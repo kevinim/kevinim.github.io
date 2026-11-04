@@ -1,6 +1,6 @@
 'use strict';
 // Addresses and coordinates are held in memory only. Geocoding is triggered by submit.
-let home=null,homeMarker=null,homeCandidates=[],homeRequest=null,homeRouteRequest=null,homeVersion=0;
+let home=null,homeMarker=null,homeCandidates=[],homeRequest=null,homeRouteRequest=null,homeVersion=0,homeRouteLayer=null;
 
 function ringContains(point,ring){
   let inside=false;
@@ -29,11 +29,16 @@ function homeFriscoMatches(ll){
     if(seen.has(key))return false;seen.add(key);return true;
   });
 }
+function homeSchoolMatches(s){
+ if(!home||s.district!=='FISD')return false;
+ const key=zoneNameKey(canonical(s.name)).replace(/\bk\s*4\b/g,'').trim();
+ return (home.matches||[]).some(f=>f.properties.gradeLevel===s.type&&zoneNameKey(canonical(f.properties.school)).replace(/\bk\s*4\b/g,'').trim()===key);
+}
 function clearHome(){
   homeVersion++;homeRequest?.abort();homeRouteRequest?.abort();home=null;homeCandidates=[];
   if(map&&homeMarker)map.removeLayer(homeMarker);homeMarker=null;
-  el('homeCandidates').replaceChildren();el('homeResult').replaceChildren();el('homeStatus').textContent='';
-  el('homeSearch').disabled=false;
+  el('homeCandidates').replaceChildren();el('homeResult').replaceChildren();el('homeSchoolInfo').replaceChildren();el('homeStatus').textContent='';if(homeRouteLayer)homeRouteLayer.clearLayers();
+  el('homeSearch').disabled=false;if(map){drawSchools();drawList()}
 }
 async function geocodeAddress(address,signal){
   const body=new URLSearchParams({SingleLine:address,f:'json',outFields:'Match_addr,Addr_type,Region,Postal',maxLocations:'5',forStorage:'false'});
@@ -48,15 +53,16 @@ function homeDirections(reverse){
 }
 function renderHome(){
   if(!home)return;
-  const matches=homeZipMatches(home.ll),schools=homeFriscoMatches(home.ll);
+  const matches=homeZipMatches(home.ll),schools=homeFriscoMatches(home.ll);home.matches=schools;
   const zipText=matches.length?matches.map(d=>escape(d.z+' · '+d.name)).join(', '):'지도에 포함된 ZIP 경계를 확인하지 못했습니다.';
-  const schoolText=!state.zoneReady?'학교 경계 데이터를 불러오는 중입니다.':schools.length?'<b>Frisco 2026–27 경계상 후보</b><br>'+schools.map(f=>escape(f.properties.school+' · '+f.properties.grades)).join('<br>'):'이 위치에 적용할 수 있는 검증된 2026–27 학교별 경계를 확인하지 못했습니다.';
-  const official=Object.entries(OFFICIAL).map(([id,url])=>'<a class="cardlink" href="'+escape(url)+'" target="_blank" rel="noopener">'+escape(({FISD:'Frisco',PISD:'Plano',AISD:'Allen',PROSPER:'Prosper',LISD:'Lewisville',CFB:'Carrollton–FB'})[id]||id)+' ↗</a>').join('');
+  const schoolText=!state.zoneReady?'학교 경계 데이터를 불러오는 중입니다.':schools.length?'<b>프리스코 2026–27 경계상 후보</b><br>'+schools.map(f=>escape(f.properties.school+' · '+f.properties.grades)).join('<br>')+(schools.some(f=>/nelson/i.test(f.properties.school))?'<br><b>넬슨 배정구역 신규 학생은 웨스터 배정 예외를 확인하세요.</b>':''):'이 위치에 적용할 수 있는 검증된 2026–27 학교별 경계를 확인하지 못했습니다.';
+  const official='<details><summary>학군별 공식 배정 확인</summary>'+Object.entries(OFFICIAL).map(([id,url])=>'<a class="cardlink" href="'+escape(url)+'" target="_blank" rel="noopener">'+escape(({FISD:'프리스코',PISD:'플레이노',AISD:'앨런',PROSPER:'프로스퍼',LISD:'루이스빌',CFB:'캐럴턴–파머스브랜치'})[id]||id)+' ↗</a>').join('')+'</details>';
   const office=el('destination').value.trim();
-  el('homeResult').innerHTML='<div class="small-note" style="margin-top:10px"><b>HOME</b><br>'+escape(home.address)+'<p><b>지역:</b> '+zipText+'</p><p>'+schoolText+'</p><p>경계와 학교별 예외·학년은 학군의 주소 검색으로 반드시 확인하세요. ZIP 경계는 USPS 배달 주소와 다를 수 있습니다.</p>'+official+'<p><b>목적지:</b> '+escape(office||'선택되지 않음')+'</p>'+(office?'<a class="cardlink" href="'+escape(homeDirections(false))+'" target="_blank" rel="noopener">집 → 회사 Google Maps ↗</a><a class="cardlink" href="'+escape(homeDirections(true))+'" target="_blank" rel="noopener">회사 → 집 ↗</a><button type="button" class="mini-btn" id="homeRoute">집에서 운전시간 계산</button>':'목적지를 입력하세요.')+'<div id="homeRouteStatus" class="source">교통량 미반영 도로망 계산 또는 Google Maps에서 출발시간을 선택하세요.</div></div>';
+  el('homeSchoolInfo').innerHTML='<hr class="rule"><h2>집 주소 학교 후보</h2><div class="source">'+escape(home.address)+'</div><p>'+schoolText+'</p><div class="source">경계·학년·예외를 학군에서 확인하세요. 학교 위치나 ZIP은 배정을 보장하지 않습니다.</div>'+official;
+  el('homeResult').innerHTML=office?'<div class="home-actions"><button type="button" class="mini-btn" id="homeRoute">집에서 운전시간 계산</button> <a class="cardlink" href="'+escape(homeDirections(false))+'" target="_blank" rel="noopener">집 → 회사 Google ↗</a> <a class="cardlink" href="'+escape(homeDirections(true))+'" target="_blank" rel="noopener">회사 → 집 ↗</a><div id="homeRouteStatus" class="source" role="status">집 주소 기준 · 교통량 미반영</div></div>':'목적지를 입력하세요.';
   const route=el('homeRoute');if(route)route.onclick=calculateHomeCommute;
 }
-function refreshHomeOffice(){if(!home)return;homeVersion++;homeRouteRequest?.abort();renderHome()}
+function refreshHomeOffice(){if(!home)return;homeVersion++;homeRouteRequest?.abort();if(homeRouteLayer)homeRouteLayer.clearLayers();renderHome()}
 function refreshHomeSchools(){if(home){homeVersion++;homeRouteRequest?.abort();renderHome()}}
 function useHomeCandidate(candidate){
   if(!map){el('homeStatus').textContent='지도가 아직 준비되지 않았습니다. 잠시 후 다시 선택하세요.';return}
@@ -64,10 +70,10 @@ function useHomeCandidate(candidate){
   home={address:candidate.address,ll:[candidate.location.y,candidate.location.x]};
   el('homeCandidates').replaceChildren();
   if(homeMarker)map.removeLayer(homeMarker);
-  homeMarker=L.marker(home.ll,{zIndexOffset:4000,icon:L.divIcon({className:'',html:'<div class="mapmark zip" style="width:54px;border-radius:9px">HOME</div>',iconSize:[54,27],iconAnchor:[27,14]}),title:'HOME'}).addTo(map).bindPopup('<b>HOME</b><br>'+escape(home.address));
+  homeMarker=L.marker(home.ll,{zIndexOffset:4000,icon:L.divIcon({className:'',html:'<svg class="house-pin" width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"><path d="M4 19L21 4l17 15h-4v17H8V19z" fill="white" stroke="#a72e2e" stroke-width="2"/><path d="M3 19L21 3l18 16-3 3L21 9 6 22z" fill="#d63737" stroke="white" stroke-width="1.5"/><path d="M18 36V24h7v12" fill="#d63737"/></svg>',iconSize:[42,42],iconAnchor:[21,37]}),title:'HOME'}).addTo(map).bindPopup('<b>HOME</b><br>'+escape(home.address));
   const matches=homeZipMatches(home.ll);
   if(matches.length===1)selectZip(matches[0].z,false);
-  map.setView(home.ll,13);el('homeStatus').textContent='검색 결과 위치를 지도에 표시했습니다. 주소와 핀을 확인하세요.';renderHome();
+  map.setView(home.ll,13);renderHome();drawSchools();drawList();el('homeStatus').textContent='검색 결과 위치를 지도에 표시했습니다. 주소와 핀을 확인하세요.';
 }
 async function searchHome(event){
   event.preventDefault();const address=el('homeAddress').value.trim();clearHome();
@@ -89,10 +95,10 @@ async function calculateHomeCommute(){
   try{
     const hits=await geocodeAddress(office,homeRouteRequest.signal);if(!hits.length)throw Error('회사 주소를 찾지 못했습니다.');
     const dest=hits[0].location;const coords=home.ll[1]+','+home.ll[0]+';'+dest.x+','+dest.y;
-    const response=await fetch('https://router.project-osrm.org/route/v1/driving/'+coords+'?overview=false',{signal:homeRouteRequest.signal});
+    const response=await fetch('https://router.project-osrm.org/route/v1/driving/'+coords+'?overview=full&geometries=geojson',{signal:homeRouteRequest.signal});
     if(!response.ok)throw Error('도로망 서비스를 사용할 수 없습니다.');const data=await response.json();
     const seconds=data.routes?.[0]?.duration;if(!Number.isFinite(seconds))throw Error('경로를 찾지 못했습니다.');
-    if(version===homeVersion)status.textContent='집 → 회사 약 '+Math.round(seconds/60)+'분 · OSRM 도로망 추정, 교통량 미반영. 실제 출근 시간은 Google Maps에서 확인하세요.';
+    if(version===homeVersion){routeRequestSeq++;if(routeGroup)routeGroup.clearLayers();if(targetMarker){map.removeLayer(targetMarker);targetMarker=null}state.dest=null;const line=data.routes?.[0]?.geometry;if(!line?.coordinates?.length)throw Error('경로 도형을 찾지 못했습니다.');if(!homeRouteLayer)homeRouteLayer=L.layerGroup().addTo(map);homeRouteLayer.clearLayers();const path=L.geoJSON(line,{style:{color:'#1757df',weight:5,opacity:.9}}).addTo(homeRouteLayer);const middle=line.coordinates[Math.floor(line.coordinates.length/2)];L.marker([middle[1],middle[0]],{interactive:false,icon:L.divIcon({className:'',html:'<span class="route-label">집 → 회사 '+Math.round(seconds/60)+'분</span>',iconSize:[130,30]})}).addTo(homeRouteLayer);L.marker([dest.y,dest.x],{icon:L.divIcon({className:'',html:'<span class="route-label">목적지</span>',iconSize:[65,30],iconAnchor:[32,15]})}).addTo(homeRouteLayer).bindPopup('목적지: '+escape(office));map.fitBounds(path.getBounds(),{padding:[35,35],maxZoom:13});status.textContent='집 → 회사 약 '+Math.round(seconds/60)+'분 · OSRM 도로망 추정, 교통량 미반영. 실제 출근 시간은 Google Maps에서 확인하세요.';}
   }catch(error){if(error.name!=='AbortError'&&version===homeVersion)status.textContent='도로망 계산 실패: '+error.message+' Google Maps 링크로 확인하세요.'}
   finally{if(version===homeVersion&&el('homeRoute'))el('homeRoute').disabled=false}
 }
