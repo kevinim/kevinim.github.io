@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>North Dallas Neighborhood Explorer | Plano · Frisco</title>
+<link rel="stylesheet" href="./vendor/leaflet-1.9.4.css">
+<style>
+:root{--ink:#15253c;--sub:#64748b;--line:#e4eaf2;--bg:#f4f7fb;--blue:#375bd2;--sky:#e8efff;--dark:#10243c;--mint:#0a887d;--amber:#ab6f18}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px}button,input,select{font:inherit}button{cursor:pointer}a{color:#2a53be;text-decoration:none}a:hover{text-decoration:underline}.shell{max-width:1660px;margin:auto;padding:0 22px 30px}.top{background:#11243d;color:white}.top-in{max-width:1660px;padding:18px 24px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.brand{font-weight:800;letter-spacing:-.4px;font-size:19px}.brand small{font-weight:500;letter-spacing:0;font-size:11px;color:#abbdd1;display:block;margin-top:5px}.toplinks{display:flex;gap:10px;flex-wrap:wrap}.toplinks a{color:#dce8ff;border:1px solid #3a536b;border-radius:8px;padding:8px 10px;font-size:12px}.heading{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:24px 0 16px}.heading h1{font-size:23px;letter-spacing:-.65px;margin:0 0 6px}.muted{color:var(--sub);font-size:12px;line-height:1.6}.eyebrow{font-size:10px;font-weight:800;letter-spacing:1.15px;color:#4a6bd3}.pill{background:#eaf0fa;color:#425d86;padding:6px 10px;border-radius:18px;font-size:11px}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:16px}.kpi,.panel,.mapbox{background:#fff;border:1px solid var(--line);box-shadow:0 3px 18px rgba(27,46,88,.045);border-radius:13px}.kpi{padding:17px 19px}.kpi label{font-size:11px;color:#71839d;font-weight:600;display:block}.kpi strong{font-size:24px;letter-spacing:-.5px;display:block;margin:8px 0 3px}.kpi small{font-size:11px;color:#71839d}.main{display:grid;grid-template-columns:300px minmax(0,1fr) 290px;gap:15px;align-items:stretch}.panel{padding:18px}.panel h2,.maphead h2{margin:0 0 14px;font-size:15px}.field{margin-bottom:16px}.field label{display:block;font-size:11px;color:#52627a;font-weight:700;margin-bottom:7px}.field select,.field input{width:100%;padding:11px 12px;background:#fafcff;border:1px solid #dbe3ef;border-radius:8px;outline:0;min-width:0}.field input:focus,.field select:focus{border-color:#8099df;box-shadow:0 0 0 3px #dce6ff}.seg{display:flex;gap:4px;background:#f3f6fb;padding:4px;border-radius:10px}.seg button{flex:1;border:0;border-radius:7px;background:transparent;color:#6e7e94;padding:8px 3px;font-size:11px;font-weight:650}.seg button.active{background:#fff;box-shadow:0 1px 4px #cad5e4;color:#3156ad}.btn{width:100%;background:#3259cd;color:white;border:0;border-radius:9px;padding:11px 13px;font-weight:720}.btn.secondary{background:#f0f4ff;color:#3458ba}.mini-btn{border:1px solid #d7e2f1;border-radius:7px;padding:6px 8px;background:#fff;color:#3d5684;font-weight:700;font-size:11px}.rule{border:0;border-top:1px solid #e8edf4;margin:18px 0}.check{display:flex;gap:9px;align-items:center;margin:10px 0;color:#52627a;font-size:12px}.check input{accent-color:#3e63d9}.small-note{background:#f1f5fc;border:1px solid #e1e8f3;border-radius:9px;padding:11px;color:#637389;font-size:11px;line-height:1.55}.mapbox{overflow:hidden;display:flex;flex-direction:column;min-width:0}.maphead{padding:15px 17px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.maphead h2{margin:0}.maphead .legend{display:flex;gap:12px;color:#6a7890;font-size:11px;flex-wrap:wrap}.legend span:before{content:' ';display:inline-block;width:9px;height:9px;border-radius:100%;margin-right:5px;background:#3259cd}.legend span:nth-child(2):before{background:#07967a}.legend span:nth-child(3):before{background:#bf7639}#map{height:370px;width:100%;background:#e9edf3;position:relative;overflow:hidden;isolation:isolate}.map-foot{padding:12px 16px;border-top:1px solid #e9eff5;font-size:11px;color:#768398;line-height:1.55}.detail h3{font-size:20px;margin:8px 0 3px}.detail .stat-list{margin-top:12px}.detail .statrow{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #edf1f6;padding:10px 0;gap:8px}.detail .statrow span{color:#738298;font-size:12px}.detail .statrow strong{font-size:13px}.bars{margin-top:16px}.brow{margin:10px 0}.btop{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px}.btop span:last-child{font-weight:800}.track{height:7px;background:#edf2f8;border-radius:5px;overflow:hidden}.fill{height:100%;background:#4767d7;border-radius:5px}.section{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:15px;margin-top:16px}.section .panel{min-width:0}.secHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}.secHead h2{margin:0;font-size:16px}.searchrow{display:flex;gap:7px}.searchrow input{min-width:0;width:100%;border:1px solid #dbe3ed;border-radius:8px;padding:10px;background:#fbfdff}.searchrow button{background:#3158cd;color:#fff;border:0;border-radius:8px;padding:0 14px;font-weight:700}.school-list{overflow:auto;max-height:358px;margin-top:9px}.school{width:100%;text-align:left;background:#fff;border:1px solid #e4eaf3;border-radius:9px;margin:6px 0;padding:10px 11px;display:flex;justify-content:space-between;gap:10px;align-items:center}.school:hover{border-color:#9aafea;background:#f8faff}.school b{display:block;font-size:12px}.school small{display:block;color:#7d899a;font-size:10px;margin-top:4px}.score{flex:0 0 auto;border-radius:7px;background:#e7f5ee;color:#24704c;padding:5px 7px;font-size:11px;font-weight:800}.score.nr{color:#89919c;background:#f2f4f7}.data-table{width:100%;border-collapse:collapse;font-size:11px;min-width:460px}.data-table th{position:sticky;top:0;background:#f2f5fa;padding:10px 8px;text-align:right;color:#607089}.data-table th:first-child,.data-table td:first-child{text-align:left}.data-table td{padding:10px 8px;text-align:right;border-bottom:1px solid #eef1f5;font-variant-numeric:tabular-nums}.data-table tr{cursor:pointer}.data-table tr:hover,.data-table tr.sel{background:#edf3ff}.scroll-table{overflow:auto;max-height:370px}.source{font-size:10px;color:#8190a2;line-height:1.5;margin-top:10px}.notice{border-left:3px solid #e4a950;padding:9px 11px;background:#fffaf0;font-size:11px;color:#7b653d;line-height:1.6;border-radius:5px}.commuteline{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eef2f6;padding:8px 0;font-size:11px;gap:5px}.commuteline b{font-size:12px}.commuteline button{border:0;background:none;color:#4262c9;font-weight:800;font-size:10px;padding:0}.hidden{display:none}.loader{height:20px;color:#6d7c93}.cardlink{display:inline-block;font-size:11px;background:#f2f5fb;color:#3659af;padding:8px 10px;border-radius:7px;margin:6px 3px 0 0}.mapmark{display:flex;justify-content:center;align-items:center;border:2px solid white;border-radius:50%;width:27px;height:27px;background:#315bd3;color:white;font-weight:800;font-size:10px;box-shadow:0 1px 9px #647d9c}.mapmark.middle{background:#078b7d}.mapmark.high{background:#c08038}.mapmark.zip{background:#142e51}.footer{color:#8793a5;font-size:11px;margin-top:22px}.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#172b44;color:white;padding:11px 16px;border-radius:9px;font-size:12px;z-index:99999;box-shadow:0 8px 35px #0003;display:none;max-width:90vw}.inline-file{width:100%;font-size:11px} @media(max-width:1160px){.main{grid-template-columns:250px 1fr}.main>.detail{grid-column:1/-1}.detail .stat-list{display:grid;grid-template-columns:repeat(2,1fr);gap:0 24px}.section{grid-template-columns:1fr 1fr}}@media(max-width:720px){.shell{padding:0 12px 20px}.top-in{padding:16px 14px}.toplinks{display:none}.heading h1{font-size:20px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.kpi{padding:13px}.kpi strong{font-size:20px}.main,.section{grid-template-columns:1fr}.main>.detail{grid-column:auto}.panel{padding:14px}#map{height:315px}.detail .stat-list{grid-template-columns:1fr}.maphead .legend{font-size:10px}}
+#map .leaflet-tile,#map .leaflet-pane,#map .leaflet-tile-container,#map .leaflet-marker-icon,#map .leaflet-layer{position:absolute;left:0;top:0}#map .leaflet-container{overflow:hidden}.basemap-control{font-size:11px;color:#667892;display:flex;align-items:center;gap:6px}.basemap-control select{border:1px solid #d8e3ef;border-radius:6px;padding:5px;background:#fff;font-size:11px;max-width:155px}#map .leaflet-tile{max-width:none!important;max-height:none!important;transform-origin:top left}.score.rated{background:#e6f5e9;color:#145f33}@media(max-width:720px){.basemap-control{order:3;width:100%}}
+#map{height:clamp(380px,55vh,650px)}
+@media(max-width:720px){#map{height:clamp(320px,48vh,460px)}}
+.area-label{pointer-events:none}.area-label span{display:block;text-align:center;white-space:nowrap;background:rgba(255,255,255,.94);border:1px solid #8194ae;border-radius:6px;padding:3px 6px;color:#172d4a;font-size:11px;font-weight:750;line-height:1.15;box-shadow:0 1px 4px #1b355044}.area-label.selected span{background:#173b78;border-color:#fff;color:white}
+</style></head><body>
+<header class="top"><div class="top-in"><div class="brand">NORTH DALLAS <span style="color:#91aaff">/</span> NEIGHBORHOOD EXPLORER<small>Plano · Frisco · Allen · Prosper · The Colony · Carrollton</small></div><div class="toplinks"><a href="https://txschools.gov/" target="_blank" rel="noopener">TEA School Ratings</a><a href="https://www.friscoisd.org/page/2026-2027-zones/" target="_blank" rel="noopener">2026–27 Frisco Zones</a><a href="https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/attendance-boundary-descriptions" target="_blank" rel="noopener">Plano Zones</a></div></div></header>
+<div class="shell"><div class="heading"><div><div class="eyebrow">RELOCATION RESEARCH DASHBOARD · MVP</div><h1>어느 동네에서 살면 좋을까?</h1><div class="muted">민족 구성 · 자녀 비율 · 소득 · 학교 위치 · 배정구역 확인 · 통근 경로를 한 번에 비교</div></div><span class="pill">ACS 2024 · TEA 2026 예비 등급</span></div>
+<div class="kpis"><div class="kpi"><label>선택 지역</label><strong id="k-zip">75093</strong><small id="k-area">West Plano</small></div><div class="kpi"><label>한국계 인구</label><strong id="k-korean">1.1%</strong><small>ZIP 전체 인구 대비</small></div><div class="kpi"><label>미성년자 있는 가구</label><strong id="k-households">28.3%</strong><small>전체 가구 대비</small></div><div class="kpi"><label>중위 가구 소득</label><strong id="k-income">$124,563</strong><small>2024 dollars / annual</small></div></div>
+<div class="main"><aside class="panel"><h2>필터 &amp; 비교 기준</h2><div class="field"><label>지역 선택</label><select id="zipSelect"></select></div><div class="field"><label>ZIP 경계 색상 기준</label><select id="metric"><option value="korean">한국계 비율</option><option value="indian">인도계 비율</option><option value="chinese">중국계 비율</option><option value="vietnamese">베트남계 비율</option><option value="kids">18세 미만 인구</option><option value="childHH">자녀가 있는 가구</option><option value="income">중위 가구 소득</option></select></div><div class="field"><label>학교 유형 필터</label><div class="seg" id="levels"><button class="active" data-v="all">전체</button><button data-v="elementary">초등</button><button data-v="middle">중등</button><button data-v="high">고등</button></div></div><div class="field"><label>2026 TEA 학교 점수</label><select id="ratingFilter"><option value="all">전체 (점수 미확인 포함)</option><option value="rated">점수 확인된 학교만</option></select></div><label class="check"><input type="checkbox" id="zipOverlay" checked> ZIP 통계 구역 표시</label><label class="check"><input type="checkbox" id="schoolOverlay" checked> 학교 위치 마커 표시</label><label class="check"><input type="checkbox" id="historicOverlay" checked> 학교 클릭 시 배정구역 보기</label><div class="small-note" id="mapLoadStatus">ZIP 경계와 학교 위치 데이터를 불러오는 중…</div><hr class="rule"><h2>통근 목적지</h2><div class="field"><label for="officeSelect">목적지 선택</label><select id="officeSelect"><option value="jpm">JPMorgan Chase · Plano</option><option value="custom">다른 주소 직접 입력</option></select><label for="destination">회사 주소 또는 목적지</label><input id="destination" value="8181 Communications Pkwy, Plano, TX 75024" placeholder="예: 5000 Legacy Dr, Plano, TX" autocomplete="street-address"><div id="commuteCache" class="small-note" role="status">저장된 통근 예상 확인 중…</div></div><button id="calcCommute" class="btn">선택 ZIP 운전 시간 계산</button><div class="source">선택 ZIP 대표점 기준 도로망 예상치이며 과거·실시간 교통량은 반영하지 않습니다. 대표점은 실제 거주지가 아닙니다. Google Maps에서 실시간 경로 재확인.</div><div id="routeStatus" style="margin-top:12px;font-size:11px;color:#6c7b90"></div><hr class="rule"><h2>학교 배정구역 (자동 연결)</h2>
+<div class="small-note" id="zoneDatasetStatus">Plano · Allen의 공식 시청 GIS 도형을 자동으로 불러오는 중…</div>
+<p class="source" style="margin-top:10px"><strong>중요:</strong> 녹색은 Frisco 2026–27 공식 검색기 경계, 주황색 점선은 이전 학년도 참고용입니다. 이사·입학 결정 전에는 반드시 각 학군의 2026–27 공식 주소별 배정 검색으로 최종 확인해야 합니다. GeoJSON 수동 업로드는 필요하지 않습니다.</p>
+<div class="small-note"><strong>학군별 공식 배정 확인</strong><br>아래 링크에서 실제 주소와 학년을 확인하세요. 조사일: 2026-11-03.<br>
+<a class="cardlink" href="https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder" target="_blank" rel="noopener">Plano ↗</a>
+<a class="cardlink" href="https://www.friscoisd.org/page/2026-2027-zones/" target="_blank" rel="noopener">Frisco ↗</a>
+<a class="cardlink" href="https://www.allenisd.org/page/findaschool" target="_blank" rel="noopener">Allen ↗</a>
+<a class="cardlink" href="https://www.prosper-isd.net/page/attendance-boundaries/" target="_blank" rel="noopener">Prosper ↗</a>
+<a class="cardlink" href="https://www.lisd.net/resources/families/school-locator" target="_blank" rel="noopener">Lewisville ↗</a>
+<a class="cardlink" href="https://www.cfbisd.edu/students/school-maps-locator-system" target="_blank" rel="noopener">Carrollton–Farmers Branch ↗</a>
+<p><strong>지도 도형 검증 상태:</strong> Frisco 2026–27 공식 검색기 경계 확인. Plano·Allen은 과거 경계만 표시. Prosper·Lewisville·Carrollton–Farmers Branch는 최신 도형 적용 여부 미확정이며 공식 검색기를 이용하세요.</p>
+<p>Plano 공식 검색기의 연결 GIS는 2025–26 레이어명으로 표시되어 현재 학년도 여부를 별도 확인 중입니다. 학군에 최종 확인하세요.</p>
+<p>Frisco의 Nelson 배정구역 신규 학생은 2026–27에 Wester로 배정되는 예외가 있습니다. <a href="https://www.friscoisd.org/page/2026-2027-zones/" target="_blank" rel="noopener">학군 안내 확인 ↗</a></p>
+<p>Prosper 2027–28 중학교 경계는 검토 중입니다. 학군은 2026년 11월 16일 이사회에 최종안을 제시할 예정이라고 밝혔습니다. <a href="https://www.prosper-isd.net/article/3206562" target="_blank" rel="noopener">학군 일정 확인 ↗</a></p>
+<p>다른 학군의 2027–28 학교별 경계 확정 여부는 아직 확인되지 않았습니다. 이 지도는 2027–28 배정을 표시하지 않습니다.</p>
+</div>
+</aside>
+<div class="mapbox"><div class="maphead"><h2>Interactive Area Map</h2><label class="basemap-control" for="baseMap">지도 배경 <select id="baseMap" aria-label="지도 배경"><option value="osm">OpenStreetMap</option><option value="esri">Esri Streets</option></select></label><div class="legend"><span>초등</span><span>중등</span><span>고등</span></div></div><div id="map"></div><div id="tileStatus" class="map-foot" role="status" aria-live="polite" hidden></div><div class="map-foot" id="mapHelp">지도에 지역명과 ZIP이 표시됩니다. 이름이 겹치면 지도를 확대하세요. 도시명은 2020 Census 기준 ZIP과 가장 많이 겹치는 도시로, ZIP이 여러 도시에 걸칠 수 있습니다. ZIP 도형이나 아래 비교표에서 지역을 선택하세요. 학교 마커는 현재 화면에서 최대 260개를 표시하며, 전체 필터에서 초등학교는 지도 확대 13단계부터 나타납니다. 학교 마커를 누르면 학교 정보와 배정 확인 링크가 표시됩니다. ZIP 통계구역과 학교별 배정구역을 구분합니다. Frisco는 녹색으로 2026–27 경계를, Plano·Allen은 주황색 점선으로 과거 경계를 표시합니다. 실제 배정은 학군에 확인하세요.</div></div>
+<aside class="panel detail"><div class="eyebrow">AREA INSIGHTS / SCHOOL INSPECTOR</div><div id="detailContent"></div></aside></div>
+<div class="section"><section class="panel"><div class="secHead"><h2>초·중·고 학교 찾기</h2><span class="pill" id="schoolCount">조회 중</span></div><div class="searchrow"><input id="schoolSearch" placeholder="학교 이름 검색 (예: Wakeland, Rice, Lawler)"><button id="schoolSearchClear">초기화</button></div><div class="school-list" id="schoolList"></div><div class="source">학교 지도 좌표는 Plano City GIS의 2022년 자료와 2026년 학교 주소 기반 고신뢰도 지오코딩 자료를 함께 사용합니다. TEA 2026 예비 평가 원본에서 DFW 11개 카운티에 소속된 학군의 학교를 표시합니다. 학교 위치는 NCES 2024–25 좌표를 학교 고유번호로 연결하며 현재 위치와 다를 수 있습니다. 최신 배정 경계는 학군마다 다르며, 학군 소재 카운티와 학교 실제 위치는 다를 수 있습니다. 고유 학교번호 또는 학군과 이름이 고유하게 일치하는 경우에만 연결하며, 미연결과 Not Rated는 다릅니다. 최신 주소, 개교 및 학교 배정은 해당 학군에서 반드시 확인하세요.</div></section>
+<section class="panel"><div class="secHead"><h2>지역 전체 비교</h2><span class="pill">ZIP 별</span></div><div class="scroll-table"><table class="data-table" id="compareTable"><thead><tr><th>지역</th><th>한국</th><th>인도</th><th>중국</th><th>18세 미만</th><th>자녀가구</th><th>중위 소득</th><th>출근 · 퇴근*</th></tr></thead><tbody></tbody></table></div><div class="source">*직접 계산한 도로망 예상은 교통량을 반영하지 않습니다. 출퇴근 시간대는 Google Maps에서 출발 요일과 시간을 설정해 확인하세요. 동네 내 실제 주소마다 달라집니다. Census ZCTA 경계는 USPS 배달 ZIP과 완전히 일치하지 않습니다.</div></section></div>
+<div class="footer">Sources: TEA 2026 preliminary campus accountability summary (downloaded November 3, 2026); U.S. Census ACS 2020–2024 (B01001, B01002, B11005, B19013, B02018); North Central Texas Council of Governments (2020 ZCTA polygons; 2021 service); City of Plano GIS (school positions last updated Oct 2022); OpenStreetMap tiles; Frisco ISD / Plano ISD / Allen ISD / Prosper ISD / Lewisville ISD / Carrollton-Farmers Branch ISD; Texas Education Agency accountability portal (school scores must be checked individually). Static demographics are 5-year estimates, not a 2026 census. Map tiles © OpenStreetMap contributors.</div></div><div id="toast" class="toast"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+'use strict';
+const DATA=[
+{z:'75093',name:'West Plano',pop:47954,korean:1.1,indian:8.3,chinese:5.7,vietnamese:.7,filipino:1.6,kids:19.4,childHH:28.3,income:124563,age:43.3,ll:[33.019,-96.815]},
+{z:'75024',name:'NW Plano',pop:45652,korean:1.9,indian:27.8,chinese:5.6,vietnamese:1.5,filipino:.9,kids:21,childHH:32.7,income:117088,age:38.2,ll:[33.078,-96.825]},
+{z:'75025',name:'North Plano',pop:53202,korean:1.4,indian:22.3,chinese:7.8,vietnamese:2.3,filipino:1.1,kids:23.9,childHH:42.1,income:143260,age:41.1,ll:[33.095,-96.745]},
+{z:'75035',name:'East Frisco',pop:89682,korean:1.9,indian:27.7,chinese:3.5,vietnamese:1.4,filipino:1.4,kids:29.5,childHH:56.3,income:166590,age:38.7,ll:[33.155,-96.752]},
+{z:'75034',name:'West Frisco',pop:53818,korean:2.3,indian:12.2,chinese:2.2,vietnamese:.8,filipino:1.2,kids:20.3,childHH:30.1,income:111122,age:35.9,ll:[33.113,-96.86]},
+{z:'75036',name:'SW Frisco',pop:33496,korean:2.0,indian:21.5,chinese:2.7,vietnamese:1.2,filipino:.9,kids:25.7,childHH:43.5,income:151645,age:41.9,ll:[33.103,-96.912]},
+{z:'75033',name:'North Frisco',pop:52795,korean:1.3,indian:10.2,chinese:1.9,vietnamese:1.1,filipino:1.1,kids:31.8,childHH:58.2,income:174762,age:36.5,ll:[33.185,-96.834]},
+{z:'75013',name:'West Allen',pop:49796,korean:4.6,indian:12.1,chinese:7.1,vietnamese:2.9,filipino:.5,kids:24.9,childHH:41.5,income:146891,age:38.9,ll:[33.108,-96.689]},
+{z:'75078',name:'Prosper',pop:53011,korean:1.0,indian:11.2,chinese:3.1,vietnamese:.7,filipino:1.0,kids:33.1,childHH:62.0,income:196564,age:36.6,ll:[33.237,-96.789]},
+{z:'75056',name:'The Colony',pop:69628,korean:3.8,indian:7.4,chinese:1.8,vietnamese:2.5,filipino:1.0,kids:20.4,childHH:30.7,income:119682,age:37.4,ll:[33.089,-96.887]},
+{z:'75010',name:'Carrollton North',pop:33326,korean:7.5,indian:7.7,chinese:2.6,vietnamese:3.1,filipino:1.7,kids:20.5,childHH:31.6,income:107317,age:38.4,ll:[33.045,-96.918]}
+];
+const OFFICIAL={PISD:'https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder',FISD:'https://www.friscoisd.org/page/2026-2027-zones/',AISD:'https://www.allenisd.org/page/findaschool',PROSPER:'https://www.prosper-isd.net/page/attendance-boundaries/',LISD:'https://www.lisd.net/resources/families/school-locator',CFB:'https://www.cfbisd.edu/students/school-maps-locator-system'};
+const PROSPER_MAPS={elementary:'https://aptg.co/vgDpkm',middle:'https://aptg.co/ty_VGv',high:'https://aptg.co/hmz4Ps'};
+const FISD_MAPS={elementary:'https://www.friscoisd.org/docs/default-source/attendance-zones/2026-27/2026-27-elementary-school.pdf?sfvrsn=692050e1_3',middle:'https://sf1.friscoisd.org/docs/default-source/attendance-zones/2026-27/2026-27-middle-school.pdf?sfvrsn=4e66667_3',high:'https://www.friscoisd.org/docs/default-source/attendance-zones/2026-27/2026-27-high-school.pdf?sfvrsn=1bf3f52f_3'};
+const RATINGS={}; // School-level numeric ratings are not yet verified against TEA.
+const FALLBACK_SCHOOLS=[
+{name:'Wakeland High School',type:'high',district:'FISD',address:'10700 Legacy Dr, Frisco TX 75034'},
+{name:'Reedy High School',type:'high',district:'FISD',address:'3003 Stonebrook Pkwy, Frisco TX 75034'},
+{name:'Centennial High School',type:'high',district:'FISD',address:'6901 Coit Rd, Frisco TX 75035'},
+{name:'Independence High School',type:'high',district:'FISD',address:'10555 Independence Pkwy, Frisco TX 75035'},
+{name:'Liberty High School',type:'high',district:'FISD',address:'15250 Rolater Rd, Frisco TX 75035'},
+{name:'Lebanon Trail High School',type:'high',district:'FISD',address:'5151 Ohio Dr, Frisco TX 75035'},
+{name:'Lawler Middle School',type:'middle',district:'FISD'},
+{name:'Nelson Middle School',type:'middle',district:'FISD'},
+{name:'Talley Elementary School',type:'elementary',district:'FISD'},
+{name:'McSpedden Elementary School',type:'elementary',district:'FISD'},
+{name:'Plano West Senior High School',type:'high',district:'PISD'},
+{name:'Plano Senior High School',type:'high',district:'PISD'},
+{name:'Plano East Senior High School',type:'high',district:'PISD'},
+{name:'Rice Middle School',type:'middle',district:'PISD'},
+{name:'Robinson Middle School',type:'middle',district:'PISD'},
+{name:'Jasper High School',type:'high',district:'PISD'},
+{name:'Curtis Middle School',type:'middle',district:'AISD'},
+{name:'Ereckson Middle School',type:'middle',district:'AISD'},
+{name:'Allen High School',type:'high',district:'AISD'}
+];
+let state={zoneData:{},zoneReady:false,showHistoric:true,ratings:[],ratingFilter:'all',zip:'75093',metric:'korean',level:'all',showZip:true,showSchools:true,allen:false,schools:[],selectedSchool:null,dest:null,times:{},schoolQuery:'',polys:{},uploaded:null,boundaries:[],initDone:false};
+const el=id=>document.getElementById(id),fmt=v=>v==null?'미공개':Number(v).toLocaleString('en-US'),money=v=>v==null?'미공개':'$'+fmt(v),pct=v=>v==null?'미공개':v.toFixed(1)+'%',escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(s){let e=el('toast');e.textContent=s;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',4000)}
+let map=null,zipGroup,schoolGroup,zoneGroup,routeGroup,targetMarker,zipMarkers,areaLabels,placeNames={},baseTiles=null,baseErrors=0,activeBase='osm',boundarySeq=0;const col={elementary:'#315bd3',middle:'#078b7d',high:'#c08038'};
+function ratingKey(n){return n.toLowerCase().replace(/\b(school|h s|h s\.|h\.s\.|el|ms|high school|middle school|elementary school)\b/g,s=>s.includes('high')||s==='h s'||s==='h.s.'?'high':s==='ms'?'middle':s==='el'?'elementary':'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ')}
+function canonical(n){return String(n||'').toLowerCase().replace(/\bh\.?\s*s\.?\b/g,'high').replace(/\bm\.?\s*s\.?\b/g,'middle').replace(/\bsr\.?\b/g,'senior').replace(/\b(?:elem|el)\b/g,'elementary').replace(/\bschool\b/g,'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ')}
+function scoreRecord(n,district=''){const key=district+'|'+canonical(n);const matches=state.ratingIndex?.get(key);return matches?.length===1?matches[0]:null}
+function score(n,district=''){return scoreRecord(n,district)?.score??null}
+function ratingText(r){return !r?'TEA 미연결':r.rating==='Not Rated'?'Not Rated':r.score===null?`${r.rating} · 점수 미공개`:`${r.rating} · ${r.score}`}
+function scoreSource(n,district=''){return scoreRecord(n,district)?.official||'https://txschools.gov/'}
+function getZip(){return DATA.find(x=>x.z===state.zip)}
+function niceMetric(v,k=state.metric){return k==='income'?money(v):pct(v)}
+function metricLabel(k){return ({korean:'한국계',indian:'인도계',chinese:'중국계',vietnamese:'베트남계',kids:'18세 미만',childHH:'미성년자 동거 가구',income:'중위 가구 소득'})[k]}
+function shade(v){if(v==null)return '#cbd5e1';const a=DATA.map(d=>d[state.metric]).filter(Number.isFinite);const mn=Math.min(...a),mx=Math.max(...a);const t=mx===mn?.5:(v-mn)/(mx-mn);return `hsl(${213-24*t} 65% ${88-46*t}%)`}
+function init(){DATA.forEach(d=>{let o=document.createElement('option');o.value=d.z;o.textContent=`${d.z} · ${d.name}`;el('zipSelect').appendChild(o)});el('zipSelect').value=state.zip;el('zipSelect').onchange=e=>selectZip(e.target.value);el('metric').onchange=e=>{state.metric=e.target.value;drawZip();drawDetail();drawTable()};el('ratingFilter').onchange=e=>{state.ratingFilter=e.target.value;drawSchools();drawList()};el('zipOverlay').onchange=e=>{state.showZip=e.target.checked;drawZip()};el('schoolOverlay').onchange=e=>{state.showSchools=e.target.checked;drawSchools()};el('historicOverlay').onchange=e=>{state.showHistoric=e.target.checked;drawBoundary()};el('levels').onclick=e=>{const b=e.target.closest('button');if(!b)return;state.level=b.dataset.v;[...el('levels').children].forEach(x=>x.classList.toggle('active',x===b));drawSchools();drawList()};el('schoolSearch').oninput=e=>{state.schoolQuery=e.target.value.toLowerCase();drawList()};el('schoolSearchClear').onclick=()=>{el('schoolSearch').value='';state.schoolQuery='';drawList()};el('calcCommute').onclick=calcCommute;el('destination').onkeydown=e=>{if(e.key==='Enter')calcCommute()};el('destination').oninput=()=>{el('officeSelect').value=el('destination').value.trim().toLowerCase()===JPM_ADDRESS.toLowerCase()?'jpm':'custom';state.times={};state.dest=null;if(routeGroup)routeGroup.clearLayers();showSavedCommute();drawTable()};el('officeSelect').onchange=e=>{el('destination').value=e.target.value==='jpm'?JPM_ADDRESS:'';el('destination').oninput();if(e.target.value==='custom')el('destination').focus()};el('baseMap').onchange=e=>setBaseMap(e.target.value);
+loadSavedCommute();renderData();drawList();if(window.L){map=L.map('map',{zoomControl:true,preferCanvas:true}).setView([33.129,-96.785],11);setBaseMap('osm');zipGroup=L.featureGroup().addTo(map);schoolGroup=L.featureGroup().addTo(map);zoneGroup=L.featureGroup().addTo(map);routeGroup=L.featureGroup().addTo(map);zipMarkers=L.featureGroup().addTo(map);areaLabels=L.layerGroup().addTo(map);map.on('moveend',()=>{drawSchools();drawAreaLabels()});fetch('./zcta-place-names.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{placeNames=data;drawAreaLabels()}).catch(e=>console.error('지역명 자료를 불러오지 못했습니다:',e));loadZipShapes();Promise.all([loadBoundaryData(),loadSchools().then(loadRatings).then(loadExtra2026SchoolLocations)]).then(addFriscoBoundarySchools);setTimeout(()=>map.invalidateSize(),250)}else{el('map').innerHTML='<div style="padding:30px;color:#53647a">미리보기 또는 브라우저에서 지도 라이브러리 로딩에 실패했습니다. GitHub Pages 정식 주소를 이용하거나 브라우저 연결을 확인하세요. 아래 인구 비교표와 기본 학교 목록은 사용할 수 있습니다.</div>';el('mapLoadStatus').textContent='Leaflet 지도를 로드하지 못했습니다.';state.schools=FALLBACK_SCHOOLS;drawList();}}
+
+function setBaseMap(choice, fallbackFrom=null){
+ if(!map)return;
+ const sources={
+   osm:{name:'OpenStreetMap',url:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',opts:{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',maxZoom:19}},
+   esri:{name:'Esri Streets',url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',opts:{attribution:'Tiles &copy; Esri',maxZoom:18}}
+ };
+ choice=Object.hasOwn(sources,choice)?choice:'osm';
+ const cfg=sources[choice],status=el('tileStatus');
+ if(baseTiles)map.removeLayer(baseTiles);
+ activeBase=choice;baseErrors=0;el('baseMap').value=choice;
+ status.hidden=!fallbackFrom;
+ status.textContent=fallbackFrom ? fallbackFrom+' 타일 오류로 '+cfg.name+' 배경을 사용합니다. 일부 지도가 보이지 않으면 지도 배경을 직접 변경하세요.' : '';
+ const layer=L.tileLayer(cfg.url,{...cfg.opts,keepBuffer:2});
+ baseTiles=layer;
+ layer.on('tileerror',()=>{
+   if(baseTiles!==layer)return;
+   baseErrors++;
+   status.hidden=false;
+   status.textContent=cfg.name+' 지도 타일을 불러오지 못했습니다. 연결을 확인하거나 다른 지도 배경을 선택하세요.';
+   if(baseErrors===3 && !fallbackFrom){
+     setBaseMap(choice==='osm'?'esri':'osm',cfg.name);
+   }
+ });
+ layer.addTo(map);
+}
+async function loadRatings(){
+ try{
+  const res=await fetch('./tea-ratings-2026.json',{cache:'no-store'});
+  if(!res.ok)throw Error('2026 rating HTTP '+res.status);
+  const j=await res.json();
+  if(j.year!==2026||!Array.isArray(j.data))throw Error('rating schema');
+  state.ratings=j.data.filter(r=>/^\d{9}$/.test(r.id)&&['A','B','C','D','F','Not Rated'].includes(r.rating));
+  let locationById=new Map();try{const lr=await fetch('./nces-locations-2024.json',{cache:'no-store'});if(!lr.ok)throw Error('HTTP '+lr.status);const lj=await lr.json();if(!Array.isArray(lj.data))throw Error('location schema');locationById=new Map(lj.data.map(x=>[x.id,x]))}catch(e){console.error('NCES location data:',e);toast('학교 위치 자료 일부를 불러오지 못했습니다.')}
+  state.ratingIndex=new Map();
+  for(const r of state.ratings){for(const key of new Set([canonical(r.name),canonical(r.officialName)])){const k=r.district+'|'+key;const values=state.ratingIndex.get(k)||[];values.push(r);state.ratingIndex.set(k,values)}}
+  const existingByKey=new Map();for(const x of state.schools){const k=x.district+'|'+canonical(x.name);existingByKey.set(k,existingByKey.has(k)?null:x)}
+  for(const r of state.ratings){
+   const type=schoolType(r.name)||'other',location=locationById.get(r.id),key=r.district+'|'+canonical(r.name);
+   const existing=state.ratingIndex.get(key)?.length===1?existingByKey.get(key):null;
+   if(existing){existing.address=existing.address||r.address||location?.address;existing.ll=existing.ll||location?.ll;existing.districtName=r.districtName}
+   else state.schools.push({name:r.name,type,district:r.district,districtName:r.districtName,address:r.address||location?.address,ll:location?.ll,source:location?'NCES 2024–25 / TEA 2026 예비':'2026 TEA 예비 평가'});
+  }
+  state.schools.sort((a,b)=>a.name.localeCompare(b.name));
+  drawSchools();drawList();
+ }catch(e){console.error('2026 TEA rating data:',e);toast('학교 평가 데이터 로딩에 실패했습니다. 공식 TEA 링크를 사용하세요.')}
+}
+
+async function loadExtra2026SchoolLocations(){
+ const paths=['./schools2026-1.json','./schools2026-2.json','./schools2026-3.json','./schools2026-4.json'];
+ const resp=await Promise.allSettled(paths.map(async path=>{
+  const r=await fetch(path,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status+' '+path);
+  const j=await r.json();if(!Array.isArray(j.data))throw Error('Invalid schools file '+path);
+  return j.data;
+ }));
+ let inserted=0;
+ for(const entry of resp){
+  if(entry.status==='rejected'){console.warn('2026 school location batch unavailable:',entry.reason);continue}
+  for(const s of entry.value){
+   if(Array.isArray(s.ll)&&Number.isFinite(s.ll[0])&&Number.isFinite(s.ll[1])&&s.ll[0]>32.8&&s.ll[0]<33.7&&s.ll[1]>-97.4&&s.ll[1]<-96.35){addSchool(s);inserted++}
+  }
+ }
+ state.schools.sort((a,b)=>a.name.localeCompare(b.name));
+ drawSchools();drawList();
+ console.info('Verified 2026 campus coordinates processed:',inserted);
+}
+
+async function geocodeSchool(s){
+ if(!s.address)return false;
+ try{
+  const q=new URLSearchParams({SingleLine:s.address,sourceCountry:'USA',maxLocations:'1',outFields:'Addr_type',f:'json'});
+  const res=await fetch('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?'+q);
+  if(!res.ok)throw Error('HTTP '+res.status);
+  const j=await res.json();const x=j.candidates?.[0];
+  if(!x||x.score<85||!x.location)throw Error('정확한 주소 좌표를 확인하지 못함');
+  const lat=x.location.y,lon=x.location.x;
+  if(!(lat>32.8&&lat<33.7&&lon> -97.3&&lon< -96.35))throw Error('대상 지역 밖 좌표');
+  s.ll=[lat,lon];drawSchools();drawList();return true;
+ }catch(e){console.warn('School geocoding error:',s.name,e);return false}
+}
+
+function renderData(){showSavedCommute();const d=getZip();el('k-zip').textContent=d.z;el('k-area').textContent=d.name;el('k-korean').textContent=pct(d.korean);el('k-households').textContent=pct(d.childHH);el('k-income').textContent=money(d.income);drawDetail();drawTable()}
+function selectZip(z,fly=true){state.zip=z;el('zipSelect').value=z;state.selectedSchool=null;renderData();drawZip();if(map&&fly){const p=state.polys[z];p?map.fitBounds(p.getBounds(),{maxZoom:12,padding:[18,18]}):map.flyTo(getZip().ll,12)}drawSchools();if(state.dest)drawSelectedRoute()}
+function drawDetail(){const d=getZip();if(state.selectedSchool){const s=state.selectedSchool;const sRating=scoreRecord(s.name,s.district);const sScore=sRating?.score??null;el('detailContent').innerHTML=`<h3>${escape(s.name)}</h3><div class="muted">${({high:'고등학교',middle:'중학교',elementary:'초등학교'})[s.type]||'학교'} · ${escape(s.districtName||s.district||'학군 미확인')} · 2026 TEA 예비: <b>${escape(ratingText(sRating))}</b></div>${s.address?`<div style="margin-top:10px;font-size:12px">${escape(s.address)}</div>`:''}<hr class="rule"><div class="eyebrow">SCHOOL ASSIGNMENT</div><p class="muted" style="margin:9px 0">학교 위치나 오래된 경계만으로 현재 배정이 보장되지 않습니다. 해당 주소를 공식 학군 검색기에 입력해 검증하세요.</p><div class="notice" id="zoneNotice">${s.district==='AISD'?'Allen 공개 GIS 경계는 메타데이터가 과거 연도로 표시됩니다. <b>최신 배정 확인이 필요</b>합니다.':'최신 2026–27 학교별 배정구역은 공식 학군에서 주소로 확인해야 합니다. 과거 GIS 표시가 있더라도 현재 배정 근거로 사용할 수 없습니다.'}</div><a class="cardlink" target="_blank" rel="noopener" href="${OFFICIAL[s.district]||'https://txschools.gov/'}">${OFFICIAL[s.district]?'학군 공식 배정 확인':'학군 배정 링크 미확인 · TEA 검색'} ↗</a><a class="cardlink" target="_blank" rel="noopener" href="${scoreSource(s.name,s.district)}">${sScore===null?'TEA 성적 확인':'2026 점수 출처'} ↗</a>${(s.district==='FISD'||s.district==='PROSPER')?`<a class="cardlink" target="_blank" rel="noopener" href="${s.district==='FISD'?FISD_MAPS[s.type]:PROSPER_MAPS[s.type]}">2026–27 공식 ${({elementary:'초등',middle:'중등',high:'고등'})[s.type]} 배정구역 지도 PDF ↗</a>`:''}<a class="cardlink" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.address||s.name+', Texas')}">학교 위치 확인 ↗</a><div style="margin-top:18px"><button class="btn secondary" onclick="clearSchool()">ZIP 통계로 돌아가기</button></div>`;drawBoundary();return}
+let html=`<h3>${escape(d.name)} <span style="font-size:12px;color:#7a8b9c;font-weight:500">${d.z}</span></h3><div class="muted">Census ZIP Tabulation Area · 표본 추정치</div><div class="stat-list">`;
+const stats=[['전체 인구',fmt(d.pop)+'명'],['중위 연령',d.age==null?'미공개':d.age+'세'],['18세 미만 인구',pct(d.kids)],['미성년자 동거 가구',pct(d.childHH)],['중위 가구 소득',money(d.income)]];html+=stats.map(([x,y])=>`<div class="statrow"><span>${x}</span><strong>${y}</strong></div>`).join('')+'</div><div style="margin-top:18px;font-size:12px;font-weight:800">아시아계 세부 구성</div><div class="bars">';const arr=[['한국계',d.korean],['인도계',d.indian],['중국계',d.chinese],['베트남계',d.vietnamese],['필리핀계',d.filipino]];html+=arr.map(([x,y])=>`<div class="brow"><div class="btop"><span>${x}</span><span>${pct(y)}</span></div><div class="track"><div class="fill" style="width:${Math.min(100,y/32*100)}%"></div></div></div>`).join('');html+='</div><p class="source">민족 상세 데이터는 복수 선택 응답을 포함할 수 있어 합계가 전체 Asian 수치와 정확히 일치하지 않을 수 있습니다.</p>';el('detailContent').innerHTML=html;if(map)zoneGroup?.clearLayers()}
+window.clearSchool=()=>{state.selectedSchool=null;drawDetail();drawBoundary()};
+function drawTable(){const tbody=el('compareTable').querySelector('tbody');tbody.innerHTML=DATA.map(d=>`<tr data-z="${d.z}" class="${d.z===state.zip?'sel':''}"><td><b>${d.z}</b><br><span style="color:#718095">${escape(d.name)}</span></td><td>${pct(d.korean)}</td><td>${pct(d.indian)}</td><td>${pct(d.chinese)}</td><td>${pct(d.kids)}</td><td>${pct(d.childHH)}</td><td>${money(d.income)}</td><td>${commuteTableText(d.z)}</td></tr>`).join('');tbody.querySelectorAll('tr').forEach(tr=>tr.onclick=()=>selectZip(tr.dataset.z))}
+async function loadZipShapes(){
+  try{
+    const res=await fetch('./dfw-zcta-boundaries.geojson',{cache:'no-store'});
+    if(!res.ok)throw new Error('ZIP 데이터 HTTP '+res.status);
+    const obj=await res.json();
+    if(obj.type!=='FeatureCollection'||!Array.isArray(obj.features))throw new Error('GeoJSON 형식 오류');
+    const expected=new Set(DATA.map(d=>d.z));
+    const found=new Set();
+    for(const f of obj.features){
+      const z=String(f.properties?.ZCTA5CE20||'');
+      if(!expected.has(z)||!f.geometry)continue;
+      const shape=L.geoJSON(f);
+      if(!shape.getBounds().isValid())continue;
+      state.polys[z]=shape;
+      found.add(z);
+      const centroid=shape.getBounds().getCenter();
+      DATA.find(x=>x.z===z).ll=[centroid.lat,centroid.lng];
+    }
+    if(found.size!==DATA.length)throw new Error('ZIP 경계 '+found.size+'/'+DATA.length+'개');
+    drawZip();
+    if(state.polys[state.zip])map.fitBounds(state.polys[state.zip].getBounds(),{padding:[25,25],maxZoom:12});
+    el('mapLoadStatus').innerHTML='<b>'+found.size+'개 DFW ZIP 통계 경계 표시</b><br>2020 Census ZCTA; DFW 11개 카운티와 육지가 겹치는 구역. 학교 배정구역과 다릅니다.';
+  }catch(e){
+    console.error('ZIP boundary loading failed:',e);
+    drawZip();
+    el('mapLoadStatus').textContent='ZIP 경계를 불러오지 못했습니다. 구역명 마커를 대신 표시합니다: '+e.message;
+  }
+}
+function drawZip(){if(!map)return;zipGroup.clearLayers();zipMarkers.clearLayers();DATA.forEach(d=>{const p=state.polys[d.z];if(p&&state.showZip){p.setStyle({color:d.z===state.zip?'#1e4298':'#99a8ba',weight:d.z===state.zip?2.8:1.1,opacity:.9,fillColor:shade(d[state.metric]),fillOpacity:.26});p.off('click').on('click',()=>selectZip(d.z,false));p.bindTooltip(`<b>${d.z}</b> ${escape(d.name)}<br>${metricLabel(state.metric)}: ${niceMetric(d[state.metric])}`,{sticky:true});zipGroup.addLayer(p)}else if(!p){const icon=L.divIcon({className:'',html:`<div class="mapmark zip" style="width:41px;border-radius:10px">${d.z}</div>`,iconSize:[41,27],iconAnchor:[20,14]});L.marker(d.ll,{icon}).addTo(zipMarkers).on('click',()=>selectZip(d.z))}});drawAreaLabels()}
+function drawAreaLabels(){
+  if(!map||!areaLabels)return;
+  areaLabels.clearLayers();
+  if(!state.showZip)return;
+  const bounds=map.getBounds(),size=map.getSize(),occupied=[];
+  const candidates=DATA.filter(d=>state.polys[d.z]&&bounds.contains(d.ll)).sort((a,b)=>(b.z===state.zip)-(a.z===state.zip));
+  for(const d of candidates){
+    const name=placeNames[d.z]||(!d.name.endsWith(' County')?d.name:'');
+    const label=name?name+' · '+d.z:d.z;
+    const width=Math.min(190,Math.max(70,label.length*7+16)),height=23,p=map.latLngToContainerPoint(d.ll);
+    const rect={left:p.x-width/2-4,right:p.x+width/2+4,top:p.y-height/2-4,bottom:p.y+height/2+4};
+    if(rect.left<0||rect.right>size.x||rect.top<0||rect.bottom>size.y)continue;
+    if(occupied.some(r=>rect.left<r.right&&rect.right>r.left&&rect.top<r.bottom&&rect.bottom>r.top))continue;
+    occupied.push(rect);
+    const icon=L.divIcon({className:'area-label'+(d.z===state.zip?' selected':''),html:'<span>'+escape(label)+'</span>',iconSize:[width,height],iconAnchor:[width/2,height/2]});
+    L.marker(d.ll,{icon,interactive:false,keyboard:false,zIndexOffset:d.z===state.zip?3000:2000}).addTo(areaLabels);
+  }
+}
+function schoolType(s){const a=(s||'').toLowerCase().replace(/\bh\s+s\b/g,'high').replace(/\bm\s+s\b/g,'middle');if(/elementary|\bel\b|primary|kindergarten|\bk-5\b|\bk-6\b/.test(a))return'elementary';if(/middle|intermediate|junior high|\bms\b/.test(a))return'middle';if(/high|senior|freshman|\bhs\b/.test(a))return'high';return null}
+function normalizeSchool(raw){if(!raw.name)return null;let type=raw.type||schoolType(raw.name+' '+(raw.grades||'')+' '+(raw.stype||''));if(type===null)type=schoolType(raw.stype);if(!type)return null;let district=raw.district||'';if(!district){const a=(raw.addr||'').toLowerCase();district=a.includes('allen')?'AISD':a.includes('frisco')?'FISD':a.includes('plano')?'PISD':a.includes('prosper')?'PROSPER':''}return {...raw,type,district}}
+async function loadSchools(){
+  state.schools=FALLBACK_SCHOOLS.map(s=>({...s,source:'검증 필요한 초기 학교 목록'}));
+  drawList();
+  let loaded=0;
+  try{
+    const res=await fetch('./schools.json',{cache:'no-store'});
+    if(!res.ok)throw new Error('학교 데이터 HTTP '+res.status);
+    const obj=await res.json();
+    if(!Array.isArray(obj.schools))throw new Error('학교 데이터 형식 오류');
+    for(const raw of obj.schools){
+      const s=normalizeSchool(raw);
+      if(!s||!Array.isArray(s.ll)||!Number.isFinite(s.ll[0])||!Number.isFinite(s.ll[1]))continue;
+      addSchool(s);
+      loaded++;
+    }
+    if(!loaded)throw new Error('학교 좌표 0개');
+  }catch(e){console.error('School location dataset:',e);toast('학교 지도 위치 데이터를 읽지 못했습니다. 기본 목록은 유지됩니다.')}
+  state.schools.sort((a,b)=>a.name.localeCompare(b.name));
+  drawSchools();
+  drawList();
+  el('schoolCount').textContent=state.schools.length+'개 학교 · 위치 '+state.schools.filter(s=>s.ll).length+'개 · 2026 점수 '+state.schools.filter(s=>score(s.name,s.district)!==null).length+'개';
+}
+function addSchool(s){const key=canonical(s.name);if(!key)return;const ex=state.schools.find(a=>canonical(a.name)===key&&(!a.district||!s.district||a.district===s.district));if(ex){ex.ll=s.ll||ex.ll;ex.address=s.address||ex.address;ex.district=s.district||ex.district;ex.source=s.source;return}state.schools.push(s)}
+function gradeTag(s){return s.type==='high'?'고등':s.type==='middle'?'중등':s.type==='elementary'?'초등':'기타'}
+async function schoolClicked(s){
+ state.selectedSchool=s;drawDetail();
+ if(!s.ll&&s.address){toast('학교 주소 좌표를 확인하는 중입니다.');await geocodeSchool(s);}
+ if(state.selectedSchool!==s)return;
+ if(map&&s.ll){map.flyTo(s.ll,13);drawBoundary();}
+ else toast('학교의 좌표를 확인하지 못했습니다. 상세정보의 Google 지도 링크를 사용하세요.');
+ if(window.innerWidth<721)el('detailContent').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function drawSchools(){if(!map)return;schoolGroup.clearLayers();if(!state.showSchools)return;const z=map.getZoom();const items=state.schools.filter(s=>s.ll&&s.type!=='other'&&map.getBounds().contains(s.ll)&&(state.level==='all'||s.type===state.level)&&(state.ratingFilter!=='rated'||score(s.name,s.district)!==null)&&(state.level!=='all'||z>=13||s.type!=='elementary'));items.slice(0,260).forEach(s=>{const icon=L.divIcon({className:'',html:`<div class="mapmark ${s.type}">${s.type==='elementary'?'E':s.type==='middle'?'M':'H'}</div>`,iconSize:[27,27],iconAnchor:[13,13]});L.marker(s.ll,{icon,title:s.name}).addTo(schoolGroup).on('click',()=>schoolClicked(s))})}
+function drawList(){let items=state.schools.filter(s=>(state.level==='all'||s.type===state.level)&&(state.ratingFilter!=='rated'||score(s.name,s.district)!==null)&&(!state.schoolQuery||s.name.toLowerCase().includes(state.schoolQuery)));el('schoolList').innerHTML=items.slice(0,150).map((s,i)=>{const r=scoreRecord(s.name,s.district);return `<button class="school" data-sid="${state.schools.indexOf(s)}"><span><b>${escape(s.name)}</b><small>${gradeTag(s)} · ${escape(s.districtName||s.district||'배정 학군 확인 필요')} ${s.ll?'· 지도 위치 있음':'· 지도 위치 미확인'}</small></span><span class="score ${r===null?'nr':'rated'}">${escape(ratingText(r))}</span></button>`}).join('')||'<div class="muted" style="padding:14px">검색 결과 없음</div>';el('schoolCount').textContent=items.length+'개 검색 결과 · 최대 150개 표시 · 이름 검색 가능';el('schoolList').querySelectorAll('button').forEach(b=>b.onclick=()=>schoolClicked(state.schools[+b.dataset.sid]))}
+
+
+function zoneNameKey(name){
+ return String(name||'').toLowerCase().replace(/\b(dr|doctor|elementary|middle|senior|sr|high|school|campus)\b/g,'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
+}
+function convertFriscoZones(data){
+ const types={'Elementary':'elementary','Middle School':'middle','High School':'high'};
+ if(!Array.isArray(data)||!data.length)throw Error('Frisco 경계 데이터 형식 오류');
+ return data.map((z,i)=>{
+  if(!z.name||!z.grades||!types[z.type]||!Array.isArray(z.border)||!z.border.length)throw Error('Frisco 경계 항목 오류 '+i);
+  const coordinates=z.border.map(poly=>poly.map(ring=>{
+   if(!Array.isArray(ring)||ring.length<3)throw Error('Frisco 경계 좌표 오류 '+i);
+   const points=ring.map(([lng,lat])=>{
+    if(!Number.isFinite(lng)||lng>=-96||lng<=-98||!Number.isFinite(lat)||lat<=32||lat>=34)throw Error('Frisco 경계 좌표 범위 오류 '+i);
+    return [lng,lat];
+   });
+   const a=points[0],b=points[points.length-1];
+   if(a[0]!==b[0]||a[1]!==b[1])points.push(a);
+   return points;
+  }));
+  return {type:'Feature',properties:{school:z.name,gradeLevel:types[z.type],grades:z.grades,sourceVintage:'2026–27',address:z.address,location:z.location},geometry:{type:'MultiPolygon',coordinates}};
+ });
+}
+async function loadBoundaryData(){
+ const sources=[
+  {district:'FISD',url:'https://static.friscoisd.org/js/json/school.borders.2627.json',label:'Frisco 2026–27 (공식 검색기)'},
+  {district:'PISD',url:'./plano-attendance-2019.geojson',label:'Plano 2019–20 (과거)'},
+  {district:'AISD',url:'./allen-attendance-historical.geojson',label:'Allen 2019·2023'}
+ ];
+ const results=await Promise.all(sources.map(async x=>{
+  try{
+   const r=await fetch(x.url,{cache:'no-store'});
+   if(!r.ok)throw Error('HTTP '+r.status);
+   const j=await r.json();
+   if(x.district==='FISD')state.zoneData.FISD=convertFriscoZones(j);
+   else{
+    if(j.type!=='FeatureCollection'||!Array.isArray(j.features))throw Error('GeoJSON 형식 오류');
+    state.zoneData[x.district]=j.features.filter(f=>f.geometry&&f.properties?.school);
+   }
+   return x.label+': '+state.zoneData[x.district].length+'개';
+  }catch(e){console.error('Zone data '+x.label,e);state.zoneData[x.district]=[];return x.label+': 오류 ('+e.message+')'}
+ }));
+ state.zoneReady=true;
+ el('zoneDatasetStatus').innerHTML=results.map(escape).join('<br>')+'<br><b>Plano·Allen 도형은 과거 자료</b>';
+ if(state.selectedSchool)drawBoundary();
+}
+function addFriscoBoundarySchools(){
+ for(const f of state.zoneData.FISD||[]){
+  const p=f.properties, key=zoneNameKey(p.school).replace(/\bk\s*4\b/g,'').trim();
+  const ll=p.location&&Number.isFinite(p.location.lat)&&Number.isFinite(p.location.lng)?[p.location.lat,p.location.lng]:null;
+  const existing=state.schools.find(s=>s.district==='FISD'&&s.type===p.gradeLevel&&zoneNameKey(s.name).replace(/\bk\s*4\b/g,'').trim()===key);
+  if(existing){if(!existing.ll&&ll)existing.ll=ll;if(!existing.address&&p.address)existing.address=p.address;continue}
+  addSchool({name:p.school,type:p.gradeLevel,district:'FISD',address:p.address,ll,source:'Frisco ISD 2026–27'});
+ }
+ state.schools.sort((a,b)=>a.name.localeCompare(b.name));
+ drawSchools();drawList();
+}
+function drawBoundary(){
+ if(!map)return;
+ ++boundarySeq;zoneGroup.clearLayers();
+ const s=state.selectedSchool;
+ if(!s)return;
+ const note=el('zoneNotice');
+ if(!state.showHistoric){
+  if(note)note.innerHTML='배정구역 표시가 꺼져 있습니다. 현재 배정구역은 학군의 공식 주소 검색으로 확인하세요.';
+  return;
+ }
+ const geo=state.zoneData[s.district]||[];
+ const target=zoneNameKey(s.name).replace(/\bk\s*4\b/g,'').trim();
+ const levels=s.type==='high'?['high','senior']:s.type==='elementary'?['elementary']:['middle'];
+ const eligible=geo.filter(f=>levels.includes(f.properties?.gradeLevel));
+ let found=eligible.filter(f=>zoneNameKey(f.properties?.school).replace(/\bk\s*4\b/g,'').trim()===target);
+ // Allen's recent campus names sometimes add honorees' full names, while the GIS uses only surnames.
+ // Use a last-name alias only if it uniquely identifies a campus within the grade-level/district.
+ if(!found.length&&s.district==='AISD'){
+   const last=target.split(' ').at(-1);
+   if(last&&last.length>=4){
+     const bySurname=eligible.filter(f=>zoneNameKey(f.properties?.school)===last);
+     const distinct=[...new Set(bySurname.map(f=>zoneNameKey(f.properties.school)))];
+     if(distinct.length===1)found=bySurname;
+   }
+ }
+ if(found.length){
+  const current=s.district==='FISD';
+  const layer=L.geoJSON({type:'FeatureCollection',features:found},{style:{color:current?'#087f69':'#d37125',weight:3,dashArray:current?null:'7 5',fillColor:current?'#70cbb4':'#ffc078',fillOpacity:.25}}).addTo(zoneGroup);
+  if(layer.getBounds().isValid())map.fitBounds(layer.getBounds(),{padding:[28,28],maxZoom:13});
+  const yrs=[...new Set(found.map(f=>f.properties?.sourceVintage).filter(Boolean))].join(', ');
+  const grades=[...new Set(found.map(f=>f.properties?.grades).filter(Boolean))].join(', ');
+  if(note)note.innerHTML=current?'<b>Frisco 공식 검색기 경계 '+escape(yrs)+'</b> · 녹색 도형, 학년 '+escape(grades)+(grades.includes(',')?' (여러 학년의 구역을 함께 표시)':'')+'. 배정 예외와 정원 제한이 있을 수 있으므로 학군에 최종 확인하세요.':'<b style="color:#ab531b">과거 GIS 경계 '+escape(yrs)+' (현재 배정 보장 X)</b> · 주황색 점선 '+found.length+'개 도형 표시. 실제 2026–27 배정은 해당 주소로 공식 학군 검색에서 확인하세요.';
+ }else if(!state.zoneReady&&['AISD','PISD','FISD'].includes(s.district)){
+  if(note)note.textContent='배정구역 데이터를 불러오는 중입니다…';
+ }else if(note){
+  note.innerHTML='이 학교의 지도 경계를 표시할 수 없습니다. 현재 배정은 학군 공식 주소검색에서 확인하세요.';
+ }
+}
+
+const JPM_ADDRESS='8181 Communications Pkwy, Plano, TX 75024';
+function savedCommuteFor(zip){return el('destination').value.trim().toLowerCase()===JPM_ADDRESS.toLowerCase()?state.savedCommute?.results?.[zip]||null:null}
+function averageMinutes(values){return Array.isArray(values)&&values.length===2&&values.every(Number.isFinite)?Math.round((values[0]+values[1])/120):null}
+function commuteTableText(zip){const r=savedCommuteFor(zip);if(r){const am=averageMinutes(r.outbound),pm=averageMinutes(r.return);return am===null||pm===null?'미확인':`${am}분 · ${pm}분`}return state.times[zip]===undefined?'—':`도로망 ${Math.round(state.times[zip])}분`}
+function showSavedCommute(){const box=el('commuteCache');if(!box)return;box.textContent='직접 계산은 교통량을 반영하지 않습니다. Google Maps에서 출발 요일과 시간을 선택해 확인할 수 있습니다. ';if(el('destination').value.trim()){for(const [label,reverse] of [['출근 경로 ↗',false],['퇴근 경로 ↗',true]]){const a=document.createElement('a');a.href=gmaps(getZip(),reverse);a.target='_blank';a.rel='noopener';a.textContent=label;a.style.marginRight='12px';box.appendChild(a)}}}
+async function loadSavedCommute(){showSavedCommute()}
+async function calcCommute(){let addr=el('destination').value.trim();if(!addr){toast('회사 주소 또는 목적지를 먼저 입력해주세요.');return}el('routeStatus').textContent='목적지 위치 확인 중…';try{const q=new URLSearchParams({q:/\b(TX|Texas)\b/i.test(addr)?addr:addr+', Texas',format:'jsonv2',limit:'1',countrycodes:'us'});let r=await fetch('https://nominatim.openstreetmap.org/search?'+q,{headers:{'Accept':'application/json'}});if(!r.ok)throw Error('주소검색 응답 오류');let j=await r.json();if(!j.length)throw Error('주소를 찾을 수 없습니다. 더 구체적인 주소를 입력하세요');let p=[+j[0].lat,+j[0].lon];state.dest={ll:p,address:j[0].display_name};routeGroup.clearLayers();if(targetMarker)map.removeLayer(targetMarker);targetMarker=L.marker(p).addTo(map).bindPopup('통근 목적지: '+escape(addr));el('routeStatus').textContent='도로망 기반 ZIP별 시간을 계산 중…';const commuteData=[getZip()];const coords=commuteData.map(d=>d.ll).concat([p]).map(ll=>ll[1].toFixed(6)+','+ll[0].toFixed(6)).join(';');let base='https://router.project-osrm.org/table/v1/driving/'+coords;let qs=new URLSearchParams({sources:commuteData.map((_,i)=>i).join(';'),destinations:String(commuteData.length),annotations:'duration'});let rr=await fetch(base+'?'+qs);if(!rr.ok)throw Error('경로 계산 API 응답 오류');const result=await rr.json();if(result.code!=='Ok')throw Error('도로 경로를 찾지 못했습니다');state.times={};commuteData.forEach((d,i)=>{const sec=result.durations?.[i]?.[0];if(Number.isFinite(sec))state.times[d.z]=sec/60});drawTable();drawCommute();drawSelectedRoute();}catch(e){el('routeStatus').textContent='예상 시간 계산 실패: '+e.message+' (Google Maps 링크로 직접 확인 가능)';drawCommute()}}
+function gmaps(d,reverse=false){const dest=el('destination').value.trim()||state.dest?.address||'',zipPoint=d.ll[0]+','+d.ll[1];return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(reverse?dest:zipPoint)+'&destination='+encodeURIComponent(reverse?zipPoint:dest)+'&travelmode=driving'}
+function drawCommute(){const vals=Object.values(state.times);if(!vals.length){el('routeStatus').innerHTML='자동 거리 계산이 되지 않았습니다. 아래 구역별 Google Maps 링크를 사용하세요.<div style="margin-top:8px">'+DATA.map(d=>`<a class="cardlink" target="_blank" rel="noopener" href="${gmaps(d)}">${d.z} ↗</a>`).join('')+'</div>';return}const xs=DATA.slice().sort((a,b)=>(state.times[a.z]??999)-(state.times[b.z]??999)).map(d=>`<div class="commuteline"><span>${d.z} · ${escape(d.name)}</span><b>${state.times[d.z]?Math.round(state.times[d.z])+'분':'—'}</b><a href="${gmaps(d)}" target="_blank" rel="noopener">Google ↗</a></div>`).join('');el('routeStatus').innerHTML='<b>통근 예상시간 (교통량 미반영)</b>'+xs+'<div class="source">공개 OSRM 도로망 분석값입니다. 러시아워 정체, 통행료, 학교 통학 시간 등 미반영. Google Maps에서 출발시간 설정을 활용하세요.</div>'}
+let routeRequestSeq=0;
+async function drawSelectedRoute(){if(!map||!state.dest)return;const seq=++routeRequestSeq;routeGroup.clearLayers();const d=getZip(),p=state.dest.ll;try{const uri='https://router.project-osrm.org/route/v1/driving/'+d.ll[1]+','+d.ll[0]+';'+p[1]+','+p[0]+'?overview=full&geometries=geojson';const r=await fetch(uri);if(!r.ok)throw Error('route HTTP '+r.status);const j=await r.json();if(seq!==routeRequestSeq||d.z!==state.zip)return;const line=j.routes?.[0]?.geometry;if(line)L.geoJSON(line,{style:{color:'#1d57d4',weight:4,opacity:.8}}).addTo(routeGroup)}catch(e){if(seq===routeRequestSeq)console.warn('route overlay',e)}}
+document.addEventListener('DOMContentLoaded',async()=>{try{const r=await fetch('./dfw-demographics.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const j=await r.json();if(j.year!==2024||!Array.isArray(j.data)||j.data.length!==292)throw Error('DFW 데이터 형식 오류');const existing=new Map(DATA.map(d=>[d.z,d]));for(const row of j.data){const prior=existing.get(row.z);if(prior){const name=prior.name;Object.assign(prior,row,{name})}else DATA.push(row)}}catch(e){console.error('DFW demographics:',e);toast('DFW 통계 데이터를 불러오지 못해 기존 11개 지역만 표시합니다.')}init()});
+</script></body></html>
+
+
+
