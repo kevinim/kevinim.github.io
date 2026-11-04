@@ -83,8 +83,9 @@ async function searchHome(event){
     const candidates=await geocodeAddress(address,homeRequest.signal);if(version!==homeVersion)return;
     homeCandidates=candidates;
     if(!candidates.length){el('homeStatus').textContent='주소를 찾지 못했습니다. 도시와 ZIP을 포함해 다시 입력하세요.';return}
-    el('homeStatus').textContent='아래에서 정확한 주소를 선택하세요. 위치 정확도는 공급자에 따라 다릅니다.';
-    candidates.forEach((c,index)=>{const b=document.createElement('button');b.type='button';b.className='school';b.textContent=c.address+' · 일치도 '+Math.round(c.score);b.onclick=()=>useHomeCandidate(homeCandidates[index]);el('homeCandidates').appendChild(b)});
+    candidates.sort((a,b)=>(Number.isFinite(b.score)?b.score:-1)-(Number.isFinite(a.score)?a.score:-1));
+    const best=candidates[0];el('homeSearch').disabled=false;useHomeCandidate(best);
+    const requestedZip=[...address.matchAll(/\b\d{5}(?:-\d{4})?\b/g)].at(-1),returnedZip=[...best.address.matchAll(/\b\d{5}(?:-\d{4})?\b/g)].at(-1);const zipWarning=requestedZip&&returnedZip&&requestedZip[0].slice(0,5)!==returnedZip[0].slice(0,5)?' 입력한 ZIP과 검색된 ZIP이 다릅니다.':'';el('homeStatus').textContent='자동 선택: '+best.address+' · 일치도 '+(Number.isFinite(best.score)?Math.round(best.score):'미확인')+'.'+zipWarning+' 주소와 지도 위치를 확인하세요.';
   }catch(error){if(error.name!=='AbortError'&&version===homeVersion)el('homeStatus').textContent='주소 검색에 실패했습니다. 연결 상태를 확인한 뒤 다시 시도하세요.'}
   finally{if(version===homeVersion)el('homeSearch').disabled=false}
 }
