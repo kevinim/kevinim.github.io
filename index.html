@@ -91,7 +91,7 @@ function ratingKey(n){return n.toLowerCase().replace(/\b(school|h s|h s\.|h\.s\.
 function canonical(n){return String(n||'').toLowerCase().replace(/\bh\.?\s*s\.?\b/g,'high').replace(/\bm\.?\s*s\.?\b/g,'middle').replace(/\bsr\.?\b/g,'senior').replace(/\b(?:elem|el)\b/g,'elementary').replace(/\bschool\b/g,'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ')}
 function scoreRecord(n,district=''){const key=district+'|'+canonical(n);const matches=state.ratingIndex?.get(key);return matches?.length===1?matches[0]:null}
 function score(n,district=''){return scoreRecord(n,district)?.score??null}
-function ratingText(r){return !r?'TEA 미연결':r.rating==='Not Rated'?'Not Rated':r.score===null?`${r.rating} · 점수 미공개`:`${r.rating} · ${r.score}`}
+function ratingText(r){if(!r)return 'TEA 미연결';if(r.rating==='Not Rated'){const p=r.prior2025;return '2026 미평가'+(p?` · 2025 ${p.rating} ${p.score}${p.paired?' (학군 연계)':''}`:'')}return (r.score===null?`${r.rating} · 점수 미공개`:`${r.rating} · ${r.score}`)+(r.paired2026?' (연계 평가)':'')}
 function scoreSource(n,district=''){return scoreRecord(n,district)?.official||'https://txschools.gov/'}
 function getZip(){return DATA.find(x=>x.z===state.zip)}
 function niceMetric(v,k=state.metric){return k==='income'?money(v):pct(v)}
@@ -161,10 +161,12 @@ async function loadRatings(){
   let locationById=new Map();try{const lr=await fetch('./nces-locations-2024.json',{cache:'no-store'});if(!lr.ok)throw Error('HTTP '+lr.status);const lj=await lr.json();if(!Array.isArray(lj.data))throw Error('location schema');locationById=new Map(lj.data.map(x=>[x.id,x]))}catch(e){console.error('NCES location data:',e);toast('학교 위치 자료 일부를 불러오지 못했습니다.')}
   state.ratingIndex=new Map();
   for(const r of state.ratings){for(const key of new Set([canonical(r.name),canonical(r.officialName)])){const k=r.district+'|'+key;const values=state.ratingIndex.get(k)||[];values.push(r);state.ratingIndex.set(k,values)}}
+  addVerifiedAliases(state.ratingIndex,state.schools,state.ratings,(name,district)=>district+'|'+canonical(name));
+  const existingById=new Map();for(const x of state.schools)if(x.id)existingById.set(x.id,existingById.has(x.id)?null:x);
   const existingByKey=new Map();for(const x of state.schools){const k=x.district+'|'+canonical(x.name);existingByKey.set(k,existingByKey.has(k)?null:x)}
   for(const r of state.ratings){
    const type=schoolType(r.name)||'other',location=locationById.get(r.id),key=r.district+'|'+canonical(r.name);
-   const existing=state.ratingIndex.get(key)?.length===1?existingByKey.get(key):null;
+   const existing=(existingById.get(r.id)?.district===r.district?existingById.get(r.id):null)||(state.ratingIndex.get(key)?.length===1?existingByKey.get(key):null);
    if(existing){existing.address=existing.address||r.address||location?.address;existing.ll=existing.ll||location?.ll;existing.districtName=r.districtName}
    else state.schools.push({name:r.name,type,district:r.district,districtName:r.districtName,address:r.address||location?.address,ll:location?.ll,source:location?'NCES 2024–25 / TEA 2026 예비':'2026 TEA 예비 평가'});
   }
@@ -344,6 +346,7 @@ async function loadBoundaryData(){
  const sources=[
   {district:'FISD',url:'https://static.friscoisd.org/js/json/school.borders.2627.json',label:'프리스코 2026–27 (공식 검색기)'},
   {district:'LISD',url:'https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/03c099e24d304c4fa0f4ce8a76c10062/data?f=json',label:'루이스빌 공식 검색기 연결 도형 · 적용 학년도 확인 필요'},
+  {district:'PISD_LOOKUP',url:'./plano-locator-reference.geojson',label:'플레이노 공식 검색기 연결 · 2025–26 필드'},
   {district:'PISD',url:'./plano-attendance-2019.geojson',label:'Plano 2019–20 (과거)'},
   {district:'AISD',url:'./allen-attendance-historical.geojson',label:'Allen 2019·2023'}
  ];
@@ -430,5 +433,5 @@ function drawCommute(){const d=getZip(),v=state.times[d.z];el('routeStatus').inn
 let routeRequestSeq=0;
 async function drawSelectedRoute(){if(!map||!state.dest)return;const seq=++routeRequestSeq;routeGroup.clearLayers();const d=getZip(),p=state.dest.ll;try{const uri='https://router.project-osrm.org/route/v1/driving/'+d.ll[1]+','+d.ll[0]+';'+p[1]+','+p[0]+'?overview=full&geometries=geojson';const r=await fetch(uri);if(!r.ok)throw Error('route HTTP '+r.status);const j=await r.json();if(seq!==routeRequestSeq||d.z!==state.zip)return;const line=j.routes?.[0]?.geometry;if(line){L.geoJSON(line,{style:{color:'#1d57d4',weight:4,opacity:.8}}).addTo(routeGroup);const mid=line.coordinates[Math.floor(line.coordinates.length/2)],minutes=j.routes?.[0]?.duration;if(mid&&Number.isFinite(minutes))L.marker([mid[1],mid[0]],{interactive:false,icon:L.divIcon({className:'',html:'<span class="route-label">ZIP 대표점 '+Math.round(minutes/60)+'분</span>',iconSize:[120,30]})}).addTo(routeGroup)}}catch(e){if(seq===routeRequestSeq)console.warn('route overlay',e)}}
 document.addEventListener('DOMContentLoaded',async()=>{try{const r=await fetch('./dfw-demographics.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const j=await r.json();if(j.year!==2024||!Array.isArray(j.data)||j.data.length!==292)throw Error('DFW 데이터 형식 오류');const existing=new Map(DATA.map(d=>[d.z,d]));for(const row of j.data){const prior=existing.get(row.z);if(prior){const name=prior.name;Object.assign(prior,row,{name})}else DATA.push(row)}}catch(e){console.error('DFW demographics:',e);toast('DFW 통계 데이터를 불러오지 못해 기존 11개 지역만 표시합니다.')}try{const r=await fetch('./jpm-outside-dfw.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);outsideData=await r.json();if(!Array.isArray(outsideData.data)||!Array.isArray(outsideData.shapes?.features))throw Error('주변 ZIP 데이터 형식 오류');for(const d of outsideData.data){Object.assign(d,outsideData.race[d.z]||{},{jpmMinutes:outsideData.minutes[d.z]??null});DATA.push(d)}}catch(e){console.error('주변 ZIP 자료 오류:',e);toast('DFW 바깥 일부 ZIP을 불러오지 못했습니다.')}init()});
-</script><script src="./school-assignment.js?v=1"></script><script src="./home-lookup-v2.js?v=5"></script><script src="./allen-lookup.js?v=3"></script><script src="./candidate-compare.js?v=4"></script></body></html>
+</script><script src="./school-identity.js?v=1"></script><script src="./school-assignment.js?v=2"></script><script src="./home-lookup-v2.js?v=6"></script><script src="./allen-lookup.js?v=3"></script><script src="./candidate-compare.js?v=4"></script></body></html>
 
