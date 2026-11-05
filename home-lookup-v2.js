@@ -40,6 +40,7 @@ function schoolAssignmentFor(item){
  return resolveAssignment({frisco:homeFriscoMatches(item.ll),lewisville:homeZoneMatches(item.ll,'LISD'),plano:homeZoneMatches(item.ll,'PISD_LOOKUP'),allen:window.allenAssignment?.(item.address,item.ll),ready:state.zoneReady&&!window.allenAssignmentLoading?.(),failed:!!state.assignmentLoadFailed||!!window.allenAssignmentFailed?.()});
 }
 function assignmentRating(p,district){
+ if(district==='LISD'&&p.campusId){const byId=state.ratings.filter(r=>r.district===district&&r.id===p.campusId);if(byId.length===1)return byId[0]}
  const key=zoneNameKey(canonical(p.school));
  const hits=state.schools.filter(s=>s.district===district&&s.type===p.gradeLevel&&zoneNameKey(canonical(s.name))===key);
  return hits.length===1?scoreRecord(hits[0].name,district):scoreRecord(p.school,district);

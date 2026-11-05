@@ -332,6 +332,11 @@ function convertFriscoZones(data){
 // Official Lewisville locator embeds Web Mercator rings; preserve islands and holes.
 function convertLewisvilleZones(webmap){
  const specs=[['Elementary_Boundaries','ELEM_PLAN1','elementary'],['Middle_Boundaries','MID_NAME','middle'],['High_Boundaries','HIGH_NAME','high']];
+ // The locator's Schools layer uses the three-digit TEA campus suffix. Only use
+ // a campus identity when its locator name and school level are unambiguous.
+ const campusIndex=new Map(),classes={ELEM:'elementary',MID:'middle',HIGH:'high'};
+ const campuses=webmap.operationalLayers?.find(l=>l.title==='Schools')?.featureCollection?.layers?.[0]?.featureSet?.features||[];
+ for(const f of campuses){const a=f.attributes||{},level=classes[a.CLASS],n=String(a.NAME||'').trim().toUpperCase(),id=Number(a.CAMPUS_ID);if(!level||!n||!Number.isInteger(id)||id<1||id>999)continue;const k=level+'|'+n,items=campusIndex.get(k)||[];items.push('061902'+String(id).padStart(3,'0'));campusIndex.set(k,items)}
  const out=[];for(const [title,field,level] of specs){const layer=webmap.operationalLayers?.find(l=>l.title===title)?.featureCollection?.layers?.[0];if(!layer?.featureSet?.features)throw Error('루이스빌 경계 레이어 없음: '+title);
  for(const f of layer.featureSet.features){const name=f.attributes?.[field];if(!name||!f.geometry?.rings?.length)continue;
  const rings=f.geometry.rings.filter(r=>r.length>=4).map(r=>r.map(([x,y])=>{const ll=L.CRS.EPSG3857.unproject(L.point(x,y));return [ll.lng,ll.lat]}));
@@ -339,7 +344,8 @@ function convertLewisvilleZones(webmap){
  const ordered=rings.map(r=>({r,area:area(r),parent:null,depth:0})).sort((a,b)=>b.area-a.area);
  for(let i=0;i<ordered.length;i++){const child=ordered[i];const parents=ordered.slice(0,i).filter(p=>ringContains(child.r[0],p.r));if(parents.length){child.parent=parents.reduce((a,b)=>a.area<b.area?a:b);child.depth=child.parent.depth+1}}
  const polys=ordered.filter(r=>r.depth%2===0).map(r=>[r.r,...ordered.filter(h=>h.parent===r&&h.depth%2===1).map(h=>h.r)]);if(!polys.length)continue;
- out.push({type:'Feature',properties:{school:name,gradeLevel:level,sourceVintage:level==='high'?'공식 검색기 연결 · 고등 레이어 2025–26 표기':'공식 검색기 연결 · 학년도 미확인'},geometry:{type:'MultiPolygon',coordinates:polys}});
+ const ids=campusIndex.get(level+'|'+String(name).trim().toUpperCase())||[];
+ out.push({type:'Feature',properties:{school:name,gradeLevel:level,campusId:ids.length===1?ids[0]:null,sourceVintage:level==='high'?'공식 검색기 연결 · 고등 레이어 2025–26 표기':'공식 검색기 연결 · 학년도 미확인'},geometry:{type:'MultiPolygon',coordinates:polys}});
  }}return out;
 }
 async function loadBoundaryData(){
@@ -395,7 +401,7 @@ function drawBoundary(){
  const levels=s.type==='high'?['high','senior']:s.type==='elementary'?['elementary']:['middle'];
  const eligible=geo.filter(f=>levels.includes(f.properties?.gradeLevel));
  const selectedRating=scoreRecord(s.name,s.district);
- let found=eligible.filter(f=>{const zone=zoneNameKey(canonical(f.properties?.school)).replace(/\bk\s*4\b/g,'').trim();const zoneRating=scoreRecord(f.properties?.school,s.district);return zone===target||!!(selectedRating?.id&&zoneRating?.id===selectedRating.id)});
+ let found=eligible.filter(f=>{const zone=zoneNameKey(canonical(f.properties?.school)).replace(/\bk\s*4\b/g,'').trim();const zoneRating=scoreRecord(f.properties?.school,s.district);return zone===target||!!(selectedRating?.id&&(zoneRating?.id===selectedRating.id||(s.district==='LISD'&&f.properties?.campusId===selectedRating.id)))});
  if(!found.length&&s.district==='PISD'&&geo===state.zoneData.PISD_LOOKUP){found=(state.zoneData.PISD||[]).filter(f=>levels.includes(f.properties?.gradeLevel)&&zoneNameKey(canonical(f.properties?.school)).replace(/\bk\s*4\b/g,'').trim()===target)}
  // Allen's recent campus names sometimes add honorees' full names, while the GIS uses only surnames.
  // Use a last-name alias only if it uniquely identifies a campus within the grade-level/district.
@@ -435,5 +441,5 @@ function drawCommute(){const d=getZip(),v=state.times[d.z];el('routeStatus').inn
 let routeRequestSeq=0;
 async function drawSelectedRoute(){if(!map||!state.dest)return;const seq=++routeRequestSeq;routeGroup.clearLayers();const d=getZip(),p=state.dest.ll;try{const uri='https://router.project-osrm.org/route/v1/driving/'+d.ll[1]+','+d.ll[0]+';'+p[1]+','+p[0]+'?overview=full&geometries=geojson';const r=await fetch(uri);if(!r.ok)throw Error('route HTTP '+r.status);const j=await r.json();if(seq!==routeRequestSeq||d.z!==state.zip)return;const line=j.routes?.[0]?.geometry;if(line){L.geoJSON(line,{style:{color:'#1d57d4',weight:4,opacity:.8}}).addTo(routeGroup);const mid=line.coordinates[Math.floor(line.coordinates.length/2)],minutes=j.routes?.[0]?.duration;if(mid&&Number.isFinite(minutes))L.marker([mid[1],mid[0]],{interactive:false,icon:L.divIcon({className:'',html:'<span class="route-label">ZIP 대표점 '+Math.round(minutes/60)+'분</span>',iconSize:[120,30]})}).addTo(routeGroup)}}catch(e){if(seq===routeRequestSeq)console.warn('route overlay',e)}}
 document.addEventListener('DOMContentLoaded',async()=>{try{const r=await fetch('./dfw-demographics.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const j=await r.json();if(j.year!==2024||!Array.isArray(j.data)||j.data.length!==292)throw Error('DFW 데이터 형식 오류');const existing=new Map(DATA.map(d=>[d.z,d]));for(const row of j.data){const prior=existing.get(row.z);if(prior){const name=prior.name;Object.assign(prior,row,{name})}else DATA.push(row)}}catch(e){console.error('DFW demographics:',e);toast('DFW 통계 데이터를 불러오지 못해 기존 11개 지역만 표시합니다.')}try{const r=await fetch('./jpm-outside-dfw.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);outsideData=await r.json();if(!Array.isArray(outsideData.data)||!Array.isArray(outsideData.shapes?.features))throw Error('주변 ZIP 데이터 형식 오류');for(const d of outsideData.data){Object.assign(d,outsideData.race[d.z]||{},{jpmMinutes:outsideData.minutes[d.z]??null});DATA.push(d)}}catch(e){console.error('주변 ZIP 자료 오류:',e);toast('DFW 바깥 일부 ZIP을 불러오지 못했습니다.')}init()});
-</script><script src="./rating-context.js?v=1"></script><script src="./school-identity.js?v=1"></script><script src="./school-assignment.js?v=2"></script><script src="./home-lookup-v2.js?v=7"></script><script src="./allen-lookup.js?v=4"></script><script src="./candidate-compare.js?v=4"></script></body></html>
+</script><script src="./rating-context.js?v=1"></script><script src="./school-identity.js?v=1"></script><script src="./school-assignment.js?v=2"></script><script src="./home-lookup-v2.js?v=8"></script><script src="./allen-lookup.js?v=4"></script><script src="./candidate-compare.js?v=4"></script></body></html>
 
