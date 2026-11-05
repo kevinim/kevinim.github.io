@@ -66,7 +66,7 @@ function renderHome(){
 function refreshHomeOffice(){if(!home)return;homeVersion++;homeRouteRequest?.abort();if(homeRouteLayer)homeRouteLayer.clearLayers();renderHome()}
 function refreshHomeSchools(){if(home){homeVersion++;homeRouteRequest?.abort();renderHome()}}
 function useHomeCandidate(candidate){
-  if(!map){el('homeStatus').textContent='지도가 아직 준비되지 않았습니다. 잠시 후 다시 선택하세요.';return}
+  if(!map){el('homeStatus').textContent='지도가 아직 준비되지 않았습니다. 잠시 후 주소 검색을 다시 눌러 주세요.';return false}
   homeVersion++;homeRouteRequest?.abort();
   home={address:candidate.address,ll:[candidate.location.y,candidate.location.x]};
   el('homeCandidates').replaceChildren();
@@ -74,7 +74,7 @@ function useHomeCandidate(candidate){
   homeMarker=L.marker(home.ll,{zIndexOffset:4000,icon:L.divIcon({className:'',html:'<svg class="house-pin" width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"><path d="M4 19L21 4l17 15h-4v17H8V19z" fill="white" stroke="#a72e2e" stroke-width="2"/><path d="M3 19L21 3l18 16-3 3L21 9 6 22z" fill="#d63737" stroke="white" stroke-width="1.5"/><path d="M18 36V24h7v12" fill="#d63737"/></svg>',iconSize:[42,42],iconAnchor:[21,37]}),title:'HOME'}).addTo(map).bindPopup('<b>HOME</b><br>'+escape(home.address));
   const matches=homeZipMatches(home.ll);
   if(matches.length===1)selectZip(matches[0].z,false);
-  map.setView(home.ll,13);renderHome();drawSchools();drawList();el('homeStatus').textContent='검색 결과 위치를 지도에 표시했습니다. 주소와 핀을 확인하세요.';
+  map.setView(home.ll,13);renderHome();drawSchools();drawList();el('homeStatus').textContent='검색 결과 위치를 지도에 표시했습니다. 주소와 핀을 확인하세요.';return true;
 }
 async function searchHome(event){
   event.preventDefault();const address=el('homeAddress').value.trim();clearHome();
@@ -85,7 +85,7 @@ async function searchHome(event){
     homeCandidates=candidates;
     if(!candidates.length){el('homeStatus').textContent='주소를 찾지 못했습니다. 도시와 ZIP을 포함해 다시 입력하세요.';return}
     candidates.sort((a,b)=>(Number.isFinite(b.score)?b.score:-1)-(Number.isFinite(a.score)?a.score:-1));
-    const best=candidates[0];el('homeSearch').disabled=false;useHomeCandidate(best);
+    const best=candidates[0];el('homeSearch').disabled=false;if(!useHomeCandidate(best))return;
     const requestedZip=[...address.matchAll(/\b\d{5}(?:-\d{4})?\b/g)].at(-1),returnedZip=[...best.address.matchAll(/\b\d{5}(?:-\d{4})?\b/g)].at(-1);const zipWarning=requestedZip&&returnedZip&&requestedZip[0].slice(0,5)!==returnedZip[0].slice(0,5)?' 입력한 ZIP과 검색된 ZIP이 다릅니다.':'';el('homeStatus').textContent='자동 선택: '+best.address+' · 일치도 '+(Number.isFinite(best.score)?Math.round(best.score):'미확인')+'.'+zipWarning+' 주소와 지도 위치를 확인하세요.';
   }catch(error){if(error.name!=='AbortError'&&version===homeVersion)el('homeStatus').textContent='주소 검색에 실패했습니다. 연결 상태를 확인한 뒤 다시 시도하세요.'}
   finally{if(version===homeVersion)el('homeSearch').disabled=false}
