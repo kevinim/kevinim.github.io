@@ -361,7 +361,7 @@ async function loadBoundaryData(){
    return x.label+': '+state.zoneData[x.district].length+'개';
   }catch(e){console.error('Zone data '+x.label,e);state.zoneData[x.district]=[];return x.label+': 오류 ('+e.message+')'}
  }));
- state.zoneReady=true;window.refreshCandidateComparisons?.();
+ state.assignmentLoadFailed=results.some(x=>x.includes(': 오류 ('));state.zoneReady=true;window.refreshCandidateComparisons?.();
  el('zoneDatasetStatus').innerHTML=results.map(escape).join('<br>')+'<br><b>Plano·Allen은 과거 자료 · Lewisville은 적용 학년도 미확인</b>';
  if(state.selectedSchool)drawBoundary();
  if(typeof refreshHomeSchools==='function')refreshHomeSchools();drawSchools();drawList();
@@ -430,5 +430,5 @@ function drawCommute(){const d=getZip(),v=state.times[d.z];el('routeStatus').inn
 let routeRequestSeq=0;
 async function drawSelectedRoute(){if(!map||!state.dest)return;const seq=++routeRequestSeq;routeGroup.clearLayers();const d=getZip(),p=state.dest.ll;try{const uri='https://router.project-osrm.org/route/v1/driving/'+d.ll[1]+','+d.ll[0]+';'+p[1]+','+p[0]+'?overview=full&geometries=geojson';const r=await fetch(uri);if(!r.ok)throw Error('route HTTP '+r.status);const j=await r.json();if(seq!==routeRequestSeq||d.z!==state.zip)return;const line=j.routes?.[0]?.geometry;if(line){L.geoJSON(line,{style:{color:'#1d57d4',weight:4,opacity:.8}}).addTo(routeGroup);const mid=line.coordinates[Math.floor(line.coordinates.length/2)],minutes=j.routes?.[0]?.duration;if(mid&&Number.isFinite(minutes))L.marker([mid[1],mid[0]],{interactive:false,icon:L.divIcon({className:'',html:'<span class="route-label">ZIP 대표점 '+Math.round(minutes/60)+'분</span>',iconSize:[120,30]})}).addTo(routeGroup)}}catch(e){if(seq===routeRequestSeq)console.warn('route overlay',e)}}
 document.addEventListener('DOMContentLoaded',async()=>{try{const r=await fetch('./dfw-demographics.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const j=await r.json();if(j.year!==2024||!Array.isArray(j.data)||j.data.length!==292)throw Error('DFW 데이터 형식 오류');const existing=new Map(DATA.map(d=>[d.z,d]));for(const row of j.data){const prior=existing.get(row.z);if(prior){const name=prior.name;Object.assign(prior,row,{name})}else DATA.push(row)}}catch(e){console.error('DFW demographics:',e);toast('DFW 통계 데이터를 불러오지 못해 기존 11개 지역만 표시합니다.')}try{const r=await fetch('./jpm-outside-dfw.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);outsideData=await r.json();if(!Array.isArray(outsideData.data)||!Array.isArray(outsideData.shapes?.features))throw Error('주변 ZIP 데이터 형식 오류');for(const d of outsideData.data){Object.assign(d,outsideData.race[d.z]||{},{jpmMinutes:outsideData.minutes[d.z]??null});DATA.push(d)}}catch(e){console.error('주변 ZIP 자료 오류:',e);toast('DFW 바깥 일부 ZIP을 불러오지 못했습니다.')}init()});
-</script><script src="./home-lookup-v2.js?v=4"></script><script src="./allen-lookup.js?v=2"></script><script src="./candidate-compare.js?v=3"></script></body></html>
+</script><script src="./school-assignment.js?v=1"></script><script src="./home-lookup-v2.js?v=5"></script><script src="./allen-lookup.js?v=3"></script><script src="./candidate-compare.js?v=4"></script></body></html>
 

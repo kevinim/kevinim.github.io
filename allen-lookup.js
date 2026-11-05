@@ -13,9 +13,10 @@ function matchAllenAddress(address, rows) {
 }
 if (typeof module !== 'undefined') module.exports = { matchAllenAddress };
 if (typeof document !== 'undefined') {
-  let allenRows = null;
+  let allenRows = null, allenFailed = false;
   window.allenAssignment = address => allenRows ? matchAllenAddress(address, allenRows) : null;
   window.allenAssignmentLoading = () => allenRows === null;
+  window.allenAssignmentFailed = () => allenFailed;
   window.allenSchoolRating = (name, type) => {
     const key = canonical(name);
     const matches = (state.ratings || []).filter(r => r.district === 'AISD' && (type === 'freshman' ? canonical(r.name).includes('freshman') : schoolType(r.name) === type) && key.split(' ').every(word => canonical(r.name).split(' ').includes(word)));
@@ -24,5 +25,5 @@ if (typeof document !== 'undefined') {
   fetch('./allen-address-schools.json').then(r => { if (!r.ok) throw Error('Allen address data'); return r.json(); }).then(data => {
     if (!Array.isArray(data.rows)) throw Error('Allen address data format');
     allenRows = data.rows; window.refreshCandidateComparisons?.(); if (typeof refreshHomeSchools === 'function') refreshHomeSchools();
-  }).catch(error => { allenRows = []; console.error('Allen address lookup:', error); window.refreshCandidateComparisons?.(); });
+  }).catch(error => { allenRows = []; allenFailed = true; console.error('Allen address lookup:', error); window.refreshCandidateComparisons?.(); if (typeof refreshHomeSchools === 'function') refreshHomeSchools(); });
 }
