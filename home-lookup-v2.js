@@ -55,7 +55,8 @@ function renderHome(){
   if(!home)return;
   const matches=homeZipMatches(home.ll),schools=homeFriscoMatches(home.ll);home.matches=schools;
   const zipText=matches.length?matches.map(d=>escape(d.z+' · '+d.name)).join(', '):'지도에 포함된 ZIP 경계를 확인하지 못했습니다.';
-  const schoolText=!state.zoneReady?'학교 경계 데이터를 불러오는 중입니다.':schools.length?'<b>프리스코 2026–27 경계상 후보</b><br>'+schools.map(f=>escape(f.properties.school+' · '+f.properties.grades)).join('<br>')+(schools.some(f=>/nelson/i.test(f.properties.school))?'<br><b>넬슨 배정구역 신규 학생은 웨스터 배정 예외를 확인하세요.</b>':''):'이 위치에 적용할 수 있는 검증된 2026–27 학교별 경계를 확인하지 못했습니다.';
+  const allen=window.allenAssignment?.(home.address);
+  const schoolText=allen?'<b>확인 필요 · 앨런 공식 주소표 (학년도 미표기)</b><br>'+[[allen[2],'elementary','K–6'],[allen[3],'middle','7–8'],[allen[4],'freshman','9'],[allen[5],'high','10–12']].map(([n,type,g])=>escape(n+' · '+g)+' <b>'+escape(allenSchoolRating(n,type))+'</b>').join('<br>'):!state.zoneReady?'학교 경계 데이터를 불러오는 중입니다.':schools.length?'<b>프리스코 2026–27 경계상 후보</b><br>'+schools.map(f=>escape(f.properties.school+' · '+f.properties.grades)).join('<br>')+(schools.some(f=>/nelson/i.test(f.properties.school))?'<br><b>넬슨 배정구역 신규 학생은 웨스터 배정 예외를 확인하세요.</b>':''):'이 주소의 학교 배정을 자동으로 연결하지 못했습니다. 학교가 없다는 뜻은 아닙니다. 학군 공식 조회가 필요합니다.';
   const official='<details><summary>학군별 공식 배정 확인</summary>'+Object.entries(OFFICIAL).map(([id,url])=>'<a class="cardlink" href="'+escape(url)+'" target="_blank" rel="noopener">'+escape(({FISD:'프리스코',PISD:'플레이노',AISD:'앨런',PROSPER:'프로스퍼',LISD:'루이스빌',CFB:'캐럴턴–파머스브랜치'})[id]||id)+' ↗</a>').join('')+'</details>';
   const office=el('destination').value.trim();
   el('homeSchoolInfo').innerHTML='<hr class="rule"><h2>집 주소 학교 후보</h2><div class="source">'+escape(home.address)+'</div><p>'+schoolText+'</p><div class="source">경계·학년·예외를 학군에서 확인하세요. 학교 위치나 ZIP은 배정을 보장하지 않습니다.</div>'+official;
