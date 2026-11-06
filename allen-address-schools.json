@@ -13508,5 +13508,5 @@
       "Allen High School"
     ]
   ],
-  "notes": "Current Allen ISD public Find-A-School 2026-11-06 has 1,689 visible street-range rows; this cache has 1,688 parseable/accepted rows. Newly observed 2050 Peak St (Evans/Ereckson/Lowery/Allen HS) added. Newly observed Moss Haven PL has invalid published range '2009 – 202-216' and is intentionally excluded until corrected by district; source academic year is not stated."
+  "notes": "Allen ISD official Find-A-School page (2026-11-06) lists 1,689 street-range rows. Local snapshot stores 1,688 rows including newly confirmed Peak St 2050. Exactly 1,687 cached rows have parseable numeric ranges. Two malformed official rows: Moss Haven PL '2009 – 202-216' (quarantined and omitted), Crestview Heights '2050 Peak St' (retained as source provenance but parser intentionally refuses it). Official source does NOT specify current academic year."
 }
