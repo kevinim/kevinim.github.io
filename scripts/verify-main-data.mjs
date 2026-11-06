@@ -9,6 +9,7 @@ const audit = readJson('school-data-provenance.json');
 const plano = readJson('plano-locator-reference.geojson');
 const allen = readJson('allen-attendance-historical.geojson');
 const prosper = readJson('prosper-celina-reference-2026.geojson');
+const prosperCurrent = readJson('prosper-attendance-2026.geojson');
 const demographics = readJson('dfw-demographics.json');
 const rating = readJson('tea-ratings-2026.json');
 const location = readJson('nces-locations-2024.json');
@@ -72,6 +73,60 @@ test('Allen GIS remains historical (never falsely current)',()=>{
   assert.equal(allen.type,'FeatureCollection');
   assert.equal(allen.features.length,20);
   assert.ok(allen.features.every(x=>x.properties.current===false));
+});
+test('all 31 Prosper ISD 2026–27 school zones acquired from official live locator',()=>{
+  assert.equal(prosperCurrent.type,'FeatureCollection');
+  assert.equal(prosperCurrent.metadata.district,'PROSPER');
+  assert.equal(prosperCurrent.metadata.sourceYear,'2026–27');
+  assert.equal(prosperCurrent.metadata.currentYearConfirmed,true);
+  assert.equal(prosperCurrent.metadata.recordCount,31);
+  assert.equal(prosperCurrent.metadata.polygonPartCount,33);
+  assert.equal(prosperCurrent.metadata.ringCount,35);
+  assert.equal(prosperCurrent.metadata.vertexCount,1706);
+  assert.deepEqual(prosperCurrent.metadata.gradeCounts,{elementary:20,middle:7,high:4});
+  assert.ok(prosperCurrent.metadata.officialLocator.includes('infofinderi.com/ifi/?cid=PI5FFG7RYZ1'));
+  assert.ok(prosperCurrent.metadata.sourceGroupNames.every(x=>x.startsWith('2026-2027')));
+  assert.equal(prosperCurrent.features.length,31);
+});
+test('Prosper official current boundaries are full, valid and source ID-linked',()=>{
+  const seen=new Set(),grades={elementary:0,middle:0,high:0},ratingById=new Map(rating.data.filter(x=>x.district==='PROSPER').map(x=>[x.id,x]));
+  let vertices=0,rings=0,parts=0;
+  for(const f of prosperCurrent.features){
+    const p=f.properties;
+    assert.equal(f.type,'Feature');
+    assert.equal(p.sourceDistrict,'PROSPER');
+    assert.equal(p.current,true);
+    assert.equal(p.sourceYearConfirmed,true);
+    assert.equal(p.sourceVintage,'2026–27');
+    assert.equal(p.schoolYear,'2026–27');
+    assert.ok(/^043912\d{3}$/.test(p.campusId));
+    assert.ok(!seen.has(p.campusId));seen.add(p.campusId);
+    assert.ok(ratingById.has(p.campusId)||(p.campusId==='043912048'&&p.school==='Jim Bridges Middle School'));
+    grades[p.gradeLevel]++;
+    assert.equal(f.geometry.type,'MultiPolygon');
+    assert.ok(f.geometry.coordinates.length);
+    for(const polygon of f.geometry.coordinates){
+      parts++;assert.ok(polygon.length);
+      for(const ring of polygon){
+        rings++;vertices+=ring.length;
+        assert.ok(ring.length>=4);
+        assert.deepEqual(ring[0],ring.at(-1));
+        for(const [x,y] of ring){
+          assert.ok(Number.isFinite(x)&&x > -97.5&&x < -96.2);
+          assert.ok(Number.isFinite(y)&&y >32.8&&y<33.6);
+        }
+      }
+    }
+  }
+  assert.deepEqual(grades,{elementary:20,middle:7,high:4});
+  assert.deepEqual([parts,rings,vertices],[33,35,1706]);
+});
+test('Prosper official source acquired safely, not yet used for home assignment',()=>{
+  assert.ok(readText('scripts/fetch-prosper-2026-zones.mjs').includes('GetRedistricts'));
+  assert.ok(!html.includes("url:'./prosper-attendance-2026.geojson'"));
+  assert.ok(html.includes("./prosper-celina-reference-2026.geojson"));
+  assert.ok(readText('home-lookup-v2.js').includes("homeZoneMatches(item.ll,'LISD')"));
+  assert.ok(!readText('home-lookup-v2.js').includes("homeZoneMatches(item.ll,'PROSPER')"));
 });
 test('Prosper/Celina government GIS is validated as partial, never current',()=>{
   assert.equal(prosper.type,'FeatureCollection');
