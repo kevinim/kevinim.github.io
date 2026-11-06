@@ -129,7 +129,8 @@ test('Prosper official current boundaries are full, valid and source ID-linked',
 test('cross-validated Prosper 2026-27 source is live in campus map and home assignment',()=>{
   const inline=inlineScripts.join('\n'),home=readText('home-lookup-v2.js');
   assert.ok(readText('scripts/fetch-prosper-2026-zones.mjs').includes('GetRedistricts'));
-  assert.ok(readText('scripts/check-prosper-official-locator.mjs').includes('SearchLocation'));
+  assert.ok(readText('scripts/check-prosper-official-locator.mjs').includes('officialSearchUrl'));
+  assert.ok(officialChecks.metadata.officialSearchUrl.endsWith('/SearchLocation'));
   assert.ok(inline.includes("district:'PROSPER',url:'./prosper-attendance-2026.geojson'"));
   assert.ok(!inline.includes("{district:'PROSPER_REF'"));
   assert.ok(!inline.includes("url:'./prosper-celina-reference-2026.geojson'"));
