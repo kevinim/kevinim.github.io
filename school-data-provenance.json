@@ -55,7 +55,24 @@
         "https://services1.arcgis.com/x4nhme9V33KOzAfr/arcgis/rest/services/Prosper_ISD_Elementary_Zones/FeatureServer/0",
         "https://services1.arcgis.com/x4nhme9V33KOzAfr/arcgis/rest/services/Prosper_ISD_Middle_Zones/FeatureServer/8",
         "https://services1.arcgis.com/x4nhme9V33KOzAfr/arcgis/rest/services/PISDHighZones/FeatureServer/43"
-      ]
+      ],
+      "acquiredOfficial2026_27": {
+        "status": "downloaded-and-validated-staged",
+        "file": "prosper-attendance-2026.geojson",
+        "campusCount": 31,
+        "polygonParts": 33,
+        "rings": 35,
+        "schoolYear": "2026–27",
+        "isActiveInApp": false,
+        "officialSource": "https://www.infofinderi.com/ifi/?cid=PI5FFG7RYZ1",
+        "apiSource": "https://www.infofinderi.com/ifi/ws/RedistrictRequest.asmx/GetRedistricts?clientId=PI5FFG7RYZ1",
+        "pdfSources": {
+          "elementary": "https://aptg.co/vgDpkm",
+          "middle": "https://aptg.co/ty_VGv",
+          "high": "https://aptg.co/hmz4Ps"
+        },
+        "remainingGate": "QA the full address-to-school flow and compare representative homes and edge cases in district locator before replacing Celina partial reference in live dashboard"
+      }
     },
     {
       "code": "CFB",
@@ -109,6 +126,13 @@
       "count": 13,
       "unit": "local-government partial reference polygons",
       "freshness": "7 elementary, 3 middle, 3 high polygons only in City of Celina's Prosper ISD study area. Not guaranteed 2026–27 and not used for home assignment."
+    },
+    {
+      "file": "prosper-attendance-2026.geojson",
+      "period": "official Prosper ISD current locator explicitly 2026–27",
+      "count": 31,
+      "unit": "20 elementary, 7 middle, 4 high school zones",
+      "freshness": "Latest year verified; official source acquired and staged in repo, not yet used by production map or home assignment until address cross-validation."
     }
   ]
 }
