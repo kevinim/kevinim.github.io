@@ -45,25 +45,25 @@
     {
       "code": "PROSPER",
       "name": "Prosper ISD",
-      "status": "partial-reference",
-      "geometryYear": "source edited September 9, 2026; no confirmed academic school-year",
+      "status": "current-source",
+      "geometryYear": "2026–27",
       "officialLookup": "https://www.prosper-isd.net/page/attendance-boundaries/",
-      "geometryUse": "Orange dashed school-click reference for 7 elementary, 3 middle, 3 high zones within City of Celina study area only. Source academic year unspecified. Not used for home address assignment; not districtwide. 2026-27 Prosper approved official map remains authoritative.",
-      "featureCount": 13,
-      "localFile": "prosper-celina-reference-2026.geojson",
+      "geometryUse": "Official 2026–27 polygon map and address-school candidate mapping. Independently compared all 31 school interior locations plus 12 near-border sides with current public Infofinder i SearchLocation response; 43/43 school code matches. Site does not guarantee enrollment; confirm actual residential address, grade, special programs and exceptions with district.",
+      "featureCount": 31,
+      "localFile": "prosper-attendance-2026.geojson",
       "mapSources": [
-        "https://services1.arcgis.com/x4nhme9V33KOzAfr/arcgis/rest/services/Prosper_ISD_Elementary_Zones/FeatureServer/0",
-        "https://services1.arcgis.com/x4nhme9V33KOzAfr/arcgis/rest/services/Prosper_ISD_Middle_Zones/FeatureServer/8",
-        "https://services1.arcgis.com/x4nhme9V33KOzAfr/arcgis/rest/services/PISDHighZones/FeatureServer/43"
+        "https://www.infofinderi.com/ifi/ws/RedistrictRequest.asmx/GetRedistrict?clientId=PI5FFG7RYZ1&redistrictId=1",
+        "https://www.infofinderi.com/ifi/ws/RedistrictRequest.asmx/GetRedistrict?clientId=PI5FFG7RYZ1&redistrictId=2",
+        "https://www.infofinderi.com/ifi/ws/RedistrictRequest.asmx/GetRedistrict?clientId=PI5FFG7RYZ1&redistrictId=3"
       ],
       "acquiredOfficial2026_27": {
-        "status": "downloaded-and-validated-staged",
+        "status": "validated-and-live-activated",
         "file": "prosper-attendance-2026.geojson",
         "campusCount": 31,
         "polygonParts": 33,
         "rings": 35,
         "schoolYear": "2026–27",
-        "isActiveInApp": false,
+        "isActiveInApp": true,
         "officialSource": "https://www.infofinderi.com/ifi/?cid=PI5FFG7RYZ1",
         "apiSource": "https://www.infofinderi.com/ifi/ws/RedistrictRequest.asmx/GetRedistricts?clientId=PI5FFG7RYZ1",
         "pdfSources": {
@@ -71,7 +71,18 @@
           "middle": "https://aptg.co/ty_VGv",
           "high": "https://aptg.co/hmz4Ps"
         },
-        "remainingGate": "QA the full address-to-school flow and compare representative homes and edge cases in district locator before replacing Celina partial reference in live dashboard"
+        "remainingGate": "Continue manual residential address test cases / apartment and special-program exception validation as advisory, not a substitute for official district enrollment eligibility.",
+        "crossValidation": {
+          "date": "2026-11-06",
+          "method": "Independent public Infofinder i SearchLocation point-to-school lookup",
+          "interiorZonesChecked": 31,
+          "borderPointChecks": 12,
+          "totalPassed": 43,
+          "totalChecked": 43,
+          "fixture": "tests/prosper-official-location-checks-2026.json",
+          "repeatableScript": "scripts/check-prosper-official-locator.mjs",
+          "limitation": "Synthetic map coordinates, not verified street addresses or enrollment exceptions."
+        }
       }
     },
     {
@@ -125,14 +136,14 @@
       "period": "last edited 2026-09-09; school year not stated",
       "count": 13,
       "unit": "local-government partial reference polygons",
-      "freshness": "7 elementary, 3 middle, 3 high polygons only in City of Celina's Prosper ISD study area. Not guaranteed 2026–27 and not used for home assignment."
+      "freshness": "Partial 13-shape City of Celina September 9 2026 reference only, year unconfirmed; retained as archival rollback, not loaded or used for school/home assignment."
     },
     {
       "file": "prosper-attendance-2026.geojson",
       "period": "official Prosper ISD current locator explicitly 2026–27",
       "count": 31,
       "unit": "20 elementary, 7 middle, 4 high school zones",
-      "freshness": "Latest year verified; official source acquired and staged in repo, not yet used by production map or home assignment until address cross-validation."
+      "freshness": "Official 2026–27 Infofinder i 31 zones; 43/43 cross-checks succeeded across every school interior and 6 campus-border transitions. Active in production map and home school candidate engine; actual address exceptions require district verification."
     }
   ]
 }
