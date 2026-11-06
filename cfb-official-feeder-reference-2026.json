@@ -1,0 +1,206 @@
+{
+  "source": "https://www.cfbisd.edu/enrollment-page/frequently-asked-questions-about-enrollment",
+  "corroboratingDistrictPage": "https://www.cfbisd.edu/students/transfer-enrollment-page/transfer-guidelines",
+  "sourceType": "official CFBISD 2026–27 feeder-pattern table; NOT geographic school attendance polygons",
+  "retrieved": "2026-11-06",
+  "academicYearExplicit": "2026–27",
+  "notParcelGeometries": true,
+  "notAddressSchoolLookup": true,
+  "exceptionNote": "Feeder links are not a substitute for the official GuideK12 property and apartment address search. Pre-K and K–5 bilingual locations can differ from the zoned elementary school; high school is not safely derivable from middle alone (McLaughlin-Strickland lists Perry then Turner).",
+  "counts": {
+    "zonedElementary": 21,
+    "middle": 5,
+    "high": 4
+  },
+  "rows": [
+    {
+      "zonedElementary": "Blair",
+      "preK_Bilingual": "Farmers Branch",
+      "preK": "Farmers Branch",
+      "k5_Bilingual": "Blair",
+      "k5": "Blair",
+      "middle": "Field",
+      "high": "Turner"
+    },
+    {
+      "zonedElementary": "Blanton",
+      "preK_Bilingual": "Blanton",
+      "preK": "Blanton",
+      "k5_Bilingual": "Carrollton",
+      "k5": "Blanton",
+      "middle": "Perry",
+      "high": "Smith"
+    },
+    {
+      "zonedElementary": "Carrollton",
+      "preK_Bilingual": "Carrollton",
+      "preK": "Carrollton",
+      "k5_Bilingual": "Carrollton",
+      "k5": "Carrollton",
+      "middle": "Perry",
+      "high": "Smith"
+    },
+    {
+      "zonedElementary": "Country Place",
+      "preK_Bilingual": "Country Place",
+      "preK": "Country Place",
+      "k5_Bilingual": "McKamy",
+      "k5": "Country Place",
+      "middle": "Polk",
+      "high": "Smith"
+    },
+    {
+      "zonedElementary": "Davis",
+      "preK_Bilingual": "Kent",
+      "preK": "Kent",
+      "k5_Bilingual": "Davis",
+      "k5": "Davis",
+      "middle": "Blalack",
+      "high": "Creekview"
+    },
+    {
+      "zonedElementary": "Farmers Branch",
+      "preK_Bilingual": "Farmers Branch",
+      "preK": "Farmers Branch",
+      "k5_Bilingual": "Farmers Branch",
+      "k5": "Farmers Branch",
+      "middle": "Field",
+      "high": "Turner"
+    },
+    {
+      "zonedElementary": "Freeman",
+      "preK_Bilingual": "Riverchase",
+      "preK": "Freeman",
+      "k5_Bilingual": "Riverchase",
+      "k5": "Freeman",
+      "middle": "Bush",
+      "high": "Ranchview"
+    },
+    {
+      "zonedElementary": "Good",
+      "preK_Bilingual": "Country Place",
+      "preK": "Country Place",
+      "k5_Bilingual": "Good",
+      "k5": "Good",
+      "middle": "Perry",
+      "high": "Smith"
+    },
+    {
+      "zonedElementary": "Kent",
+      "preK_Bilingual": "Kent",
+      "preK": "Kent",
+      "k5_Bilingual": "Thompson",
+      "k5": "Kent",
+      "middle": "Blalack",
+      "high": "Creekview"
+    },
+    {
+      "zonedElementary": "La Villita",
+      "preK_Bilingual": "Riverchase",
+      "preK": "La Villita",
+      "k5_Bilingual": "Riverchase",
+      "k5": "La Villita",
+      "middle": "Bush",
+      "high": "Ranchview"
+    },
+    {
+      "zonedElementary": "Landry",
+      "preK_Bilingual": "Riverchase",
+      "preK": "Landry",
+      "k5_Bilingual": "Riverchase",
+      "k5": "Landry",
+      "middle": "Bush",
+      "high": "Ranchview"
+    },
+    {
+      "zonedElementary": "Las Colinas",
+      "preK_Bilingual": "Riverchase",
+      "preK": "Las Colinas",
+      "k5_Bilingual": "Riverchase",
+      "k5": "Las Colinas",
+      "middle": "Bush",
+      "high": "Ranchview"
+    },
+    {
+      "zonedElementary": "McKamy",
+      "preK_Bilingual": "McKamy",
+      "preK": "McKamy",
+      "k5_Bilingual": "McKamy",
+      "k5": "McKamy",
+      "middle": "Polk",
+      "high": "Smith"
+    },
+    {
+      "zonedElementary": "McLaughlin-Strickland",
+      "preK_Bilingual": "McLaughlin-Strickland",
+      "preK": "McLaughlin-Strickland",
+      "k5_Bilingual": "McLaughlin-Strickland",
+      "k5": "McLaughlin-Strickland",
+      "middle": "Perry",
+      "high": "Turner"
+    },
+    {
+      "zonedElementary": "McWhorter",
+      "preK_Bilingual": "Kent",
+      "preK": "Kent",
+      "k5_Bilingual": "McWhorter",
+      "k5": "McWhorter",
+      "middle": "Polk",
+      "high": "Smith"
+    },
+    {
+      "zonedElementary": "Rainwater",
+      "preK_Bilingual": "Rainwater",
+      "preK": "Rainwater",
+      "k5_Bilingual": "Thompson",
+      "k5": "Rainwater",
+      "middle": "Blalack",
+      "high": "Creekview"
+    },
+    {
+      "zonedElementary": "Riverchase",
+      "preK_Bilingual": "Riverchase",
+      "preK": "Riverchase",
+      "k5_Bilingual": "Riverchase",
+      "k5": "Riverchase",
+      "middle": "Bush",
+      "high": "Ranchview"
+    },
+    {
+      "zonedElementary": "Rosemeade",
+      "preK_Bilingual": "Kent",
+      "preK": "Rosemeade",
+      "k5_Bilingual": "Thompson",
+      "k5": "Rosemeade",
+      "middle": "Blalack",
+      "high": "Creekview"
+    },
+    {
+      "zonedElementary": "Sheffield",
+      "preK_Bilingual": "Sheffield",
+      "preK": "Sheffield",
+      "k5_Bilingual": "Sheffield",
+      "k5": "Sheffield",
+      "middle": "Polk",
+      "high": "Smith"
+    },
+    {
+      "zonedElementary": "Stark",
+      "preK_Bilingual": "Stark",
+      "preK": "Stark",
+      "k5_Bilingual": "Stark",
+      "k5": "Stark",
+      "middle": "Field",
+      "high": "Turner"
+    },
+    {
+      "zonedElementary": "Thompson",
+      "preK_Bilingual": "Rainwater",
+      "preK": "Rainwater",
+      "k5_Bilingual": "Thompson",
+      "k5": "Thompson",
+      "middle": "Blalack",
+      "high": "Creekview"
+    }
+  ]
+}

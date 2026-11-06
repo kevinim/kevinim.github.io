@@ -122,7 +122,18 @@
       "geometryYear": "zones approved March 6, 2025, referenced by 2026–27 enrollment search",
       "officialLookup": "https://www.cfbisd.edu/students/school-maps-locator-system",
       "geometryUse": "Official GuideK12 current address search linked directly; no validated export available in this dashboard",
-      "directLocator": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/"
+      "directLocator": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/",
+      "feederReference": {
+        "file": "cfb-official-feeder-reference-2026.json",
+        "source": "https://www.cfbisd.edu/enrollment-page/frequently-asked-questions-about-enrollment",
+        "checked": "2026-11-06",
+        "publishedSchoolYear": "2026–27",
+        "zonedElementaryCampuses": 21,
+        "uniqueMiddleSchools": 5,
+        "uniqueHighSchools": 4,
+        "notBoundaryGeometry": true,
+        "currentYearGeometryStillUnverified": true
+      }
     }
   ],
   "datasets": [
@@ -188,6 +199,13 @@
       "count": 1689,
       "unit": "official street-range assignment rows",
       "freshness": "1,689 official rows; 1,687 parseable/candidate rows, 2 malformed. Peak St added; one malformed Moss Haven omitted and one preexisting Crestview Heights rejected. NOT evidence 2019/2023 GIS zones are current."
+    },
+    {
+      "file": "cfb-official-feeder-reference-2026.json",
+      "period": "official 2026–27 feeder paths, posted by CFBISD",
+      "count": 21,
+      "unit": "elementary-to-middle/high feeder rows (with Pre-K and bilingual variants)",
+      "freshness": "2026–27 academic year EXPLICIT in source. These are official feeder paths only; no campus GIS boundary data and no address-level residency verification."
     }
   ]
 }

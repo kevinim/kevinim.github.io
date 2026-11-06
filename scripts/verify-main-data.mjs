@@ -12,6 +12,7 @@ const allen = readJson('allen-attendance-historical.geojson');
 const allenAddress = readJson('allen-address-schools.json');
 const allenAddressAudit = readJson('allen-official-address-source-audit-2026.json');
 const planoFeeder = readJson('plano-official-feeder-reference-2026.json');
+const cfbFeeder = readJson('cfb-official-feeder-reference-2026.json');
 const prosper = readJson('prosper-celina-reference-2026.geojson');
 const prosperCurrent = readJson('prosper-attendance-2026.geojson');
 const officialChecks = readJson('tests/prosper-official-location-checks-2026.json');
@@ -255,6 +256,27 @@ test('Prosper archival Celina reference stays disabled',()=>{
 test('Prosper new Jim Bridges school listed with no guessed coordinates',()=>{
   assert.ok(inlineScripts.join('\n').includes("name:'Jim Bridges Middle School',type:'middle',district:'PROSPER'"));
   assert.ok(inlineScripts.join('\n').includes("source:'Prosper ISD 2026–27 new campus"));
+});
+test('CFB official 2026–27 feeder table is accurate and never treated as GIS',()=>{
+  assert.equal(cfbFeeder.academicYearExplicit,'2026–27');
+  assert.equal(cfbFeeder.notParcelGeometries,true);
+  assert.equal(cfbFeeder.notAddressSchoolLookup,true);
+  assert.equal(cfbFeeder.counts.zonedElementary,21);
+  assert.equal(cfbFeeder.rows.length,21);
+  assert.equal(new Set(cfbFeeder.rows.map(x=>x.zonedElementary)).size,21);
+  assert.equal(new Set(cfbFeeder.rows.map(x=>x.middle)).size,5);
+  assert.equal(new Set(cfbFeeder.rows.map(x=>x.high)).size,4);
+  const sourceCfb=audit.districts.find(x=>x.code==='CFB');
+  assert.equal(sourceCfb.status,'lookup-only');
+  assert.equal(sourceCfb.feederReference.publishedSchoolYear,'2026–27');
+  assert.equal(sourceCfb.feederReference.notBoundaryGeometry,true);
+  const m=cfbFeeder.rows.find(x=>x.zonedElementary==='McLaughlin-Strickland');
+  assert.equal(m.middle,'Perry');assert.equal(m.high,'Turner');
+  const b=cfbFeeder.rows.find(x=>x.zonedElementary==='Blanton');
+  assert.equal(b.k5_Bilingual,'Carrollton');
+  assert.equal(b.k5,'Blanton');
+  assert.ok(html.includes('CFB 2026–27 공식 진학표'));
+  assert.ok(html.includes('진학표 21개 초등학교 경로 확인'));
 });
 test('CFB official current GuideK12 locator linked',()=>{
   assert.ok(html.includes('https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/'));

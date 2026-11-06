@@ -70,6 +70,10 @@ Neither the current Allen address table nor the separate City GIS has an explici
 - City of Allen official public GIS has elementary 16 + middle 3 polygons last marked 2023 and high 1 polygon marked 2019. These are **historical** references.
 - `allen-address-schools.json` is a separate **year-undated** official address-index reference. It is not a substitute for confirming enrollment eligibility. Allen ISD explicitly lists apartment/unit-level school-district exceptions; check actual building and unit in the official site.
 
+### CFBISD confirmed 2026–27 feeder patterns (not GIS) — 2026-11-06
+
+CFBISD's [official enrollment FAQ](https://www.cfbisd.edu/enrollment-page/frequently-asked-questions-about-enrollment) explicitly labels its feeder table **2026–27**. The 21 zoned elementary schools route to **5 middle** and **4 high** schools; the table also distinguishes Pre-K and bilingual assignments. The structured verbatim row snapshot is `cfb-official-feeder-reference-2026.json`. **No attendance-zone vectors or address-level entitlement are inferred.** The official 2026–27 [transfer guidelines](https://www.cfbisd.edu/students/transfer-enrollment-page/transfer-guidelines) independently confirm the academic-year scope. Specifically, McLaughlin-Strickland feeds Perry Middle then Turner High, so middle-school identity must **not** be used to infer high school. CFB remains **lookup-only** for GIS, and 2/6 current-year polygon coverage is unchanged.
+
 ## Demographics, ratings, locations and commute data
 
 | File or source | Coverage | Vintage / usage |
