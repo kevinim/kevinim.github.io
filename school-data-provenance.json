@@ -51,13 +51,16 @@
         "officialPage": "https://www.allenisd.org/page/findaschool",
         "checked": "2026-11-06",
         "officialTableRows": 1689,
-        "acceptedCachedRows": 1688,
+        "acceptedCachedRows": 1687,
         "previousRows": 1687,
         "acceptedNew": "2050 Peak St => Evans / Ereckson / Lowery / Allen High",
-        "quarantined": "Moss Haven PL '2009 – 202-216' invalid official street range",
+        "quarantined": "Two malformed published ranges: Moss Haven PL '2009 – 202-216' omitted; Crestview Heights '2050 Peak St' retained for provenance but rejected by parser.",
         "publishedSchoolYear": null,
         "geometryYearStillUnverified2026_27": true,
-        "doNotInferPolygons": true
+        "doNotInferPolygons": true,
+        "storedCachedRows": 1688,
+        "officialParseableRows": 1687,
+        "officialMalformedRows": 2
       }
     },
     {
@@ -184,7 +187,7 @@
       "period": "official Allen Find-A-School retrieved November 6, 2026; no explicit school year",
       "count": 1689,
       "unit": "official street-range assignment rows",
-      "freshness": "1688 usable cached entries; 2050 Peak St added; one malformed Moss Haven PL range excluded; NOT evidence that 2019/2023 GIS zones are current."
+      "freshness": "1,689 official rows; 1,687 parseable/candidate rows, 2 malformed. Peak St added; one malformed Moss Haven omitted and one preexisting Crestview Heights rejected. NOT evidence 2019/2023 GIS zones are current."
     }
   ]
 }
