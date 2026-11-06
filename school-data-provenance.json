@@ -1,0 +1,99 @@
+{
+  "lastVerified": "2026-11-05",
+  "activeSchoolYear": "2026–27",
+  "notes": "Audits data source and vintages, not guaranteed student assignments. Verify address + grade with the official ISD before leasing or purchasing.",
+  "districts": [
+    {
+      "code": "FISD",
+      "name": "Frisco ISD",
+      "status": "current-source",
+      "geometryYear": "2026–27",
+      "mapSource": "https://static.friscoisd.org/js/json/school.borders.2627.json",
+      "officialLookup": "https://www.friscoisd.org/page/2026-2027-zones/",
+      "geometryUse": "live display, individual residence exceptions remain"
+    },
+    {
+      "code": "PISD",
+      "name": "Plano ISD",
+      "status": "historical-reference",
+      "geometryYear": "2025–26",
+      "featureCount": 64,
+      "localFile": "plano-locator-reference.geojson",
+      "mapSource": "https://services4.arcgis.com/uBV8NRVfoRJv7qWn/arcgis/rest/services/Plano_ISD_School_Districts/FeatureServer",
+      "officialLookup": "https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder",
+      "geometryUse": "orange dashed reference; 2026–27 equivalence not established; no 2019 fallback"
+    },
+    {
+      "code": "AISD",
+      "name": "Allen ISD",
+      "status": "historical-reference",
+      "geometryYear": "2019 high / 2023 elementary and middle",
+      "featureCount": 20,
+      "localFile": "allen-attendance-historical.geojson",
+      "officialLookup": "https://www.allenisd.org/page/findaschool",
+      "geometryUse": "orange dashed reference; address-level school assignment from year-undated official published address table remains unverified"
+    },
+    {
+      "code": "LISD",
+      "name": "Lewisville ISD",
+      "status": "mixed-vintage-reference",
+      "geometryYear": "2025–26 high; elementary and middle source-year not explicitly recorded",
+      "mapSource": "https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/03c099e24d304c4fa0f4ce8a76c10062/data?f=json",
+      "officialLookup": "https://www.lisd.net/resources/families/school-locator",
+      "geometryUse": "orange dashed reference; web map named 2627 but high polygon source field SCHL_YEAR=2025-26"
+    },
+    {
+      "code": "PROSPER",
+      "name": "Prosper ISD",
+      "status": "lookup-only",
+      "geometryYear": "2026–27 approved map PDF, no verified GIS export",
+      "officialLookup": "https://www.prosper-isd.net/page/attendance-boundaries/",
+      "geometryUse": "no local assignment polygons"
+    },
+    {
+      "code": "CFB",
+      "name": "Carrollton–Farmers Branch ISD",
+      "status": "lookup-only",
+      "geometryYear": "zones approved March 6, 2025, referenced by 2026–27 enrollment search",
+      "officialLookup": "https://www.cfbisd.edu/students/school-maps-locator-system",
+      "geometryUse": "no local assignment polygons"
+    }
+  ],
+  "datasets": [
+    {
+      "file": "dfw-demographics.json",
+      "period": "2020–2024 ACS 5-year",
+      "count": 292,
+      "unit": "ZIP/ZCTA profiles",
+      "freshness": "Latest ACS 5-year ZCTA vintage available on 2026-11-05; 2021–2025 ACS 5-year scheduled December 2026."
+    },
+    {
+      "file": "tea-ratings-2026.json",
+      "period": "2026 preliminary campus ratings",
+      "count": 2282,
+      "unit": "campus records",
+      "freshness": "Downloaded November 3, 2026. Verify TEA revisions."
+    },
+    {
+      "file": "nces-locations-2024.json",
+      "period": "2024–25 schools",
+      "count": 2213,
+      "unit": "NCES campus location records",
+      "freshness": "Historical coordinate reference; independent school enrollment verification needed."
+    },
+    {
+      "file": "plano-locator-reference.geojson",
+      "period": "2025–26 ArcGIS layers",
+      "count": 64,
+      "unit": "school-boundary polygons",
+      "freshness": "Linked to official 2026–27 locator but not verified as 2026–27."
+    },
+    {
+      "file": "allen-attendance-historical.geojson",
+      "period": "2019 and 2023 municipal GIS",
+      "count": 20,
+      "unit": "school-boundary polygons",
+      "freshness": "Historical reference only."
+    }
+  ]
+}
