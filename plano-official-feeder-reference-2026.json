@@ -1,0 +1,155 @@
+{
+  "source": "https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/attendance-boundary-descriptions",
+  "sourceType": "current district-published feeder descriptions",
+  "retrieved": "2026-11-06",
+  "academicYearExplicit": null,
+  "sourceYearUnconfirmed": true,
+  "notParcelGeometries": true,
+  "note": "Official web page doesn't label academic year. This is feeder-pattern reference, NOT verified 2026–27 polygons. Jackson Elementary is divided east/west of Coit Road, so elementary campus name alone is not sufficient to determine its middle/high feeder. Confirm residence via 2026–27 SchoolFinder.",
+  "counts": {
+    "feederPaths": 11,
+    "elementaryReferences": 43,
+    "uniqueElementaryCampuses": 42,
+    "uniqueMiddle": 11,
+    "uniqueHigh": 6,
+    "uniqueSenior": 3
+  },
+  "specialCases": [
+    {
+      "school": "Jackson Elementary",
+      "rule": "east of Coit Road",
+      "middle": "Wilson",
+      "high": "Vines",
+      "seniorHigh": "Plano Senior High"
+    },
+    {
+      "school": "Jackson Elementary",
+      "rule": "west of Coit Road",
+      "middle": "Frankford",
+      "high": "Shepton",
+      "seniorHigh": "Plano West Senior High"
+    }
+  ],
+  "feeders": [
+    {
+      "seniorHigh": "Plano East Senior High",
+      "elementary": [
+        "Boggess",
+        "Hunt",
+        "Miller"
+      ],
+      "middle": "Murphy",
+      "high": "McMillen"
+    },
+    {
+      "seniorHigh": "Plano East Senior High",
+      "elementary": [
+        "Meadows",
+        "Schell",
+        "Stinson"
+      ],
+      "middle": "Otto",
+      "high": "McMillen"
+    },
+    {
+      "seniorHigh": "Plano East Senior High",
+      "elementary": [
+        "Barron",
+        "Dooley",
+        "Hickey",
+        "McCall",
+        "Memorial",
+        "Mendenhall"
+      ],
+      "middle": "Bowman",
+      "high": "Williams"
+    },
+    {
+      "seniorHigh": "Plano Senior High",
+      "elementary": [
+        "Bethany",
+        "Carlisle",
+        "Christie",
+        "Mathews"
+      ],
+      "middle": "Schimelpfenig",
+      "high": "Clark"
+    },
+    {
+      "seniorHigh": "Plano Senior High",
+      "elementary": [
+        "Beverly",
+        "Hedgcoxe",
+        "Rasor",
+        "Thomas"
+      ],
+      "middle": "Hendrick",
+      "high": "Clark"
+    },
+    {
+      "seniorHigh": "Plano Senior High",
+      "elementary": [
+        "Harrington",
+        "Hughston",
+        "Saigling",
+        "Wells"
+      ],
+      "middle": "Haggard",
+      "high": "Vines"
+    },
+    {
+      "seniorHigh": "Plano Senior High",
+      "elementary": [
+        "Aldridge",
+        "Jackson (east of Coit)",
+        "Shepard",
+        "Sigler",
+        "Weatherford"
+      ],
+      "middle": "Wilson",
+      "high": "Vines"
+    },
+    {
+      "seniorHigh": "Plano West Senior High",
+      "elementary": [
+        "Andrews",
+        "Skaggs",
+        "Wyatt"
+      ],
+      "middle": "Rice",
+      "high": "Jasper"
+    },
+    {
+      "seniorHigh": "Plano West Senior High",
+      "elementary": [
+        "Daffron",
+        "Gulledge",
+        "Haun"
+      ],
+      "middle": "Robinson",
+      "high": "Jasper"
+    },
+    {
+      "seniorHigh": "Plano West Senior High",
+      "elementary": [
+        "Barksdale",
+        "Brinker",
+        "Centennial",
+        "Huffman"
+      ],
+      "middle": "Renner",
+      "high": "Shepton"
+    },
+    {
+      "seniorHigh": "Plano West Senior High",
+      "elementary": [
+        "Haggar",
+        "Hightower",
+        "Jackson (west of Coit)",
+        "Mitchell"
+      ],
+      "middle": "Frankford",
+      "high": "Shepton"
+    }
+  ]
+}
