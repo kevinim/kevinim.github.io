@@ -32,13 +32,13 @@
 <div class="small-note" id="districtZoneAudit" aria-label="학군별 학교 배정구역 출처 검증">
 <strong>학군별 배정 경계 최신성 · 2026-11-06</strong>
 <div class="zone-audit-row"><b>Frisco</b><span>2026–27 공식 검색기 도형 · 현재 연도</span></div>
-<div class="zone-audit-row"><b>Plano</b><span>2025–26 공식 ArcGIS 참고 도형 64개 · 2026–27 동일 여부 미검증</span></div>
-<div class="zone-audit-row"><b>Allen</b><span>초·중등 2023 / 고등 2019 도형 · 과거</span></div>
+<div class="zone-audit-row"><b>Plano</b><span>2025–26 공식 ArcGIS 도형 64개(최신 미확인) · 공식 진학 연결 관계 11개 대조</span></div>
+<div class="zone-audit-row"><b>Allen</b><span>GIS 초·중등 2023 / 고등 2019 · 공식 주소별 배정표 1,689행 중 유효 1,688행</span></div>
 <div class="zone-audit-row"><b>Lewisville</b><span>2026–27 검색기 연결 · 고등 도형은 2025–26, 초·중등 연도 미확인</span></div>
 <div class="zone-audit-row"><b>Prosper</b><span>2026–27 공식 Infofinder i 배정구역 31개 · 초등 20 / 중등 7 / 고등 4 · 교차 검증 통과</span></div>
 <div class="zone-audit-row"><b>Carrollton–Farmers Branch</b><span>2025-03-06 승인 구역 공식 검색기 · GIS 경계 미연결</span></div>
 <div class="source">2026–27 학교별 배정 경계 원본과 교차 검증이 완료된 학군은 Frisco·Prosper 2곳입니다. 나머지 4개 학군은 최신 연도 미확인입니다. 모든 실제 주소·학년의 예외는 공식 검색기에서 확인하세요. ZIP은 배정구역이 아닙니다.</div></div><p><strong>지도 도형 검증 상태:</strong> Frisco·Prosper의 2026–27 공식 검색기 경계는 녹색으로 표시합니다. Plano 2025–26, Allen 2019/2023, Lewisville 학년도 미검증 자료는 주황 점선 참고용입니다. Prosper·CFB도 공식 주소 검색기로 실제 배정을 확인하세요.</p>
-<p>Plano 2026–27 SchoolFinder에 연결된 실제 ArcGIS 레이어명은 <code>Elementary 2526</code>, <code>Middle 2526</code>, <code>High 2526</code>, <code>Senior High 2526</code>입니다. 이를 2025–26 참고용으로만 사용하며 과거 2019–20 경계를 대신 적용하지 않습니다. 학군에 현행 배정을 확인하세요.</p>
+<p>Plano 2026–27 SchoolFinder에 연결된 실제 ArcGIS 레이어명은 <code>Elementary 2526</code>, <code>Middle 2526</code>, <code>High 2526</code>, <code>Senior High 2526</code>입니다. 이를 2025–26 참고용으로만 사용하며 과거 2019–20 경계를 대신 적용하지 않습니다. 학군에 현행 배정을 확인하세요.</p><p><strong>Plano 진학 연결 예외:</strong> 공식 <a href="https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/attendance-boundary-descriptions" target="_blank" rel="noopener">Feeder School 안내 ↗</a>의 11개 진학 경로를 확인했습니다. Jackson Elementary는 <b>Coit Road 동쪽→Wilson→Vines→Plano Senior</b>, <b>서쪽→Frankford→Shepton→Plano West Senior</b>로 나뉩니다. 실제 주소를 확인하지 않고 상급학교를 추정하지 마세요.</p><p><strong>Allen 공식 주소표:</strong> 2026-11-06에 1,689행을 대조해 1,688행을 사용 가능한 상태로 유지했습니다. <code>2050 Peak St</code>를 추가했으며 <code>Moss Haven Pl</code>의 비정상 범위는 자동 매칭에서 제외했습니다. 공식 표에는 적용 학년도가 명시되지 않으며, <a href="https://www.allenisd.org/page/findaschool" target="_blank" rel="noopener">Allen 주소별 검색기 ↗</a>와 등록 담당자 확인이 필요합니다.</p>
 <p>Frisco의 Nelson 배정구역 신규 학생은 2026–27에 Wester로 배정되는 예외가 있습니다. <a href="https://www.friscoisd.org/page/2026-2027-zones/" target="_blank" rel="noopener">학군 안내 확인 ↗</a></p>
 <p>Prosper 2027–28 중학교 경계는 검토 중입니다. 학군은 2026년 11월 16일 이사회에 최종안을 제시할 예정이라고 밝혔습니다. <a href="https://www.prosper-isd.net/article/3206562" target="_blank" rel="noopener">학군 일정 확인 ↗</a></p>
 <p>다른 학군의 2027–28 학교별 경계 확정 여부는 아직 확인되지 않았습니다. 이 지도는 2027–28 배정을 표시하지 않습니다.</p>
@@ -438,6 +438,7 @@ function drawBoundary(){
   const yrs=[...new Set(found.map(f=>f.properties?.sourceVintage).filter(Boolean))].join(', ');
   const grades=[...new Set(found.map(f=>f.properties?.grades).filter(Boolean))].join(', ');
   if(note)note.innerHTML=s.district==='PISD'&&found.some(f=>String(f.properties?.sourceVintage).includes('공식 검색기'))?'<b>플레이노 공식 검색기 경계 참고</b> · 일부 레이어에 2025–26 표기. 2026–27 적용과 아파트 예외는 학군에 확인하세요.':s.district==='LISD'?'<b>루이스빌 공식 검색기에 연결된 참고 도형</b> · 2026–27 적용 여부 미확인. 고등 레이어는 2025–26 표기입니다. 아파트 예외를 포함해 학군에서 확인하세요.':s.district==='PROSPER'?'<b>Prosper 공식 검색기 배정구역 2026–27 · '+escape(yrs)+'</b> · 초등 20개, 중등 7개, 고등 4개 전체 구역 원본을 학군 검색기 좌표와 교차 검증했습니다. 녹색 도형은 배정구역 참고이며 실제 집 주소·학년·특수 프로그램/예외·등록 자격은 공식 Prosper ISD 검색기로 확인하세요.':current?'<b>Frisco 공식 검색기 경계 '+escape(yrs)+'</b> · 녹색 도형, 학년 '+escape(grades)+(grades.includes(',')?' (여러 학년의 구역을 함께 표시)':'')+'. 배정 예외와 정원 제한이 있을 수 있으므로 학군에 최종 확인하세요.':'<b style="color:#ab531b">과거 GIS 경계 '+escape(yrs)+' (현재 배정 보장 X)</b> · 주황색 점선 '+found.length+'개 도형 표시. 실제 2026–27 배정은 해당 주소로 공식 학군 검색에서 확인하세요.';
+  if(note&&s.district==='PISD'&&/\bJackson\b/i.test(s.name))note.innerHTML+='<br><b>Jackson Elementary 진학 경로 예외:</b> Coit Rd 동쪽은 Wilson Middle → Vines High → Plano Senior, 서쪽은 Frankford Middle → Shepton High → Plano West Senior입니다. 정확한 주소로 학군 공식 SchoolFinder를 확인하세요.';
  }else if(!state.zoneReady&&['AISD','PISD','FISD','LISD','PROSPER'].includes(s.district)){
   if(note)note.textContent='배정구역 데이터를 불러오는 중입니다…';
  }else if(note){
