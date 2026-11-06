@@ -22,6 +22,8 @@ const {matchAllenAddress}=require('../allen-lookup.js');
 const {isRetiredCampus, RETIRED_CAMPUSES_2026}=require('../school-lifecycle.js');
 const {assessResidentialGeocode}=require('../geocode-quality.js');
 const {addCandidate}=require('../candidate-compare.js');
+const {zoneBoundaryProximity,distancePointToSegmentMeters}=require('../school-zone-risk.js');
+const {buildCollinParcelUrl,parcelStreetKey,assessCollinParcelResult}=require('../collin-parcel-check.js');
 const demographics = readJson('dfw-demographics.json');
 const rating = readJson('tea-ratings-2026.json');
 const location = readJson('nces-locations-2024.json');
@@ -42,7 +44,7 @@ test('main page inline JavaScript compiles', () => {
   inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
 });
 test('all main application JS modules compile', () => {
-  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js']) {
+  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','collin-parcel-check.js']) {
     new Script(readText(name), {filename:name});
     assert.ok(html.includes('./' + name), name + ' not loaded');
   }
@@ -321,6 +323,43 @@ test('official CFB 2026-27 feeder contradiction is not auto-resolved',()=>{
  assert.equal(cfbFeeder.rows.find(x=>x.zonedElementary==='Farmers Branch').feederVerification,'conflicting-official-sources');
  assert.equal(audit.districts.find(x=>x.code==='CFB').feederReference.autoAssignmentAllowed,false);
  assert.ok(html.includes('Farmers Branch Elementary의 두 공식 진학표 충돌'));
+});
+test('P0 zone-edge warning uses closest official polygon ring',()=>{
+ const p=[-96.7,33.1],d=100/111195;
+ const ring=r=>[[p[0]-r,p[1]-r],[p[0]+r,p[1]-r],[p[0]+r,p[1]+r],[p[0]-r,p[1]+r],[p[0]-r,p[1]-r]];
+ const near=zoneBoundaryProximity(p,[{geometry:{type:'Polygon',coordinates:[ring(d)]}}]);
+ const far=zoneBoundaryProximity(p,[{geometry:{type:'MultiPolygon',coordinates:[[ring(4*d)]]}}]);
+ assert.ok(near.review && near.distanceMeters>60 && near.distanceMeters<=105);
+ assert.ok(!far.review && far.distanceMeters>270);
+ assert.equal(zoneBoundaryProximity(p,[]),null);
+ assert.ok(distancePointToSegmentMeters(p,p,p)<0.001);
+ const hole=zoneBoundaryProximity(p,[{geometry:{type:'Polygon',coordinates:[ring(5*d),ring(.5*d)]}}]);
+ assert.ok(hole.review);
+ const h=readText('home-lookup-v2.js');
+ assert.ok(h.includes("status:'boundary-review'"));
+ assert.ok(h.includes('zoneBoundaryProximity([item.ll[1],item.ll[0]],found.features)'));
+ assert.ok(html.includes('./school-zone-risk.js?v=1'));
+});
+test('P0 Collin CAD on-demand parcel crosscheck is address-only, fail closed',()=>{
+ const u=new URL(buildCollinParcelUrl([33.10880474891,-96.65977951915]));
+ assert.equal(u.host,'services2.arcgis.com');
+ assert.equal(u.searchParams.get('geometry'),'-96.65977951915,33.10880474891');
+ assert.equal(u.searchParams.get('outFields'),'OBJECTID,situsConcat,propYear');
+ assert.equal(u.searchParams.get('returnGeometry'),'false');
+ assert.equal(parcelStreetKey('300 Rivercrest Boulevard, Allen, TX 75002'),parcelStreetKey('300 RIVERCREST BLVD , ALLEN, TX 75002'));
+ const a='300 Rivercrest Blvd, Allen, TX 75002';
+ assert.equal(assessCollinParcelResult(a,{features:[{attributes:{situsConcat:'300 RIVERCREST BLVD , ALLEN, TX 75002',propYear:2027}}]}).status,'matched');
+ assert.equal(assessCollinParcelResult(a,{features:[{attributes:{situsConcat:'310 Rivercrest Blvd, Allen, TX 75002'}}]}).status,'mismatch');
+ assert.equal(assessCollinParcelResult(a,{features:[]}).status,'not-found');
+ assert.equal(assessCollinParcelResult(a,{features:[{attributes:{}},{attributes:{}}]}).status,'ambiguous');
+ assert.equal(assessCollinParcelResult(a,{error:{code:400}}).status,'error');
+ const h=readText('home-lookup-v2.js'),cmp=readText('candidate-compare.js');
+ assert.ok(h.includes('parcelButton.onclick=checkHomeParcel'));
+ assert.ok(h.includes('homeParcelRequest?.abort()'));
+ assert.ok(h.includes('savedGeocodeQuality'));
+ assert.ok(cmp.includes('savedGeocodeQuality:item.geocodeQuality'));
+ assert.ok(html.includes('누르면 집 핀 좌표가 Collin CAD에 전송됩니다'));
+ assert.ok(html.includes('./collin-parcel-check.js?v=1'));
 });
 test('CFB official current GuideK12 locator linked',()=>{
   assert.ok(html.includes('https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/'));

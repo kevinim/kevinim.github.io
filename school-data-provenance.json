@@ -221,6 +221,22 @@
       "period": "2026–27 address assignment safeguard",
       "unit": "score >=95, PointAddress/Subaddress and matching ZIP/state",
       "freshness": "Only sufficiently precise address geocodes get automatic school candidates; otherwise use district official search."
+    },
+    {
+      "file": "school-zone-risk.js",
+      "period": "2026–27 current Frisco/Prosper GIS zones only",
+      "unit": "geocoded-point distance to matched school-zone polygon rings, approx meters",
+      "reviewThresholdMeters": 150,
+      "notes": "Conservative review threshold, not official school policy. Does not upgrade 2/6 current GIS coverage."
+    },
+    {
+      "file": "collin-parcel-check.js",
+      "period": "Collin CAD live service checked 2026-11-06",
+      "unit": "on-click parcel address geolocation crosscheck",
+      "apiSource": "https://services2.arcgis.com/uXyoacYrZTPTKD3R/arcgis/rest/services/CCAD_Parcel_Feature_Set/FeatureServer/4",
+      "sample": "Public Allen High School address 300 Rivercrest Blvd matched a single parcel; propYear 2027",
+      "privacy": "User clicks button before coordinates sent; only situsConcat, propYear and OBJECTID retrieved; no owner fields.",
+      "notes": "A parcel street-address match is not an assigned school."
     }
   ]
 }

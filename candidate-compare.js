@@ -1,7 +1,7 @@
 'use strict';
 function addCandidate(items, candidate) {
   if (items.length >= 3 || items.some(x => x.address.toLowerCase() === candidate.address.toLowerCase())) return items;
-  return [...items, { address: candidate.address, ll: [...candidate.ll], geocodeQuality: candidate.geocodeQuality ? {...candidate.geocodeQuality} : null }];
+  return [...items, { address: candidate.address, ll: [...candidate.ll], geocodeQuality: candidate.geocodeQuality ? {...candidate.geocodeQuality} : null, parcel: candidate.parcel?.status==='matched' ? {...candidate.parcel} : null }];
 }
 function removeCandidate(items, index) { return items.filter((_, i) => i !== index); }
 if (typeof module !== 'undefined') module.exports = { addCandidate, removeCandidate };
@@ -24,7 +24,7 @@ if (typeof document !== 'undefined') {
     container.querySelectorAll('[data-open]').forEach(button => button.addEventListener('click', () => {
       const item = comparisons[+button.dataset.open];
       el('homeAddress').value = item.address;
-      useHomeCandidate({address:item.address,location:{y:item.ll[0],x:item.ll[1]}});
+      useHomeCandidate({address:item.address,location:{y:item.ll[0],x:item.ll[1]},savedGeocodeQuality:item.geocodeQuality,savedParcel:item.parcel});
       el('map').scrollIntoView({behavior:'smooth',block:'center'});
     }));
   }

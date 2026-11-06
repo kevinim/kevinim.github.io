@@ -91,6 +91,13 @@ CFBISD's [official enrollment FAQ](https://www.cfbisd.edu/enrollment-page/freque
 
 **No guessed 2026–27 GeoJSON** should be constructed from a schematic PDF or mixed-year locator without validated alignment to district addresses. Verify any specific home, grade, and special program at the district itself.
 
+## P0 school residence location checks — 2026-11-06
+
+- **Collin CAD**: publicly exposed ArcGIS FeatureServer layer `CCAD_Parcel_Feature_Set/FeatureServer/4` was live-tested with point coordinates at publicly listed Allen High School (300 Rivercrest Blvd). It returned exactly one parcel with matching `situsConcat`, `propYear:2027`. This validates access and schema, not residential school assignments. A residence coordinate is sent ONLY upon clicking "필지 주소 대조"; no owner fields are requested. Street-address matches are distinguishable from mismatches, no matches, ambiguous overlaps and server errors. Parcel school-tax code is *not* a school-campus zone.
+- **Current-year boundary edge risk**: Frisco and Prosper official 2026–27 geometry only; measure approximate meter distance from home pin to all matched school polygon rings. If within a conservative **150 m review buffer**, show extra warning and do not highlight a definite matched school; confirm actual address + grade + apartment with district. Existing 2/6 GIS evidence status stays unchanged.
+- **Candidate comparison restore**: preserve original Esri geocoder confidence and optional independently checked parcel result in memory. Previously reopening a saved address silently lost its geocoding verification and downgraded confidence.
+- Not verified: genuine enrollment by unit or special program, the four unverified-year ISDs, city-specific tax-ISD parcel status. District lookup remains authoritative.
+
 ## P0 school location and assignment protections — 2026-11-06
 
 - 14 documented school closures/retirements are excluded from the live campus choices through `school-lifecycle.js`: 1 Frisco, 4 Plano, 5 Lewisville, 4 CFB. In particular, Frisco's Staley Middle was retired after 2025–26 but is still present with a 2026 TEA rating and 2024–25 NCES coordinates. Never infer current operating status from a rating or old point.
