@@ -1,0 +1,489 @@
+{
+  "metadata": {
+    "verifiedOn": "2026-11-06",
+    "district": "PROSPER",
+    "schoolYear": "2026–27",
+    "source": "Prosper ISD public Infofinder i SearchLocation API",
+    "officialSearchUrl": "https://www.infofinderi.com/ifi/ws/SearchRequest.asmx/SearchLocation",
+    "clientId": "PI5FFG7RYZ1",
+    "scope": "31 school-level interior synthetic coordinate tests; 12 boundary-adjacent coordinate tests crossing 6 campus borders; exact independent official API matched each expected campus code. No actual home addresses tested, exception handling remains district-controlled.",
+    "count": 43,
+    "interior": 31,
+    "boundary": 12
+  },
+  "cases": [
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912101",
+      "expectedCode": "101",
+      "position": [
+        -96.7847555,
+        33.226183
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912102",
+      "expectedCode": "102",
+      "position": [
+        -96.80731025,
+        33.2336375
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912103",
+      "expectedCode": "103",
+      "position": [
+        -96.68935446,
+        33.240979
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912104",
+      "expectedCode": "104",
+      "position": [
+        -96.7499535,
+        33.24049
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912105",
+      "expectedCode": "105",
+      "position": [
+        -96.79966375,
+        33.27803067
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912106",
+      "expectedCode": "106",
+      "position": [
+        -96.86939688,
+        33.227455
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912107",
+      "expectedCode": "107",
+      "position": [
+        -96.7659655,
+        33.211214
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912108",
+      "expectedCode": "108",
+      "position": [
+        -96.79361494,
+        33.25558778
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912109",
+      "expectedCode": "109",
+      "position": [
+        -96.77767787,
+        33.19661658
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912110",
+      "expectedCode": "110",
+      "position": [
+        -96.74262894,
+        33.21074733
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912111",
+      "expectedCode": "111",
+      "position": [
+        -96.85212217,
+        33.22673063
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912112",
+      "expectedCode": "112",
+      "position": [
+        -96.74272425,
+        33.273225
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912113",
+      "expectedCode": "113",
+      "position": [
+        -96.71269075,
+        33.245721
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912114",
+      "expectedCode": "114",
+      "position": [
+        -96.8602095,
+        33.24210425
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912115",
+      "expectedCode": "115",
+      "position": [
+        -96.83762175,
+        33.23992963
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912116",
+      "expectedCode": "116",
+      "position": [
+        -96.77534967,
+        33.26331042
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912117",
+      "expectedCode": "117",
+      "position": [
+        -96.88017144,
+        33.25904578
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912118",
+      "expectedCode": "118",
+      "position": [
+        -96.79626529,
+        33.20688492
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912119",
+      "expectedCode": "119",
+      "position": [
+        -96.82068808,
+        33.27810554
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "elementary",
+      "campusId": "043912120",
+      "expectedCode": "120",
+      "position": [
+        -96.8503655,
+        33.26298775
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "high",
+      "campusId": "043912001",
+      "expectedCode": "001",
+      "position": [
+        -96.81271342,
+        33.25807592
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "high",
+      "campusId": "043912005",
+      "expectedCode": "005",
+      "position": [
+        -96.78587267,
+        33.2065135
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "high",
+      "campusId": "043912006",
+      "expectedCode": "006",
+      "position": [
+        -96.74063983,
+        33.25686342
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "high",
+      "campusId": "043912007",
+      "expectedCode": "007",
+      "position": [
+        -96.87021867,
+        33.2537515
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "middle",
+      "campusId": "043912041",
+      "expectedCode": "041",
+      "position": [
+        -96.75410667,
+        33.23692858
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "middle",
+      "campusId": "043912042",
+      "expectedCode": "042",
+      "position": [
+        -96.80258967,
+        33.2524575
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "middle",
+      "campusId": "043912043",
+      "expectedCode": "043",
+      "position": [
+        -96.79197956,
+        33.2036865
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "middle",
+      "campusId": "043912044",
+      "expectedCode": "044",
+      "position": [
+        -96.85421,
+        33.228754
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "middle",
+      "campusId": "043912045",
+      "expectedCode": "045",
+      "position": [
+        -96.68751475,
+        33.23040496
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "middle",
+      "campusId": "043912046",
+      "expectedCode": "046",
+      "position": [
+        -96.87352075,
+        33.2638105
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "interior",
+      "gradeLevel": "middle",
+      "campusId": "043912048",
+      "expectedCode": "048",
+      "position": [
+        -96.711809,
+        33.25730008
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "boundary",
+      "transition": 1,
+      "gradeLevel": "elementary",
+      "expectedCode": "101",
+      "position": [
+        -96.77432675,
+        33.233222
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "boundary",
+      "transition": 1,
+      "gradeLevel": "elementary",
+      "expectedCode": "102",
+      "position": [
+        -96.77432525,
+        33.233582
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "boundary",
+      "transition": 2,
+      "gradeLevel": "elementary",
+      "expectedCode": "101",
+      "position": [
+        -96.78480732,
+        33.219185
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "boundary",
+      "transition": 2,
+      "gradeLevel": "elementary",
+      "expectedCode": "118",
+      "position": [
+        -96.78480968,
+        33.218545
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "boundary",
+      "transition": 3,
+      "gradeLevel": "middle",
+      "expectedCode": "041",
+      "position": [
+        -96.73255447,
+        33.24545617
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "boundary",
+      "transition": 3,
+      "gradeLevel": "middle",
+      "expectedCode": "048",
+      "position": [
+        -96.73219453,
+        33.24544983
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "boundary",
+      "transition": 4,
+      "gradeLevel": "middle",
+      "expectedCode": "041",
+      "position": [
+        -96.76705552,
+        33.25984577
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "boundary",
+      "transition": 4,
+      "gradeLevel": "middle",
+      "expectedCode": "042",
+      "position": [
+        -96.76741548,
+        33.25984023
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "boundary",
+      "transition": 5,
+      "gradeLevel": "high",
+      "expectedCode": "001",
+      "position": [
+        -96.81260714,
+        33.219256
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "boundary",
+      "transition": 5,
+      "gradeLevel": "high",
+      "expectedCode": "005",
+      "position": [
+        -96.81260886,
+        33.218896
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "boundary",
+      "transition": 6,
+      "gradeLevel": "high",
+      "expectedCode": "001",
+      "position": [
+        -96.80021256,
+        33.22141702
+      ],
+      "officialQueryMatched": true
+    },
+    {
+      "type": "boundary",
+      "transition": 6,
+      "gradeLevel": "high",
+      "expectedCode": "006",
+      "position": [
+        -96.79990744,
+        33.22122598
+      ],
+      "officialQueryMatched": true
+    }
+  ]
+}
