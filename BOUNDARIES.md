@@ -55,6 +55,16 @@ The current parent-facing [Prosper Infofinder i](https://www.infofinderi.com/ifi
 - **Total: 43 of 43 successful**, with no campus-code disagreements. Full vector QA cases: `tests/prosper-official-location-checks-2026.json`. Repeatable official live test: `node scripts/check-prosper-official-locator.mjs`.
 - These are **synthetic map-click coordinates, not verified residential street addresses**. Registration eligibility, apartment unit-level exceptions, transfers and special programs are not proven by polygon coverage. The site labels results as school *candidates* and links to the official district lookup.
 
+### Plano and Allen current official lookup audit — 2026-11-06
+
+**Plano:** The current district [Attendance Boundary Descriptions](https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/attendance-boundary-descriptions) page publishes **11 elementary→middle→high→senior feeder routes** (43 elementary references corresponding to 42 unique elementary campus names, 11 middle campuses, 6 high campuses and 3 senior highs). All 42 elementary, 11 middle and 6 high names have matching campuses in the **2025–26** linked ArcGIS source. This provides **campus-name/feeder consistency only**, **not verification that the boundary geometries remain unchanged for 2026–27**.
+
+A critical exception is **Jackson Elementary**: the official district describes a split **east of Coit Road → Wilson Middle → Vines High → Plano Senior High**, and **west of Coit Road → Frankford Middle → Shepton High → Plano West Senior High**. The single school name is not enough to infer either chain for an address. The dashboard now warns on selecting Jackson. A reproducible structured snapshot of the undated published feeder reference is in `plano-official-feeder-reference-2026.json` (`academicYearExplicit:null`). Official 2026–27 [Plano SchoolFinder](https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder) remains the address-level authority.
+
+**Allen:** Audited the current official [Find A School](https://www.allenisd.org/page/findaschool) table at **1,689 visible street-range rows** vs **1,687 originally cached**. Found a valid additional official entry **2050 Peak St → Evans / Ereckson / Lowery / Allen High**; added it to the snapshot. Another newly published row **Moss Haven PL, range `2009 – 202-216`** is malformed and was **not imported**. An existing official row **Crestview Heights, range `2050 Peak St`** is also malformed and is retained only as source provenance, never numerically matched. Thus **1,688 rows in the updated local snapshot, of which 1,687 are parseable numeric address ranges**; **2 malformed official rows** in total. Four markdown-escaped `***SEE NOTES BELOW` display differences were normalized as **formatting**, not new address records.
+
+Neither the current Allen address table nor the separate City GIS has an explicitly verified **2026–27 campus boundary source year**. The street-level source is useful for *candidate* assignments only; it cannot upgrade 2019/2023 GIS polygons to current-year status. The four apartment/unit exceptions in the district's official guide remain explicitly excluded from automatic assignment and require an Allen registrar confirmation. Data-quality evidence: `allen-official-address-source-audit-2026.json`.
+
 ### Allen and address-level exceptions
 
 - City of Allen official public GIS has elementary 16 + middle 3 polygons last marked 2023 and high 1 polygon marked 2019. These are **historical** references.
@@ -71,6 +81,8 @@ The current parent-facing [Prosper Infofinder i](https://www.infofinderi.com/ifi
 | `jpm-road-times-2026-11-04.json`, `jpm-60min-isochrone-2026-11-04.geojson` | ZIP representative route calculations and 60-minute isochrone | Road network estimates from Nov 4, 2026; **no traffic** or parcel-specific guarantee |
 | `prosper-celina-reference-2026.geojson` | 13 partial reference polygons | City of Celina updated September 9, 2026; academic school year **not documented**; **archived only, NOT loaded** |
 | `prosper-attendance-2026.geojson` | **31 full Prosper campus attendance zones** | **Official 2026–27 Infofinder i**: 20 elementary, 7 middle, 4 high; exact school year and identifiers verified. **Live school boundary and address-candidate use after 43/43 official crosschecks** |
+| `plano-official-feeder-reference-2026.json` | 11 official Plano feeder routes | Published page current but academic year not stated; Jackson east/west Coit split |
+| `allen-official-address-source-audit-2026.json` | 1,689 official Allen street rows, 1,687 parseable | 2 malformed ranges excluded from numeric matching; no 2026–27 zone-year confirmation |
 | `school-data-provenance.json` | Six district records and key file counts | Machine-readable audit updated November 6, 2026 |
 
 **No guessed 2026–27 GeoJSON** should be constructed from a schematic PDF or mixed-year locator without validated alignment to district addresses. Verify any specific home, grade, and special program at the district itself.

@@ -9,11 +9,15 @@ const html = readText('index.html');
 const audit = readJson('school-data-provenance.json');
 const plano = readJson('plano-locator-reference.geojson');
 const allen = readJson('allen-attendance-historical.geojson');
+const allenAddress = readJson('allen-address-schools.json');
+const allenAddressAudit = readJson('allen-official-address-source-audit-2026.json');
+const planoFeeder = readJson('plano-official-feeder-reference-2026.json');
 const prosper = readJson('prosper-celina-reference-2026.geojson');
 const prosperCurrent = readJson('prosper-attendance-2026.geojson');
 const officialChecks = readJson('tests/prosper-official-location-checks-2026.json');
 const require=createRequire(import.meta.url);
 const {resolveAssignment}=require('../school-assignment.js');
+const {matchAllenAddress}=require('../allen-lookup.js');
 const demographics = readJson('dfw-demographics.json');
 const rating = readJson('tea-ratings-2026.json');
 const location = readJson('nces-locations-2024.json');
@@ -78,6 +82,59 @@ test('Allen GIS remains historical (never falsely current)',()=>{
   assert.equal(allen.type,'FeatureCollection');
   assert.equal(allen.features.length,20);
   assert.ok(allen.features.every(x=>x.properties.current===false));
+});
+test('Allen official street-level source reconciled with 2 malformed-range exceptions',()=>{
+ assert.equal(allenAddressAudit.streetRangesInOfficialTable,1689);
+ assert.equal(allenAddressAudit.currentCachedRows,1688);
+ assert.equal(allenAddressAudit.currentCachedUsableRows,1687);
+ assert.equal(allenAddressAudit.officialMalformedRows,2);
+ assert.equal(allenAddress.rows.length,1688);
+ assert.equal(allenAddress.schoolYear,null); // source school-year NOT explicitly stated
+ const regex=/^\s*(\d+)\s*(?:[-–—]\s*(\d+))?\s*(\(even numbers only\))?\s*$/i;
+ const acceptable=allenAddress.rows.filter(x=>regex.test(x[1]));
+ assert.equal(acceptable.length,1687);
+ assert.deepEqual(allenAddress.rows.filter(x=>x[0]==='Peak St'),[['Peak St','2050','Evans','Ereckson','Lowery','Allen High School']]);
+ assert.ok(!allenAddress.rows.some(x=>x[0]==='Moss Haven PL'));
+ assert.equal(allenAddress.rows.filter(x=>!regex.test(x[1]))[0][0],'Crestview Heights');
+ assert.equal(allenAddressAudit.quarantined[0].automaticMatchAllowed,false);
+});
+test('Allen numeric street lookup adds Peak while refusing malformed and apartment exceptions',()=>{
+ const ok=matchAllenAddress('2050 Peak St, Allen, TX 75002',allenAddress.rows,true);
+ assert.ok(ok);assert.deepEqual(ok.slice(2),['Evans','Ereckson','Lowery','Allen High School']);
+ assert.equal(matchAllenAddress('2050 Peak St, Plano, TX',allenAddress.rows,false),null);
+ assert.equal(matchAllenAddress('2009 Moss Haven Pl, Allen, TX',allenAddress.rows,true),null);
+ assert.equal(matchAllenAddress('2050 Crestview Heights, Allen, TX',allenAddress.rows,true),null);
+ assert.equal(matchAllenAddress('4450 S Ridge Rd, Allen, TX',allenAddress.rows,true),null);
+ assert.equal(matchAllenAddress('4700 S Ridge Rd, Allen, TX',allenAddress.rows,true),null);
+});
+test('Plano feeder name agreement with 2025–26 ArcGIS does not imply current GIS vintage',()=>{
+ assert.equal(planoFeeder.sourceYearUnconfirmed,true);
+ assert.equal(planoFeeder.academicYearExplicit,null);
+ assert.equal(planoFeeder.counts.feederPaths,11);
+ assert.equal(planoFeeder.counts.uniqueElementaryCampuses,42);
+ assert.equal(planoFeeder.counts.uniqueMiddle,11);
+ assert.equal(planoFeeder.counts.uniqueHigh,6);
+ assert.equal(planoFeeder.counts.uniqueSenior,3);
+ assert.equal(planoFeeder.feeders.length,11);
+ const key=x=>String(x||'').toLowerCase().replace(/\(.*?\)/g,'').replace(/\b(elementary|middle|high|senior|school)\b/g,'').replace(/[^a-z0-9]/g,'');
+ const fromGIS=new Set(plano.features.filter(x=>x.properties.gradeLevel==='elementary').map(x=>key(x.properties.school)));
+ const fromOfficial=new Set(planoFeeder.feeders.flatMap(x=>x.elementary.map(key)));
+ assert.deepEqual([...fromGIS].sort(),[...fromOfficial].sort());
+ assert.equal(plano.features.filter(x=>x.properties.gradeLevel==='elementary').length,44); // 42 campuses, 44 polygons
+ assert.equal(planoFeeder.feeders.reduce((acc,x)=>acc+x.elementary.length,0),43); // Jackson split into two different feeder paths
+ assert.ok(planoFeeder.specialCases.some(x=>x.rule==='east of Coit Road'&&x.middle==='Wilson'));
+ assert.ok(planoFeeder.specialCases.some(x=>x.rule==='west of Coit Road'&&x.middle==='Frankford'));
+});
+test('Production source panels and Jackson overlay identify authoritative exceptions',()=>{
+ assert.ok(html.includes('공식 진학 연결 관계 11개 대조'));
+ assert.ok(html.includes('자동 해석 가능한 1,687행'));
+ assert.ok(html.includes('Moss Haven Pl'));
+ assert.ok(html.includes('Crestview Heights'));
+ assert.ok(html.includes('Jackson Elementary 진학 경로 예외'));
+ assert.ok(html.includes('Coit Rd 동쪽'));
+ assert.ok(html.includes('Plano West Senior'));
+ assert.ok(html.includes('2025–26 공식 ArcGIS'));
+ assert.ok(html.includes('Frisco·Prosper 2곳'));
 });
 test('all 31 Prosper ISD 2026–27 school zones acquired from official live locator',()=>{
   assert.equal(prosperCurrent.type,'FeatureCollection');
