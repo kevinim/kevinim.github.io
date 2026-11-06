@@ -86,6 +86,16 @@ Older `prosper-celina-reference-2026.geojson` (13 local Celina study-area featur
 - Current GuideK12 uses screen tiles `school_map_tile` (PNG) with address-based searches; no public documented GeoJSON/FeatureServer endpoint found. Do not infer precise parcel shapes from PNG screenshots.
 - **Needed:** district/GuideK12 vendor current campus-zone shapefile or GeoJSON export and permission for reuse.
 
+## Cross-check: secondary public Infofinder school-zone catalogs — 2026-11-06
+
+The public parent-facing Transfinder district directory at https://www.infofinderi.com/tfi/default.aspx?invalidid=T lists separate school locator clients. Following its published client links and reading the same **anonymous, public `GetRedistricts`** endpoint used by the official interface yielded:
+
+- **Allen ISD** — directory client `AI03835938622`, https://www.infofinderi.com/ifi/ws/RedistrictRequest.asmx/GetRedistricts?clientId=AI03835938622. The published catalogs are `Middle School Boundary Set 2023`, `Redistricting Elementary 2023`, `LOWERY FRESHMAN CENTER`, `AHS`. These are **not** verified 2026–27 vectors; no update to Allen's "historical" status.
+- **Lewisville ISD** — directory client `LI3VBOFR0JM`, https://www.infofinderi.com/ifi/ws/RedistrictRequest.asmx/GetRedistricts?clientId=LI3VBOFR0JM. Its four catalog titles are `25-26 SY Elementary`, `25-26 SY Middle Schools`, `25-26 SY High School`, `25-26 SY 9th & 10th grade`. Again **not** current-year source confirmation, despite the separate MetroStudy web app being titled 2026–27.
+- **Prosper ISD** — independently linked public district client `PI5FFG7RYZ1` really did report **`2026-2027`** for all three age groups, so its current-year vector acquisition status is distinct.
+
+This independently corroborates why 2023 Allen and 2025–26 Lewisville polygons must not be silently promoted to 2026–27. Parent-facing links may support school transportation rather than enrollment assignments; GIS years cannot be inferred from a transport portal's title.
+
 ## Acquisition gates before production activation
 
 1. Validate source academic year, grade, school ID, geometry bounds and polygon rings.
