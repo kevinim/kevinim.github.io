@@ -4,6 +4,25 @@
 **Production repository:** `kevinim/kevinim.github.io`  
 **Status:** Frisco 2026–27 verified/live and Prosper 2026–27 verified/live (31 zones; 43 independent lookup checks). The four ISDs below are **not** verified current-year geospatial polygons.
 
+## 2026-11-06 follow-up findings — Allen and Plano
+
+### Allen Find-A-School (official live published table, not GIS)
+
+- Retrieved all **1,689 current published rows** from https://www.allenisd.org/page/findaschool and compared to the root dashboard's **1,687 previous cached rows**. Four apparent differences were only escaped asterisk formatting in apartment exception annotations.
+- Two genuine new rows: **Peak St, 2050 → Evans elementary / Ereckson middle / Lowery ninth-grade / Allen High** (valid; added); **Moss Haven PL, `2009 – 202-216`** (invalid numeric range; quarantined, no made-up correction).
+- The official source also has a previously cached malformed row **Crestview Heights, `2050 Peak St`**, which is text rather than a numeric range. It is retained as source evidence and remains rejected by the assignment matching regex.
+- Final cached rows **1,688**, valid auto-parseable numeric ranges **1,687**; official rows **1,689**, unusable source ranges **2**. Four apartment/unit-specific exceptions must remain subject to registrar verification. Details: `allen-official-address-source-audit-2026.json`.
+- The official address table does **not** label itself as school year 2026–27. It cannot confirm that the public City of Allen 2019/2023 GIS shapes are current.
+
+### Plano current feeder paths (official current web page, not current GIS)
+
+- Captured **11 official published feeder paths** from https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/attendance-boundary-descriptions : **42 unique elementary schools**, **11 middle**, **6 high**, **3 senior high**. Matched every listed elementary/middle/high **campus name** to the source of the production dashboard's 64 **2025–26 polygon features**, but this **does not prove** the 2025–26 polygon geometry is unchanged for 2026–27.
+- **Jackson Elementary is a documented exception:** **east of Coit Rd** goes to Wilson Middle → Vines High → Plano Senior, **west of Coit Rd** goes to Frankford Middle → Shepton High → Plano West Senior. A school name match alone must never determine secondary feeder for this campus.
+- Structured source snapshot: `plano-official-feeder-reference-2026.json`. Its `academicYearExplicit` is `null` because the feeder page itself does not state the academic school year.
+- Official public `blueraster.pisd` ArcGIS search found no newer published 2026–27 polygon version; 2026–27 SchoolFinder frontend still references `2526` layers. **Still needs written PISD confirmation of no zone changes or an actual 2026–27 GIS file**.
+
+**Result:** Both districts' public *non-GIS* assignment/reference records are improved, but **the current-year polygon coverage is unchanged (2/6 verified overall: Frisco and Prosper).** Do not call either Allen or Plano 2026–27 GeoJSON without further official evidence.
+
 ## Audit
 
 | District | Current official parent lookup | Newest public candidate actually checked | Blocker for 2026–27 GeoJSON | Verified follow-up |
