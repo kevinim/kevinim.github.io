@@ -312,7 +312,7 @@ test('school assignment candidates require precise residential geocoder results'
  const src=readText('home-lookup-v2.js');
  assert.ok(src.includes("status:'needs-address-verification'"));
  assert.ok(src.includes('if(!item?.geocodeQuality?.usableForSchoolCandidate)'));
- assert.ok(src.includes('geocodeQuality:assessResidentialGeocode'));
+ assert.ok(src.includes('candidate.savedGeocodeQuality||assessResidentialGeocode'));
  assert.ok(html.includes('./geocode-quality.js?v=1'));
 });
 test('official CFB 2026-27 feeder contradiction is not auto-resolved',()=>{
