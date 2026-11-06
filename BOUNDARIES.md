@@ -7,6 +7,8 @@
 
 ## School attendance polygons: six-district audit
 
+**Source acquisition update (2026-11-06):** The full official **2026–27 Prosper ISD** 31-campus polygons have been acquired into the new, source-validated `prosper-attendance-2026.geojson` file, with a reproducible `scripts/fetch-prosper-2026-zones.mjs` converter. The **live application still uses the earlier 13-zone partial Celina reference** until address-level QA; this is a data acquisition milestone, not production activation. Full research log: [SCHOOL_ZONE_SOURCE_ACQUISITION_2026-11-06.md](SCHOOL_ZONE_SOURCE_ACQUISITION_2026-11-06.md).
+
 | District | Geometry currently used | Vintage and confidence | Official address lookup |
 | --- | --- | --- | --- |
 | Frisco ISD | Live `static.friscoisd.org/js/json/school.borders.2627.json` | **2026–27**, latest-year source; capacity and enrollment exceptions still apply | [FISD zones](https://www.friscoisd.org/page/2026-2027-zones/) |
@@ -16,7 +18,7 @@
 | Prosper ISD | `prosper-celina-reference-2026.geojson`, **13** local-government reference polygons (7 elementary, 3 middle, 3 high) covering **only the Celina-area subset** | City of Celina GIS updated **September 9, 2026**; source polygons have **no explicit 2026–27 school-year field**. Historical/undated **reference only**, excluded from home assignment logic | [Prosper 2026–27 approved boundaries](https://www.prosper-isd.net/page/attendance-boundaries/) |
 | Carrollton–Farmers Branch ISD | No GIS polygon linked | Official locator references **March 6, 2025 board-approved** zones and 2026–27 registration. Public GuideK12 search is available but its polygons are not independently exported/validated | [CFB School Search](https://www.cfbisd.edu/students/school-maps-locator-system) / [Current GuideK12 address tool](https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/) |
 
-**Interpretation:** Exactly **one of six** districts has 2026–27 current-year **polygon source** verified for this site's map (Frisco). This is not the percentage of schools, students, residences or land affected. The 2025/2023 data can still be a useful *visual reference*, but must not be labeled current.
+**Interpretation:** Exactly **one of six** districts currently **renders current-year polygons in the live app** (Frisco). A second full current-year source, Prosper (31 school zones), has been acquired and committed but is not yet activated. This is not the percentage of schools, students, residences or land affected. The 2025/2023 data can still be a useful *visual reference*, but must not be labeled current.
 
 ### Plano ArcGIS lineage
 
@@ -58,7 +60,8 @@ The exported WGS84 GeoJSON is stored in `prosper-celina-reference-2026.geojson`.
 | `nces-locations-2024.json` | 2,213 location records | 2024–25 school address/coordinate reference; coordinates are not proof of current assignment |
 | `dfw-zcta-boundaries.geojson` and `county-scopes.json` | Regional ZIP polygons and county scopes | ZIP statistics boundaries **are not** school attendance boundaries |
 | `jpm-road-times-2026-11-04.json`, `jpm-60min-isochrone-2026-11-04.geojson` | ZIP representative route calculations and 60-minute isochrone | Road network estimates from Nov 4, 2026; **no traffic** or parcel-specific guarantee |
-| `prosper-celina-reference-2026.geojson` | 13 partial reference polygons | City of Celina updated September 9, 2026; academic school year **not documented**, not used for address assignment |
+| `prosper-celina-reference-2026.geojson` | 13 partial reference polygons | City of Celina updated September 9, 2026; academic school year **not documented**, currently displayed as partial school-click reference only |
+| `prosper-attendance-2026.geojson` | **31 full Prosper campus attendance zones** | **Official 2026–27 Infofinder i**: 20 elementary, 7 middle, 4 high; exact school year and identifiers verified. **Acquired, NOT YET USED in live home-address assignment** |
 | `school-data-provenance.json` | Six district records and key file counts | Machine-readable audit updated November 6, 2026 |
 
 **No guessed 2026–27 GeoJSON** should be constructed from a schematic PDF or mixed-year locator without validated alignment to district addresses. Verify any specific home, grade, and special program at the district itself.
