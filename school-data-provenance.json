@@ -132,7 +132,9 @@
         "uniqueMiddleSchools": 5,
         "uniqueHighSchools": 4,
         "notBoundaryGeometry": true,
-        "currentYearGeometryStillUnverified": true
+        "currentYearGeometryStillUnverified": true,
+        "officialSourceConflict": "Farmers Branch ES: FAQ Field/Turner; Pre-K page Bush/Ranchview; no definitive address mapping.",
+        "autoAssignmentAllowed": false
       }
     }
   ],
@@ -206,6 +208,19 @@
       "count": 21,
       "unit": "elementary-to-middle/high feeder rows (with Pre-K and bilingual variants)",
       "freshness": "2026–27 academic year EXPLICIT in source. These are official feeder paths only; no campus GIS boundary data and no address-level residency verification."
+    },
+    {
+      "file": "school-lifecycle.js",
+      "period": "active 2026–27 campuses",
+      "count": 14,
+      "unit": "retired schools excluded from live selections",
+      "freshness": "Official four-district closure notices; TEA legacy 2026 rating records stay as historical data, not active campus status."
+    },
+    {
+      "file": "geocode-quality.js",
+      "period": "2026–27 address assignment safeguard",
+      "unit": "score >=95, PointAddress/Subaddress and matching ZIP/state",
+      "freshness": "Only sufficiently precise address geocodes get automatic school candidates; otherwise use district official search."
     }
   ]
 }

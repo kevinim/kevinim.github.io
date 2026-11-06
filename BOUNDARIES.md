@@ -91,6 +91,14 @@ CFBISD's [official enrollment FAQ](https://www.cfbisd.edu/enrollment-page/freque
 
 **No guessed 2026–27 GeoJSON** should be constructed from a schematic PDF or mixed-year locator without validated alignment to district addresses. Verify any specific home, grade, and special program at the district itself.
 
+## P0 school location and assignment protections — 2026-11-06
+
+- 14 documented school closures/retirements are excluded from the live campus choices through `school-lifecycle.js`: 1 Frisco, 4 Plano, 5 Lewisville, 4 CFB. In particular, Frisco's Staley Middle was retired after 2025–26 but is still present with a 2026 TEA rating and 2024–25 NCES coordinates. Never infer current operating status from a rating or old point.
+- Home geocoding uses `geocode-quality.js`. Unless Esri returns a precise `PointAddress` or `Subaddress` with score ≥95, a Texas result, and no ZIP mismatch, automatic assigned-school candidates are suppressed. A rough map pin is still shown with a clear warning; the district's locator is the final authority. Comparison cards preserve this quality flag.
+- School detail shows the school coordinate source (including old City of Plano or NCES vintages) rather than implying all pins were verified in 2026–27.
+- **CFB official contradiction**: [2026–27 enrollment FAQ](https://www.cfbisd.edu/enrollment-page/frequently-asked-questions-about-enrollment) says Farmers Branch ES → Field Middle / Turner High; [2026–27 Pre-K campus table](https://www.cfbisd.edu/students/prek-enrollment-page/pre-k-campuses) says Bush Middle / Ranchview High. The source conflict is recorded; no automated feeder assignment is permitted.
+- Current-year geometry for Allen, Plano, Lewisville and CFB **remains unverified** despite these safety improvements.
+
 ## Release QA and maintenance
 
 Run `node scripts/verify-main-data.mjs` locally or through the GitHub Actions main-site data-integrity workflow. Its checks cover existing HTML script parsing, critical home/commute/compare functionality hooks, valid files, counts, six-district provenance and the absence of the unsafe 2019 Plano fallback.

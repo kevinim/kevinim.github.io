@@ -19,6 +19,9 @@ const officialChecks = readJson('tests/prosper-official-location-checks-2026.jso
 const require=createRequire(import.meta.url);
 const {resolveAssignment}=require('../school-assignment.js');
 const {matchAllenAddress}=require('../allen-lookup.js');
+const {isRetiredCampus, RETIRED_CAMPUSES_2026}=require('../school-lifecycle.js');
+const {assessResidentialGeocode}=require('../geocode-quality.js');
+const {addCandidate}=require('../candidate-compare.js');
 const demographics = readJson('dfw-demographics.json');
 const rating = readJson('tea-ratings-2026.json');
 const location = readJson('nces-locations-2024.json');
@@ -39,7 +42,7 @@ test('main page inline JavaScript compiles', () => {
   inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
 });
 test('all main application JS modules compile', () => {
-  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js']) {
+  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js']) {
     new Script(readText(name), {filename:name});
     assert.ok(html.includes('./' + name), name + ' not loaded');
   }
@@ -277,6 +280,47 @@ test('CFB official 2026–27 feeder table is accurate and never treated as GIS',
   assert.equal(b.k5,'Blanton');
   assert.ok(html.includes('CFB 2026–27 공식 진학표'));
   assert.ok(html.includes('진학표 21개 초등학교 경로 확인'));
+});
+test('active 2026-27 campus selection excludes 14 officially retired schools',()=>{
+ assert.equal(RETIRED_CAMPUSES_2026.length,14);
+ const staley=rating.data.find(x=>x.id==='043905041'&&x.district==='FISD');
+ assert.ok(staley);assert.equal(isRetiredCampus(staley),true);
+ assert.equal(isRetiredCampus({district:'FISD',name:'Nelson Middle School'}),false);
+ assert.equal(isRetiredCampus({district:'PROSPER',name:'Jim Bridges Middle School'}),false);
+ for(const rec of RETIRED_CAMPUSES_2026)assert.ok(isRetiredCampus(rec),rec.name);
+ const app=inlineScripts.join('\n');
+ assert.ok(app.includes('if(isRetiredCampus(r))continue'));
+ assert.ok(app.includes('if(isRetiredCampus(s))return'));
+ assert.ok(html.includes('./school-lifecycle.js?v=1'));
+ assert.ok(html.includes('학교 위치 출처:'));
+});
+test('school assignment candidates require precise residential geocoder results',()=>{
+ const q='8181 Communications Pkwy, Plano, TX 75024';
+ const make=(score,type,zip='75024',region='TX')=>({score,address:'8181 Communications Pkwy, Plano, TX '+zip,location:{x:-96.8,y:33.1},attributes:{Addr_type:type,Postal:zip,Region:region}});
+ assert.equal(assessResidentialGeocode(q,make(100,'PointAddress')).usableForSchoolCandidate,true);
+ assert.equal(assessResidentialGeocode(q,make(98,'Subaddress')).usableForSchoolCandidate,true);
+ assert.equal(assessResidentialGeocode(q,make(100,'StreetAddress')).usableForSchoolCandidate,false);
+ assert.equal(assessResidentialGeocode(q,make(94,'PointAddress')).usableForSchoolCandidate,false);
+ assert.equal(assessResidentialGeocode(q,make(100,'Locality')).usableForSchoolCandidate,false);
+ assert.equal(assessResidentialGeocode(q,make(100,'PointAddress','75035')).usableForSchoolCandidate,false);
+ assert.equal(assessResidentialGeocode(q,make(100,'PointAddress','75024','OK')).usableForSchoolCandidate,false);
+ assert.equal(assessResidentialGeocode(q,null).usableForSchoolCandidate,false);
+ const bad={address:'Bad geocode',ll:[33,-96],geocodeQuality:assessResidentialGeocode(q,make(80,'Locality'))};
+ assert.equal(addCandidate([],bad)[0].geocodeQuality.usableForSchoolCandidate,false);
+ const src=readText('home-lookup-v2.js');
+ assert.ok(src.includes("status:'needs-address-verification'"));
+ assert.ok(src.includes('if(!item?.geocodeQuality?.usableForSchoolCandidate)'));
+ assert.ok(src.includes('geocodeQuality:assessResidentialGeocode'));
+ assert.ok(html.includes('./geocode-quality.js?v=1'));
+});
+test('official CFB 2026-27 feeder contradiction is not auto-resolved',()=>{
+ const c=cfbFeeder.officialSourceConflicts.find(x=>x.school==='Farmers Branch');
+ assert.ok(c);assert.equal(c.middleA,'Field');assert.equal(c.highA,'Turner');
+ assert.equal(c.middleB,'Bush');assert.equal(c.highB,'Ranchview');
+ assert.equal(c.status,'unresolved-do-not-auto-assign');
+ assert.equal(cfbFeeder.rows.find(x=>x.zonedElementary==='Farmers Branch').feederVerification,'conflicting-official-sources');
+ assert.equal(audit.districts.find(x=>x.code==='CFB').feederReference.autoAssignmentAllowed,false);
+ assert.ok(html.includes('Farmers Branch Elementary의 두 공식 진학표 충돌'));
 });
 test('CFB official current GuideK12 locator linked',()=>{
   assert.ok(html.includes('https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/'));

@@ -1,7 +1,7 @@
 'use strict';
 function addCandidate(items, candidate) {
   if (items.length >= 3 || items.some(x => x.address.toLowerCase() === candidate.address.toLowerCase())) return items;
-  return [...items, { address: candidate.address, ll: [...candidate.ll] }];
+  return [...items, { address: candidate.address, ll: [...candidate.ll], geocodeQuality: candidate.geocodeQuality ? {...candidate.geocodeQuality} : null }];
 }
 function removeCandidate(items, index) { return items.filter((_, i) => i !== index); }
 if (typeof module !== 'undefined') module.exports = { addCandidate, removeCandidate };

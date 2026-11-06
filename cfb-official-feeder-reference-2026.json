@@ -6,7 +6,7 @@
   "academicYearExplicit": "2026–27",
   "notParcelGeometries": true,
   "notAddressSchoolLookup": true,
-  "exceptionNote": "Feeder links are not a substitute for the official GuideK12 property and apartment address search. Pre-K and K–5 bilingual locations can differ from the zoned elementary school; high school is not safely derivable from middle alone (McLaughlin-Strickland lists Perry then Turner).",
+  "exceptionNote": "Feeder links are not a substitute for the official GuideK12 property and apartment address search. Pre-K and K–5 bilingual locations can differ from the zoned elementary school; high school is not safely derivable from middle alone (McLaughlin-Strickland lists Perry then Turner). The CFBISD 2026–27 Pre-K Campuses page contradicts the 2026–27 Enrollment FAQ for Farmers Branch Elementary (Bush/Ranchview vs Field/Turner); no automatic secondary feeder should be inferred.",
   "counts": {
     "zonedElementary": 21,
     "middle": 5,
@@ -65,7 +65,8 @@
       "k5_Bilingual": "Farmers Branch",
       "k5": "Farmers Branch",
       "middle": "Field",
-      "high": "Turner"
+      "high": "Turner",
+      "feederVerification": "conflicting-official-sources"
     },
     {
       "zonedElementary": "Freeman",
@@ -201,6 +202,20 @@
       "k5": "Thompson",
       "middle": "Blalack",
       "high": "Creekview"
+    }
+  ],
+  "alternateDistrictSource": "https://www.cfbisd.edu/students/prek-enrollment-page/pre-k-campuses",
+  "officialSourceConflicts": [
+    {
+      "school": "Farmers Branch",
+      "academicYear": "2026–27",
+      "sourceA": "https://www.cfbisd.edu/enrollment-page/frequently-asked-questions-about-enrollment",
+      "middleA": "Field",
+      "highA": "Turner",
+      "sourceB": "https://www.cfbisd.edu/students/prek-enrollment-page/pre-k-campuses",
+      "middleB": "Bush",
+      "highB": "Ranchview",
+      "status": "unresolved-do-not-auto-assign"
     }
   ]
 }

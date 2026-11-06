@@ -37,6 +37,7 @@ function homeZoneMatches(ll,district){
   });
 }
 function schoolAssignmentFor(item){
+ if(!item?.geocodeQuality?.usableForSchoolCandidate)return {status:'needs-address-verification'};
  return resolveAssignment({frisco:homeFriscoMatches(item.ll),prosper:homeZoneMatches(item.ll,'PROSPER'),lewisville:homeZoneMatches(item.ll,'LISD'),plano:homeZoneMatches(item.ll,'PISD_LOOKUP'),allen:window.allenAssignment?.(item.address,item.ll),ready:state.zoneReady&&!window.allenAssignmentLoading?.(),failed:!!state.assignmentLoadFailed||!!window.allenAssignmentFailed?.()});
 }
 function assignmentRating(p,district){
@@ -46,6 +47,7 @@ function assignmentRating(p,district){
  return hits.length===1?scoreRecord(hits[0].name,district):scoreRecord(p.school,district);
 }
 function assignmentHtml(result){
+ if(result.status==='needs-address-verification')return '<b>주소 정밀도 확인 필요 · 자동 학교 배정을 표시하지 않습니다.</b><br>지도 핀이 실제 집·아파트 호수 위치인지 확인되지 않았습니다. 학군 공식 주소 검색기에서 다시 확인하세요.';
  if(result.status==='conflict')return '<b>확인 필요 · 서로 다른 학군 자료가 겹칩니다.</b><br>경계나 아파트별 예외를 학군 공식 검색기에서 확인하세요.';
  if(result.status==='loading')return '학교 배정 자료를 불러오는 중입니다.';
  if(result.status==='error')return '학교 배정 자료를 불러오지 못했습니다. 새로고침하거나 학군 공식 검색기에서 확인하세요.';
@@ -83,7 +85,7 @@ function renderHome(){
   const matches=homeZipMatches(home.ll),schools=homeFriscoMatches(home.ll);home.matches=schools;
   const zipText=matches.length?matches.map(d=>escape(d.z+' · '+d.name)).join(', '):'지도에 포함된 ZIP 경계를 확인하지 못했습니다.';
   home.assignment=schoolAssignmentFor(home);const schoolText=assignmentHtml(home.assignment);
-  const official='<details'+(['unavailable','error','conflict'].includes(home.assignment.status)?' open':'')+'><summary>학군별 공식 배정 확인</summary>'+Object.entries(OFFICIAL).map(([id,url])=>'<a class="cardlink" href="'+escape(url)+'" target="_blank" rel="noopener">'+escape(({FISD:'프리스코',PISD:'플레이노',AISD:'앨런',PROSPER:'프로스퍼',LISD:'루이스빌',CFB:'캐럴턴–파머스브랜치'})[id]||id)+' ↗</a>').join('')+'</details>';
+  const official='<details'+(['unavailable','error','conflict','needs-address-verification'].includes(home.assignment.status)?' open':'')+'><summary>학군별 공식 배정 확인</summary>'+Object.entries(OFFICIAL).map(([id,url])=>'<a class="cardlink" href="'+escape(url)+'" target="_blank" rel="noopener">'+escape(({FISD:'프리스코',PISD:'플레이노',AISD:'앨런',PROSPER:'프로스퍼',LISD:'루이스빌',CFB:'캐럴턴–파머스브랜치'})[id]||id)+' ↗</a>').join('')+'</details>';
   const office=el('destination').value.trim();
   el('homeSchoolInfo').innerHTML='<hr class="rule"><h2>집 주소 학교 후보</h2><div class="source">'+escape(home.address)+'</div><p>'+schoolText+'</p><div class="source">경계·학년·예외를 학군에서 확인하세요. 학교 위치나 ZIP은 배정을 보장하지 않습니다.</div>'+official;
   el('homeResult').innerHTML=office?'<div class="home-actions"><button type="button" class="mini-btn" id="homeRoute">집에서 운전시간 계산</button> <a class="cardlink" href="'+escape(homeDirections(false))+'" target="_blank" rel="noopener">집 → 회사 Google ↗</a> <a class="cardlink" href="'+escape(homeDirections(true))+'" target="_blank" rel="noopener">회사 → 집 ↗</a><div id="homeRouteStatus" class="source" role="status">집 주소 기준 · 교통량 미반영</div></div>':'목적지를 입력하세요.';
@@ -94,7 +96,7 @@ function refreshHomeSchools(){if(home){homeVersion++;homeRouteRequest?.abort();r
 function useHomeCandidate(candidate){
   if(!map){el('homeStatus').textContent='지도가 아직 준비되지 않았습니다. 잠시 후 주소 검색을 다시 눌러 주세요.';return false}
   homeVersion++;homeRouteRequest?.abort();
-  home={address:candidate.address,ll:[candidate.location.y,candidate.location.x]};
+  home={address:candidate.address,ll:[candidate.location.y,candidate.location.x],geocodeQuality:assessResidentialGeocode(el('homeAddress').value.trim(),candidate)};
   el('homeCandidates').replaceChildren();
   if(homeMarker)map.removeLayer(homeMarker);
   homeMarker=L.marker(home.ll,{zIndexOffset:4000,icon:L.divIcon({className:'',html:'<svg class="house-pin" width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"><path d="M4 19L21 4l17 15h-4v17H8V19z" fill="white" stroke="#a72e2e" stroke-width="2"/><path d="M3 19L21 3l18 16-3 3L21 9 6 22z" fill="#d63737" stroke="white" stroke-width="1.5"/><path d="M18 36V24h7v12" fill="#d63737"/></svg>',iconSize:[42,42],iconAnchor:[21,37]}),title:'HOME'}).addTo(map).bindPopup('<b>HOME</b><br>'+escape(home.address));
@@ -112,7 +114,8 @@ async function searchHome(event){
     if(!candidates.length){el('homeStatus').textContent='주소를 찾지 못했습니다. 도시와 ZIP을 포함해 다시 입력하세요.';return}
     candidates.sort((a,b)=>(Number.isFinite(b.score)?b.score:-1)-(Number.isFinite(a.score)?a.score:-1));
     const best=candidates[0];el('homeSearch').disabled=false;if(!useHomeCandidate(best))return;
-    const requestedZip=[...address.matchAll(/\b\d{5}(?:-\d{4})?\b/g)].at(-1),returnedZip=[...best.address.matchAll(/\b\d{5}(?:-\d{4})?\b/g)].at(-1);const zipWarning=requestedZip&&returnedZip&&requestedZip[0].slice(0,5)!==returnedZip[0].slice(0,5)?' 입력한 ZIP과 검색된 ZIP이 다릅니다.':'';el('homeStatus').textContent='자동 선택: '+best.address+' · 일치도 '+(Number.isFinite(best.score)?Math.round(best.score):'미확인')+'.'+zipWarning+' 주소와 지도 위치를 확인하세요.';
+    const requestedZip=[...address.matchAll(/\b\d{5}(?:-\d{4})?\b/g)].at(-1),returnedZip=[...best.address.matchAll(/\b\d{5}(?:-\d{4})?\b/g)].at(-1);const zipWarning=requestedZip&&returnedZip&&requestedZip[0].slice(0,5)!==returnedZip[0].slice(0,5)?' 입력한 ZIP과 검색된 ZIP이 다릅니다.':'';const quality=home.geocodeQuality;
+    el('homeStatus').textContent='자동 선택: '+best.address+' · 일치도 '+(Number.isFinite(best.score)?Math.round(best.score):'미확인')+'.'+zipWarning+(quality?.usableForSchoolCandidate?' 건물 단위 위치 후보입니다. 등록 자격은 학군에 확인하세요.':' 좌표 신뢰도 부족: '+(quality?.reason||'공식 주소 검색을 이용하세요.'));
   }catch(error){if(error.name!=='AbortError'&&version===homeVersion)el('homeStatus').textContent='주소 검색에 실패했습니다. 연결 상태를 확인한 뒤 다시 시도하세요.'}
   finally{if(version===homeVersion)el('homeSearch').disabled=false}
 }
