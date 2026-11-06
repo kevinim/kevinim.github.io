@@ -1,7 +1,8 @@
 'use strict';
-function resolveAssignment({frisco=[],lewisville=[],plano=[],allen=null,ready=true,failed=false}) {
+function resolveAssignment({frisco=[],prosper=[],lewisville=[],plano=[],allen=null,ready=true,failed=false}) {
  const found=[];
  if(frisco.length) found.push({district:'FISD',status:'current',features:frisco});
+ if(prosper.length) found.push({district:'PROSPER',status:'current',features:prosper});
  if(allen) found.push({district:'AISD',status:'unverified-year',allen});
  if(lewisville.length) found.push({district:'LISD',status:'reference',features:lewisville});
  if(plano.length) found.push({district:'PISD',status:'reference',features:plano});

@@ -37,10 +37,10 @@ function homeZoneMatches(ll,district){
   });
 }
 function schoolAssignmentFor(item){
- return resolveAssignment({frisco:homeFriscoMatches(item.ll),lewisville:homeZoneMatches(item.ll,'LISD'),plano:homeZoneMatches(item.ll,'PISD_LOOKUP'),allen:window.allenAssignment?.(item.address,item.ll),ready:state.zoneReady&&!window.allenAssignmentLoading?.(),failed:!!state.assignmentLoadFailed||!!window.allenAssignmentFailed?.()});
+ return resolveAssignment({frisco:homeFriscoMatches(item.ll),prosper:homeZoneMatches(item.ll,'PROSPER'),lewisville:homeZoneMatches(item.ll,'LISD'),plano:homeZoneMatches(item.ll,'PISD_LOOKUP'),allen:window.allenAssignment?.(item.address,item.ll),ready:state.zoneReady&&!window.allenAssignmentLoading?.(),failed:!!state.assignmentLoadFailed||!!window.allenAssignmentFailed?.()});
 }
 function assignmentRating(p,district){
- if(district==='LISD'&&p.campusId){const byId=state.ratings.filter(r=>r.district===district&&r.id===p.campusId);if(byId.length===1)return byId[0]}
+ if(['LISD','PROSPER'].includes(district)&&p.campusId){const byId=state.ratings.filter(r=>r.district===district&&r.id===p.campusId);if(byId.length===1)return byId[0]}
  const key=zoneNameKey(canonical(p.school));
  const hits=state.schools.filter(s=>s.district===district&&s.type===p.gradeLevel&&zoneNameKey(canonical(s.name))===key);
  return hits.length===1?scoreRecord(hits[0].name,district):scoreRecord(p.school,district);
@@ -51,14 +51,15 @@ function assignmentHtml(result){
  if(result.status==='error')return '학교 배정 자료를 불러오지 못했습니다. 새로고침하거나 학군 공식 검색기에서 확인하세요.';
  if(result.status==='unavailable')return '자동 연결 자료가 없습니다. 학교가 없다는 뜻은 아닙니다. 아래 학군 공식 검색기에서 주소를 확인하세요.';
  if(result.district==='AISD')return '<b>확인 필요 · 앨런 공식 주소표 (학년도 미표기)</b><br>'+[[result.allen[2],'elementary','K–6'],[result.allen[3],'middle','7–8'],[result.allen[4],'freshman','9'],[result.allen[5],'high','10–12']].map(([n,type,g])=>escape(n+' · '+g)+' <b>'+escape(allenSchoolRating(n,type))+'</b>').join('<br>')+'<br><span class="source">학군 경계와 실제 배정, 건물·호수별 예외는 학군에 확인하세요.</span>';
- const frisco=result.district==='FISD';
- return '<b>'+(frisco?'최신 경계상 후보 · 프리스코 2026–27':(result.district==='PISD'?'공식 검색기 경계 참고 · 플레이노':'과거·학년도 미확인 경계 참고 · 루이스빌'))+'</b><br>'+result.features.map(f=>{const p=f.properties;return escape(p.school+' · '+(p.grades||({elementary:'초등',middle:'중등',high:'고등'})[p.gradeLevel]||'학년 미확인'))+' <b>'+escape(ratingText(assignmentRating(p,result.district)))+'</b>'}).join('<br>')+(frisco&&result.features.some(f=>/nelson/i.test(f.properties.school))?'<br>넬슨 신규 학생은 웨스터 배정 예외 확인':'')+(!frisco?'<br><span class="source">일부 레이어에 2025–26 표기. 현재 학년도 배정과 아파트 예외는 반드시 학군에 확인하세요.</span>':'');
+ const frisco=result.district==='FISD',prosper=result.district==='PROSPER',current=frisco||prosper;
+ return '<b>'+(frisco?'최신 경계상 후보 · 프리스코 2026–27':prosper?'최신 경계상 후보 · 프로스퍼 2026–27':(result.district==='PISD'?'공식 검색기 경계 참고 · 플레이노':'과거·학년도 미확인 경계 참고 · 루이스빌'))+'</b><br>'+result.features.map(f=>{const p=f.properties;return escape(p.school+' · '+(p.grades||({elementary:'초등',middle:'중등',high:'고등'})[p.gradeLevel]||'학년 미확인'))+' <b>'+escape(ratingText(assignmentRating(p,result.district)))+'</b>'}).join('<br>')+(frisco&&result.features.some(f=>/nelson/i.test(f.properties.school))?'<br>넬슨 신규 학생은 웨스터 배정 예외 확인':'')+(current?'<br><span class="source">2026–27 공식 경계 기반 후보입니다. 실제 집 주소·학년·전학/특수 프로그램 예외·등록 자격은 학군 공식 검색기에서 확인하세요.</span>':'<br><span class="source">일부 레이어에 2025–26 표기. 현재 학년도 배정과 아파트 예외는 반드시 학군에 확인하세요.</span>');
 }
 function homeSchoolMatches(s){
  if(!home)return false;
  const result=home.assignment;if(!result||result.status!=='current'||result.district!==s.district)return false;
  const key=zoneNameKey(canonical(s.name)).replace(/\bk\s*4\b/g,'').trim();
- return (result.features||[]).some(f=>f.properties.gradeLevel===s.type&&zoneNameKey(canonical(f.properties.school)).replace(/\bk\s*4\b/g,'').trim()===key);
+ const schoolId=scoreRecord(s.name,s.district)?.id;
+ return (result.features||[]).some(f=>f.properties.gradeLevel===s.type&&((schoolId&&f.properties.campusId===schoolId)||zoneNameKey(canonical(f.properties.school)).replace(/\bk\s*4\b/g,'').trim()===key));
 }
 function clearHome(){
   homeVersion++;homeRequest?.abort();homeRouteRequest?.abort();home=null;homeCandidates=[];
