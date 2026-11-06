@@ -21,7 +21,21 @@
       "localFile": "plano-locator-reference.geojson",
       "mapSource": "https://services4.arcgis.com/uBV8NRVfoRJv7qWn/arcgis/rest/services/Plano_ISD_School_Districts/FeatureServer",
       "officialLookup": "https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder",
-      "geometryUse": "orange dashed reference; 2026–27 equivalence not established; no 2019 fallback"
+      "geometryUse": "orange dashed reference; 2026–27 equivalence not established; no 2019 fallback",
+      "feederReference": {
+        "file": "plano-official-feeder-reference-2026.json",
+        "officialPage": "https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/attendance-boundary-descriptions",
+        "checked": "2026-11-06",
+        "publishedSchoolYear": null,
+        "feederPaths": 11,
+        "uniqueElementarySchools": 42,
+        "uniqueMiddleSchools": 11,
+        "uniqueHighSchools": 6,
+        "uniqueSeniorHighSchools": 3,
+        "matching2025GisCampusNames": true,
+        "geometryYearStillUnverified2026_27": true,
+        "exception": "Jackson Elementary feeder splits east/west of Coit Rd: east Wilson/Vines/Plano Senior, west Frankford/Shepton/Plano West Senior."
+      }
     },
     {
       "code": "AISD",
@@ -31,7 +45,20 @@
       "featureCount": 20,
       "localFile": "allen-attendance-historical.geojson",
       "officialLookup": "https://www.allenisd.org/page/findaschool",
-      "geometryUse": "orange dashed reference; address-level school assignment from year-undated official published address table remains unverified"
+      "geometryUse": "orange dashed reference; address-level school assignment from year-undated official published address table remains unverified",
+      "addressAssignmentReference": {
+        "file": "allen-address-schools.json",
+        "officialPage": "https://www.allenisd.org/page/findaschool",
+        "checked": "2026-11-06",
+        "officialTableRows": 1689,
+        "acceptedCachedRows": 1688,
+        "previousRows": 1687,
+        "acceptedNew": "2050 Peak St => Evans / Ereckson / Lowery / Allen High",
+        "quarantined": "Moss Haven PL '2009 – 202-216' invalid official street range",
+        "publishedSchoolYear": null,
+        "geometryYearStillUnverified2026_27": true,
+        "doNotInferPolygons": true
+      }
     },
     {
       "code": "LISD",
@@ -144,6 +171,20 @@
       "count": 31,
       "unit": "20 elementary, 7 middle, 4 high school zones",
       "freshness": "Official 2026–27 Infofinder i 31 zones; 43/43 cross-checks succeeded across every school interior and 6 campus-border transitions. Active in production map and home school candidate engine; actual address exceptions require district verification."
+    },
+    {
+      "file": "plano-official-feeder-reference-2026.json",
+      "period": "current official feeder description retrieved November 6, 2026; no explicit school year",
+      "count": 11,
+      "unit": "feeder chains",
+      "freshness": "All 42 unique elementary campus names, 11 middle and 6 high match official 2025-26 GIS; DOES NOT prove GIS school year is current. Jackson Elementary has east/west Coit split."
+    },
+    {
+      "file": "allen-official-address-source-audit-2026.json",
+      "period": "official Allen Find-A-School retrieved November 6, 2026; no explicit school year",
+      "count": 1689,
+      "unit": "official street-range assignment rows",
+      "freshness": "1688 usable cached entries; 2050 Peak St added; one malformed Moss Haven PL range excluded; NOT evidence that 2019/2023 GIS zones are current."
     }
   ]
 }
