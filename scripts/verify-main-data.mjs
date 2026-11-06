@@ -278,7 +278,7 @@ test('CFB official 2026–27 feeder table is accurate and never treated as GIS',
   const b=cfbFeeder.rows.find(x=>x.zonedElementary==='Blanton');
   assert.equal(b.k5_Bilingual,'Carrollton');
   assert.equal(b.k5,'Blanton');
-  assert.ok(html.includes('CFB 2026–27 공식 진학표'));
+  assert.ok(html.includes('CFB 2026–27 진학표 A') && html.includes('CFB 2026–27 진학표 B'));
   assert.ok(html.includes('진학표 21개 초등학교 경로 확인'));
 });
 test('active 2026-27 campus selection excludes 14 officially retired schools',()=>{
