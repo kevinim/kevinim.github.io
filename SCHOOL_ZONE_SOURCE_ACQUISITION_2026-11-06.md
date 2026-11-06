@@ -13,13 +13,13 @@ A school district *outer boundary* is NOT a per-campus attendance zone. Texas Ed
 | ISD | Official 2026–27 information | Public vector polygons | Acquisition/production status | Outstanding |
 | --- | --- | --- | --- | --- |
 | Frisco | 2026–27 official `school.borders.2627.json` | 75 features | Verified current; production map active | Spot-check address exceptions |
-| **Prosper** | District-linked Infofinder i exposes 2026–27 elementary, middle, high groups | **31 school zones = 33 polygon parts (35 rings), 20 elementary + 7 middle + 4 high** | **Original current-year vectors acquired and converted to `prosper-attendance-2026.geojson`; staged, NOT yet active in production map/home assignment** | Compare representative addresses in current district locator and approved PDF before activation |
+| **Prosper** | District-linked Infofinder i exposes 2026–27 elementary, middle, high groups | **31 school zones = 33 polygon parts (35 rings), 20 elementary + 7 middle + 4 high** | **31 official current-year vectors acquired, independently cross-validated (43/43 checks) and activated in production map and home-address school candidate engine** | Continue testing real residential addresses, apartment exceptions, and special-program enrollments with official locator; do not treat geometry as guarantee |
 | Plano | Public 2026–27 SchoolFinder web page; linked Web Map uses `2526` GIS layer names | 64 polygons, 2025–26 | Older reference active; no newer 2026–27 geometries found in Plano-owned public ArcGIS catalog | Request current-vintage GIS or authoritative confirmation unchanged |
 | Allen | Public address-based school assignments and "Attendance Boundary Map" linked to a **2024–25 PNG** | City of Allen GIS 20 polygons, 2019/2023 | Historical reference only | Request latest campus polygons/board-validated zones. A 2025 ArcGIS "Master Map & School Locator" item is token-protected (403) and cannot be accessed as public vector |
 | Lewisville | Official **2026–27 locator** and public MetroStudy ArcGIS web-map `SZF 2627` | 676 elementary geometry pieces, 15 middle polygons, 5 high polygons | Current-year locator source obtained; **high polygons explicitly `SCHL_YEAR=2025-26`** and elementary/middle are undated. Production renders as unverified year | Obtain vendor/district year equivalence; address-validate high, middle, elementary |
 | CFBISD | District public School Search embeds current GuideK12, reflecting March 6, 2025 board-approved zones and used for 2026–27 registration | No validated public vector download found. GuideK12 client renders school boundaries via PNG `school_map_tile` endpoint | Official current search + 2025 approved maps secured as links, **not** a GeoJSON | Request GIS shapefile or vendor-supported export; compare approved 2025 and current 2026–27 |
 
-**Bottom line:** official **current-year geometries acquired for 2 of 6 districts** (Frisco active + Prosper staged). **Live site** still displays current-year Frisco only until Prosper's address-level validation is completed. Do not claim 2/6 live yet.
+**Bottom line:** official **current-year geometries acquired and activated for 2 of 6 districts (Frisco and Prosper)**. Prosper activation is based on 43 independent district search comparisons, covering all 31 school-zone interiors and both sides of six campus borders. The four other districts remain historical or unverified.
 
 ## Prosper — authoritative georeferenced source (ACQUIRED)
 
@@ -49,7 +49,18 @@ Official **approved 2026–27 map PDFs** (all three levels, not georeferenced GI
 
 The middle-school map includes the new **Bridges** attendance zone approved November 17, 2025: https://www.prosper-isd.net/article/2560387
 
-Older `prosper-celina-reference-2026.geojson` (13 local Celina study-area features) is **NOT district-wide** and has an unverified school-year. Keep it only as historical reference/rollback; do not combine it with current-year polygons or use for 2026–27 assignments.
+Older `prosper-celina-reference-2026.geojson` (13 local Celina study-area features) is **NOT district-wide** and has an unverified school-year. It is archived only and **no longer loaded** by the production website. Do not combine it with the official current 31-zone dataset.
+
+## Prosper production cross-validation evidence (completed November 6, 2026)
+
+The official district Infofinder i frontend exposes the polygon source `GetRedistrict` and an **independent school lookup** `SearchLocation` called by parents selecting a point on the map. We independently issued live queries on synthetic geographic coordinates to verify the transformed data (not simply comparing a file against its own copy):
+
+- **31/31 full-zone deep-interior coordinate tests passed:** 20 elementary, 7 middle and 4 high; each coordinate's official assigned school code matched the polygon campus ID.
+- **12/12 near-border tests passed:** 6 school transitions, tested a location on either side of each boundary (2 elementary, 2 middle, 2 high).
+- **43/43 total matched.** No geometry/lookup mismatches detected. Coordinates and expected school IDs in `tests/prosper-official-location-checks-2026.json`. Re-run via `node scripts/check-prosper-official-locator.mjs` (public internet access required).
+- School assignment candidates and green current-year map overlays for Prosper were activated following these checks. UI and integration QA must still run as normal on every deployment.
+
+**Limit:** These are synthetic coordinate map pin tests, not actual verified residential addresses. Enrollment eligibility, apartments, grandfathering and program exceptions remain subject to official district address-search and registrar verification.
 
 ## Other four districts — authoritative entry points and blockers
 
@@ -101,4 +112,4 @@ This independently corroborates why 2023 Allen and 2025–26 Lewisville polygons
 1. Validate source academic year, grade, school ID, geometry bounds and polygon rings.
 2. Test at least two known residential addresses per campus level plus border/exception addresses using the district's official address-search results. No invented property addresses; obtain district-confirmed public examples or verified test locations.
 3. Test home school assignment, campus selection, ZIP map interactions and existing comparisons in real browser.
-4. Only then update the production overlay/assignment logic and change the **live** freshness tally to 2/6. A data file saved in the repository alone does not upgrade the live site.
+4. **Done for Prosper:** current-year boundary geometry updated in production after independent source-lookup comparisons (43/43); live freshness tally is now 2/6. Continue monitoring actual residential address/program exceptions separately.
