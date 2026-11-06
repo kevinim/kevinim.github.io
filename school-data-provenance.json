@@ -1,5 +1,5 @@
 {
-  "lastVerified": "2026-11-05",
+  "lastVerified": "2026-11-06",
   "activeSchoolYear": "2026–27",
   "notes": "Audits data source and vintages, not guaranteed student assignments. Verify address + grade with the official ISD before leasing or purchasing.",
   "districts": [
@@ -45,10 +45,17 @@
     {
       "code": "PROSPER",
       "name": "Prosper ISD",
-      "status": "lookup-only",
-      "geometryYear": "2026–27 approved map PDF, no verified GIS export",
+      "status": "partial-reference",
+      "geometryYear": "source edited September 9, 2026; no confirmed academic school-year",
       "officialLookup": "https://www.prosper-isd.net/page/attendance-boundaries/",
-      "geometryUse": "no local assignment polygons"
+      "geometryUse": "Orange dashed school-click reference for 7 elementary, 3 middle, 3 high zones within City of Celina study area only. Source academic year unspecified. Not used for home address assignment; not districtwide. 2026-27 Prosper approved official map remains authoritative.",
+      "featureCount": 13,
+      "localFile": "prosper-celina-reference-2026.geojson",
+      "mapSources": [
+        "https://services1.arcgis.com/x4nhme9V33KOzAfr/arcgis/rest/services/Prosper_ISD_Elementary_Zones/FeatureServer/0",
+        "https://services1.arcgis.com/x4nhme9V33KOzAfr/arcgis/rest/services/Prosper_ISD_Middle_Zones/FeatureServer/8",
+        "https://services1.arcgis.com/x4nhme9V33KOzAfr/arcgis/rest/services/PISDHighZones/FeatureServer/43"
+      ]
     },
     {
       "code": "CFB",
@@ -56,7 +63,8 @@
       "status": "lookup-only",
       "geometryYear": "zones approved March 6, 2025, referenced by 2026–27 enrollment search",
       "officialLookup": "https://www.cfbisd.edu/students/school-maps-locator-system",
-      "geometryUse": "no local assignment polygons"
+      "geometryUse": "Official GuideK12 current address search linked directly; no validated export available in this dashboard",
+      "directLocator": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/"
     }
   ],
   "datasets": [
@@ -94,6 +102,13 @@
       "count": 20,
       "unit": "school-boundary polygons",
       "freshness": "Historical reference only."
+    },
+    {
+      "file": "prosper-celina-reference-2026.geojson",
+      "period": "last edited 2026-09-09; school year not stated",
+      "count": 13,
+      "unit": "local-government partial reference polygons",
+      "freshness": "7 elementary, 3 middle, 3 high polygons only in City of Celina's Prosper ISD study area. Not guaranteed 2026–27 and not used for home assignment."
     }
   ]
 }

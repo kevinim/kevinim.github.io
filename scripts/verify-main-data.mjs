@@ -8,6 +8,7 @@ const html = readText('index.html');
 const audit = readJson('school-data-provenance.json');
 const plano = readJson('plano-locator-reference.geojson');
 const allen = readJson('allen-attendance-historical.geojson');
+const prosper = readJson('prosper-celina-reference-2026.geojson');
 const demographics = readJson('dfw-demographics.json');
 const rating = readJson('tea-ratings-2026.json');
 const location = readJson('nces-locations-2024.json');
@@ -72,9 +73,47 @@ test('Allen GIS remains historical (never falsely current)',()=>{
   assert.equal(allen.features.length,20);
   assert.ok(allen.features.every(x=>x.properties.current===false));
 });
+test('Prosper/Celina government GIS is validated as partial, never current',()=>{
+  assert.equal(prosper.type,'FeatureCollection');
+  assert.equal(prosper.features.length,13);
+  assert.equal(prosper.metadata.sourceOwner,'City of Celina, TX / lisakasemodel-celinatx ArcGIS Online');
+  assert.equal(prosper.metadata.schoolYearConfirmed,false);
+  assert.equal(prosper.metadata.coverage,'partial-Celina');
+  assert.equal(prosper.metadata.doNotUseForAddressAssignment,true);
+  const levels={elementary:7,middle:3,high:3};
+  for(const [level,count] of Object.entries(levels))assert.equal(prosper.features.filter(x=>x.properties.gradeLevel===level).length,count,level);
+  assert.equal(new Set(prosper.features.map(x=>x.properties.gradeLevel+'|'+x.properties.school)).size,13);
+  assert.equal(new Set(prosper.features.map(x=>x.properties.sourceUrl)).size,3);
+  let vertices=0;
+  function walk(x){if(typeof x[0]==='number'){const [lon,lat]=x;assert.ok(Number.isFinite(lon)&&lon>-97.3&&lon< -96.3);assert.ok(Number.isFinite(lat)&&lat>32.8&&lat<33.6);vertices++;return;}x.forEach(walk);}
+  for(const f of prosper.features){
+    assert.equal(f.properties.current,false);
+    assert.equal(f.properties.sourceDistrict,'PROSPER');
+    assert.ok(f.properties.sourceVintage.includes('학년도 미확인'));
+    assert.ok(['Polygon','MultiPolygon'].includes(f.geometry.type));
+    walk(f.geometry.coordinates);
+  }
+  assert.ok(vertices>1100);
+});
+test('Prosper reference never enters address assignment',()=>{
+  const inline=inlineScripts.join('\n');
+  const home=readText('home-lookup-v2.js');
+  assert.ok(inline.includes("district:'PROSPER_REF'"));
+  assert.ok(inline.includes("s.district==='PROSPER'?state.zoneData.PROSPER_REF"));
+  assert.ok(inline.includes("sources[i].district!=='PROSPER_REF'"));
+  assert.ok(!home.includes("homeZoneMatches(item.ll,'PROSPER_REF')"));
+  assert.ok(!home.includes("prosper:homeZoneMatches"));
+});
+test('Prosper new Jim Bridges school listed with no guessed coordinates',()=>{
+  assert.ok(inlineScripts.join('\n').includes("name:'Jim Bridges Middle School',type:'middle',district:'PROSPER'"));
+  assert.ok(inlineScripts.join('\n').includes("source:'Prosper ISD 2026–27 new campus"));
+});
+test('CFB official current GuideK12 locator linked',()=>{
+  assert.ok(html.includes('https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/'));
+});
 test('6 school-district rows and provenance date visible on site',()=>{
   for (const name of ['Frisco','Plano','Allen','Lewisville','Prosper','Carrollton–Farmers Branch']) assert.ok(html.includes('<b>' + name + '</b>'));
-  assert.ok(html.includes('학군별 배정 경계 최신성 · 2026-11-05'));
+  assert.ok(html.includes('학군별 배정 경계 최신성 · 2026-11-06'));
   assert.ok(html.includes('2019–20 경계를 대신 적용하지 않습니다'));
 });
 test('DFW demographic rows retain 2020-2024 ACS ZIP coverage',()=>{
