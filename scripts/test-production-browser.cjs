@@ -16,7 +16,9 @@ mkdirSync(dir,{recursive:true});
   browser=await chromium.launch({headless:true,args:['--no-sandbox']});
   const page=await browser.newPage({viewport:{width:1380,height:900},deviceScaleFactor:1});
   const jsErrors=[];
+  let txwrapTileRequests=0;
   page.on('pageerror',error=>jsErrors.push(String(error?.message||error)));
+  page.on('request',request=>{if(request.url().includes('/TxWRAP/wildfire_hazard_potential/MapServer/tile/'))txwrapTileRequests++});
   await page.goto(base+'?production-smoke='+Date.now(),{waitUntil:'domcontentloaded',timeout:90000});
   await page.waitForSelector('.leaflet-container',{timeout:70000});
   await page.waitForFunction(()=>window.schoolBoundaryAuditReady===true,null,{timeout:100000});
@@ -90,6 +92,34 @@ mkdirSync(dir,{recursive:true});
   await page.waitForFunction(()=>document.getElementById('femaHazardStatus')?.textContent?.includes('1,734'),null,{timeout:80000});
   assert.equal(await page.locator('#nfhlEnabled').isChecked(),false);
   result.checks.push('Live NRI 1,734-tract model remains independent and NFHL restores ZIP');
+
+  // Verify the published Texas A&M wildfire model, not merely a localhost build.
+  assert.equal(txwrapTileRequests,0,'Deployed TxWRAP tiles must remain lazy before user opt-in');
+  assert.equal(await page.locator('#txwrapWHPEnabled').count(),1,'Deployed TxWRAP control is missing');
+  await page.locator('#txwrapWHPPanel > summary').click();
+  await page.locator('#txwrapWHPEnabled').check();
+  await page.waitForFunction(()=>{
+   const t=document.getElementById('txwrapWHPStatus')?.textContent||'';
+   return t.includes('지도 타일 ')||t.includes('모두 확인할 수 없어');
+  },null,{timeout:65000}).catch(()=>{});
+  const txwrapStatus=await page.locator('#txwrapWHPStatus').innerText();
+  result.txwrapStatus=txwrapStatus;
+  result.txwrapTileRequests=txwrapTileRequests;
+  assert.equal(await page.locator('#femaHazardEnabled').isChecked(),false);
+  assert.equal(await page.locator('#nfhlEnabled').isChecked(),false);
+  assert.equal(await page.locator('#zipOverlay').isChecked(),false);
+  const loaded=Number(txwrapStatus.match(/지도 타일 (\d+)개 로딩 확인/)?.[1]||0);
+  if(loaded>0&&txwrapTileRequests>0){
+   assert.equal(await page.locator('#txwrapWHPLegend').isVisible(),true);
+   result.txwrapTilesLoaded=loaded;
+   result.checks.push('LIVE TxWRAP official wildfire hazard tiles render on top of DFW map and exclude FEMA/ZIP');
+   await page.screenshot({path:dir+'/txwrap-wildfire-live.png',timeout:30000});
+  }else{
+   result.warnings.push('Official TxWRAP raster service did not deliver a complete tile during the live check: '+txwrapStatus);
+  }
+  await page.locator('#txwrapWHPEnabled').uncheck();
+  assert.equal(await page.locator('#zipOverlay').isChecked(),true,'ZIP layer must restore after turning off TxWRAP');
+
   assert.deepEqual(jsErrors,[],'Live dashboard JavaScript errors: '+jsErrors.join(' | '));
   await page.screenshot({path:dir+'/deployed-dashboard.png',timeout:30000});
   result.status=result.warnings.length?'pass-with-provider-warning':'pass';
