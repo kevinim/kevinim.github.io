@@ -368,10 +368,9 @@ async function schoolClicked(s){
  state.selectedSchool=s;
  // School selection should automatically reveal any existing current or
  // historic reference polygon. Do not require a second checkbox click.
- const officialYear=s.district==='FISD'||s.district==='PROSPER';
- const finderLinked=(s.district==='PISD'&&state.liveFinder.PISD_LOOKUP)||(s.district==='LISD'&&state.liveFinder.LISD);
- if(!officialYear&&!finderLinked){state.showOldZones=true;el('referenceBoundaryOverlay').checked=true}
- else{state.showHistoric=true;el('historicOverlay').checked=true}
+ state.showOldZones=true;state.showHistoric=true;
+ el('referenceBoundaryOverlay').checked=true;
+ el('historicOverlay').checked=true;
  drawDetail();
  if(!s.ll&&s.address){toast('학교 주소 좌표를 확인하는 중입니다.');await geocodeSchool(s);}
  if(state.selectedSchool!==s)return;
