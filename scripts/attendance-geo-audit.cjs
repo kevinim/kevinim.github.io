@@ -34,10 +34,25 @@ function interiorPoints(geometry,max=50){
   }
  }
  const seen=new Set(),out=[];
- for(const p of candidates){
-  if(!inGeometry(p,geometry))continue;
-  const key=p.map(x=>x.toFixed(10)).join(',');if(seen.has(key))continue;seen.add(key);
-  out.push(p);if(out.length>=max)break;
+ const add=p=>{
+  if(!inGeometry(p,geometry))return;
+  const key=p.map(x=>x.toFixed(10)).join(',');if(seen.has(key))return;
+  seen.add(key);out.push(p);
+ };
+ for(const p of candidates){add(p);if(out.length>=max)return out}
+ // Sparse polygons such as a simple four-cornered square may not yield 50
+ // edge-interior candidates. Add a deterministic interior grid to reach 50
+ // without duplicating points, then fail closed if the polygon is too thin.
+ if(out.length<max){
+  for(const poly of polys){
+   const ring=poly[0];if(!ring?.length)continue;
+   const xs=ring.map(p=>p[0]),ys=ring.map(p=>p[1]);
+   const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+   for(let iy=0;iy<24&&out.length<max;iy++)
+    for(let ix=0;ix<24&&out.length<max;ix++)
+     add([x0+(ix+.5)*(x1-x0)/24,y0+(iy+.5)*(y1-y0)/24]);
+   if(out.length>=max)break;
+  }
  }
  return out;
 }
