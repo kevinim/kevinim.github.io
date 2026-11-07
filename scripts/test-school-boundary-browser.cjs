@@ -127,7 +127,7 @@ mkdirSync(out,{recursive:true});
   assert.ok((await page.locator('#zoneNotice a').getAttribute('href')).includes('earlycollege.cfbisd.edu'));
   // Regression for Allen map visibility. Initial overview zoom 11 previously
   // rendered ZERO school markers even when the school data had loaded.
-  await page.evaluate(()=>map.setView([33.103,-96.675],11));
+  await page.evaluate(()=>{map.setView([33.103,-96.675],11);return null});
   await page.waitForFunction(()=>map.getZoom()===11);
   const allenWide=await page.evaluate(()=>{
    const expected=state.schools.filter(s=>s.district==='AISD'&&s.ll&&s.type!=='other'&&map.getBounds().contains(s.ll));
