@@ -1,0 +1,51 @@
+{
+  "auditDate": "2026-11-07",
+  "approach": "Human-style browser inspection of publicly accessible district-operated resident school finders. These are source functionality checks, NOT claims that all home addresses have independently verified school assignments or current GIS polygons.",
+  "residentLookupCompletionCriterion": "Live official Finder must show a single elementary, middle and high/freshman school path for an actual entered location; mere link availability or an unfiltered school catalog is insufficient.",
+  "districts": [
+    {
+      "code": "AISD",
+      "status": "resident-finder-confirmed",
+      "source": "https://www.allenisd.org/page/findaschool",
+      "officialYearExplicit": null,
+      "inputInstructions": "Search street name only; select the address-number range matching the home number.",
+      "addressExample": "2050 Peak St, Allen, TX 75002",
+      "observedRow": {
+        "street": "Peak St",
+        "range": "2050",
+        "elementary": "Evans",
+        "middle": "Ereckson",
+        "freshman": "Lowery",
+        "high": "Allen High School"
+      },
+      "uniqueCampusesObserved": 4,
+      "consistentWithCachedStreetRange": true,
+      "yearVerifiedGeojson": false,
+      "manualEligibilityRequired": true,
+      "exceptionAddresses": 4,
+      "sourceRowsOfficial": 1689,
+      "sourceRowsParsable": 1687,
+      "notes": "Exact source row re-read after a first automation pass inaccurately generalized range as 2000–2099. The literal official cell is '2050'."
+    },
+    {
+      "code": "CFB",
+      "status": "property-specific-lookup-not-independently-confirmed",
+      "source": "https://www.cfbisd.edu/students/school-maps-locator-system",
+      "embeddedFinder": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/",
+      "officialYearExplicit": null,
+      "districtPageZonePolicyApproved": "2025-03-06",
+      "publicFacilityTestAddresses": [
+        "1445 N Perry Rd, Carrollton, TX 75006",
+        "1600 S Josey Ln, Carrollton, TX 75006"
+      ],
+      "publicFacilityTestsCompleted": 2,
+      "uniquePropertyZonedResultsObserved": 0,
+      "observedBehavior": "Address entry and Find on Map did not produce a uniquely identified zoned elementary/middle/high set. The many school cards remained indistinguishable from the default unfiltered directory in tested sessions.",
+      "conclusion": "Do not mark the address-level lookup as verified. These browser observations do not establish that the locator is universally broken for every resident browser and address; request confirmation through CFB Student Services.",
+      "feederPathStatus": "21 official 2026–27 elementary-to-middle/high paths; 20 cross-official-source consistent, 1 contradictory Farmers Branch Elementary; feeder path does NOT assign residence.",
+      "currentYearGeometryVerified": false,
+      "enrollmentContact": "enroll@cfbisd.edu",
+      "phone": "972-968-6500"
+    }
+  ]
+}
