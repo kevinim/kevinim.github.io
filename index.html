@@ -491,7 +491,7 @@ function drawSchools(){
  for(const s of visible){
   const selectedArea=inSelectedArea(s);
   const cls=homeActive?(homeSchoolMatches(s)?'home-match':'nearby'):s.type;
-  const subdued=prioritizeSelectedArea&&!selectedArea&&!homeSchoolMatches(s);
+  const subdued=prioritizeSelectedArea&&!selectedArea&&!(homeActive&&homeSchoolMatches(s));
   const icon=L.divIcon({className:'',html:`<div class="mapmark ${cls}${subdued?' outside-selected-area':''}">${s.type==='elementary'?'초':s.type==='middle'?'중':'고'}</div>`,iconSize:[27,27],iconAnchor:[13,13]});
   L.marker(s.ll,{icon,title:s.name,zIndexOffset:selectedArea?1000:0}).addTo(schoolGroup).on('click',()=>schoolClicked(s));
  }
