@@ -38,11 +38,13 @@ const {buildTexasSuggestUrl,isTexasStreetSuggestion,filterTexasStreetSuggestions
 const {addCandidate}=require('../candidate-compare.js');
 const {compareManualSchoolResult,compareProsperOfficialPoint,buildProsperOfficialPointUrl,officialReviewCandidates,officialReviewName,PLANO_2026_27_EXPERIENCE}=require('../official-school-review.js');
 const {zoneBoundaryProximity,distancePointToSegmentMeters}=require('../school-zone-risk.js');
+const {FEMA_HAZARD_TYPES,FEMA_RISK_COLORS,femaHazardMetric,femaHazardStyle,validateFemaHazardGeojson}=require('../phase2a-fema-hazards.js');
 const {buildCollinParcelUrl,parcelStreetKey,assessCollinParcelResult}=require('../collin-parcel-check.js');
 const demographics = readJson('dfw-demographics.json');
 const rating = readJson('tea-ratings-2026.json');
 const location = readJson('nces-locations-2024.json');
 const zips = readJson('dfw-zcta-boundaries.geojson');
+const femaHazards=readJson('data/phase2a-fema-nri-dfw-2025.geojson');
 const school = readJson('schools.json');
 let total = 0;
 const asyncChecks=[];
@@ -61,7 +63,7 @@ test('main page inline JavaScript compiles', () => {
   inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
 });
 test('all main application JS modules compile', () => {
-  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
+  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','phase2a-fema-hazards.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
     new Script(readText(name), {filename:name});
     assert.ok(html.includes('./' + name), name + ' not loaded');
   }
@@ -936,6 +938,56 @@ test('6 school-district rows and provenance date visible on site',()=>{
   assert.ok(html.includes('교차 검증 통과'));
   assert.ok(html.includes('Frisco·Prosper 2곳'));
   assert.ok(html.includes('과거 2019–20 GIS로 대체하지 않습니다'));
+});
+test('Phase2A FEMA December 2025 v1.20 source snapshot is real and separate from school/ZIP data',()=>{
+ assert.equal(femaHazards.type,'FeatureCollection');
+ assert.equal(validateFemaHazardGeojson(femaHazards),true);
+ assert.equal(femaHazards.metadata.snapshotSourceVersion,'December 2025');
+ assert.equal(femaHazards.metadata.sourceDataset,'2025 NRI v1.20.0');
+ assert.equal(femaHazards.metadata.modelReleased,'2025-12');
+ assert.equal(femaHazards.metadata.notParcelFloodplain,true);
+ assert.equal(femaHazards.metadata.scale,'census-tract');
+ assert.equal(Object.keys(femaHazards.metadata.coverageCounties).length,12);
+ assert.equal(femaHazards.features.length,1734);
+ assert.equal(Object.values(femaHazards.metadata.countyTractCounts).reduce((a,b)=>a+b,0),femaHazards.features.length);
+ const seen=new Set();
+ for(const feature of femaHazards.features){
+  const p=feature.properties;
+  assert.ok(/^48\\d{9}$/.test(p.tract));
+  assert.equal(feature.id,p.tract);
+  assert.equal(seen.has(feature.id),false);
+  seen.add(feature.id);
+  assert.equal(p.version,'December 2025');
+  assert.ok(femaHazards.metadata.coverageCounties[p.countyFips]);
+  assert.ok(['Polygon','MultiPolygon'].includes(feature.geometry.type));
+  for(const kind of ['ifld','wfir','hrcn']){
+   assert.ok(Number.isFinite(p[kind].score)&&p[kind].score>=0&&p[kind].score<=100);
+   assert.ok(typeof p[kind].rating==='string');
+  }
+ }
+ assert.equal(Object.keys(FEMA_HAZARD_TYPES).join(','),'ifld,wfir,hrcn');
+ assert.equal(Object.keys(FEMA_RISK_COLORS).includes('No Rating'),true);
+ assert.equal(femaHazards.features.filter(f=>f.properties.wfir.rating==='No Rating').length,228);
+ assert.equal(femaHazardMetric(femaHazards.features[0],'ifld').rating,femaHazards.features[0].properties.ifld.rating);
+ const noRating=femaHazards.features.find(f=>f.properties.wfir.rating==='No Rating');
+ assert.ok(noRating);
+ assert.equal(femaHazardMetric(noRating,'wfir').rating,'No Rating');
+ assert.equal(femaHazardMetric(noRating,'wfir').score,0);
+ assert.equal(femaHazardMetric(null,'ifld').rating,'Insufficient Data');
+ assert.equal(femaHazardMetric(femaHazards.features[0],'not-a-source').score,null);
+ assert.equal(femaHazardStyle(femaHazards.features[0],'ifld',0.6).pane,'femaHazardPane');
+ assert.equal(femaHazardStyle(femaHazards.features[0],'ifld',0.6).fillOpacity,0.6);
+ assert.ok(html.includes('id="phase2HazardPanel"'));
+ assert.ok(html.includes('id="femaHazardEnabled"'));
+ assert.ok(html.includes('id="femaHazardType"'));
+ assert.ok(html.includes('id="femaHazardLegend"'));
+ assert.ok(html.includes('id="femaHazardStatus"'));
+ assert.ok(html.includes('createFemaHazardOverlay?.(map,document)'));
+ assert.ok(html.includes('Census tract'));
+ assert.ok(html.includes('FEMA 2025'));
+ assert.ok(html.includes('https://www.fema.gov/flood-maps'));
+ assert.ok(!html.includes('id="cfbFeederSection"'));
+ assert.ok(!html.includes('id="lisdApartmentSection"'));
 });
 test('DFW demographic rows retain 2020-2024 ACS ZIP coverage',()=>{
   assert.ok(demographics.data?.length>=290);
