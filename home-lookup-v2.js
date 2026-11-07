@@ -82,7 +82,7 @@ function homeSchoolMatches(s){
  const result=home.assignment;if(!result||!['current','finder-current'].includes(result.status)||result.district!==s.district)return false;
  const key=zoneNameKey(canonical(s.name)).replace(/\bk\s*4\b/g,'').trim();
  const schoolId=scoreRecord(s.name,s.district)?.id;
- return (result.features||[]).some(f=>f.properties.gradeLevel===s.type&&((schoolId&&f.properties.campusId===schoolId)||zoneNameKey(canonical(f.properties.school)).replace(/\bk\s*4\b/g,'').trim()===key));
+ return (result.features||[]).some(f=>schoolLevelMatchesAssignment(s,f.properties.gradeLevel)&&((schoolId&&f.properties.campusId===schoolId)||zoneNameKey(canonical(f.properties.school)).replace(/\bk\s*4\b/g,'').trim()===key));
 }
 function clearHome(){
   homeVersion++;homeRequest?.abort();homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;home=null;homeCandidates=[];
