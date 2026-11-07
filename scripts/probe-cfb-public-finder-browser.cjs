@@ -17,6 +17,16 @@ const report={checkedAt:new Date().toISOString(),district:'CFB',
  propertyZonedCampusResultsVerified:false,driver:'GitHub Actions Playwright Chromium',
  errors:[],networkFailures:[],diagnostics:{},publicNetworkTrace:[]};
 const cleanUrl=u=>{try{const x=new URL(u);return x.origin+x.pathname}catch{return '[unparseable URL]'}};
+const assignedCampusNames=text=>{
+ const lines=String(text||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+ const names=[];
+ for(let i=1;i<lines.length;i++)
+  if(lines[i]==='Assigned school'&&!names.includes(lines[i-1]))names.push(lines[i-1]);
+ const elementary=names.filter(x=>/Elementary \(K-5\)/i.test(x)&&!/Bilingual/i.test(x));
+ const middle=names.filter(x=>/Middle School \(6-8\)/i.test(x));
+ const high=names.filter(x=>/High School \(9-12\)/i.test(x));
+ return {all:names,elementary,middle,high,threeLevelsFound:elementary.length===1&&middle.length===1&&high.length===1};
+};
 (async()=>{
  let browser;
  try{
@@ -112,6 +122,9 @@ const cleanUrl=u=>{try{const x=new URL(u);return x.origin+x.pathname}catch{retur
    };
   });
   report.diagnostics.afterSearch=dom;
+  report.diagnostics.afterSearch.assigned=assignedCampusNames(dom.matchingResultsExcerpt);
+  report.propertyZonedCampusResultsVerified=report.diagnostics.nativeCandidateSelected&&report.diagnostics.afterSearch.assigned.threeLevelsFound;
+  if(report.propertyZonedCampusResultsVerified)report.result='native-address-selection-three-grade-band-assigned-schools-observed';
   await page.screenshot({path:join(out,'search.png'),animations:'disabled',timeout:20000});
   // A public SCHOOL campus address can be absent from residential address
   // catalogs. Repeat with an advertised apartment building whose inclusion
@@ -127,7 +140,10 @@ const cleanUrl=u=>{try{const x=new URL(u);return x.origin+x.pathname}catch{retur
   report.diagnostics.apartmentProbe.suggestions=await page.evaluate(()=>[...document.querySelectorAll('.address_input .search_result')].slice(0,12).map(el=>({text:(el.textContent||'').trim().slice(0,150),visible:!!el.getClientRects().length})));
   await addressInput.fill(publicApartment);
   await page.waitForTimeout(2900);
-  const aptNative=page.locator('.address_input .search_result_container .search_result').filter({hasText:/1011/i}).first();
+  const aptOptions=page.locator('.address_input .search_result_container .search_result');
+  const aptBase=aptOptions.filter({hasText:/^1011 S MAIN ST Carrollton, TX 75006$/i}).first();
+  const aptNative=(await aptBase.count())>0?aptBase:aptOptions.filter({hasText:/1011/i}).first();
+  report.diagnostics.apartmentProbe.baseAddressCandidateFound=(await aptBase.count())>0;
   report.diagnostics.apartmentProbe.nativeCandidateCount=await page.locator('.address_input .search_result_container .search_result').count();
   report.diagnostics.apartmentProbe.nativeCandidateMarkup=await page.locator('.address_input .search_result_container').first().evaluate(el=>el.outerHTML.slice(0,2300)).catch(()=>null);
   report.diagnostics.apartmentProbe.nativeCandidateVisible=(await aptNative.count())>0&&await aptNative.isVisible().catch(()=>false);
@@ -146,10 +162,13 @@ const cleanUrl=u=>{try{const x=new URL(u);return x.origin+x.pathname}catch{retur
   const secondListing=start>=0?secondText.slice(start,start+3500):'';
   const firstListing=dom.matchingResultsExcerpt.slice(0,3500);
   report.diagnostics.apartmentProbe.resultsExcerpt=secondListing.slice(0,2200);
+  report.diagnostics.apartmentProbe.assigned=assignedCampusNames(secondListing);
+  report.diagnostics.apartmentProbe.zonedSchoolConfirmed=report.diagnostics.apartmentProbe.nativeCandidateSelected&&
+   report.diagnostics.apartmentProbe.assigned.threeLevelsFound;
   report.diagnostics.apartmentProbe.sameFirst3500CharsAsPublicSchool=secondListing===firstListing;
   report.diagnostics.apartmentProbe.containsAssignmentHeading=/\b(your zoned schools|assigned schools|schools assigned to address)\b/i.test(secondListing);
   await page.screenshot({path:join(out,'apartment-search.png'),animations:'disabled',timeout:20000});
-  report.result='address-search-attempted-results-for-manual-review';
+  if(!report.propertyZonedCampusResultsVerified)report.result='address-search-attempted-results-for-manual-review';
   // This probe intentionally NEVER certifies a school assignment from
   // the presence of a school card or words in provider boilerplate.
  }catch(error){
@@ -164,5 +183,6 @@ const cleanUrl=u=>{try{const x=new URL(u);return x.origin+x.pathname}catch{retur
   console.log('CFB PUBLIC NETWORK TRACE (paths only): '+JSON.stringify(report.publicNetworkTrace).slice(0,8500));
   console.log('CFB INPUT DOM DETAILS: '+JSON.stringify({initial:report.diagnostics.firstInputInteraction,scripts:report.diagnostics.publicScripts,apartment:report.diagnostics.apartmentProbe?.inputMarkup}).slice(0,4800));
   console.log('CFB NATIVE AUTOCOMPLETE: '+JSON.stringify({school:{nativeCount:report.diagnostics.nativeCandidateCount,nativeVisible:report.diagnostics.nativeVisible,nativeSelected:report.diagnostics.nativeCandidateSelected,label:report.diagnostics.nativeCandidateLabel,markup:report.diagnostics.nativeCandidateMarkup},apartment:{nativeCount:report.diagnostics.apartmentProbe?.nativeCandidateCount,nativeVisible:report.diagnostics.apartmentProbe?.nativeCandidateVisible,nativeSelected:report.diagnostics.apartmentProbe?.nativeCandidateSelected,label:report.diagnostics.apartmentProbe?.nativeCandidateLabel,markup:report.diagnostics.apartmentProbe?.nativeCandidateMarkup}}).slice(0,6500));
+  console.log('CFB ASSIGNED-SCHOOL SUMMARY: '+JSON.stringify({publicCampus:report.diagnostics.afterSearch?.assigned,publicCampusValidated:report.propertyZonedCampusResultsVerified,publicApartment:report.diagnostics.apartmentProbe?.assigned,apartmentBaseCandidateFound:report.diagnostics.apartmentProbe?.baseAddressCandidateFound,apartmentSelectedLabel:report.diagnostics.apartmentProbe?.nativeCandidateLabel,publicApartmentValidated:report.diagnostics.apartmentProbe?.zonedSchoolConfirmed}).slice(0,4200));
  }
 })().catch(error=>{console.error(error);process.exitCode=1});
