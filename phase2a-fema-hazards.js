@@ -2,7 +2,7 @@
 // Phase 2A FEMA 2025 NRI tract-only relative risk; never parcel/ZIP zoning.
 // Data is fetched lazily, only after the user enables a hazard overlay.
 const FEMA_HAZARD_TYPES={
- rfld:{label:'하천 범람 위험',meaning:'FEMA Riverine Flooding 상대 위험도 · 도심 배수/급류 침수를 포함하지 않을 수 있음'},
+ ifld:{label:'내륙 홍수 위험',meaning:'FEMA Inland Flooding 상대 위험도 · 개별 필지 침수 예상이나 FEMA NFHL 홍수보험지도와 다름'},
  wfir:{label:'산불 위험',meaning:'FEMA Wildfire 상대 위험도 · 실제 건물별 화재 위험이나 TxWRAP 등급이 아님'},
  hrcn:{label:'허리케인 영향 위험',meaning:'FEMA Hurricane 상대 위험도 · DFW에서는 해안 폭풍해일이 아닌 내륙 영향 참고용'}
 };
@@ -60,7 +60,7 @@ function createFemaHazardOverlay(map,documentRef){
  const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const riskKor={'Very Low':'매우 낮음','Relatively Low':'상대적으로 낮음','Relatively Moderate':'중간','Relatively High':'상대적으로 높음','Very High':'매우 높음','Insufficient Data':'자료 없음'};
  const setStatus=(value,warning=false)=>{status.textContent=value;status.dataset.state=warning?'warning':'ready'};
- const selected=()=>Object.hasOwn(FEMA_HAZARD_TYPES,typeSelect.value)?typeSelect.value:'rfld';
+ const selected=()=>Object.hasOwn(FEMA_HAZARD_TYPES,typeSelect.value)?typeSelect.value:'ifld';
  const opacity=()=>Number(opacityControl.value)/100;
  const currency=v=>Number.isFinite(v)?'$'+Math.round(v).toLocaleString('en-US'):'자료 없음';
  const popup=f=>{
