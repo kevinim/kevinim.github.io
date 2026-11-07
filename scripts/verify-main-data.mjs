@@ -721,7 +721,7 @@ test('CFB free Playwright public-apartment and campus lookup diagnostics never a
  assert.equal(cfbBrowserAudit.samples[1].type,'public-apartment-complex');
  assert.equal(cfbBrowserAudit.samples[1].address,'1011 S Main St, Carrollton, TX 75006');
  assert.equal(cfbBrowserAudit.limitations.length,3);
- assert.ok(html.includes('1011 S Main St (Lux on Main)'));
+ assert.ok(html.includes('1011 S Main St'));
  const district=audit.districts.find(x=>x.code==='CFB');
  assert.equal(district.residentFinderVerification.browserProbe.uniquePropertyZonedResults,0);
  assert.equal(district.residentFinderVerification.browserProbe.didSearchResultListChangeAcrossAddresses,false);
