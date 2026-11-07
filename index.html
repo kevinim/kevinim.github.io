@@ -477,16 +477,32 @@ function drawSchools(){
  const bounds=map.getBounds();
  // Render every eligible school in the current viewport, irrespective of ISD
  // or zoom. Filtering is explicit; never silently discard campuses by rank.
- const visible=state.schools.filter(s=>s.ll&&s.type!=='other'&&bounds.contains(s.ll)&&
+ const eligible=state.schools.filter(s=>s.ll&&s.type!=='other'&&
   (state.level==='all'||s.type===state.level)&&
   (state.ratingFilter!=='rated'||score(s.name,s.district)!==null));
+ let visible=eligible.filter(s=>bounds.contains(s.ll));
+ // Fail visibly, not silently: when a selected area has schools but a stale,
+ // invalid, or zero-sized map viewport yields zero, recover the selected ZIP.
+ // ZIP is a location filter here, NOT a school attendance assignment.
+ let recovered=false;
+ if(!visible.length&&eligible.length&&state.showSchools){
+  const selected=state.polys[state.zip];
+  const geo=selected?.toGeoJSON();
+  const features=geo?(geo.features||[geo]):[];
+  const inZip=eligible.filter(s=>features.some(f=>geometryContains([s.ll[1],s.ll[0]],f.geometry)));
+  if(inZip.length){
+   visible=inZip;recovered=true;
+   // The selected polygon is the most reliable area when map bounds are stale.
+   // Only recenter on explicit ZIP selection, never while freely panning.
+  }
+ }
  for(const s of visible){
   const cls=homeActive?(homeSchoolMatches(s)?'home-match':'nearby'):s.type;
   const icon=L.divIcon({className:'',html:`<div class="mapmark ${cls}">${s.type==='elementary'?'초':s.type==='middle'?'중':'고'}</div>`,iconSize:[27,27],iconAnchor:[13,13]});
   L.marker(s.ll,{icon,title:s.name}).addTo(schoolGroup).on('click',()=>schoolClicked(s));
  }
  if(notice){
-  notice.textContent=visible.length?'학교 마커 '+visible.length+'개 표시 · 현재 지도 범위 내 필터 일치 학교 전체 표시 · 학교 위치는 주소별 배정 확정 정보가 아닙니다.':('현재 지도 범위의 표시 대상 학교 0개 · 전체 등록 '+state.schools.length+'개 · ZIP '+state.zip+' · 확대/지도 위치 또는 학교 필터를 확인하세요.');
+  notice.textContent='학교 마커 '+visible.length+'개 표시 · 등록 '+state.schools.length+'개 · 필터 적합 '+eligible.length+'개 · 화면 내 '+eligible.filter(s=>bounds.contains(s.ll)).length+'개 · ZIP '+state.zip+' · Zoom '+zoom+(recovered?' · 지도 범위 불일치로 선택 ZIP 학교 복구':'')+' · 학교 위치는 배정 확정 정보가 아닙니다.';
  }
 }
 function schoolWithinScope(s){const scope=el('schoolScope').value;if(scope==='all')return true;if(!s.ll)return false;const county=countyData?.zipCounty[state.zip];if(scope==='county'&&!county)return false;const candidates=scope==='zip'?[getZip()]:DATA.filter(d=>countyData.zipCounty[d.z]===county);return candidates.some(d=>{const layer=state.polys[d.z];if(!layer||!layer.getBounds().contains(s.ll))return false;const geo=layer.toGeoJSON();return (geo.features||[geo]).some(f=>geometryContains([s.ll[1],s.ll[0]],f.geometry))})}
