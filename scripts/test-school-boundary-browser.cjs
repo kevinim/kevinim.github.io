@@ -168,6 +168,41 @@ mkdirSync(out,{recursive:true});
     'Allen Leaflet markers must be visible in the rendered map, not only in data at zoom '+zoom+': '+JSON.stringify(check));
    allenZoomAudits.push(check);
   }
+  // Guardrail: a marker can exist in Leaflet yet be visually absent because
+  // a selected ZIP/district styling change sets opacity too low.
+  // Exercise regional zoom with multiple selected ZIPs and every target district.
+  const visibilityAudit=[];
+  for(const zip of ['75093','75013']){
+   for(const zoom of [9,10,11,12,13]){
+    const result=await page.evaluate(({zip,zoom})=>{
+     state.zip=zip;state.level='all';state.ratingFilter='all';state.showSchools=true;
+     map.stop();map.setView([33.103,-96.675],zoom,{animate:false});drawSchools();
+     const eligible=state.schools.filter(s=>s.ll&&s.type!=='other'&&map.getBounds().contains(s.ll));
+     const layers=schoolGroup.getLayers();
+     const actual=layers.map(l=>{
+      const node=l.getElement();const mark=node?.querySelector('.mapmark');
+      const outer=node?getComputedStyle(node):null;
+      const inner=mark?getComputedStyle(mark):null;
+      const opacity=(outer?Number(outer.opacity):0)*(inner?Number(inner.opacity):0);
+      return {name:l.options.title,opacity,hidden:!node||!mark||outer.display==='none'||outer.visibility==='hidden'||inner.display==='none'||inner.visibility==='hidden'};
+     });
+     const expectedNames=eligible.map(s=>s.name);
+     const actualNames=actual.map(x=>x.name);
+     return {zip,zoom,eligible:eligible.length,rendered:layers.length,
+      missing:expectedNames.filter(n=>!actualNames.includes(n)),
+      lowOpacity:actual.filter(x=>x.hidden||!Number.isFinite(x.opacity)||x.opacity<0.9),
+      byDistrict:Object.fromEntries(['AISD','PISD','FISD','PROSPER'].map(d=>[d,eligible.filter(s=>s.district===d).length]))};
+    },{zip,zoom});
+    assert.equal(result.rendered,result.eligible,'Marker count regression: '+JSON.stringify(result));
+    assert.deepEqual(result.missing,[],'Missing school marker: '+JSON.stringify(result));
+    assert.deepEqual(result.lowOpacity,[],'Visually hidden/dimmed school marker: '+JSON.stringify(result));
+    visibilityAudit.push(result);
+   }
+  }
+  assert.ok(visibilityAudit.some(r=>r.byDistrict.AISD>10),'Allen coverage required');
+  assert.ok(visibilityAudit.some(r=>r.byDistrict.PISD>10),'Plano coverage required');
+  writeFileSync(out+'/school-marker-visibility-guardrail.json',JSON.stringify(visibilityAudit,null,2)+'\\n');
+  console.log('PASS all-district marker visibility/opacity guardrail across ZIP and zoom '+JSON.stringify(visibilityAudit));
   assert.equal(await page.locator('#schoolOverlay').isChecked(),true);
   console.log('PASS Allen campus markers automatically at zoom 9, 10, 11 and 13 without shortcut: '+JSON.stringify(allenZoomAudits));
   console.log('PASS school boundary auto display, per-school source footnote, district coverage audit');
