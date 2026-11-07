@@ -29,7 +29,7 @@
     },
     {
       "code": "CFB",
-      "status": "property-specific-lookup-not-independently-confirmed",
+      "status": "official-current-finder-address-school-result-verified",
       "source": "https://www.cfbisd.edu/students/school-maps-locator-system",
       "embeddedFinder": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/",
       "officialYearExplicit": null,
@@ -39,13 +39,43 @@
         "1600 S Josey Ln, Carrollton, TX 75006"
       ],
       "publicFacilityTestsCompleted": 2,
-      "uniquePropertyZonedResultsObserved": 0,
-      "observedBehavior": "Address entry and Find on Map did not produce a uniquely identified zoned elementary/middle/high set. The many school cards remained indistinguishable from the default unfiltered directory in tested sessions.",
-      "conclusion": "Do not mark the address-level lookup as verified. These browser observations do not establish that the locator is universally broken for every resident browser and address; request confirmation through CFB Student Services.",
+      "uniquePropertyZonedResultsObserved": 2,
+      "observedBehavior": "Selecting a matching native `.search_result` row in GuideK12 after typing the public street address shows 'Assigned school' and distinct K–5, 6–8 and 9–12 campus labels; typing but not selecting leaves an unfiltered catalog.",
+      "conclusion": "Official current resident Finder functionality confirmed for two public addresses. Exact apartment unit allocation, 2026–27 polygon year and official Farmers Branch ES conflicting feeder tables remain unverified. Dashboard is link-only for CFB, not household automatic campus lookup.",
       "feederPathStatus": "21 official 2026–27 elementary-to-middle/high paths; 20 cross-official-source consistent, 1 contradictory Farmers Branch Elementary; feeder path does NOT assign residence.",
       "currentYearGeometryVerified": false,
       "enrollmentContact": "enroll@cfbisd.edu",
-      "phone": "972-968-6500"
+      "phone": "972-968-6500",
+      "initialTestsBeforeAutocompleteSelection": {
+        "status": "property-specific-lookup-not-independently-confirmed",
+        "publicFacilityTestAddresses": [
+          "1445 N Perry Rd, Carrollton, TX 75006",
+          "1600 S Josey Ln, Carrollton, TX 75006"
+        ],
+        "publicFacilityTestsCompleted": 2,
+        "uniquePropertyZonedResultsObserved": 0,
+        "observedBehavior": "Address entry and Find on Map did not produce a uniquely identified zoned elementary/middle/high set. The many school cards remained indistinguishable from the default unfiltered directory in tested sessions.",
+        "conclusion": "Do not mark the address-level lookup as verified. These browser observations do not establish that the locator is universally broken for every resident browser and address; request confirmation through CFB Student Services."
+      },
+      "confirmedProperties": [
+        {
+          "address": "1600 S Josey Ln, Carrollton, TX 75006",
+          "type": "public school facility",
+          "elementary": "McLaughlin Strickland Elementary (K-5)",
+          "middle": "Perry Middle School (6-8)",
+          "high": "Turner High School (9-12)"
+        },
+        {
+          "address": "1011 S Main St, Carrollton, TX 75006",
+          "type": "public apartment complex base address",
+          "elementary": "Carrollton Elementary (K-5)",
+          "middle": "Perry Middle School (6-8)",
+          "high": "Newman Smith High School (9-12)"
+        }
+      ],
+      "nativeAddressSelectionIsRequired": true,
+      "verifiedSource": "tests/cfb-official-resident-finder-verified-2026-11-07.json",
+      "ciEvidence": "https://github.com/kevinim/kevinim.github.io/actions/runs/42356357561"
     }
   ]
 }
