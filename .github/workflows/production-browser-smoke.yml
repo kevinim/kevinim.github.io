@@ -6,18 +6,13 @@ on:
     paths:
       - 'scripts/test-production-browser.cjs'
       - '.github/workflows/production-browser-smoke.yml'
-  push:
+  workflow_run:
+    workflows: ['pages build and deployment']
+    types: [completed]
     branches: [main]
-    paths:
-      - 'scripts/test-production-browser.cjs'
-      - '.github/workflows/production-browser-smoke.yml'
-      - 'index.html'
-      - 'phase2a-nfhl-flood.js'
-      - 'phase2a-fema-hazards.js'
-      - 'txwrap-wildfire-potential.js'
-      - 'school-boundary-match.js'
 jobs:
   production-smoke:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
