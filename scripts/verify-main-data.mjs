@@ -511,7 +511,7 @@ test('CFB official 2026–27 feeder table is accurate and never treated as GIS',
   assert.equal(b.k5_Bilingual,'Carrollton');
   assert.equal(b.k5,'Blanton');
   assert.ok(html.includes('CFB 2026–27 진학표 A') && html.includes('CFB 2026–27 진학표 B'));
-  assert.ok(html.includes('2026–27 공식 진학표 20/21행 일치, Farmers Branch Elementary 충돌'));
+  assert.ok(html.includes('2026–27 진학표 20/21행 일치, Farmers Branch Elementary 자료 충돌 별도'));
 });
 test('active 2026-27 campus selection excludes 14 officially retired schools',()=>{
  assert.equal(RETIRED_CAMPUSES_2026.length,14);
