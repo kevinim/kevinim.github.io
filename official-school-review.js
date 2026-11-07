@@ -44,6 +44,7 @@ function compareProsperOfficialPoint(assignment,payload){
  if(expected.size!==3)return {status:'incomplete-geometry',expected:[...expected]};
  const actual=new Set(payload.schools.map(x=>String(x.schoolCode||'').padStart(3,'0')).filter(x=>/^\d{3}$/.test(x)));
  const missing=[...expected].filter(x=>!actual.has(x));
- return {status:missing.length?'official-code-disagreement':'official-point-codes-match',expected:[...expected],actual:[...actual],missing,pointOnly:true,addressExact:payload.exactAddressMatch===true,sourceKind:'direct-public-official-point-lookup'};
+ const unexpected=[...actual].filter(x=>!expected.has(x));
+ return {status:missing.length||unexpected.length?'official-code-disagreement':'official-point-codes-match',expected:[...expected],actual:[...actual],missing,unexpected,pointOnly:true,addressExact:payload.exactAddressMatch===true,sourceKind:'direct-public-official-point-lookup'};
 }
 if(typeof module!=='undefined')module.exports={officialReviewName,officialReviewCandidates,compareManualSchoolResult,buildProsperOfficialPointUrl,compareProsperOfficialPoint,PLANO_2026_27_EXPERIENCE};

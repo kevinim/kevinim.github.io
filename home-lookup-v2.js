@@ -130,7 +130,8 @@ function officialReviewPanelHtml(item){
  let msg=result?(result.kind==='prosper'?result.message:labels[result.status]||'대조 결과 확인 필요'):'대조를 아직 실행하지 않았습니다. 공식 결과를 확인하고 직접 입력하세요.';
  const label=result?.kind==='prosper'?'Prosper 공개 API 조회 결과':'사용자가 입력한 공식 결과 대조';
  const officialUrl=district==='PISD'?PLANO_2026_27_EXPERIENCE:OFFICIAL[district]||null;
- const officialLink=officialUrl?'<a class="cardlink" href="'+escape(officialUrl)+'" target="_blank" rel="noopener">2026–27 공식 검색기 열기</a>':'';
+ const currentYearLink=['PISD','PROSPER','LISD'].includes(district);
+ const officialLink=officialUrl?'<a class="cardlink" href="'+escape(officialUrl)+'" target="_blank" rel="noopener">'+(currentYearLink?'2026–27 학군 검색기 열기':'학군 공식 주소 검색기 열기')+'</a>':'';
  const note=district==='LISD'?'Lewisville 아파트는 주소 대신 별도의 Find an Apartment 검색을 이용하세요.':district==='AISD'?'Allen 아파트 건물·호수 예외가 있으므로 학교 등록 담당자 확인이 필요합니다.':district==='PISD'?'Plano Jackson Elementary는 Coit Rd 동·서쪽에 따라 상급 학교가 달라집니다.':'검색기에 주소·학년을 입력한 뒤 나온 학교명을 복사하세요.';
  const showProsper=district==='PROSPER'&&['current','boundary-review'].includes(a.status);
  return '<div class="small-note" id="officialReviewPanel" style="margin-top:10px"><b>공식 학군 주소 조회 결과 교차검증</b>'+

@@ -373,6 +373,9 @@ test('official live Prosper point comparison uses current polygon codes, never c
  assert.equal(good.pointOnly,true);
  const bad=compareProsperOfficialPoint(predicted,{...payload,schools:payload.schools.slice(0,2)});
  assert.equal(bad.status,'official-code-disagreement');
+ const additional=compareProsperOfficialPoint(predicted,{...payload,schools:[...payload.schools,{schoolCode:'999'}]});
+ assert.equal(additional.status,'official-code-disagreement');
+ assert.deepEqual(additional.unexpected,['999']);
  assert.equal(compareProsperOfficialPoint(predicted,{resultCode:403}).status,'invalid-official-response');
  const u=new URL(buildProsperOfficialPointUrl([33.226183,-96.7847555]));
  assert.equal(u.hostname,'www.infofinderi.com');
