@@ -511,6 +511,17 @@ function renderSchoolBoundaryCoverageAudit(){
     type:school.type,reason,availablePolygons:polygons.length});
   }
  }
+ const coreCodes=['FISD','PISD','AISD','LISD','PROSPER','CFB'];
+ const coreDistricts=coreCodes.map(x=>summary.byDistrict[x]||{total:0,matched:0,missing:0});
+ summary.targetSix={
+  districts:coreCodes,
+  total:coreDistricts.reduce((n,v)=>n+v.total,0),
+  matched:coreDistricts.reduce((n,v)=>n+v.matched,0),
+  missing:coreDistricts.reduce((n,v)=>n+v.missing,0),
+  missingSchools:summary.missingSchools.filter(x=>coreCodes.includes(x.district))
+ };
+ summary.otherDistricts={total:summary.total-summary.targetSix.total,
+  missing:summary.missing-summary.targetSix.missing};
  window.schoolBoundaryCoverage=summary;
  const target=el('schoolBoundaryCoverageAudit');
  if(target){
@@ -521,15 +532,17 @@ function renderSchoolBoundaryCoverageAudit(){
    'not-a-zoned-campus':'일반 배정학교 이외 유형'};
   target.replaceChildren();
   const title=document.createElement('strong');
-  title.textContent='학교 목록 '+summary.total+'개 중 지도 경계 표시 가능 '+summary.matched+
-   '개 · 표시 불가 '+summary.missing+'개';
+  title.textContent='주요 6개 학군 '+summary.targetSix.total+'개 중 지도 경계 표시 '+summary.targetSix.matched+
+   '개 · 미표시 '+summary.targetSix.missing+'개';
   target.appendChild(title);
   const reasons=document.createElement('div');reasons.className='source';
-  reasons.textContent=Object.entries(summary.byReason)
+  const coreReasons={};
+  for(const item of summary.targetSix.missingSchools)coreReasons[item.reason]=(coreReasons[item.reason]||0)+1;
+  reasons.textContent=Object.entries(coreReasons)
    .map(([reason,count])=>(reasonLabels[reason]||reason)+' '+count+'개').join(' · ')||'미표시 사유 없음';
   target.appendChild(reasons);
   const note=document.createElement('small');note.className='source';
-  note.textContent='현재 로드된 학교·경계 원본 기준이며, 개별 학교를 클릭하면 해당 사유 각주가 표시됩니다. 임의의 대체 경계는 만들지 않습니다.';
+  note.textContent='현재 로드된 학교·경계 원본 기준. 6개 학군 외 학교 '+summary.otherDistricts.total+'개는 별도 범위로 집계(현재 배정 GIS 미지원 '+summary.otherDistricts.missing+'개). 개별 학교 선택 시 사유 각주를 표시하며, 배정선을 추측해 만들지 않습니다.';
   target.appendChild(note);
  }
  return summary;
