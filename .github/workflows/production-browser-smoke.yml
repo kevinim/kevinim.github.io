@@ -14,6 +14,7 @@ on:
       - 'index.html'
       - 'phase2a-nfhl-flood.js'
       - 'phase2a-fema-hazards.js'
+      - 'txwrap-wildfire-potential.js'
       - 'school-boundary-match.js'
 jobs:
   production-smoke:
