@@ -200,16 +200,53 @@ function useHomeCandidate(candidate){
   if(matches.length===1)selectZip(matches[0].z,false);
   map.setView(home.ll,13);renderHome();drawSchools();drawList();el('homeStatus').textContent='검색 결과 위치를 지도에 표시했습니다. 주소와 핀을 확인하세요.';return true;
 }
+// Similar addresses are shown rather than silently selecting an arbitrary school-zone pin.
+function showHomeCandidateChoices(candidates){
+ const panel=el('homeCandidates');
+ panel.replaceChildren();
+ const intro=document.createElement('p');
+ intro.className='source';
+ intro.textContent='검색된 주소가 여러 개입니다. 실제 집 주소를 선택하세요. 선택 후에도 학군 공식 검색기 확인이 필요합니다.';
+ panel.appendChild(intro);
+ const options=document.createElement('div');
+ options.className='lisd-apartment-results';
+ for(const candidate of candidates){
+  const button=document.createElement('button');
+  button.type='button';
+  button.className='lisd-apartment-choice';
+  const quality=assessResidentialGeocode(el('homeAddress').value.trim(),candidate);
+  const label=document.createElement('strong');
+  label.textContent=candidate.address;
+  const detail=document.createElement('small');
+  detail.textContent='일치도 '+(Number.isFinite(candidate.score)?Math.round(candidate.score):'미확인')+
+   ' · '+(quality.usableForSchoolCandidate?'건물 주소 위치 후보':'학교 배정 자동 표시 제한');
+  button.append(label,detail);
+  button.addEventListener('click',()=>{
+   if(useHomeCandidate(candidate)){
+    homeCandidates=[];
+    panel.replaceChildren();
+    el('homeStatus').textContent='주소 직접 선택: '+candidate.address+' · 실제 학교 배정은 공식 학군 검색기로 검증하세요.';
+   }
+  });
+  options.appendChild(button);
+ }
+ panel.appendChild(options);
+}
 async function searchHome(event,suggestion=null){
   event.preventDefault();const address=el('homeAddress').value.trim();
   homeAutocomplete?.dismiss();clearHome();
   if(!address){el('homeStatus').textContent='도로명과 도시, 텍사스 주를 포함한 주소를 입력하세요.';el('homeAddress').focus();return}
   const version=homeVersion;homeRequest=new AbortController();el('homeSearch').disabled=true;el('homeStatus').textContent='주소를 검색 중입니다…';
   try{
-    const candidates=await geocodeAddress(address,homeRequest.signal,suggestion);if(version!==homeVersion)return;
+    const result=await geocodeAddress(address,homeRequest.signal,suggestion);if(version!==homeVersion)return;
+    const {candidates,requiresSelection}=rankTexasHomeCandidates(address,result);
     homeCandidates=candidates;
-    if(!candidates.length){el('homeStatus').textContent='주소를 찾지 못했습니다. 도시와 ZIP을 포함해 다시 입력하세요.';return}
-    candidates.sort((a,b)=>(Number.isFinite(b.score)?b.score:-1)-(Number.isFinite(a.score)?a.score:-1));
+    if(!candidates.length){el('homeStatus').textContent='텍사스 주소를 찾지 못했습니다. 도시와 TX, ZIP을 포함해 다시 입력하세요.';return}
+    if(requiresSelection){
+     showHomeCandidateChoices(candidates);
+     el('homeStatus').textContent='서로 비슷한 주소 '+candidates.length+'개를 확인했습니다. 아래에서 정확한 집 주소를 선택하세요.';
+     return;
+    }
     const best=candidates[0];el('homeSearch').disabled=false;if(!useHomeCandidate(best))return;
     const requestedZip=[...address.matchAll(/\b\d{5}(?:-\d{4})?\b/g)].at(-1),returnedZip=[...best.address.matchAll(/\b\d{5}(?:-\d{4})?\b/g)].at(-1);const zipWarning=requestedZip&&returnedZip&&requestedZip[0].slice(0,5)!==returnedZip[0].slice(0,5)?' 입력한 ZIP과 검색된 ZIP이 다릅니다.':'';const quality=home.geocodeQuality;
     el('homeStatus').textContent='자동 선택: '+best.address+' · 일치도 '+(Number.isFinite(best.score)?Math.round(best.score):'미확인')+'.'+zipWarning+(quality?.usableForSchoolCandidate?' 건물 단위 위치 후보입니다. 등록 자격은 학군에 확인하세요.':' 좌표 신뢰도 부족: '+(quality?.reason||'공식 주소 검색을 이용하세요.'));
