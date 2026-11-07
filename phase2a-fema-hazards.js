@@ -30,7 +30,7 @@ function femaHazardStyle(feature,type,opacity=.62){
 function validateFemaHazardGeojson(data){
  if(data?.type!=='FeatureCollection'||!Array.isArray(data.features))return false;
  const m=data.metadata;
- if(m?.sourceDataset!=='2025 NRI v1.20.0'||m?.snapshotSourceVersion!=='1.20.0'||m?.scale!=='census-tract'||
+ if(m?.sourceDataset!=='2025 NRI v1.20.0'||m?.snapshotSourceVersion!=='December 2025'||m?.scale!=='census-tract'||
   m?.notParcelFloodplain!==true||Object.keys(m?.coverageCounties||{}).length!==12)return false;
  if(data.features.length<1000||data.features.length>8000)return false;
  const seen=new Set(),countySet=new Set();
