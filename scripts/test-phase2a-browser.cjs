@@ -55,6 +55,18 @@ const assert=require('node:assert/strict');
   // NFHL is a separate regulatory flood map, not the NRI relative-risk
   // census-tract layer. It must not issue a nationwide vector query at zoom 11.
   await page.locator('#nfhlFloodPanel > summary').click();
+  // The live FEMA NFHL service is independently checked by the deployed
+  // production smoke. Locally, deterministic map rendering tests MUST NOT
+  // fail solely because FEMA happens to have a transient outage.
+  const deterministicNFHLMatcher=/\/NFHL\/MapServer\/28\/query\?/;
+  const deterministicFlood={type:'FeatureCollection',features:[{
+   type:'Feature',properties:{SFHA_TF:'T',FLD_ZONE:'AE',ZONE_SUBTY:null,DFIRM_ID:'TESTTX'},
+   geometry:{type:'Polygon',coordinates:[[[-96.82,32.77],[-96.81,32.77],[-96.81,32.78],[-96.82,32.78],[-96.82,32.77]]]}
+  }]};
+  await page.route(deterministicNFHLMatcher,route=>route.fulfill({
+   status:200,contentType:'application/geo+json',
+   headers:{'access-control-allow-origin':'*'},body:JSON.stringify(deterministicFlood)
+  }));
   await page.locator('#nfhlEnabled').check();
   assert.equal(await page.locator('#femaHazardEnabled').isChecked(),false);
   assert.ok((await page.locator('#nfhlStatus').innerText()).includes('줌 14'));
@@ -68,12 +80,13 @@ const assert=require('node:assert/strict');
    return text.includes('NFHL 공식 실시간 조회')||text.includes('조회에 실패했습니다');
   },null,{timeout:90000});
   const nfhlResult=await page.locator('#nfhlStatus').innerText();
-  assert.ok(nfhlResult.includes('NFHL 공식 실시간 조회'),'Live FEMA NFHL query should succeed for a Dallas Trinity River vicinity: '+nfhlResult);
+  assert.ok(nfhlResult.includes('NFHL 공식 실시간 조회'),'Deterministic FEMA NFHL browser query should render the official data shape: '+nfhlResult);
   assert.ok(nfhlResult.includes('홍수구역 도형'));
   assert.equal(await page.locator('#zipOverlay').isChecked(),false);
   await page.locator('#nfhlEnabled').uncheck();
   assert.equal(await page.locator('#nfhlLegend').isVisible(),false);
   assert.equal(await page.locator('#zipOverlay').isChecked(),true);
+  await page.unroute(deterministicNFHLMatcher);
 
   // Resilience regression: make FEMA return HTTP 503 once, then a VALID
   // synthetic polygon via a local Playwright network stub. No provider
@@ -106,7 +119,7 @@ const assert=require('node:assert/strict');
   await page.locator('#femaHazardEnabled').check();
   await page.waitForFunction(()=>document.getElementById('femaHazardStatus')?.textContent?.includes('1,734'),null,{timeout:45000});
   assert.equal(await page.locator('#nfhlEnabled').isChecked(),false);
-  console.log('PASS NFHL live FEMA flood service: low-zoom guard, two red intensities, live Dallas view, NRI mutual exclusion and ZIP recovery');
+  console.log('PASS NFHL GeoJSON browser render (deterministic): low-zoom guard, red severity colors, retry from 503, NRI mutual exclusion and ZIP recovery; actual provider health checked separately in production smoke');
   // Separate official Texas A&M wildfire potential layer: it must be lazy,
   // keep the source-native palette, and not masquerade as an NRI hazard score.
   assert.equal(txwrapTileFetches,0,'TxWRAP tiles must not download before opt-in');
