@@ -10,6 +10,7 @@ on:
       - 'index.html'
       - 'scripts/test-phase2a-browser.cjs'
       - 'scripts/test-school-boundary-browser.cjs'
+      - 'scripts/test-map-viewport-sync-browser.cjs'
       - 'school-boundary-match.js'
       - 'data/phase2a-fema-nri-dfw-2025.geojson'
       - '.github/workflows/phase2a-browser-qa.yml'
@@ -44,6 +45,10 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/phase2a-browser-tmp/node_modules
         run: node scripts/test-school-boundary-browser.cjs
+      - name: P0 map viewport sync (hidden-at-init, ZIP 75013/75093, zoom 9-13, drag, filters, reload)
+        env:
+          NODE_PATH: ${{ github.workspace }}/phase2a-browser-tmp/node_modules
+        run: node scripts/test-map-viewport-sync-browser.cjs
       - name: Attach phase2a browser screenshot
         if: always()
         uses: actions/upload-artifact@v4
