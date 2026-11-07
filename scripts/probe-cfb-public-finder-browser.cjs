@@ -177,7 +177,7 @@ const assignedCampusNames=text=>{
  }finally{
   await browser?.close().catch(()=>{});
   writeFileSync(join(out,'result.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('CFB BROWSER PROBE: '+report.result+'; property-zoned campus set verified=false');
+  console.log('CFB BROWSER PROBE: '+report.result+'; public-campus-address assigned 3 levels='+report.propertyZonedCampusResultsVerified+'; public-apartment-address assigned 3 levels='+!!report.diagnostics.apartmentProbe?.zonedSchoolConfirmed);
   console.log('CFB DIAGNOSTIC: '+JSON.stringify({navigationHttp:report.diagnostics.navigationHttp,inputs:report.diagnostics.inputsBefore,suggestions:report.diagnostics.suggestionsAfterPartial,afterSearch:report.diagnostics.afterSearch,errors:report.errors,failures:report.networkFailures.slice(0,10)}).slice(0,7600));
   console.log('CFB RESIDENTIAL COMPLEX PROBE: '+JSON.stringify(report.diagnostics.apartmentProbe||{}).slice(0,2800));
   console.log('CFB PUBLIC NETWORK TRACE (paths only): '+JSON.stringify(report.publicNetworkTrace).slice(0,8500));
