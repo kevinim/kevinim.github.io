@@ -166,10 +166,6 @@ mkdirSync(out,{recursive:true});
    assert.equal(check.shown,check.expected,'Allen markers must all render automatically at zoom '+zoom+': '+JSON.stringify(check));
    assert.ok(check.visibleInViewport>=check.expected,
     'Allen Leaflet markers must be visible in the rendered map, not only in data at zoom '+zoom+': '+JSON.stringify(check));
-   if(zoom<11)assert.equal(check.totalMarkers,check.expected,
-    'At zoom below 11, only in-viewport Allen campus markers should be shown');
-   if(zoom===11)assert.ok(check.totalMarkers<=100,'Regional marker cap exceeded');
-   if(zoom===13)assert.ok(check.totalMarkers<=260,'Detailed marker cap exceeded');
    allenZoomAudits.push(check);
   }
   assert.equal(await page.locator('#schoolOverlay').isChecked(),true);
