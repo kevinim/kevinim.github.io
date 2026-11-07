@@ -144,7 +144,7 @@ test('P0 Allen four published split apartments halt automatic Frisco/Allen campu
  const app=readText('home-lookup-v2.js'),cmp=readText('candidate-compare.js');
  assert.ok(app.includes("status:'apartment-split-review'"));
  assert.ok(app.includes('allenSplitApartmentException(item.typedAddress)||allenSplitApartmentException(item.address)'));
- assert.ok(app.includes('if(result.status===\\'apartment-split-review\\')'));
+ assert.ok(app.includes("if(result.status==='apartment-split-review')"));
  assert.ok(app.includes('학군 경계가 건물·호수에 따라 갈리는 주소'));
  assert.ok(app.includes("typedAddress:candidate.savedTypedAddress||"));
  assert.ok(cmp.includes("typedAddress:candidate.typedAddress||candidate.address"));
