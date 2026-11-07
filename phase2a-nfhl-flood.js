@@ -78,6 +78,8 @@ function createNFHLFloodOverlay(map,documentRef){
   if(!enabled.checked){remove();restore();statusText('공식 NFHL 레이어 꺼짐');legend.hidden=true;return}
   legend.hidden=false;
   if(nri?.checked){nri.checked=false;nri.dispatchEvent(new Event('change'))}
+  const txwrap=d.getElementById('txwrapWHPEnabled');
+  if(txwrap?.checked){txwrap.checked=false;txwrap.dispatchEvent(new Event('change'))}
   if(savedZip===null&&zip){
    savedZip=zip.checked;
    if(zip.checked){zip.checked=false;zip.dispatchEvent(new Event('change'))}
