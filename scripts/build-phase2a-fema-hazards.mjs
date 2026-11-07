@@ -82,7 +82,7 @@ const coverage=Object.fromEntries(HAZARDS.map(prefix=>{
 }));
 if(versions.size!==1)throw Error('Multiple unknown NRI vintages: '+[...versions].join(','));
 const publishedVersion=[...versions][0];
-if(!/1\.20(\.|$)/.test(publishedVersion))throw Error('Expected FEMA 2025 NRI version 1.20, source reports '+publishedVersion);
+if(publishedVersion!=='December 2025')throw Error('Expected FEMA 2025 NRI raw version December 2025, source reports '+publishedVersion);
 const out={type:'FeatureCollection',
  metadata:{sourcePublisher:'FEMA National Risk Index',sourceDataset:'2025 NRI v1.20.0',
   sourceService:SERVICE,sourceItem:'https://www.arcgis.com/home/item.html?id=9da4eeb936544335a6db0cd7a8448a51',
