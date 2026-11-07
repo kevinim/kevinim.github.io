@@ -99,7 +99,7 @@ const cleanUrl=u=>{try{const x=new URL(u);return x.origin+x.pathname}catch{retur
   const firstListing=dom.matchingResultsExcerpt.slice(0,3500);
   report.diagnostics.apartmentProbe.resultsExcerpt=secondListing.slice(0,2200);
   report.diagnostics.apartmentProbe.sameFirst3500CharsAsPublicSchool=secondListing===firstListing;
-  report.diagnostics.apartmentProbe.containsAssignmentHeading=/\\b(your zoned schools|assigned schools|schools assigned to address)\\b/i.test(secondListing);
+  report.diagnostics.apartmentProbe.containsAssignmentHeading=/\b(your zoned schools|assigned schools|schools assigned to address)\b/i.test(secondListing);
   await page.screenshot({path:join(out,'apartment-search.png'),animations:'disabled',timeout:20000});
   report.result='address-search-attempted-results-for-manual-review';
   // This probe intentionally NEVER certifies a school assignment from
