@@ -13,7 +13,7 @@ function officialReviewName(name){
    .replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
 }
 function officialReviewCandidates(assignment,level){
- if(!assignment||!['current','reference','unverified-year','boundary-review'].includes(assignment.status))return [];
+ if(!assignment||!['current','reference','unverified-year','boundary-review','finder-current','finder-boundary-review'].includes(assignment.status))return [];
  if(assignment.district==='AISD'&&assignment.allen){
   const fields={elementary:2,middle:3,freshman:4,high:5};
   return Number.isInteger(fields[level])?[assignment.allen[fields[level]]].filter(Boolean):[];
@@ -24,7 +24,7 @@ function officialReviewCandidates(assignment,level){
 function compareManualSchoolResult(assignment,{district,gradeLevel,schoolName,schoolYear}){
  if(!OFFICIAL_REVIEW_DISTRICTS.includes(district)||!OFFICIAL_REVIEW_LEVELS.includes(gradeLevel)||!schoolName?.trim())return {status:'missing-input'};
  if(schoolYear!=='2026–27')return {status:'year-not-confirmed'};
- if(!assignment||!['current','reference','unverified-year','boundary-review'].includes(assignment.status))return {status:'no-candidate'};
+ if(!assignment||!['current','reference','unverified-year','boundary-review','finder-current','finder-boundary-review'].includes(assignment.status))return {status:'no-candidate'};
  if(district!==assignment.district)return {status:'district-disagrees',predictedDistrict:assignment.district};
  const options=officialReviewCandidates(assignment,gradeLevel);
  if(options.length!==1)return {status:'no-unique-candidate',options};
