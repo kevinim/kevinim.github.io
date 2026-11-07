@@ -94,7 +94,7 @@ mkdirSync(out,{recursive:true});
      selected:state.selectedSchool===campus,
      referenceChecked:document.getElementById('referenceBoundaryOverlay').checked
     };
-    assert.equal(typeof completeGeocode,'function','Missing coordinates must initiate non-blocking secondary lookup');
+    if(typeof completeGeocode!=='function')throw Error('Missing coordinates must initiate non-blocking secondary lookup');
     completeGeocode(false);
     await pending;
     return immediate;
