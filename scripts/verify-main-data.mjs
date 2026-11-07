@@ -158,8 +158,8 @@ test('Allen official street name variants: suffix and direction, fail closed on 
   else unresolved++;
  }
  assert.equal(checked,1687);
- assert.equal(accepted,1684);
- assert.equal(unresolved,3);
+ assert.equal(accepted,1680); // 3 overlapping source ranges + 4 published split-apartment rows are blocked
+ assert.equal(unresolved,7);
  assert.ok(readText('index.html').includes('./allen-lookup.js?v=5'));
 });
 
