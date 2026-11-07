@@ -1,0 +1,23 @@
+{
+  "metadata": {
+    "date": "2026-11-06",
+    "audit": "Plano current official Finder polygons overlaid against separately published district feeder paths",
+    "officialPolygonSource": "https://services4.arcgis.com/uBV8NRVfoRJv7qWn/arcgis/rest/services/Plano_ISD_School_Districts/FeatureServer",
+    "officialFeederSource": "https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/attendance-boundary-descriptions",
+    "sourceYear": "2025–26 field names; actively linked in 2026–27 Finder",
+    "elementaryPolygons": 44,
+    "uniqueElementary": 42,
+    "perPolygonSamples": 50,
+    "testedInteriorPoints": 2200,
+    "pointToFeederDisagreements": 0,
+    "polygonsNotCovered": 0,
+    "levelsCompared": [
+      "elementary",
+      "middle",
+      "high",
+      "senior"
+    ],
+    "note": "Cross-layer consistency between two district-controlled public sources, not an independently verified property-by-address enrollment result. Border-line or apartment-specific exceptions still require official district address lookup.",
+    "recheckScript": "scripts/check-plano-feeder-zones-live.mjs"
+  }
+}

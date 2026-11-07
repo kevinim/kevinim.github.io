@@ -5,6 +5,13 @@
 **Checked:** 2026-11-06 (America/New_York)  
 **Active school year:** 2026–27
 
+## Public facility street addresses and Plano cross-layer QA — 2026-11-06
+
+- Tested **four public institutional addresses** (never private homes) against official live district address/coordinate Finders, independent Esri address geocodes and published school zone polygons: Frisco ISD HQ `5515 Ohio Dr` → Shawnee Trail / Clark / Lebanon Trail; Frisco City Hall `6101 Frisco Square Blvd` → Bright / Griffin / Frisco; Prosper ISD HQ `605 E 7th St` → official Infofinder codes 102/042/001; Prosper High campus `301 Eagle Dr` → codes 108/042/001. **4/4 public property samples agree**. Frisco results are official Finder UI snapshots, while Prosper API is re-callable. Exact coordinates and limits in `tests/public-address-finder-crosscheck-2026.json`, recheck script `scripts/check-public-address-finders-live.mjs`.
+- The Plano current operating 2026–27 Finder's internally 2025–26-named **44 elementary polygons** were sampled at **50 strictly interior points per polygon (2,200 points)** and compared to distinct current district-published 11 feeder chains and all three upper school-zone layers. **0 uncovered polygons / 0 cross-layer feeder disagreements**. Checks ensure each point has exactly one middle, high and senior zone and that it matches one official elementary feeder chain, including the two official Jackson east/west of Coit paths. Audit file `tests/plano-feeder-geometry-audit-2026.json`; reproducible live checker `scripts/check-plano-feeder-zones-live.mjs`. This is independent district document vs GIS cross-check, not independent actual home-address lookup.
+- CFBISD GuideK12 on public headquarters `1445 N Perry Rd` displayed an unfiltered school listing and no uniquely visible zoned school in this browser attempt. Marked **inconclusive**; do NOT generalize that the official Finder is broken or that all addresses fail.
+- **No accuracy percentage for actual residential addresses** is claimed. School campuses, office buildings and civic buildings do not establish a right to enroll; geocoded parcel position, district registrar and address/unit/grade-specific exceptions still matter.
+
 ## Current official district Finder is practical zoning source — 2026-11-06
 
 Operational policy: A district's **currently published School Finder** is the practical line source. Its old internal GIS field-year does not by itself invalidate the currently served map. Keep separately **(1) currently district-operated** and **(2) independently certified 2026–27 GIS source vintage**.

@@ -1,0 +1,139 @@
+{
+  "metadata": {
+    "date": "2026-11-06",
+    "timeZone": "America/New_York",
+    "auditType": "Public facility street address vs official Finder and dashboard GIS",
+    "testPropertyClass": "Public district offices, public city hall, or public school campuses only",
+    "notResidentialEnrollmentValidation": true,
+    "independentlyCheckedAddresses": 4,
+    "fullMatches": 4,
+    "friscoOfficialUiCases": 2,
+    "prosperLiveInfofinderCases": 2,
+    "planoPublicAddressFinder": "not-yet-confirmed",
+    "lewisvilleApartmentChecks": "174 internally compared previously, 173 agreements/1 conflict; not independent residence validation",
+    "allen": "street-range source agreement, not independent address Finder tests",
+    "cfbPublicHQTrial": {
+      "address": "1445 N Perry Rd, Carrollton, TX 75006",
+      "finder": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/",
+      "status": "inconclusive",
+      "note": "The entered public office address did not produce an identifiable zoned campus in this browser trial. Do not infer the district's entire Finder is broken."
+    },
+    "note": "Four successful PUBLIC property samples in two districts are not a general accuracy rate. Official address finder snapshots in Frisco are human-readable public UI results verified on date; the original district may change results later."
+  },
+  "records": [
+    {
+      "district": "FISD",
+      "kind": "district-headquarters",
+      "address": "5515 Ohio Dr, Frisco, TX 75035",
+      "point": [
+        -96.796667481212,
+        33.124666997755
+      ],
+      "esriScore": 100,
+      "esriType": "PointAddress",
+      "zip": "75035",
+      "officialSource": "https://www.friscoisd.org/page/2026-2027-zones/",
+      "officialMethod": "District public 2026-27 School Zone Search interactive address lookup",
+      "officialSchools": {
+        "elementary": "Shawnee Trail Elementary",
+        "middle": "Clark Middle School",
+        "high": "Lebanon Trail High School"
+      },
+      "gisSchools": {
+        "elementary": "Shawnee Trail Elementary",
+        "middle": "Clark Middle School",
+        "high": "Lebanon Trail High School"
+      },
+      "status": "match",
+      "residentialEnrolmentVerified": false
+    },
+    {
+      "district": "FISD",
+      "kind": "city-hall",
+      "address": "6101 Frisco Square Blvd, Frisco, TX 75034",
+      "point": [
+        -96.834538679959,
+        33.150039898767
+      ],
+      "esriScore": 100,
+      "esriType": "PointAddress",
+      "zip": "75034",
+      "officialSource": "https://www.friscoisd.org/page/2026-2027-zones/",
+      "officialMethod": "District public 2026-27 School Zone Search interactive address lookup",
+      "officialSchools": {
+        "elementary": "Bright Elementary",
+        "middle": "Griffin Middle School",
+        "high": "Frisco High School"
+      },
+      "gisSchools": {
+        "elementary": "Bright Elementary",
+        "middle": "Griffin Middle School",
+        "high": "Frisco High School"
+      },
+      "status": "match",
+      "residentialEnrolmentVerified": false
+    },
+    {
+      "district": "PROSPER",
+      "kind": "district-headquarters",
+      "address": "605 E 7th St, Prosper, TX 75078",
+      "point": [
+        -96.794813152773,
+        33.239374474268
+      ],
+      "esriScore": 100,
+      "esriType": "PointAddress",
+      "zip": "75078",
+      "officialSource": "https://www.infofinderi.com/ifi/ws/SearchRequest.asmx/SearchLocation",
+      "officialMethod": "Live official Infofinder public coordinate query",
+      "officialCodes": {
+        "elementary": "102",
+        "middle": "042",
+        "high": "001"
+      },
+      "gisCodes": {
+        "elementary": "102",
+        "middle": "042",
+        "high": "001"
+      },
+      "officialSchoolNames": {
+        "elementary": "RUCKER ELEMENTARY",
+        "middle": "REYNOLDS MIDDLE",
+        "high": "PROSPER HIGH"
+      },
+      "status": "match",
+      "residentialEnrolmentVerified": false
+    },
+    {
+      "district": "PROSPER",
+      "kind": "public-high-school",
+      "address": "301 Eagle Dr, Prosper, TX 75078",
+      "point": [
+        -96.798660027235,
+        33.259379981672
+      ],
+      "esriScore": 100,
+      "esriType": "PointAddress",
+      "zip": "75078",
+      "officialSource": "https://www.infofinderi.com/ifi/ws/SearchRequest.asmx/SearchLocation",
+      "officialMethod": "Live official Infofinder public coordinate query",
+      "officialCodes": {
+        "elementary": "108",
+        "middle": "042",
+        "high": "001"
+      },
+      "gisCodes": {
+        "elementary": "108",
+        "middle": "042",
+        "high": "001"
+      },
+      "officialSchoolNames": {
+        "elementary": "BOYER ELEMENTARY",
+        "middle": "REYNOLDS MIDDLE",
+        "high": "PROSPER HIGH"
+      },
+      "status": "match",
+      "residentialEnrolmentVerified": false
+    }
+  ]
+}

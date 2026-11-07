@@ -10,7 +10,14 @@
       "geometryYear": "2026–27",
       "mapSource": "https://static.friscoisd.org/js/json/school.borders.2627.json",
       "officialLookup": "https://www.friscoisd.org/page/2026-2027-zones/",
-      "geometryUse": "live display, individual residence exceptions remain"
+      "geometryUse": "live display, individual residence exceptions remain",
+      "publicAddressCrosscheck": {
+        "count": 2,
+        "passed": 2,
+        "source": "https://www.friscoisd.org/page/2026-2027-zones/",
+        "publicFacilitiesOnly": true,
+        "snapshot": "tests/public-address-finder-crosscheck-2026.json"
+      }
     },
     {
       "code": "PISD",
@@ -74,7 +81,15 @@
           "elementary": "42/42"
         },
         "addressesIndependentlyCompared": 0,
-        "notes": "Campus-name crosscheck, not an address school entitlement proof."
+        "notes": "Campus-name crosscheck, not an address school entitlement proof.",
+        "geometryFeederCrosscheck": {
+          "date": "2026-11-06",
+          "polygons": 44,
+          "interiorPoints": 2200,
+          "discrepancies": 0,
+          "auditFile": "tests/plano-feeder-geometry-audit-2026.json",
+          "limitations": "Current Finder and feeder docs from same district; not independent house assignments."
+        }
       }
     },
     {
@@ -229,6 +244,13 @@
           "repeatableScript": "scripts/check-prosper-official-locator.mjs",
           "limitation": "Synthetic map coordinates, not verified street addresses or enrollment exceptions."
         }
+      },
+      "publicAddressCrosscheck": {
+        "count": 2,
+        "passed": 2,
+        "source": "https://www.infofinderi.com/ifi/ws/SearchRequest.asmx/SearchLocation",
+        "publicFacilitiesOnly": true,
+        "snapshot": "tests/public-address-finder-crosscheck-2026.json"
       }
     },
     {
@@ -270,6 +292,12 @@
         ],
         "geojsonAvailable": false,
         "note": "Published approved zone images, not coordinate-level vector boundary."
+      },
+      "publicHQAddressFinderTrial": {
+        "date": "2026-11-06",
+        "address": "1445 N Perry Rd, Carrollton TX 75006",
+        "status": "inconclusive",
+        "reason": "GuideK12 public school list not visibly filtered to zoned campuses for HQ input; not evidence of general Finder outage."
       }
     }
   ],

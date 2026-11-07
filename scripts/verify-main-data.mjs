@@ -18,6 +18,9 @@ const prosperCurrent = readJson('prosper-attendance-2026.geojson');
 const officialChecks = readJson('tests/prosper-official-location-checks-2026.json');
 const require=createRequire(import.meta.url);
 const {resolveAssignment}=require('../school-assignment.js');
+const {inRing,inGeometry,inFriscoBorder,schoolKey,interiorPoints}=require('../scripts/attendance-geo-audit.cjs');
+const publicAddressAudit=readJson('tests/public-address-finder-crosscheck-2026.json');
+const planoGeometryAudit=readJson('tests/plano-feeder-geometry-audit-2026.json');
 const {PLANO_LAYERS,PLANO_SERVICE,planoLiveUrl,convertPlanoLive,loadPlanoLiveFinder}=require('../plano-finder-live.js');
 const {matchAllenAddress}=require('../allen-lookup.js');
 const {allenSplitApartmentException,ALLEN_SPLIT_APARTMENTS}=require('../allen-apartment-exceptions.js');
@@ -574,6 +577,45 @@ test('P0 current Finder and prior unlinked GIS are visually distinct without fal
  assert.equal(audit.districts.find(x=>x.code==='PISD').liveFinderVerification.levels.elementary.distinct,42);
  assert.equal(audit.districts.find(x=>x.code==='PISD').status,'official-finder-connected');
  assert.equal(audit.districts.find(x=>x.code==='LISD').status,'official-finder-connected');
+});
+test('public facility address-to-official-Finder QA has four verified street-level evidence records',()=>{
+ const rows=publicAddressAudit.records;
+ assert.equal(publicAddressAudit.metadata.independentlyCheckedAddresses,4);
+ assert.equal(publicAddressAudit.metadata.fullMatches,4);
+ assert.equal(publicAddressAudit.metadata.testPropertyClass.startsWith('Public'),true);
+ assert.equal(rows.length,4);
+ assert.equal(rows.filter(x=>x.district==='FISD').length,2);
+ assert.equal(rows.filter(x=>x.district==='PROSPER').length,2);
+ assert.equal(publicAddressAudit.metadata.cfbPublicHQTrial.status,'inconclusive');
+ for(const r of rows){
+  assert.equal(r.esriScore,100);assert.equal(r.esriType,'PointAddress');
+  assert.equal(r.status,'match');assert.equal(r.residentialEnrolmentVerified,false);
+  assert.equal(r.point.length,2);assert.ok(r.point[0]<-96&&r.point[0]>-99&&r.point[1]>32&&r.point[1]<34);
+  assert.equal(Object.keys(r.district==='FISD'?r.officialSchools:r.officialCodes).length,3);
+  for(const g of ['elementary','middle','high']){
+   if(r.district==='FISD')assert.equal(schoolKey(r.officialSchools[g]),schoolKey(r.gisSchools[g]));
+   else assert.equal(r.officialCodes[g],r.gisCodes[g]);
+  }
+ }
+ assert.ok(html.includes('4개 공개시설 주소를 공식 Finder와 개별 교차검증'));
+ assert.ok(html.includes('공공시설 시험으로 실제 주택 등록 배정을 보장하지 않습니다'));
+});
+test('official geometry intersection helper handles holes and 50 interior samples',()=>{
+ const g={type:'Polygon',coordinates:[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[4,4],[6,4],[6,6],[4,6],[4,4]]]};
+ assert.equal(inGeometry([2,2],g),true);
+ assert.equal(inGeometry([5,5],g),false);
+ assert.equal(inGeometry([12,5],g),false);
+ assert.equal(inFriscoBorder([2,2],[g.coordinates]),true);
+ assert.equal(schoolKey('Jackson (east of Coit)'),schoolKey('Jackson (west of Coit)'));
+ const points=interiorPoints(g,50);assert.equal(points.length,50);
+ assert.ok(points.every(p=>inGeometry(p,g)));
+ assert.equal(planoGeometryAudit.metadata.elementaryPolygons,44);
+ assert.equal(planoGeometryAudit.metadata.uniqueElementary,42);
+ assert.equal(planoGeometryAudit.metadata.perPolygonSamples,50);
+ assert.equal(planoGeometryAudit.metadata.testedInteriorPoints,2200);
+ assert.equal(planoGeometryAudit.metadata.pointToFeederDisagreements,0);
+ assert.equal(planoGeometryAudit.metadata.polygonsNotCovered,0);
+ assert.equal(audit.districts.find(x=>x.code==='PISD').liveFinderVerification.geometryFeederCrosscheck.interiorPoints,2200);
 });
 test('CFB official current GuideK12 locator linked',()=>{
   assert.ok(html.includes('https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/'));
