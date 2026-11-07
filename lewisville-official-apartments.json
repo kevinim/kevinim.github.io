@@ -13,7 +13,7 @@
     "notIndividualEnrollment": true,
     "note": "Current publicly linked 2026–27 official school locator apartment table. Source table has no 2026–27 academic-year column; exact building, unit and school registration must be confirmed using district Find an Apartment.",
     "internalCrossCheck": {
-      "reviewed": "2026-11-06",
+      "reviewed": "2026-11-07",
       "method": "Compare 174 official apartment point geometries against Lewisville SZF 2627 embedded Elementary_Boundaries (ELEM_PLAN1, INT_NAME), Middle_Boundaries (MID_NAME), High_Boundaries (HIGH_NAME) using point-in-polygon in EPSG 3857; four school levels per record.",
       "records": 174,
       "recordsAllFourLevelsMatch": 173,
@@ -25,7 +25,8 @@
       "highMatches": 173,
       "publicationYearProven": false,
       "independentCampusAssignment": false,
-      "notes": "Internal locator consistency is not official 2026–27 address unit-level school verification. The dispute remains unresolved."
+      "notes": "Internal locator consistency is not official 2026–27 address unit-level school verification. The dispute remains unresolved.",
+      "lastFollowUp": "Operator confirms specific disputed 5289 property is in The Colony TX 75056; apartment row continues to contradict same official GIS map's four zone levels. District registrar apartment/unit confirmation outstanding. No official 2026–27 address-to-campus result independently obtained."
     }
   },
   "apartments": [
@@ -301,7 +302,17 @@
           "intermediate": "THE COLONY",
           "high": "THE COLONY"
         },
-        "note": "The public apartment record lists Southridge / Durham / Lewisville Harmon / Lewisville, but its point intersects Camey / Lakeview / The Colony / The Colony in the very same Lewisville SZF 2627 webmap. Neither side should be regarded as authoritative unit assignment."
+        "note": "The public apartment record lists Southridge / Durham / Lewisville Harmon / Lewisville, but its point intersects Camey / Lakeview / The Colony / The Colony in the very same Lewisville SZF 2627 webmap. Neither side should be regarded as authoritative unit assignment.",
+        "propertyLocationCrosscheck": {
+          "checked": "2026-11-07",
+          "sourceType": "property-operator-public-address; NOT campus assignment",
+          "operatorUrl": "https://www.budgetsuites.com/property.php?name=thecolony_the_colony",
+          "operatorAddress": "5289 S. Highway 121, The Colony, TX 75056",
+          "confirmsStreetAndCity": true,
+          "schoolsVerifiedByOperator": false,
+          "otherSameNameLocatorRecord": "2175 S STATE HIGHWAY 121",
+          "risk": "Two different addresses share Budget Suites of America name in district apartment directory. Map point's Camey/Lakeview/The Colony feeder agrees with general The Colony district geography, but this alone cannot establish 2026–27 unit-specific zoned campus. Neither map nor apartment table gets an automatic winner."
+        }
       }
     },
     {

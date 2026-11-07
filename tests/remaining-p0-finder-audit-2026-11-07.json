@@ -1,0 +1,90 @@
+{
+  "auditDate": "2026-11-07",
+  "scope": "Remaining P0 official resident Finder spot-checks (public facilities only) and Lewisville 5289 suite address discrepancy",
+  "completionPolicy": "Only an official property-specific result showing zoned campuses can mark a district address-lookup verified; current district link, feeder paths, map pins, and catalog lists alone cannot.",
+  "samples": [
+    {
+      "district": "PISD",
+      "source": "https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder",
+      "legacyFinder": "https://webservice.pisd.edu/SchoolFinderForSchoolWires/",
+      "address": "5400 Legacy Dr, Plano, TX 75024",
+      "privacy": "public commercial address, not residence",
+      "status": "property-school-names-not-independently-confirmed",
+      "officialExperience": "https://experience.arcgis.com/experience/73a3f873d9c040348d6e723ed4b48af4",
+      "observations": [
+        "The legacy finder provided no address suggestion for this address",
+        "The current ArcGIS experience accepted the address but displayed an analyzing state in the inspected session; school names were not extracted"
+      ],
+      "existingGISExpected": {
+        "elementary": "Haun",
+        "middle": "Robinson",
+        "high": "Jasper",
+        "senior": "Plano West Senior High"
+      },
+      "sourceYearExplicit": null,
+      "note": "Existing current-linked source GIS + feeder descriptions agree; browser session does NOT confirm official per-address names. Do not label 5400 Legacy a checked exact campus match."
+    },
+    {
+      "district": "CFB",
+      "source": "https://www.cfbisd.edu/students/school-maps-locator-system",
+      "liveFinder": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/",
+      "addressSamples": [
+        "1445 N Perry Rd, Carrollton, TX 75006",
+        "1600 S Josey Ln, Carrollton, TX 75006"
+      ],
+      "status": "property-school-names-not-independently-confirmed",
+      "observations": [
+        "Multiple live GuideK12 attempts did not identify a unique elementary/middle/high set for either public address",
+        "The school cards observed were an unfiltered catalog; no residence-zoned marker was observed",
+        "No suggestion was seen in the tested address entry flow"
+      ],
+      "yearInFinder": null,
+      "zonedFeederSource": "cfb-official-feeder-reference-2026.json",
+      "safeFeederPaths": 20,
+      "conflictingFeederPaths": 1,
+      "note": "Not proof that every user or address encounters this behavior. District enrollment staff confirmation or a working alternative address-query mechanism is necessary."
+    },
+    {
+      "district": "LISD",
+      "source": "https://www.lisd.net/resources/families/school-locator",
+      "address": "5289 S Highway 121, The Colony, TX 75056",
+      "privacy": "publicly listed apartment complex",
+      "status": "official-table-vs-current-finder-map-conflict-unresolved",
+      "name": "Budget Suites of America",
+      "operatorUrl": "https://www.budgetsuites.com/property.php?name=thecolony_the_colony",
+      "operatorConfirmedAddress": "5289 S. Highway 121, The Colony, TX 75056",
+      "similarlyNamedOtherLocation": {
+        "address": "2175 S State Hwy 121, Lewisville, TX 75067",
+        "operatorUrl": "https://www.budgetsuites.com/property.php?name=lewisville_lewisville"
+      },
+      "districtApartmentSource": "https://server.metrostudygis.com/arcgis/rest/services/apartments_lewisville/FeatureServer/0",
+      "officialApartmentTable": {
+        "elementary": "Southridge",
+        "middle": "Durham",
+        "intermediate": "Lewisville Harmon",
+        "high": "Lewisville"
+      },
+      "officialMapAtPublishedPoint": {
+        "elementary": "Camey",
+        "middle": "Lakeview",
+        "intermediate": "The Colony",
+        "high": "The Colony"
+      },
+      "observations": [
+        "The district's 2026–27 School Locator opens, and contains a 'Find an Apartment' widget",
+        "The exact 5289 apartment selection's campus output was not independently obtained in the tested browser session",
+        "Operator address verifies site identity, NOT school zoning or unit enrollment"
+      ],
+      "manualContact": {
+        "email": "studentservices@lisd.net",
+        "phone": "469-713-5206"
+      },
+      "note": "No winner chosen. All four school levels must remain on manual review until school district confirms exact 2026–27 building and unit assignment."
+    }
+  ],
+  "gis2026_27IndependentlyVerified": [
+    "FISD",
+    "PROSPER"
+  ],
+  "note": "Do not promote Plano/CFB/Lewisville property lookup to independently validated because their official pages can be opened."
+}

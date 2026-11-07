@@ -29,7 +29,14 @@ function initLisdApartmentLookup(){
    const table=node('dl','');table.className='lisd-campus-grid';
    for(const [title,value] of listed){table.appendChild(node('dt',title));table.appendChild(node('dd',value))}
    details.appendChild(table);
-   details.appendChild(node('p','이 항목은 동일한 공식 지도 내부에서 4개 배정 필드가 충돌합니다. 해당 아파트의 정확한 건물·호수·학년도는 Lewisville Student Services 또는 공식 Find an Apartment에서 직접 확인하세요.'));
+   const verifiedLocation=rec.zoneAudit.propertyLocationCrosscheck;
+   if(verifiedLocation){
+    details.appendChild(node('p','아파트 운영사 공개 주소: '+verifiedLocation.operatorAddress+' · 같은 이름의 다른 Budget Suites(2175 S State Highway 121)와 혼동하지 마세요.'));
+    const a=node('a','Budget Suites The Colony 운영사 주소 확인');
+    a.href=verifiedLocation.operatorUrl;a.target='_blank';a.rel='noopener';a.className='cardlink';details.appendChild(a);
+    details.appendChild(node('p','운영사 주소는 건물 위치 확인용입니다. 학교 배정 확인 자료가 아닙니다.'));
+   }
+   details.appendChild(node('p','해당 아파트의 정확한 건물·호수·2026–27 배정은 Lewisville Student Services (studentservices@lisd.net · 469-713-5206) 또는 공식 Find an Apartment에서 확인하세요. 서로 다른 4개 학교 단계 중 어느 쪽도 자동 확정하지 않습니다.'));
    status.textContent='공식 지도 내 불일치 · 4개 학교 단계 모두 별도 확인 필요';return;
   }
   const dl=node('dl','');dl.className='lisd-campus-grid';

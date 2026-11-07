@@ -14,6 +14,7 @@ const allenAddressAudit = readJson('allen-official-address-source-audit-2026.jso
 const planoFeeder = readJson('plano-official-feeder-reference-2026.json');
 const cfbFeeder = readJson('cfb-official-feeder-reference-2026.json');
 const residentFinderAudit = readJson('official-resident-finder-audit-2026-11-07.json');
+const remainingP0Audit = readJson('tests/remaining-p0-finder-audit-2026-11-07.json');
 const prosper = readJson('prosper-celina-reference-2026.geojson');
 const prosperCurrent = readJson('prosper-attendance-2026.geojson');
 const officialChecks = readJson('tests/prosper-official-location-checks-2026.json');
@@ -264,14 +265,14 @@ test('Plano feeder name agreement with 2025–26 ArcGIS does not imply current G
  assert.ok(planoFeeder.specialCases.some(x=>x.rule==='west of Coit Road'&&x.middle==='Frankford'));
 });
 test('Production source panels and Jackson overlay identify authoritative exceptions',()=>{
- assert.ok(html.includes('GIS 연도 최신성은 미입증'));
+ assert.ok(html.includes('현행 2026–27 SchoolFinder 연결 · 2025–26 필드명 GIS 64개'));
  assert.ok(html.includes('공식 주소표 1,689행/유효 1,687행'));
  assert.ok(html.includes('Moss Haven Pl'));
  assert.ok(html.includes('Crestview Heights'));
  assert.ok(html.includes('Jackson Elementary 진학 경로 예외'));
  assert.ok(html.includes('Coit Rd 동쪽'));
  assert.ok(html.includes('Plano West Senior'));
- assert.ok(html.includes('2026–27 공식 SchoolFinder가 기존 2025–26 FeatureServer를 사용함 확인'));
+ assert.ok(html.includes('현행 2026–27 SchoolFinder 연결 · 2025–26 필드명 GIS 64개'));
  assert.ok(html.includes('Frisco·Prosper 2곳'));
 });
 test('all 31 Prosper ISD 2026–27 school zones acquired from official live locator',()=>{
@@ -674,6 +675,36 @@ test('home autocomplete ARIA, debounced request, magicKey and direct address sea
  assert.ok(src.includes('geocodeAddress(address,homeRequest.signal,suggestion)'));
  assert.ok(src.includes("homeAutocomplete?.dismiss();clearHome()"));
 });
+test('P0 remaining districts retain honest address-level evidence and free live-source monitor',()=>{
+ assert.equal(audit.lastVerified,'2026-11-07');
+ assert.equal(remainingP0Audit.auditDate,'2026-11-07');
+ assert.equal(remainingP0Audit.completionPolicy.includes('official property-specific result'),true);
+ assert.deepEqual(remainingP0Audit.samples.map(x=>x.district),['PISD','CFB','LISD']);
+ const p=remainingP0Audit.samples[0];
+ assert.equal(p.status,'property-school-names-not-independently-confirmed');
+ assert.equal(p.existingGISExpected.elementary,'Haun');
+ assert.equal(audit.districts.find(x=>x.code==='PISD').liveFinderVerification.publicAddressFinderFollowup.independentlyMatchedAddressSchoolNames,0);
+ const c=remainingP0Audit.samples[1];
+ assert.equal(c.status,'property-school-names-not-independently-confirmed');
+ assert.equal(c.addressSamples.length,2);
+ assert.equal(c.safeFeederPaths,20);
+ assert.equal(c.conflictingFeederPaths,1);
+ assert.equal(audit.districts.find(x=>x.code==='CFB').residentFinderVerification.uniqueZonedCampusSetsObserved,0);
+ const l=remainingP0Audit.samples[2];
+ assert.equal(l.status,'official-table-vs-current-finder-map-conflict-unresolved');
+ assert.ok(l.operatorConfirmedAddress.includes('The Colony'));
+ assert.equal(audit.districts.find(x=>x.code==='LISD').liveFinderVerification.apartment5289Followup.findAnApartmentSelectionVerified,false);
+ assert.ok(html.includes('5400 Legacy Dr 공식 검색기에서 학교명 4단계 결과 독립 판독 실패'));
+ assert.ok(html.includes('5289 아파트 표/지도 4단계 충돌은 교육청 확인 전 자동 배정 금지'));
+ const schedule=readText('.github/workflows/live-official-school-sources.yml');
+ const probe=readText('scripts/check-official-source-health-live.mjs');
+ assert.ok(schedule.includes('workflow_dispatch:')&&schedule.includes('schedule:'));
+ assert.ok(schedule.includes('node scripts/check-public-address-finders-live.mjs'));
+ assert.ok(schedule.includes('node scripts/check-plano-feeder-zones-live.mjs'));
+ assert.ok(schedule.includes('node scripts/check-official-source-health-live.mjs'));
+ assert.ok(probe.includes('notAddressSchoolVerification:true'));
+ assert.ok(probe.includes("propertyAssignmentVerified:false"));
+});
 test('LISD official locator-linked 174 apartment table and no unsafe vintage promotion',()=>{
  const info=lisdApartmentData.metadata,rows=lisdApartmentData.apartments;
  assert.equal(rows.length,174);assert.equal(info.recordCount,174);
@@ -689,6 +720,14 @@ test('LISD official locator-linked 174 apartment table and no unsafe vintage pro
  assert.deepEqual(disputed[0].zoneAudit.polygonAtLocatorPoint,{elementary:'CAMEY',middle:'LAKEVIEW',intermediate:'THE COLONY',high:'THE COLONY'});
  assert.equal(disputed[0].elementary,'SOUTHRIDGE');assert.equal(disputed[0].middle,'DURHAM');
  assert.equal(disputed[0].intermediate,'LEWISVILLE HARMON');assert.equal(disputed[0].high,'LEWISVILLE');
+ const operator=disputed[0].zoneAudit.propertyLocationCrosscheck;
+ assert.equal(operator.operatorAddress,'5289 S. Highway 121, The Colony, TX 75056');
+ assert.equal(operator.schoolsVerifiedByOperator,false);
+ assert.equal(operator.confirmsStreetAndCity,true);
+ assert.equal(operator.otherSameNameLocatorRecord,'2175 S STATE HIGHWAY 121');
+ assert.equal(info.internalCrossCheck.recordsDisputed,1);
+ assert.ok(readText('lewisville-apartments.js').includes('운영사 주소는 건물 위치 확인용입니다. 학교 배정 확인 자료가 아닙니다.'));
+ assert.ok(html.includes('./lewisville-apartments.js?v=2'));
  assert.ok(readText('lewisville-apartments.js').includes("rec.zoneAudit?.status==='internal-map-conflict'"));
  assert.ok(html.includes('지도와 배정표가 서로 다른 아파트 1곳은 별도 경고'));
  assert.equal(info.uniqueApartmentNames,173);
