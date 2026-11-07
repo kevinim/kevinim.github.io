@@ -215,7 +215,7 @@
           "conflictingProperty": "Budget Suites of America (5289 STATE HIGHWAY 121)",
           "apartmentTable": "SOUTHRIDGE / DURHAM / LEWISVILLE HARMON / LEWISVILLE",
           "geometryPoint": "CAMEY / LAKEVIEW / THE COLONY / THE COLONY",
-          "resolution": "Unresolved; same public locator has conflicting fields. UI warns and displays both sources without assigning.",
+          "resolution": "Unresolved; operator identifies two distinct Budget Suites street locations; map-vs-table disagreement remains at all four campus levels. UI blocks automatic choice; weekly public layer drift monitor checks rows but does NOT assign campuses.",
           "geometryYearStillUnverified": true,
           "operatorLocationConfirmation": {
             "date": "2026-11-07",
@@ -226,7 +226,8 @@
             "disputedLevels": 4,
             "manualContact": "studentservices@lisd.net"
           }
-        }
+        },
+        "weeklyAutomatedSourceDrift": "scripts/check-lisd-budget-suites-source-drift-live.mjs"
       },
       "liveFinderVerification": {
         "checked": "2026-11-06",
@@ -321,7 +322,14 @@
           "unresolvedRows": 1,
           "conflictSchool": "Farmers Branch Elementary",
           "notes": "Exactly one row mismatch among three full 21-row official sources. Property-level current school enrollment still requires GuideK12 verification; do not choose winner from majority vote."
-        }
+        },
+        "additionalCampus2026Context": {
+          "article": "https://farmersbranch.cfbisd.edu/student-life/news/post-details-page/~board/farmers-branch-elementary-news/post/fbe-teacher-spotlight-ms-caroline-cave",
+          "date": "2026-11-06",
+          "observation": "School news mentions partnerships with Field and Turner; indirect context only, not evidence to override a contradictory official 2026–27 Pre-K feeder table",
+          "sourceContradictionStillOpen": true
+        },
+        "weeklyAutomatedSourceDrift": "scripts/check-cfb-feeder-source-drift-live.mjs"
       },
       "approvedMapReference": {
         "page": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning",

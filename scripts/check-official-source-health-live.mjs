@@ -9,6 +9,8 @@ const sources=[
  {code:'LISD',kind:'public-district-page',url:'https://www.lisd.net/resources/families/school-locator',pattern:/School Locator/i},
  {code:'CFB',kind:'public-district-page',url:'https://www.cfbisd.edu/students/school-maps-locator-system',pattern:/School Search|school search/i},
  {code:'CFB',kind:'external-locator-page',url:'https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/',pattern:/SchoolSearch|Find your address|Find on Map|GuideK12/i},
+ // District Student Services still links this legacy short domain; do NOT treat it as a validated address resolver.
+ {code:'CFB',kind:'district-linked-legacy-url-advisory-only',url:'https://www.cfbmaps.com/',pattern:/SchoolSearch|GuideK12|Carrollton|school locator/i},
  {code:'PISD',kind:'live-finder-geographic-service',url:'https://services4.arcgis.com/uBV8NRVfoRJv7qWn/arcgis/rest/services/Plano_ISD_School_Districts/FeatureServer?f=json',pattern:/layers|currentVersion/i}
 ];
 const checkedAt=new Date().toISOString();
@@ -18,6 +20,7 @@ for(const spec of sources){
  try{
   const response=await fetch(spec.url,{headers:{'accept':'text/html,application/json'},signal:AbortSignal.timeout(18000),redirect:'follow'});
   outcome.httpStatus=response.status;
+  outcome.finalUrl=response.url;
   if(response.ok){
    const body=(await response.text()).slice(0,1200000);
    outcome.bodyRecognized=spec.pattern.test(body);

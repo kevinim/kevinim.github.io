@@ -215,7 +215,15 @@
       "sourceB": "https://www.cfbisd.edu/students/prek-enrollment-page/pre-k-campuses",
       "middleB": "Bush",
       "highB": "Ranchview",
-      "status": "unresolved-do-not-auto-assign"
+      "status": "unresolved-do-not-auto-assign",
+      "corroboratingCurrentCampusArticle": {
+        "url": "https://farmersbranch.cfbisd.edu/student-life/news/post-details-page/~board/farmers-branch-elementary-news/post/fbe-teacher-spotlight-ms-caroline-cave",
+        "published": "2026-11-06",
+        "statement": "Farmers Branch Elementary school post describes teacher's partnerships with Field and Turner, her alma maters",
+        "supports": "Field/Turner local campus association, also shown in FAQ and Transfer Guidelines",
+        "doesNotEstablish": "This is a teacher spotlight, not a 2026–27 attendance-zone approval, school-year zoning finder result, or correction of contradictory Pre-K page.",
+        "status": "supporting-context-only-keep-conflict-blocked"
+      }
     }
   ],
   "crossSourceAudit": {
@@ -234,6 +242,7 @@
     "conflictingRows": 1,
     "conflictSchool": "Farmers Branch",
     "agreement": "Enrollment FAQ and Transfer Guidelines agree on Farmers Branch -> Field Middle -> Turner High; Pre-K Campuses says Bush Middle -> Ranchview High.",
-    "status": "unresolved; no property-level GIS or address-to-school inference from this feeder crosscheck"
+    "status": "unresolved; no property-level GIS or address-to-school inference from this feeder crosscheck",
+    "latestAdditionalContext": "2026-11-07: Official Farmers Branch Elementary news 2026-11-06 mentions school partnerships with Field and Turner; does not override district 2026-27 Pre-K feeder contradiction. Weekly public-source drift monitor added."
   }
 }
