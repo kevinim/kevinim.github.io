@@ -1,0 +1,39 @@
+{
+  "auditedAt": "2026-11-07",
+  "provider": "Texas A&M Forest Service / Texas Wildfire Risk Assessment Portal (TxWRAP)",
+  "indicator": "Wildfire Hazard Potential (WHP)",
+  "officialLanding": "https://tfsweb.tamu.edu/wildfire-and-other-disasters/burn-bans-and-information/wildfire-risk/",
+  "mapService": "https://gis.texaswildfirerisk.com/server/rest/services/TxWRAP/wildfire_hazard_potential/MapServer",
+  "legend": "https://gis.texaswildfirerisk.com/server/rest/services/TxWRAP/wildfire_hazard_potential/MapServer/legend",
+  "tileTemplate": "https://gis.texaswildfirerisk.com/server/rest/services/TxWRAP/wildfire_hazard_potential/MapServer/tile/{z}/{y}/{x}",
+  "sampleDallasTile": {
+    "z": 11,
+    "x": 473,
+    "y": 824,
+    "observedContentType": "image/png",
+    "httpStatus": 200
+  },
+  "serviceProperties": {
+    "projection": "EPSG:3857",
+    "singleFusedMapCache": true,
+    "tileSize": 256,
+    "maxNativeLOD": 17,
+    "raster": true
+  },
+  "interpretation": "WildEST deterministic fire-behavior simulations weighted by weather-type probability; long-term relative potential for wildfire difficult to control, not current fire occurrence, wildfire likelihood forecast at a particular dwelling, or FEMA 2025 NRI tract rating.",
+  "classification": "Official TxWRAP source describes eight WHP classes; keep original published raster legend and source colors rather than inventing a crosswalk to FEMA red NRI grades.",
+  "timeRange": "source methodology is public but explicit effective revision year could not be confirmed on the REST MapServer landing; dashboard intentionally discloses unverified vintage",
+  "limitations": [
+    "Live raster service availability can change; never leave partial tiles as complete coverage.",
+    "No numerical parcel scoring from published raster cache.",
+    "Historical wildfire incident dates (2005–2021) are a separate dataset and must not be relabeled as prospective risk.",
+    "No local copy of tiled raster or redistribution of contractor GIS data."
+  ],
+  "qaGates": [
+    "no tile requests before opt-in",
+    "nonzero PNG tiles loaded at a DFW viewport",
+    "distinct source legend and timestamp caveat",
+    "FEMA NRI and NFHL mutually exclusive",
+    "ZIP color restoration and no school-map regression"
+  ]
+}
