@@ -6,6 +6,8 @@ on:
       - 'phase2a-fema-hazards.js'
       - 'index.html'
       - 'scripts/test-phase2a-browser.cjs'
+      - 'scripts/test-school-boundary-browser.cjs'
+      - 'school-boundary-match.js'
       - 'data/phase2a-fema-nri-dfw-2025.geojson'
       - '.github/workflows/phase2a-browser-qa.yml'
 jobs:
@@ -35,6 +37,10 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/phase2a-browser-tmp/node_modules
         run: node scripts/test-phase2a-browser.cjs
+      - name: Audit all selectable school boundary coverage and click-to-show behavior
+        env:
+          NODE_PATH: ${{ github.workspace }}/phase2a-browser-tmp/node_modules
+        run: node scripts/test-school-boundary-browser.cjs
       - name: Attach phase2a browser screenshot
         if: always()
         uses: actions/upload-artifact@v4
