@@ -675,6 +675,31 @@ test('home autocomplete ARIA, debounced request, magicKey and direct address sea
  assert.ok(src.includes('geocodeAddress(address,homeRequest.signal,suggestion)'));
  assert.ok(src.includes("homeAutocomplete?.dismiss();clearHome()"));
 });
+test('P0 CFB/area source drift monitors never promote conflicting feeder or apartment to enrollment truth',()=>{
+ const cfbSource=readJson('cfb-official-feeder-reference-2026.json');
+ const conflict=cfbSource.officialSourceConflicts.find(x=>x.school==='Farmers Branch');
+ assert.ok(conflict);assert.equal(conflict.status,'unresolved-do-not-auto-assign');
+ assert.equal(conflict.corroboratingCurrentCampusArticle.published,'2026-11-06');
+ assert.equal(conflict.corroboratingCurrentCampusArticle.status,'supporting-context-only-keep-conflict-blocked');
+ assert.equal(cfbFeederByElementary('Farmers Branch',cfbSource).status,'official-disagreement');
+ const cfb=audit.districts.find(x=>x.code==='CFB');
+ const lisd=audit.districts.find(x=>x.code==='LISD');
+ assert.equal(cfb.feederReference.additionalCampus2026Context.sourceContradictionStillOpen,true);
+ assert.equal(cfb.feederReference.weeklyAutomatedSourceDrift,'scripts/check-cfb-feeder-source-drift-live.mjs');
+ assert.equal(lisd.apartmentReference.weeklyAutomatedSourceDrift,'scripts/check-lisd-budget-suites-source-drift-live.mjs');
+ const cfbScript=readText('scripts/check-cfb-feeder-source-drift-live.mjs');
+ const lisdScript=readText('scripts/check-lisd-budget-suites-source-drift-live.mjs');
+ const weekly=readText('.github/workflows/live-official-school-sources.yml');
+ assert.ok(cfbScript.includes('autoAssignAllowed:false'));
+ assert.ok(cfbScript.includes('source-conflict-possibly-resolved-requires-human-review'));
+ assert.ok(lisdScript.includes("officialCampusAssignmentFor5289:'unresolved'"));
+ assert.ok(weekly.includes('node scripts/check-cfb-feeder-source-drift-live.mjs'));
+ assert.ok(weekly.includes('node scripts/check-lisd-budget-suites-source-drift-live.mjs'));
+ assert.ok(weekly.includes('artifacts/cfb-farmers-branch-source-drift.json'));
+ assert.ok(weekly.includes('artifacts/lisd-5289-budget-suites-source-drift.json'));
+ const health=readText('scripts/check-official-source-health-live.mjs');
+ assert.ok(health.includes("kind:'district-linked-legacy-url-advisory-only'"));
+});
 test('P0 remaining districts retain honest address-level evidence and free live-source monitor',()=>{
  assert.equal(audit.lastVerified,'2026-11-07');
  assert.equal(remainingP0Audit.auditDate,'2026-11-07');
