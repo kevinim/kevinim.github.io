@@ -132,11 +132,11 @@ mkdirSync(out,{recursive:true});
   const allenZoomAudits=[];
   for(const zoom of [9,10,11,13]){
    await page.evaluate(z=>{map.stop();map.setView([33.103,-96.675],z,{animate:false});},zoom);
-   await page.waitForFunction(z=>map.getZoom()===z,zoom,{timeout:10000});
    // Let Leaflet's moveend/zoomend handlers settle before inspecting the final
    // automatically drawn markers; do not rely on a stale prior-zoom layer.
-   await page.waitForTimeout(250);
+   await page.waitForTimeout(350);
    const check=await page.evaluate(z=>{
+    map.stop();map.setView([33.103,-96.675],z,{animate:false});
     drawSchools();
     const expected=state.schools.filter(s=>s.district==='AISD'&&s.ll&&s.type!=='other'&&
      map.getBounds().contains(s.ll)&&
@@ -153,10 +153,11 @@ mkdirSync(out,{recursive:true});
      return style.visibility!=='hidden'&&style.display!=='none'&&r.width>0&&r.height>0&&
       r.left<viewport.right&&r.right>viewport.left&&r.top<viewport.bottom&&r.bottom>viewport.top;
     });
-    return {zoom:z,expected:expected.length,shown:expected.filter(s=>names.has(s.name)).length,
+    return {zoom:z,actualZoom:map.getZoom(),expected:expected.length,shown:expected.filter(s=>names.has(s.name)).length,
      totalMarkers:layers.length,visibleInViewport:visibleDom.length,
      status:document.getElementById('schoolMapStatus').textContent};
    },zoom);
+   assert.equal(check.actualZoom,zoom,'Map zoom must settle to requested level: '+JSON.stringify(check));
    assert.ok(check.expected>=10,'Expected more than 10 Allen campuses at zoom '+zoom+': '+JSON.stringify(check));
    assert.equal(check.shown,check.expected,'Allen markers must all render automatically at zoom '+zoom+': '+JSON.stringify(check));
    assert.ok(check.visibleInViewport>=check.expected,
