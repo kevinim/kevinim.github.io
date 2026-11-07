@@ -116,6 +116,8 @@ function createFemaHazardOverlay(map,documentRef){
    setStatus('재해 레이어 꺼짐 · 필요할 때만 지도 데이터를 불러옵니다.');
    drawLegend();return;
   }
+  const nfhl=d.getElementById('nfhlEnabled');
+  if(nfhl?.checked){nfhl.checked=false;nfhl.dispatchEvent(new Event('change'))}
   if(zipToggle&&restoreZip===null){
    restoreZip=zipToggle.checked;
    if(zipToggle.checked){zipToggle.checked=false;zipToggle.dispatchEvent(new Event('change'))}

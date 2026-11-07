@@ -40,6 +40,7 @@ const {compareManualSchoolResult,compareProsperOfficialPoint,buildProsperOfficia
 const {zoneBoundaryProximity,distancePointToSegmentMeters}=require('../school-zone-risk.js');
 const {boundarySchoolKey,boundaryGradeLevels,boundarySchoolSource,findSchoolBoundary,boundaryMissingExplanation}=require('../school-boundary-match.js');
 const {FEMA_HAZARD_TYPES,FEMA_RISK_COLORS,femaHazardMetric,femaHazardStyle,validateFemaHazardGeojson}=require('../phase2a-fema-hazards.js');
+const {NFHL_LAYER_ENDPOINT,NFHL_WHERE,NFHL_MAX_RECORDS,NFHL_MIN_ZOOM,nfhlClassify,nfhlLayerStyle,validateNfhlResponse,nfhlQueryUrl}=require('../phase2a-nfhl-flood.js');
 const {buildCollinParcelUrl,parcelStreetKey,assessCollinParcelResult}=require('../collin-parcel-check.js');
 const demographics = readJson('dfw-demographics.json');
 const rating = readJson('tea-ratings-2026.json');
@@ -64,7 +65,7 @@ test('main page inline JavaScript compiles', () => {
   inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
 });
 test('all main application JS modules compile', () => {
-  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','school-boundary-match.js','phase2a-fema-hazards.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
+  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','school-boundary-match.js','phase2a-fema-hazards.js','phase2a-nfhl-flood.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
     new Script(readText(name), {filename:name});
     assert.ok(html.includes('./' + name), name + ' not loaded');
   }
@@ -976,6 +977,46 @@ test('6 school-district rows and provenance date visible on site',()=>{
   assert.ok(html.includes('교차 검증 통과'));
   assert.ok(html.includes('Frisco·Prosper 2곳'));
   assert.ok(html.includes('과거 2019–20 GIS로 대체하지 않습니다'));
+});
+test('Phase2A FEMA official NFHL live flood map filters, two red intensities and no-flood-is-not-safe caveats',()=>{
+ assert.equal(NFHL_LAYER_ENDPOINT,'https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28/query');
+ assert.ok(NFHL_WHERE.includes("SFHA_TF = 'T'"));
+ assert.ok(NFHL_WHERE.includes('ZONE_SUBTY'));
+ assert.equal(NFHL_MIN_ZOOM,14);
+ assert.equal(NFHL_MAX_RECORDS,1000);
+ const bounds={getWest:()=>-96.83,getSouth:()=>32.76,getEast:()=>-96.79,getNorth:()=>32.80};
+ const url=new URL(nfhlQueryUrl(bounds));
+ assert.equal(url.searchParams.get('f'),'geojson');
+ assert.equal(url.searchParams.get('where'),NFHL_WHERE);
+ assert.equal(url.searchParams.get('geometryType'),'esriGeometryEnvelope');
+ assert.equal(url.searchParams.get('inSR'),'4326');
+ assert.equal(url.searchParams.get('returnGeometry'),'true');
+ assert.equal(url.searchParams.get('resultRecordCount'),'1000');
+ const high={type:'Feature',geometry:{type:'Polygon',coordinates:[]},
+  properties:{SFHA_TF:'T',FLD_ZONE:'AE',ZONE_SUBTY:null}};
+ const moderate={type:'Feature',geometry:{type:'Polygon',coordinates:[]},
+  properties:{SFHA_TF:'F',FLD_ZONE:'X',ZONE_SUBTY:'0.2 PCT ANNUAL CHANCE FLOOD HAZARD'}};
+ const unknown={type:'Feature',geometry:{type:'Polygon',coordinates:[]},
+  properties:{SFHA_TF:'F',FLD_ZONE:'X',ZONE_SUBTY:'AREA OF MINIMAL FLOOD HAZARD'}};
+ assert.equal(nfhlClassify(high).kind,'sfha');
+ assert.equal(nfhlClassify(moderate).kind,'moderate');
+ assert.equal(nfhlClassify(unknown).kind,'none');
+ assert.equal(nfhlLayerStyle(high).fillColor,'#b91c1c');
+ assert.equal(nfhlLayerStyle(moderate).fillColor,'#ffabab');
+ assert.equal(nfhlLayerStyle(unknown).fillOpacity,0);
+ assert.equal(nfhlLayerStyle(unknown).interactive,false);
+ assert.equal(validateNfhlResponse({type:'FeatureCollection',features:[high,moderate]}),true);
+ assert.equal(validateNfhlResponse({type:'FeatureCollection',features:new Array(1000).fill(high)}),false);
+ assert.equal(validateNfhlResponse({error:{message:'fail'},type:'FeatureCollection',features:[]}),false);
+ assert.ok(html.includes('id="nfhlFloodPanel"'));
+ assert.ok(html.includes('id="nfhlEnabled"'));
+ assert.ok(html.includes('id="nfhlStatus"'));
+ assert.ok(html.includes('id="nfhlLegend"'));
+ assert.ok(html.includes('phase2a-nfhl-flood.js?v=1'));
+ assert.ok(html.includes('createNFHLFloodOverlay?.(map,document)'));
+ assert.ok(html.includes('FEMA Map Service Center'));
+ assert.ok(html.includes('이 화면에서 보이지 않는다고 홍수 위험이 없다는 뜻은 아닙니다.')||readText('phase2a-nfhl-flood.js').includes('이 화면에서 보이지 않는다고 홍수 위험이 없다는 뜻은 아닙니다.'));
+ assert.ok(!html.includes('회색은 데이터 부족입니다'));
 });
 test('Phase2A FEMA December 2025 v1.20 source snapshot is real and separate from school/ZIP data',()=>{
  assert.equal(femaHazards.type,'FeatureCollection');
