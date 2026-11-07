@@ -1,0 +1,47 @@
+name: Production Pages live browser smoke
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/test-production-browser.cjs'
+      - '.github/workflows/production-browser-smoke.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/test-production-browser.cjs'
+      - '.github/workflows/production-browser-smoke.yml'
+      - 'index.html'
+      - 'phase2a-nfhl-flood.js'
+      - 'phase2a-fema-hazards.js'
+      - 'school-boundary-match.js'
+jobs:
+  production-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated Playwright browser
+        run: |
+          mkdir -p production-browser-tmp
+          cd production-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Verify LIVE GitHub Pages map, school polygons and FEMA NFHL service
+        env:
+          NODE_PATH: ${{ github.workspace }}/production-browser-tmp/node_modules
+          DASHBOARD_BASE_URL: https://kevinim.github.io/
+        run: node scripts/test-production-browser.cjs
+      - name: Attach production browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-pages-browser-smoke
+          path: artifacts/production-browser/
+          if-no-files-found: warn
