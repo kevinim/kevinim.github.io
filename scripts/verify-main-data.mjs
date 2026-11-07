@@ -25,7 +25,7 @@ const {PLANO_LAYERS,PLANO_SERVICE,planoLiveUrl,convertPlanoLive,loadPlanoLiveFin
 const {matchAllenAddress}=require('../allen-lookup.js');
 const {allenSplitApartmentException,ALLEN_SPLIT_APARTMENTS}=require('../allen-apartment-exceptions.js');
 const {isRetiredCampus, RETIRED_CAMPUSES_2026}=require('../school-lifecycle.js');
-const {assessResidentialGeocode}=require('../geocode-quality.js');
+const {isTexasGeocode,assessResidentialGeocode,rankTexasHomeCandidates}=require('../geocode-quality.js');
 const {findLisdApartments,lisdKey}=require('../lewisville-apartments.js');
 const lisdApartmentData=readJson('lewisville-official-apartments.json');
 const {buildTexasSuggestUrl,isTexasStreetSuggestion,filterTexasStreetSuggestions}=require('../texas-address-suggest.js');
@@ -457,6 +457,35 @@ test('official manual result only checks user transcription, never upgrades old 
  assert.ok(html.includes('official-school-review.js?v=1'));
  assert.ok(readText('candidate-compare.js').includes('savedOfficialReview:item.officialReview'));
 });
+test('P0 home geocoding rejects uncertain TX and does not silently choose a tied home',()=>{
+ const make=(address,score,region='TX',zip='75024',x=-96.8,y=33.1,type='PointAddress')=>({
+  address,score,location:{x,y},attributes:{Region:region,Postal:zip,Addr_type:type}
+ });
+ const plano=make('3400 Legacy Dr, Plano, TX 75024',99);
+ const frisco=make('3400 Legacy Dr, Frisco, TX 75034',99,'TX','75034',-96.82,33.15);
+ const outOfState=make('3400 Legacy Dr, Oklahoma City, OK 73102',100,'OK','73102');
+ const noRegion=make('3400 Legacy Dr, Plano, TX 75024',100,'','75024');
+ const wrongCoords=make('3400 Legacy Dr, Houston, TX 77002',100,'TX','77002',-90,29);
+ assert.equal(isTexasGeocode(outOfState),false);
+ assert.equal(isTexasGeocode(noRegion),false);
+ assert.equal(isTexasGeocode(wrongCoords),false);
+ assert.equal(assessResidentialGeocode('3400 Legacy Dr',noRegion).usableForSchoolCandidate,false);
+ const tied=rankTexasHomeCandidates('3400 Legacy Dr',[outOfState,noRegion,frisco,plano,plano]);
+ assert.equal(tied.candidates.length,2);
+ assert.equal(tied.requiresSelection,true);
+ assert.equal(tied.candidates.every(isTexasGeocode),true);
+ const zipExact=rankTexasHomeCandidates('3400 Legacy Dr, Plano, TX 75024',[frisco,plano]);
+ assert.equal(zipExact.candidates[0].address,plano.address);
+ assert.equal(zipExact.requiresSelection,false);
+ const weak=rankTexasHomeCandidates('3400 Legacy Dr',[plano,make('Legacy Dr, Plano, TX 75024',93,'TX','75024',-96.81,33.12,'StreetName')]);
+ assert.equal(weak.requiresSelection,false);
+ assert.equal(rankTexasHomeCandidates('123 Main',[outOfState,noRegion]).candidates.length,0);
+ const ui=readText('home-lookup-v2.js');
+ assert.ok(ui.includes('rankTexasHomeCandidates(address,result)'));
+ assert.ok(ui.includes('showHomeCandidateChoices(candidates)'));
+ assert.ok(ui.includes('if(requiresSelection)'));
+});
+
 test('Texas-only home address suggestions exclude Oklahoma and POIs even inside the Esri bounding box',()=>{
  const u=new URL(buildTexasSuggestUrl('3400 Legacy'));
  assert.equal(u.pathname.endsWith('/suggest'),true);
