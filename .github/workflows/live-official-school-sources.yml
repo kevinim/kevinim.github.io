@@ -1,5 +1,7 @@
 name: Public school source crosschecks (no browser agent)
 on:
+  pull_request:
+    branches: [main]
   workflow_dispatch:
   schedule:
     - cron: '15 13 * * 1'
@@ -26,10 +28,14 @@ jobs:
         run: node scripts/check-public-address-finders-live.mjs
       - name: Recheck Plano current-linked GIS against district-published feeder paths
         run: node scripts/check-plano-feeder-zones-live.mjs
+      - name: Check Plano single PUBLIC address via district Finder-linked per-level ArcGIS point query
+        run: node scripts/check-plano-public-address-layer-live.mjs
       - name: Upload source health report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: official-school-source-health
-          path: artifacts/official-school-source-health.json
+          path: |
+            artifacts/official-school-source-health.json
+            artifacts/plano-public-address-arcgis-check.json
           if-no-files-found: warn
