@@ -1023,6 +1023,17 @@ test('Phase2A NOAA official 2024/2025 county-coded historical storm snapshot sou
  assert.ok(html.includes('createNoaaStormHistory?.(document)'));
  assert.ok(html.includes('실제 보고된 사건 수'));
 });
+test('Map Allen schools and natural hazard heatmaps have visible quick controls',()=>{
+ assert.ok(html.includes('id="allenSchoolsShortcut"'));
+ assert.ok(html.includes('id="hazardMapQuickToggle"'));
+ assert.ok(html.includes('id="schoolMapStatus"'));
+ assert.ok(html.includes("map.flyTo([33.103,-96.675],13)"));
+ assert.ok(html.includes("const limit=zoom<12?100:260;"));
+ assert.ok(html.includes("center.distanceTo(a.ll)-center.distanceTo(b.ll)"));
+ assert.ok(html.includes("el('phase2HazardPanel').open=true"));
+ assert.ok(html.includes("toggle.dispatchEvent(new Event('change',{bubbles:true}))"));
+ assert.ok(html.includes("aria-label=\"FEMA 자연재해 위험 지도 켜기 또는 끄기\""));
+});
 test('Phase2A official TxWRAP Wildfire Hazard Potential raster remains distinct from modeled NRI and NFHL',()=>{
  assert.equal(TXWRAP_WHP_TILES,TXWRAP_WHP_SERVICE+'/tile/{z}/{y}/{x}');
  assert.equal(TXWRAP_WHP_MAX_NATIVE_ZOOM,17);

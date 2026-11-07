@@ -125,6 +125,37 @@ mkdirSync(out,{recursive:true});
   const earlyReason=await page.locator('#zoneNotice').innerText();
   assert.ok(earlyReason.includes('별도 지원·추첨'),earlyReason);
   assert.ok((await page.locator('#zoneNotice a').getAttribute('href')).includes('earlycollege.cfbisd.edu'));
+  // Regression for Allen map visibility. Initial overview zoom 11 previously
+  // rendered ZERO school markers even when the school data had loaded.
+  await page.evaluate(()=>{map.setView([33.103,-96.675],11);drawSchools();return null});
+  await page.waitForFunction(()=>map.getZoom()===11);
+  const allenWide=await page.evaluate(()=>{
+   const expected=state.schools.filter(s=>s.district==='AISD'&&s.ll&&s.type!=='other'&&map.getBounds().contains(s.ll));
+   const names=new Set(schoolGroup.getLayers().map(l=>l.options.title));
+   return {expected:expected.length,totalMarkers:names.size,
+    allenDisplayed:expected.filter(s=>names.has(s.name)).length,
+    status:document.getElementById('schoolMapStatus').textContent};
+  });
+  assert.ok(allenWide.expected>=5,'Allen must have geocoded school records in the map');
+  assert.ok(allenWide.totalMarkers>0,'Regional overview must not hide every school marker');
+  assert.ok(allenWide.totalMarkers<=100,'Overview should respect 100-marker limit to avoid visual overload');
+  assert.ok(allenWide.allenDisplayed>0,'Allen nearby schools must appear at overview zoom 11: '+JSON.stringify(allenWide));
+  await page.locator('#allenSchoolsShortcut').click();
+  await page.waitForFunction(()=>map.getZoom()===13,{timeout:0},{timeout:20000});
+  await page.waitForFunction(()=>{
+   const a=state.schools.filter(s=>s.district==='AISD'&&s.ll&&s.type!=='other'&&map.getBounds().contains(s.ll));
+   const names=new Set(schoolGroup.getLayers().map(l=>l.options.title));
+   return a.length>=4&&a.filter(s=>names.has(s.name)).length>=4;
+  },null,{timeout:15000});
+  const allenZoom=await page.evaluate(()=>{
+   const selected=state.schools.filter(s=>s.district==='AISD'&&s.ll&&s.type!=='other'&&map.getBounds().contains(s.ll));
+   const names=new Set(schoolGroup.getLayers().map(l=>l.options.title));
+   return {expected:selected.length,visible:selected.filter(s=>names.has(s.name)).length,
+    center:[map.getCenter().lat,map.getCenter().lng],zoom:map.getZoom()};
+  });
+  assert.ok(allenZoom.visible>=4,JSON.stringify(allenZoom));
+  assert.equal(await page.locator('#schoolOverlay').isChecked(),true);
+  console.log('PASS Allen school markers at regional zoom 11 and zoom 13 shortcut: '+JSON.stringify({wide:allenWide,detail:allenZoom}));
   console.log('PASS school boundary auto display, per-school source footnote, district coverage audit');
   console.log('Page JavaScript errors: '+JSON.stringify(errors.slice(0,6)));
  }finally{await browser?.close().catch(()=>{})}
