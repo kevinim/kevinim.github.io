@@ -19,14 +19,14 @@ jobs:
           node-version: '22'
       - name: Install isolated open-source Playwright Chromium
         run: |
-          mkdir -p .tmp-browser
-          cd .tmp-browser
+          mkdir -p cfb-browser-probe-tmp
+          cd cfb-browser-probe-tmp
           npm init -y >/dev/null
           npm install --no-fund --no-audit playwright@1.65.0
           ./node_modules/.bin/playwright install --with-deps chromium
       - name: Inspect public CFB SchoolSearch using an institutional address (not a private home)
         env:
-          NODE_PATH: ${{ github.workspace }}/.tmp-browser/node_modules
+          NODE_PATH: ${{ github.workspace }}/cfb-browser-probe-tmp/node_modules
         run: node scripts/probe-cfb-public-finder-browser.cjs
       - name: Upload diagnostic JSON and redacted public-site screenshot
         if: always()
