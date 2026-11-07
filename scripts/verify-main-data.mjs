@@ -40,7 +40,7 @@ const {compareManualSchoolResult,compareProsperOfficialPoint,buildProsperOfficia
 const {zoneBoundaryProximity,distancePointToSegmentMeters}=require('../school-zone-risk.js');
 const {boundarySchoolKey,boundaryGradeLevels,boundarySchoolSource,findSchoolBoundary,boundaryMissingExplanation}=require('../school-boundary-match.js');
 const {FEMA_HAZARD_TYPES,FEMA_RISK_COLORS,femaHazardMetric,femaHazardStyle,validateFemaHazardGeojson}=require('../phase2a-fema-hazards.js');
-const {NFHL_LAYER_ENDPOINT,NFHL_WHERE,NFHL_MAX_RECORDS,NFHL_MIN_ZOOM,nfhlClassify,nfhlLayerStyle,validateNfhlResponse,nfhlQueryUrl}=require('../phase2a-nfhl-flood.js');
+const {NFHL_LAYER_ENDPOINT,NFHL_WHERE,NFHL_MAX_RECORDS,NFHL_MIN_ZOOM,NFHL_FETCH_TIMEOUT_MS,NFHL_RETRY_DELAYS_MS,nfhlClassify,nfhlLayerStyle,validateNfhlResponse,nfhlQueryUrl}=require('../phase2a-nfhl-flood.js');
 const {TXWRAP_WHP_TILES,TXWRAP_WHP_SERVICE,TXWRAP_WHP_EXPLAINER,TXWRAP_WHP_MAX_NATIVE_ZOOM}=require('../txwrap-wildfire-potential.js');
 const {buildCollinParcelUrl,parcelStreetKey,assessCollinParcelResult}=require('../collin-parcel-check.js');
 const demographics = readJson('dfw-demographics.json');
@@ -1017,6 +1017,11 @@ test('Phase2A FEMA official NFHL live flood map filters, two red intensities and
  assert.ok(NFHL_WHERE.includes('ZONE_SUBTY'));
  assert.equal(NFHL_MIN_ZOOM,14);
  assert.equal(NFHL_MAX_RECORDS,1000);
+ assert.ok(NFHL_FETCH_TIMEOUT_MS>=8000&&NFHL_FETCH_TIMEOUT_MS<=25000);
+ assert.deepEqual(NFHL_RETRY_DELAYS_MS,[0,900,1800]);
+ assert.ok(readText('phase2a-nfhl-flood.js').includes('setTimeout(()=>{timedOut=true;current.abort()}'));
+ assert.ok(readText('phase2a-nfhl-flood.js').includes('request!==seq||!enabled.checked'));
+ assert.ok(readText('phase2a-nfhl-flood.js').includes('clearTimeout(timeout)'));
  const bounds={getWest:()=>-96.83,getSouth:()=>32.76,getEast:()=>-96.79,getNorth:()=>32.80};
  const url=new URL(nfhlQueryUrl(bounds));
  assert.equal(url.searchParams.get('f'),'geojson');
@@ -1045,7 +1050,8 @@ test('Phase2A FEMA official NFHL live flood map filters, two red intensities and
  assert.ok(html.includes('id="nfhlEnabled"'));
  assert.ok(html.includes('id="nfhlStatus"'));
  assert.ok(html.includes('id="nfhlLegend"'));
- assert.ok(html.includes('phase2a-nfhl-flood.js?v=1'));
+ assert.ok(html.includes('phase2a-nfhl-flood.js?v=2'));
+ assert.ok(html.includes('최대 3회 재시도'));
  assert.ok(html.includes('createNFHLFloodOverlay?.(map,document)'));
  assert.ok(html.includes('FEMA Map Service Center'));
  assert.ok(html.includes('이 화면에서 보이지 않는다고 홍수 위험이 없다는 뜻은 아닙니다.')||readText('phase2a-nfhl-flood.js').includes('이 화면에서 보이지 않는다고 홍수 위험이 없다는 뜻은 아닙니다.'));
