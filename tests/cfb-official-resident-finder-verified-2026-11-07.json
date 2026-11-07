@@ -1,0 +1,55 @@
+{
+  "auditDate": "2026-11-07",
+  "district": "CFB",
+  "officialFinder": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/",
+  "districtPortal": "https://www.cfbisd.edu/students/school-maps-locator-system",
+  "status": "public-address-school-lookup-operational",
+  "evidence": "https://github.com/kevinim/kevinim.github.io/actions/runs/42356357561",
+  "method": "Open-source Playwright Chromium on free GitHub Actions; user-style input and actual click of native `.address_input .search_result_container .search_result` autocomplete match before reading explicit Assigned school labels",
+  "nativeAutocompleteRequired": true,
+  "previousFalseNegative": "Earlier probes typed full address or pressed Find on Map without selecting the official app's native address result, and thus displayed an unfiltered school catalog; later canonical selection returns specific Assigned school campus labels, distance and travel-time.",
+  "samples": [
+    {
+      "address": "1600 S Josey Ln, Carrollton, TX 75006",
+      "type": "public-school-facility",
+      "candidateSelected": "1600 S JOSEY LN Carrollton, TX 75006",
+      "assigned": {
+        "elementary": "McLaughlin Strickland Elementary (K-5)",
+        "middle": "Perry Middle School (6-8)",
+        "high": "Turner High School (9-12)"
+      },
+      "elementaryMiddleHighVerified": true
+    },
+    {
+      "address": "1011 S Main St, Carrollton, TX 75006",
+      "type": "publicly advertised apartment-complex base street address",
+      "candidateSelected": "1011 S MAIN ST Carrollton, TX 75006",
+      "additionalDistinctUnitSuggestions": [
+        "1011 S MAIN ST 2511",
+        "1011 S MAIN ST 3511",
+        "1011 S MAIN ST 4511",
+        "1011 S MAIN ST 2509"
+      ],
+      "assigned": {
+        "elementary": "Carrollton Elementary (K-5)",
+        "middle": "Perry Middle School (6-8)",
+        "high": "Newman Smith High School (9-12)"
+      },
+      "elementaryMiddleHighVerified": true,
+      "apartmentUnitExceptionNotEvaluated": true
+    }
+  ],
+  "standardFinderUsabilityVerified": true,
+  "sourceYearExplicitInAppURL": null,
+  "confirmedInCurrentDistrictPortal": true,
+  "localAutomaticHouseAssignmentIntegrated": false,
+  "sourceGeometryCurrentYearIndependent": false,
+  "relatedFeederContradiction": "Farmers Branch Elementary 2026–27 official district sources remain inconsistent Field/Turner vs Bush/Ranchview; do not resolve this conflict from other addresses or name associations.",
+  "caveats": [
+    "Shows official Finder is operational for two public test addresses when selecting native autocomplete. This does not validate every residence or unit.",
+    "These results are property-specific official Finder UI output, not a separate per-campus geometry dataset.",
+    "District registrar remains authoritative for specific units, programs, transfers and year changes.",
+    "Do not add the optional CFB elementary feeder lookup panel the user explicitly removed."
+  ],
+  "reviewConclusion": "Treat CFB resident official Finder access as functionally verified, while retaining outstanding Farmers Branch feeder reference contradiction and absence of independently verified current-year GIS polygons."
+}
