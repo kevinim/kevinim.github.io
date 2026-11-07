@@ -509,7 +509,7 @@ test('LISD official locator-linked 174 apartment table and no unsafe vintage pro
  assert.equal(disputed[0].elementary,'SOUTHRIDGE');assert.equal(disputed[0].middle,'DURHAM');
  assert.equal(disputed[0].intermediate,'LEWISVILLE HARMON');assert.equal(disputed[0].high,'LEWISVILLE');
  assert.ok(readText('lewisville-apartments.js').includes("rec.zoneAudit?.status==='internal-map-conflict'"));
- assert.ok(html.includes('학교 도형이 서로 다른 아파트 1곳은 별도 경고'));
+ assert.ok(html.includes('지도와 배정표가 서로 다른 아파트 1곳은 별도 경고'));
  assert.equal(info.uniqueApartmentNames,173);
  assert.equal(rows.filter(r=>!r.address).length,4);
  assert.ok(rows.every(r=>r.name&&r.elementary&&r.middle&&r.intermediate&&r.high));
