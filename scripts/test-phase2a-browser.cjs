@@ -34,7 +34,7 @@ const assert=require('node:assert/strict');
   await page.selectOption('#femaHazardType','wfir');
   assert.ok((await legend.innerText()).includes('산불'));
   assert.ok((await legend.innerText()).includes('공식 등급 없음'));
-  await page.locator('#femaHazardOpacity').fill('45');
+  await page.locator('#femaHazardOpacity').evaluate(el=>{el.value='45';el.dispatchEvent(new Event('input',{bubbles:true}))});
   await page.selectOption('#femaHazardType','hrcn');
   assert.ok((await legend.innerText()).includes('허리케인'));
   await page.locator('#femaHazardEnabled').uncheck();
