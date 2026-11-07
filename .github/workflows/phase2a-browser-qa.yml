@@ -1,0 +1,44 @@
+name: Phase 2A browser regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'phase2a-fema-hazards.js'
+      - 'index.html'
+      - 'scripts/test-phase2a-browser.cjs'
+      - 'data/phase2a-fema-nri-dfw-2025.geojson'
+      - '.github/workflows/phase2a-browser-qa.yml'
+jobs:
+  browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Isolated Playwright browser
+        run: |
+          mkdir -p phase2a-browser-tmp
+          cd phase2a-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve exact PR website on localhost
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/phase2a-site-server.log 2>&1 &
+          echo $! > /tmp/phase2a-server.pid
+          sleep 2
+      - name: Test real map browser on 1,734 FEMA tracts
+        env:
+          NODE_PATH: ${{ github.workspace }}/phase2a-browser-tmp/node_modules
+        run: node scripts/test-phase2a-browser.cjs
+      - name: Attach phase2a browser screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase2a-local-browser-qa
+          path: artifacts/phase2a-browser/
+          if-no-files-found: warn
