@@ -5,6 +5,7 @@ function boundarySchoolKey(value){
  return String(value||'').toLowerCase()
   .replace(/\bh\.?\s*s\.?\b/g,'high').replace(/\bm\.?\s*s\.?\b/g,'middle')
   .replace(/\bsr\.?\b/g,'senior').replace(/\b(?:elem|el)\b/g,'elementary')
+  .replace(/\bk\s*[-–]?\s*[0-9]\b/g,'')
   .replace(/\b(dr|doctor|elementary|middle|senior|sr|high|school|campus)\b/g,'')
   .replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
 }
@@ -13,6 +14,22 @@ function boundaryGradeLevels(type){
 }
 function boundarySchoolSource(district){
  return district==='PISD'?'PISD_LOOKUP':district;
+}
+function knownBoundaryException(s){
+ const district=s?.district,key=boundarySchoolKey(s?.name);
+ if(district==='PISD'&&key==='academy')return {
+  reason:'Academy High School은 일반 주소별 진학구역이 아닌 지원·선발형 학교입니다.',
+  footnote:'Plano ISD Academy Programs는 별도 지원 절차로 입학합니다. 일반 High School 출석구역 도형을 Academy에 대응시키면 잘못된 배정 안내가 되므로 표시하지 않습니다.',
+  sourceUrl:'https://www.pisd.edu/students-families-a6/academy-programs'};
+ if(district==='AISD'&&key==='lowery freshman center')return {
+  reason:'Lowery Freshman Center는 Allen ISD의 9학년 전용 캠퍼스입니다.',
+  footnote:'현재 보유한 Allen 2019·2023 학교별 배정 지도에는 Lowery 전용 도형이 없습니다. Allen High(10–12학년)의 과거 도형을 임의로 Lowery 9학년 경계로 복제하지 않습니다. 주소별 9학년 배정은 공식 Find-A-School에서 확인하세요.',
+  sourceUrl:'https://www.allenisd.org/page/ahs-lowery-profile'};
+ if(district==='LISD'&&key==='mill street')return {
+  reason:'Mill Street Elementary는 2026–27학년도부터 일반 초등학교가 아닌 유아교육 시설로 전환됩니다.',
+  footnote:'Lewisville ISD 공식 Turnaround Plan에 따라 기존 학생은 다른 초등학교로 재배정됐습니다. 과거 Mill Street의 통학구역을 현재 초등 배정도로 표시하지 않습니다.',
+  sourceUrl:'https://www.lisd.net/resources/families/school-improvement/2025-2026-plans/mill-street'};
+ return null;
 }
 function findSchoolBoundary(s,geo,ratings){
  const feats=Array.isArray(geo)?geo:[];
@@ -39,12 +56,14 @@ function findSchoolBoundary(s,geo,ratings){
    if(new Set(candidates.map(f=>boundarySchoolKey(f.properties.school))).size===1)hits=candidates;
   }
  }
- return {status:hits.length?'matched':'school-not-in-polygon-source',features:hits,
+ return {status:hits.length?'matched':knownBoundaryException(s)?'special-campus-no-standard-zone':'school-not-in-polygon-source',features:hits,
   eligible:eligible.length,sourceFeatures:feats.length};
 }
 function boundaryMissingExplanation(s, result, sourceVintage, sourceLoadError){
  const district=s?.district||'';
  const finder=({FISD:'Frisco',PISD:'Plano',AISD:'Allen',LISD:'Lewisville',PROSPER:'Prosper',CFB:'CFB'})[district]||district||'해당 학군';
+ const special=knownBoundaryException(s);
+ if(special&&result?.status!=='matched')return special;
  if(sourceLoadError)return {reason:finder+' 학군 배정구역 데이터가 이번 접속에서 로딩되지 않았습니다.',
   footnote:'이 세션의 원본 요청에 오류가 있어 학교별 경계 수록 여부를 판단할 수 없습니다. 인터넷/교육청 서비스 상태를 확인한 뒤 다시 시도하세요. 과거 도형을 임의로 대신 표시하지 않습니다.'};
  switch(result?.status){
@@ -63,5 +82,5 @@ function boundaryMissingExplanation(s, result, sourceVintage, sourceLoadError){
    footnote:'현재 도형 원본 '+(sourceVintage||'학년도 미확인')+'의 학교명·수록 범위와 학교 목록이 다를 수 있습니다(신설·개명·선택학교 등). 실제 원인은 공식 학군 자료 추가 확인이 필요하며, 임의로 이웃 학교 경계를 대신 표시하지 않습니다.'};
  }
 }
-if(typeof module!=='undefined')module.exports={boundarySchoolKey,boundaryGradeLevels,boundarySchoolSource,findSchoolBoundary,boundaryMissingExplanation};
+if(typeof module!=='undefined')module.exports={boundarySchoolKey,boundaryGradeLevels,boundarySchoolSource,findSchoolBoundary,boundaryMissingExplanation,knownBoundaryException};
 if(typeof window!=='undefined')window.SchoolBoundaryMatch={boundarySchoolKey,boundaryGradeLevels,boundarySchoolSource,findSchoolBoundary,boundaryMissingExplanation};
