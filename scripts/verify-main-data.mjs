@@ -440,7 +440,12 @@ test('CFB 2026-27 official feeder-only lookup provides 20 reference paths, never
  assert.equal(conflicts,1);
  assert.ok(html.includes('id="cfbFeederSection"'));
  assert.ok(html.includes('id="cfbElementary"'));
- assert.ok(html.includes('./cfb-feeder-lookup.js?v=2'));
+ assert.ok(html.includes('./cfb-feeder-lookup.js?v=3'));
+ assert.ok(html.includes('id="cfbFeederAll"'));
+ const staticHelper=readText('cfb-feeder-lookup.js');
+ assert.ok(staticHelper.includes('function renderAll()'));
+ assert.ok(staticHelper.includes("node('td','공식 자료 충돌 · 확인 필요')"));
+ assert.ok(staticHelper.includes("select.addEventListener('input',render)"));
  const feederUi=readText('cfb-feeder-lookup.js');
  assert.ok(feederUi.includes("select.addEventListener('focus',load)"));
  assert.ok(feederUi.includes('load();\n}'));
