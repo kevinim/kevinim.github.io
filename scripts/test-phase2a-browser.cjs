@@ -31,9 +31,17 @@ const assert=require('node:assert/strict');
   assert.equal(await legend.isVisible(),true);
   assert.ok((await legend.innerText()).includes('내륙 홍수'));
   assert.ok((await legend.innerText()).includes('FEMA NRI 2025'));
+  const painted=await page.locator('#femaHazardLegend .fema-legend-swatches span').allTextContents();
+  assert.equal(painted.length,5,'Exactly 5 sequential red severity levels, not 7 mixed statuses');
+  assert.equal(await page.locator('#femaHazardLegend .fema-legend-absent div').count(),2);
+  assert.ok((await legend.innerText()).includes('자료 없음:'));
+  assert.ok((await legend.innerText()).includes('등급 없음:'));
+  const colors=await page.locator('#femaHazardLegend .fema-legend-swatches i').evaluateAll(els=>els.map(x=>getComputedStyle(x).backgroundColor));
+  assert.deepEqual(colors,['rgb(255, 241, 241)','rgb(255, 209, 209)','rgb(255, 158, 158)','rgb(239, 88, 88)','rgb(185, 28, 28)']);
+
   await page.selectOption('#femaHazardType','wfir');
   assert.ok((await legend.innerText()).includes('산불'));
-  assert.ok((await legend.innerText()).includes('공식 등급 없음'));
+  assert.ok((await legend.innerText()).includes('등급 없음:'));
   await page.locator('#femaHazardOpacity').evaluate(el=>{el.value='45';el.dispatchEvent(new Event('input',{bubbles:true}))});
   await page.selectOption('#femaHazardType','hrcn');
   assert.ok((await legend.innerText()).includes('허리케인'));

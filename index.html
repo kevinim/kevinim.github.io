@@ -40,6 +40,8 @@
 .fema-legend-swatches span{display:inline-flex;align-items:center;gap:5px;font-size:10px}
 .fema-legend-swatches i{width:12px;height:12px;border:1px solid #687b96;border-radius:2px;display:inline-block}
 .fema-legend-note{margin-top:7px;color:#607083;font-size:10px;line-height:1.5}
+.fema-legend-absent{margin-top:10px;padding-top:7px;border-top:1px solid #e9edf2;display:flex;flex-direction:column;gap:4px;font-size:10px;line-height:1.5;color:#576579}
+.fema-legend-absent div{display:block}
 .fema-popup{font-size:12px;line-height:1.65}
 .fema-popup strong{display:block;font-size:13px;margin-bottom:5px}
 .fema-popup small{display:block;font-size:10px;color:#57657a;margin-top:7px}
@@ -54,7 +56,7 @@
  <div class="field"><label for="femaHazardType">위험 종류</label><select id="femaHazardType"><option value="ifld">내륙 홍수</option><option value="wfir">산불</option><option value="hrcn">허리케인 영향</option></select></div>
  <div class="field"><label for="femaHazardOpacity">위험 색상 투명도</label><input id="femaHazardOpacity" type="range" min="25" max="85" step="5" value="60" aria-label="자연재해 구역 색상 투명도"></div>
  <div id="femaHazardStatus" class="source" role="status" aria-live="polite">선택 시 FEMA 2025 위험 자료를 별도로 불러옵니다.</div>
- <p class="source">2025년 12월 FEMA NRI v1.20 · 2020년 Census tract 기준, DFW 12개 카운티. <b>개별 주소·필지의 실제 침수·피해·보험 위험을 예측하지 않습니다.</b> 다른 지역은 미제공이며 회색은 데이터 부족입니다. 레이어 표시 시 ZIP 인구통계 색상은 임시 숨김 후 복원됩니다.</p>
+ <p class="source">2025년 12월 FEMA NRI v1.20 · 2020년 Census tract 기준, DFW 12개 카운티. <b>개별 주소·필지의 실제 침수·피해·보험 위험을 예측하지 않습니다.</b> 높은 등급일수록 빨간색이 진하며, 등급 없음·자료 없음은 색칠하지 않습니다. 다른 지역은 미제공이며 회색은 데이터 부족입니다. 레이어 표시 시 ZIP 인구통계 색상은 임시 숨김 후 복원됩니다.</p>
  <div class="source">공식 확인:
  <a href="https://www.fema.gov/flood-maps" target="_blank" rel="noopener">FEMA 실주소 홍수지도</a> ·
  <a href="https://tfsweb.tamu.edu/wildfire-and-other-disasters/burn-bans-and-information/wildfire-risk/" target="_blank" rel="noopener">TxWRAP 산불 위험</a> ·
@@ -94,7 +96,7 @@
 <script src="./school-lifecycle.js?v=1"></script>
 <script src="./geocode-quality.js?v=1"></script>
 <script src="./school-zone-risk.js?v=1"></script>
-<script src="./phase2a-fema-hazards.js?v=1"></script>
+<script src="./phase2a-fema-hazards.js?v=2"></script>
 <script src="./collin-parcel-check.js?v=1"></script>
 <script src="./official-school-review.js?v=1"></script>
 <script src="./texas-address-suggest.js?v=1"></script>

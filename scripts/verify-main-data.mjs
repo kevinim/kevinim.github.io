@@ -967,12 +967,27 @@ test('Phase2A FEMA December 2025 v1.20 source snapshot is real and separate from
  }
  assert.equal(Object.keys(FEMA_HAZARD_TYPES).join(','),'ifld,wfir,hrcn');
  assert.equal(Object.keys(FEMA_RISK_COLORS).includes('No Rating'),true);
+ const expectedReds=['#fff1f1','#ffd1d1','#ff9e9e','#ef5858','#b91c1c'];
+ assert.deepEqual(['Very Low','Relatively Low','Relatively Moderate','Relatively High','Very High'].map(k=>FEMA_RISK_COLORS[k]),expectedReds);
+ assert.equal(FEMA_RISK_COLORS['No Rating'],null);
+ assert.equal(FEMA_RISK_COLORS['Insufficient Data'],null);
+ assert.equal(femaHazardStyle(null,'ifld').fillOpacity,0);
+ assert.equal(femaHazardStyle(null,'ifld').weight,0);
+ assert.equal(femaHazardStyle(null,'ifld').interactive,false);
+ assert.ok(html.includes('phase2a-fema-hazards.js?v=2'));
+ assert.ok(html.includes('fema-legend-absent'));
+
  assert.equal(femaHazards.features.filter(f=>f.properties.wfir.rating==='No Rating').length,228);
  assert.equal(femaHazardMetric(femaHazards.features[0],'ifld').rating,femaHazards.features[0].properties.ifld.rating);
  const noRating=femaHazards.features.find(f=>f.properties.wfir.rating==='No Rating');
  assert.ok(noRating);
  assert.equal(femaHazardMetric(noRating,'wfir').rating,'No Rating');
  assert.equal(femaHazardMetric(noRating,'wfir').score,0);
+ const noRatingStyle=femaHazardStyle(noRating,'wfir');
+ assert.equal(noRatingStyle.fillOpacity,0);
+ assert.equal(noRatingStyle.weight,0);
+ assert.equal(noRatingStyle.interactive,false);
+
  assert.equal(femaHazardMetric(null,'ifld').rating,'Insufficient Data');
  assert.equal(femaHazardMetric(femaHazards.features[0],'not-a-source').score,null);
  assert.equal(femaHazardStyle(femaHazards.features[0],'ifld',0.6).pane,'femaHazardPane');

@@ -6,10 +6,14 @@ const FEMA_HAZARD_TYPES={
  wfir:{label:'산불 위험',meaning:'FEMA Wildfire 상대 위험도 · 실제 건물별 화재 위험이나 TxWRAP 등급이 아님'},
  hrcn:{label:'허리케인 영향 위험',meaning:'FEMA Hurricane 상대 위험도 · DFW에서는 해안 폭풍해일이 아닌 내륙 영향 참고용'}
 };
+// One visual dimension only: near-white -> progressively deeper red.
+// Both absence types are unpainted; distinct text explanations appear BELOW the scale.
 const FEMA_RISK_COLORS={
- 'Very Low':'#d9e8f2','Relatively Low':'#8fc5d8','Relatively Moderate':'#f9d979',
- 'Relatively High':'#f29a61','Very High':'#ca3f49','No Rating':'#e5e7eb','Insufficient Data':'#9ca3af'
+ 'Very Low':'#fff1f1','Relatively Low':'#ffd1d1','Relatively Moderate':'#ff9e9e',
+ 'Relatively High':'#ef5858','Very High':'#b91c1c',
+ 'No Rating':null,'Insufficient Data':null
 };
+const FEMA_PAINTED_RATINGS=['Very Low','Relatively Low','Relatively Moderate','Relatively High','Very High'];
 const FEMA_HAZARD_SOURCE='https://www.fema.gov/sites/default/files/documents/fema_national-risk-index_technical-documentation.pdf';
 function femaHazardMetric(feature,type){
  if(!Object.hasOwn(FEMA_HAZARD_TYPES,type))return {score:null,rating:'Insufficient Data',eal:null};
@@ -22,10 +26,12 @@ function femaHazardMetric(feature,type){
 }
 function femaHazardStyle(feature,type,opacity=.62){
  const m=femaHazardMetric(feature,type);
- return {pane:'femaHazardPane',color:m.score===null?'#94a3b8':'#475569',
-  weight:.55,opacity:.7,fillColor:FEMA_RISK_COLORS[m.rating],
-  fillOpacity:Math.max(.15,Math.min(.85,Number(opacity)||.62)),
-  interactive:true};
+ const painted=FEMA_PAINTED_RATINGS.includes(m.rating);
+ return {pane:'femaHazardPane',color:painted?'#ac4c4c':'transparent',
+  weight:painted?.35:0,opacity:painted?.5:0,
+  fillColor:painted?FEMA_RISK_COLORS[m.rating]:'transparent',
+  fillOpacity:painted?Math.max(.15,Math.min(.85,Number(opacity)||.62)):0,
+  interactive:painted};
 }
 function validateFemaHazardGeojson(data){
  if(data?.type!=='FeatureCollection'||!Array.isArray(data.features))return false;
@@ -79,11 +85,16 @@ function createFemaHazardOverlay(map,documentRef){
   legend.hidden=false;
   const head=d.createElement('div');head.textContent=FEMA_HAZARD_TYPES[h].label+' · FEMA NRI 2025 v1.20 · 상대 위험도';head.className='fema-legend-title';legend.appendChild(head);
   const scale=d.createElement('div');scale.className='fema-legend-swatches';
-  for(const [k,color] of Object.entries(FEMA_RISK_COLORS)){
-   const entry=d.createElement('span'),chip=d.createElement('i');chip.style.backgroundColor=color;chip.setAttribute('aria-hidden','true');
+  scale.setAttribute('aria-label','위험 등급: 매우 낮음부터 매우 높음까지 연한 빨강에서 진한 빨강');
+  for(const k of FEMA_PAINTED_RATINGS){
+   const entry=d.createElement('span'),chip=d.createElement('i');chip.style.backgroundColor=FEMA_RISK_COLORS[k];chip.setAttribute('aria-hidden','true');
    entry.appendChild(chip);entry.appendChild(d.createTextNode(riskKor[k]));scale.appendChild(entry);
   }
   legend.appendChild(scale);
+  const absent=d.createElement('div');absent.className='fema-legend-absent';
+  const unrated=d.createElement('div');unrated.textContent='등급 없음: FEMA가 위험 등급을 부여하지 않은 구역 · 색칠하지 않음';
+  const missing=d.createElement('div');missing.textContent='자료 없음: 위험 수치가 없거나 해석 불가한 구역 · 색칠하지 않음';
+  absent.appendChild(unrated);absent.appendChild(missing);legend.appendChild(absent);
   const caveat=d.createElement('div');caveat.className='fema-legend-note';
   caveat.textContent=FEMA_HAZARD_TYPES[h].meaning+' · 2020 Census tract 단위 · 주소·필지별 위험 평가 불가';
   legend.appendChild(caveat);
