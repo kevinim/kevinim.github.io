@@ -42,6 +42,10 @@ function schoolAssignmentFor(item){
  if(split)return {status:'apartment-split-review',district:'AISD',exception:split};
  const found=resolveAssignment({frisco:homeFriscoMatches(item.ll),prosper:homeZoneMatches(item.ll,'PROSPER'),lewisville:homeZoneMatches(item.ll,'LISD'),plano:homeZoneMatches(item.ll,'PISD_LOOKUP'),allen:window.allenAssignment?.(item.address,item.ll),planoFinderLive:!!state.liveFinder.PISD_LOOKUP,lewisvilleFinderLive:!!state.liveFinder.LISD,ready:state.zoneReady&&!window.allenAssignmentLoading?.(),failed:!!state.assignmentLoadFailed||!!window.allenAssignmentFailed?.()});
  if(!['current','finder-current'].includes(found.status))return found;
+ if(found.district==='PISD'&&found.status==='finder-current'){
+  const feeder=evaluatePlanoFeederAssignment(found.features,state.planoFeederReference);
+  if(feeder.status!=='consistent')return {...found,status:'feeder-review',feeder};
+ }
  const near=zoneBoundaryProximity([item.ll[1],item.ll[0]],found.features);
  return near?.review?{...found,status:found.status==='current'?'boundary-review':'finder-boundary-review',edge:near}:{...found,edge:near};
 }
@@ -53,6 +57,17 @@ function assignmentRating(p,district){
 }
 function assignmentHtml(result){
  if(result.status==='apartment-split-review')return '<b>학군 경계가 건물·호수에 따라 갈리는 주소 · 학교 자동 배정 중단</b><br>'+escape(result.exception.note)+'<br><span class="source">집 주소의 지도 핀이나 Frisco/Allen 경계 도형만으로 학군을 결정할 수 없습니다. <a href="https://www.allenisd.org/page/findaschool" target="_blank" rel="noopener">Allen 공식 아파트 예외 목록 및 학교 확인</a>에서 건물과 호수를 검증하세요.</span>';
+ if(result.status==='feeder-review'){
+  const detail=result.feeder?.status==='source-unavailable'
+   ?'공식 진학표 대조 자료를 읽지 못했습니다.'
+   :result.feeder?.status==='ambiguous'
+    ?'초등·중등·고등·Senior High 경계 후보가 한 학교로 특정되지 않습니다.'
+    :'GIS의 초등·중등·고등·Senior High 조합이 Plano 공식 진학표의 어느 경로와도 일치하지 않습니다.';
+  const observed=Object.entries(result.feeder?.observed||{}).map(([level,name])=>escape(level+': '+name)).join(' · ');
+  return '<b>Plano 진학 경로 교차검증 필요 · 학교 자동 강조 중단</b><br>'+escape(detail)+
+   (observed?'<br><span class="source">GIS 후보: '+observed+'</span>':'')+
+   '<br><span class="source">공식 Finder의 주소별 결과를 확인하세요. 진학표 자체에 학년도 명시가 없어 2026–27 GIS 최신성을 확증하는 검증은 아닙니다. <a href="https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder" target="_blank" rel="noopener">Plano SchoolFinder</a> · <a href="https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/attendance-boundary-descriptions" target="_blank" rel="noopener">공식 진학표</a></span>';
+ }
  if(result.status==='needs-address-verification')return '<b>주소 정밀도 확인 필요 · 자동 학교 배정을 표시하지 않습니다.</b><br>지도 핀이 실제 집·아파트 호수 위치인지 확인되지 않았습니다. 학군 공식 주소 검색기에서 다시 확인하세요.';
  if(result.status==='conflict')return '<b>확인 필요 · 서로 다른 학군 자료가 겹칩니다.</b><br>경계나 아파트별 예외를 학군 공식 검색기에서 확인하세요.';
  if(result.status==='loading')return '학교 배정 자료를 불러오는 중입니다.';
@@ -95,7 +110,7 @@ function renderHome(){
   const matches=homeZipMatches(home.ll),schools=homeFriscoMatches(home.ll);home.matches=schools;
   const zipText=matches.length?matches.map(d=>escape(d.z+' · '+d.name)).join(', '):'지도에 포함된 ZIP 경계를 확인하지 못했습니다.';
   home.assignment=schoolAssignmentFor(home);const schoolText=assignmentHtml(home.assignment);
-  const official='<details'+(['unavailable','error','conflict','needs-address-verification','boundary-review','finder-boundary-review','apartment-split-review'].includes(home.assignment.status)?' open':'')+'><summary>학군별 공식 배정 확인</summary>'+Object.entries(OFFICIAL).map(([id,url])=>'<a class="cardlink" href="'+escape(url)+'" target="_blank" rel="noopener">'+escape(({FISD:'프리스코',PISD:'플레이노',AISD:'앨런',PROSPER:'프로스퍼',LISD:'루이스빌',CFB:'캐럴턴–파머스브랜치'})[id]||id)+' ↗</a>').join('')+'</details>';
+  const official='<details'+(['unavailable','error','conflict','needs-address-verification','boundary-review','finder-boundary-review','feeder-review','apartment-split-review'].includes(home.assignment.status)?' open':'')+'><summary>학군별 공식 배정 확인</summary>'+Object.entries(OFFICIAL).map(([id,url])=>'<a class="cardlink" href="'+escape(url)+'" target="_blank" rel="noopener">'+escape(({FISD:'프리스코',PISD:'플레이노',AISD:'앨런',PROSPER:'프로스퍼',LISD:'루이스빌',CFB:'캐럴턴–파머스브랜치'})[id]||id)+' ↗</a>').join('')+'</details>';
   const office=el('destination').value.trim();
   const parcel=home.parcel||{status:'idle'};
   const message=parcel.status==='idle'?'별도 필지 주소 대조를 실행할 수 있습니다.':parcel.status==='checking'?'Collin CAD 필지 확인 중…':parcel.reason||'필지 확인 불가';

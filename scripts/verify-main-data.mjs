@@ -22,6 +22,7 @@ const {inRing,inGeometry,inFriscoBorder,schoolKey,interiorPoints}=require('../sc
 const publicAddressAudit=readJson('tests/public-address-finder-crosscheck-2026.json');
 const planoGeometryAudit=readJson('tests/plano-feeder-geometry-audit-2026.json');
 const {PLANO_LAYERS,PLANO_SERVICE,planoLiveUrl,convertPlanoLive,loadPlanoLiveFinder}=require('../plano-finder-live.js');
+const {planoFeederKey,validPlanoFeederReference,evaluatePlanoFeederAssignment}=require('../plano-feeder-guard.js');
 const {matchAllenAddress}=require('../allen-lookup.js');
 const {allenSplitApartmentException,ALLEN_SPLIT_APARTMENTS}=require('../allen-apartment-exceptions.js');
 const {isRetiredCampus, RETIRED_CAMPUSES_2026}=require('../school-lifecycle.js');
@@ -157,6 +158,45 @@ test('P0 Allen four published split apartments halt automatic Frisco/Allen campu
  assert.ok(cmp.includes("savedTypedAddress:item.typedAddress"));
  assert.ok(html.includes('./allen-apartment-exceptions.js?v=1'));
 });
+test('P0 Plano four-level feeder guard detects Jackson Coit split and blocks mismatches',()=>{
+ assert.equal(validPlanoFeederReference(planoFeeder),true);
+ assert.equal(validPlanoFeederReference({...planoFeeder,feeders:[]}),false);
+ assert.equal(planoFeederKey('Plano West Senior High School'),'plano west');
+ assert.equal(planoFeederKey('Jackson (west of Coit) Elementary'),'jackson');
+ const features=(elementary,middle,high,senior)=>[
+  {properties:{gradeLevel:'elementary',school:elementary}},
+  {properties:{gradeLevel:'middle',school:middle}},
+  {properties:{gradeLevel:'high',school:high}},
+  {properties:{gradeLevel:'senior',school:senior}}
+ ];
+ let evaluated=0;
+ for(const row of planoFeeder.feeders)for(const elementary of row.elementary){
+  const result=evaluatePlanoFeederAssignment(features(elementary,row.middle,row.high,row.seniorHigh),planoFeeder);
+  assert.equal(result.status,'consistent',JSON.stringify({elementary,row,result}));
+  assert.equal(result.schoolYearVerified,false);
+  evaluated++;
+ }
+ assert.equal(evaluated,43);
+ const west=features('Jackson Elementary School','Frankford Middle School','Shepton High School','Plano West Senior High School');
+ const east=features('Jackson Elementary School','Wilson Middle School','Vines High School','Plano Senior High School');
+ assert.equal(evaluatePlanoFeederAssignment(west,planoFeeder).status,'consistent');
+ assert.equal(evaluatePlanoFeederAssignment(east,planoFeeder).status,'consistent');
+ const wrong=features('Jackson Elementary School','Wilson Middle School','Shepton High School','Plano West Senior High School');
+ assert.equal(evaluatePlanoFeederAssignment(wrong,planoFeeder).status,'disagreement');
+ assert.equal(evaluatePlanoFeederAssignment(west.slice(0,3),planoFeeder).status,'ambiguous');
+ assert.equal(evaluatePlanoFeederAssignment([...west,features('Haun','Robinson','Jasper','Plano West')[0]],planoFeeder).status,'ambiguous');
+ assert.equal(evaluatePlanoFeederAssignment(west,null).status,'source-unavailable');
+ const app=readText('home-lookup-v2.js');
+ assert.ok(app.includes("if(found.district==='PISD'&&found.status==='finder-current')"));
+ assert.ok(app.includes("status:'feeder-review',feeder"));
+ assert.ok(app.includes("if(result.status==='feeder-review')"));
+ assert.ok(app.includes("'finder-boundary-review','feeder-review'"));
+ assert.ok(html.includes('./plano-feeder-guard.js?v=1'));
+ assert.ok(html.includes("state.planoFeederReference=null"));
+ assert.ok(html.includes("await feederPromise"));
+ assert.ok(html.includes('Plano 공식 진학표 점검'));
+});
+
 test('Plano feeder name agreement with 2025–26 ArcGIS does not imply current GIS vintage',()=>{
  assert.equal(planoFeeder.sourceYearUnconfirmed,true);
  assert.equal(planoFeeder.academicYearExplicit,null);
