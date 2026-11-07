@@ -490,6 +490,52 @@ function addProsperCurrentSchools(){
  addSchool({name:'Jim Bridges Middle School',type:'middle',district:'PROSPER',address:'3225 East Frontier Parkway, Prosper, TX 75078',source:'Prosper ISD 2026–27 new campus; TEA rating not established'});
  state.schools.sort((a,b)=>a.name.localeCompare(b.name));drawSchools();drawList();
 }
+function renderSchoolBoundaryCoverageAudit(){
+ if(!state.zoneReady)return null;
+ const schools=state.schools.filter(s=>['elementary','middle','high'].includes(s.type));
+ const summary={total:schools.length,matched:0,missing:0,
+  byDistrict:{},byReason:{},missingSchools:[],
+  note:'Counts are for the live loaded campus directory and currently loaded polygon sources; they are not claims about which schools a resident can enroll in.'};
+ for(const school of schools){
+  const source=window.SchoolBoundaryMatch.boundarySchoolSource(school.district);
+  const polygons=state.zoneData[source]||[];
+  const match=window.SchoolBoundaryMatch.findSchoolBoundary(school,polygons,(name,district)=>scoreRecord(name,district));
+  const reason=state.zoneLoadErrors[source]?'source-fetch-failed':match.status;
+  const district=summary.byDistrict[school.district]||(summary.byDistrict[school.district]={total:0,matched:0,missing:0,reasons:{}});
+  district.total++;
+  if(reason==='matched'){summary.matched++;district.matched++}
+  else{
+   summary.missing++;district.missing++;
+   summary.byReason[reason]=(summary.byReason[reason]||0)+1;
+   district.reasons[reason]=(district.reasons[reason]||0)+1;
+   summary.missingSchools.push({school:school.name,district:school.district,
+    type:school.type,reason,availablePolygons:polygons.length});
+  }
+ }
+ window.schoolBoundaryCoverage=summary;
+ const target=el('schoolBoundaryCoverageAudit');
+ if(target){
+  const reasonLabels={'no-district-polygon-source':'학교별 경계 GIS 미연결',
+   'no-grade-polygon-source':'해당 학교급 경계 없음',
+   'school-not-in-polygon-source':'학교명·도형 원본 불일치 또는 미수록',
+   'source-fetch-failed':'이번 세션 지도 원본 로딩 실패',
+   'not-a-zoned-campus':'일반 배정학교 이외 유형'};
+  target.replaceChildren();
+  const title=document.createElement('strong');
+  title.textContent='학교 목록 '+summary.total+'개 중 지도 경계 표시 가능 '+summary.matched+
+   '개 · 표시 불가 '+summary.missing+'개';
+  target.appendChild(title);
+  const reasons=document.createElement('div');reasons.className='source';
+  reasons.textContent=Object.entries(summary.byReason)
+   .map(([reason,count])=>(reasonLabels[reason]||reason)+' '+count+'개').join(' · ')||'미표시 사유 없음';
+  target.appendChild(reasons);
+  const note=document.createElement('small');note.className='source';
+  note.textContent='현재 로드된 학교·경계 원본 기준이며, 개별 학교를 클릭하면 해당 사유 각주가 표시됩니다. 임의의 대체 경계는 만들지 않습니다.';
+  target.appendChild(note);
+ }
+ return summary;
+}
+window.getSchoolBoundaryCoverage=()=>window.schoolBoundaryCoverage||renderSchoolBoundaryCoverageAudit();
 function drawBoundary(){
  if(!map)return;
  ++boundarySeq;zoneGroup.clearLayers();
