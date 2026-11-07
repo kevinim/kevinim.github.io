@@ -42,12 +42,15 @@ const {boundarySchoolKey,boundaryGradeLevels,boundarySchoolSource,findSchoolBoun
 const {FEMA_HAZARD_TYPES,FEMA_RISK_COLORS,femaHazardMetric,femaHazardStyle,validateFemaHazardGeojson}=require('../phase2a-fema-hazards.js');
 const {NFHL_LAYER_ENDPOINT,NFHL_WHERE,NFHL_MAX_RECORDS,NFHL_MIN_ZOOM,NFHL_FETCH_TIMEOUT_MS,NFHL_RETRY_DELAYS_MS,nfhlClassify,nfhlLayerStyle,validateNfhlResponse,nfhlQueryUrl}=require('../phase2a-nfhl-flood.js');
 const {TXWRAP_WHP_TILES,TXWRAP_WHP_SERVICE,TXWRAP_WHP_EXPLAINER,TXWRAP_WHP_MAX_NATIVE_ZOOM}=require('../txwrap-wildfire-potential.js');
+const {NOAA_STORM_DATA_URL,validateNoaaStormSnapshot,summarizeNoaaStormSnapshot}=require('../noaa-storm-history.js');
+const {parseCSV:parseNoaaCSV,summarizeRecords:summarizeNoaaRecords}=require('./refresh-noaa-storm-events.cjs');
 const {buildCollinParcelUrl,parcelStreetKey,assessCollinParcelResult}=require('../collin-parcel-check.js');
 const demographics = readJson('dfw-demographics.json');
 const rating = readJson('tea-ratings-2026.json');
 const location = readJson('nces-locations-2024.json');
 const zips = readJson('dfw-zcta-boundaries.geojson');
 const femaHazards=readJson('data/phase2a-fema-nri-dfw-2025.geojson');
+const noaaStorms=readJson('data/noaa-storm-events-dfw-2024-2025.json');
 const school = readJson('schools.json');
 let total = 0;
 const asyncChecks=[];
@@ -66,7 +69,7 @@ test('main page inline JavaScript compiles', () => {
   inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
 });
 test('all main application JS modules compile', () => {
-  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','school-boundary-match.js','phase2a-fema-hazards.js','phase2a-nfhl-flood.js','txwrap-wildfire-potential.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
+  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','school-boundary-match.js','phase2a-fema-hazards.js','phase2a-nfhl-flood.js','txwrap-wildfire-potential.js','noaa-storm-history.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
     new Script(readText(name), {filename:name});
     assert.ok(html.includes('./' + name), name + ' not loaded');
   }
@@ -993,6 +996,32 @@ test('6 school-district rows and provenance date visible on site',()=>{
   assert.ok(html.includes('교차 검증 통과'));
   assert.ok(html.includes('Frisco·Prosper 2곳'));
   assert.ok(html.includes('과거 2019–20 GIS로 대체하지 않습니다'));
+});
+test('Phase2A NOAA official 2024/2025 county-coded historical storm snapshot source and monthly totals',()=>{
+ assert.equal(NOAA_STORM_DATA_URL,'./data/noaa-storm-events-dfw-2024-2025.json');
+ assert.equal(validateNoaaStormSnapshot(noaaStorms),true);
+ assert.equal(noaaStorms.metadata.selectedEvents,1169);
+ assert.equal(noaaStorms.metadata.aggregatedRows,90);
+ assert.equal(noaaStorms.metadata.counties.length,12);
+ assert.deepEqual(noaaStorms.metadata.analyzedYears,[2024,2025]);
+ assert.deepEqual(noaaStorms.metadata.sourceFiles.map(s=>s.selectedCountyRows),[563,606]);
+ assert.deepEqual(noaaStorms.metadata.sourceFiles.map(s=>s.revision),['20260728','20260819']);
+ assert.ok(noaaStorms.metadata.sourceFiles.every(s=>s.sha256?.length===64 && s.bytes>10000000 && s.rawRows>10000));
+ assert.equal(summarizeNoaaStormSnapshot(noaaStorms,2024,'ALL','ALL').total,563);
+ assert.equal(summarizeNoaaStormSnapshot(noaaStorms,2025,'ALL','ALL').total,606);
+ assert.equal(summarizeNoaaStormSnapshot(noaaStorms,2024,'COLLIN','hail').total,34);
+ assert.equal(summarizeNoaaStormSnapshot(noaaStorms,2025,'COLLIN','hail').total,33);
+ assert.equal(summarizeNoaaStormSnapshot(noaaStorms,2025,'ALL','ALL').monthly.reduce((a,b)=>a+b,0),606);
+ const corrupt=structuredClone(noaaStorms);corrupt.summary[0].monthly[0]++;
+ assert.equal(validateNoaaStormSnapshot(corrupt),false,'Corrupt NOAA monthly source must fail closed');
+ const parsed=[];parseNoaaCSV('A,B,C\n1,"2,3","line1\nline2"\n4,5,6\n',row=>parsed.push(row));
+ assert.deepEqual(parsed,[['A','B','C'],['1','2,3','line1\nline2'],['4','5','6']]);
+ assert.deepEqual(summarizeNoaaRecords([{county:'COLLIN',year:2025,category:'hail',month:3}])[0].monthly[2],1);
+ assert.ok(html.includes('id="noaaStormHistoryPanel"'));
+ assert.ok(html.includes('id="noaaStormMonthly"'));
+ assert.ok(html.includes('noaa-storm-history.js?v=1'));
+ assert.ok(html.includes('createNoaaStormHistory?.(document)'));
+ assert.ok(html.includes('실제 보고된 사건 수'));
 });
 test('Phase2A official TxWRAP Wildfire Hazard Potential raster remains distinct from modeled NRI and NFHL',()=>{
  assert.equal(TXWRAP_WHP_TILES,TXWRAP_WHP_SERVICE+'/tile/{z}/{y}/{x}');
