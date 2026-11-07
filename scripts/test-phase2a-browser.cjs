@@ -73,6 +73,35 @@ const assert=require('node:assert/strict');
   await page.locator('#nfhlEnabled').uncheck();
   assert.equal(await page.locator('#nfhlLegend').isVisible(),false);
   assert.equal(await page.locator('#zipOverlay').isChecked(),true);
+
+  // Resilience regression: make FEMA return HTTP 503 once, then a VALID
+  // synthetic polygon via a local Playwright network stub. No provider
+  // availability is assumed by this deterministic recovery test.
+  let fakeNFHLRequests=0;
+  const fakeFlood={type:'FeatureCollection',features:[{
+   type:'Feature',properties:{SFHA_TF:'T',FLD_ZONE:'AE',ZONE_SUBTY:null,DFIRM_ID:'TESTTX'},
+   geometry:{type:'Polygon',coordinates:[[[-96.82,32.77],[-96.81,32.77],[-96.81,32.78],[-96.82,32.78],[-96.82,32.77]]]}
+  }]};
+  const nfhlMatcher=/\/NFHL\/MapServer\/28\/query\?/;
+  await page.route(nfhlMatcher,async route=>{
+   fakeNFHLRequests++;
+   if(fakeNFHLRequests===1){
+    await route.fulfill({status:503,contentType:'application/json',
+     headers:{'access-control-allow-origin':'*'},body:'{"error":"transient test 503"}'});
+   }else{
+    await route.fulfill({status:200,contentType:'application/geo+json',
+     headers:{'access-control-allow-origin':'*'},body:JSON.stringify(fakeFlood)});
+   }
+  });
+  await page.locator('#nfhlEnabled').check();
+  await page.waitForFunction(()=>document.getElementById('nfhlStatus')?.textContent?.includes('1개 홍수구역 도형'),null,{timeout:22000});
+  assert.equal(fakeNFHLRequests,2,'NFHL retry must recover after a simulated single HTTP 503');
+  assert.ok((await page.locator('#nfhlStatus').innerText()).includes('2회 시도 후 복구'));
+  assert.equal(await page.locator('#zipOverlay').isChecked(),false);
+  await page.locator('#nfhlEnabled').uncheck();
+  assert.equal(await page.locator('#zipOverlay').isChecked(),true);
+  await page.unroute(nfhlMatcher);
+  console.log('PASS FEMA NFHL automatic recovery from synthetic HTTP 503 without manual checkbox retry');
   await page.locator('#femaHazardEnabled').check();
   await page.waitForFunction(()=>document.getElementById('femaHazardStatus')?.textContent?.includes('1,734'),null,{timeout:45000});
   assert.equal(await page.locator('#nfhlEnabled').isChecked(),false);
