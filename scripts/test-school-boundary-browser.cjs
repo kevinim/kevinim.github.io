@@ -26,7 +26,12 @@ mkdirSync(out,{recursive:true});
   assert.equal(report.byDistrict.CFB.matched,0,'CFB has official working address Finder but no stored per-campus GIS polygons');
   writeFileSync(out+'/school-boundary-coverage.json',JSON.stringify({generatedAt:new Date().toISOString(),...report},null,2)+'\n');
   console.log('SCHOOL BOUNDARY COVERAGE AUDIT '+JSON.stringify({total:report.total,matched:report.matched,missing:report.missing,byReason:report.byReason,byDistrict:report.byDistrict}));
-  console.log('SCHOOL BOUNDARY MISSING SCHOOL LIST '+JSON.stringify(report.missingSchools).slice(0,24000));
+  console.log('SCHOOL BOUNDARY TARGET SIX SUMMARY '+JSON.stringify(report.targetSix));
+  console.log('SCHOOL BOUNDARY EXTRA DISTRICTS '+JSON.stringify(report.otherDistricts));
+  console.log('SCHOOL BOUNDARY TARGET SIX MISSING SCHOOL LIST '+JSON.stringify(report.targetSix.missingSchools));
+  assert.ok(report.targetSix.total>200);
+  assert.equal(report.targetSix.matched+report.targetSix.missing,report.targetSix.total);
+  assert.equal(report.otherDistricts.total+report.targetSix.total,report.total);
   // Test that selecting a school auto-enables the previously disabled historic
   // map checkbox and renders a historical polygon instead of an instructive notice.
   const allen=await page.evaluate(()=>{
