@@ -42,8 +42,16 @@ try{
  }
  const cached={};
  for(const level of PLANO_LAYERS){
-  const hits=reference.features.filter(f=>f.properties?.gradeLevel===level.level&&inGeometry(point,f.geometry));
-  if(hits.length!==1)throw Error('Cached geographic '+level.level+' contains '+hits.length+' polygon hits');
+  // The 2025–26 cached fallback groups Senior High and 9–10 High as
+  // gradeLevel=high (nine records). The live Finder service separates them.
+  // Match the SAME CAMPUS name first, then require exactly one containing
+  // polygon; this does not allow any alternate campus to stand in for a gap.
+  const hits=reference.features.filter(f=>
+    (f.properties?.gradeLevel===level.level||
+      (level.level==='senior'&&f.properties?.gradeLevel==='high'))&&
+    schoolKey(f.properties?.school)===schoolKey(report.campusResults[level.level])&&
+    inGeometry(point,f.geometry));
+  if(hits.length!==1)throw Error('Cached geographic '+level.level+' same-campus check found '+hits.length+' polygon hits for '+report.campusResults[level.level]);
   cached[level.level]=String(hits[0].properties.school);
   if(schoolKey(cached[level.level])!==schoolKey(report.campusResults[level.level]))throw Error(level.level+' district live point endpoint differs from cached geometry');
   if(schoolKey(report.campusResults[level.level])!==schoolKey(sample.expectedCachedGIS[level.level]))throw Error(level.level+' does not match prior public-address dashboard reference: '+report.campusResults[level.level]);
