@@ -512,7 +512,7 @@ test('official CFB 2026-27 feeder contradiction is not auto-resolved',()=>{
  assert.ok(cfbFeeder.crossSourceAudit.sources.every(x=>x.startsWith('https://www.cfbisd.edu/')));
  assert.equal(cfbFeeder.crossSourceAudit.conflictSchool,'Farmers Branch');
  assert.equal(audit.districts.find(x=>x.code==='CFB').feederReference.autoAssignmentAllowed,false);
- assert.ok(html.includes('Farmers Branch Elementary 1행 충돌'));
+ assert.ok(html.includes('Farmers Branch Elementary 충돌'));
 });
 test('P0 zone-edge warning uses closest official polygon ring',()=>{
  const p=[-96.7,33.1],d=100/111195;
