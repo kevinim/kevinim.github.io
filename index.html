@@ -14,6 +14,8 @@
 
 .controls-grid{align-items:stretch}.controls-grid .panel{height:100%}.office-controls .field select,.office-controls .field input{padding:8px 10px}.office-controls .small-note{padding:7px 9px}.office-controls .source{line-height:1.35}.office-controls #routeStatus:empty{display:none}@media(max-width:720px){.controls-grid .panel{height:auto}}
  .candidate-panel{margin-bottom:15px;padding:14px 18px}.candidate-panel .secHead{margin-bottom:4px}.candidate-panel .source{margin:3px 0 8px}.candidate-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.candidate-empty{grid-column:1/-1;color:#64748b;font-size:12px;padding:5px 0}.candidate-card{border:1px solid #dbe5f3;background:#f9fbff;border-radius:10px;padding:12px;min-width:0}.candidate-heading{display:flex;align-items:center;justify-content:space-between;color:#24499c}.candidate-address{font-size:12px;font-weight:700;margin:7px 0;overflow-wrap:anywhere}.candidate-card dl{margin:0}.candidate-card dl div{display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid #e8eef7;font-size:11px}.candidate-card dt{color:#64748b}.candidate-card dd{margin:0;text-align:right;font-weight:700}.candidate-schools{font-size:11px;color:#51627c;line-height:1.55;margin:8px 0}.candidate-open{min-height:32px}.candidate-card button:focus-visible,#addComparison:focus-visible{outline:3px solid #6b8fe8;outline-offset:2px}@media(max-width:720px){.candidate-cards{grid-template-columns:1fr}.candidate-panel{padding:14px}}
+#zoneNotice .boundary-footnote{display:block;margin-top:7px;font-size:11px;line-height:1.5;color:#6c7686}
+#schoolBoundaryCoverageAudit{line-height:1.6;margin:10px 0}
 .zone-audit-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:7px 0;border-bottom:1px solid #dae3f1;font-size:11px}.zone-audit-row b{flex:0 0 115px}.zone-audit-row span{text-align:right;color:#52647e;line-height:1.5}#districtZoneAudit{margin:10px 0}@media(max-width:720px){.zone-audit-row b{flex-basis:92px}}
  .home-address-autocomplete{position:relative;z-index:1100}
 .home-address-autocomplete input{width:100%}
@@ -502,22 +504,8 @@ function drawBoundary(){
    return;
  }
  const geo=(s.district==='PISD'?state.zoneData.PISD_LOOKUP:s.district==='PROSPER'?state.zoneData.PROSPER:state.zoneData[s.district])||[];
- const target=zoneNameKey(canonical(s.name)).replace(/\bk\s*4\b/g,'').trim();
- const levels=s.type==='high'?['high','senior']:s.type==='elementary'?['elementary']:['middle'];
- const eligible=geo.filter(f=>levels.includes(f.properties?.gradeLevel));
- const selectedRating=scoreRecord(s.name,s.district);
- let found=eligible.filter(f=>{const zone=zoneNameKey(canonical(f.properties?.school)).replace(/\bk\s*4\b/g,'').trim();const zoneRating=scoreRecord(f.properties?.school,s.district);return zone===target||!!(selectedRating?.id&&(zoneRating?.id===selectedRating.id||(['LISD','PROSPER'].includes(s.district)&&f.properties?.campusId===selectedRating.id)))});
- 
- // Allen's recent campus names sometimes add honorees' full names, while the GIS uses only surnames.
- // Use a last-name alias only if it uniquely identifies a campus within the grade-level/district.
- if(!found.length&&s.district==='AISD'){
-   const last=target.split(' ').at(-1);
-   if(last&&last.length>=4){
-     const bySurname=eligible.filter(f=>zoneNameKey(f.properties?.school)===last);
-     const distinct=[...new Set(bySurname.map(f=>zoneNameKey(f.properties.school)))];
-     if(distinct.length===1)found=bySurname;
-   }
- }
+ const match=window.SchoolBoundaryMatch.findSchoolBoundary(s,geo,(name,district)=>scoreRecord(name,district));
+ const found=match.features;
  if(found.length){
   const current=s.district==='FISD'||s.district==='PROSPER';
   const layer=L.geoJSON({type:'FeatureCollection',features:found},{style:{color:current?'#087f69':finderLinked?'#285ac0':'#d37125',weight:3,dashArray:current||finderLinked?null:'7 5',fillColor:current?'#70cbb4':finderLinked?'#8db6f8':'#ffc078',fillOpacity:.25}}).addTo(zoneGroup);
@@ -529,7 +517,14 @@ function drawBoundary(){
  }else if(!state.zoneReady&&['AISD','PISD','FISD','LISD','PROSPER'].includes(s.district)){
   if(note)note.textContent='배정구역 데이터를 불러오는 중입니다…';
  }else if(note){
-  note.innerHTML='이 학교의 지도 경계를 표시할 수 없습니다. 현재 배정은 학군 공식 주소검색에서 확인하세요.';
+  const source=window.SchoolBoundaryMatch.boundarySchoolSource(s.district);
+  const loadError=state.zoneLoadErrors[source]||null;
+  const sourceVintage=[...new Set(geo.map(f=>f.properties?.sourceVintage).filter(Boolean))].join(', ');
+  const failure=window.SchoolBoundaryMatch.boundaryMissingExplanation(s,match,sourceVintage,loadError);
+  note.replaceChildren();
+  const heading=document.createElement('strong');heading.textContent=failure.reason;note.appendChild(heading);
+  const footnote=document.createElement('small');footnote.className='source boundary-footnote';
+  footnote.textContent='경계 미표시 각주 · '+failure.footnote;note.appendChild(footnote);
  }
 }
 
