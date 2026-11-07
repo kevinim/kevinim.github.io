@@ -125,6 +125,32 @@ mkdirSync(out,{recursive:true});
   const earlyReason=await page.locator('#zoneNotice').innerText();
   assert.ok(earlyReason.includes('별도 지원·추첨'),earlyReason);
   assert.ok((await page.locator('#zoneNotice a').getAttribute('href')).includes('earlycollege.cfbisd.edu'));
+  // Selected ZIP prioritization: visual only, never suppress other districts.
+  const priority=await page.evaluate(()=>{
+   state.zip='75093';
+   state.level='all';state.ratingFilter='all';state.showSchools=true;
+   map.stop();map.setView([33.03,-96.80],11,{animate:false});drawSchools();
+   const selected=state.polys[state.zip];
+   const features=selected?.toGeoJSON();
+   const polys=features?(features.features||[features]):[];
+   const eligible=state.schools.filter(s=>s.ll&&s.type!=='other'&&map.getBounds().contains(s.ll));
+   const inside=eligible.filter(s=>selected?.getBounds().contains(s.ll)&&polys.some(f=>geometryContains([s.ll[1],s.ll[0]],f.geometry)));
+   const layers=schoolGroup.getLayers();
+   const subdued=layers.filter(l=>l.getElement()?.querySelector('.outside-selected-area'));
+   const highlighted=layers.filter(l=>!l.getElement()?.querySelector('.outside-selected-area'));
+   const before={zoom:map.getZoom(),eligible:eligible.length,inside:inside.length,layers:layers.length,subdued:subdued.length,highlighted:highlighted.length,selectedHighZ:layers.filter(l=>l.options.zIndexOffset===1000).length};
+   map.stop();map.setView([33.03,-96.80],13,{animate:false});drawSchools();
+   const detailed=schoolGroup.getLayers();
+   return {...before,detailed:detailed.length,detailedSubdued:detailed.filter(l=>l.getElement()?.querySelector('.outside-selected-area')).length};
+  });
+  assert.ok(priority.inside>0,'Selected ZIP polygon must contain campus points: '+JSON.stringify(priority));
+  assert.ok(priority.eligible>priority.inside,'Regional view must include surrounding schools: '+JSON.stringify(priority));
+  assert.equal(priority.layers,priority.eligible);
+  assert.equal(priority.highlighted,priority.inside);
+  assert.equal(priority.subdued,priority.eligible-priority.inside);
+  assert.equal(priority.selectedHighZ,priority.inside);
+  assert.equal(priority.detailedSubdued,0,'Zoom 13 must restore full marker emphasis');
+  console.log('PASS selected ZIP priority at zoom 11 and all normal at zoom 13 '+JSON.stringify(priority));
   // Regression for original user report: Allen campus markers must appear
   // automatically at wide map zoom; never require an Allen-only action button.
   assert.equal(await page.locator('#allenSchoolsShortcut').count(),0,
