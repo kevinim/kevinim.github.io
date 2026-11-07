@@ -95,7 +95,23 @@
           "sample": "5400 Legacy Dr, Plano TX 75024",
           "result": "inconclusive; current experience accepted address but remained Analyzing and did not reveal campus names in tested browser; legacy finder provided no autocomplete",
           "independentlyMatchedAddressSchoolNames": 0,
-          "reference": "tests/remaining-p0-finder-audit-2026-11-07.json"
+          "reference": "tests/remaining-p0-finder-audit-2026-11-07.json",
+          "officialArcGISPointQuery": {
+            "checked": "2026-11-07",
+            "sample": "5400 Legacy Dr, Plano, TX 75024",
+            "result": "4 exact level-specific campus results from the live district Finder-linked official ArcGIS layers, confirmed against cached polygons and independently published feeder paths",
+            "campusByLevel": {
+              "elementary": "Haun Elementary",
+              "middle": "Robinson Middle",
+              "high": "Jasper High",
+              "senior": "Plano West Senior High"
+            },
+            "exactMatches": 4,
+            "siteUiIndependentResults": 0,
+            "yearOfSourceLayer": "2025–26",
+            "evidence": "https://github.com/kevinim/kevinim.github.io/actions/runs/42352710810",
+            "automatedRecheck": "scripts/check-plano-public-address-layer-live.mjs"
+          }
         }
       }
     },
