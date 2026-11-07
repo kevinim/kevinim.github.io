@@ -953,7 +953,7 @@ test('Phase2A FEMA December 2025 v1.20 source snapshot is real and separate from
  const seen=new Set();
  for(const feature of femaHazards.features){
   const p=feature.properties;
-  assert.ok(/^48\\d{9}$/.test(p.tract));
+  assert.ok(/^48\d{9}$/.test(p.tract));
   assert.equal(feature.id,p.tract);
   assert.equal(seen.has(feature.id),false);
   seen.add(feature.id);
