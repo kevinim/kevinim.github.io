@@ -36,10 +36,12 @@ const location = readJson('nces-locations-2024.json');
 const zips = readJson('dfw-zcta-boundaries.geojson');
 const school = readJson('schools.json');
 let total = 0;
+const asyncChecks=[];
 const test = (name, fn) => {
-  fn();
-  total++;
-  console.log('PASS ' + name);
+  const result=fn();
+  if(result&&typeof result.then==='function') {
+    asyncChecks.push(result.then(()=>{total++;console.log('PASS '+name)}));
+  } else {total++;console.log('PASS '+name)}
 };
 
 const inlineScripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)]
@@ -569,7 +571,7 @@ test('P0 current Finder and prior unlinked GIS are visually distinct without fal
  assert.ok(web.includes('CFB 승인 배정선 3종'));
  assert.ok(home.includes("'finder-boundary-review'"));
  assert.ok(home.includes('planoFinderLive:!!state.liveFinder.PISD_LOOKUP'));
- assert.equal(audit.districts.find(x=>x.code==='PISD').currentFinderBoundary.uniqueCampuses.elementary,42);
+ assert.equal(audit.districts.find(x=>x.code==='PISD').liveFinderVerification.levels.elementary.distinct,42);
  assert.equal(audit.districts.find(x=>x.code==='PISD').status,'official-finder-connected');
  assert.equal(audit.districts.find(x=>x.code==='LISD').status,'official-finder-connected');
 });
@@ -604,4 +606,5 @@ test('ZIP map data and Plano school identity preserved',()=>{
   assert.ok(zips.features.length>=290);
   assert.ok(school.schools.length>=73);
 });
+await Promise.all(asyncChecks);
 console.log('Main website QA: ' + total + ' tests passed.');
