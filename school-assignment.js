@@ -1,4 +1,9 @@
 'use strict';
+// Plano has distinct grades 9-10 high and 11-12 senior-high zones, while
+// the campus list groups both types as high schools.
+function schoolLevelMatchesAssignment(s,level){
+ return s?.type===level||(s?.district==='PISD'&&s?.type==='high'&&level==='senior');
+}
 function resolveAssignment({frisco=[],prosper=[],lewisville=[],plano=[],allen=null,planoFinderLive=false,lewisvilleFinderLive=false,ready=true,failed=false}) {
  const found=[];
  if(frisco.length) found.push({district:'FISD',status:'current',features:frisco});
@@ -12,4 +17,4 @@ function resolveAssignment({frisco=[],prosper=[],lewisville=[],plano=[],allen=nu
  if(failed)return {status:'error'};
  return {status:'unavailable'};
 }
-if(typeof module!=='undefined')module.exports={resolveAssignment};
+if(typeof module!=='undefined')module.exports={resolveAssignment,schoolLevelMatchesAssignment};
