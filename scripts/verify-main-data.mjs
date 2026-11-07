@@ -13,6 +13,7 @@ const allenAddress = readJson('allen-address-schools.json');
 const allenAddressAudit = readJson('allen-official-address-source-audit-2026.json');
 const planoFeeder = readJson('plano-official-feeder-reference-2026.json');
 const cfbFeeder = readJson('cfb-official-feeder-reference-2026.json');
+const residentFinderAudit = readJson('official-resident-finder-audit-2026-11-07.json');
 const prosper = readJson('prosper-celina-reference-2026.geojson');
 const prosperCurrent = readJson('prosper-attendance-2026.geojson');
 const officialChecks = readJson('tests/prosper-official-location-checks-2026.json');
@@ -28,6 +29,7 @@ const {allenSplitApartmentException,ALLEN_SPLIT_APARTMENTS}=require('../allen-ap
 const {isRetiredCampus, RETIRED_CAMPUSES_2026}=require('../school-lifecycle.js');
 const {isTexasGeocode,assessResidentialGeocode,rankTexasHomeCandidates}=require('../geocode-quality.js');
 const {findLisdApartments,lisdKey}=require('../lewisville-apartments.js');
+const {cfbFeederKey,cfbOfficialFeederValid,cfbFeederByElementary}=require('../cfb-feeder-lookup.js');
 const lisdApartmentData=readJson('lewisville-official-apartments.json');
 const {buildTexasSuggestUrl,isTexasStreetSuggestion,filterTexasStreetSuggestions}=require('../texas-address-suggest.js');
 const {addCandidate}=require('../candidate-compare.js');
@@ -56,7 +58,7 @@ test('main page inline JavaScript compiles', () => {
   inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
 });
 test('all main application JS modules compile', () => {
-  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','lewisville-apartments.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
+  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','lewisville-apartments.js','cfb-feeder-lookup.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
     new Script(readText(name), {filename:name});
     assert.ok(html.includes('./' + name), name + ' not loaded');
   }
@@ -263,7 +265,7 @@ test('Plano feeder name agreement with 2025–26 ArcGIS does not imply current G
 });
 test('Production source panels and Jackson overlay identify authoritative exceptions',()=>{
  assert.ok(html.includes('GIS 연도 최신성은 미입증'));
- assert.ok(html.includes('자동 해석 가능한 1,687행'));
+ assert.ok(html.includes('공식 주소표 1,689행/유효 1,687행'));
  assert.ok(html.includes('Moss Haven Pl'));
  assert.ok(html.includes('Crestview Heights'));
  assert.ok(html.includes('Jackson Elementary 진학 경로 예외'));
@@ -392,6 +394,56 @@ test('Prosper new Jim Bridges school listed with no guessed coordinates',()=>{
   assert.ok(inlineScripts.join('\n').includes("name:'Jim Bridges Middle School',type:'middle',district:'PROSPER'"));
   assert.ok(inlineScripts.join('\n').includes("source:'Prosper ISD 2026–27 new campus"));
 });
+test('2026-11-07 Allen/CFB resident Finder evidence gates are accurate',()=>{
+ assert.equal(residentFinderAudit.auditDate,'2026-11-07');
+ assert.equal(residentFinderAudit.districts.length,2);
+ const allenFinder=residentFinderAudit.districts.find(x=>x.code==='AISD');
+ assert.equal(allenFinder.status,'resident-finder-confirmed');
+ assert.equal(allenFinder.observedRow.range,'2050');
+ assert.deepEqual([allenFinder.observedRow.elementary,allenFinder.observedRow.middle,allenFinder.observedRow.freshman,allenFinder.observedRow.high],['Evans','Ereckson','Lowery','Allen High School']);
+ assert.deepEqual(matchAllenAddress('2050 Peak St, Allen, TX 75002',allenAddress.rows,true)?.slice(2),['Evans','Ereckson','Lowery','Allen High School']);
+ const cfbFinder=residentFinderAudit.districts.find(x=>x.code==='CFB');
+ assert.equal(cfbFinder.status,'property-specific-lookup-not-independently-confirmed');
+ assert.equal(cfbFinder.publicFacilityTestsCompleted,2);
+ assert.equal(cfbFinder.uniquePropertyZonedResultsObserved,0);
+ assert.equal(cfbFinder.currentYearGeometryVerified,false);
+ assert.ok(html.includes('공식 주민용 Find-A-School 주소 검색 정상 작동'));
+ assert.ok(html.includes('CFB는 공식 GuideK12에'));
+ assert.ok(html.includes('주소별 배정 검증 보류'));
+ assert.ok(html.includes('GIS 자체가 독립 검증된 학군은 Frisco·Prosper 2곳'));
+});
+test('CFB 2026-27 official feeder-only lookup provides 20 reference paths, never property assignments',()=>{
+ assert.equal(cfbOfficialFeederValid(cfbFeeder),true);
+ assert.equal(cfbFeederKey('Stark Elementary School'),cfbFeederKey('Stark'));
+ assert.equal(cfbOfficialFeederValid({...cfbFeeder,academicYearExplicit:'2025–26'}),false);
+ assert.equal(cfbFeederByElementary('Stark',null).status,'source-unavailable');
+ assert.equal(cfbFeederByElementary('',cfbFeeder).status,'no-school-selected');
+ assert.equal(cfbFeederByElementary('Random',cfbFeeder).status,'school-not-found');
+ let pass=0,conflicts=0;
+ for(const row of cfbFeeder.rows){
+  const r=cfbFeederByElementary(row.zonedElementary,cfbFeeder);
+  assert.equal(r.propertyAssignmentVerified,false,row.zonedElementary);
+  if(row.zonedElementary==='Farmers Branch'){
+   assert.equal(r.status,'official-disagreement');
+   assert.equal(r.middle,undefined);
+   assert.equal(r.high,undefined);
+   conflicts++;
+  }else{
+   assert.equal(r.status,'feeder-reference',row.zonedElementary);
+   assert.equal(r.middle,row.middle);
+   assert.equal(r.high,row.high);
+   assert.equal(r.schoolYear,'2026–27');
+   pass++;
+  }
+ }
+ assert.equal(pass,20);
+ assert.equal(conflicts,1);
+ assert.ok(html.includes('id="cfbFeederSection"'));
+ assert.ok(html.includes('id="cfbElementary"'));
+ assert.ok(html.includes('./cfb-feeder-lookup.js?v=1'));
+ assert.ok(html.includes('진학표입니다. <b>집 주소의 배정 학교를 찾아주는 기능은 아닙니다.'));
+});
+
 test('CFB official 2026–27 feeder table is accurate and never treated as GIS',()=>{
   assert.equal(cfbFeeder.academicYearExplicit,'2026–27');
   assert.equal(cfbFeeder.notParcelGeometries,true);
@@ -411,7 +463,7 @@ test('CFB official 2026–27 feeder table is accurate and never treated as GIS',
   assert.equal(b.k5_Bilingual,'Carrollton');
   assert.equal(b.k5,'Blanton');
   assert.ok(html.includes('CFB 2026–27 진학표 A') && html.includes('CFB 2026–27 진학표 B'));
-  assert.ok(html.includes('진학표 3개 출처 21행 전수대조') && html.includes('Farmers Branch Elementary 1행 충돌'));
+  assert.ok(html.includes('2026–27 공식 진학표 20/21행 일치, Farmers Branch Elementary 충돌'));
 });
 test('active 2026-27 campus selection excludes 14 officially retired schools',()=>{
  assert.equal(RETIRED_CAMPUSES_2026.length,14);
@@ -460,7 +512,7 @@ test('official CFB 2026-27 feeder contradiction is not auto-resolved',()=>{
  assert.ok(cfbFeeder.crossSourceAudit.sources.every(x=>x.startsWith('https://www.cfbisd.edu/')));
  assert.equal(cfbFeeder.crossSourceAudit.conflictSchool,'Farmers Branch');
  assert.equal(audit.districts.find(x=>x.code==='CFB').feederReference.autoAssignmentAllowed,false);
- assert.ok(html.includes('Farmers Branch Elementary 1행 충돌'));
+ assert.ok(html.includes('Farmers Branch Elementary 충돌'));
 });
 test('P0 zone-edge warning uses closest official polygon ring',()=>{
  const p=[-96.7,33.1],d=100/111195;
