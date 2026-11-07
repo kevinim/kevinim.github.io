@@ -23,7 +23,7 @@ const publicAddressAudit=readJson('tests/public-address-finder-crosscheck-2026.j
 const planoGeometryAudit=readJson('tests/plano-feeder-geometry-audit-2026.json');
 const {PLANO_LAYERS,PLANO_SERVICE,planoLiveUrl,convertPlanoLive,loadPlanoLiveFinder}=require('../plano-finder-live.js');
 const {planoFeederKey,validPlanoFeederReference,evaluatePlanoFeederAssignment}=require('../plano-feeder-guard.js');
-const {matchAllenAddress}=require('../allen-lookup.js');
+const {matchAllenAddress,normalizeAllenStreet}=require('../allen-lookup.js');
 const {allenSplitApartmentException,ALLEN_SPLIT_APARTMENTS}=require('../allen-apartment-exceptions.js');
 const {isRetiredCampus, RETIRED_CAMPUSES_2026}=require('../school-lifecycle.js');
 const {isTexasGeocode,assessResidentialGeocode,rankTexasHomeCandidates}=require('../geocode-quality.js');
@@ -132,6 +132,37 @@ test('Allen numeric street lookup adds Peak while refusing malformed and apartme
  assert.equal(matchAllenAddress('4450 S Ridge Rd, Allen, TX',allenAddress.rows,true),null);
  assert.equal(matchAllenAddress('4700 S Ridge Rd, Allen, TX',allenAddress.rows,true),null);
 });
+test('Allen official street name variants: suffix and direction, fail closed on competing ranges',()=>{
+ assert.equal(normalizeAllenStreet('N Alder Drive'),normalizeAllenStreet('Alder Dr N'));
+ assert.equal(normalizeAllenStreet('North Arbor Ridge Drive'),normalizeAllenStreet('Arbor Ridge Dr  N'));
+ assert.equal(normalizeAllenStreet('Rivercrest Boulevard'),normalizeAllenStreet('Rivercrest Blvd'));
+ assert.equal(normalizeAllenStreet('Mckinney Ranch Parkway'),'MCKINNEY RANCH PKWY');
+ const river=matchAllenAddress('701 Rivercrest Boulevard, Allen, Texas 75002',allenAddress.rows,true);
+ assert.ok(river);assert.equal(river[0],'Rivercrest Blvd');
+ const alder=matchAllenAddress('100 N Alder Drive, Allen, TX 75002',allenAddress.rows,true);
+ assert.ok(alder);assert.equal(alder[0],'Alder Dr  N');
+ const peak=matchAllenAddress('2050 Peak Street, Allen, TX 75002',allenAddress.rows,true);
+ assert.equal(peak?.[2],'Evans');
+ assert.equal(matchAllenAddress('2050 Peak Street, Plano, TX 75002',allenAddress.rows,false),null);
+ assert.equal(matchAllenAddress('4700 S Ridge Road, Allen, TX 75002',allenAddress.rows,true),null);
+ assert.equal(matchAllenAddress('7830 Van Tuyl Parkway, Allen, TX 75002',allenAddress.rows,true),null);
+ // Survey the entire published numeric-range snapshot: no silent campus changes.
+ const numeric=/^\s*(\d+)\s*(?:[-–—]\s*(\d+))?\s*(\(even numbers only\))?\s*$/i;
+ let accepted=0,unresolved=0,checked=0;
+ for(const row of allenAddress.rows){
+  const range=row[1].match(numeric);if(!range)continue;
+  let number=Number(range[1]);if(range[3]&&number%2)number++;
+  const actual=matchAllenAddress(number+' '+row[0]+', Allen, TX 75002',allenAddress.rows,true);
+  checked++;
+  if(actual){assert.deepEqual(actual.slice(2),row.slice(2));accepted++}
+  else unresolved++;
+ }
+ assert.equal(checked,1687);
+ assert.equal(accepted,1680); // 3 overlapping source ranges + 4 published split-apartment rows are blocked
+ assert.equal(unresolved,7);
+ assert.ok(readText('index.html').includes('./allen-lookup.js?v=5'));
+});
+
 test('P0 Allen four published split apartments halt automatic Frisco/Allen campus highlighting',()=>{
  const cases=[
  ['4450 S Ridge Rd Apt 8202, McKinney, TX 75070','4450 S Ridge Rd'],
