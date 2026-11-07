@@ -31,7 +31,7 @@ const assert=require('node:assert/strict');
   const legend=page.locator('#femaHazardLegend');
   assert.equal(await legend.isVisible(),true);
   assert.ok((await legend.innerText()).includes('내륙 홍수'));
-  assert.ok((await legend.innerText()).includes('FEMA NRI 2025'));
+  assert.ok((await legend.innerText()).includes('FEMA 2025'));
   const painted=await page.locator('#femaHazardLegend .fema-legend-swatches span').allTextContents();
   assert.equal(painted.length,5,'Exactly 5 sequential red severity levels, not 7 mixed statuses');
   assert.equal(await page.locator('#femaHazardLegend .fema-legend-absent div').count(),2);
@@ -165,17 +165,34 @@ const assert=require('node:assert/strict');
   // Regression: hazard heatmap was effectively undiscoverable because it
   // lives inside a collapsed details panel, with no map-level activation.
   assert.equal(await page.locator('#femaHazardEnabled').isChecked(),false);
-  await page.locator('#hazardMapQuickToggle').click();
-  assert.equal(await page.locator('#phase2HazardPanel').evaluate(el=>el.open),true);
+  // Plain-language icon chips on the map: no developer labels, no panel pop-open.
+  const chipText=await page.locator('#hazardMapQuickToggle').innerText();
+  for(const word of ['홍수','산불','폭풍'])assert.ok(chipText.includes(word),'Hazard chip missing: '+word);
+  assert.ok(!/Phase/i.test(chipText));
+  assert.ok(!/Phase\s*2/i.test(await page.locator('#phase2HazardPanel > summary').innerText()),'Panel title must not show developer phase labels');
+  const panelWasOpen=await page.locator('#phase2HazardPanel').evaluate(el=>el.open);
+  const chip=k=>page.locator('#hazardMapQuickToggle .hazard-chip[data-hazard="'+k+'"]');
+  await chip('ifld').click();
   assert.equal(await page.locator('#femaHazardEnabled').isChecked(),true);
+  assert.equal(await page.locator('#femaHazardType').inputValue(),'ifld');
+  assert.equal(await page.locator('#phase2HazardPanel').evaluate(el=>el.open),panelWasOpen,'Chip must not expand the detail panel');
   await page.waitForFunction(()=>document.getElementById('femaHazardStatus')?.textContent?.includes('1,734'),null,{timeout:45000});
-  assert.equal(await page.locator('#hazardMapQuickToggle').getAttribute('aria-pressed'),'true');
+  assert.equal(await chip('ifld').getAttribute('aria-pressed'),'true');
   assert.ok(await page.locator('#femaHazardLegend').isVisible());
-  await page.locator('#hazardMapQuickToggle').click();
+  // Switching chips changes hazard type and keeps the layer on.
+  await chip('wfir').click();
+  assert.equal(await page.locator('#femaHazardType').inputValue(),'wfir');
+  assert.equal(await page.locator('#femaHazardEnabled').isChecked(),true);
+  assert.equal(await chip('wfir').getAttribute('aria-pressed'),'true');
+  assert.equal(await chip('ifld').getAttribute('aria-pressed'),'false');
+  await chip('hrcn').click();
+  assert.equal(await page.locator('#femaHazardType').inputValue(),'hrcn');
+  // Tapping the active chip turns the layer off and restores ZIP colors.
+  await chip('hrcn').click();
   assert.equal(await page.locator('#femaHazardEnabled').isChecked(),false);
   assert.equal(await page.locator('#zipOverlay').isChecked(),true);
-  assert.equal(await page.locator('#hazardMapQuickToggle').getAttribute('aria-pressed'),'false');
-  console.log('PASS map-level quick FEMA heatmap toggle restores visual hazard layer and ZIP');
+  assert.equal(await page.locator('#hazardMapQuickToggle .hazard-chip[aria-pressed="true"]').count(),0);
+  console.log('PASS map-level flood/wildfire/storm icon chips toggle and switch the hazard layer and restore ZIP');
   await page.screenshot({path:dir+'/fema-overlay.png',timeout:30000});
   console.log('PASS Phase2A browser: full 1,734 tract data loads lazily, flood/wildfire/hurricane switch, official No Rating, ZIP restore, cached reload');
   console.log('Phase2A nonfatal page errors (other providers may be blocked): '+JSON.stringify(errors.slice(0,6)));

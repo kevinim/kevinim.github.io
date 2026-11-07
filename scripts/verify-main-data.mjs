@@ -1030,9 +1030,10 @@ test('Allen school markers are automatic at wide zoom; independent FEMA quick to
  assert.ok(html.includes('const eligible=state.schools.filter('));
  assert.ok(html.includes('bounds.contains(s.ll)'));
  assert.ok(!html.includes('const visible=zoom<11?allenItems:items.slice(0,limit);'));
- assert.ok(html.includes("el('phase2HazardPanel').open=true"));
+ assert.ok(html.includes('class="hazard-chip ifld"')&&html.includes('class="hazard-chip wfir"')&&html.includes('class="hazard-chip hrcn"'));
  assert.ok(html.includes("toggle.dispatchEvent(new Event('change',{bubbles:true}))"));
- assert.ok(html.includes("aria-label=\"FEMA 자연재해 위험 지도 켜기 또는 끄기\""));
+ assert.ok(html.includes('aria-label="자연재해 위험 지도"'));
+ assert.ok(!html.includes('Phase 2A ·'),'No developer phase label in visible hazard UI');
 });
 test('Phase2A official TxWRAP Wildfire Hazard Potential raster remains distinct from modeled NRI and NFHL',()=>{
  assert.equal(TXWRAP_WHP_TILES,TXWRAP_WHP_SERVICE+'/tile/{z}/{y}/{x}');
@@ -1132,7 +1133,7 @@ test('Phase2A FEMA December 2025 v1.20 source snapshot is real and separate from
  assert.equal(femaHazardStyle(null,'ifld').fillOpacity,0);
  assert.equal(femaHazardStyle(null,'ifld').weight,0);
  assert.equal(femaHazardStyle(null,'ifld').interactive,false);
- assert.ok(html.includes('phase2a-fema-hazards.js?v=2'));
+ assert.ok(html.includes('phase2a-fema-hazards.js?v=3'));
  assert.ok(html.includes('fema-legend-absent'));
 
  assert.equal(femaHazards.features.filter(f=>f.properties.wfir.rating==='No Rating').length,228);

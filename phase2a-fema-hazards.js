@@ -83,7 +83,7 @@ function createFemaHazardOverlay(map,documentRef){
   legend.replaceChildren();
   if(!toggle.checked){legend.hidden=true;return}
   legend.hidden=false;
-  const head=d.createElement('div');head.textContent=FEMA_HAZARD_TYPES[h].label+' · FEMA NRI 2025 v1.20 · 상대 위험도';head.className='fema-legend-title';legend.appendChild(head);
+  const head=d.createElement('div');head.textContent=FEMA_HAZARD_TYPES[h].label+' · 동네별 상대 비교 (FEMA 2025)';head.className='fema-legend-title';legend.appendChild(head);
   const scale=d.createElement('div');scale.className='fema-legend-swatches';
   scale.setAttribute('aria-label','위험 등급: 매우 낮음부터 매우 높음까지 연한 빨강에서 진한 빨강');
   for(const k of FEMA_PAINTED_RATINGS){
