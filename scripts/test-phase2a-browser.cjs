@@ -149,6 +149,20 @@ const assert=require('node:assert/strict');
   assert.ok((await page.locator('#noaaStormTotal').innerText()).endsWith('건'));
   assert.equal(noaaFetches,1,'NOAA county/year filtering should reuse cached snapshot');
   console.log('PASS NOAA official Storm Events county-coded 2024/2025 history: original 563+606 events, 12 months, Collin hail and cache');
+  // Regression: hazard heatmap was effectively undiscoverable because it
+  // lives inside a collapsed details panel, with no map-level activation.
+  assert.equal(await page.locator('#femaHazardEnabled').isChecked(),false);
+  await page.locator('#hazardMapQuickToggle').click();
+  assert.equal(await page.locator('#phase2HazardPanel').evaluate(el=>el.open),true);
+  assert.equal(await page.locator('#femaHazardEnabled').isChecked(),true);
+  await page.waitForFunction(()=>document.getElementById('femaHazardStatus')?.textContent?.includes('1,734'),null,{timeout:45000});
+  assert.equal(await page.locator('#hazardMapQuickToggle').getAttribute('aria-pressed'),'true');
+  assert.ok(await page.locator('#femaHazardLegend').isVisible());
+  await page.locator('#hazardMapQuickToggle').click();
+  assert.equal(await page.locator('#femaHazardEnabled').isChecked(),false);
+  assert.equal(await page.locator('#zipOverlay').isChecked(),true);
+  assert.equal(await page.locator('#hazardMapQuickToggle').getAttribute('aria-pressed'),'false');
+  console.log('PASS map-level quick FEMA heatmap toggle restores visual hazard layer and ZIP');
   await page.screenshot({path:dir+'/fema-overlay.png',timeout:30000});
   console.log('PASS Phase2A browser: full 1,734 tract data loads lazily, flood/wildfire/hurricane switch, official No Rating, ZIP restore, cached reload');
   console.log('Phase2A nonfatal page errors (other providers may be blocked): '+JSON.stringify(errors.slice(0,6)));
