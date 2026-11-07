@@ -42,7 +42,9 @@ mkdirSync(out,{recursive:true});
   assert.equal(report.targetSix.total,273,'In-scope school directory should not unexpectedly change');
   assert.equal(report.targetSix.byDistrict,undefined);
   assert.equal(report.targetSix.missingSchools.filter(x=>x.district==='CFB').length,30);
-  assert.equal(report.targetSix.missingSchools.filter(x=>x.reason==='special-campus-no-standard-zone').length,3);
+  assert.equal(report.targetSix.missingSchools.filter(x=>x.reason==='special-campus-no-standard-zone').length,4);
+  assert.equal(report.targetSix.missingSchools.filter(x=>x.district==='CFB'&&x.reason==='no-district-polygon-source').length,29);
+  assert.ok(report.targetSix.missingSchools.some(x=>x.district==='CFB'&&/EARLY COLLEGE H S/i.test(x.school)&&x.reason==='special-campus-no-standard-zone'));
   assert.equal(report.targetSix.missingSchools.some(x=>/Isbell/i.test(x.school)),false,'Frisco official Isbell K-4 2026 polygons must display');
   const gradeSplit=await page.evaluate(()=>{
    const selected=state.schools.find(x=>x.district==='FISD'&&/Isbell Elementary/i.test(x.name));
@@ -85,6 +87,14 @@ mkdirSync(out,{recursive:true});
    assert.ok(reason.includes('경계 미표시 각주'),reason);
    assert.ok(reason.includes('GIS')||reason.includes('도형')||reason.includes('원본'),reason);
   }
+  await page.evaluate(async()=>{
+   const early=state.schools.find(x=>x.district==='CFB'&&/EARLY COLLEGE H S/i.test(x.name));
+   if(!early)throw Error('CFB Early College high school missing from browser directory');
+   await schoolClicked(early);
+  });
+  const earlyReason=await page.locator('#zoneNotice').innerText();
+  assert.ok(earlyReason.includes('별도 지원·추첨'),earlyReason);
+  assert.ok((await page.locator('#zoneNotice a').getAttribute('href')).includes('earlycollege.cfbisd.edu'));
   console.log('PASS school boundary auto display, per-school source footnote, district coverage audit');
   console.log('Page JavaScript errors: '+JSON.stringify(errors.slice(0,6)));
  }finally{await browser?.close().catch(()=>{})}
