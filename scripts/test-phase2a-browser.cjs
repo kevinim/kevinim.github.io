@@ -51,6 +51,32 @@ const assert=require('node:assert/strict');
   await page.locator('#femaHazardEnabled').check();
   await page.waitForFunction(()=>document.getElementById('femaHazardStatus')?.textContent?.includes('1,734'),{timeout:0},{timeout:40000});
   assert.equal(riskFetches,1,'Re-enabling must reuse cached risk data without another request');
+  // NFHL is a separate regulatory flood map, not the NRI relative-risk
+  // census-tract layer. It must not issue a nationwide vector query at zoom 11.
+  await page.locator('#nfhlFloodPanel > summary').click();
+  await page.locator('#nfhlEnabled').check();
+  assert.equal(await page.locator('#femaHazardEnabled').isChecked(),false);
+  assert.ok((await page.locator('#nfhlStatus').innerText()).includes('줌 14'));
+  assert.ok(await page.locator('#nfhlLegend').isVisible());
+  assert.equal(await page.locator('#nfhlLegend i').count(),2);
+  const nfhlColors=await page.locator('#nfhlLegend i').evaluateAll(els=>els.map(el=>getComputedStyle(el).backgroundColor));
+  assert.deepEqual(nfhlColors,['rgb(185, 28, 28)','rgb(255, 171, 171)']);
+  await page.evaluate(()=>map.setView([32.778,-96.813],15));
+  await page.waitForFunction(()=>{
+   const text=document.getElementById('nfhlStatus')?.textContent||'';
+   return text.includes('NFHL 공식 실시간 조회')||text.includes('조회에 실패했습니다');
+  },null,{timeout:90000});
+  const nfhlResult=await page.locator('#nfhlStatus').innerText();
+  assert.ok(nfhlResult.includes('NFHL 공식 실시간 조회'),'Live FEMA NFHL query should succeed for a Dallas Trinity River vicinity: '+nfhlResult);
+  assert.ok(nfhlResult.includes('홍수구역 도형'));
+  assert.equal(await page.locator('#zipOverlay').isChecked(),false);
+  await page.locator('#nfhlEnabled').uncheck();
+  assert.equal(await page.locator('#nfhlLegend').isVisible(),false);
+  assert.equal(await page.locator('#zipOverlay').isChecked(),true);
+  await page.locator('#femaHazardEnabled').check();
+  await page.waitForFunction(()=>document.getElementById('femaHazardStatus')?.textContent?.includes('1,734'),null,{timeout:45000});
+  assert.equal(await page.locator('#nfhlEnabled').isChecked(),false);
+  console.log('PASS NFHL live FEMA flood service: low-zoom guard, two red intensities, live Dallas view, NRI mutual exclusion and ZIP recovery');
   await page.screenshot({path:dir+'/fema-overlay.png',timeout:30000});
   console.log('PASS Phase2A browser: full 1,734 tract data loads lazily, flood/wildfire/hurricane switch, official No Rating, ZIP restore, cached reload');
   console.log('Phase2A nonfatal page errors (other providers may be blocked): '+JSON.stringify(errors.slice(0,6)));
