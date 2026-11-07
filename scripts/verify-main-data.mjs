@@ -140,7 +140,7 @@ test('Production source panels and Jackson overlay identify authoritative except
  assert.ok(html.includes('Jackson Elementary 진학 경로 예외'));
  assert.ok(html.includes('Coit Rd 동쪽'));
  assert.ok(html.includes('Plano West Senior'));
- assert.ok(html.includes('2025–26 공식 ArcGIS'));
+ assert.ok(html.includes('2026–27 공식 SchoolFinder가 기존 2025–26 FeatureServer를 사용함 확인'));
  assert.ok(html.includes('Frisco·Prosper 2곳'));
 });
 test('all 31 Prosper ISD 2026–27 school zones acquired from official live locator',()=>{

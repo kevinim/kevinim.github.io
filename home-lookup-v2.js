@@ -150,6 +150,8 @@ function wireOfficialReviewPanel(item){
  const update=()=>{
   if(home!==item)return;
   item.officialDraft=Object.fromEntries(Object.entries(fields).map(([k,v])=>[k,get(v)?.value||'']));
+  item.officialReview=null;
+  const status=get('officialReviewResult');if(status)status.textContent='입력 내용 변경됨 · 다시 비교 버튼을 눌러 확인하세요.';
  };
  for(const id of Object.values(fields))get(id)?.addEventListener('change',update);
  get('officialReviewName')?.addEventListener('input',update);
