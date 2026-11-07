@@ -71,15 +71,26 @@ const cleanUrl=u=>{try{const x=new URL(u);return x.origin+x.pathname}catch{retur
     value:el?.value,nearbyMarkup:el?.parentElement?.parentElement?.outerHTML?.slice(0,1900)};
   });
   await page.waitForTimeout(2800);
-  report.diagnostics.suggestionsAfterPartial=await page.evaluate(()=>[...document.querySelectorAll('[role="option"], [class*="suggest"], [class*="autocomplete"]')].filter(el=>el.getClientRects().length).slice(0,16).map(el=>(el.textContent||'').trim().slice(0,150)));
+  report.diagnostics.suggestionsAfterPartial=await page.evaluate(()=>[...document.querySelectorAll('[role="option"], .address_input .search_result')].slice(0,16).map(el=>({text:(el.textContent||'').trim().slice(0,150),visible:!!el.getClientRects().length,containerDisplay:getComputedStyle(el.closest('.exo_dlg_ss_container')||el).display})));
   await addressInput.fill(report.address);
-  await page.waitForTimeout(1300);
+  await page.waitForTimeout(2500);
+  const native=page.locator('.address_input .search_result_container .search_result').filter({hasText:/1600/i}).first();
+  report.diagnostics.nativeCandidateCount=await page.locator('.address_input .search_result_container .search_result').count();
+  report.diagnostics.nativeCandidateMarkup=await page.locator('.address_input .search_result_container').first().evaluate(el=>el.outerHTML.slice(0,2300)).catch(()=>null);
+  report.diagnostics.nativeVisible=(await native.count())>0&&await native.isVisible().catch(()=>false);
+  if(report.diagnostics.nativeVisible){
+   report.diagnostics.nativeCandidateLabel=(await native.innerText()).slice(0,160);
+   await native.click({timeout:8000});
+   report.diagnostics.nativeCandidateSelected=true;
+  }else{
+   report.diagnostics.nativeCandidateSelected=false;
+  }
   const find=page.getByRole('button',{name:/find on map/i}).first();
   report.diagnostics.hasFindOnMapButton=(await find.count())>0;
-  if(report.diagnostics.hasFindOnMapButton){
+  if(!report.diagnostics.nativeCandidateSelected&&report.diagnostics.hasFindOnMapButton){
    await find.click({timeout:10000});
    report.diagnostics.findOnMapClicked=true;
-  }else{
+  }else if(!report.diagnostics.nativeCandidateSelected){
    await addressInput.press('Enter').catch(()=>{});
    report.diagnostics.findOnMapClicked=false;
   }
@@ -113,10 +124,22 @@ const cleanUrl=u=>{try{const x=new URL(u);return x.origin+x.pathname}catch{retur
   await addressInput.pressSequentially('1011 S Main',{delay:80});
   report.diagnostics.apartmentProbe.inputMarkup=await page.evaluate(()=>document.activeElement?.parentElement?.parentElement?.outerHTML?.slice(0,1600));
   await page.waitForTimeout(2000);
-  report.diagnostics.apartmentProbe.suggestions=await page.evaluate(()=>[...document.querySelectorAll('[role="option"], [class*="suggest"], [class*="autocomplete"]')].filter(el=>el.getClientRects().length).slice(0,12).map(el=>(el.textContent||'').trim().slice(0,150)));
+  report.diagnostics.apartmentProbe.suggestions=await page.evaluate(()=>[...document.querySelectorAll('.address_input .search_result')].slice(0,12).map(el=>({text:(el.textContent||'').trim().slice(0,150),visible:!!el.getClientRects().length})));
   await addressInput.fill(publicApartment);
-  if(await find.count())await find.click({timeout:10000});
-  else await addressInput.press('Enter').catch(()=>{});
+  await page.waitForTimeout(2900);
+  const aptNative=page.locator('.address_input .search_result_container .search_result').filter({hasText:/1011/i}).first();
+  report.diagnostics.apartmentProbe.nativeCandidateCount=await page.locator('.address_input .search_result_container .search_result').count();
+  report.diagnostics.apartmentProbe.nativeCandidateMarkup=await page.locator('.address_input .search_result_container').first().evaluate(el=>el.outerHTML.slice(0,2300)).catch(()=>null);
+  report.diagnostics.apartmentProbe.nativeCandidateVisible=(await aptNative.count())>0&&await aptNative.isVisible().catch(()=>false);
+  if(report.diagnostics.apartmentProbe.nativeCandidateVisible){
+   report.diagnostics.apartmentProbe.nativeCandidateLabel=(await aptNative.innerText()).slice(0,160);
+   await aptNative.click({timeout:8000});
+   report.diagnostics.apartmentProbe.nativeCandidateSelected=true;
+  }else{
+   report.diagnostics.apartmentProbe.nativeCandidateSelected=false;
+   if(await find.count())await find.click({timeout:10000});
+   else await addressInput.press('Enter').catch(()=>{});
+  }
   await page.waitForTimeout(7000);
   const secondText=await page.locator('body').innerText();
   const start=secondText.toLowerCase().indexOf('matching results');
@@ -140,5 +163,6 @@ const cleanUrl=u=>{try{const x=new URL(u);return x.origin+x.pathname}catch{retur
   console.log('CFB RESIDENTIAL COMPLEX PROBE: '+JSON.stringify(report.diagnostics.apartmentProbe||{}).slice(0,2800));
   console.log('CFB PUBLIC NETWORK TRACE (paths only): '+JSON.stringify(report.publicNetworkTrace).slice(0,8500));
   console.log('CFB INPUT DOM DETAILS: '+JSON.stringify({initial:report.diagnostics.firstInputInteraction,scripts:report.diagnostics.publicScripts,apartment:report.diagnostics.apartmentProbe?.inputMarkup}).slice(0,4800));
+  console.log('CFB NATIVE AUTOCOMPLETE: '+JSON.stringify({school:{nativeCount:report.diagnostics.nativeCandidateCount,nativeVisible:report.diagnostics.nativeVisible,nativeSelected:report.diagnostics.nativeCandidateSelected,label:report.diagnostics.nativeCandidateLabel,markup:report.diagnostics.nativeCandidateMarkup},apartment:{nativeCount:report.diagnostics.apartmentProbe?.nativeCandidateCount,nativeVisible:report.diagnostics.apartmentProbe?.nativeCandidateVisible,nativeSelected:report.diagnostics.apartmentProbe?.nativeCandidateSelected,label:report.diagnostics.apartmentProbe?.nativeCandidateLabel,markup:report.diagnostics.apartmentProbe?.nativeCandidateMarkup}}).slice(0,6500));
  }
 })().catch(error=>{console.error(error);process.exitCode=1});
