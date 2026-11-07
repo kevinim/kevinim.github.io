@@ -30,6 +30,10 @@ jobs:
         run: node scripts/check-plano-feeder-zones-live.mjs
       - name: Check Plano single PUBLIC address via district Finder-linked per-level ArcGIS point query
         run: node scripts/check-plano-public-address-layer-live.mjs
+      - name: Crosscheck three CFB 2026–27 official Farmers Branch feeder pages (advisory)
+        run: node scripts/check-cfb-feeder-source-drift-live.mjs
+      - name: Recheck public LISD Budget Suites 5289 / 2175 apartment source rows (advisory)
+        run: node scripts/check-lisd-budget-suites-source-drift-live.mjs
       - name: Upload source health report
         if: always()
         uses: actions/upload-artifact@v4
@@ -38,4 +42,6 @@ jobs:
           path: |
             artifacts/official-school-source-health.json
             artifacts/plano-public-address-arcgis-check.json
+            artifacts/cfb-farmers-branch-source-drift.json
+            artifacts/lisd-5289-budget-suites-source-drift.json
           if-no-files-found: warn
