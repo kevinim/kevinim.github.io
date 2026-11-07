@@ -142,6 +142,9 @@ mkdirSync(out,{recursive:true});
      map.getBounds().contains(s.ll)&&
      (state.level==='all'||s.type===state.level)&&
      (state.ratingFilter!=='rated'||score(s.name,s.district)!==null));
+    const allEligible=state.schools.filter(s=>s.ll&&s.type!=='other'&&map.getBounds().contains(s.ll)&&
+     (state.level==='all'||s.type===state.level)&&
+     (state.ratingFilter!=='rated'||score(s.name,s.district)!==null));
     const layers=schoolGroup.getLayers();
     const names=new Set(layers.map(l=>l.options.title));
     const viewport=map.getContainer().getBoundingClientRect();
@@ -153,10 +156,11 @@ mkdirSync(out,{recursive:true});
      return style.visibility!=='hidden'&&style.display!=='none'&&r.width>0&&r.height>0&&
       r.left<viewport.right&&r.right>viewport.left&&r.top<viewport.bottom&&r.bottom>viewport.top;
     });
-    return {zoom:z,actualZoom:map.getZoom(),expected:expected.length,shown:expected.filter(s=>names.has(s.name)).length,
+    return {zoom:z,actualZoom:map.getZoom(),expected:expected.length,shown:expected.filter(s=>names.has(s.name)).length,eligible:allEligible.length,
      totalMarkers:layers.length,visibleInViewport:visibleDom.length,
      status:document.getElementById('schoolMapStatus').textContent};
    },zoom);
+   assert.equal(check.totalMarkers,check.eligible,'No school may be silently omitted at zoom '+zoom+': '+JSON.stringify(check));
    assert.equal(check.actualZoom,zoom,'Map zoom must settle to requested level: '+JSON.stringify(check));
    assert.ok(check.expected>=10,'Expected more than 10 Allen campuses at zoom '+zoom+': '+JSON.stringify(check));
    assert.equal(check.shown,check.expected,'Allen markers must all render automatically at zoom '+zoom+': '+JSON.stringify(check));
