@@ -72,5 +72,23 @@
     "academicYearExplicit": null,
     "apartmentExceptionsReconfirmed": 4,
     "significance": "Validates public street-range table is unchanged, but does not establish 2026–27 validity or individual apartment eligibility."
+  },
+  "lookupNormalization20261107": {
+    "checked": "2026-11-07",
+    "scope": "Official cached numeric street ranges only; not independent current-year enrollment or revised GIS",
+    "officialSourceRows": 1689,
+    "parseableNumericRows": 1687,
+    "exactOrAliasRangeRowsWithUniqueResults": 1684,
+    "conflictingOrOverlappingVariantRowsFailClosed": 3,
+    "supportedVariants": [
+      "Drive / Dr",
+      "Boulevard / Blvd",
+      "Parkway / Pkwy",
+      "N Alder Dr / Alder Dr N"
+    ],
+    "apartmentUnitExceptionsStillManual": 4,
+    "academicYearInPublishedAddressTable": null,
+    "currentYearGISBoundariesEstablished": false,
+    "provenance": "No source ranges or school assignments changed; only geocoder street-name normalization and collision refusal."
   }
 }
