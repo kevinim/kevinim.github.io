@@ -29,6 +29,13 @@ mkdirSync(out,{recursive:true});
   console.log('SCHOOL BOUNDARY TARGET SIX SUMMARY '+JSON.stringify(report.targetSix));
   console.log('SCHOOL BOUNDARY EXTRA DISTRICTS '+JSON.stringify(report.otherDistricts));
   console.log('SCHOOL BOUNDARY TARGET SIX MISSING SCHOOL LIST '+JSON.stringify(report.targetSix.missingSchools));
+  const sourceNames=await page.evaluate(()=>({
+   friscoIsbell:(state.zoneData.FISD||[]).filter(x=>/isbell/i.test(x.properties?.school||'')).map(x=>({school:x.properties.school,grade:x.properties.gradeLevel,grades:x.properties.grades})),
+   planoAcademy:(state.zoneData.PISD_LOOKUP||[]).filter(x=>/academy/i.test(x.properties?.school||'')).map(x=>x.properties.school),
+   lisdMill:(state.zoneData.LISD||[]).filter(x=>/mill.?street/i.test(x.properties?.school||'')).map(x=>x.properties.school),
+   allenLowery:(state.zoneData.AISD||[]).filter(x=>/lowery/i.test(x.properties?.school||'')).map(x=>x.properties.school)
+  }));
+  console.log('SCHOOL BOUNDARY FOUR EXCEPTION SOURCE LABELS '+JSON.stringify(sourceNames));
   assert.ok(report.targetSix.total>200);
   assert.equal(report.targetSix.matched+report.targetSix.missing,report.targetSix.total);
   assert.equal(report.otherDistricts.total+report.targetSix.total,report.total);
