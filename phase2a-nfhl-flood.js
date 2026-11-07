@@ -138,7 +138,7 @@ function createNFHLFloodOverlay(map,documentRef){
   if(request!==seq||!enabled.checked)return;
   console.warn('FEMA NFHL map query failed after '+NFHL_RETRY_DELAYS_MS.length+' attempts:',lastError);
   remove();
-  statusText('공식 NFHL 서버 조회에 '+NFHL_RETRY_DELAYS_MS.length+'회 실패했습니다. 일부 지역을 안전하다고 판단하지 마시고 FEMA Map Service Center에서 확인하세요.',true);
+  statusText('공식 NFHL 서버 조회에 실패했습니다 ('+NFHL_RETRY_DELAYS_MS.length+'회 재시도). 일부 지역을 안전하다고 판단하지 마시고 FEMA Map Service Center에서 확인하세요.',true);
  }
  enabled.addEventListener('change',refresh);
  map.on('moveend',()=>{if(enabled.checked)refresh()});
