@@ -25,7 +25,7 @@ jobs:
       - name: Validate static output exists, not a placeholder
         run: |
           test -s data/phase2a-fema-nri-dfw-2025.geojson
-          node -e "const j=require('./data/phase2a-fema-nri-dfw-2025.geojson');if(j.features.length<1000||Object.keys(j.metadata.coverageCounties).length!==12)process.exit(1)"
+          node -e "const j=JSON.parse(require('node:fs').readFileSync('data/phase2a-fema-nri-dfw-2025.geojson','utf8'));if(j.features.length<1000||Object.keys(j.metadata.coverageCounties).length!==12)process.exit(1)"
       - name: Commit verified small static geojson to feature branch
         if: github.event_name == 'pull_request'
         run: |
