@@ -265,7 +265,7 @@ test('Plano feeder name agreement with 2025–26 ArcGIS does not imply current G
 });
 test('Production source panels and Jackson overlay identify authoritative exceptions',()=>{
  assert.ok(html.includes('GIS 연도 최신성은 미입증'));
- assert.ok(html.includes('자동 해석 가능한 1,687행'));
+ assert.ok(html.includes('공식 주소표 1,689행/유효 1,687행'));
  assert.ok(html.includes('Moss Haven Pl'));
  assert.ok(html.includes('Crestview Heights'));
  assert.ok(html.includes('Jackson Elementary 진학 경로 예외'));
