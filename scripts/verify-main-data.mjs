@@ -17,7 +17,7 @@ const prosper = readJson('prosper-celina-reference-2026.geojson');
 const prosperCurrent = readJson('prosper-attendance-2026.geojson');
 const officialChecks = readJson('tests/prosper-official-location-checks-2026.json');
 const require=createRequire(import.meta.url);
-const {resolveAssignment}=require('../school-assignment.js');
+const {resolveAssignment,schoolLevelMatchesAssignment}=require('../school-assignment.js');
 const {inRing,inGeometry,inFriscoBorder,schoolKey,interiorPoints}=require('../scripts/attendance-geo-audit.cjs');
 const publicAddressAudit=readJson('tests/public-address-finder-crosscheck-2026.json');
 const planoGeometryAudit=readJson('tests/plano-feeder-geometry-audit-2026.json');
@@ -158,6 +158,21 @@ test('P0 Allen four published split apartments halt automatic Frisco/Allen campu
  assert.ok(cmp.includes("savedTypedAddress:item.typedAddress"));
  assert.ok(html.includes('./allen-apartment-exceptions.js?v=1'));
 });
+test('P0 Plano senior-high home marker and map source legend are accurate',()=>{
+ assert.equal(schoolLevelMatchesAssignment({district:'PISD',type:'high'},'high'),true);
+ assert.equal(schoolLevelMatchesAssignment({district:'PISD',type:'high'},'senior'),true);
+ assert.equal(schoolLevelMatchesAssignment({district:'PISD',type:'middle'},'senior'),false);
+ assert.equal(schoolLevelMatchesAssignment({district:'LISD',type:'high'},'senior'),false);
+ assert.equal(schoolLevelMatchesAssignment({district:'FISD',type:'high'},'senior'),false);
+ const home=readText('home-lookup-v2.js');
+ assert.ok(home.includes('schoolLevelMatchesAssignment(s,f.properties.gradeLevel)'));
+ assert.ok(home.includes("result.district!==s.district)return false"));
+ assert.ok(html.includes('./school-assignment.js?v=3'));
+ assert.ok(html.includes('./home-lookup-v2.js?v=10'));
+ assert.ok(html.includes('현행 공식 Finder가 사용하는 플레이노·루이스빌 경계는 파란색'));
+ assert.ok(html.includes('플레이노 저장본과 앨런 과거 GIS는 주황색 점선 참고'));
+});
+
 test('P0 Plano four-level feeder guard detects Jackson Coit split and blocks mismatches',()=>{
  assert.equal(validPlanoFeederReference(planoFeeder),true);
  assert.equal(validPlanoFeederReference({...planoFeeder,feeders:[]}),false);
