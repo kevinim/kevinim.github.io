@@ -300,7 +300,7 @@
       "status": "lookup-only",
       "geometryYear": "zones approved March 6, 2025, referenced by 2026–27 enrollment search",
       "officialLookup": "https://www.cfbisd.edu/students/school-maps-locator-system",
-      "geometryUse": "Official GuideK12 current address search linked directly; no validated export available in this dashboard",
+      "geometryUse": "Official GuideK12 current address search is operational for sampled public address lookups after native autocomplete selection; the dashboard links to this official Finder, but does not have an authorized per-campus geometry export or automatic CFB house-to-campus integration.",
       "directLocator": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/",
       "feederReference": {
         "file": "cfb-official-feeder-reference-2026.json",
@@ -349,11 +349,11 @@
       },
       "residentFinderVerification": {
         "checked": "2026-11-07",
-        "status": "inconclusive-address-zoning",
+        "status": "official-current-finder-address-school-result-verified",
         "publicInstitutionalAddressesChecked": 2,
-        "uniqueZonedCampusSetsObserved": 0,
+        "uniqueZonedCampusSetsObserved": 2,
         "locator": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/",
-        "note": "Unfiltered school catalog on tested browser sessions; not evidence of a universal district Finder outage or apartment assignment.",
+        "note": "Resident-operated GuideK12 official Finder is operational after selecting native address autocomplete. Two public sample addresses return explicit elementary/middle/high 'Assigned school'. This confirms a usable official Finder, not validated 2026–27 GIS polygons nor unit-specific entitlement. Farmers Branch ES's official cross-page feeder contradiction remains open.",
         "browserProbe": {
           "checked": "2026-11-07",
           "engine": "Playwright Chromium on GitHub Actions, not paid browser agent",
@@ -368,7 +368,53 @@
           "note": "Both public test addresses produced same full campus directory; no zoned school label/suggestion in tested sessions. This is inconclusive for other residential units, not a universal service-outage assertion.",
           "auditFile": "tests/cfb-public-schoolsearch-browser-audit-2026-11-07.json",
           "ciEvidence": "https://github.com/kevinim/kevinim.github.io/actions/runs/42353651130"
-        }
+        },
+        "initialTrials": {
+          "status": "inconclusive-before-native-autocomplete-selection",
+          "publicInstitutionalAddressesChecked": 2,
+          "uniqueZonedCampusSetsObserved": 0,
+          "notes": "Unfiltered school catalog on tested browser sessions; not evidence of a universal district Finder outage or apartment assignment.",
+          "browserProbe": {
+            "checked": "2026-11-07",
+            "engine": "Playwright Chromium on GitHub Actions, not paid browser agent",
+            "source": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/",
+            "testedPublicPropertyTypes": [
+              "school campus",
+              "public apartment complex"
+            ],
+            "testPublicApartment": "Lux on Main · 1011 S Main St, Carrollton, TX 75006",
+            "uniquePropertyZonedResults": 0,
+            "didSearchResultListChangeAcrossAddresses": false,
+            "note": "Both public test addresses produced same full campus directory; no zoned school label/suggestion in tested sessions. This is inconclusive for other residential units, not a universal service-outage assertion.",
+            "auditFile": "tests/cfb-public-schoolsearch-browser-audit-2026-11-07.json",
+            "ciEvidence": "https://github.com/kevinim/kevinim.github.io/actions/runs/42353651130"
+          }
+        },
+        "verifiedDistinctPublicAddressKinds": [
+          "public-school-campus",
+          "public-apartment-base"
+        ],
+        "officialFinderMethod": "Enter street address then select actual GuideK12 .search_result native autocomplete option. Reading the 'Matching Results' school catalog before selecting the address does not yield assigned schools.",
+        "verifiedPublicAddressSchoolResults": [
+          {
+            "address": "1600 S Josey Ln, Carrollton, TX 75006",
+            "elementary": "McLaughlin Strickland Elementary (K-5)",
+            "middle": "Perry Middle School (6-8)",
+            "high": "Turner High School (9-12)",
+            "notes": "Public school facility example only"
+          },
+          {
+            "address": "1011 S Main St, Carrollton, TX 75006",
+            "elementary": "Carrollton Elementary (K-5)",
+            "middle": "Perry Middle School (6-8)",
+            "high": "Newman Smith High School (9-12)",
+            "notes": "Apartment complex base address; unit-specific exceptions not verified"
+          }
+        ],
+        "ciEvidence": "https://github.com/kevinim/kevinim.github.io/actions/runs/42356357561",
+        "auditFile": "tests/cfb-official-resident-finder-verified-2026-11-07.json",
+        "currentYearGISIndependentVerification": false,
+        "propertyApartmentUnitAssignmentCertified": false
       }
     }
   ],
