@@ -251,6 +251,14 @@
       "period": "2026–27 user-initiated official school comparison",
       "unit": "Prosper Infofinder live coordinate lookup or user-entered official finder school name for any of 6 ISDs",
       "notes": "Manual transcription is not independently validated. Live Prosper API checks exactly 3 GIS campus codes and never establishes residential unit, grade admission or enrollment. CORS restrictions can prevent direct browser calls; fail safely. Data stored only in page memory."
+    },
+    {
+      "file": "texas-address-suggest.js",
+      "period": "Esri World Geocoding live suggest API as of 2026-11-06",
+      "unit": "Texas-only house-numbered street address autocomplete, max five rows",
+      "api": "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest",
+      "constraints": "Debounced 320ms, >=4 characters with a number, geographic query bounds plus explicit TX in returned suggestion text; exclude out-of-state results, POI/collections; use magicKey on user selection; never infer school assignment from suggestion",
+      "privacy": "Partial home address typed is transmitted to Esri after debounce; addresses are not stored by dashboard"
     }
   ]
 }

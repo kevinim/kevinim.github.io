@@ -91,6 +91,13 @@ CFBISD's [official enrollment FAQ](https://www.cfbisd.edu/enrollment-page/freque
 
 **No guessed 2026–27 GeoJSON** should be constructed from a schematic PDF or mixed-year locator without validated alignment to district addresses. Verify any specific home, grade, and special program at the district itself.
 
+## Texas home address autocomplete — 2026-11-06
+
+- Home input now suggests **up to five Texas numbered street addresses** after at least 4 characters including a number, using Esri World Geocoding `/suggest` with a 320ms debounce and abortable requests; no API key is required on the public Esri endpoint used by the existing geocoder.
+- **Important filter:** Esri `searchExtent=-106.65,25.8,-93.5,36.5` alone can return Oklahoma and Arkansas due to the rectangular extent. The UI therefore shows only `isCollection=false`, explicit `, TX, ZIP` or `, Texas, ZIP` street-address suggestions, excludes duplicated records and POIs, and limits to five entries. Esri `magicKey` is sent to the matching `findAddressCandidates` request when the user selects an item, as required by Esri's REST docs.
+- Accessibility: listbox/combobox with arrow keys, Enter, Escape, Tab, pointer selection and visible focus. Selecting a suggestion geocodes an address with the **existing precision gate**; no suggestion by itself establishes a verified property parcel, school zone or registration eligibility.
+- Privacy: typing any partial address may transmit that prefix to Esri after a brief pause. The disclosure is visible at the input. No stored address cache or new backend was added. Manual full-address submission continues to work if no suggestion is shown.
+
 ## P0 official address-school evidence — November 6, 2026
 
 - **Important Plano 2026–27 correction:** the district's [2026–27 SchoolFinder](https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder) links to [current ArcGIS Experience](https://experience.arcgis.com/experience/73a3f873d9c040348d6e723ed4b48af4), item `73a3f873d9c040348d6e723ed4b48af4`. Its public config references WebMap `68c373c99db1425e9f0030a689efa742` last modified 2025-05-02, and its underlying senior/high/middle/elementary group layers use exactly `Plano_ISD_School_Districts/FeatureServer/{0,1,2,3}` — the same service as our 2025–26 reference. **The district's live 2026–27 *front end* uses those geometries; this does NOT establish a 2026–27 geodata vintage or prove no changes.** Do not upgrade freshness count.

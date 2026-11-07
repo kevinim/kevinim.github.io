@@ -1,6 +1,6 @@
 'use strict';
 // Addresses and coordinates are held in memory only. Geocoding is triggered by submit.
-let home=null,homeMarker=null,homeCandidates=[],homeRequest=null,homeRouteRequest=null,homeParcelRequest=null,homeOfficialRequest=null,homeVersion=0,homeRouteLayer=null;
+let home=null,homeMarker=null,homeCandidates=[],homeRequest=null,homeRouteRequest=null,homeParcelRequest=null,homeOfficialRequest=null,homeVersion=0,homeRouteLayer=null,homeAutocomplete=null;
 
 function ringContains(point,ring){
   let inside=false;
@@ -72,8 +72,12 @@ function clearHome(){
   el('homeCandidates').replaceChildren();el('homeResult').replaceChildren();el('homeSchoolInfo').replaceChildren();el('homeStatus').textContent='';if(homeRouteLayer)homeRouteLayer.clearLayers();
   el('homeSearch').disabled=false;if(map){drawSchools();drawList()}
 }
-async function geocodeAddress(address,signal){
+async function geocodeAddress(address,signal,suggestion=null){
   const body=new URLSearchParams({SingleLine:address,f:'json',outFields:'Match_addr,Addr_type,Region,Postal',maxLocations:'5',forStorage:'false'});
+  if(suggestion?.text===address&&suggestion.magicKey){
+   body.set('magicKey',suggestion.magicKey);body.set('countryCode','USA');
+   body.set('searchExtent',TEXAS_SUGGEST_EXTENT);body.set('location','-96.8,33.1');body.set('returnCollections','false');
+  }
   const response=await fetch('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates',{method:'POST',body,signal});
   if(!response.ok)throw Error('주소 검색 서비스 HTTP '+response.status);
   const json=await response.json();if(json.error)throw Error('주소 검색 서비스 오류');
@@ -193,12 +197,13 @@ function useHomeCandidate(candidate){
   if(matches.length===1)selectZip(matches[0].z,false);
   map.setView(home.ll,13);renderHome();drawSchools();drawList();el('homeStatus').textContent='검색 결과 위치를 지도에 표시했습니다. 주소와 핀을 확인하세요.';return true;
 }
-async function searchHome(event){
-  event.preventDefault();const address=el('homeAddress').value.trim();clearHome();
+async function searchHome(event,suggestion=null){
+  event.preventDefault();const address=el('homeAddress').value.trim();
+  homeAutocomplete?.dismiss();clearHome();
   if(!address){el('homeStatus').textContent='도로명과 도시, 텍사스 주를 포함한 주소를 입력하세요.';el('homeAddress').focus();return}
   const version=homeVersion;homeRequest=new AbortController();el('homeSearch').disabled=true;el('homeStatus').textContent='주소를 검색 중입니다…';
   try{
-    const candidates=await geocodeAddress(address,homeRequest.signal);if(version!==homeVersion)return;
+    const candidates=await geocodeAddress(address,homeRequest.signal,suggestion);if(version!==homeVersion)return;
     homeCandidates=candidates;
     if(!candidates.length){el('homeStatus').textContent='주소를 찾지 못했습니다. 도시와 ZIP을 포함해 다시 입력하세요.';return}
     candidates.sort((a,b)=>(Number.isFinite(b.score)?b.score:-1)-(Number.isFinite(a.score)?a.score:-1));
@@ -223,7 +228,8 @@ async function calculateHomeCommute(){
   finally{if(version===homeVersion&&el('homeRoute'))el('homeRoute').disabled=false}
 }
 document.addEventListener('DOMContentLoaded',()=>{
+  homeAutocomplete=attachTexasAddressSuggestions(el('homeAddress'),el('homeSuggestions'),item=>searchHome({preventDefault(){}},item));
   el('homeForm').addEventListener('submit',searchHome);
-  el('homeClear').addEventListener('click',()=>{el('homeAddress').value='';clearHome();el('homeAddress').focus()});
+  el('homeClear').addEventListener('click',()=>{homeAutocomplete?.dismiss();el('homeAddress').value='';clearHome();el('homeAddress').focus()});
   el('homeAddress').addEventListener('input',()=>{if(home||homeCandidates.length||homeRequest)clearHome()});
 });

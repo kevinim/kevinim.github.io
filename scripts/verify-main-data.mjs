@@ -21,6 +21,7 @@ const {resolveAssignment}=require('../school-assignment.js');
 const {matchAllenAddress}=require('../allen-lookup.js');
 const {isRetiredCampus, RETIRED_CAMPUSES_2026}=require('../school-lifecycle.js');
 const {assessResidentialGeocode}=require('../geocode-quality.js');
+const {buildTexasSuggestUrl,isTexasStreetSuggestion,filterTexasStreetSuggestions}=require('../texas-address-suggest.js');
 const {addCandidate}=require('../candidate-compare.js');
 const {compareManualSchoolResult,compareProsperOfficialPoint,buildProsperOfficialPointUrl,officialReviewCandidates,officialReviewName,PLANO_2026_27_EXPERIENCE}=require('../official-school-review.js');
 const {zoneBoundaryProximity,distancePointToSegmentMeters}=require('../school-zone-risk.js');
@@ -45,7 +46,7 @@ test('main page inline JavaScript compiles', () => {
   inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
 });
 test('all main application JS modules compile', () => {
-  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','collin-parcel-check.js','official-school-review.js']) {
+  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js']) {
     new Script(readText(name), {filename:name});
     assert.ok(html.includes('./' + name), name + ' not loaded');
   }
@@ -405,6 +406,48 @@ test('official manual result only checks user transcription, never upgrades old 
  assert.ok(h.includes('homeOfficialRequest?.abort()'));
  assert.ok(html.includes('official-school-review.js?v=1'));
  assert.ok(readText('candidate-compare.js').includes('savedOfficialReview:item.officialReview'));
+});
+test('Texas-only home address suggestions exclude Oklahoma and POIs even inside the Esri bounding box',()=>{
+ const u=new URL(buildTexasSuggestUrl('3400 Legacy'));
+ assert.equal(u.pathname.endsWith('/suggest'),true);
+ assert.equal(u.searchParams.get('countryCode'),'USA');
+ assert.equal(u.searchParams.get('sourceCountry'),'USA');
+ assert.equal(u.searchParams.get('searchExtent'),'-106.65,25.8,-93.5,36.5');
+ assert.equal(u.searchParams.get('maxSuggestions'),'15');
+ assert.equal(u.searchParams.get('returnCollections'),'false');
+ assert.throws(()=>buildTexasSuggestUrl('300'));
+ const raw=[
+  {text:'3400 Legacy Dr, Frisco, TX, 75034, USA',magicKey:'frisco',isCollection:false},
+  {text:'3400 Legacy Dr, Plano, TX, 75023, USA',magicKey:'plano',isCollection:false},
+  {text:'3400 Legacy Pointe, El Reno, OK, 73036, USA',magicKey:'ok',isCollection:false},
+  {text:'3400 Legacy Dr, Frisco, TX, 75034, USA',magicKey:'dupe',isCollection:false},
+  {text:'School, 3400 Main St, Austin, TX, 78701, USA',magicKey:'poi',isCollection:false},
+  {text:'3400 Legacy Ln, Harlingen, TX, 78550, USA',magicKey:'harlingen',isCollection:false},
+  {text:'3400 Main St, Irving, TX, 75062, USA',magicKey:'coll',isCollection:true},
+  {text:'3400 No Key Dr, Plano, TX, 75024, USA',isCollection:false}
+ ];
+ const matches=filterTexasStreetSuggestions(raw);
+ assert.deepEqual(matches.map(x=>x.magicKey),['frisco','plano','harlingen']);
+ assert.equal(isTexasStreetSuggestion(raw[2]),false);
+ assert.equal(isTexasStreetSuggestion(raw[0]),true);
+ assert.equal(filterTexasStreetSuggestions(raw,2).length,2);
+});
+test('home autocomplete ARIA, debounced request, magicKey and direct address search are wired',()=>{
+ for(const id of ['homeSuggestions','homeSuggestHint'])assert.ok(html.includes('id="'+id+'"'),id);
+ assert.ok(html.includes('aria-autocomplete="list"'));
+ assert.ok(html.includes('aria-controls="homeSuggestions"'));
+ assert.ok(html.includes('aria-expanded="false"'));
+ assert.ok(html.includes('입력 중 주소 일부가 Esri에 전송됩니다'));
+ const mod=readText('texas-address-suggest.js'),src=readText('home-lookup-v2.js');
+ assert.ok(mod.includes('},320)'));
+ assert.ok(mod.includes('controller?.abort()'));
+ assert.ok(mod.includes("e.key==='Escape'"));
+ assert.ok(mod.includes("e.key==='ArrowDown'"));
+ assert.ok(mod.includes("e.key==='Enter'&&active>=0"));
+ assert.ok(src.includes('homeAutocomplete=attachTexasAddressSuggestions('));
+ assert.ok(src.includes("body.set('magicKey',suggestion.magicKey)"));
+ assert.ok(src.includes('geocodeAddress(address,homeRequest.signal,suggestion)'));
+ assert.ok(src.includes("homeAutocomplete?.dismiss();clearHome()"));
 });
 test('CFB official current GuideK12 locator linked',()=>{
   assert.ok(html.includes('https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/'));
