@@ -1023,12 +1023,13 @@ test('Phase2A NOAA official 2024/2025 county-coded historical storm snapshot sou
  assert.ok(html.includes('createNoaaStormHistory?.(document)'));
  assert.ok(html.includes('실제 보고된 사건 수'));
 });
-test('Map Allen schools and natural hazard heatmaps have visible quick controls',()=>{
- assert.ok(html.includes('id="allenSchoolsShortcut"'));
+test('Allen school markers are automatic at wide zoom; independent FEMA quick toggle is preserved',()=>{
+ assert.ok(!html.includes('id="allenSchoolsShortcut"'),'Do not require user to click an Allen button');
  assert.ok(html.includes('id="hazardMapQuickToggle"'));
  assert.ok(html.includes('id="schoolMapStatus"'));
- assert.ok(html.includes("map.flyTo([33.103,-96.675],13)"));
- assert.ok(html.includes("const limit=zoom<12?100:260;"));
+ assert.ok(html.includes("const allenItems=items.filter(s=>s.district==='AISD');"));
+ assert.ok(html.includes("const visible=zoom<11?allenItems:items.slice(0,limit);"));
+ assert.ok(html.includes("const limit=zoom<11?allenItems.length:zoom<12?100:260;"));
  assert.ok(html.includes("center.distanceTo(a.ll)-center.distanceTo(b.ll)"));
  assert.ok(html.includes("el('phase2HazardPanel').open=true"));
  assert.ok(html.includes("toggle.dispatchEvent(new Event('change',{bubbles:true}))"));

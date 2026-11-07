@@ -139,7 +139,7 @@
 <p>다른 학군의 2027–28 학교별 경계 확정 여부는 아직 확인되지 않았습니다. 이 지도는 2027–28 배정을 표시하지 않습니다.</p>
 </div>
 </details></aside>
-<div class="mapbox"><div class="maphead"><h2>동네 지도</h2><button class="mapquickbtn" type="button" id="allenSchoolsShortcut" aria-label="Allen 지역으로 확대하여 학교 마커 보기">Allen 학교 보기</button><button class="mapquickbtn" type="button" id="hazardMapQuickToggle" aria-pressed="false" aria-label="FEMA 자연재해 위험 지도 켜기 또는 끄기">재해 지도 켜기</button><label class="basemap-control" for="countyLanguage">지도 지명 <select id="countyLanguage"><option value="ko">한글</option><option value="en">영어</option></select></label><label class="basemap-control" for="baseMap">지도 배경 <select id="baseMap" aria-label="지도 배경"><option value="osm">OpenStreetMap</option><option value="esri">Esri Streets</option></select></label><div class="legend" id="schoolLegend"><span>초등</span><span>중등</span><span>고등</span></div></div><div id="map"></div><div class="source" id="schoolMapStatus" role="status" aria-live="polite" style="padding:4px 16px;margin:0">학교 지도 마커를 준비하는 중…</div><div id="heatLegend" class="heat-legend" aria-live="polite"></div><div id="femaHazardLegend" class="heat-legend" aria-live="polite" hidden></div><div id="tileStatus" class="map-foot" role="status" aria-live="polite" hidden></div><details class="map-foot"><summary>지도와 학교 경계 안내</summary><div id="mapHelp">지명 전환은 대시보드의 지역명에 적용됩니다. 배경 지도에 인쇄된 도로·장소명은 제공자의 언어로 표시됩니다. 지도에는 지역명이 표시됩니다. ZIP은 구역을 선택해 확인하세요. 이름이 겹치면 지도를 확대하세요. 도시명은 2020 Census 기준 ZIP과 가장 많이 겹치는 도시로, ZIP이 여러 도시에 걸칠 수 있습니다. ZIP 도형이나 아래 비교표에서 지역을 선택하세요. 학교 마커는 지도 확대 11단계부터 보이며, 넓은 지도에서는 가까운 학교 최대 100개, 확대 12단계부터는 최대 260개를 표시합니다. 학교가 보이지 않으면 지도 위 Allen 학교 보기 버튼을 사용하거나 더 확대하세요. 학교 마커를 누르면 학교 정보와 배정 확인 링크가 표시됩니다. ZIP 통계구역과 학교별 배정구역을 구분합니다. 프리스코·프로스퍼의 공식 2026–27 경계는 녹색, 현행 공식 Finder가 사용하는 플레이노·루이스빌 경계는 파란색입니다(원본의 학년도 불일치 가능). 현행 Finder를 불러오지 못했을 때의 플레이노 저장본과 앨런 과거 GIS는 주황색 점선 참고로 표시합니다. 실제 배정은 학군에 확인하세요.</div></details></div>
+<div class="mapbox"><div class="maphead"><h2>동네 지도</h2><button class="mapquickbtn" type="button" id="hazardMapQuickToggle" aria-pressed="false" aria-label="FEMA 자연재해 위험 지도 켜기 또는 끄기">재해 지도 켜기</button><label class="basemap-control" for="countyLanguage">지도 지명 <select id="countyLanguage"><option value="ko">한글</option><option value="en">영어</option></select></label><label class="basemap-control" for="baseMap">지도 배경 <select id="baseMap" aria-label="지도 배경"><option value="osm">OpenStreetMap</option><option value="esri">Esri Streets</option></select></label><div class="legend" id="schoolLegend"><span>초등</span><span>중등</span><span>고등</span></div></div><div id="map"></div><div class="source" id="schoolMapStatus" role="status" aria-live="polite" style="padding:4px 16px;margin:0">학교 지도 마커를 준비하는 중…</div><div id="heatLegend" class="heat-legend" aria-live="polite"></div><div id="femaHazardLegend" class="heat-legend" aria-live="polite" hidden></div><div id="tileStatus" class="map-foot" role="status" aria-live="polite" hidden></div><details class="map-foot"><summary>지도와 학교 경계 안내</summary><div id="mapHelp">지명 전환은 대시보드의 지역명에 적용됩니다. 배경 지도에 인쇄된 도로·장소명은 제공자의 언어로 표시됩니다. 지도에는 지역명이 표시됩니다. ZIP은 구역을 선택해 확인하세요. 이름이 겹치면 지도를 확대하세요. 도시명은 2020 Census 기준 ZIP과 가장 많이 겹치는 도시로, ZIP이 여러 도시에 걸칠 수 있습니다. ZIP 도형이나 아래 비교표에서 지역을 선택하세요. Allen ISD 학교 위치는 현재 지도 범위 안에 있으면 축소 상태에서도 표시합니다. 다른 학군 학교는 지도 확대 11단계부터 최대 100개, 확대 12단계부터 최대 260개를 거리순으로 표시합니다. 표시되지 않는 학교가 있으면 지도 범위와 학교 유형·평가 필터를 확인하세요. 학교 마커를 누르면 학교 정보와 배정 확인 링크가 표시됩니다. ZIP 통계구역과 학교별 배정구역을 구분합니다. 프리스코·프로스퍼의 공식 2026–27 경계는 녹색, 현행 공식 Finder가 사용하는 플레이노·루이스빌 경계는 파란색입니다(원본의 학년도 불일치 가능). 현행 Finder를 불러오지 못했을 때의 플레이노 저장본과 앨런 과거 GIS는 주황색 점선 참고로 표시합니다. 실제 배정은 학군에 확인하세요.</div></details></div>
 <aside class="panel detail"><div class="eyebrow">지역 통계 · 학교 정보</div><div id="detailContent"></div><div id="homeSchoolInfo"></div></aside>
 <div class="section"><section class="panel"><div class="secHead"><h2>초·중·고 학교 찾기</h2><span class="pill" id="schoolCount">조회 중</span></div><label for="schoolScope" class="source">학교 목록 범위</label><select id="schoolScope" aria-label="학교 목록 범위"><option value="zip">선택 ZIP</option><option value="county">대표 카운티의 ZIP</option><option value="all">전체 학교</option></select><div class="source">학교 위치 기준이며 배정 학교 목록이 아닙니다. 카운티는 대표 카운티에 속한 ZIP 통계구역으로 추정하며 좌표 없는 학교는 전체에서만 보입니다.</div><div class="searchrow"><input aria-label="학교 이름 검색" id="schoolSearch" placeholder="학교 이름 검색 (예: Wakeland, Rice, Lawler)"><button id="schoolSearchClear">초기화</button></div><div class="school-list" id="schoolList"></div><details class="source school-info"><summary>등급과 자료 설명</summary><p>TEA 2026 예비 등급: A가 가장 높고 F가 가장 낮습니다. 학업 성취, 학교 향상도, 학생 집단 간 성취 격차를 평가합니다. 고등학교는 졸업 및 대학·취업·군 복무 준비도도 포함합니다. 적용 항목은 학교별로 다를 수 있습니다. 미연결과 등급 미부여는 다릅니다. 소년사법·징계 대안교육기관은 TEA 미평가 대상이며, 그 밖의 대안학교는 별도 기준으로 등급을 받을 수 있습니다. 자료 부족 등 다른 이유로도 미평가될 수 있습니다. <a href="https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-accountability-manual" target="_blank" rel="noopener">TEA 평가 기준</a></p><p>학교 지도 좌표는 Plano City GIS의 2022년 자료와 2026년 학교 주소 기반 고신뢰도 지오코딩 자료를 함께 사용합니다. TEA 2026 예비 평가 원본에서 DFW 11개 카운티 및 주변 Grayson·Fannin·Cooke 카운티에 소속된 학군의 학교를 표시합니다. 학교 위치는 NCES 2024–25 좌표를 학교 고유번호로 연결하며 현재 위치와 다를 수 있습니다. 최신 배정 경계는 학군마다 다르며, 학군 소재 카운티와 학교 실제 위치는 다를 수 있습니다. 고유 학교번호 또는 학군과 이름이 고유하게 일치하는 경우에만 연결하며, 미연결과 Not Rated는 다릅니다. 최신 주소, 개교 및 학교 배정은 해당 학군에서 반드시 확인하세요.</p></details></section>
 <section class="panel"><div class="secHead"><h2>지역 전체 비교</h2><span class="pill">우편번호별</span></div><div class="scroll-table" tabindex="0" role="region" aria-label="지역별 통계 비교"><table class="data-table" id="compareTable"><thead><tr><th scope="col" data-sort="z"><button type="button" data-sort="z">지역 ↕</button></th><th scope="col" data-sort="korean"><button type="button" data-sort="korean">한국 ↕</button></th><th scope="col" data-sort="indian"><button type="button" data-sort="indian">인도 ↕</button></th><th scope="col" data-sort="chinese"><button type="button" data-sort="chinese">중국 ↕</button></th><th scope="col" data-sort="kids"><button type="button" data-sort="kids">18세 미만 ↕</button></th><th scope="col" data-sort="childHH"><button type="button" data-sort="childHH">자녀가구 ↕</button></th><th scope="col" data-sort="income"><button type="button" data-sort="income">중위 소득 ↕</button></th></tr></thead><tbody></tbody></table></div><div class="source">Census ZCTA 경계는 USPS 배달 ZIP과 완전히 일치하지 않습니다. 열 제목을 누르면 정렬됩니다.</div></section></div></div>
@@ -244,13 +244,6 @@ function shade(v){if(!Number.isFinite(v))return '#b8c2cc';const [mn,mx]=metricRa
 function drawHeatLegend(){const [min,max]=metricRange(),box=el('heatLegend');if(!box)return;if(state.withinHour){box.innerHTML='<b>JPM Plano 도착 · 도로망 추정</b><div>빨간 점선: 60분 도달선 · Valhalla/OSM</div><div class="heat-values"><span>파란색: 60분 이내</span><span>흰색: 60분 초과</span><span>회색: 미확인</span></div><div>2026-11-04 도로망 기반 추정 · 교통량 미반영 · 파란 ZIP은 대표점 기준, ZIP 일부만 도달선에 포함될 수 있음</div>';return;}box.innerHTML='<b>'+escape(metricLabel(state.metric))+'</b> · ZIP별 비교 <span style="color:#667892">(회색: 자료 없음)</span><div class="heat-scale" aria-hidden="true"></div><div class="heat-values"><span>낮음 '+(min===null?'미공개':niceMetric(min))+'</span><span>높음 '+(max===null?'미공개':niceMetric(max))+'</span></div><div>2020–2024 ACS 추정치 · '+escape(scopeDescription())+' · '+scopedZips().filter(d=>Number.isFinite(d[state.metric])).length+'개 ZIP 기준 · 범위 밖은 옅은 회색</div>'}
 
 function init(){DATA.forEach(d=>{let o=document.createElement('option');o.value=d.z;o.textContent=`${d.z} · ${d.name}`;el('zipSelect').appendChild(o)});el('zipSelect').value=state.zip;el('zipSelect').onchange=e=>selectZip(e.target.value);el('metric').onchange=e=>{state.metric=e.target.value;drawZip();drawDetail();drawTable()};el('heatScope').onchange=e=>{state.heatScope=e.target.value;drawZip()};el('schoolScope').onchange=()=>drawList();el('countyLanguage').onchange=()=>{updatePlaceOptions();renderData();drawZip();drawCommute();window.refreshCandidateComparisons?.()};el('compareTable').querySelector('thead').onclick=e=>{const b=e.target.closest('button[data-sort]');if(!b)return;const k=b.dataset.sort;tableSort.dir=tableSort.key===k?-tableSort.dir:1;tableSort.key=k;drawTable()};el('ratingFilter').onchange=e=>{state.ratingFilter=e.target.value;drawSchools();drawList()};el('zipOverlay').onchange=e=>{state.showZip=e.target.checked;drawZip()};el('oneHourOverlay').onchange=e=>{state.withinHour=e.target.checked;drawZip();drawIsochrone();if(state.withinHour&&isochroneLayer)map.fitBounds(isochroneLayer.getBounds(),{padding:[20,20]})};el('schoolOverlay').onchange=e=>{state.showSchools=e.target.checked;drawSchools()};
-el('allenSchoolsShortcut').onclick=()=>{
- state.showSchools=true;el('schoolOverlay').checked=true;
- state.level='all';[...el('levels').children].forEach(b=>b.classList.toggle('active',b.dataset.v==='all'));
- state.ratingFilter='all';el('ratingFilter').value='all';
- if(map){map.flyTo([33.103,-96.675],13);map.once('moveend',drawSchools);}
- drawList();
-};
 const hazardShortcut=el('hazardMapQuickToggle');
 const updateHazardShortcut=()=>{
  const on=el('femaHazardEnabled').checked;
@@ -481,33 +474,42 @@ function drawSchools(){
   if(notice)notice.textContent='학교 마커 표시가 꺼져 있습니다. 왼쪽 학교 위치 마커 표시를 선택하세요.';
   return;
  }
- if(zoom<11){
-  if(notice)notice.textContent='학교 마커는 지도 확대 11단계부터 표시됩니다. 지도를 확대하세요.';
-  return;
- }
  const center=map.getCenter(),bounds=map.getBounds();
  const items=state.schools.filter(s=>s.ll&&s.type!=='other'&&bounds.contains(s.ll)&&
   (state.level==='all'||s.type===state.level)&&
   (state.ratingFilter!=='rated'||score(s.name,s.district)!==null));
- // On a regional map, select the nearest campuses to its center rather than
- // the first 260 alphabetical names (which silently omitted entire cities).
+ // Allen campus points are real data, and must not vanish just because a
+ // user zoomed out or a nearby city has many more alphabetically listed schools.
+ // Keep explicit school type, rated-only and checkbox filters intact.
+ const allenItems=items.filter(s=>s.district==='AISD');
  items.sort((a,b)=>{
   if(homeActive){
    const ah=homeSchoolMatches(a)?1:0,bh=homeSchoolMatches(b)?1:0;
    if(ah!==bh)return bh-ah;
   }
+  if(a.district==='AISD'&&b.district!=='AISD')return -1;
+  if(b.district==='AISD'&&a.district!=='AISD')return 1;
   return center.distanceTo(a.ll)-center.distanceTo(b.ll)||a.name.localeCompare(b.name);
  });
- const limit=zoom<12?100:260;
- const visible=items.slice(0,limit);
+ // At wide zoom, limit other districts' icon clutter while retaining ALL
+ // in-viewport Allen campuses without requiring a special user action.
+ const limit=zoom<11?allenItems.length:zoom<12?100:260;
+ const visible=zoom<11?allenItems:items.slice(0,limit);
  for(const s of visible){
   const cls=homeActive?(homeSchoolMatches(s)?'home-match':'nearby'):s.type;
   const icon=L.divIcon({className:'',html:`<div class="mapmark ${cls}">${s.type==='elementary'?'초':s.type==='middle'?'중':'고'}</div>`,iconSize:[27,27],iconAnchor:[13,13]});
   L.marker(s.ll,{icon,title:s.name}).addTo(schoolGroup).on('click',()=>schoolClicked(s));
  }
- if(notice)notice.textContent='학교 마커 '+visible.length+'개 표시 · 현재 지도 범위 '+items.length+'개 위치'+
-  (items.length>limit?' · 겹침 방지를 위해 가까운 학교 우선, 확대 시 더 표시':'')+
-  ' · 위치는 배정학교 확정 정보가 아닙니다.';
+ if(notice){
+  if(zoom<11&&!allenItems.length){
+   notice.textContent='넓은 지도에서는 Allen ISD 학교만 표시합니다. 현재 화면에 표시 가능한 Allen 학교가 없거나 필터에서 제외됐습니다. 다른 학군 학교는 지도를 확대하면 표시됩니다.';
+  }else{
+   notice.textContent='학교 마커 '+visible.length+'개 표시 · 현재 지도 범위 '+items.length+'개 위치'+
+    ' · Allen '+allenItems.length+'개 중 '+visible.filter(s=>s.district==='AISD').length+'개 표시'+
+    (zoom<11?' · 넓은 지도에서는 다른 학군 학교 마커만 숨김':items.length>limit?' · 다른 학군은 가까운 학교 우선':'')+
+    ' · 학교 위치는 주소별 배정 확정 정보가 아닙니다.';
+  }
+ }
 }
 function schoolWithinScope(s){const scope=el('schoolScope').value;if(scope==='all')return true;if(!s.ll)return false;const county=countyData?.zipCounty[state.zip];if(scope==='county'&&!county)return false;const candidates=scope==='zip'?[getZip()]:DATA.filter(d=>countyData.zipCounty[d.z]===county);return candidates.some(d=>{const layer=state.polys[d.z];if(!layer||!layer.getBounds().contains(s.ll))return false;const geo=layer.toGeoJSON();return (geo.features||[geo]).some(f=>geometryContains([s.ll[1],s.ll[0]],f.geometry))})}
 function drawList(){let items=state.schools.filter(s=>schoolWithinScope(s)&&(state.level==='all'||s.type===state.level)&&(state.ratingFilter!=='rated'||score(s.name,s.district)!==null)&&(!state.schoolQuery||s.name.toLowerCase().includes(state.schoolQuery)));const box=el('schoolList');box.classList.toggle('broad',el('schoolScope').value!=='zip');const groups=[['elementary','초등학교'],['middle','중학교'],['high','고등학교'],['other','기타 학교']];box.innerHTML=items.length?'<div class="school-groups">'+groups.map(([type,label])=>{const group=items.filter(s=>(['elementary','middle','high'].includes(s.type)?s.type:'other')===type).sort((a,b)=>{const ar=scoreRecord(a.name,a.district),br=scoreRecord(b.name,b.district),order={'A':0,'B':1,'C':2,'D':3,'F':4};return (order[ar?.rating]??5)-(order[br?.rating]??5)||((br?.score??-1)-(ar?.score??-1))||a.name.localeCompare(b.name)});if(!group.length)return '';return `<section class="school-group"><h3>${label} · ${group.length}</h3>${group.map(s=>{const r=scoreRecord(s.name,s.district),grade=r&&['A','B','C','D','F'].includes(r.rating)?'grade-'+r.rating.toLowerCase():'nr';return `<button class="school ${typeof home!=='undefined'&&home&&homeSchoolMatches(s)?'home-match':''}" data-sid="${state.schools.indexOf(s)}"><span><b>${escape(s.name)}${typeof home!=='undefined'&&home?(homeSchoolMatches(s)?'<span class="match-label">집 주소 배정 후보</span>':'<span class="other-label">배정 미확인</span>'):''}</b><small>${gradeTag(s)} · ${escape(s.districtName||s.district||'배정 학군 확인 필요')}${s.ll?'':' · 위치 미확인'}</small></span><span class="score ${grade}">${escape(ratingText(r))}</span></button>`}).join('')}</section>`}).join('')+'</div>':'<div class="muted" style="padding:14px">검색 결과 없음</div>';el('schoolCount').textContent=items.length+'개 학교';box.querySelectorAll('button').forEach(b=>b.onclick=()=>schoolClicked(state.schools[+b.dataset.sid]))}
