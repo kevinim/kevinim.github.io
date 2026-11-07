@@ -79,6 +79,28 @@ const cleanUrl=u=>{try{const x=new URL(u);return x.origin+x.pathname}catch{retur
   });
   report.diagnostics.afterSearch=dom;
   await page.screenshot({path:join(out,'search.png'),animations:'disabled',timeout:20000});
+  // A public SCHOOL campus address can be absent from residential address
+  // catalogs. Repeat with an advertised apartment building whose inclusion
+  // in CFB rezoning is independently documented by the district.
+  const publicApartment='1011 S Main St, Carrollton, TX 75006';
+  report.diagnostics.apartmentProbe={address:publicApartment,propertyType:'public apartment leasing address (Lux on Main)',zonedSchoolConfirmed:false};
+  const clear=page.getByRole('button',{name:/clear location/i}).first();
+  if(await clear.count())await clear.click({timeout:5000}).catch(()=>{});
+  await addressInput.fill('1011 S Main');
+  await page.waitForTimeout(2000);
+  report.diagnostics.apartmentProbe.suggestions=await page.evaluate(()=>[...document.querySelectorAll('[role="option"], [class*="suggest"], [class*="autocomplete"]')].filter(el=>el.getClientRects().length).slice(0,12).map(el=>(el.textContent||'').trim().slice(0,150)));
+  await addressInput.fill(publicApartment);
+  if(await find.count())await find.click({timeout:10000});
+  else await addressInput.press('Enter').catch(()=>{});
+  await page.waitForTimeout(7000);
+  const secondText=await page.locator('body').innerText();
+  const start=secondText.toLowerCase().indexOf('matching results');
+  const secondListing=start>=0?secondText.slice(start,start+3500):'';
+  const firstListing=dom.matchingResultsExcerpt.slice(0,3500);
+  report.diagnostics.apartmentProbe.resultsExcerpt=secondListing.slice(0,2200);
+  report.diagnostics.apartmentProbe.sameFirst3500CharsAsPublicSchool=secondListing===firstListing;
+  report.diagnostics.apartmentProbe.containsAssignmentHeading=/\\b(your zoned schools|assigned schools|schools assigned to address)\\b/i.test(secondListing);
+  await page.screenshot({path:join(out,'apartment-search.png'),animations:'disabled',timeout:20000});
   report.result='address-search-attempted-results-for-manual-review';
   // This probe intentionally NEVER certifies a school assignment from
   // the presence of a school card or words in provider boilerplate.
@@ -90,5 +112,6 @@ const cleanUrl=u=>{try{const x=new URL(u);return x.origin+x.pathname}catch{retur
   writeFileSync(join(out,'result.json'),JSON.stringify(report,null,2)+'\n');
   console.log('CFB BROWSER PROBE: '+report.result+'; property-zoned campus set verified=false');
   console.log('CFB DIAGNOSTIC: '+JSON.stringify({navigationHttp:report.diagnostics.navigationHttp,inputs:report.diagnostics.inputsBefore,suggestions:report.diagnostics.suggestionsAfterPartial,afterSearch:report.diagnostics.afterSearch,errors:report.errors,failures:report.networkFailures.slice(0,10)}).slice(0,7600));
+  console.log('CFB RESIDENTIAL COMPLEX PROBE: '+JSON.stringify(report.diagnostics.apartmentProbe||{}).slice(0,2800));
  }
 })().catch(error=>{console.error(error);process.exitCode=1});
