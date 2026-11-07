@@ -73,7 +73,11 @@ function initCfbFeederLookup(){
    }).catch(err=>{dataset=null;status.textContent='공식 진학표를 불러오지 못했습니다. 교육청에 직접 확인하세요.';console.warn('CFB feeder load',err)});
  }
  section.addEventListener('toggle',()=>{if(section.open)load()});
+ select.addEventListener('focus',load);
  select.addEventListener('change',render);
+ // 21-row JSON is small. Eager loading avoids browsers/embedded clients that
+ // fail to dispatch the details.toggle event before the user selects a campus.
+ load();
 }
 if(typeof module!=='undefined')module.exports={cfbFeederKey,cfbOfficialFeederValid,cfbFeederByElementary};
 if(typeof document!=='undefined')document.addEventListener('DOMContentLoaded',initCfbFeederLookup);
