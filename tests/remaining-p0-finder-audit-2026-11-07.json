@@ -22,7 +22,26 @@
         "senior": "Plano West Senior High"
       },
       "sourceYearExplicit": null,
-      "note": "Existing current-linked source GIS + feeder descriptions agree; browser session does NOT confirm official per-address names. Do not label 5400 Legacy a checked exact campus match."
+      "note": "The current Finder-linked official GIS gives all four school names for the precise geocoded PUBLIC commercial sample with direct point queries; campus names match cached 2025–26 features and separate feeder table, but independent browser UI and year-2026–27 layer geometry have not been confirmed.",
+      "officialFinderLinkedArcGISPublicAddress20261107": {
+        "source": "https://services4.arcgis.com/uBV8NRVfoRJv7qWn/arcgis/rest/services/Plano_ISD_School_Districts/FeatureServer",
+        "sampleAddress": "5400 Legacy Dr, Plano, TX 75024",
+        "checked": "2026-11-07",
+        "method": "Esri PointAddress geocode with TX and ZIP checks; direct server-side ArcGIS spatial intersect of four school levels; same-campus point-in-polygon on downloaded 2025–26 cached reference; separate district feeder paths check",
+        "officialLiveServiceResults": {
+          "elementary": "Haun Elementary",
+          "middle": "Robinson Middle",
+          "high": "Jasper High",
+          "senior": "Plano West Senior High"
+        },
+        "exactSchoolNamesMatched": 4,
+        "levelsChecked": 4,
+        "cachedHighSeniorFallbackCaveat": "Cached 2025–26 file has 9 high zone features and no dedicated senior level; match campus by name and point. Live Finder splits 6 High and 3 Senior High.",
+        "independentBrowserFinderUiResult": false,
+        "schoolYearOfLayer": "2025–26",
+        "studentEnrollmentCertified": false,
+        "ciEvidence": "https://github.com/kevinim/kevinim.github.io/actions/runs/42352710810"
+      }
     },
     {
       "district": "CFB",

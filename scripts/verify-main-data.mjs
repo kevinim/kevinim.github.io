@@ -265,14 +265,14 @@ test('Plano feeder name agreement with 2025–26 ArcGIS does not imply current G
  assert.ok(planoFeeder.specialCases.some(x=>x.rule==='west of Coit Road'&&x.middle==='Frankford'));
 });
 test('Production source panels and Jackson overlay identify authoritative exceptions',()=>{
- assert.ok(html.includes('현행 2026–27 SchoolFinder 연결 · 2025–26 필드명 GIS 64개'));
+ assert.ok(html.includes('현행 SchoolFinder 연결 GIS 64개 · 5400 Legacy Dr 공식 ArcGIS 주소 좌표 질의 4개 학교 일치'));
  assert.ok(html.includes('공식 주소표 1,689행/유효 1,687행'));
  assert.ok(html.includes('Moss Haven Pl'));
  assert.ok(html.includes('Crestview Heights'));
  assert.ok(html.includes('Jackson Elementary 진학 경로 예외'));
  assert.ok(html.includes('Coit Rd 동쪽'));
  assert.ok(html.includes('Plano West Senior'));
- assert.ok(html.includes('현행 2026–27 SchoolFinder 연결 · 2025–26 필드명 GIS 64개'));
+ assert.ok(html.includes('현행 SchoolFinder 연결 GIS 64개 · 5400 Legacy Dr 공식 ArcGIS 주소 좌표 질의 4개 학교 일치'));
  assert.ok(html.includes('Frisco·Prosper 2곳'));
 });
 test('all 31 Prosper ISD 2026–27 school zones acquired from official live locator',()=>{
@@ -683,6 +683,19 @@ test('P0 remaining districts retain honest address-level evidence and free live-
  const p=remainingP0Audit.samples[0];
  assert.equal(p.status,'property-school-names-not-independently-confirmed');
  assert.equal(p.existingGISExpected.elementary,'Haun');
+ const officialPoint=p.officialFinderLinkedArcGISPublicAddress20261107;
+ assert.equal(officialPoint.exactSchoolNamesMatched,4);
+ assert.equal(officialPoint.levelsChecked,4);
+ assert.equal(officialPoint.officialLiveServiceResults.senior,'Plano West Senior High');
+ assert.equal(officialPoint.independentBrowserFinderUiResult,false);
+ const districtPoint=audit.districts.find(x=>x.code==='PISD').liveFinderVerification.publicAddressFinderFollowup.officialArcGISPointQuery;
+ assert.equal(districtPoint.exactMatches,4);
+ assert.equal(districtPoint.siteUiIndependentResults,0);
+ assert.equal(districtPoint.yearOfSourceLayer,'2025–26');
+ const sourceScript=readText('scripts/check-plano-public-address-layer-live.mjs');
+ assert.ok(sourceScript.includes("geometryType:'esriGeometryPoint'"));
+ assert.ok(sourceScript.includes("independentFinderUiCampusResultVerified:false"));
+ assert.ok(sourceScript.includes("level.level==='senior'&&f.properties?.gradeLevel==='high'"));
  assert.equal(audit.districts.find(x=>x.code==='PISD').liveFinderVerification.publicAddressFinderFollowup.independentlyMatchedAddressSchoolNames,0);
  const c=remainingP0Audit.samples[1];
  assert.equal(c.status,'property-school-names-not-independently-confirmed');
@@ -694,7 +707,8 @@ test('P0 remaining districts retain honest address-level evidence and free live-
  assert.equal(l.status,'official-table-vs-current-finder-map-conflict-unresolved');
  assert.ok(l.operatorConfirmedAddress.includes('The Colony'));
  assert.equal(audit.districts.find(x=>x.code==='LISD').liveFinderVerification.apartment5289Followup.findAnApartmentSelectionVerified,false);
- assert.ok(html.includes('5400 Legacy Dr 공식 검색기에서 학교명 4단계 결과 독립 판독 실패'));
+ assert.ok(html.includes('5400 Legacy Dr 공식 ArcGIS 주소 좌표 질의 4개 학교 일치'));
+ assert.ok(html.includes('GIS 원본 연도는 2025–26이며 공식 Finder 웹 화면에서 독립적으로 읽어낸 학교명은 아닙니다.'));
  assert.ok(html.includes('5289 아파트 표/지도 4단계 충돌은 교육청 확인 전 자동 배정 금지'));
  const schedule=readText('.github/workflows/live-official-school-sources.yml');
  const probe=readText('scripts/check-official-source-health-live.mjs');
