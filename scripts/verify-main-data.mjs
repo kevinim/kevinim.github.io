@@ -125,6 +125,17 @@ test('school selection auto-displays available source polygons with a specific m
  assert.deepEqual(boundaryGradeLevels('high'),['high','senior']);
  assert.equal(boundarySchoolSource('PISD'),'PISD_LOOKUP');
  assert.equal(boundarySchoolKey('Plano West Senior High School'),'plano west');
+ assert.equal(boundarySchoolKey('Isbell K-4 Elementary'),'isbell');
+ assert.equal(boundarySchoolKey('Isbell K-5 Elementary'),'isbell');
+ assert.equal(findSchoolBoundary({district:'FISD',name:'Isbell Elementary School',type:'elementary'},
+  [{type:'Feature',properties:{school:'Isbell K-4 Elementary',gradeLevel:'elementary',grades:'K-4'}}]).status,'matched');
+ assert.equal(findSchoolBoundary({district:'PISD',name:'Academy High School',type:'high'},[polygon]).status,'special-campus-no-standard-zone');
+ assert.equal(findSchoolBoundary({district:'AISD',name:'Lowery Freshman Center',type:'high'},[polygon]).status,'special-campus-no-standard-zone');
+ assert.equal(findSchoolBoundary({district:'LISD',name:'Mill Street El',type:'elementary'},[polygon]).status,'special-campus-no-standard-zone');
+ assert.ok(boundaryMissingExplanation({district:'LISD',name:'Mill Street El',type:'elementary'},
+  findSchoolBoundary({district:'LISD',name:'Mill Street El',type:'elementary'},[polygon]),'2025–26').sourceUrl.includes('lisd.net'));
+ assert.ok(inline.includes('Isbell 세부 학년 주의'));
+ assert.ok(inline.includes('미표시 원인 공식 근거 확인'));
  assert.ok(boundaryMissingExplanation({district:'CFB',name:'Any Elementary',type:'elementary'},findSchoolBoundary({district:'CFB',name:'Any Elementary',type:'elementary'},[]),'').footnote.includes('GuideK12'));
  assert.ok(boundaryMissingExplanation(area,findSchoolBoundary(area,[]),'','network down').reason.includes('로딩되지'));
 });
