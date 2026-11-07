@@ -38,6 +38,7 @@ const {buildTexasSuggestUrl,isTexasStreetSuggestion,filterTexasStreetSuggestions
 const {addCandidate}=require('../candidate-compare.js');
 const {compareManualSchoolResult,compareProsperOfficialPoint,buildProsperOfficialPointUrl,officialReviewCandidates,officialReviewName,PLANO_2026_27_EXPERIENCE}=require('../official-school-review.js');
 const {zoneBoundaryProximity,distancePointToSegmentMeters}=require('../school-zone-risk.js');
+const {boundarySchoolKey,boundaryGradeLevels,boundarySchoolSource,findSchoolBoundary,boundaryMissingExplanation}=require('../school-boundary-match.js');
 const {FEMA_HAZARD_TYPES,FEMA_RISK_COLORS,femaHazardMetric,femaHazardStyle,validateFemaHazardGeojson}=require('../phase2a-fema-hazards.js');
 const {buildCollinParcelUrl,parcelStreetKey,assessCollinParcelResult}=require('../collin-parcel-check.js');
 const demographics = readJson('dfw-demographics.json');
@@ -63,7 +64,7 @@ test('main page inline JavaScript compiles', () => {
   inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
 });
 test('all main application JS modules compile', () => {
-  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','phase2a-fema-hazards.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
+  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','school-boundary-match.js','phase2a-fema-hazards.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
     new Script(readText(name), {filename:name});
     assert.ok(html.includes('./' + name), name + ' not loaded');
   }
@@ -100,6 +101,32 @@ test('six distinct district records and exact evidence vintages', () => {
   assert.ok(byCode.LISD.geometryYear.includes('2025–26'));
   assert.equal(audit.districts.filter(x=>x.status==='current-source').length,2);
   assert.equal(byCode.PROSPER.geometryYear,'2026–27');
+});
+test('school selection auto-displays available source polygons with a specific missing-boundary footnote',()=>{
+ const inline=inlineScripts.join('\n');
+ assert.ok(html.includes('<script src="./school-boundary-match.js?v=1"></script>'));
+ assert.ok(html.includes('id="schoolBoundaryCoverageAudit"'));
+ assert.ok(inline.includes('state.showOldZones=true;state.showHistoric=true;'));
+ assert.ok(inline.includes("el('referenceBoundaryOverlay').checked=true"));
+ assert.ok(inline.includes("el('historicOverlay').checked=true"));
+ assert.ok(inline.includes('renderSchoolBoundaryCoverageAudit()'));
+ assert.ok(inline.includes('window.getSchoolBoundaryCoverage='));
+ assert.ok(inline.includes('SchoolBoundaryMatch.findSchoolBoundary(s,geo'));
+ assert.ok(inline.includes('boundaryMissingExplanation(s,match,sourceVintage,loadError)'));
+ assert.ok(inline.includes('경계 미표시 각주'));
+ assert.ok(!inline.includes('현행 공식 Finder와 연결되지 않은 과거 배정선입니다. 참고 경계선 표시를 선택하세요.')); 
+ const area={type:'high',district:'AISD',name:'Allen High School'};
+ const polygon={type:'Feature',geometry:{type:'Polygon',coordinates:[]},properties:{school:'Allen High School',gradeLevel:'high'}};
+ assert.equal(findSchoolBoundary(area,[polygon]).status,'matched');
+ assert.equal(findSchoolBoundary(area,[]).status,'no-district-polygon-source');
+ assert.equal(findSchoolBoundary({...area,type:'elementary'},[polygon]).status,'no-grade-polygon-source');
+ assert.equal(findSchoolBoundary({...area,name:'Unknown School'},[polygon]).status,'school-not-in-polygon-source');
+ assert.equal(findSchoolBoundary({...area,type:'other'},[polygon]).status,'not-a-zoned-campus');
+ assert.deepEqual(boundaryGradeLevels('high'),['high','senior']);
+ assert.equal(boundarySchoolSource('PISD'),'PISD_LOOKUP');
+ assert.equal(boundarySchoolKey('Plano West Senior High School'),'plano west');
+ assert.ok(boundaryMissingExplanation({district:'CFB',name:'Any Elementary',type:'elementary'},findSchoolBoundary({district:'CFB',name:'Any Elementary',type:'elementary'},[]),'').footnote.includes('GuideK12'));
+ assert.ok(boundaryMissingExplanation(area,findSchoolBoundary(area,[]),'','network down').reason.includes('로딩되지'));
 });
 test('old Plano 2019 boundary removed from active code paths',()=>{
   const inline = inlineScripts.join('\n');
