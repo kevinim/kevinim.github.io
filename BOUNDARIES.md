@@ -91,6 +91,12 @@ CFBISD's [official enrollment FAQ](https://www.cfbisd.edu/enrollment-page/freque
 
 **No guessed 2026–27 GeoJSON** should be constructed from a schematic PDF or mixed-year locator without validated alignment to district addresses. Verify any specific home, grade, and special program at the district itself.
 
+## Allen official address assignments and Allen/Lewisville GIS catalog — rechecked 2026-11-06
+
+- Live Allen ISD `Find-A-School` table re-fetched: **1,689 public street/range rows**. All **1,688 cached rows** matched the same six-column official source (street, number range, elementary, middle, ninth-grade, high) after normalizing Markdown-escaped asterisks in four street names. The one intentionally omitted source row, `Moss Haven PL / 2009 – 202-216`, is malformed and remains unassignable; cached `Crestview Heights / 2050 Peak St` is also malformed, so only **1,687 rows** are parseable. Four published apartment-specific exclusion addresses remain quarantined.
+- No published school year in the Allen street table; do not upgrade the 2023 / 2019 school-level GIS.
+- Official public Infofinder `GetRedistricts` catalogs rechecked for Allen client `AI03835938622` (2023 elementary/middle sets) and Lewisville client `LI3VBOFR0JM` (four `25-26 SY` groups). **Neither provides a 2026–27 named school-boundary collection**, so they do not qualify as latest-zone geometry for this dashboard. The current Lewisville district School Locator is labeled 2026–27, but its separate MetroStudy GIS geometry year is still not fully evidenced.
+
 ## CFB 2026–27 official feeder sources: full three-way audit — 2026-11-06
 
 - Compared all seven fields of every one of 21 zoned elementary rows on three independently retrieved district-controlled tables: [Enrollment FAQ](https://www.cfbisd.edu/enrollment-page/frequently-asked-questions-about-enrollment), [Transfer Guidelines](https://www.cfbisd.edu/students/transfer-enrollment-page/transfer-guidelines), [Pre-K Campuses](https://www.cfbisd.edu/students/prek-enrollment-page/pre-k-campuses).

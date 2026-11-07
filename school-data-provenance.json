@@ -69,6 +69,27 @@
         "storedCachedRows": 1688,
         "officialParseableRows": 1687,
         "officialMalformedRows": 2
+      },
+      "addressTableRevalidation": {
+        "source": "https://www.allenisd.org/page/findaschool",
+        "checked": "2026-11-06",
+        "sourceRows": 1689,
+        "cachedRowsMatching": 1688,
+        "unimportableOfficialRows": 1,
+        "officialChangesInCachedAssignments": 0,
+        "schoolYearInSource": null,
+        "apartmentExclusionCount": 4
+      },
+      "infofinderManifestRecheck": {
+        "checked": "2026-11-06",
+        "clientId": "AI03835938622",
+        "names": [
+          "Middle School Boundary Set 2023",
+          "Redistricting Elementary 2023",
+          "LOWERY FRESHMAN CENTER",
+          "AHS"
+        ],
+        "found2026_27": false
       }
     },
     {
@@ -78,7 +99,18 @@
       "geometryYear": "2025–26 high; elementary and middle source-year not explicitly recorded",
       "mapSource": "https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/03c099e24d304c4fa0f4ce8a76c10062/data?f=json",
       "officialLookup": "https://www.lisd.net/resources/families/school-locator",
-      "geometryUse": "orange dashed reference; web map named 2627 but high polygon source field SCHL_YEAR=2025-26"
+      "geometryUse": "orange dashed reference; web map named 2627 but high polygon source field SCHL_YEAR=2025-26",
+      "infofinderManifestRecheck": {
+        "checked": "2026-11-06",
+        "clientId": "LI3VBOFR0JM",
+        "names": [
+          "25-26 SY Elementary",
+          "25-26 SY Middle Schools",
+          "25-26 SY High School",
+          "25-26 SY 9th & 10 th grade"
+        ],
+        "found2026_27": false
+      }
     },
     {
       "code": "PROSPER",

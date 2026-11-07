@@ -53,5 +53,24 @@
   "currentCachedRows": 1688,
   "officialParseableRows": 1687,
   "officialMalformedRows": 2,
-  "notes": "1,689 official rows; 1,687 numeric address ranges accepted, 2 malformed/unusable. One valid new row Peak St was added. Moss Haven row omitted; existing Crestview Heights malformed row cannot be parsed. Exactly 1,688 rows stored, 1,687 parseable."
+  "notes": "1,689 official rows; 1,687 numeric address ranges accepted, 2 malformed/unusable. One valid new row Peak St was added. Moss Haven row omitted; existing Crestview Heights malformed row cannot be parsed. Exactly 1,688 rows stored, 1,687 parseable.",
+  "liveRecheck": {
+    "date": "2026-11-06",
+    "source": "https://www.allenisd.org/page/findaschool",
+    "liveOfficialRows": 1689,
+    "committedRows": 1688,
+    "rowsFullyMatchingAfterMarkdownEscapingNormalization": 1688,
+    "schoolAssignmentChanges": 0,
+    "excludedMalformedOfficialRows": [
+      "Moss Haven PL: 2009 – 202-216"
+    ],
+    "preservedInvalidButNonmatchingSourceRow": [
+      "Crestview Heights: 2050 Peak St"
+    ],
+    "nonSemanticFormattingDifferenceCount": 4,
+    "reasonForFormattingDifferences": "Markdown scraper escapes asterisks in ***SEE NOTES BELOW street names; published school rows and cached values are identical after unescaping.",
+    "academicYearExplicit": null,
+    "apartmentExceptionsReconfirmed": 4,
+    "significance": "Validates public street-range table is unchanged, but does not establish 2026–27 validity or individual apartment eligibility."
+  }
 }

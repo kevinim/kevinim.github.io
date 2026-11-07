@@ -94,6 +94,13 @@ test('Allen GIS remains historical (never falsely current)',()=>{
 test('Allen official street-level source reconciled with 2 malformed-range exceptions',()=>{
  assert.equal(allenAddressAudit.streetRangesInOfficialTable,1689);
  assert.equal(allenAddressAudit.currentCachedRows,1688);
+ assert.equal(allenAddressAudit.liveRecheck.liveOfficialRows,1689);
+ assert.equal(allenAddressAudit.liveRecheck.rowsFullyMatchingAfterMarkdownEscapingNormalization,1688);
+ assert.equal(allenAddressAudit.liveRecheck.schoolAssignmentChanges,0);
+ assert.equal(allenAddressAudit.liveRecheck.academicYearExplicit,null);
+ assert.equal(audit.districts.find(x=>x.code==='AISD').addressTableRevalidation.officialChangesInCachedAssignments,0);
+ assert.equal(audit.districts.find(x=>x.code==='AISD').infofinderManifestRecheck.found2026_27,false);
+ assert.equal(audit.districts.find(x=>x.code==='LISD').infofinderManifestRecheck.found2026_27,false);
  assert.equal(allenAddressAudit.currentCachedUsableRows,1687);
  assert.equal(allenAddressAudit.officialMalformedRows,2);
  assert.equal(allenAddress.rows.length,1688);
