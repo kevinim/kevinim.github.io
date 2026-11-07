@@ -583,7 +583,7 @@ test('6 school-district rows and provenance date visible on site',()=>{
   assert.ok(html.includes('학군별 배정 경계 최신성 · 2026-11-06'));
   assert.ok(html.includes('교차 검증 통과'));
   assert.ok(html.includes('Frisco·Prosper 2곳'));
-  assert.ok(html.includes('2019–20 경계를 대신 적용하지 않습니다'));
+  assert.ok(html.includes('과거 2019–20 GIS로 대체하지 않습니다'));
 });
 test('DFW demographic rows retain 2020-2024 ACS ZIP coverage',()=>{
   assert.ok(demographics.data?.length>=290);
