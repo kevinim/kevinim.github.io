@@ -138,6 +138,21 @@ test('school selection auto-displays available source polygons with a specific m
  assert.ok(inline.includes('Isbell 세부 학년 주의'));
  assert.ok(inline.includes('미표시 원인 공식 근거 확인'));
  assert.ok(boundaryMissingExplanation({district:'CFB',name:'Any Elementary',type:'elementary'},findSchoolBoundary({district:'CFB',name:'Any Elementary',type:'elementary'},[]),'').footnote.includes('GuideK12'));
+ const cfbChoice={district:'CFB',name:'EARLY COLLEGE H S',type:'high'};
+ assert.equal(boundarySchoolKey(cfbChoice.name),'early college');
+ assert.equal(findSchoolBoundary(cfbChoice,[]).status,'special-campus-no-standard-zone');
+ const cfbChoiceReason=boundaryMissingExplanation(cfbChoice,findSchoolBoundary(cfbChoice,[]),'');
+ assert.ok(cfbChoiceReason.sourceUrl.includes('earlycollege.cfbisd.edu'));
+ assert.ok(cfbChoiceReason.footnote.includes('lottery'));
+ assert.ok(cfbChoiceReason.sourceLinkLabel.includes('입학'));
+ const cfbNeighborhood={district:'CFB',name:'BLAIR EL',type:'elementary'};
+ assert.equal(findSchoolBoundary(cfbNeighborhood,[]).status,'no-district-polygon-source');
+ const cfbNeighborhoodReason=boundaryMissingExplanation(cfbNeighborhood,findSchoolBoundary(cfbNeighborhood,[]),'');
+ assert.ok(cfbNeighborhoodReason.footnote.includes('2025-03-06'));
+ assert.ok(cfbNeighborhoodReason.sourceUrl.includes('cfbisd.edu/students/school-maps-locator-system'));
+ assert.equal(cfbNeighborhoodReason.sourceLinkLabel,'CFB 공식 주소별 배정 조회기');
+ assert.ok(inline.includes('failure.sourceLinkLabel'));
+
  assert.ok(boundaryMissingExplanation(area,findSchoolBoundary(area,[]),'','network down').reason.includes('로딩되지'));
 });
 test('old Plano 2019 boundary removed from active code paths',()=>{

@@ -1,0 +1,35 @@
+{
+  "auditedAt": "2026-11-07",
+  "scope": "Carrollton-Farmers Branch ISD (CFB) school attendance polygons; display-only source provenance, not address assignment",
+  "officialSources": {
+    "currentDistrictFinder": "https://www.cfbisd.edu/students/school-maps-locator-system",
+    "actualEmbeddedFinder": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/",
+    "approvedRezoning": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning",
+    "boardApprovalDate": "2025-03-06",
+    "officialEarlyCollegeAdmissions": "https://earlycollege.cfbisd.edu/campus-information/echs-designation/benchmark-1",
+    "externalGISContractorOverview": "https://dunaway.com/project/carrollton-farmers-branch-isd-gis-mapping/",
+    "historicalNCES": "https://nces.ed.gov/programs/edge/SABS"
+  },
+  "findings": [
+    "The district's official page says the public address finder reflects zones adopted on 2025-03-06.",
+    "The public school search embeds a GuideK12 SchoolSearch map (not an exportable school-geometry endpoint verified for this dashboard).",
+    "CFB's GIS contractor describes attendance zones as a GIS input, but no authenticated current per-campus GeoJSON/Shapefile download or ArcGIS feature service was established in this research.",
+    "NCES SABS published attendance-area geometry concerns the 2013–14 and 2015–16 cohorts, predating CFB's 2025 school consolidations, so it is unsuitable as current assignment geometry.",
+    "CFB Early College High School has a separate application and weighted lottery; it should not count as a routine missing neighborhood-attendance zone."
+  ],
+  "observedDashboardScope": {
+    "totalSelectableCfbSchools": 30,
+    "noReusableCurrentCampusGeometry": 29,
+    "specialEnrollmentSchoolWithoutNeighborhoodZone": 1,
+    "currentlyMatchedPolygons": 0,
+    "sourceRecencyNote": "Dashboard audit count is tied to the selected school's 2026 directory; re-evaluate with subsequent directory updates."
+  },
+  "acceptanceCriteriaForFutureGeometry": [
+    "Direct district-issued updated file or clearly public official live vector layer with geometry and per-school names",
+    "Explicit adoption date/version matching or postdating the March 2025 CFB consolidation",
+    "Elementary, middle, and high geometry coverage independently verified by official address samples and school names",
+    "Fail-closed for overlapping/missing geometry, school-program exceptions, or vintage ambiguity",
+    "Only then enable automatic selectable map boundary rendering for CFB"
+  ],
+  "warning": "Never derive a current school assignment from a 2015-16 SABS zone, a district-wide polygon, campus point locations, or visual georeferencing of screenshots."
+}

@@ -614,7 +614,7 @@ function drawBoundary(){
   if(failure.sourceUrl){
    const sourceLink=document.createElement('a');sourceLink.href=failure.sourceUrl;
    sourceLink.target='_blank';sourceLink.rel='noopener';sourceLink.className='cardlink';
-   sourceLink.textContent='미표시 원인 공식 근거 확인';note.appendChild(sourceLink);
+   sourceLink.textContent=failure.sourceLinkLabel||'미표시 원인 공식 근거 확인';note.appendChild(sourceLink);
   }
  }
 }
