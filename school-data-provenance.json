@@ -135,7 +135,19 @@
         "noStreetAddressRows": 4,
         "academicYearInLayer": null,
         "verified2026_27ByApartment": false,
-        "notes": "Source independently queried from officially linked apartment map, but no year field; manual apartment-name search not address-school auto assignment; verify building/unit with district."
+        "notes": "Source independently queried from officially linked apartment map, but no year field; manual apartment-name search not address-school auto assignment; verify building/unit with district.",
+        "internalPolygonAudit": {
+          "checked": "2026-11-06",
+          "sourceLinkedMapId": "03c099e24d304c4fa0f4ce8a76c10062",
+          "apartmentsPointCompared": 174,
+          "matchesAllFourSchoolLevels": 173,
+          "conflicts": 1,
+          "conflictingProperty": "Budget Suites of America (5289 STATE HIGHWAY 121)",
+          "apartmentTable": "SOUTHRIDGE / DURHAM / LEWISVILLE HARMON / LEWISVILLE",
+          "geometryPoint": "CAMEY / LAKEVIEW / THE COLONY / THE COLONY",
+          "resolution": "Unresolved; same public locator has conflicting fields. UI warns and displays both sources without assigning.",
+          "geometryYearStillUnverified": true
+        }
       }
     },
     {

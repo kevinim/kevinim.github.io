@@ -98,6 +98,13 @@ CFBISD's [official enrollment FAQ](https://www.cfbisd.edu/enrollment-page/freque
 - Preserve the typed original (including unit) in memory and comparison entries; check both typed and geocoded addresses after reopening a saved candidate. A complete unit must be confirmed with Allen/Frisco enrollment; the published notes do **not** authorize auto-assigning based solely on unit suffix.
 - This is a safety change only: does not promote Allen's historic 2019/2023 GIS or establish a 2026–27 current-year district-wide geometry.
 
+## Lewisville apartment point/polygon internal cross-validation — 2026-11-06
+
+- Downloaded 174 apartment point geometries in Web Mercator from the district-linked [public apartment service](https://server.metrostudygis.com/arcgis/rest/services/apartments_lewisville/FeatureServer/0), independently intersected them against the *same* 2026–27 locator WebMap's **676 elementary fragment polygons, 15 middle polygons and 5 high polygons** (using `ELEM_PLAN1`, `INT_NAME`, `MID_NAME`, `HIGH_NAME` school fields).
+- **173/174 apartment entries agree at all four listed campus levels**. Exactly **one internal disagreement**: `Budget Suites of America / 5289 STATE HIGHWAY 121`. The apartment table indicates `SOUTHRIDGE / DURHAM / LEWISVILLE HARMON / LEWISVILLE`, but its point lies in polygon fields `CAMEY / LAKEVIEW / THE COLONY / THE COLONY`. This is distinct from the *other* Budget Suites at `2175 S STATE HIGHWAY 121`, which matches its Lewisville polygons. Independent public address geocoding also places 5289 State Highway 121 in **The Colony**; this supports the locator point but is not school eligibility proof.
+- The conflict is retained in `lewisville-official-apartments.json` as an explicit `internal-map-conflict`, and the UI shows **both** contradictory school sets with a stop-warning instead of declaring an assigned school. Confirm with Lewisville Student Services or official Find an Apartment.
+- These 173 internal agreements are **not** 173 independently verified 2026–27 address assignments: the polygon's HIGH `SCHL_YEAR` still reads 2025–26; the independent apartment service has no year field.
+
 ## Lewisville official locator-linked apartment table — checked 2026-11-06
 
 - The [district 2026–27 School Locator](https://www.lisd.net/resources/families/school-locator) has an explicit separate **Find an Apartment** flow.

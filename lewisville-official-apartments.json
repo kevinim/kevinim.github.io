@@ -11,7 +11,22 @@
     "missingStreetAddress": 4,
     "sourceAcademicYear": null,
     "notIndividualEnrollment": true,
-    "note": "Current publicly linked 2026–27 official school locator apartment table. Source table has no 2026–27 academic-year column; exact building, unit and school registration must be confirmed using district Find an Apartment."
+    "note": "Current publicly linked 2026–27 official school locator apartment table. Source table has no 2026–27 academic-year column; exact building, unit and school registration must be confirmed using district Find an Apartment.",
+    "internalCrossCheck": {
+      "reviewed": "2026-11-06",
+      "method": "Compare 174 official apartment point geometries against Lewisville SZF 2627 embedded Elementary_Boundaries (ELEM_PLAN1, INT_NAME), Middle_Boundaries (MID_NAME), High_Boundaries (HIGH_NAME) using point-in-polygon in EPSG 3857; four school levels per record.",
+      "records": 174,
+      "recordsAllFourLevelsMatch": 173,
+      "recordsDisputed": 1,
+      "dispute": "Budget Suites of America, 5289 STATE HIGHWAY 121",
+      "elementaryMatches": 173,
+      "middleMatches": 173,
+      "intermediateMatches": 173,
+      "highMatches": 173,
+      "publicationYearProven": false,
+      "independentCampusAssignment": false,
+      "notes": "Internal locator consistency is not official 2026–27 address unit-level school verification. The dispute remains unresolved."
+    }
   },
   "apartments": [
     {
@@ -276,7 +291,18 @@
       "elementary": "SOUTHRIDGE",
       "middle": "DURHAM",
       "intermediate": "LEWISVILLE HARMON",
-      "high": "LEWISVILLE"
+      "high": "LEWISVILLE",
+      "zoneAudit": {
+        "status": "internal-map-conflict",
+        "code": "lisd-apartment-5289-hwy121",
+        "polygonAtLocatorPoint": {
+          "elementary": "CAMEY",
+          "middle": "LAKEVIEW",
+          "intermediate": "THE COLONY",
+          "high": "THE COLONY"
+        },
+        "note": "The public apartment record lists Southridge / Durham / Lewisville Harmon / Lewisville, but its point intersects Camey / Lakeview / The Colony / The Colony in the very same Lewisville SZF 2627 webmap. Neither side should be regarded as authoritative unit assignment."
+      }
     },
     {
       "name": "CAMBRIA AT COYOTE RIDGE",

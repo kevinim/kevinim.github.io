@@ -22,6 +22,16 @@ function initLisdApartmentLookup(){
   details.replaceChildren();
   details.appendChild(node('strong',rec.name));
   details.appendChild(node('p',rec.address||'공식 목록에 도로 주소가 없습니다.'));
+  if(rec.zoneAudit?.status==='internal-map-conflict'){
+   const warning=node('p','주의: 같은 Lewisville 공식 지도의 아파트 표와 학교 경계 도형이 서로 다릅니다. 어느 학교가 맞는지 확인되지 않아 자동 배정을 중단합니다.');
+   warning.className='lisd-source-conflict';details.appendChild(warning);
+   const listed=[['아파트 공개 표의 초등',rec.elementary],['지도 경계 초등',rec.zoneAudit.polygonAtLocatorPoint.elementary],['아파트 공개 표의 중등',rec.middle],['지도 경계 중등',rec.zoneAudit.polygonAtLocatorPoint.middle],['아파트 표의 9학년 캠퍼스',rec.intermediate],['지도 경계 9학년',rec.zoneAudit.polygonAtLocatorPoint.intermediate],['아파트 공개 표의 고등',rec.high],['지도 경계 고등',rec.zoneAudit.polygonAtLocatorPoint.high]];
+   const table=node('dl','');table.className='lisd-campus-grid';
+   for(const [title,value] of listed){table.appendChild(node('dt',title));table.appendChild(node('dd',value))}
+   details.appendChild(table);
+   details.appendChild(node('p','이 항목은 동일한 공식 지도 내부에서 4개 배정 필드가 충돌합니다. 해당 아파트의 정확한 건물·호수·학년도는 Lewisville Student Services 또는 공식 Find an Apartment에서 직접 확인하세요.'));
+   status.textContent='공식 지도 내 불일치 · 4개 학교 단계 모두 별도 확인 필요';return;
+  }
   const dl=node('dl','');dl.className='lisd-campus-grid';
   for(const [title,value] of [['초등학교',rec.elementary],['중학교',rec.middle],['9학년·중간캠퍼스',rec.intermediate],['고등학교',rec.high]]){
    dl.appendChild(node('dt',title));dl.appendChild(node('dd',value));
@@ -39,7 +49,7 @@ function initLisdApartmentLookup(){
   status.textContent=list.length?list.length+'개 후보 · 개별 호수 배정 미확인':'검색 결과가 없습니다. 공식 학군 검색기에서 확인하세요.';
   for(const item of list){
    const button=node('button','');button.type='button';button.className='lisd-apartment-choice';
-   button.appendChild(node('strong',item.name));button.appendChild(node('small',item.address||'주소 미기재'));
+   button.appendChild(node('strong',item.name));button.appendChild(node('small',(item.address||'주소 미기재')+(item.zoneAudit?.status==='internal-map-conflict'?' · 학교 도형 불일치':'')));
    button.addEventListener('click',()=>select(item));results.appendChild(button);
   }
  };
