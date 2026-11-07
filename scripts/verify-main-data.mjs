@@ -440,7 +440,10 @@ test('CFB 2026-27 official feeder-only lookup provides 20 reference paths, never
  assert.equal(conflicts,1);
  assert.ok(html.includes('id="cfbFeederSection"'));
  assert.ok(html.includes('id="cfbElementary"'));
- assert.ok(html.includes('./cfb-feeder-lookup.js?v=1'));
+ assert.ok(html.includes('./cfb-feeder-lookup.js?v=2'));
+ const feederUi=readText('cfb-feeder-lookup.js');
+ assert.ok(feederUi.includes("select.addEventListener('focus',load)"));
+ assert.ok(feederUi.includes('load();\n}'));
  assert.ok(html.includes('진학표입니다. <b>집 주소의 배정 학교를 찾아주는 기능은 아닙니다.'));
 });
 
