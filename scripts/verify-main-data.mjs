@@ -19,6 +19,7 @@ const officialChecks = readJson('tests/prosper-official-location-checks-2026.jso
 const require=createRequire(import.meta.url);
 const {resolveAssignment}=require('../school-assignment.js');
 const {matchAllenAddress}=require('../allen-lookup.js');
+const {allenSplitApartmentException,ALLEN_SPLIT_APARTMENTS}=require('../allen-apartment-exceptions.js');
 const {isRetiredCampus, RETIRED_CAMPUSES_2026}=require('../school-lifecycle.js');
 const {assessResidentialGeocode}=require('../geocode-quality.js');
 const {findLisdApartments,lisdKey}=require('../lewisville-apartments.js');
@@ -48,7 +49,7 @@ test('main page inline JavaScript compiles', () => {
   inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
 });
 test('all main application JS modules compile', () => {
-  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','lewisville-apartments.js']) {
+  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','lewisville-apartments.js','allen-apartment-exceptions.js']) {
     new Script(readText(name), {filename:name});
     assert.ok(html.includes('./' + name), name + ' not loaded');
   }
@@ -123,6 +124,32 @@ test('Allen numeric street lookup adds Peak while refusing malformed and apartme
  assert.equal(matchAllenAddress('2050 Crestview Heights, Allen, TX',allenAddress.rows,true),null);
  assert.equal(matchAllenAddress('4450 S Ridge Rd, Allen, TX',allenAddress.rows,true),null);
  assert.equal(matchAllenAddress('4700 S Ridge Rd, Allen, TX',allenAddress.rows,true),null);
+});
+test('P0 Allen four published split apartments halt automatic Frisco/Allen campus highlighting',()=>{
+ const cases=[
+ ['4450 S Ridge Rd Apt 8202, McKinney, TX 75070','4450 S Ridge Rd'],
+ ['4700 S Ridge Road Apt 501, McKinney, TX 75070','4700 S Ridge Rd'],
+ ['6551 McKinney Ranch Pkwy Unit 611, McKinney, TX 75070','6551 McKinney Ranch Pkwy'],
+ ['7830 Van Tuyl Parkway #118, McKinney, TX 75070','7830 Van Tuyl Pkwy']
+ ];
+ assert.equal(ALLEN_SPLIT_APARTMENTS.length,4);
+ for(const [address,key] of cases){
+  const found=allenSplitApartmentException(address);
+  assert.ok(found,key);assert.equal(found.key,key);assert.equal(found.status,'unit-specific-district-boundary');
+  assert.equal(found.source,'https://www.allenisd.org/page/findaschool');
+ }
+ assert.equal(allenSplitApartmentException('4450 S Ridge Ln, McKinney, TX'),null);
+ assert.equal(allenSplitApartmentException('4451 S Ridge Rd, McKinney, TX'),null);
+ assert.equal(allenSplitApartmentException('123 Main Street, Allen, TX'),null);
+ const app=readText('home-lookup-v2.js'),cmp=readText('candidate-compare.js');
+ assert.ok(app.includes("status:'apartment-split-review'"));
+ assert.ok(app.includes('allenSplitApartmentException(item.typedAddress)||allenSplitApartmentException(item.address)'));
+ assert.ok(app.includes('if(result.status===\\'apartment-split-review\\')'));
+ assert.ok(app.includes('학군 경계가 건물·호수에 따라 갈리는 주소'));
+ assert.ok(app.includes("typedAddress:candidate.savedTypedAddress||"));
+ assert.ok(cmp.includes("typedAddress:candidate.typedAddress||candidate.address"));
+ assert.ok(cmp.includes("savedTypedAddress:item.typedAddress"));
+ assert.ok(html.includes('./allen-apartment-exceptions.js?v=1'));
 });
 test('Plano feeder name agreement with 2025–26 ArcGIS does not imply current GIS vintage',()=>{
  assert.equal(planoFeeder.sourceYearUnconfirmed,true);

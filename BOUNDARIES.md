@@ -91,6 +91,13 @@ CFBISD's [official enrollment FAQ](https://www.cfbisd.edu/enrollment-page/freque
 
 **No guessed 2026–27 GeoJSON** should be constructed from a schematic PDF or mixed-year locator without validated alignment to district addresses. Verify any specific home, grade, and special program at the district itself.
 
+## Allen split apartments — mandatory address-level review before GIS-based school inference
+
+- [Allen ISD Find-A-School](https://www.allenisd.org/page/findaschool) explicitly documents **four apartment addresses with building/unit-specific district eligibility**: 4450 S Ridge Rd, 4700 S Ridge Rd, 6551 McKinney Ranch Pkwy and 7830 Van Tuyl Pkwy.
+- Prior parser conservatively excluded these addresses from the **Allen** street-table assignment, but that alone could let a **Frisco GIS point-in-polygon** match display an apparently current **Frisco** campus for a split property. New `allen-apartment-exceptions.js` enforces a hard-stop for **all** automatic matched school candidates for these four addresses (on high-confidence geocodes) and renders the actual official exception notes. This prevents a false binary Allen/Frisco assignment when geocoding loses apartment/unit.
+- Preserve the typed original (including unit) in memory and comparison entries; check both typed and geocoded addresses after reopening a saved candidate. A complete unit must be confirmed with Allen/Frisco enrollment; the published notes do **not** authorize auto-assigning based solely on unit suffix.
+- This is a safety change only: does not promote Allen's historic 2019/2023 GIS or establish a 2026–27 current-year district-wide geometry.
+
 ## Lewisville official locator-linked apartment table — checked 2026-11-06
 
 - The [district 2026–27 School Locator](https://www.lisd.net/resources/families/school-locator) has an explicit separate **Find an Apartment** flow.

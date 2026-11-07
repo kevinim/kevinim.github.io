@@ -90,6 +90,20 @@
           "AHS"
         ],
         "found2026_27": false
+      },
+      "splitApartmentSafety": {
+        "file": "allen-apartment-exceptions.js",
+        "source": "https://www.allenisd.org/page/findaschool",
+        "counts": 4,
+        "addresses": [
+          "4450 S Ridge Rd",
+          "4700 S Ridge Rd",
+          "6551 McKinney Ranch Pkwy",
+          "7830 Van Tuyl Pkwy"
+        ],
+        "behavior": "Even when current Frisco 2026-27 polygon shows a campus, block automatic district & campus claims for split apartment addresses until precise unit verified by registrars.",
+        "publishedYearInSource": null,
+        "quality": "Explicit official building/unit exclusions, not a comprehensive unit-level district map."
       }
     },
     {
