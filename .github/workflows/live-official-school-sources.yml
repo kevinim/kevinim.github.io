@@ -1,0 +1,35 @@
+name: Public school source crosschecks (no browser agent)
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 13 * * 1'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/live-official-school-sources.yml'
+      - 'scripts/check-official-source-health-live.mjs'
+jobs:
+  verify-public-sources:
+    name: GIS, public address samples and source health
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Inspect district source availability (advisory, not address-zone certification)
+        run: node scripts/check-official-source-health-live.mjs
+      - name: Recheck Frisco and Prosper public institutional address samples
+        run: node scripts/check-public-address-finders-live.mjs
+      - name: Recheck Plano current-linked GIS against district-published feeder paths
+        run: node scripts/check-plano-feeder-zones-live.mjs
+      - name: Upload source health report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-school-source-health
+          path: artifacts/official-school-source-health.json
+          if-no-files-found: warn
