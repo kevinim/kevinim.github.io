@@ -118,6 +118,8 @@ function createFemaHazardOverlay(map,documentRef){
   }
   const nfhl=d.getElementById('nfhlEnabled');
   if(nfhl?.checked){nfhl.checked=false;nfhl.dispatchEvent(new Event('change'))}
+  const txwrap=d.getElementById('txwrapWHPEnabled');
+  if(txwrap?.checked){txwrap.checked=false;txwrap.dispatchEvent(new Event('change'))}
   if(zipToggle&&restoreZip===null){
    restoreZip=zipToggle.checked;
    if(zipToggle.checked){zipToggle.checked=false;zipToggle.dispatchEvent(new Event('change'))}
