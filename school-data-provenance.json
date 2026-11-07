@@ -110,6 +110,18 @@
           "25-26 SY 9th & 10 th grade"
         ],
         "found2026_27": false
+      },
+      "apartmentReference": {
+        "file": "lewisville-official-apartments.json",
+        "officialDistrictLinkedMap": "Lewisville SZF 2627",
+        "source": "https://server.metrostudygis.com/arcgis/rest/services/apartments_lewisville/FeatureServer/0",
+        "checked": "2026-11-06",
+        "publishedRows": 174,
+        "uniqueApartmentNames": 173,
+        "noStreetAddressRows": 4,
+        "academicYearInLayer": null,
+        "verified2026_27ByApartment": false,
+        "notes": "Source independently queried from officially linked apartment map, but no year field; manual apartment-name search not address-school auto assignment; verify building/unit with district."
       }
     },
     {

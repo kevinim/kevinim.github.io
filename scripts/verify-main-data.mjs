@@ -21,6 +21,8 @@ const {resolveAssignment}=require('../school-assignment.js');
 const {matchAllenAddress}=require('../allen-lookup.js');
 const {isRetiredCampus, RETIRED_CAMPUSES_2026}=require('../school-lifecycle.js');
 const {assessResidentialGeocode}=require('../geocode-quality.js');
+const {findLisdApartments,lisdKey}=require('../lewisville-apartments.js');
+const lisdApartmentData=readJson('lewisville-official-apartments.json');
 const {buildTexasSuggestUrl,isTexasStreetSuggestion,filterTexasStreetSuggestions}=require('../texas-address-suggest.js');
 const {addCandidate}=require('../candidate-compare.js');
 const {compareManualSchoolResult,compareProsperOfficialPoint,buildProsperOfficialPointUrl,officialReviewCandidates,officialReviewName,PLANO_2026_27_EXPERIENCE}=require('../official-school-review.js');
@@ -46,7 +48,7 @@ test('main page inline JavaScript compiles', () => {
   inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
 });
 test('all main application JS modules compile', () => {
-  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js']) {
+  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','lewisville-apartments.js']) {
     new Script(readText(name), {filename:name});
     assert.ok(html.includes('./' + name), name + ' not loaded');
   }
@@ -463,6 +465,26 @@ test('home autocomplete ARIA, debounced request, magicKey and direct address sea
  assert.ok(src.includes("body.set('magicKey',suggestion.magicKey)"));
  assert.ok(src.includes('geocodeAddress(address,homeRequest.signal,suggestion)'));
  assert.ok(src.includes("homeAutocomplete?.dismiss();clearHome()"));
+});
+test('LISD official locator-linked 174 apartment table and no unsafe vintage promotion',()=>{
+ const info=lisdApartmentData.metadata,rows=lisdApartmentData.apartments;
+ assert.equal(rows.length,174);assert.equal(info.recordCount,174);
+ assert.equal(info.sourceAcademicYear,null);
+ assert.equal(info.uniqueApartmentNames,173);
+ assert.equal(rows.filter(r=>!r.address).length,4);
+ assert.ok(rows.every(r=>r.name&&r.elementary&&r.middle&&r.intermediate&&r.high));
+ assert.equal(new Set(rows.map(r=>lisdKey(r.name))).size,173);
+ assert.ok(info.source.includes('apartments_lewisville/FeatureServer/0'));
+ assert.ok(findLisdApartments('Arbor Creek',rows).some(r=>r.name==='ARBOR CREEK'));
+ assert.ok(findLisdApartments('396 SOUTHWEST',rows).some(r=>r.name==='ARBOR CREEK'));
+ assert.ok(findLisdApartments('Vue Castle',rows).some(r=>r.name==='VUE CASTLE HILLS'));
+ assert.deepEqual(findLisdApartments('a',rows),[]);
+ assert.ok(findLisdApartments('apartment',rows).length<=8);
+ assert.ok(html.includes('id="lisdApartmentSection"'));
+ assert.ok(html.includes('id="lisdApartmentQuery"'));
+ assert.ok(html.includes('공식 Find an Apartment에서 현재 배정 확인'));
+ assert.ok(readText('lewisville-apartments.js').includes('sourceAcademicYear!==null'));
+ assert.equal(audit.districts.find(d=>d.code==='LISD').status,'mixed-vintage-reference');
 });
 test('CFB official current GuideK12 locator linked',()=>{
   assert.ok(html.includes('https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/'));

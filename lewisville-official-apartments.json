@@ -1,0 +1,1410 @@
+{
+  "metadata": {
+    "district": "LISD",
+    "source": "https://server.metrostudygis.com/arcgis/rest/services/apartments_lewisville/FeatureServer/0",
+    "districtLocator": "https://www.lisd.net/resources/families/school-locator",
+    "linked2026_27MapId": "03c099e24d304c4fa0f4ce8a76c10062",
+    "mapName": "Lewisville SZF 2627",
+    "verifiedDate": "2026-11-06",
+    "recordCount": 174,
+    "uniqueApartmentNames": 173,
+    "missingStreetAddress": 4,
+    "sourceAcademicYear": null,
+    "notIndividualEnrollment": true,
+    "note": "Current publicly linked 2026–27 official school locator apartment table. Source table has no 2026–27 academic-year column; exact building, unit and school registration must be confirmed using district Find an Apartment."
+  },
+  "apartments": [
+    {
+      "name": "2451 SUNDERLAND LN",
+      "address": "2451 SUNDERLAND LN",
+      "elementary": "SOUTHRIDGE",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "301 FLOWER MOUND",
+      "address": "301 SILVERON BLVD",
+      "elementary": "BLUEBONNET",
+      "middle": "SHADOW RIDGE",
+      "intermediate": "FLOWER MOUND 9TH GRADE",
+      "high": "FLOWER MOUND"
+    },
+    {
+      "name": "441 N COWAN AVE",
+      "address": "441 N COWAN AVE",
+      "elementary": "VALLEY RIDGE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "ABBEY AT VISTA RIDGE",
+      "address": "350 E VISTA RIDGE MALL DR",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "ANSEL APARTMENTS",
+      "address": "4200 TRIBUTARY WAY",
+      "elementary": "TOM HICKS",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "ARBOR CREEK",
+      "address": "396 SOUTHWEST PKWY",
+      "elementary": "LEWISVILLE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "ARCHSTONE LEXINGTON",
+      "address": "1111 LEXINGTON",
+      "elementary": "BLUEBONNET",
+      "middle": "SHADOW RIDGE",
+      "intermediate": "FLOWER MOUND 9TH GRADE",
+      "high": "FLOWER MOUND"
+    },
+    {
+      "name": "ATLAS POINT AT PRESTONWOOD (AGE RESTRICTED)",
+      "address": "3033 E HEBRON PKWY",
+      "elementary": "INDIAN CREEK",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "AURA AT THE REALM",
+      "address": "NE CORNER WINDHAVEN PKWY AND CASTLE HILLS DR",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "AURA AVANT",
+      "address": "2200 E SH 121 BUSINESS",
+      "elementary": "INDEPENDENCE",
+      "middle": "KILLIAN",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "AURA CASTLE HILLS APARTMENTS",
+      "address": "1980 E STATE HWY 121",
+      "elementary": "INDEPENDENCE",
+      "middle": "KILLIAN",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "AURA CROWNE CENTER",
+      "address": "2040 E SH 121 BUSINESS",
+      "elementary": "INDEPENDENCE",
+      "middle": "KILLIAN",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "AUSTIN RANCH I & II",
+      "address": "6005-6009 SAINTSBURY DR",
+      "elementary": "HOMESTEAD",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "AUSTIN RANCH PH III",
+      "address": "SAINTSBURY & S OF WINDHAVEN",
+      "elementary": "HOMESTEAD",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "AUSTIN SQUARE (MF)",
+      "address": "6815 WINDHAVEN PKWY",
+      "elementary": "HOMESTEAD",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "AUTUMN BREEZE",
+      "address": "1679 S HWY 121",
+      "elementary": "LEWISVILLE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "AUTUMN CHASE",
+      "address": "4600 N JOSEY LN",
+      "elementary": "INDIAN CREEK",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "AVANA STONEBRIAR",
+      "address": "5620 S COLONY BLVD",
+      "elementary": "CAMEY",
+      "middle": "LAKEVIEW",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "AVENUES AT CARROLLTON",
+      "address": "4689 MUSTANG PKWY",
+      "elementary": "INDIAN CREEK",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "BALLANTYNE",
+      "address": "2801 DENTON TAP RD",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "BARROW APTS",
+      "address": "247 SOUTHWEST PKWY",
+      "elementary": "CENTRAL",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "BASSWOOD MANOR",
+      "address": "1020 FOX AVE",
+      "elementary": "LAKELAND",
+      "middle": "HEDRICK",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "BAY SHORE VILLAGE",
+      "address": "2101 LAKEVIEW CIR",
+      "elementary": "VALLEY RIDGE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "BELL STONEBRIAR",
+      "address": "5250 TOWN AND COUNTRY BLVD",
+      "elementary": "TOM HICKS",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "BELLA MADERA",
+      "address": "650 LEORA LN",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "BELLA VIDA AT COYOTE RIDGE",
+      "address": "4253 HUNT DR",
+      "elementary": "COYOTE RIDGE",
+      "middle": "CREEK VALLEY",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "BENT CREEK",
+      "address": "760 S EDMONDS LN",
+      "elementary": "DEGAN",
+      "middle": "HUFFINES",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "BOAT HOUSE AT AUSTIN RANCH",
+      "address": "2875 PAINTED LAKE CIR",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "BRIGHTON PLACE",
+      "address": "357 CORPORATE DR",
+      "elementary": "LEWISVILLE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "BRISTOL",
+      "address": "4777 MEMORIAL DR",
+      "elementary": "CAMEY",
+      "middle": "LAKEVIEW",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "BROADSTONE VISTA RIDGE APARTMENTS",
+      "address": "160 E VISTA RIDGE MALL DR",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "Budget Suites of America",
+      "address": "2175 S STATE HIGHWAY 121",
+      "elementary": "SOUTHRIDGE",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "Budget Suites of America",
+      "address": "5289 STATE HIGHWAY 121",
+      "elementary": "SOUTHRIDGE",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "CAMBRIA AT COYOTE RIDGE",
+      "address": "4230 FAIRWAY DR",
+      "elementary": "COYOTE RIDGE",
+      "middle": "CREEK VALLEY",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "CAMBRIDGE VILLAGE",
+      "address": "1402 N VALLEY PKWY",
+      "elementary": "DEGAN",
+      "middle": "HUFFINES",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "CASCADES AT THE LEGENDS (TOWNHOMES)",
+      "address": "SH 121 & MORNINGSTAR",
+      "elementary": "MORNINGSIDE",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "CATALINA",
+      "address": "998 BELLAIRE BLVD",
+      "elementary": "LAKELAND",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "CHAPEL HILL APARTMENTS I, II & III",
+      "address": "300 E ROUND GROVE RD",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "COLONIAL GRAND AT HEBRON",
+      "address": "1701 HEBRON PKWY E",
+      "elementary": "INDIAN CREEK",
+      "middle": "CREEK VALLEY",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "COLONIAL VILLAGE AT OAK BEND",
+      "address": "195 E ROUND GROVE RD",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "CREEKSIDE",
+      "address": "4000 ACE LN",
+      "elementary": "PARKWAY",
+      "middle": "HEDRICK",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "CRESCENT COVE AT LAKEPOINTE",
+      "address": "801 HEBRON PKWY",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "CREST MANOR I",
+      "address": "940 W ROUND GROVE RD",
+      "elementary": "PARKWAY",
+      "middle": "HEDRICK",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "CREST MANOR II",
+      "address": "940 W ROUND GROVE RD",
+      "elementary": "PARKWAY",
+      "middle": "HEDRICK",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "CROSS ROADS CENTRE NORTH",
+      "address": "2570  LAKE RIDGE ROAD",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "CYPRESS AT LEWISVILLE",
+      "address": "2436 S VALLEY PKWY",
+      "elementary": "PARKWAY",
+      "middle": "HEDRICK",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "DISCOVERY AT THE REALM PHASE 1",
+      "address": "3600 WINDHAVEN PKWY",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "DISCOVERY AT THE REALM PHASE 2",
+      "address": "3600 WINDHAVEN PARKWAY",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "DISTRICT OF HIGHLAND VILLAGE",
+      "address": "2570 JUSTIN RD",
+      "elementary": "HERITAGE",
+      "middle": "BRIARHILL",
+      "intermediate": "MARCUS 9TH GRADE",
+      "high": "MARCUS"
+    },
+    {
+      "name": "EAGLE RIDGE OF LEWISVILLE",
+      "address": "617 HOLFORDS PRAIRIE RD",
+      "elementary": "INDEPENDENCE",
+      "middle": "KILLIAN",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "EASTBANK RIVER WALK APARTMENTS",
+      "address": "3900 RIVERWALK DR",
+      "elementary": "FLOWER MOUND",
+      "middle": "DOWNING",
+      "intermediate": "MARCUS 9TH GRADE",
+      "high": "MARCUS"
+    },
+    {
+      "name": "EDGEWATER (THE)",
+      "address": "800 LAKESIDE CIR",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "EDGEWOOD VILLAGE",
+      "address": "2190 UECKER LN",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "ELAN FLOWER MOUND",
+      "address": "2601 LAKESIDE PKWY",
+      "elementary": "OLD SETTLERS",
+      "middle": "SHADOW RIDGE",
+      "intermediate": "FLOWER MOUND 9TH GRADE",
+      "high": "FLOWER MOUND"
+    },
+    {
+      "name": "EMERY BAY AT LAKEPOINTE",
+      "address": "901 LAKESIDE CIR",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "ENCLAVE",
+      "address": "2197 S UECKER LN",
+      "elementary": "SOUTHRIDGE",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "ENCLAVE AT VISTA RIDGE",
+      "address": "2701 MACARTHUR BLVD",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "ESTANCIA AT MORNING STAR",
+      "address": "6399 MORNINGSTAR DR",
+      "elementary": "CAMEY",
+      "middle": "LAKEVIEW",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "Extended Stay America Select Suites - Dallas - Lewisville",
+      "address": "1900 LAKEPOINTE DR",
+      "elementary": "CENTRAL",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "FAITH ADDITION",
+      "address": "2690 ROCKBROOK DR",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "FIELDCREST",
+      "address": "4747 N JOSEY LN",
+      "elementary": "INDIAN CREEK",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "FLOWER MOUND MOBILE HOME PARK",
+      "address": "3600 WAKETON RD",
+      "elementary": "FLOWER MOUND",
+      "middle": "DOWNING",
+      "intermediate": "MARCUS 9TH GRADE",
+      "high": "MARCUS"
+    },
+    {
+      "name": "FOREST BROOK",
+      "address": "165 FORESTBROOK DR",
+      "elementary": "SOUTHRIDGE",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "FOX HOLLOW",
+      "address": "696 FOX AVE",
+      "elementary": "LAKELAND",
+      "middle": "HEDRICK",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "FRANKFORD STATION",
+      "address": "1700 W FRANKFORD RD",
+      "elementary": "HEBRON VALLEY",
+      "middle": "CREEK VALLEY",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "FRANKLIN PARK AT LEWISVILLE",
+      "address": "901 N GARDEN RIDGE DR",
+      "elementary": "DEGAN",
+      "middle": "HUFFINES",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "HEBRON 121 STATION",
+      "address": "880 UNION STATION PKWY",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "HEBRON OAKS",
+      "address": "1930 E HEBRON PKWY",
+      "elementary": "HOMESTEAD",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "HEBRON TRAILS",
+      "address": "1109 E HEBRON PKWY",
+      "elementary": "HEBRON VALLEY",
+      "middle": "CREEK VALLEY",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "HERITAGE TOWERS",
+      "address": "",
+      "elementary": "VALLEY RIDGE",
+      "middle": "HUFFINES",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "HIDDEN CREEK",
+      "address": "1200 COLLEGE PKWY",
+      "elementary": "DEGAN",
+      "middle": "HUFFINES",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "HIGHLAND ACRES OF LEWISVILLE",
+      "address": "1708 BUNKER HILL LN",
+      "elementary": "INDEPENDENCE",
+      "middle": "KILLIAN",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "HUNTINGTON CIRCLE",
+      "address": "409 W ROUND GROVE RD",
+      "elementary": "SOUTHRIDGE",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "INDIAN CREEK",
+      "address": "3910 OLD DENTON RD",
+      "elementary": "HEBRON VALLEY",
+      "middle": "CREEK VALLEY",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "InTown Suites Extended Stay Lewisville TX",
+      "address": "324 E CORPORATE DR",
+      "elementary": "LEWISVILLE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "JEFFERSON GRANDSCAPE",
+      "address": "DESTINATION DR AND GOVE LN",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "KEALY AVE",
+      "address": "536 KEALY AVE",
+      "elementary": "VALLEY RIDGE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "LAKE PARK II",
+      "address": "1903 N MILL ST",
+      "elementary": "VALLEY RIDGE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "LAKELAND",
+      "address": "322 LAKE PARK RD",
+      "elementary": "VALLEY RIDGE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "LAKEPOINTE RESIDENCES",
+      "address": "2025 LAKEPOINTE DR",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "LAKESIDE AT 121",
+      "address": "701 N LEORA LN",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "LAKESIDE TOWER AND CONDOS",
+      "address": "2900 LAKESIDE",
+      "elementary": "OLD SETTLERS",
+      "middle": "SHADOW RIDGE",
+      "intermediate": "FLOWER MOUND 9TH GRADE",
+      "high": "FLOWER MOUND"
+    },
+    {
+      "name": "LANTOWER LEGACY LAKES",
+      "address": "2600 LAKE RIDGE DR",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "LENNOX CASTLE HILLS",
+      "address": "1835 PARKER RD",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "LEWISVILLE",
+      "address": "370 MAIN ST",
+      "elementary": "VALLEY RIDGE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "LEWISVILLE MOBILE HOMES",
+      "address": "1156 E HWY 121",
+      "elementary": "CENTRAL",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "LEWISVILLE RV PARK",
+      "address": "804 HOLFORDS PRAIRIE RD",
+      "elementary": "INDEPENDENCE",
+      "middle": "KILLIAN",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "LIMESTONE RANCH @ VISTA RIDGE",
+      "address": "650 VISTA RIDGE MALL DR",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "MADISON AT ROUND GROVE",
+      "address": "201 E ROUNDGROVE",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "MANSIONS AT COYOTE RIDGE PHASE II",
+      "address": "4229 HUNT DR",
+      "elementary": "COYOTE RIDGE",
+      "middle": "CREEK VALLEY",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "MANSIONS AT SUNSET RIDGE",
+      "address": "1440 CARROLLTON PKWY",
+      "elementary": "INDEPENDENCE",
+      "middle": "KILLIAN",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "MARBELLA VILLAS AT INDIAN CREEK",
+      "address": "1152 INDIAN RUN DR",
+      "elementary": "COYOTE RIDGE",
+      "middle": "CREEK VALLEY",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "MARIGOLD HOUSING LP",
+      "address": "SW CORNER OF JUSTIN RD AND STONE HILL FARMS PKWY",
+      "elementary": "PRAIRIE TRAIL",
+      "middle": "LAMAR",
+      "intermediate": "MARCUS 9TH GRADE",
+      "high": "MARCUS"
+    },
+    {
+      "name": "MARQUIS AT LANTANA",
+      "address": "5210 LONG PRAIRIE RD",
+      "elementary": "FLOWER MOUND",
+      "middle": "DOWNING",
+      "intermediate": "MARCUS 9TH GRADE",
+      "high": "MARCUS"
+    },
+    {
+      "name": "MARQUIS AT VISTA RIDGE",
+      "address": "501 HIGHLAND DR",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "MCKAMY LAKE",
+      "address": "290 LAKE PARK RD",
+      "elementary": "VALLEY RIDGE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "MEADOWS",
+      "address": "141 VALLEY VIEW DR",
+      "elementary": "LEWISVILLE",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "MERIDIAN",
+      "address": "3620 HUFFINES BLVD",
+      "elementary": "HEBRON VALLEY",
+      "middle": "CREEK VALLEY",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "MERIT",
+      "address": "1000 GRANDYS LN",
+      "elementary": "VALLEY RIDGE",
+      "middle": "HUFFINES",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "MIRA VISTA RANCH",
+      "address": "350 CONTINENTAL DR",
+      "elementary": "LEWISVILLE",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "MUSTANG PARK",
+      "address": "4645 PLANO PKWY",
+      "elementary": "INDIAN CREEK",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "NEXUS LAKESIDE",
+      "address": "2501 LAKESIDE PKWY",
+      "elementary": "OLD SETTLERS",
+      "middle": "SHADOW RIDGE",
+      "intermediate": "FLOWER MOUND 9TH GRADE",
+      "high": "FLOWER MOUND"
+    },
+    {
+      "name": "NORTHWOOD COUNTRY",
+      "address": "402 E HWY 121",
+      "elementary": "CENTRAL",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "OAK FOREST",
+      "address": "1531 S HWY 121",
+      "elementary": "LEWISVILLE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "OAK TREE",
+      "address": "622 HOLFORDS PRAIRIE RD",
+      "elementary": "INDEPENDENCE",
+      "middle": "KILLIAN",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "OAK TREE VILLAGE",
+      "address": "1595 S OLD ORCHARD LN",
+      "elementary": "VICKERY",
+      "middle": "HEDRICK",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "OAKBROOK ON THE LAKE",
+      "address": "30 OAKBROOK DR",
+      "elementary": "VALLEY RIDGE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "OAKS OF LEWISVILLE",
+      "address": "200 E OAK KNOLL CIR",
+      "elementary": "CENTRAL",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "OVATION AT LEWISVILLE",
+      "address": "2250 S VALLEY PKWY",
+      "elementary": "PARKWAY",
+      "middle": "HEDRICK",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "OVERTURE FLOWER MOUND",
+      "address": "2771 LAKESIDE PKWY",
+      "elementary": "OLD SETTLERS",
+      "middle": "SHADOW RIDGE",
+      "intermediate": "FLOWER MOUND 9TH GRADE",
+      "high": "FLOWER MOUND"
+    },
+    {
+      "name": "PARC LAKE I & II",
+      "address": "1901 LAKEVIEW CIR",
+      "elementary": "VALLEY RIDGE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "PARK AT FLOWER MOUND",
+      "address": "4100 MORRISS RD",
+      "elementary": "TIMBER CREEK",
+      "middle": "LAMAR",
+      "intermediate": "MARCUS 9TH GRADE",
+      "high": "MARCUS"
+    },
+    {
+      "name": "PARK CENTRAL AT FLOWER MOUND",
+      "address": "4200 BROADWAY AVE",
+      "elementary": "FLOWER MOUND",
+      "middle": "DOWNING",
+      "intermediate": "MARCUS 9TH GRADE",
+      "high": "MARCUS"
+    },
+    {
+      "name": "PARK TIMBERS",
+      "address": "1902 S HWY 121",
+      "elementary": "LEWISVILLE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "PARKS MOBILE HOMES",
+      "address": "2709 JUSTIN RD",
+      "elementary": "PRAIRIE TRAIL",
+      "middle": "LAMAR",
+      "intermediate": "MARCUS 9TH GRADE",
+      "high": "MARCUS"
+    },
+    {
+      "name": "PINE PRAIRIE",
+      "address": "951 LEORA LN",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "PINNACLE",
+      "address": "146 VALLEY VIEW DR",
+      "elementary": "SOUTHRIDGE",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "PLATINUM I APARTMENTS (CASTLE HILLS)",
+      "address": "5200 WINDHAVEN PKWY",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "PRESERVE AT ARBOR HILLS",
+      "address": "7001 PARKER RD",
+      "elementary": "INDIAN CREEK",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "PROVENZA",
+      "address": "4900 WINDHAVEN PKWY",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "RAVELLO AT STONEBRIAR COMMONS",
+      "address": "5225 TOWN & COUNTRY BLVD",
+      "elementary": "TOM HICKS",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "REMINGTON (THE)",
+      "address": "401 N OLD ORCHARD LN",
+      "elementary": "DEGAN",
+      "middle": "HUFFINES",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "RENAISSANCE VILLAGE",
+      "address": "1716 EDMONDS LN",
+      "elementary": "LAKELAND",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "RESIDENCES AT THE COLLECTION",
+      "address": "4025 HUFFINES BLVD",
+      "elementary": "HEBRON VALLEY",
+      "middle": "CREEK VALLEY",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "RIVER WALK VILLAGE",
+      "address": "4000 S BROADWAY",
+      "elementary": "FLOWER MOUND",
+      "middle": "DOWNING",
+      "intermediate": "MARCUS 9TH GRADE",
+      "high": "MARCUS"
+    },
+    {
+      "name": "ROCKBROOK CREEK PH I",
+      "address": "2200 UECKER DR",
+      "elementary": "SOUTHRIDGE",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "ROCKBROOK VILLAGE",
+      "address": "2201 ROCKBROOK DR",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "ROSE HILL",
+      "address": "951 LEORA LN",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "ROSEMEADE TOWNHOMES",
+      "address": "3830 OLD DENTON RD",
+      "elementary": "HEBRON VALLEY",
+      "middle": "CREEK VALLEY",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "SEQUOIA BLUFFS AT VISTA RIDGE (THE)",
+      "address": "625 E VISTA RIDGE MALL DR",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "SLOANE STREET WEST",
+      "address": "",
+      "elementary": "HOMESTEAD",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "SOJURN CONDOS",
+      "address": "3517 WINDHAVEN PKWY",
+      "elementary": "INDEPENDENCE",
+      "middle": "KILLIAN",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "SOMERSET",
+      "address": "256 E CORPORATE DR",
+      "elementary": "SOUTHRIDGE",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "SPRINGS OF INDIAN CREEK",
+      "address": "2057 W HEBRON PKWY",
+      "elementary": "COYOTE RIDGE",
+      "middle": "CREEK VALLEY",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "ST CHARLES PLACE",
+      "address": "994 S CHARLES ST",
+      "elementary": "CENTRAL",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "STATION AT OLD TOWN",
+      "address": "502 E COLLEGE ST",
+      "elementary": "VALLEY RIDGE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "STONE CREEK",
+      "address": "328 SOUTHWEST PKWY",
+      "elementary": "LEWISVILLE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "STONEBRIAR OF FRISCO",
+      "address": "5200 TOWN & COUNTRY BLVD",
+      "elementary": "TOM HICKS",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "SUBURBAN EXTENDED STAY HOTEL LEWISVILLE",
+      "address": "1920 LAKEPOINTE DR",
+      "elementary": "CENTRAL",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "SUMMIT RIDGE",
+      "address": "1070 GRANDYS LN",
+      "elementary": "VALLEY RIDGE",
+      "middle": "HUFFINES",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "TAPESTRY AT THE REALM APARTMENTS",
+      "address": "2901 LADY BETTYE DR",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "THE CHLOE APARTMENTS",
+      "address": "5855 WINDHAVEN PKWY",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "THE ELLIS",
+      "address": "4221 OLD DENTON RD",
+      "elementary": "HEBRON VALLEY",
+      "middle": "CREEK VALLEY",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "THE FLATS AT FRANKFORD STATION",
+      "address": "1652 W FRANKFORD RD",
+      "elementary": "HEBRON VALLEY",
+      "middle": "CREEK VALLEY",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "THE GLEN",
+      "address": "248 E SOUTHWEST PKWY",
+      "elementary": "LEWISVILLE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "THE HUDSON",
+      "address": "3075 PAINTED LAKE CIR",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "THE MILL OLD TOWN",
+      "address": "NW CORNER MILL STREET AND PURNELL ST",
+      "elementary": "VALLEY RIDGE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "THOUSAND OAKS APARTMENTS IN AUSTIN RANCH",
+      "address": "SEC WINDHAVEN PKWY & SAINTSBURY DRIVE EAST",
+      "elementary": "HOMESTEAD",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "THOUSAND OAKS AT AUSTIN RANCH",
+      "address": "6900 SUMNER",
+      "elementary": "HOMESTEAD",
+      "middle": "ARBOR CREEK",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "THREE OAKS APARTMENTS",
+      "address": "720 CHARLES ST",
+      "elementary": "CENTRAL",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "TOSCANA AT VALLEY RIDGE",
+      "address": "1400 W VALLEY RIDGE BLVD",
+      "elementary": "VALLEY RIDGE",
+      "middle": "HUFFINES",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "TOWER BAY LOFTS",
+      "address": "3000 N STEMMONS FRWY",
+      "elementary": "VALLEY RIDGE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "TOWNHOMES OF VISTA RIDGE",
+      "address": "",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "TRAILS AT FRANKFORD STATION",
+      "address": "1600 W FRANKFORD RD",
+      "elementary": "HEBRON VALLEY",
+      "middle": "CREEK VALLEY",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "TUSCANY AT LAKEPOINTE",
+      "address": "805 LAKESIDE CIR",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "VALLEY RIDGE",
+      "address": "1000 W VALLEY RIDGE BLVD",
+      "elementary": "DEGAN",
+      "middle": "HUFFINES",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "VALOR AT THE REALM",
+      "address": "",
+      "elementary": "MEMORIAL",
+      "middle": "GRIFFIN",
+      "intermediate": "THE COLONY",
+      "high": "THE COLONY"
+    },
+    {
+      "name": "VICTORIA HEIGHTS",
+      "address": "290 COUNTRY RIDGE RD",
+      "elementary": "LEWISVILLE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "VILLAGE AT LEWISVILLE",
+      "address": "NE CORNER SUMMIT AND GRANDYS",
+      "elementary": "VALLEY RIDGE",
+      "middle": "HUFFINES",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "VILLAGE NORTH OF LEWISVILLE",
+      "address": "1240 N COWAN AVE",
+      "elementary": "VALLEY RIDGE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "VILLAGE WEST",
+      "address": "1002 EDMONDS LN",
+      "elementary": "LAKELAND",
+      "middle": "HUFFINES",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "VILLAS AT WATERCHASE",
+      "address": "165 N OLD ORCHARD LN",
+      "elementary": "DEGAN",
+      "middle": "HUFFINES",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "VILLAS OF VISTA RIDGE",
+      "address": "351 HWY 121 BYP",
+      "elementary": "ROCKBROOK",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "VINES",
+      "address": "247 E CORPORATE DR",
+      "elementary": "SOUTHRIDGE",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "VISTA SPRINGS",
+      "address": "265 E CORPORATE DR",
+      "elementary": "SOUTHRIDGE",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "VUE CASTLE HILLS",
+      "address": "5500 HWY 121",
+      "elementary": "INDEPENDENCE",
+      "middle": "KILLIAN",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    },
+    {
+      "name": "WATERMERE AT FLOWER MOUND",
+      "address": "SE CORNER DIXON LN AND LONG PRAIRIE RD",
+      "elementary": "PRAIRIE TRAIL",
+      "middle": "LAMAR",
+      "intermediate": "MARCUS 9TH GRADE",
+      "high": "MARCUS"
+    },
+    {
+      "name": "WELLINGTON PARK",
+      "address": "2479 DEER RUN",
+      "elementary": "SOUTHRIDGE",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "WESTMOUNT AT VISTA RIDGE",
+      "address": "2241 S BUS 121",
+      "elementary": "SOUTHRIDGE",
+      "middle": "DURHAM",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "WESTVIEW",
+      "address": "201 W SOUTHWEST PKWY",
+      "elementary": "LEWISVILLE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE HARMON",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "WHITLOW",
+      "address": "501 E COLLEGE ST",
+      "elementary": "VALLEY RIDGE",
+      "middle": "DELAY",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "WILLOW RIDGE",
+      "address": "797 S OLD ORCHARD LN",
+      "elementary": "DEGAN",
+      "middle": "HEDRICK",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "WIMBLEDON",
+      "address": "1420 W MAIN ST",
+      "elementary": "VICKERY",
+      "middle": "HEDRICK",
+      "intermediate": "LEWISVILLE KILLOUGH",
+      "high": "LEWISVILLE"
+    },
+    {
+      "name": "WIND DANCE",
+      "address": "1220 INDIAN RUN DR",
+      "elementary": "COYOTE RIDGE",
+      "middle": "CREEK VALLEY",
+      "intermediate": "HEBRON 9TH GRADE",
+      "high": "HEBRON"
+    }
+  ]
+}

@@ -91,6 +91,13 @@ CFBISD's [official enrollment FAQ](https://www.cfbisd.edu/enrollment-page/freque
 
 **No guessed 2026–27 GeoJSON** should be constructed from a schematic PDF or mixed-year locator without validated alignment to district addresses. Verify any specific home, grade, and special program at the district itself.
 
+## Lewisville official locator-linked apartment table — checked 2026-11-06
+
+- The [district 2026–27 School Locator](https://www.lisd.net/resources/families/school-locator) has an explicit separate **Find an Apartment** flow.
+- The district-linked ArcGIS WebMap `Lewisville SZF 2627` (item `03c099e24d304c4fa0f4ce8a76c10062`) includes the [public apartments feature layer](https://server.metrostudygis.com/arcgis/rest/services/apartments_lewisville/FeatureServer/0) with `APT, ADDRESS, ELEM_NAME, INT_NAME, MID_NAME, HIGH_NAME` fields.
+- All **174 public apartment rows** were retrieved (173 distinct names, 4 lacking street address, all four campus columns present). No resident/owner data downloaded. Local site UI can search them without sending typed apartment names to a third party.
+- Critically **the apartment table has no school-year field**; the 2026–27 webmap link alone does not independently verify all its school assignments. Show campus names as advisory only, not a current-year geospatial boundary or specific apartment-unit eligibility. An apartment's name/street cannot determine its building/unit assignments. Confirm in the actual official locator.
+
 ## Allen official address assignments and Allen/Lewisville GIS catalog — rechecked 2026-11-06
 
 - Live Allen ISD `Find-A-School` table re-fetched: **1,689 public street/range rows**. All **1,688 cached rows** matched the same six-column official source (street, number range, elementary, middle, ninth-grade, high) after normalizing Markdown-escaped asterisks in four street names. The one intentionally omitted source row, `Moss Haven PL / 2009 – 202-216`, is malformed and remains unassignable; cached `Crestview Heights / 2050 Peak St` is also malformed, so only **1,687 rows** are parseable. Four published apartment-specific exclusion addresses remain quarantined.
