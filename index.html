@@ -387,18 +387,30 @@ function addSchool(s){if(isRetiredCampus(s))return;const key=canonical(s.name);i
 function gradeTag(s){return s.type==='high'?'고등':s.type==='middle'?'중등':s.type==='elementary'?'초등':'기타'}
 async function schoolClicked(s){
  state.selectedSchool=s;
- // School selection should automatically reveal any existing current or
- // historic reference polygon. Do not require a second checkbox click.
+ // A valid attendance polygon must render immediately, even if the campus
+ // point needs slow/failed geocoding. Never let the point request block the zone.
  state.showOldZones=true;state.showHistoric=true;
  el('referenceBoundaryOverlay').checked=true;
  el('historicOverlay').checked=true;
  drawDetail();
- if(!s.ll&&s.address){toast('학교 주소 좌표를 확인하는 중입니다.');await geocodeSchool(s);}
- if(state.selectedSchool!==s)return;
- if(map){if(s.ll)map.flyTo(s.ll,13);drawBoundary();
-  if(!s.ll&&zoneGroup.getLayers().length===0)toast('학교 위치 좌표·배정 경계 확인 불가. 상세정보의 원인 각주를 확인하세요.');}
- else toast('지도 로딩 실패. 학군 공식 Finder에서 주소를 확인하세요.');
+ if(map){
+  drawBoundary(); // Also fits the real selected-school polygon when available.
+  if(zoneGroup.getLayers().length===0){
+   if(s.ll)map.flyTo(s.ll,13);
+   else if(!s.address)toast('학교 위치 좌표·배정 경계 확인 불가. 상세정보의 원인 각주를 확인하세요.');
+  }
+ }else toast('지도 로딩 실패. 학군 공식 Finder에서 주소를 확인하세요.');
  if(window.innerWidth<721)el('detailContent').scrollIntoView({behavior:'smooth',block:'nearest'});
+ if(!s.ll&&s.address){
+  // Lookup is secondary: retain the already visible polygon when it completes.
+  if(!map||zoneGroup.getLayers().length===0)toast('학교 주소 좌표를 확인하는 중입니다.');
+  await geocodeSchool(s);
+  if(state.selectedSchool!==s)return; // A late response must not move a newly selected school.
+  if(map&&zoneGroup.getLayers().length===0){
+   if(s.ll)map.flyTo(s.ll,13);
+   else toast('학교 위치 좌표·배정 경계 확인 불가. 상세정보의 원인 각주를 확인하세요.');
+  }
+ }
 }
 function drawSchools(){if(!map)return;const homeActive=typeof home!=='undefined'&&!!home;const legend=el('schoolLegend');if(legend){legend.classList.toggle('matching',homeActive);legend.innerHTML=homeActive?'<span>집 주소 배정 후보</span><span>그 외 학교 · 배정 미확인</span>':'<span>초등</span><span>중등</span><span>고등</span>'}schoolGroup.clearLayers();if(!state.showSchools||map.getZoom()<12)return;const z=map.getZoom();const items=state.schools.filter(s=>s.ll&&s.type!=='other'&&map.getBounds().contains(s.ll)&&(state.level==='all'||s.type===state.level)&&(state.ratingFilter!=='rated'||score(s.name,s.district)!==null)&&(state.level!=='all'||z>=13||s.type!=='elementary'||(homeActive&&homeSchoolMatches(s))));items.sort((a,b)=>(homeActive&&homeSchoolMatches(b)?1:0)-(homeActive&&homeSchoolMatches(a)?1:0));items.slice(0,260).forEach(s=>{const cls=homeActive?(homeSchoolMatches(s)?'home-match':'nearby'):s.type;const icon=L.divIcon({className:'',html:`<div class="mapmark ${cls}">${s.type==='elementary'?'초':s.type==='middle'?'중':'고'}</div>`,iconSize:[27,27],iconAnchor:[13,13]});L.marker(s.ll,{icon,title:s.name}).addTo(schoolGroup).on('click',()=>schoolClicked(s))})}
 function schoolWithinScope(s){const scope=el('schoolScope').value;if(scope==='all')return true;if(!s.ll)return false;const county=countyData?.zipCounty[state.zip];if(scope==='county'&&!county)return false;const candidates=scope==='zip'?[getZip()]:DATA.filter(d=>countyData.zipCounty[d.z]===county);return candidates.some(d=>{const layer=state.polys[d.z];if(!layer||!layer.getBounds().contains(s.ll))return false;const geo=layer.toGeoJSON();return (geo.features||[geo]).some(f=>geometryContains([s.ll[1],s.ll[0]],f.geometry))})}
