@@ -209,7 +209,7 @@ mkdirSync(out,{recursive:true});
   await page.locator('#zipSelect').selectOption('75013');
   await page.waitForTimeout(1200);
   const realAllen=await page.evaluate(()=>{
-   const visible=state.schools.filter(s=>s.district==='AISD'&&s.ll&&map.getBounds().contains(s.ll));
+   const visible=state.schools.filter(s=>s.district==='AISD'&&s.ll&&s.type!=='other'&&map.getBounds().contains(s.ll)&&(state.level==='all'||s.type===state.level)&&(state.ratingFilter!=='rated'||score(s.name,s.district)!==null));
    const names=schoolGroup.getLayers().map(l=>l.options.title);
    return {zip:state.zip,zoom:map.getZoom(),bounds:map.getBounds().toBBoxString(),schools:state.schools.length,
     allenInViewport:visible.length,allenRendered:visible.filter(s=>names.includes(s.name)).length,
