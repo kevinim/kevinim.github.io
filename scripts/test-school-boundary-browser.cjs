@@ -39,6 +39,23 @@ mkdirSync(out,{recursive:true});
   assert.ok(report.targetSix.total>200);
   assert.equal(report.targetSix.matched+report.targetSix.missing,report.targetSix.total);
   assert.equal(report.otherDistricts.total+report.targetSix.total,report.total);
+  assert.equal(report.targetSix.total,273,'In-scope school directory should not unexpectedly change');
+  assert.equal(report.targetSix.byDistrict,undefined);
+  assert.equal(report.targetSix.missingSchools.filter(x=>x.district==='CFB').length,30);
+  assert.equal(report.targetSix.missingSchools.filter(x=>x.reason==='special-campus-no-standard-zone').length,3);
+  assert.equal(report.targetSix.missingSchools.some(x=>/Isbell/i.test(x.school)),false,'Frisco official Isbell K-4 2026 polygons must display');
+  const gradeSplit=await page.evaluate(()=>{
+   const selected=state.schools.find(x=>x.district==='FISD'&&/Isbell Elementary/i.test(x.name));
+   return window.SchoolBoundaryMatch.findSchoolBoundary(selected,state.zoneData.FISD||[],(name,district)=>scoreRecord(name,district)).features.map(f=>({school:f.properties.school,grades:f.properties.grades}));
+  });
+  assert.equal(gradeSplit.length,2);
+  assert.ok(gradeSplit.every(x=>x.grades==='K-4'));
+  await page.evaluate(async ()=>{
+   const school=state.schools.find(x=>x.district==='FISD'&&/Isbell Elementary/i.test(x.name));
+   await schoolClicked(school);
+  });
+  assert.ok((await page.locator('#zoneNotice').innerText()).includes('Isbell 세부 학년 주의'));
+
   // Test that selecting a school auto-enables the previously disabled historic
   // map checkbox and renders a historical polygon instead of an instructive notice.
   const allen=await page.evaluate(()=>{
