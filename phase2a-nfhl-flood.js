@@ -7,6 +7,8 @@ const NFHL_SERVICE_PAGE='https://hazards.fema.gov/arcgis/rest/services/public/NF
 const NFHL_WHERE="SFHA_TF = 'T' OR (FLD_ZONE = 'X' AND (ZONE_SUBTY LIKE '%0.2 PCT%' OR ZONE_SUBTY LIKE '%0.2 PERCENT%'))";
 const NFHL_MAX_RECORDS=1000;
 const NFHL_MIN_ZOOM=14;
+const NFHL_FETCH_TIMEOUT_MS=16000;
+const NFHL_RETRY_DELAYS_MS=[0,900,1800];
 function nfhlClassify(feature){
  const p=feature?.properties||{};
  const flag=String(p.SFHA_TF??'').trim().toUpperCase();
@@ -92,31 +94,51 @@ function createNFHLFloodOverlay(map,documentRef){
   const key=[b.getWest(),b.getSouth(),b.getEast(),b.getNorth()].map(x=>x.toFixed(4)).join(',');
   if(key===lastKey&&layer&&map.hasLayer(layer))return;
   if(ctrl)ctrl.abort();
-  const current=new AbortController();ctrl=current;
   if(layer&&map.hasLayer(layer))map.removeLayer(layer);
-  statusText('FEMA 공식 NFHL 홍수구역을 조회하는 중…');
-  try{
-   const response=await fetch(nfhlQueryUrl(b),{signal:current.signal,cache:'no-store'});
-   if(!response.ok)throw Error('HTTP '+response.status);
-   const geo=await response.json();
-   if(!validateNfhlResponse(geo))throw Error('공식 NFHL 응답 오류·초과건수 또는 자료 유효성 검증 실패');
+  let lastError=null;
+  for(let i=0;i<NFHL_RETRY_DELAYS_MS.length;i++){
    if(request!==seq||!enabled.checked)return;
-   if(!map.getPane('nfhlFloodPane')){map.createPane('nfhlFloodPane');map.getPane('nfhlFloodPane').style.zIndex='395'}
-   const selected=geo.features.filter(f=>nfhlClassify(f).kind!=='none');
-   if(layer)layer.clearLayers();
-   else layer=L.geoJSON(null,{pane:'nfhlFloodPane',style:nfhlLayerStyle,
-    onEachFeature:(f,l)=>l.bindPopup(popup(f),{maxWidth:295})});
-   if(selected.length)layer.addData({type:'FeatureCollection',features:selected});
-   if(!map.hasLayer(layer))layer.addTo(map);
-   lastKey=key;
-   statusText('FEMA NFHL 공식 실시간 조회 · '+selected.length+'개 홍수구역 도형 · 줌 '+map.getZoom()+
-    ' · 이 화면에서 보이지 않는다고 홍수 위험이 없다는 뜻은 아닙니다.');
-  }catch(error){
-   if(error?.name==='AbortError')return;
-   if(request!==seq||!enabled.checked)return;
-   console.warn('FEMA NFHL map query:',error);
-   remove();statusText('공식 NFHL 홍수구역 조회에 실패했습니다. 더 확대하거나 FEMA Map Service Center에서 확인하세요.',true);
+   const delay=NFHL_RETRY_DELAYS_MS[i];
+   if(delay){
+    statusText('FEMA NFHL 외부 서비스 재조회 '+(i+1)+'/'+NFHL_RETRY_DELAYS_MS.length+'회 · 일시 장애일 수 있습니다…');
+    await new Promise(resolve=>setTimeout(resolve,delay));
+    if(request!==seq||!enabled.checked)return;
+   }
+   const current=new AbortController();
+   ctrl=current;
+   let timedOut=false;
+   const timeout=setTimeout(()=>{timedOut=true;current.abort()},NFHL_FETCH_TIMEOUT_MS);
+   if(!delay)statusText('FEMA 공식 NFHL 홍수구역을 조회하는 중…');
+   try{
+    const response=await fetch(nfhlQueryUrl(b),{signal:current.signal,cache:'no-store'});
+    if(!response.ok)throw Error('HTTP '+response.status);
+    const geo=await response.json();
+    if(!validateNfhlResponse(geo))throw Error('공식 NFHL 응답 오류·초과건수 또는 자료 유효성 검증 실패');
+    if(request!==seq||!enabled.checked)return;
+    if(!map.getPane('nfhlFloodPane')){map.createPane('nfhlFloodPane');map.getPane('nfhlFloodPane').style.zIndex='395'}
+    const selected=geo.features.filter(f=>nfhlClassify(f).kind!=='none');
+    if(layer)layer.clearLayers();
+    else layer=L.geoJSON(null,{pane:'nfhlFloodPane',style:nfhlLayerStyle,
+     onEachFeature:(f,l)=>l.bindPopup(popup(f),{maxWidth:295})});
+    if(selected.length)layer.addData({type:'FeatureCollection',features:selected});
+    if(!map.hasLayer(layer))layer.addTo(map);
+    lastKey=key;
+    statusText('FEMA NFHL 공식 실시간 조회 · '+selected.length+'개 홍수구역 도형 · 줌 '+map.getZoom()+
+     (i?' · '+(i+1)+'회 시도 후 복구':'')+' · 이 화면에서 보이지 않는다고 홍수 위험이 없다는 뜻은 아닙니다.');
+    return;
+   }catch(error){
+    if(request!==seq||!enabled.checked)return;
+    if(error?.name==='AbortError'&&!timedOut)return;
+    lastError=timedOut?Error('FEMA query timed out after '+NFHL_FETCH_TIMEOUT_MS+'ms'):error;
+   }finally{
+    clearTimeout(timeout);
+    if(ctrl===current)ctrl=null;
+   }
   }
+  if(request!==seq||!enabled.checked)return;
+  console.warn('FEMA NFHL map query failed after '+NFHL_RETRY_DELAYS_MS.length+' attempts:',lastError);
+  remove();
+  statusText('공식 NFHL 서버 조회에 '+NFHL_RETRY_DELAYS_MS.length+'회 실패했습니다. 일부 지역을 안전하다고 판단하지 마시고 FEMA Map Service Center에서 확인하세요.',true);
  }
  enabled.addEventListener('change',refresh);
  map.on('moveend',()=>{if(enabled.checked)refresh()});
@@ -124,5 +146,5 @@ function createNFHLFloodOverlay(map,documentRef){
  statusText('지도를 확대한 뒤 켜면 현재 지도 범위의 FEMA NFHL 홍수구역을 조회합니다.');
  return {refresh,disable:()=>{enabled.checked=false;return refresh()},count:()=>layer?.getLayers().length||0};
 }
-if(typeof module!=='undefined')module.exports={NFHL_LAYER_ENDPOINT,NFHL_WHERE,NFHL_MAX_RECORDS,NFHL_MIN_ZOOM,nfhlClassify,nfhlLayerStyle,validateNfhlResponse,nfhlQueryUrl};
+if(typeof module!=='undefined')module.exports={NFHL_LAYER_ENDPOINT,NFHL_WHERE,NFHL_MAX_RECORDS,NFHL_MIN_ZOOM,NFHL_FETCH_TIMEOUT_MS,NFHL_RETRY_DELAYS_MS,nfhlClassify,nfhlLayerStyle,validateNfhlResponse,nfhlQueryUrl};
 if(typeof window!=='undefined')window.createNFHLFloodOverlay=createNFHLFloodOverlay;
