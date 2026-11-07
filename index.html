@@ -545,7 +545,7 @@ function drawBoundary(){
  const finderLinked=!!((s.district==='PISD'&&state.liveFinder.PISD_LOOKUP)||(s.district==='LISD'&&state.liveFinder.LISD));
  const historical=!officialYear&&!finderLinked;
  if((historical&&!state.showOldZones)||(!historical&&!state.showHistoric)){
-   if(note)note.textContent=historical?'현행 공식 Finder와 연결되지 않은 과거 배정선입니다. 참고 경계선 표시를 선택하세요.':'배정선 표시가 꺼져 있습니다. 공식 Finder에서 주소로 확인하세요.';
+   if(note)note.textContent='배정 경계선 표시를 직접 끈 상태입니다. 학교를 다시 선택하면 해당 경계선을 자동으로 표시합니다.';
    return;
  }
  const geo=(s.district==='PISD'?state.zoneData.PISD_LOOKUP:s.district==='PROSPER'?state.zoneData.PROSPER:state.zoneData[s.district])||[];
