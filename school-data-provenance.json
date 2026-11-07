@@ -1,5 +1,5 @@
 {
-  "lastVerified": "2026-11-06",
+  "lastVerified": "2026-11-07",
   "activeSchoolYear": "2026–27",
   "notes": "Audits data source and vintages, not guaranteed student assignments. Verify address + grade with the official ISD before leasing or purchasing.",
   "districts": [
@@ -89,6 +89,13 @@
           "discrepancies": 0,
           "auditFile": "tests/plano-feeder-geometry-audit-2026.json",
           "limitations": "Current Finder and feeder docs from same district; not independent house assignments."
+        },
+        "publicAddressFinderFollowup": {
+          "checked": "2026-11-07",
+          "sample": "5400 Legacy Dr, Plano TX 75024",
+          "result": "inconclusive; current experience accepted address but remained Analyzing and did not reveal campus names in tested browser; legacy finder provided no autocomplete",
+          "independentlyMatchedAddressSchoolNames": 0,
+          "reference": "tests/remaining-p0-finder-audit-2026-11-07.json"
         }
       }
     },
@@ -193,14 +200,31 @@
           "apartmentTable": "SOUTHRIDGE / DURHAM / LEWISVILLE HARMON / LEWISVILLE",
           "geometryPoint": "CAMEY / LAKEVIEW / THE COLONY / THE COLONY",
           "resolution": "Unresolved; same public locator has conflicting fields. UI warns and displays both sources without assigning.",
-          "geometryYearStillUnverified": true
+          "geometryYearStillUnverified": true,
+          "operatorLocationConfirmation": {
+            "date": "2026-11-07",
+            "operator": "https://www.budgetsuites.com/property.php?name=thecolony_the_colony",
+            "address": "5289 S Highway 121, The Colony TX 75056",
+            "sameBrandOtherAddress": "2175 S State Hwy 121, Lewisville TX 75067",
+            "schoolAssignmentConfirmed": false,
+            "disputedLevels": 4,
+            "manualContact": "studentservices@lisd.net"
+          }
         }
       },
       "liveFinderVerification": {
         "checked": "2026-11-06",
         "operationalMap": "https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/03c099e24d304c4fa0f4ce8a76c10062/data?f=json",
         "sourceYear": "High 2025–26; Elementary/Middle unknown",
-        "addressesIndependentlyCompared": 0
+        "addressesIndependentlyCompared": 0,
+        "apartment5289Followup": {
+          "checked": "2026-11-07",
+          "status": "exact-property-zone-unresolved",
+          "webMapOpened": true,
+          "findAnApartmentSelectionVerified": false,
+          "source": "https://www.lisd.net/resources/families/school-locator",
+          "note": "Apartment-source table and same map zone polygon conflict; do not infer a winner from city or a third-party listing."
+        }
       }
     },
     {
@@ -298,6 +322,14 @@
         "address": "1445 N Perry Rd, Carrollton TX 75006",
         "status": "inconclusive",
         "reason": "GuideK12 public school list not visibly filtered to zoned campuses for HQ input; not evidence of general Finder outage."
+      },
+      "residentFinderVerification": {
+        "checked": "2026-11-07",
+        "status": "inconclusive-address-zoning",
+        "publicInstitutionalAddressesChecked": 2,
+        "uniqueZonedCampusSetsObserved": 0,
+        "locator": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/",
+        "note": "Unfiltered school catalog on tested browser sessions; not evidence of a universal district Finder outage or apartment assignment."
       }
     }
   ],
