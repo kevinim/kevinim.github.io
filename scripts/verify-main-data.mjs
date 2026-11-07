@@ -265,14 +265,14 @@ test('Plano feeder name agreement with 2025–26 ArcGIS does not imply current G
  assert.ok(planoFeeder.specialCases.some(x=>x.rule==='west of Coit Road'&&x.middle==='Frankford'));
 });
 test('Production source panels and Jackson overlay identify authoritative exceptions',()=>{
- assert.ok(html.includes('현행 2026–27 SchoolFinder 연결 · 2025–26 필드명 GIS 64개'));
+ assert.ok(html.includes('현행 SchoolFinder 연결 GIS 64개 · 5400 Legacy Dr 공식 ArcGIS 주소 좌표 질의 4개 학교 일치'));
  assert.ok(html.includes('공식 주소표 1,689행/유효 1,687행'));
  assert.ok(html.includes('Moss Haven Pl'));
  assert.ok(html.includes('Crestview Heights'));
  assert.ok(html.includes('Jackson Elementary 진학 경로 예외'));
  assert.ok(html.includes('Coit Rd 동쪽'));
  assert.ok(html.includes('Plano West Senior'));
- assert.ok(html.includes('현행 2026–27 SchoolFinder 연결 · 2025–26 필드명 GIS 64개'));
+ assert.ok(html.includes('현행 SchoolFinder 연결 GIS 64개 · 5400 Legacy Dr 공식 ArcGIS 주소 좌표 질의 4개 학교 일치'));
  assert.ok(html.includes('Frisco·Prosper 2곳'));
 });
 test('all 31 Prosper ISD 2026–27 school zones acquired from official live locator',()=>{
