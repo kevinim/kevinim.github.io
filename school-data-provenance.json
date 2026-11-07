@@ -35,6 +35,14 @@
         "matching2025GisCampusNames": true,
         "geometryYearStillUnverified2026_27": true,
         "exception": "Jackson Elementary feeder splits east/west of Coit Rd: east Wilson/Vines/Plano Senior, west Frankford/Shepton/Plano West Senior."
+      },
+      "currentOfficial2026Experience": {
+        "url": "https://experience.arcgis.com/experience/73a3f873d9c040348d6e723ed4b48af4",
+        "itemId": "73a3f873d9c040348d6e723ed4b48af4",
+        "webMapItemId": "68c373c99db1425e9f0030a689efa742",
+        "webMapLastModified": "2025-05-02",
+        "confirmedBoundariesService": "https://services4.arcgis.com/uBV8NRVfoRJv7qWn/arcgis/rest/services/Plano_ISD_School_Districts/FeatureServer",
+        "note": "Official 2026-27 landing page links web experience whose webmap school attendance polygons still reference the old 2025-26 source; this proves linkage not equivalence / freshness."
       }
     },
     {
@@ -237,6 +245,12 @@
       "sample": "Public Allen High School address 300 Rivercrest Blvd matched a single parcel; propYear 2027",
       "privacy": "User clicks button before coordinates sent; only situsConcat, propYear and OBJECTID retrieved; no owner fields.",
       "notes": "A parcel street-address match is not an assigned school."
+    },
+    {
+      "file": "official-school-review.js",
+      "period": "2026–27 user-initiated official school comparison",
+      "unit": "Prosper Infofinder live coordinate lookup or user-entered official finder school name for any of 6 ISDs",
+      "notes": "Manual transcription is not independently validated. Live Prosper API checks exactly 3 GIS campus codes and never establishes residential unit, grade admission or enrollment. CORS restrictions can prevent direct browser calls; fail safely. Data stored only in page memory."
     }
   ]
 }

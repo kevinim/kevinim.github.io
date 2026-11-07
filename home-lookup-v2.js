@@ -1,6 +1,6 @@
 'use strict';
 // Addresses and coordinates are held in memory only. Geocoding is triggered by submit.
-let home=null,homeMarker=null,homeCandidates=[],homeRequest=null,homeRouteRequest=null,homeParcelRequest=null,homeVersion=0,homeRouteLayer=null;
+let home=null,homeMarker=null,homeCandidates=[],homeRequest=null,homeRouteRequest=null,homeParcelRequest=null,homeOfficialRequest=null,homeVersion=0,homeRouteLayer=null;
 
 function ringContains(point,ring){
   let inside=false;
@@ -67,7 +67,7 @@ function homeSchoolMatches(s){
  return (result.features||[]).some(f=>f.properties.gradeLevel===s.type&&((schoolId&&f.properties.campusId===schoolId)||zoneNameKey(canonical(f.properties.school)).replace(/\bk\s*4\b/g,'').trim()===key));
 }
 function clearHome(){
-  homeVersion++;homeRequest?.abort();homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;home=null;homeCandidates=[];
+  homeVersion++;homeRequest?.abort();homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;home=null;homeCandidates=[];
   if(map&&homeMarker)map.removeLayer(homeMarker);homeMarker=null;
   el('homeCandidates').replaceChildren();el('homeResult').replaceChildren();el('homeSchoolInfo').replaceChildren();el('homeStatus').textContent='';if(homeRouteLayer)homeRouteLayer.clearLayers();
   el('homeSearch').disabled=false;if(map){drawSchools();drawList()}
@@ -93,7 +93,8 @@ function renderHome(){
   const parcel=home.parcel||{status:'idle'};
   const message=parcel.status==='idle'?'별도 필지 주소 대조를 실행할 수 있습니다.':parcel.status==='checking'?'Collin CAD 필지 확인 중…':parcel.reason||'필지 확인 불가';
   const parcelPanel='<div class="small-note" style="margin-top:10px"><b>Collin CAD 필지 주소 대조 (학교 배정과 별개)</b><div class="source" role="status">'+escape(message)+(parcel.parcelAddress?' · 조회된 필지: '+escape(parcel.parcelAddress):'')+'</div><button class="mini-btn" type="button" id="parcelCheck"'+(parcel.status==='checking'?' disabled':'')+'>필지 주소 대조</button><div class="source">버튼을 누르면 집 핀의 좌표를 Collin CAD에 전송합니다. 필지 일치가 초·중·고 배정을 의미하지 않습니다.</div></div>';
-  el('homeSchoolInfo').innerHTML='<hr class="rule"><h2>집 주소 학교 후보</h2><div class="source">'+escape(home.address)+'</div><p>'+schoolText+'</p><div class="source">경계·학년·예외를 학군에서 확인하세요. 학교 위치나 ZIP은 배정을 보장하지 않습니다.</div>'+official+parcelPanel;
+  el('homeSchoolInfo').innerHTML='<hr class="rule"><h2>집 주소 학교 후보</h2><div class="source">'+escape(home.address)+'</div><p>'+schoolText+'</p><div class="source">경계·학년·예외를 학군에서 확인하세요. 학교 위치나 ZIP은 배정을 보장하지 않습니다.</div>'+official+parcelPanel+officialReviewPanelHtml(home);
+  wireOfficialReviewPanel(home);
   const parcelButton=el('parcelCheck');if(parcelButton)parcelButton.onclick=checkHomeParcel;
   el('homeResult').innerHTML=office?'<div class="home-actions"><button type="button" class="mini-btn" id="homeRoute">집에서 운전시간 계산</button> <a class="cardlink" href="'+escape(homeDirections(false))+'" target="_blank" rel="noopener">집 → 회사 Google ↗</a> <a class="cardlink" href="'+escape(homeDirections(true))+'" target="_blank" rel="noopener">회사 → 집 ↗</a><div id="homeRouteStatus" class="source" role="status">집 주소 기준 · 교통량 미반영</div></div>':'목적지를 입력하세요.';
   const route=el('homeRoute');if(route)route.onclick=calculateHomeCommute;
@@ -116,12 +117,72 @@ async function checkHomeParcel(){
   if(home===target&&!controller.signal.aborted){homeParcelRequest=null;renderHome();}
  }
 }
+
+function officialReviewPanelHtml(item){
+ const a=item.assignment||{},prior=item.officialDraft||{},v=k=>escape(String(prior[k]||''));
+ const district=prior.district||a.district||'';
+ const districts=OFFICIAL_REVIEW_DISTRICTS.map(x=>'<option value="'+x+'"'+(x===district?' selected':'')+'>'+escape(({FISD:'Frisco',PROSPER:'Prosper',PISD:'Plano',AISD:'Allen',LISD:'Lewisville',CFB:'CFB'})[x])+'</option>').join('');
+ const level=prior.gradeLevel||'';
+ const grades=OFFICIAL_REVIEW_LEVELS.map(x=>'<option value="'+x+'"'+(x===level?' selected':'')+'>'+escape(({elementary:'초등',middle:'중등',freshman:'9학년',high:'고등',senior:'Senior High'})[x])+'</option>').join('');
+ const year=prior.schoolYear||'';
+ const labels={'missing-input':'학군·학년·학교 이름을 입력하세요.','year-not-confirmed':'2026–27 학년도임을 확인하지 못해 비교 결과를 최신 배정 검증으로 취급하지 않습니다.','no-candidate':'대시보드에서 비교할 배정 후보가 없습니다. 공식 결과를 우선 확인하세요.','district-disagrees':'입력한 학군과 지도상 후보 학군이 다릅니다. 정밀 주소와 ISD 경계를 확인하세요.','no-unique-candidate':'해당 학년의 학교 후보가 없거나 여러 개라 1:1 대조가 불가능합니다.','name-unrecognized':'학교 이름을 정규화하지 못했습니다. 정확한 학교명을 다시 확인하세요.','manually-reported-match':'입력하신 공식 검색 결과의 학교명과 대시보드 후보가 일치합니다. 사용자 입력 기반 대조일 뿐 독립적인 공식 조회 확인은 아닙니다.','manually-reported-mismatch':'입력하신 공식 검색 결과와 대시보드 후보가 다릅니다. 대시보드 배정 후보를 신뢰하지 말고 공식 학군에 확인하세요.'};
+ const result=item.officialReview;
+ let msg=result?(result.kind==='prosper'?result.message:labels[result.status]||'대조 결과 확인 필요'):'대조를 아직 실행하지 않았습니다. 공식 결과를 확인하고 직접 입력하세요.';
+ const label=result?.kind==='prosper'?'Prosper 공개 API 조회 결과':'사용자가 입력한 공식 결과 대조';
+ const officialUrl=district==='PISD'?PLANO_2026_27_EXPERIENCE:OFFICIAL[district]||null;
+ const officialLink=officialUrl?'<a class="cardlink" href="'+escape(officialUrl)+'" target="_blank" rel="noopener">2026–27 공식 검색기 열기</a>':'';
+ const note=district==='LISD'?'Lewisville 아파트는 주소 대신 별도의 Find an Apartment 검색을 이용하세요.':district==='AISD'?'Allen 아파트 건물·호수 예외가 있으므로 학교 등록 담당자 확인이 필요합니다.':district==='PISD'?'Plano Jackson Elementary는 Coit Rd 동·서쪽에 따라 상급 학교가 달라집니다.':'검색기에 주소·학년을 입력한 뒤 나온 학교명을 복사하세요.';
+ const showProsper=district==='PROSPER'&&['current','boundary-review'].includes(a.status);
+ return '<div class="small-note" id="officialReviewPanel" style="margin-top:10px"><b>공식 학군 주소 조회 결과 교차검증</b>'+
+ '<div class="source">'+escape(note)+' 자료는 현재 화면에서만 유지되며 서버에 저장하지 않습니다.</div>'+officialLink+
+ '<div class="field"><label for="officialReviewDistrict">학군</label><select id="officialReviewDistrict"><option value="">학군 선택</option>'+districts+'</select></div>'+
+ '<div class="field"><label for="officialReviewLevel">학년 구분</label><select id="officialReviewLevel"><option value="">학년 선택</option>'+grades+'</select></div>'+
+ '<div class="field"><label for="officialReviewName">공식 검색기에 표시된 학교명</label><input id="officialReviewName" maxlength="130" autocomplete="off" placeholder="학교 이름을 그대로 입력" value="'+v('schoolName')+'"></div>'+
+ '<div class="field"><label for="officialReviewYear">공식 결과의 적용 학년도</label><select id="officialReviewYear"><option value="">학년도 미확인</option><option value="2026–27"'+(year==='2026–27'?' selected':'')+'>2026–27 확인</option><option value="older"'+(year==='older'?' selected':'')+'>이전 학년도·연도 불명</option></select></div>'+
+ '<button type="button" class="mini-btn" id="officialManualCompare">입력한 결과와 비교</button>'+
+ (showProsper?' <button type="button" class="mini-btn" id="officialProsperCheck"'+(item.officialChecking?' disabled':'')+'>Prosper 공식 좌표 조회</button>':'')+
+ '<div class="source">Prosper 버튼을 누르면 집 핀 좌표가 학군이 연결한 Infofinder에 전송됩니다. 결과는 좌표의 학교 코드 비교이며 실제 주소·호수·등록 자격 확인은 아닙니다.</div>'+
+ '<div class="source" id="officialReviewResult" role="status"><b>'+escape(label)+'</b> · '+escape(msg)+'</div></div>';
+}
+function wireOfficialReviewPanel(item){
+ const get=id=>document.getElementById(id);
+ const fields={district:'officialReviewDistrict',gradeLevel:'officialReviewLevel',schoolName:'officialReviewName',schoolYear:'officialReviewYear'};
+ const update=()=>{
+  if(home!==item)return;
+  item.officialDraft=Object.fromEntries(Object.entries(fields).map(([k,v])=>[k,get(v)?.value||'']));
+ };
+ for(const id of Object.values(fields))get(id)?.addEventListener('change',update);
+ get('officialReviewName')?.addEventListener('input',update);
+ get('officialManualCompare')?.addEventListener('click',()=>{
+  update();if(home!==item)return;
+  item.officialReview={kind:'manual',...compareManualSchoolResult(item.assignment,item.officialDraft)};
+  renderHome();
+ });
+ get('officialProsperCheck')?.addEventListener('click',async()=>{
+  if(home!==item)return;
+  homeOfficialRequest?.abort();
+  const ctrl=new AbortController();homeOfficialRequest=ctrl;item.officialChecking=true;renderHome();
+  try{
+   const response=await fetch(buildProsperOfficialPointUrl(item.ll),{cache:'no-store',signal:ctrl.signal});
+   if(!response.ok)throw Error('HTTP '+response.status);
+   const json=await response.json();if(home!==item||ctrl.signal.aborted)return;
+   const verdict=compareProsperOfficialPoint(item.assignment,json);
+   item.officialReview={kind:'prosper',...verdict,message:verdict.status==='official-point-codes-match'?'공식 Infofinder 좌표 조회 학교 코드가 GIS 후보 3개와 일치합니다. 실제 집 주소 배정은 별도 확인 필요.':verdict.status==='official-code-disagreement'?'공식 조회와 GIS 후보의 학교 코드가 불일치합니다. 주소·경계 재확인 필요.':'공식 조회 응답으로 대조를 완료하지 못했습니다.'};
+  }catch(err){
+   if(err.name==='AbortError'||home!==item)return;
+   item.officialReview={kind:'prosper',status:'official-lookup-unavailable',message:'공식 조회를 브라우저에서 읽지 못했습니다(접근 제한 또는 네트워크 오류). 공식 검색기 링크로 확인하세요.'};
+  }finally{
+   if(home===item&&!ctrl.signal.aborted){item.officialChecking=false;homeOfficialRequest=null;renderHome();}
+  }
+ });
+}
+
 function refreshHomeOffice(){if(!home)return;homeVersion++;homeRouteRequest?.abort();if(homeRouteLayer)homeRouteLayer.clearLayers();renderHome()}
 function refreshHomeSchools(){if(home){homeVersion++;homeRouteRequest?.abort();renderHome()}}
 function useHomeCandidate(candidate){
   if(!map){el('homeStatus').textContent='지도가 아직 준비되지 않았습니다. 잠시 후 주소 검색을 다시 눌러 주세요.';return false}
-  homeVersion++;homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;
-  home={address:candidate.address,ll:[candidate.location.y,candidate.location.x],geocodeQuality:candidate.savedGeocodeQuality||assessResidentialGeocode(el('homeAddress').value.trim(),candidate),parcel:candidate.savedParcel||{status:'idle'}};
+  homeVersion++;homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;
+  home={address:candidate.address,ll:[candidate.location.y,candidate.location.x],geocodeQuality:candidate.savedGeocodeQuality||assessResidentialGeocode(el('homeAddress').value.trim(),candidate),parcel:candidate.savedParcel||{status:'idle'},officialReview:candidate.savedOfficialReview||null,officialDraft:candidate.savedOfficialDraft||null};
   el('homeCandidates').replaceChildren();
   if(homeMarker)map.removeLayer(homeMarker);
   homeMarker=L.marker(home.ll,{zIndexOffset:4000,icon:L.divIcon({className:'',html:'<svg class="house-pin" width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"><path d="M4 19L21 4l17 15h-4v17H8V19z" fill="white" stroke="#a72e2e" stroke-width="2"/><path d="M3 19L21 3l18 16-3 3L21 9 6 22z" fill="#d63737" stroke="white" stroke-width="1.5"/><path d="M18 36V24h7v12" fill="#d63737"/></svg>',iconSize:[42,42],iconAnchor:[21,37]}),title:'HOME'}).addTo(map).bindPopup('<b>HOME</b><br>'+escape(home.address));

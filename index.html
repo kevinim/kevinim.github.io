@@ -23,7 +23,7 @@
 <details><summary>학군 배정구역과 출처 확인</summary><div class="small-note" id="zoneDatasetStatus">공식 학군별 2026–27 배정구역 및 참고 GIS를 확인하는 중…</div>
 <p class="source" style="margin-top:10px"><strong>중요:</strong> 녹색은 Frisco·Prosper 공식 2026–27 경계, 주황색 점선은 과거·학년도 미확인 참고용입니다. 이사·입학 결정 전에는 반드시 각 학군의 2026–27 공식 주소별 배정 검색으로 최종 확인해야 합니다. GeoJSON 수동 업로드는 필요하지 않습니다.</p>
 <div class="small-note"><strong>학군별 공식 배정 확인</strong><br>아래 링크에서 실제 주소와 학년을 확인하세요. 조사일: 2026-11-06.<br>
-<a class="cardlink" href="https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder" target="_blank" rel="noopener">Plano ↗</a>
+<a class="cardlink" href="https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder" target="_blank" rel="noopener">Plano ↗</a> <a class="cardlink" href="https://experience.arcgis.com/experience/73a3f873d9c040348d6e723ed4b48af4" target="_blank" rel="noopener">Plano 2026–27 실시간 공식 지도 ↗</a>
 <a class="cardlink" href="https://www.friscoisd.org/page/2026-2027-zones/" target="_blank" rel="noopener">Frisco ↗</a>
 <a class="cardlink" href="https://www.allenisd.org/page/findaschool" target="_blank" rel="noopener">Allen ↗</a>
 <a class="cardlink" href="https://www.prosper-isd.net/page/attendance-boundaries/" target="_blank" rel="noopener">Prosper ↗</a>
@@ -32,7 +32,7 @@
 <div class="small-note" id="districtZoneAudit" aria-label="학군별 학교 배정구역 출처 검증">
 <strong>학군별 배정 경계 최신성 · 2026-11-06</strong>
 <div class="zone-audit-row"><b>Frisco</b><span>2026–27 공식 검색기 도형 · 현재 연도</span></div>
-<div class="zone-audit-row"><b>Plano</b><span>2025–26 공식 ArcGIS 도형 64개(최신 미확인) · 공식 진학 연결 관계 11개 대조</span></div>
+<div class="zone-audit-row"><b>Plano</b><span>2026–27 공식 SchoolFinder가 기존 2025–26 FeatureServer를 사용함 확인 · GIS 연도 최신성은 미입증 · 64개</span></div>
 <div class="zone-audit-row"><b>Allen</b><span>GIS 초·중등 2023 / 고등 2019 · 공식 주소별 배정표 1,689행 중 자동 해석 가능한 1,687행</span></div>
 <div class="zone-audit-row"><b>Lewisville</b><span>2026–27 검색기 연결 · 고등 도형은 2025–26, 초·중등 연도 미확인</span></div>
 <div class="zone-audit-row"><b>Prosper</b><span>2026–27 공식 Infofinder i 배정구역 31개 · 초등 20 / 중등 7 / 고등 4 · 교차 검증 통과</span></div>
@@ -54,6 +54,7 @@
 <script src="./geocode-quality.js?v=1"></script>
 <script src="./school-zone-risk.js?v=1"></script>
 <script src="./collin-parcel-check.js?v=1"></script>
+<script src="./official-school-review.js?v=1"></script>
 <script>
 'use strict';
 const DATA=[

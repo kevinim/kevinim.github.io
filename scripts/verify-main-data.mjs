@@ -22,6 +22,7 @@ const {matchAllenAddress}=require('../allen-lookup.js');
 const {isRetiredCampus, RETIRED_CAMPUSES_2026}=require('../school-lifecycle.js');
 const {assessResidentialGeocode}=require('../geocode-quality.js');
 const {addCandidate}=require('../candidate-compare.js');
+const {compareManualSchoolResult,compareProsperOfficialPoint,buildProsperOfficialPointUrl,officialReviewCandidates,officialReviewName,PLANO_2026_27_EXPERIENCE}=require('../official-school-review.js');
 const {zoneBoundaryProximity,distancePointToSegmentMeters}=require('../school-zone-risk.js');
 const {buildCollinParcelUrl,parcelStreetKey,assessCollinParcelResult}=require('../collin-parcel-check.js');
 const demographics = readJson('dfw-demographics.json');
@@ -44,7 +45,7 @@ test('main page inline JavaScript compiles', () => {
   inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
 });
 test('all main application JS modules compile', () => {
-  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','collin-parcel-check.js']) {
+  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','collin-parcel-check.js','official-school-review.js']) {
     new Script(readText(name), {filename:name});
     assert.ok(html.includes('./' + name), name + ' not loaded');
   }
@@ -132,7 +133,7 @@ test('Plano feeder name agreement with 2025–26 ArcGIS does not imply current G
  assert.ok(planoFeeder.specialCases.some(x=>x.rule==='west of Coit Road'&&x.middle==='Frankford'));
 });
 test('Production source panels and Jackson overlay identify authoritative exceptions',()=>{
- assert.ok(html.includes('공식 진학 연결 관계 11개 대조'));
+ assert.ok(html.includes('GIS 연도 최신성은 미입증'));
  assert.ok(html.includes('자동 해석 가능한 1,687행'));
  assert.ok(html.includes('Moss Haven Pl'));
  assert.ok(html.includes('Crestview Heights'));
@@ -360,6 +361,47 @@ test('P0 Collin CAD on-demand parcel crosscheck is address-only, fail closed',()
  assert.ok(cmp.includes('savedGeocodeQuality:item.geocodeQuality'));
  assert.ok(html.includes('누르면 집 핀 좌표가 Collin CAD에 전송됩니다'));
  assert.ok(html.includes('./collin-parcel-check.js?v=1'));
+});
+test('official live Prosper point comparison uses current polygon codes, never claims residence verification',()=>{
+ const x=prosperCurrent.features.filter(f=>['elementary','middle','high'].includes(f.properties.gradeLevel));
+ const sample=[x.find(f=>f.properties.gradeLevel==='elementary'),x.find(f=>f.properties.gradeLevel==='middle'),x.find(f=>f.properties.gradeLevel==='high')];
+ const predicted={district:'PROSPER',status:'current',features:sample};
+ const payload={resultCode:200,exactAddressMatch:false,schools:sample.map(f=>({schoolCode:String(Number(f.properties.schoolCode))}))};
+ const good=compareProsperOfficialPoint(predicted,payload);
+ assert.equal(good.status,'official-point-codes-match');
+ assert.equal(good.addressExact,false);
+ assert.equal(good.pointOnly,true);
+ const bad=compareProsperOfficialPoint(predicted,{...payload,schools:payload.schools.slice(0,2)});
+ assert.equal(bad.status,'official-code-disagreement');
+ assert.equal(compareProsperOfficialPoint(predicted,{resultCode:403}).status,'invalid-official-response');
+ const u=new URL(buildProsperOfficialPointUrl([33.226183,-96.7847555]));
+ assert.equal(u.hostname,'www.infofinderi.com');
+ assert.equal(u.searchParams.get('clientId'),'PI5FFG7RYZ1');
+ assert.equal(u.searchParams.get('schoolId'),'-1');
+ assert.equal(u.searchParams.get('gradeId'),'-1');
+ assert.throws(()=>buildProsperOfficialPointUrl([40,-73]));
+});
+test('official manual result only checks user transcription, never upgrades old GIS vintage',()=>{
+ const p={district:'PISD',status:'reference',features:[{properties:{gradeLevel:'elementary',school:'Jackson Elementary'}}]};
+ assert.deepEqual(officialReviewCandidates(p,'elementary'),['Jackson Elementary']);
+ assert.equal(officialReviewName('Jackson Elementary School'),officialReviewName('Jackson EL'));
+ const ok=compareManualSchoolResult(p,{district:'PISD',gradeLevel:'elementary',schoolName:'Jackson Elementary',schoolYear:'2026–27'});
+ assert.equal(ok.status,'manually-reported-match');
+ assert.equal(ok.geometryCurrent,false);
+ assert.equal(ok.sourceKind,'user-transcribed-not-independently-verified');
+ assert.equal(compareManualSchoolResult(p,{district:'PISD',gradeLevel:'elementary',schoolName:'Another School',schoolYear:'2026–27'}).status,'manually-reported-mismatch');
+ assert.equal(compareManualSchoolResult(p,{district:'PISD',gradeLevel:'elementary',schoolName:'Jackson Elementary',schoolYear:'older'}).status,'year-not-confirmed');
+ assert.equal(compareManualSchoolResult(p,{district:'CFB',gradeLevel:'elementary',schoolName:'Jackson Elementary',schoolYear:'2026–27'}).status,'district-disagrees');
+ assert.equal(compareManualSchoolResult({status:'unavailable'},{district:'PISD',gradeLevel:'elementary',schoolName:'Jackson Elementary',schoolYear:'2026–27'}).status,'no-candidate');
+ const a={district:'AISD',status:'unverified-year',allen:['Peak St','2050','Evans','Ereckson','Lowery','Allen High School']};
+ assert.deepEqual(officialReviewCandidates(a,'freshman'),['Lowery']);
+ assert.equal(PLANO_2026_27_EXPERIENCE,'https://experience.arcgis.com/experience/73a3f873d9c040348d6e723ed4b48af4');
+ const h=readText('home-lookup-v2.js');
+ assert.ok(h.includes('officialReviewPanelHtml(home)'));
+ assert.ok(h.includes('wireOfficialReviewPanel(home)'));
+ assert.ok(h.includes('homeOfficialRequest?.abort()'));
+ assert.ok(html.includes('official-school-review.js?v=1'));
+ assert.ok(readText('candidate-compare.js').includes('savedOfficialReview:item.officialReview'));
 });
 test('CFB official current GuideK12 locator linked',()=>{
   assert.ok(html.includes('https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/'));
