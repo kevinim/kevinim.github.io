@@ -5,6 +5,8 @@ on:
     paths:
       - 'phase2a-fema-hazards.js'
       - 'txwrap-wildfire-potential.js'
+      - 'noaa-storm-history.js'
+      - 'data/noaa-storm-events-dfw-2024-2025.json'
       - 'index.html'
       - 'scripts/test-phase2a-browser.cjs'
       - 'scripts/test-school-boundary-browser.cjs'

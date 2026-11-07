@@ -1,0 +1,57 @@
+name: NOAA DFW storm history snapshot
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/refresh-noaa-storm-events.cjs'
+      - '.github/workflows/noaa-storm-snapshot.yml'
+      - 'noaa-storm-history.js'
+  workflow_dispatch:
+jobs:
+  build-snapshot:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'feat/phase2a-noaa-storm-history-2024-2025-20261107'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download official NOAA files and validate DFW county-year totals
+        run: node scripts/refresh-noaa-storm-events.cjs
+      - name: Check NOAA data, source SHA-256 and monthly reconciliation
+        run: |
+          node - <<'NODE'
+          const d=require('./data/noaa-storm-events-dfw-2024-2025.json');
+          const assert=require('node:assert/strict');
+          assert.equal(d.metadata.analyzedYears.length,2);
+          assert.equal(d.metadata.counties.length,12);
+          assert.ok(d.metadata.selectedEvents>200);
+          assert.ok(d.metadata.sourceFiles.every(s=>s.sha256.length===64 && s.rawRows>1000));
+          assert.equal(d.summary.reduce((n,r)=>n+r.count,0),d.metadata.selectedEvents);
+          assert.ok(d.summary.every(r=>r.monthly.reduce((a,b)=>a+b,0)===r.count));
+          console.log('PASS NOAA source digest/aggregation check',d.metadata.selectedEvents);
+          NODE
+      - name: Commit only generated NOAA JSON back to this same-owner PR branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/noaa-storm-events-dfw-2024-2025.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Generate verified NOAA 2024-2025 DFW county storm history snapshot"
+            git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
+          else
+            echo "NOAA snapshot unchanged"
+          fi
+      - name: Attach NOAA source audit artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: noaa-storm-history-dfw-2024-2025
+          path: data/noaa-storm-events-dfw-2024-2025.json
+          if-no-files-found: warn
