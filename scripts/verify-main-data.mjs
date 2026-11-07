@@ -60,10 +60,20 @@ test('main page inline JavaScript compiles', () => {
   inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
 });
 test('all main application JS modules compile', () => {
-  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','lewisville-apartments.js','cfb-feeder-lookup.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
+  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
     new Script(readText(name), {filename:name});
     assert.ok(html.includes('./' + name), name + ' not loaded');
   }
+});
+test('optional LISD/CFB reference widgets are not loaded on the main page',()=>{
+ for(const name of ['lewisville-apartments.js','cfb-feeder-lookup.js']){
+  new Script(readText(name),{filename:name}); // retained only as reference tooling
+  assert.equal(html.includes('./'+name),false,name+' should not be requested by the browser');
+ }
+ assert.equal(html.includes('id="lisdApartmentSection"'),false);
+ assert.equal(html.includes('id="cfbFeederSection"'),false);
+ assert.ok(html.includes('https://www.lisd.net/resources/families/school-locator'));
+ assert.ok(html.includes('https://www.cfbisd.edu/students/school-maps-locator-system'));
 });
 test('home-search, candidate comparison and commute preserved', () => {
   for (const id of ['homeForm','homeAddress','homeCandidates','candidateCards','destination','calcCommute','officeSelect','schoolList','zoneDatasetStatus','districtZoneAudit','map']) {
