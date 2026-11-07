@@ -1184,5 +1184,23 @@ test('ZIP map data and Plano school identity preserved',()=>{
   assert.ok(zips.features.length>=290);
   assert.ok(school.schools.length>=73);
 });
+test('Middle Eastern / Arab ancestry (ACS B04006) covers every dashboard ZIP and stays separate from race',()=>{
+ const mena=readJson('data/dfw-mena-ancestry-2024.json');
+ const rows=[...readJson('dfw-demographics.json').data,...readJson('jpm-outside-dfw.json').data];
+ assert.ok(mena.source.includes('B04006'));
+ assert.deepEqual(mena.missing,[]);
+ assert.equal(Object.keys(mena.data).length,new Set(rows.map(d=>d.z)).size);
+ const subs=['egyptian','iraqi','jordanian','lebanese','moroccan','palestinian','syrian','arabOther','otherArab'];
+ for(const d of rows){
+  const r=mena.data[d.z];assert.ok(r,'missing ZIP '+d.z);
+  assert.equal(r.total[0],d.pop,'B04006 total must equal dashboard population (same ACS release) for '+d.z);
+  for(const k of ['arab','iranian','turkish','israeli','armenian',...subs])assert.equal(r[k].length,2);
+  // The Arab subtotal counts people once; subgroups may double count two answers.
+  assert.ok(r.arab[0]<=subs.reduce((a,k)=>a+(r[k][0]||0),0),'Arab subtotal exceeds subgroups for '+d.z);
+ }
+ assert.ok(html.includes("fetch('./data/dfw-mena-ancestry-2024.json')"));
+ assert.ok(html.includes('중동·아랍계 (조상 응답)'));
+ assert.ok(html.includes('항목끼리 더하지 않습니다'),'UI must say ancestry rows are not summed');
+});
 await Promise.all(asyncChecks);
 console.log('Main website QA: ' + total + ' tests passed.');
