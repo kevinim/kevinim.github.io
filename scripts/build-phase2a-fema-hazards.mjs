@@ -11,10 +11,10 @@ const COUNTIES={
  '48181':'Grayson','48497':'Wise','48367':'Parker','48251':'Johnson'
 };
 const FIELDS=['NRI_ID','NRI_VER','COUNTY','STCOFIPS','TRACTFIPS',
- 'RFLD_RISKS','RFLD_RISKR','RFLD_EALT',
+ 'IFLD_RISKS','IFLD_RISKR','IFLD_EALT',
  'WFIR_RISKS','WFIR_RISKR','WFIR_EALT',
  'HRCN_RISKS','HRCN_RISKR','HRCN_EALT'];
-const HAZARDS=['RFLD','WFIR','HRCN'];
+const HAZARDS=['IFLD','WFIR','HRCN'];
 const SOURCE_YEAR='2025-12';
 const TIMEOUT_MS=45000;
 const features=[],counts={},versions=new Set();
@@ -58,7 +58,7 @@ for(const [fips,name] of Object.entries(COUNTIES)){
    if(p.NRI_VER)versions.add(String(p.NRI_VER));
    feat.id=id;
    feat.properties={tract:id,county:name,countyFips:fips,version:p.NRI_VER||null,
-    rfld:{score:p.RFLD_RISKS??null,rating:p.RFLD_RISKR||null,eal:p.RFLD_EALT??null},
+    ifld:{score:p.IFLD_RISKS??null,rating:p.IFLD_RISKR||null,eal:p.IFLD_EALT??null},
     wfir:{score:p.WFIR_RISKS??null,rating:p.WFIR_RISKR||null,eal:p.WFIR_EALT??null},
     hrcn:{score:p.HRCN_RISKS??null,rating:p.HRCN_RISKR||null,eal:p.HRCN_EALT??null}};
    features.push(feat);
@@ -91,7 +91,7 @@ const out={type:'FeatureCollection',
   geography:'2020 Census tract',scale:'census-tract',notParcelFloodplain:true,
   hazardType:'relative risk (not recorded events, probability, insurance, or address prediction)',
   coverageCounties:COUNTIES,countyTractCounts:counts,scoreAvailability:coverage,
-  fields:['RFLD_RISKS','WFIR_RISKS','HRCN_RISKS'],
+  fields:['IFLD_RISKS','WFIR_RISKS','HRCN_RISKS'],
   transform:'official public source, simplified source polygon geometry <= ~50 m for fast map display',
   dataRefresh:'manual versioned regeneration; do not auto-promote source version'},
  features};
