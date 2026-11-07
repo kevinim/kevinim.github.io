@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-11-07",
+  "district": "CFB",
+  "provider": "GuideK12 SchoolSearch",
+  "officialPage": "https://www.cfbisd.edu/students/school-maps-locator-system",
+  "locator": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/",
+  "method": "GitHub Actions Playwright/Chromium public-address UI test; no paid TinyFish agent, login or private residential address",
+  "ciEvidence": "https://github.com/kevinim/kevinim.github.io/actions/runs/42353651130",
+  "status": "property-specific-zoned-school-output-not-observed",
+  "samples": [
+    {
+      "type": "public-school",
+      "address": "1600 S Josey Ln, Carrollton, TX 75006"
+    },
+    {
+      "type": "public-apartment-complex",
+      "name": "Lux on Main",
+      "address": "1011 S Main St, Carrollton, TX 75006",
+      "operator": "https://www.luxonmain.com/",
+      "alsoNamedInDistrictRezoning": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning"
+    }
+  ],
+  "observations": [
+    "Both entered public addresses yielded the same first 3500 characters of the complete campus catalog following Find on Map.",
+    "No visible autocomplete option was produced for either test query in the tested session.",
+    "No explicitly identified zoned elementary/middle/high result was observed.",
+    "All listed campus cards showed Drive Time and Drive Distance Unknown in the tested session.",
+    "Navigation returned HTTP 200; no visible JavaScript page errors or failed browser requests were logged."
+  ],
+  "limitations": [
+    "Cannot establish that GuideK12 is broken for all residents or residential unit records; these two public property types may lack the exact address needed by provider.",
+    "Presence of a school name or catalog card is never proof of address zoning.",
+    "No school has been assigned in dashboard based on this test."
+  ],
+  "nextStep": "CFB enrollment/GuideK12 support should clarify correct address selection/lookup workflow or provide current property-level school map source; keep address-level assignment inconclusive."
+}
