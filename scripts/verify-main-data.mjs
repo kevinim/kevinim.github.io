@@ -414,7 +414,7 @@ test('2026-11-07 Allen/CFB resident Finder evidence gates are accurate',()=>{
  assert.ok(html.includes('주소별 배정 검증 보류'));
  assert.ok(html.includes('GIS 자체가 독립 검증된 학군은 Frisco·Prosper 2곳'));
 });
-test('CFB 2026-27 official feeder-only lookup provides 20 reference paths, never property assignments',()=>{
+test('CFB feeder source data stays auditable but optional UI is removed',()=>{
  assert.equal(cfbOfficialFeederValid(cfbFeeder),true);
  assert.equal(cfbFeederKey('Stark Elementary School'),cfbFeederKey('Stark'));
  assert.equal(cfbOfficialFeederValid({...cfbFeeder,academicYearExplicit:'2025–26'}),false);
@@ -440,10 +440,10 @@ test('CFB 2026-27 official feeder-only lookup provides 20 reference paths, never
  }
  assert.equal(pass,20);
  assert.equal(conflicts,1);
- assert.ok(html.includes('id="cfbFeederSection"'));
- assert.ok(html.includes('id="cfbElementary"'));
- assert.ok(html.includes('./cfb-feeder-lookup.js?v=3'));
- assert.ok(html.includes('id="cfbFeederAll"'));
+ assert.ok(!html.includes('id="cfbFeederSection"'));
+ assert.ok(!html.includes('id="cfbElementary"'));
+ assert.ok(!html.includes('./cfb-feeder-lookup.js'));
+ assert.ok(!html.includes('id="cfbFeederAll"'));
  const staticHelper=readText('cfb-feeder-lookup.js');
  assert.ok(staticHelper.includes('function renderAll()'));
  assert.ok(staticHelper.includes("node('td','공식 자료 충돌 · 확인 필요')"));
@@ -451,7 +451,7 @@ test('CFB 2026-27 official feeder-only lookup provides 20 reference paths, never
  const feederUi=readText('cfb-feeder-lookup.js');
  assert.ok(feederUi.includes("select.addEventListener('focus',load)"));
  assert.ok(feederUi.includes('load();\n}'));
- assert.ok(html.includes('진학표입니다. <b>집 주소의 배정 학교를 찾아주는 기능은 아닙니다.'));
+ assert.ok(!html.includes('CFB 2026–27 진학표 조회 · 배정된 초등학교를 아는 경우'));
 });
 
 test('CFB official 2026–27 feeder table is accurate and never treated as GIS',()=>{
@@ -763,7 +763,7 @@ test('P0 remaining districts retain honest address-level evidence and free live-
  assert.ok(probe.includes('notAddressSchoolVerification:true'));
  assert.ok(probe.includes("propertyAssignmentVerified:false"));
 });
-test('LISD official locator-linked 174 apartment table and no unsafe vintage promotion',()=>{
+test('LISD apartment source remains auditable but optional UI is removed',()=>{
  const info=lisdApartmentData.metadata,rows=lisdApartmentData.apartments;
  assert.equal(rows.length,174);assert.equal(info.recordCount,174);
  assert.equal(info.sourceAcademicYear,null);
@@ -785,9 +785,9 @@ test('LISD official locator-linked 174 apartment table and no unsafe vintage pro
  assert.equal(operator.otherSameNameLocatorRecord,'2175 S STATE HIGHWAY 121');
  assert.equal(info.internalCrossCheck.recordsDisputed,1);
  assert.ok(readText('lewisville-apartments.js').includes('운영사 주소는 건물 위치 확인용입니다. 학교 배정 확인 자료가 아닙니다.'));
- assert.ok(html.includes('./lewisville-apartments.js?v=2'));
+ assert.ok(!html.includes('./lewisville-apartments.js'));
  assert.ok(readText('lewisville-apartments.js').includes("rec.zoneAudit?.status==='internal-map-conflict'"));
- assert.ok(html.includes('지도와 배정표가 서로 다른 아파트 1곳은 별도 경고'));
+ assert.ok(!html.includes('Lewisville 아파트별 학교 참고 검색 (174개 항목)'));
  assert.equal(info.uniqueApartmentNames,173);
  assert.equal(rows.filter(r=>!r.address).length,4);
  assert.ok(rows.every(r=>r.name&&r.elementary&&r.middle&&r.intermediate&&r.high));
@@ -798,9 +798,9 @@ test('LISD official locator-linked 174 apartment table and no unsafe vintage pro
  assert.ok(findLisdApartments('Vue Castle',rows).some(r=>r.name==='VUE CASTLE HILLS'));
  assert.deepEqual(findLisdApartments('a',rows),[]);
  assert.ok(findLisdApartments('apartment',rows).length<=8);
- assert.ok(html.includes('id="lisdApartmentSection"'));
- assert.ok(html.includes('id="lisdApartmentQuery"'));
- assert.ok(html.includes('공식 Find an Apartment에서 현재 배정 확인'));
+ assert.ok(!html.includes('id="lisdApartmentSection"'));
+ assert.ok(!html.includes('id="lisdApartmentQuery"'));
+ assert.ok(html.includes('https://www.lisd.net/resources/families/school-locator'));
  assert.ok(readText('lewisville-apartments.js').includes('sourceAcademicYear!==null'));
  assert.equal(audit.districts.find(d=>d.code==='LISD').status,'official-finder-connected');
 });
