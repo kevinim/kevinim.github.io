@@ -5,6 +5,16 @@
 **Checked:** 2026-11-06 (America/New_York)  
 **Active school year:** 2026–27
 
+## Current official district Finder is practical zoning source — 2026-11-06
+
+Operational policy: A district's **currently published School Finder** is the practical line source. Its old internal GIS field-year does not by itself invalidate the currently served map. Keep separately **(1) currently district-operated** and **(2) independently certified 2026–27 GIS source vintage**.
+
+- **Frisco/Prosper:** independently 2026–27 school GIS (green).
+- **Plano:** 2026–27 SchoolFinder's ArcGIS WebMap embeds `Plano_ISD_School_Districts`, still named 2025–26. The dashboard now loads its 4 FeatureServer layers **live** (3 Senior, 6 High, 11 Middle and 44 Elementary polygons representing 42 elementary schools). Independently published feeder paths contain **exactly the same school names**: senior 3/3, high 6/6, middle 11/11, elementary 42/42. This is a school-name crosscheck, NOT per-address verification. If ArcGIS cannot be fetched, the dashboard uses a clearly historical cached reference, not a purported live source (blue live, orange old).
+- **Lewisville:** the district's current locator links the live `Lewisville SZF 2627` webmap, including high school polygons with internal `SCHL_YEAR=2025–26`; 173/174 public apartment points internally agree at all 4 levels, one 5289 Hwy 121 disagreement remains. Operational Finder link is blue, not independent 2026–27 proof.
+- **Allen:** 2019/2023 campus GIS unlinked to current Find-A-School street address table, so old orange dashed zones are now hidden by default. Current published 1,689 street rows / 1,687 parsed and split-apartment exception remain the primary address source.
+- **CFB:** official GuideK12 current address search primary; board-approved 2025–26 elementary/middle/high **map images** are linked on dashboard. The images are not vector GIS. No exact home-to-campus polygon was invented.
+
 ## School attendance polygons: six-district audit
 
 **Source acquisition update (2026-11-06):** The full official **2026–27 Prosper ISD** 31-campus polygons have been acquired into the new, source-validated `prosper-attendance-2026.geojson` file, with a reproducible `scripts/fetch-prosper-2026-zones.mjs` converter. After **43/43 independent source lookups** (31 school-zone interiors and 12 boundary-adjacent points), the official 31-zone source is now **active in the production map and school candidates for home addresses**. The former 13-zone Celina file is retained only as a historical reference. Specific residence/unit/program enrollment exceptions still require district confirmation. Full research log: [SCHOOL_ZONE_SOURCE_ACQUISITION_2026-11-06.md](SCHOOL_ZONE_SOURCE_ACQUISITION_2026-11-06.md).

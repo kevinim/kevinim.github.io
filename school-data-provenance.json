@@ -15,13 +15,13 @@
     {
       "code": "PISD",
       "name": "Plano ISD",
-      "status": "historical-reference",
+      "status": "official-finder-connected",
       "geometryYear": "2025–26",
       "featureCount": 64,
       "localFile": "plano-locator-reference.geojson",
       "mapSource": "https://services4.arcgis.com/uBV8NRVfoRJv7qWn/arcgis/rest/services/Plano_ISD_School_Districts/FeatureServer",
       "officialLookup": "https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder",
-      "geometryUse": "orange dashed reference; 2026–27 equivalence not established; no 2019 fallback",
+      "geometryUse": "Current district 2026–27 SchoolFinder links a 2025–26-named FeatureServer. Live read all 4 polygon levels at runtime; 64 polygons, 62 distinct schools. Fallback cached 2025–26 if live unavailable; never mark fallback current.",
       "feederReference": {
         "file": "plano-official-feeder-reference-2026.json",
         "officialPage": "https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/attendance-boundary-descriptions",
@@ -43,6 +43,38 @@
         "webMapLastModified": "2025-05-02",
         "confirmedBoundariesService": "https://services4.arcgis.com/uBV8NRVfoRJv7qWn/arcgis/rest/services/Plano_ISD_School_Districts/FeatureServer",
         "note": "Official 2026-27 landing page links web experience whose webmap school attendance polygons still reference the old 2025-26 source; this proves linkage not equivalence / freshness."
+      },
+      "liveFinderVerification": {
+        "service": "https://services4.arcgis.com/uBV8NRVfoRJv7qWn/arcgis/rest/services/Plano_ISD_School_Districts/FeatureServer",
+        "checked": "2026-11-06",
+        "connectedToCurrentYearFinder": true,
+        "sourceLayerAcademicYear": "2025–26",
+        "levels": {
+          "senior": {
+            "polygons": 3,
+            "distinct": 3
+          },
+          "high": {
+            "polygons": 6,
+            "distinct": 6
+          },
+          "middle": {
+            "polygons": 11,
+            "distinct": 11
+          },
+          "elementary": {
+            "polygons": 44,
+            "distinct": 42
+          }
+        },
+        "crosscheckSeparateOfficialFeederNames": {
+          "senior": "3/3",
+          "high": "6/6",
+          "middle": "11/11",
+          "elementary": "42/42"
+        },
+        "addressesIndependentlyCompared": 0,
+        "notes": "Campus-name crosscheck, not an address school entitlement proof."
       }
     },
     {
@@ -109,11 +141,11 @@
     {
       "code": "LISD",
       "name": "Lewisville ISD",
-      "status": "mixed-vintage-reference",
+      "status": "official-finder-connected",
       "geometryYear": "2025–26 high; elementary and middle source-year not explicitly recorded",
       "mapSource": "https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/03c099e24d304c4fa0f4ce8a76c10062/data?f=json",
       "officialLookup": "https://www.lisd.net/resources/families/school-locator",
-      "geometryUse": "orange dashed reference; web map named 2627 but high polygon source field SCHL_YEAR=2025-26",
+      "geometryUse": "Current district locator links live Lewisville SZF 2627 WebMap, even though high zone metadata says 2025–26; previous year in source != invalid operational Finder. One apartment table-vs-map conflict remains unresolved.",
       "infofinderManifestRecheck": {
         "checked": "2026-11-06",
         "clientId": "LI3VBOFR0JM",
@@ -148,6 +180,12 @@
           "resolution": "Unresolved; same public locator has conflicting fields. UI warns and displays both sources without assigning.",
           "geometryYearStillUnverified": true
         }
+      },
+      "liveFinderVerification": {
+        "checked": "2026-11-06",
+        "operationalMap": "https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/03c099e24d304c4fa0f4ce8a76c10062/data?f=json",
+        "sourceYear": "High 2025–26; Elementary/Middle unknown",
+        "addressesIndependentlyCompared": 0
       }
     },
     {
@@ -222,6 +260,16 @@
           "conflictSchool": "Farmers Branch Elementary",
           "notes": "Exactly one row mismatch among three full 21-row official sources. Property-level current school enrollment still requires GuideK12 verification; do not choose winner from majority vote."
         }
+      },
+      "approvedMapReference": {
+        "page": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning",
+        "levels": [
+          "elementary",
+          "middle",
+          "high"
+        ],
+        "geojsonAvailable": false,
+        "note": "Published approved zone images, not coordinate-level vector boundary."
       }
     }
   ],

@@ -18,6 +18,7 @@ const prosperCurrent = readJson('prosper-attendance-2026.geojson');
 const officialChecks = readJson('tests/prosper-official-location-checks-2026.json');
 const require=createRequire(import.meta.url);
 const {resolveAssignment}=require('../school-assignment.js');
+const {PLANO_LAYERS,PLANO_SERVICE,planoLiveUrl,convertPlanoLive,loadPlanoLiveFinder}=require('../plano-finder-live.js');
 const {matchAllenAddress}=require('../allen-lookup.js');
 const {allenSplitApartmentException,ALLEN_SPLIT_APARTMENTS}=require('../allen-apartment-exceptions.js');
 const {isRetiredCampus, RETIRED_CAMPUSES_2026}=require('../school-lifecycle.js');
@@ -49,7 +50,7 @@ test('main page inline JavaScript compiles', () => {
   inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
 });
 test('all main application JS modules compile', () => {
-  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','lewisville-apartments.js','allen-apartment-exceptions.js']) {
+  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','lewisville-apartments.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
     new Script(readText(name), {filename:name});
     assert.ok(html.includes('./' + name), name + ' not loaded');
   }
@@ -382,7 +383,7 @@ test('P0 zone-edge warning uses closest official polygon ring',()=>{
  const hole=zoneBoundaryProximity(p,[{geometry:{type:'Polygon',coordinates:[ring(5*d),ring(.5*d)]}}]);
  assert.ok(hole.review);
  const h=readText('home-lookup-v2.js');
- assert.ok(h.includes("status:'boundary-review'"));
+ assert.ok(h.includes("'boundary-review':'finder-boundary-review'"));
  assert.ok(h.includes('zoneBoundaryProximity([item.ll[1],item.ll[0]],found.features)'));
  assert.ok(html.includes('./school-zone-risk.js?v=1'));
 });
@@ -524,7 +525,53 @@ test('LISD official locator-linked 174 apartment table and no unsafe vintage pro
  assert.ok(html.includes('id="lisdApartmentQuery"'));
  assert.ok(html.includes('공식 Find an Apartment에서 현재 배정 확인'));
  assert.ok(readText('lewisville-apartments.js').includes('sourceAcademicYear!==null'));
- assert.equal(audit.districts.find(d=>d.code==='LISD').status,'mixed-vintage-reference');
+ assert.equal(audit.districts.find(d=>d.code==='LISD').status,'official-finder-connected');
+});
+test('P0 current Plano official Finder zoning GIS is live, all levels complete, original vintage transparent',()=>{
+ assert.equal(PLANO_LAYERS.length,4);
+ assert.equal(PLANO_LAYERS.map(x=>x.level).join(','),'senior,high,middle,elementary');
+ const u=new URL(planoLiveUrl(3));
+ assert.ok(u.href.startsWith(PLANO_SERVICE));assert.equal(u.searchParams.get('f'),'geojson');
+ assert.equal(u.searchParams.get('resultRecordCount'),'2000');
+ assert.throws(()=>planoLiveUrl(5));
+ const fake={type:'Feature',geometry:{type:'Polygon',coordinates:[[[-96.7,33],[-96.6,33],[-96.6,33.1],[-96.7,33]]]},properties:{EntityName:'Aldridge Elementary',ELEM2526:'ALDRIDGE',Grade:'KG - 05'}};
+ const ff=convertPlanoLive(fake,PLANO_LAYERS[3]);
+ assert.equal(ff.properties.school,'Aldridge Elementary');
+ assert.equal(ff.properties.currentFinderSource,true);
+ assert.equal(ff.properties.yearVerified2627,false);
+ assert.ok(ff.properties.sourceVintage.includes('2025–26'));
+ const selected=resolveAssignment({plano:[ff],planoFinderLive:true});
+ assert.equal(selected.status,'finder-current');
+ assert.deepEqual(officialReviewCandidates(selected,'elementary'),['Aldridge Elementary']);
+ assert.equal(resolveAssignment({plano:[ff]}).status,'reference');
+ assert.equal(resolveAssignment({lewisville:[ff],lewisvilleFinderLive:true}).status,'finder-current');
+ assert.equal(resolveAssignment({frisco:[ff],plano:[ff],planoFinderLive:true}).status,'conflict');
+ const fakeFetch=async url=>{
+  const id=Number(url.match(/FeatureServer\/(\d+)\/query/)[1]),layer=PLANO_LAYERS[id];
+  const records=Array.from({length:layer.min+1},(_,i)=>({type:'Feature',geometry:fake.geometry,properties:{EntityName:i===layer.min?('Campus 0'):('Campus '+i)}}));
+  return {ok:true,json:async()=>({type:'FeatureCollection',features:records})};
+ };
+ const dynamic=loadPlanoLiveFinder(fakeFetch);
+ return dynamic.then(all=>{
+  assert.ok(all.length>=49);
+  assert.equal(all.filter(f=>f.properties.gradeLevel==='elementary').length,PLANO_LAYERS[3].min+1);
+ });
+});
+test('P0 current Finder and prior unlinked GIS are visually distinct without falsely promoting year',()=>{
+ const web=readText('index.html'),home=readText('home-lookup-v2.js');
+ assert.ok(web.includes('id="referenceBoundaryOverlay"'));
+ assert.ok(web.includes('loadPlanoLiveFinder()'));
+ assert.ok(web.includes('state.liveFinder.PISD_LOOKUP=true'));
+ assert.ok(web.includes('state.liveFinder.LISD=true'));
+ assert.ok(web.includes('historical&&!state.showOldZones'));
+ assert.ok(web.includes("finderLinked?'#285ac0'"));
+ assert.ok(web.includes('현재 학군 Finder 연결 배정선은 Plano·Lewisville까지 4곳'));
+ assert.ok(web.includes('CFB 승인 배정선 3종'));
+ assert.ok(home.includes("'finder-boundary-review'"));
+ assert.ok(home.includes('planoFinderLive:!!state.liveFinder.PISD_LOOKUP'));
+ assert.equal(audit.districts.find(x=>x.code==='PISD').currentFinderBoundary.uniqueCampuses.elementary,42);
+ assert.equal(audit.districts.find(x=>x.code==='PISD').status,'official-finder-connected');
+ assert.equal(audit.districts.find(x=>x.code==='LISD').status,'official-finder-connected');
 });
 test('CFB official current GuideK12 locator linked',()=>{
   assert.ok(html.includes('https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/'));
