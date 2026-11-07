@@ -127,7 +127,7 @@ mkdirSync(out,{recursive:true});
   assert.ok((await page.locator('#zoneNotice a').getAttribute('href')).includes('earlycollege.cfbisd.edu'));
   // Regression for Allen map visibility. Initial overview zoom 11 previously
   // rendered ZERO school markers even when the school data had loaded.
-  await page.evaluate(()=>{map.setView([33.103,-96.675],11);return null});
+  await page.evaluate(()=>{map.setView([33.103,-96.675],11);drawSchools();return null});
   await page.waitForFunction(()=>map.getZoom()===11);
   const allenWide=await page.evaluate(()=>{
    const expected=state.schools.filter(s=>s.district==='AISD'&&s.ll&&s.type!=='other'&&map.getBounds().contains(s.ll));
@@ -138,6 +138,7 @@ mkdirSync(out,{recursive:true});
   });
   assert.ok(allenWide.expected>=5,'Allen must have geocoded school records in the map');
   assert.ok(allenWide.totalMarkers>0,'Regional overview must not hide every school marker');
+  assert.ok(allenWide.totalMarkers<=100,'Overview should respect 100-marker limit to avoid visual overload');
   assert.ok(allenWide.allenDisplayed>0,'Allen nearby schools must appear at overview zoom 11: '+JSON.stringify(allenWide));
   await page.locator('#allenSchoolsShortcut').click();
   await page.waitForFunction(()=>map.getZoom()===13,{timeout:0},{timeout:20000});
