@@ -51,17 +51,53 @@
         "1445 N Perry Rd, Carrollton, TX 75006",
         "1600 S Josey Ln, Carrollton, TX 75006"
       ],
-      "status": "property-school-names-not-independently-confirmed",
+      "status": "official-property-school-names-confirmed",
       "observations": [
-        "Multiple live GuideK12 attempts did not identify a unique elementary/middle/high set for either public address",
-        "The school cards observed were an unfiltered catalog; no residence-zoned marker was observed",
-        "No suggestion was seen in the tested address entry flow"
+        "Two public test address lookups each return exactly 3 grade-band assigned school names after native autocomplete selection.",
+        "Public apartment base address has several unit candidates; unit-specific assignments are not generally verified.",
+        "Official school attendance GIS source year remains independently unverified; current Finder is usable.",
+        "Farmers Branch Elementary cross-page feeder disagreement persists and must not be auto-resolved."
       ],
       "yearInFinder": null,
       "zonedFeederSource": "cfb-official-feeder-reference-2026.json",
       "safeFeederPaths": 20,
       "conflictingFeederPaths": 1,
-      "note": "Not proof that every user or address encounters this behavior. District enrollment staff confirmation or a working alternative address-query mechanism is necessary."
+      "note": "The current official resident Finder works for sampled public street addresses. No automatic per-house CFB map in dashboard, no official unit enrollment certification, no newer verified GIS.",
+      "initialTrialsBeforeNativeSelection": {
+        "status": "property-school-names-not-independently-confirmed",
+        "addressSamples": [
+          "1445 N Perry Rd, Carrollton, TX 75006",
+          "1600 S Josey Ln, Carrollton, TX 75006"
+        ],
+        "observations": [
+          "Multiple live GuideK12 attempts did not identify a unique elementary/middle/high set for either public address",
+          "The school cards observed were an unfiltered catalog; no residence-zoned marker was observed",
+          "No suggestion was seen in the tested address entry flow"
+        ],
+        "note": "Not proof that every user or address encounters this behavior. District enrollment staff confirmation or a working alternative address-query mechanism is necessary."
+      },
+      "confirmedPublicAddressSamples": [
+        {
+          "address": "1600 S Josey Ln, Carrollton, TX 75006",
+          "kind": "public school facility",
+          "assigned": {
+            "elementary": "McLaughlin Strickland Elementary (K-5)",
+            "middle": "Perry Middle School (6-8)",
+            "high": "Turner High School (9-12)"
+          }
+        },
+        {
+          "address": "1011 S Main St, Carrollton, TX 75006",
+          "kind": "public apartment base address",
+          "assigned": {
+            "elementary": "Carrollton Elementary (K-5)",
+            "middle": "Perry Middle School (6-8)",
+            "high": "Newman Smith High School (9-12)"
+          }
+        }
+      ],
+      "confirmedSource": "https://github.com/kevinim/kevinim.github.io/actions/runs/42356357561",
+      "confirmedMethod": "Click actual `.address_input .search_result_container .search_result` autocomplete candidate, then read explicitly marked Assigned school for K-5, 6-8, 9-12. Without native selection, provider shows full campus catalog."
     },
     {
       "district": "LISD",
