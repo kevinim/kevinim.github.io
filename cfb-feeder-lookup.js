@@ -37,9 +37,35 @@ function initCfbFeederLookup(){
  const select=document.getElementById('cfbElementary');
  const output=document.getElementById('cfbFeederResult');
  const status=document.getElementById('cfbFeederStatus');
+ const overview=document.getElementById('cfbFeederAll');
  if(!section||!select||!output||!status)return;
  let dataset=null,request=null;
  const node=(tag,txt)=>{const e=document.createElement(tag);e.textContent=String(txt||'');return e};
+ function renderAll(){
+  if(!overview||!dataset)return;
+  overview.replaceChildren();
+  const table=node('table','');table.className='data-table';
+  const head=node('thead',''),hrow=node('tr','');
+  for(const label of ['초등 · 교육청에서 확인', '중학교 · 진학표 참고', '고등학교 · 진학표 참고']){
+   const th=node('th',label);th.scope='col';hrow.appendChild(th);
+  }
+  head.appendChild(hrow);table.appendChild(head);
+  const body=node('tbody','');
+  for(const row of dataset.rows){
+   const result=cfbFeederByElementary(row.zonedElementary,dataset);
+   const tr=node('tr','');
+   tr.appendChild(node('td',row.zonedElementary));
+   if(result.status==='feeder-reference'){
+    tr.appendChild(node('td',result.middle));
+    tr.appendChild(node('td',result.high));
+   }else{
+    tr.appendChild(node('td','공식 자료 충돌 · 확인 필요'));
+    tr.appendChild(node('td','자동 판단 중단'));
+   }
+   body.appendChild(tr);
+  }
+  table.appendChild(body);overview.appendChild(table);
+ }
  function render(){
   output.replaceChildren();
   const r=cfbFeederByElementary(select.value,dataset);
@@ -69,12 +95,14 @@ function initCfbFeederLookup(){
      const option=document.createElement('option');option.value=row.zonedElementary;option.textContent=row.zonedElementary+' Elementary';
      select.appendChild(option);
     }
+    renderAll();
     render();
    }).catch(err=>{dataset=null;status.textContent='공식 진학표를 불러오지 못했습니다. 교육청에 직접 확인하세요.';console.warn('CFB feeder load',err)});
  }
  section.addEventListener('toggle',()=>{if(section.open)load()});
  select.addEventListener('focus',load);
  select.addEventListener('change',render);
+ select.addEventListener('input',render);
  // 21-row JSON is small. Eager loading avoids browsers/embedded clients that
  // fail to dispatch the details.toggle event before the user selects a campus.
  load();
