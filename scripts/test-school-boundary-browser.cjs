@@ -77,6 +77,36 @@ mkdirSync(out,{recursive:true});
    assert.ok(stateAfter.layers>0,'old Allen attendance polygon must be drawn automatically on school selection');
    assert.ok(/과거 GIS 경계/.test(stateAfter.note),'explicit 2019/2023 vintage disclaimer must remain');
   }
+  // A school whose campus pin is missing must show its verified polygon
+  // synchronously, rather than waiting on an unrelated geocoding request.
+  const noPinResult=await page.evaluate(async()=>{
+   const campus=state.schools.find(s=>s.district==='FISD'&&/Isbell Elementary/i.test(s.name));
+   const oldPoint=campus.ll,oldAddress=campus.address,oldGeocode=geocodeSchool;
+   let completeGeocode;
+   campus.ll=null;
+   campus.address=oldAddress||'Dummy address for delayed geocoding regression';
+   geocodeSchool=()=>new Promise(resolve=>{completeGeocode=resolve});
+   try{
+    const pending=schoolClicked(campus);
+    const immediate={
+     layerCount:zoneGroup.getLayers().length,
+     text:document.getElementById('zoneNotice').innerText,
+     selected:state.selectedSchool===campus,
+     referenceChecked:document.getElementById('referenceBoundaryOverlay').checked
+    };
+    if(typeof completeGeocode!=='function')throw Error('Missing coordinates must initiate non-blocking secondary lookup');
+    completeGeocode(false);
+    await pending;
+    return immediate;
+   }finally{
+    campus.ll=oldPoint;campus.address=oldAddress;geocodeSchool=oldGeocode;
+   }
+  });
+  assert.equal(noPinResult.selected,true);
+  assert.equal(noPinResult.referenceChecked,true);
+  assert.ok(noPinResult.layerCount>0,'School polygon must appear before geocoding completes');
+  assert.ok(noPinResult.text.includes('Isbell 세부 학년 주의'),noPinResult.text);
+  console.log('PASS Polygon rendered instantly while school pin geocoding was artificially delayed');
   const noData=report.missingSchools.find(x=>x.district==='CFB')||report.missingSchools.find(x=>x.reason==='school-not-in-polygon-source');
   if(noData){
    await page.evaluate(async ({district,school})=>{
