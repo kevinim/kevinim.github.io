@@ -42,9 +42,11 @@ function findSchoolBoundary(s,geo,ratings){
  return {status:hits.length?'matched':'school-not-in-polygon-source',features:hits,
   eligible:eligible.length,sourceFeatures:feats.length};
 }
-function boundaryMissingExplanation(s, result, sourceVintage){
+function boundaryMissingExplanation(s, result, sourceVintage, sourceLoadError){
  const district=s?.district||'';
  const finder=({FISD:'Frisco',PISD:'Plano',AISD:'Allen',LISD:'Lewisville',PROSPER:'Prosper',CFB:'CFB'})[district]||district||'해당 학군';
+ if(sourceLoadError)return {reason:finder+' 학군 배정구역 데이터가 이번 접속에서 로딩되지 않았습니다.',
+  footnote:'이 세션의 원본 요청에 오류가 있어 학교별 경계 수록 여부를 판단할 수 없습니다. 인터넷/교육청 서비스 상태를 확인한 뒤 다시 시도하세요. 과거 도형을 임의로 대신 표시하지 않습니다.'};
  switch(result?.status){
  case 'not-a-zoned-campus':
   return {reason:'해당 학교는 지도에서 초·중·고 일반 배정구역을 표시하는 유형으로 분류되지 않았습니다.',
