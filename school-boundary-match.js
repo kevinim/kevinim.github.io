@@ -29,13 +29,19 @@ function knownBoundaryException(s){
   reason:'Mill Street Elementary는 2026–27학년도부터 일반 초등학교가 아닌 유아교육 시설로 전환됩니다.',
   footnote:'Lewisville ISD 공식 Turnaround Plan에 따라 기존 학생은 다른 초등학교로 재배정됐습니다. 과거 Mill Street의 통학구역을 현재 초등 배정도로 표시하지 않습니다.',
   sourceUrl:'https://www.lisd.net/resources/families/school-improvement/2025-2026-plans/mill-street'};
+ if(district==='CFB'&&key==='early college')return {
+  reason:'CFB Early College High School은 일반 주소별 고등학교 배정 대신 별도 지원·추첨 절차로 입학합니다.',
+  footnote:'CFB 공식 Early College High School 입학 정책은 지원서와 weighted lottery를 명시합니다. 인근 일반 고등학교의 통학구역을 이 캠퍼스에 복제하면 잘못된 배정 정보가 되므로 표시하지 않습니다.',
+  sourceUrl:'https://earlycollege.cfbisd.edu/campus-information/echs-designation/benchmark-1',
+  sourceLinkLabel:'CFB Early College 공식 입학 절차'
+ };
  return null;
 }
 function findSchoolBoundary(s,geo,ratings){
  const feats=Array.isArray(geo)?geo:[];
  const levels=boundaryGradeLevels(s?.type);
  if(!s||!levels.length)return {status:'not-a-zoned-campus',features:[],eligible:0,sourceFeatures:feats.length};
- if(!feats.length)return {status:'no-district-polygon-source',features:[],eligible:0,sourceFeatures:0};
+ if(!feats.length)return {status:knownBoundaryException(s)?'special-campus-no-standard-zone':'no-district-polygon-source',features:[],eligible:0,sourceFeatures:0};
  const eligible=feats.filter(f=>levels.includes(f?.properties?.gradeLevel));
  if(!eligible.length)return {status:knownBoundaryException(s)?'special-campus-no-standard-zone':'no-grade-polygon-source',features:[],eligible:0,sourceFeatures:feats.length};
  const key=boundarySchoolKey(s.name);
@@ -72,8 +78,9 @@ function boundaryMissingExplanation(s, result, sourceVintage, sourceLoadError){
    footnote:'학교 선택제·특수 프로그램·기타 교육시설은 일반 통학구역 다각형이 없을 수 있습니다. 학군 공식 조회에서 주소와 학년을 확인하세요.'};
  case 'no-district-polygon-source':
   return {reason:finder+' 학군의 학교별 경계 다각형이 현재 지도에 연결되지 않았습니다.',
-   footnote:district==='CFB'?'CFB는 공식 GuideK12 주소 검색은 작동하지만 학교별 GIS 경계 원본을 대시보드에 확보하지 못했습니다. 주소를 입력하고 자동완성 후보를 선택해 배정을 확인하세요.':
-    '공식 주소별 Finder와 지도용 GIS 다각형은 별개의 자료입니다. 이 화면에는 해당 학군 도형이 없어 경계를 추정하지 않습니다.'};
+   footnote:district==='CFB'?'CFB 공식 GuideK12 조회기는 2025-03-06 승인된 학교 배정 변경을 반영합니다. 다만 이 대시보드가 독립적으로 그릴 수 있는 학교별 GIS 경계 원본은 확보되지 않았습니다. 지도의 학교 위치점이나 2015–16 NCES 구역을 현재 배정 경계로 대체하지 않습니다. 공식 조회기에 거주 주소를 입력해 확인하세요.':
+    '공식 주소별 Finder와 지도용 GIS 다각형은 별개의 자료입니다. 이 화면에는 해당 학군 도형이 없어 경계를 추정하지 않습니다.',
+   ...(district==='CFB'?{sourceUrl:'https://www.cfbisd.edu/students/school-maps-locator-system',sourceLinkLabel:'CFB 공식 주소별 배정 조회기'}:{})};
  case 'no-grade-polygon-source':
   return {reason:'현재 지도 원본에 이 학교 단계('+String(s.type||'미분류')+')의 배정구역이 없습니다.',
    footnote:'지도 자료의 학년 단계 또는 공개 범위가 제한됐습니다. 학교 위치만으로 배정 경계를 만들어 표시하지 않습니다.'};
