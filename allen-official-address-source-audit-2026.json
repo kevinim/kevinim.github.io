@@ -78,7 +78,7 @@
     "scope": "Official cached numeric street ranges only; not independent current-year enrollment or revised GIS",
     "officialSourceRows": 1689,
     "parseableNumericRows": 1687,
-    "exactOrAliasRangeRowsWithUniqueResults": 1684,
+    "exactOrAliasRangeRowsWithUniqueResults": 1680,
     "conflictingOrOverlappingVariantRowsFailClosed": 3,
     "supportedVariants": [
       "Drive / Dr",
@@ -89,6 +89,9 @@
     "apartmentUnitExceptionsStillManual": 4,
     "academicYearInPublishedAddressTable": null,
     "currentYearGISBoundariesEstablished": false,
-    "provenance": "No source ranges or school assignments changed; only geocoder street-name normalization and collision refusal."
+    "provenance": "No source ranges or school assignments changed; only geocoder street-name normalization and collision refusal.",
+    "apartmentSourceRowsBlocked": 4,
+    "totalUnmatchedAtPublishedRangeStart": 7,
+    "notes": "All 1,687 parseable source ranges checked at their numeric starting address: 1,680 unique school matches, three duplicate/overlapping ranges return null, four school-year-undated split-apartment source rows stay quarantined."
   }
 }
