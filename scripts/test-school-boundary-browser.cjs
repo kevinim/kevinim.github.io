@@ -131,10 +131,12 @@ mkdirSync(out,{recursive:true});
    'Allen shortcut must not exist: map rendering should work without it');
   const allenZoomAudits=[];
   for(const zoom of [9,10,11,13]){
+   await page.evaluate(z=>{map.stop();map.setView([33.103,-96.675],z,{animate:false});},zoom);
+   await page.waitForFunction(z=>map.getZoom()===z,zoom,{timeout:10000});
+   // Let Leaflet's moveend/zoomend handlers settle before inspecting the final
+   // automatically drawn markers; do not rely on a stale prior-zoom layer.
+   await page.waitForTimeout(250);
    const check=await page.evaluate(z=>{
-    map.setView([33.103,-96.675],z);
-    // Trigger the same automatic map layer redraw after changing the viewport.
-    // No button or school filter changes are permitted.
     drawSchools();
     const expected=state.schools.filter(s=>s.district==='AISD'&&s.ll&&s.type!=='other'&&
      map.getBounds().contains(s.ll)&&
