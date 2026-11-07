@@ -265,7 +265,7 @@ test('Plano feeder name agreement with 2025–26 ArcGIS does not imply current G
  assert.ok(planoFeeder.specialCases.some(x=>x.rule==='west of Coit Road'&&x.middle==='Frankford'));
 });
 test('Production source panels and Jackson overlay identify authoritative exceptions',()=>{
- assert.ok(html.includes('GIS 연도 최신성은 미입증'));
+ assert.ok(html.includes('현행 2026–27 SchoolFinder 연결 · 2025–26 필드명 GIS 64개'));
  assert.ok(html.includes('공식 주소표 1,689행/유효 1,687행'));
  assert.ok(html.includes('Moss Haven Pl'));
  assert.ok(html.includes('Crestview Heights'));
