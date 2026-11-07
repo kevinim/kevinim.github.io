@@ -1,0 +1,37 @@
+name: Diagnose CFB address SchoolSearch (free Playwright)
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/probe-cfb-public-finder.yml'
+      - 'scripts/probe-cfb-public-finder-browser.cjs'
+jobs:
+  public-browser-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated open-source Playwright Chromium
+        run: |
+          mkdir -p .tmp-browser
+          cd .tmp-browser
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Inspect public CFB SchoolSearch using an institutional address (not a private home)
+        env:
+          NODE_PATH: ${{ github.workspace }}/.tmp-browser/node_modules
+        run: node scripts/probe-cfb-public-finder-browser.cjs
+      - name: Upload diagnostic JSON and redacted public-site screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cfb-public-schoolsearch-browser-probe
+          path: artifacts/cfb-browser-probe/
+          if-no-files-found: warn
