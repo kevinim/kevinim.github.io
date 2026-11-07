@@ -203,6 +203,23 @@ mkdirSync(out,{recursive:true});
   assert.ok(visibilityAudit.some(r=>r.byDistrict.PISD>10),'Plano coverage required');
   writeFileSync(out+'/school-marker-visibility-guardrail.json',JSON.stringify(visibilityAudit,null,2)+'\\n');
   console.log('PASS all-district marker visibility/opacity guardrail across ZIP and zoom '+JSON.stringify(visibilityAudit));
+  // Real user flow: selecting ZIP via the actual UI, not mutating state directly.
+  // This catches asynchronous map.fitBounds/moveend/overlay re-render regressions.
+  await page.locator('#schoolOverlay').check();
+  await page.locator('#zipSelect').selectOption('75013');
+  await page.waitForTimeout(1200);
+  const realAllen=await page.evaluate(()=>{
+   const visible=state.schools.filter(s=>s.district==='AISD'&&s.ll&&map.getBounds().contains(s.ll));
+   const names=schoolGroup.getLayers().map(l=>l.options.title);
+   return {zip:state.zip,zoom:map.getZoom(),bounds:map.getBounds().toBBoxString(),schools:state.schools.length,
+    allenInViewport:visible.length,allenRendered:visible.filter(s=>names.includes(s.name)).length,
+    markers:schoolGroup.getLayers().length,notice:document.getElementById('schoolMapStatus').textContent};
+  });
+  assert.equal(realAllen.zip,'75013','UI must select Allen ZIP');
+  assert.ok(realAllen.allenInViewport>0,'Allen ZIP selected but no Allen school in viewport: '+JSON.stringify(realAllen));
+  assert.equal(realAllen.allenRendered,realAllen.allenInViewport,'Allen ZIP UI marker regression: '+JSON.stringify(realAllen));
+  assert.ok(realAllen.markers>0,'Allen ZIP UI must show nonzero markers: '+JSON.stringify(realAllen));
+  console.log('PASS actual Allen ZIP dropdown selection retains visible markers '+JSON.stringify(realAllen));
   assert.equal(await page.locator('#schoolOverlay').isChecked(),true);
   console.log('PASS Allen campus markers automatically at zoom 9, 10, 11 and 13 without shortcut: '+JSON.stringify(allenZoomAudits));
   console.log('PASS school boundary auto display, per-school source footnote, district coverage audit');
