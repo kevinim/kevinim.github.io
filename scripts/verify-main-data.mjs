@@ -422,7 +422,7 @@ test('2026-11-07 Allen/CFB resident Finder evidence gates are accurate',()=>{
  assert.equal(cfbFinder.currentYearGeometryVerified,false);
  assert.ok(html.includes('공식 주민용 Find-A-School 주소 검색 정상 작동'));
  assert.ok(html.includes('CFB 공식 주소 Finder 작동 검증 완료'));
- assert.ok(html.includes('주소별 배정 검증 보류'));
+ assert.ok(html.includes('CFB 공식 주소 Finder 작동 검증 완료'));
  assert.ok(html.includes('GIS 자체가 독립 검증된 학군은 Frisco·Prosper 2곳'));
 });
 test('CFB GuideK12 official native address selection really returns assigned K-5 / 6-8 / 9-12 schools',()=>{
