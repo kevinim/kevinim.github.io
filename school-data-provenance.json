@@ -353,7 +353,22 @@
         "publicInstitutionalAddressesChecked": 2,
         "uniqueZonedCampusSetsObserved": 0,
         "locator": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/",
-        "note": "Unfiltered school catalog on tested browser sessions; not evidence of a universal district Finder outage or apartment assignment."
+        "note": "Unfiltered school catalog on tested browser sessions; not evidence of a universal district Finder outage or apartment assignment.",
+        "browserProbe": {
+          "checked": "2026-11-07",
+          "engine": "Playwright Chromium on GitHub Actions, not paid browser agent",
+          "source": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/",
+          "testedPublicPropertyTypes": [
+            "school campus",
+            "public apartment complex"
+          ],
+          "testPublicApartment": "Lux on Main · 1011 S Main St, Carrollton, TX 75006",
+          "uniquePropertyZonedResults": 0,
+          "didSearchResultListChangeAcrossAddresses": false,
+          "note": "Both public test addresses produced same full campus directory; no zoned school label/suggestion in tested sessions. This is inconclusive for other residential units, not a universal service-outage assertion.",
+          "auditFile": "tests/cfb-public-schoolsearch-browser-audit-2026-11-07.json",
+          "ciEvidence": "https://github.com/kevinim/kevinim.github.io/actions/runs/42353651130"
+        }
       }
     }
   ],
