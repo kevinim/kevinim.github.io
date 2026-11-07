@@ -37,7 +37,7 @@ function findSchoolBoundary(s,geo,ratings){
  if(!s||!levels.length)return {status:'not-a-zoned-campus',features:[],eligible:0,sourceFeatures:feats.length};
  if(!feats.length)return {status:'no-district-polygon-source',features:[],eligible:0,sourceFeatures:0};
  const eligible=feats.filter(f=>levels.includes(f?.properties?.gradeLevel));
- if(!eligible.length)return {status:'no-grade-polygon-source',features:[],eligible:0,sourceFeatures:feats.length};
+ if(!eligible.length)return {status:knownBoundaryException(s)?'special-campus-no-standard-zone':'no-grade-polygon-source',features:[],eligible:0,sourceFeatures:feats.length};
  const key=boundarySchoolKey(s.name);
  const selected=typeof ratings==='function'?ratings(s.name,s.district):null;
  let hits=eligible.filter(f=>{
