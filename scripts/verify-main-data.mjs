@@ -283,7 +283,7 @@ test('CFB official 2026–27 feeder table is accurate and never treated as GIS',
   assert.equal(b.k5_Bilingual,'Carrollton');
   assert.equal(b.k5,'Blanton');
   assert.ok(html.includes('CFB 2026–27 진학표 A') && html.includes('CFB 2026–27 진학표 B'));
-  assert.ok(html.includes('공식 진학표 21개 경로') && html.includes('두 공식 진학표 충돌'));
+  assert.ok(html.includes('진학표 3개 출처 21행 전수대조') && html.includes('Farmers Branch Elementary 1행 충돌'));
 });
 test('active 2026-27 campus selection excludes 14 officially retired schools',()=>{
  assert.equal(RETIRED_CAMPUSES_2026.length,14);
@@ -323,8 +323,16 @@ test('official CFB 2026-27 feeder contradiction is not auto-resolved',()=>{
  assert.equal(c.middleB,'Bush');assert.equal(c.highB,'Ranchview');
  assert.equal(c.status,'unresolved-do-not-auto-assign');
  assert.equal(cfbFeeder.rows.find(x=>x.zonedElementary==='Farmers Branch').feederVerification,'conflicting-official-sources');
+ assert.equal(cfbFeeder.crossSourceAudit.sourceCount,3);
+ assert.equal(cfbFeeder.crossSourceAudit.rowCountPerSource,21);
+ assert.equal(cfbFeeder.crossSourceAudit.fullyMatchingRows,20);
+ assert.equal(cfbFeeder.crossSourceAudit.conflictingRows,1);
+ assert.equal(cfbFeeder.crossSourceAudit.columnsPerRow,7);
+ assert.equal(cfbFeeder.crossSourceAudit.sources.length,3);
+ assert.ok(cfbFeeder.crossSourceAudit.sources.every(x=>x.startsWith('https://www.cfbisd.edu/')));
+ assert.equal(cfbFeeder.crossSourceAudit.conflictSchool,'Farmers Branch');
  assert.equal(audit.districts.find(x=>x.code==='CFB').feederReference.autoAssignmentAllowed,false);
- assert.ok(html.includes('Farmers Branch Elementary의 두 공식 진학표 충돌'));
+ assert.ok(html.includes('Farmers Branch Elementary 1행 충돌'));
 });
 test('P0 zone-edge warning uses closest official polygon ring',()=>{
  const p=[-96.7,33.1],d=100/111195;

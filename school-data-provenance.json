@@ -142,7 +142,16 @@
         "notBoundaryGeometry": true,
         "currentYearGeometryStillUnverified": true,
         "officialSourceConflict": "Farmers Branch ES: FAQ Field/Turner; Pre-K page Bush/Ranchview; no definitive address mapping.",
-        "autoAssignmentAllowed": false
+        "autoAssignmentAllowed": false,
+        "crossSourceAudit": {
+          "referenceFile": "cfb-official-feeder-reference-2026.json",
+          "officialSourceCount": 3,
+          "checkedRowCountEach": 21,
+          "matchingRows": 20,
+          "unresolvedRows": 1,
+          "conflictSchool": "Farmers Branch Elementary",
+          "notes": "Exactly one row mismatch among three full 21-row official sources. Property-level current school enrollment still requires GuideK12 verification; do not choose winner from majority vote."
+        }
       }
     }
   ],

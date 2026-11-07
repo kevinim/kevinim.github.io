@@ -91,6 +91,12 @@ CFBISD's [official enrollment FAQ](https://www.cfbisd.edu/enrollment-page/freque
 
 **No guessed 2026–27 GeoJSON** should be constructed from a schematic PDF or mixed-year locator without validated alignment to district addresses. Verify any specific home, grade, and special program at the district itself.
 
+## CFB 2026–27 official feeder sources: full three-way audit — 2026-11-06
+
+- Compared all seven fields of every one of 21 zoned elementary rows on three independently retrieved district-controlled tables: [Enrollment FAQ](https://www.cfbisd.edu/enrollment-page/frequently-asked-questions-about-enrollment), [Transfer Guidelines](https://www.cfbisd.edu/students/transfer-enrollment-page/transfer-guidelines), [Pre-K Campuses](https://www.cfbisd.edu/students/prek-enrollment-page/pre-k-campuses).
+- **20/21 rows match in every one of the 3 sources**. Exactly **1/21 row conflicts**: Farmers Branch Elementary. FAQ/Transfer agree on **Field Middle → Turner High**; Pre-K table says **Bush Middle → Ranchview High**. Majority source agreement is not proof of actual property address assignment; preserve `unresolved-do-not-auto-assign` and link the current GuideK12 address search.
+- This is evidence that the other 20 *published feeder rows* agree, NOT evidence of 2026–27 current school-level GIS or any apartment-specific address eligibility.
+
 ## Texas home address autocomplete — 2026-11-06
 
 - Home input now suggests **up to five Texas numbered street addresses** after at least 4 characters including a number, using Esri World Geocoding `/suggest` with a 320ms debounce and abortable requests; no API key is required on the public Esri endpoint used by the existing geocoder.

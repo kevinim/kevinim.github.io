@@ -217,5 +217,23 @@
       "highB": "Ranchview",
       "status": "unresolved-do-not-auto-assign"
     }
-  ]
+  ],
+  "crossSourceAudit": {
+    "verifiedOn": "2026-11-06",
+    "academicYear": "2026–27",
+    "method": "Independently re-read all 7 columns and 21 zoned elementary campus feeder rows from each of three CFBISD official 2026-27 web tables (Enrollment FAQ, Transfer Guidelines, Pre-K Campuses). Compared all 147 field cells per source.",
+    "sources": [
+      "https://www.cfbisd.edu/enrollment-page/frequently-asked-questions-about-enrollment",
+      "https://www.cfbisd.edu/students/transfer-enrollment-page/transfer-guidelines",
+      "https://www.cfbisd.edu/students/prek-enrollment-page/pre-k-campuses"
+    ],
+    "sourceCount": 3,
+    "rowCountPerSource": 21,
+    "columnsPerRow": 7,
+    "fullyMatchingRows": 20,
+    "conflictingRows": 1,
+    "conflictSchool": "Farmers Branch",
+    "agreement": "Enrollment FAQ and Transfer Guidelines agree on Farmers Branch -> Field Middle -> Turner High; Pre-K Campuses says Bush Middle -> Ranchview High.",
+    "status": "unresolved; no property-level GIS or address-to-school inference from this feeder crosscheck"
+  }
 }
