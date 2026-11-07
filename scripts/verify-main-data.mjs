@@ -1027,10 +1027,9 @@ test('Allen school markers are automatic at wide zoom; independent FEMA quick to
  assert.ok(!html.includes('id="allenSchoolsShortcut"'),'Do not require user to click an Allen button');
  assert.ok(html.includes('id="hazardMapQuickToggle"'));
  assert.ok(html.includes('id="schoolMapStatus"'));
- assert.ok(html.includes("const allenItems=items.filter(s=>s.district==='AISD');"));
- assert.ok(html.includes("const visible=zoom<11?allenItems:items.slice(0,limit);"));
- assert.ok(html.includes("const limit=zoom<11?allenItems.length:zoom<12?100:260;"));
- assert.ok(html.includes("center.distanceTo(a.ll)-center.distanceTo(b.ll)"));
+ assert.ok(html.includes('const visible=state.schools.filter('));
+ assert.ok(html.includes('bounds.contains(s.ll)'));
+ assert.ok(!html.includes('const visible=zoom<11?allenItems:items.slice(0,limit);'));
  assert.ok(html.includes("el('phase2HazardPanel').open=true"));
  assert.ok(html.includes("toggle.dispatchEvent(new Event('change',{bubbles:true}))"));
  assert.ok(html.includes("aria-label=\"FEMA 자연재해 위험 지도 켜기 또는 끄기\""));
