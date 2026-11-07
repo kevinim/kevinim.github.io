@@ -14,6 +14,7 @@ const allenAddressAudit = readJson('allen-official-address-source-audit-2026.jso
 const planoFeeder = readJson('plano-official-feeder-reference-2026.json');
 const cfbFeeder = readJson('cfb-official-feeder-reference-2026.json');
 const residentFinderAudit = readJson('official-resident-finder-audit-2026-11-07.json');
+const cfbBrowserAudit = readJson('tests/cfb-public-schoolsearch-browser-audit-2026-11-07.json');
 const remainingP0Audit = readJson('tests/remaining-p0-finder-audit-2026-11-07.json');
 const prosper = readJson('prosper-celina-reference-2026.geojson');
 const prosperCurrent = readJson('prosper-attendance-2026.geojson');
@@ -674,6 +675,24 @@ test('home autocomplete ARIA, debounced request, magicKey and direct address sea
  assert.ok(src.includes("body.set('magicKey',suggestion.magicKey)"));
  assert.ok(src.includes('geocodeAddress(address,homeRequest.signal,suggestion)'));
  assert.ok(src.includes("homeAutocomplete?.dismiss();clearHome()"));
+});
+test('CFB free Playwright public-apartment and campus lookup diagnostics never auto-assign schools',()=>{
+ assert.equal(cfbBrowserAudit.checkedAt,'2026-11-07');
+ assert.equal(cfbBrowserAudit.samples.length,2);
+ assert.equal(cfbBrowserAudit.status,'property-specific-zoned-school-output-not-observed');
+ assert.equal(cfbBrowserAudit.samples[1].type,'public-apartment-complex');
+ assert.equal(cfbBrowserAudit.samples[1].address,'1011 S Main St, Carrollton, TX 75006');
+ assert.equal(cfbBrowserAudit.limitations.length,3);
+ assert.ok(html.includes('1011 S Main St (Lux on Main)'));
+ const district=audit.districts.find(x=>x.code==='CFB');
+ assert.equal(district.residentFinderVerification.browserProbe.uniquePropertyZonedResults,0);
+ assert.equal(district.residentFinderVerification.browserProbe.didSearchResultListChangeAcrossAddresses,false);
+ const probe=readText('scripts/probe-cfb-public-finder-browser.cjs');
+ const workflow=readText('.github/workflows/probe-cfb-public-finder.yml');
+ assert.ok(probe.includes("propertyZonedCampusResultsVerified:false"));
+ assert.ok(probe.includes("const publicApartment='1011 S Main St, Carrollton, TX 75006'"));
+ assert.ok(workflow.includes('workflow_dispatch:'));
+ assert.ok(workflow.includes('playwright@1.65.0'));
 });
 test('P0 CFB/area source drift monitors never promote conflicting feeder or apartment to enrollment truth',()=>{
  const cfbSource=readJson('cfb-official-feeder-reference-2026.json');
