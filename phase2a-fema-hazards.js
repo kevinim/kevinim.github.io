@@ -8,7 +8,7 @@ const FEMA_HAZARD_TYPES={
 };
 const FEMA_RISK_COLORS={
  'Very Low':'#d9e8f2','Relatively Low':'#8fc5d8','Relatively Moderate':'#f9d979',
- 'Relatively High':'#f29a61','Very High':'#ca3f49','Insufficient Data':'#9ca3af'
+ 'Relatively High':'#f29a61','Very High':'#ca3f49','No Rating':'#e5e7eb','Insufficient Data':'#9ca3af'
 };
 const FEMA_HAZARD_SOURCE='https://www.fema.gov/sites/default/files/documents/fema_national-risk-index_technical-documentation.pdf';
 function femaHazardMetric(feature,type){
@@ -58,7 +58,7 @@ function createFemaHazardOverlay(map,documentRef){
  if(!map||!toggle||!typeSelect||!opacityControl||!status||!legend)return null;
  let data=null,layer=null,pending=null,restoreZip=null,requestId=0;
  const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const riskKor={'Very Low':'매우 낮음','Relatively Low':'상대적으로 낮음','Relatively Moderate':'중간','Relatively High':'상대적으로 높음','Very High':'매우 높음','Insufficient Data':'자료 없음'};
+ const riskKor={'Very Low':'매우 낮음','Relatively Low':'상대적으로 낮음','Relatively Moderate':'중간','Relatively High':'상대적으로 높음','Very High':'매우 높음','No Rating':'공식 등급 없음','Insufficient Data':'자료 없음'};
  const setStatus=(value,warning=false)=>{status.textContent=value;status.dataset.state=warning?'warning':'ready'};
  const selected=()=>Object.hasOwn(FEMA_HAZARD_TYPES,typeSelect.value)?typeSelect.value:'ifld';
  const opacity=()=>Number(opacityControl.value)/100;
