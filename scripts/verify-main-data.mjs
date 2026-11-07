@@ -41,6 +41,7 @@ const {zoneBoundaryProximity,distancePointToSegmentMeters}=require('../school-zo
 const {boundarySchoolKey,boundaryGradeLevels,boundarySchoolSource,findSchoolBoundary,boundaryMissingExplanation}=require('../school-boundary-match.js');
 const {FEMA_HAZARD_TYPES,FEMA_RISK_COLORS,femaHazardMetric,femaHazardStyle,validateFemaHazardGeojson}=require('../phase2a-fema-hazards.js');
 const {NFHL_LAYER_ENDPOINT,NFHL_WHERE,NFHL_MAX_RECORDS,NFHL_MIN_ZOOM,nfhlClassify,nfhlLayerStyle,validateNfhlResponse,nfhlQueryUrl}=require('../phase2a-nfhl-flood.js');
+const {TXWRAP_WHP_TILES,TXWRAP_WHP_SERVICE,TXWRAP_WHP_EXPLAINER,TXWRAP_WHP_MAX_NATIVE_ZOOM}=require('../txwrap-wildfire-potential.js');
 const {buildCollinParcelUrl,parcelStreetKey,assessCollinParcelResult}=require('../collin-parcel-check.js');
 const demographics = readJson('dfw-demographics.json');
 const rating = readJson('tea-ratings-2026.json');
@@ -65,7 +66,7 @@ test('main page inline JavaScript compiles', () => {
   inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
 });
 test('all main application JS modules compile', () => {
-  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','school-boundary-match.js','phase2a-fema-hazards.js','phase2a-nfhl-flood.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
+  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','school-boundary-match.js','phase2a-fema-hazards.js','phase2a-nfhl-flood.js','txwrap-wildfire-potential.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
     new Script(readText(name), {filename:name});
     assert.ok(html.includes('./' + name), name + ' not loaded');
   }
@@ -992,6 +993,23 @@ test('6 school-district rows and provenance date visible on site',()=>{
   assert.ok(html.includes('교차 검증 통과'));
   assert.ok(html.includes('Frisco·Prosper 2곳'));
   assert.ok(html.includes('과거 2019–20 GIS로 대체하지 않습니다'));
+});
+test('Phase2A official TxWRAP Wildfire Hazard Potential raster remains distinct from modeled NRI and NFHL',()=>{
+ assert.equal(TXWRAP_WHP_TILES,TXWRAP_WHP_SERVICE+'/tile/{z}/{y}/{x}');
+ assert.equal(TXWRAP_WHP_MAX_NATIVE_ZOOM,17);
+ assert.ok(TXWRAP_WHP_EXPLAINER.includes('tfsweb.tamu.edu'));
+ assert.ok(html.includes('id="txwrapWHPPanel"'));
+ assert.ok(html.includes('id="txwrapWHPEnabled"'));
+ assert.ok(html.includes('id="txwrapWHPStatus"'));
+ assert.ok(html.includes('id="txwrapWHPOpacity"'));
+ assert.ok(html.includes('id="txwrapWHPLegend"'));
+ assert.ok(html.includes('txwrap-wildfire-potential.js?v=1'));
+ assert.ok(html.includes('createTxWrapWHPOverlay?.(map,document)'));
+ assert.ok(html.includes('원본 개정연도는 이 서비스에서 확인되지 않아'));
+ assert.ok(readText('txwrap-wildfire-potential.js').includes("txwrapWHPEnabled"));
+ assert.ok(readText('phase2a-fema-hazards.js').includes("d.getElementById('txwrapWHPEnabled')"));
+ assert.ok(readText('phase2a-nfhl-flood.js').includes("d.getElementById('txwrapWHPEnabled')"));
+ assert.ok(!html.includes('TxWRAP 원본은 FEMA NRI 2025'));
 });
 test('Phase2A FEMA official NFHL live flood map filters, two red intensities and no-flood-is-not-safe caveats',()=>{
  assert.equal(NFHL_LAYER_ENDPOINT,'https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28/query');
