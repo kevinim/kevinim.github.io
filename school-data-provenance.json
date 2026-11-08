@@ -245,6 +245,40 @@
       }
     },
     {
+      "code": "043907",
+      "name": "McKinney ISD",
+      "status": "live-finder-year-gated",
+      "geometryYear": "2026–27 elementary SCHL_YEAR verified by runtime guard; independent middle/high year and address-level assignment not certified",
+      "mapSource": "https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/23b28d101ba947498650f6c7b9ef251b/data?f=json",
+      "officialLookup": "https://www.mckinneyisd.net/page/attendance-zones-maps/",
+      "geometryUse": "District-approved 2026–27 boundary changes (Dec 15, 2025). Dashboard loads 2026–27-labelled live MetroStudy Finder polygons only when elementary SCHL_YEAR is 2026-27 and distinct campus counts pass: elementary >=15, middle 5, high 3; otherwise fails closed. This is an operational live-finder gate, not independent residential address or middle/high vintage proof.",
+      "officialDistrictEvidence": {
+        "announcement": "https://www.mckinneyisd.net/article/2600626",
+        "approvalDate": "2025-12-15",
+        "currentAttendanceMaps": "https://www.mckinneyisd.net/page/attendance-zones-maps/",
+        "sourceType": "Board approval announcement plus published 2026–27 maps/locator",
+        "checked": "2026-11-08"
+      },
+      "runtimeGate": {
+        "codeFile": "index.html",
+        "registryFile": "district-registry.js",
+        "districtCode": "043907",
+        "statusOnlyWhenLive": true,
+        "elementaryYearField": "SCHL_YEAR",
+        "requiredElementaryValue": "2026-27",
+        "distinctMinimumElementary": 15,
+        "distinctMiddle": 5,
+        "distinctHigh": 3,
+        "noValidatedFallback": true,
+        "limitation": "Registry's live-only mode avoids promoting a failed/absent source. No independent 2026–27 address-school-name crosscheck or building/unit entitlement has been recorded; official School Locator remains authoritative."
+      },
+      "independentAddressVerification": {
+        "completed": 0,
+        "schoolYear": 2026,
+        "note": "Public nonresidential address checks and original provider feature metadata review still required; do not claim exact household assignments."
+      }
+    },
+    {
       "code": "PROSPER",
       "name": "Prosper ISD",
       "status": "current-source",
