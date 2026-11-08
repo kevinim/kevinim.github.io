@@ -60,6 +60,23 @@ function initWinterHazardMap(map,d){
    el.appendChild(swatch);el.appendChild(d.createTextNode(KOR[key]));swatches.appendChild(el);
   }
   legend.appendChild(swatches);
+  const picker=d.createElement('label');picker.className='winter-map-type-picker';
+  const label=d.createElement('span');label.textContent='표시할 겨울 위험';
+  const selector=d.createElement('select');selector.id='winterMapLegendType';
+  selector.setAttribute('aria-label','지도에 표시할 겨울 위험 종류');
+  for(const [key,value] of Object.entries(TYPES)){
+    const option=d.createElement('option');option.value=key;option.textContent=value.name;
+    selector.appendChild(option);
+  }
+  selector.value=selected();
+  selector.addEventListener('change',()=>{
+    if(!Object.hasOwn(TYPES,selector.value))return;
+    const control=d.getElementById('winterHazardType');
+    if(!control)return;
+    control.value=selector.value;
+    control.dispatchEvent(new Event('change',{bubbles:true}));
+  });
+  picker.appendChild(label);picker.appendChild(selector);legend.appendChild(picker);
   const note=d.createElement('div');note.className='fema-legend-note';
   note.textContent='등급 없음·자료 없음은 무색 · 2020 Census tract 기준. 전력망 또는 주소별 정전 예측치가 아닙니다.';
   legend.appendChild(note);
