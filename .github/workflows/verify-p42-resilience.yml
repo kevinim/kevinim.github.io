@@ -1,0 +1,27 @@
+name: P42 winter/grid source QA (no map deployment)
+on:
+  pull_request:
+    paths:
+      - 'data/resilience/**'
+      - 'features/resilience/**'
+      - 'tests/p42-resilience-scope.test.cjs'
+      - '.github/workflows/verify-p42-resilience.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/resilience/**'
+      - 'features/resilience/**'
+      - 'tests/p42-resilience-scope.test.cjs'
+      - '.github/workflows/verify-p42-resilience.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/p42-resilience-scope.test.cjs
