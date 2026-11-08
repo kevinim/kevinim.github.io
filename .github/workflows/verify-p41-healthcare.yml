@@ -1,0 +1,27 @@
+name: P41 hospital source-data QA (no UI deployment)
+on:
+  pull_request:
+    paths:
+      - 'data/healthcare/**'
+      - 'features/healthcare/**'
+      - 'tests/p41-healthcare-inventory.test.cjs'
+      - '.github/workflows/verify-p41-healthcare.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/healthcare/**'
+      - 'features/healthcare/**'
+      - 'tests/p41-healthcare-inventory.test.cjs'
+      - '.github/workflows/verify-p41-healthcare.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/p41-healthcare-inventory.test.cjs
