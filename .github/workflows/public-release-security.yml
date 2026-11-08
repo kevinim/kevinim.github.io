@@ -103,10 +103,18 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/preview-browser-tmp/node_modules
         run: node scripts/test-public-preview-browser.cjs
+      - name: Build family holding page only (no deploy)
+        run: node scripts/build-family-entry.cjs preview
+      - name: Verify family gateway is responsive and contains no dashboard or external requests
+        env:
+          NODE_PATH: ${{ github.workspace }}/preview-browser-tmp/node_modules
+        run: node scripts/test-family-entry-browser.cjs
       - name: Attach browser QA evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: public-preview-browser-evidence
-          path: artifacts/security/public-preview-browser.json
+          path: |
+            artifacts/security/public-preview-browser.json
+            artifacts/security/family-entry-browser.json
           if-no-files-found: warn
