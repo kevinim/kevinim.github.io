@@ -79,7 +79,10 @@ function assignmentHtml(result){
 }
 function homeSchoolMatches(s){
  if(!home)return false;
- const result=home.assignment;if(!result||!['current','finder-current'].includes(result.status)||result.district!==s.district)return false;
+ const result=home.assignment;
+ // Allen: official address table (names, no polygons) -> highlight its campuses.
+ if(result?.district==='AISD'&&result.status==='unverified-year')return allenRowMatchesSchool(s,result.allen,state.schools,canonical);
+ if(!result||!['current','finder-current'].includes(result.status)||result.district!==s.district)return false;
  const key=zoneNameKey(canonical(s.name)).replace(/\bk\s*4\b/g,'').trim();
  const schoolId=scoreRecord(s.name,s.district)?.id;
  return (result.features||[]).some(f=>schoolLevelMatchesAssignment(s,f.properties.gradeLevel)&&((schoolId&&f.properties.campusId===schoolId)||zoneNameKey(canonical(f.properties.school)).replace(/\bk\s*4\b/g,'').trim()===key));

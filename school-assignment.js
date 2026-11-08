@@ -17,4 +17,18 @@ function resolveAssignment({frisco=[],prosper=[],lewisville=[],plano=[],allen=nu
  if(failed)return {status:'error'};
  return {status:'unavailable'};
 }
-if(typeof module!=='undefined')module.exports={resolveAssignment,schoolLevelMatchesAssignment};
+// Allen's official address table returns short campus names per level:
+// [street, range, elementary K-6, middle 7-8, freshman 9, high 10-12].
+// A school is a candidate only if it is the single AISD campus of that level
+// whose canonical name contains every word of the table name.
+function allenRowMatchesSchool(s,row,schools,canonical){
+ if(!s||s.district!=='AISD'||!Array.isArray(row))return false;
+ const freshman=/freshman/i.test(s.name);
+ const slot=s.type==='elementary'?2:s.type==='middle'?3:s.type==='high'?(freshman?4:5):-1;
+ const target=row[slot];if(slot<0||!target)return false;
+ const words=n=>canonical(n).split(' ').filter(Boolean);
+ const fits=x=>x.district==='AISD'&&x.type===s.type&&/freshman/i.test(x.name)===freshman&&words(target).every(w=>words(x.name).includes(w));
+ const hits=(schools||[]).filter(fits);
+ return hits.length===1&&hits[0]===s;
+}
+if(typeof module!=='undefined')module.exports={resolveAssignment,schoolLevelMatchesAssignment,allenRowMatchesSchool};

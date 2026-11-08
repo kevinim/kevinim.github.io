@@ -273,8 +273,8 @@ test('P0 Plano senior-high home marker and map source legend are accurate',()=>{
  const home=readText('home-lookup-v2.js');
  assert.ok(home.includes('schoolLevelMatchesAssignment(s,f.properties.gradeLevel)'));
  assert.ok(home.includes("result.district!==s.district)return false"));
- assert.ok(html.includes('./school-assignment.js?v=3'));
- assert.ok(html.includes('./home-lookup-v2.js?v=10'));
+ assert.ok(html.includes('./school-assignment.js?v=4'));
+ assert.ok(html.includes('./home-lookup-v2.js?v=11'));
  assert.ok(html.includes('현행 공식 Finder가 사용하는 플레이노·루이스빌 경계는 파란색'));
  assert.ok(html.includes('플레이노 저장본과 앨런 과거 GIS는 주황색 점선 참고'));
 });
@@ -1213,6 +1213,19 @@ test('McKinney ISD 2026-27 official finder zones are wired with year and count g
   assert.ok(match.knownBoundaryException({district:'043907',name:n}),'McKinney special campus explained: '+n);
  assert.equal(match.knownBoundaryException({district:'043907',name:'FINCH EL'}),null);
  assert.ok(!/[\x00-\x08]/.test(readText('school-boundary-match.js')),'no control characters in matcher');
+});
+test('Allen address-table result highlights exactly its four campuses (270 S Watters Rd)',()=>{
+ const require=createRequire(import.meta.url);
+ const {allenRowMatchesSchool}=require('../school-assignment.js');
+ const canonical=n=>String(n||'').toLowerCase().replace(/\bh\.?\s*s\.?\b/g,'high').replace(/\bm\.?\s*s\.?\b/g,'middle').replace(/\bsr\.?\b/g,'senior').replace(/\b(?:elem|el)\b/g,'elementary').replace(/\bschool\b/g,'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
+ const row=matchAllenAddress('270 S Watters Rd, Allen, Texas, 75013',allenAddress.rows,true);
+ assert.deepEqual(row.slice(2),['Norton','Ereckson','Lowery','Allen High School']);
+ const schools=[['Frances E Norton Elementary School','elementary'],['Ereckson Middle School','middle'],['Lowery Freshman Center','high'],['Allen High School','high'],
+  ['LOWERY ROAD','elementary'],['Boyd Elementary School','elementary'],['Ford Middle School','middle']].map(([name,type])=>({name,type,district:'AISD'}));
+ const hit=schools.filter(s=>allenRowMatchesSchool(s,row,schools,canonical)).map(s=>s.name);
+ assert.deepEqual(hit,['Frances E Norton Elementary School','Ereckson Middle School','Lowery Freshman Center','Allen High School']);
+ assert.equal(allenRowMatchesSchool({name:'Norton',type:'elementary',district:'PISD'},row,schools,canonical),false);
+ assert.ok(readText('home-lookup-v2.js').includes("result.status==='unverified-year')return allenRowMatchesSchool("));
 });
 await Promise.all(asyncChecks);
 console.log('Main website QA: ' + total + ' tests passed.');
