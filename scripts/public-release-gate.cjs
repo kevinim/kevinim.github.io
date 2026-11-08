@@ -101,6 +101,15 @@ function main(){
   if(!files.includes('index.html'))blockers.push({kind:'missing-index',file:'index.html',count:1});
   if(process.env.PUBLIC_SOURCE_SEPARATED!=='confirmed')
    blockers.push({kind:'private-source-separation-not-verified',file:'[deployment-config]',count:1});
+  for(const [variable,kind] of [
+   ['PUBLIC_PROVIDER_TERMS_CONFIRMED','external-provider-terms-not-approved'],
+   ['PUBLIC_DATA_LICENSES_CONFIRMED','data-redistribution-licenses-not-approved'],
+   ['PUBLIC_BROWSER_QA_CONFIRMED','live-browser-qa-not-approved'],
+   ['PUBLIC_OWNER_GO','owner-publication-approval-missing']
+  ]){
+   if(process.env[variable]!=='confirmed')
+    blockers.push({kind,file:'[deployment-config]',count:1});
+  }
  }
  const status=release?(blockers.length?'BLOCKED':'READY_FOR_MANUAL_REVIEW'):
   (data.personalization.length||data.developmentFiles.length?'NOT_READY_FOR_PUBLIC_LAUNCH':'NO_KNOWN_LEGACY_PERSONALIZATION');
