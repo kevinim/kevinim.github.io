@@ -45,6 +45,33 @@ mkdirSync('artifacts/feature-integration',{recursive:true});
    const eia=await page.locator('#gridResilienceData').innerText();
    assert.ok(eia.includes('2024년')&&eia.includes('2025년'));
    assert.ok((await page.locator('#gridResiliencePanel').innerText()).includes('동네별 정전확률'));
+   if(width===1360){
+    // Exercise the actual ZIP-to-work route code and marker DOM using deterministic
+    // public mock data. No live third-party service calls or private addresses.
+    await page.route(url=>url.hostname==='nominatim.openstreetmap.org'&&url.pathname==='/search',route=>route.fulfill({
+      status:200,contentType:'application/json',
+      body:JSON.stringify([{lat:'33.1000',lon:'-96.8200',display_name:'Test Workplace, Plano, TX'}])
+    }));
+    await page.route(url=>url.hostname==='router.project-osrm.org'&&url.pathname.startsWith('/table/v1/driving/'),route=>route.fulfill({
+      status:200,contentType:'application/json',body:JSON.stringify({code:'Ok',durations:[[1200]]})
+    }));
+    await page.route(url=>url.hostname==='router.project-osrm.org'&&url.pathname.startsWith('/route/v1/driving/'),route=>route.fulfill({
+      status:200,contentType:'application/json',
+      body:JSON.stringify({code:'Ok',routes:[{duration:1200,distance:32186.88,
+       geometry:{type:'LineString',coordinates:[[-96.785,33.129],[-96.820,33.100]]}}]})
+    }));
+    await page.locator('#calcCommute').click();
+    await page.waitForFunction(()=>document.querySelectorAll('.work-destination-pin .work-pin-body').length>=1,null,{timeout:25000});
+    const workPin=await page.locator('.work-destination-pin .work-pin-body').first();
+    assert.equal(await workPin.getAttribute('aria-label'),'업무 목적지');
+    assert.equal(await workPin.locator('svg').count(),1,'work destination must show an SVG briefcase');
+    assert.ok((await workPin.innerText()).includes('직장'));
+    await page.waitForFunction(()=>window.schoolBoundaryAuditReady===true,null,{timeout:85000});
+    await page.locator('#zipSelect').selectOption('75013');
+    await page.waitForFunction(()=>typeof state!=='undefined'&&state.zip==='75013'&&
+      typeof schoolGroup!=='undefined'&&schoolGroup.getLayers().length>0,null,{timeout:30000});
+    console.log('PASS actual mocked ZIP route displays work briefcase pin; Allen 75013 school markers remain');
+   }
    if(width===390){
     const size=await page.evaluate(()=>({screen:innerWidth,scroll:document.documentElement.scrollWidth}));
     assert.ok(size.scroll<=size.screen+3,'mobile horizontal overflow: '+JSON.stringify(size));
