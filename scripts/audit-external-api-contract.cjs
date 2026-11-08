@@ -62,13 +62,19 @@ function auditProviderContract(files) {
     errors.push('home address external-disclosure element or known provider names removed');
   }
   for (const [name, body] of [['index.html', main], ['reviewed.html', archived]]) {
-    if (!body.includes('https://tile.openstreetmap.org/')) {
-      errors.push(name + ': OSM HTTPS tile endpoint no longer confirmed');
+    const canonicalTile = body.includes('https://tile.openstreetmap.org/');
+    const legacySubdomainTile = body.includes('https://{s}.tile.openstreetmap.org/');
+    if (!canonicalTile && !legacySubdomainTile) {
+      errors.push(name + ': no recognized OSM HTTPS tile endpoint');
+    }
+    if (legacySubdomainTile) {
+      warnings.push(name + ': legacy {s}.tile.openstreetmap.org subdomain endpoint is not the current canonical OSM tile URL; migrate in a separate UI PR');
     }
     if (!body.includes('OpenStreetMap contributors')) {
       errors.push(name + ': visible OSM attribution source marker missing');
     }
-    if (body.includes('http://tile.openstreetmap.org/')) {
+    if (body.includes('http://tile.openstreetmap.org/') ||
+        body.includes('http://{s}.tile.openstreetmap.org/')) {
       errors.push(name + ': insecure OSM tile protocol');
     }
   }
