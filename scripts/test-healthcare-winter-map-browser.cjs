@@ -23,7 +23,7 @@ mkdirSync(folder,{recursive:true});
     assert.equal(await page.locator('#healthcareMapQuickToggle').getAttribute('aria-pressed'),'true');
     assert.ok((await page.locator('#healthcareMapStatus').innerText()).includes('좌표 확인'));
     await page.locator('#healthcarePanel>summary').click();
-    await page.waitForSelector('#hospitalCity option[value="PLANO"]',{timeout:35000});
+    await page.waitForFunction(()=>Array.from(document.querySelector('#hospitalCity')?.options||[]).some(o=>o.value==='PLANO'),null,{timeout:35000});
     await page.locator('#hospitalCity').selectOption('PLANO');
     await page.waitForTimeout(250);
     const smaller=await page.locator('.hospital-map-pin').count();
