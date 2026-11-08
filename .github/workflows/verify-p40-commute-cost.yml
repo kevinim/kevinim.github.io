@@ -1,0 +1,28 @@
+name: P40 commute cost model QA (not a UI release)
+on:
+  pull_request:
+    paths:
+      - 'features/commute/**'
+      - 'tests/p40-commute-cost.test.cjs'
+      - '.github/workflows/verify-p40-commute-cost.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'features/commute/**'
+      - 'tests/p40-commute-cost.test.cjs'
+      - '.github/workflows/verify-p40-commute-cost.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-calculation-core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Assert P40 cost behavior, strict missing toll quote, and NTTA vs TEXpress handling
+        run: node --test tests/p40-commute-cost.test.cjs
