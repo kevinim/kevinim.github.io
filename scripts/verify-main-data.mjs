@@ -1325,5 +1325,12 @@ test('Crime trends per ZIP: city-level 3-year counts and direction, never ZIP-al
  assert.ok(crimeZipHtml('75002',zc).includes('시 경찰 자료가 없는 지역'),'county/unincorporated share disclosed');
  assert.ok(!readText('index.html').includes('id="crimeYear"'),'heatmap uses the latest year; no year selector');
 });
+test('Layout: ZIP subgroup details live in the wide card under the map, not the right column',()=>{
+ const web=readText('index.html');
+ assert.ok(web.includes('<div class="mapcol"><div class="mapbox">')&&web.includes('id="zipInsights"'),'map and insights card share one column');
+ assert.ok(web.includes('function drawZipInsights(d)')&&web.includes('function drawDetail(){const d=getZip();drawZipInsights(d);'),'insights refresh with every detail redraw');
+ assert.ok(!web.includes("+menaHtml(d.z);el('detailContent').innerHTML=html;"),'subgroups no longer appended to the narrow right column');
+ assert.ok(web.includes('.main>.section{grid-column:1 / -1'),'school finder + comparison use the full width');
+});
 await Promise.all(asyncChecks);
 console.log('Main website QA: ' + total + ' tests passed.');

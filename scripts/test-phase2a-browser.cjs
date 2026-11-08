@@ -216,7 +216,7 @@ const assert=require('node:assert/strict');
   console.log('PASS city crime map: police chip, lazy FBI data, legend categories, popup caveat, hazard exclusivity, ZIP restore');
   await page.locator('#zipSelect').selectOption('75093');
   await page.waitForSelector('#crimeZipTrend',{timeout:20000});
-  const zipCrime=await page.locator('#detailContent').innerText();
+  const zipCrime=await page.locator('#zipInsights').innerText();
   assert.ok(zipCrime.includes('Plano')&&/2023 .*2024 .*2025 /.test(zipCrime)&&/[▲▼―]/.test(zipCrime),'ZIP detail shows city 3-year counts and trend');
   console.log('PASS ZIP detail shows the cities it lies in with 2023-2025 counts and trend');
   await page.screenshot({path:dir+'/fema-overlay.png',timeout:30000});
