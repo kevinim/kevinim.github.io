@@ -30,7 +30,7 @@ function renderLanding(mode,uatUrl){
   +'<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; base-uri &#39;none&#39;; form-action &#39;none&#39;; frame-ancestors &#39;none&#39;">'
   +'<meta name="referrer" content="no-referrer"><title>가족용 지도 로그인</title>'
   +'<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f5f7fa;color:#182638;font:16px/1.6 system-ui,sans-serif}'
-  +'main{width:min(480px,calc(100vw - 48px));border:1px solid #d5dbe3;background:white;border-radius:18px;padding:30px;box-shadow:0 6px 24px #10203312}'
+  +'main{box-sizing:border-box;width:min(480px,calc(100vw - 48px));border:1px solid #d5dbe3;background:white;border-radius:18px;padding:30px;box-shadow:0 6px 24px #10203312}'
   +'h1{font-size:1.5rem;line-height:1.3;margin:0 0 12px}p{margin:10px 0 18px}.action{display:inline-block;padding:11px 17px;background:#223d63;color:white;border-radius:9px;text-decoration:none;font-weight:700}'
   +'.action:focus-visible{outline:3px solid #e2a72e;outline-offset:3px}.inactive{color:#536579}.small{font-size:.88rem;color:#536579}</style></head>'
   +'<body><main><h1>가족용 지도</h1>'
