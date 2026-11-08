@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "scope": "ERCOT_REGIONAL_SYSTEM",
+    "sourceUrl": "https://www.ercot.com/news/release?id=9c552983-008a-3906-8066-8b76315ed3e7",
+    "checkedOn": "2026-11-08",
+    "sourceDate": "2021-02-15",
+    "locationAccuracy": "REGIONAL_ONLY",
+    "canBeMappedToAddress": false
+  },
+  "events": [
+    {
+      "eventId": "2021-02-15_ERCOT_SYSTEM_EMERGENCY",
+      "date": "2021-02-15",
+      "type": "grid_supply_emergency",
+      "source": "ERCOT",
+      "maxReportedLoadShedMW": 10500,
+      "sourceTextScope": "ERCOT February 15 2021 press release; approximate peak load shed across ERCOT, not DFW-specific",
+      "neighborhoodOutageMinutes": null,
+      "affectedDFWNeighborhoods": null
+    }
+  ]
+}
