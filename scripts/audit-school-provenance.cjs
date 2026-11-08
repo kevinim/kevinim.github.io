@@ -38,11 +38,12 @@ function safeLocalFile(input) {
     && !path.isAbsolute(input);
 }
 
-function auditSchoolProvenance(provenance, registry, { readLocal = null } = {}) {
+function auditSchoolProvenance(provenance, registry, { readLocal = null, supplementary = [] } = {}) {
   const errors = [], warnings = [];
-  const records = provenance?.districts || [];
+  const baseRecords = provenance?.districts;
   const activeYear = provenance?.activeSchoolYear;
-  if (!Array.isArray(records)) return { errors: ['districts is not an array'], warnings, summary: null };
+  if (!Array.isArray(baseRecords) || !Array.isArray(supplementary)) return { errors: ['districts/supplementary must be arrays'], warnings, summary: null };
+  const records = [...baseRecords, ...supplementary];
   if (typeof activeYear !== 'string' || !activeYear.trim()) errors.push('activeSchoolYear is missing');
   if (!/^\d{4}-\d\d-\d\d$/.test(provenance?.lastVerified || '')) errors.push('lastVerified date missing or malformed');
 
@@ -150,8 +151,10 @@ function run() {
   const root = path.resolve(__dirname, '..');
   const provenance = JSON.parse(fs.readFileSync(path.join(root, 'school-data-provenance.json'), 'utf8'));
   const { DISTRICT_REGISTRY } = require(path.join(root, 'district-registry.js'));
+  const mckinney = JSON.parse(fs.readFileSync(path.join(root, 'data/mckinney-2026-27-provenance.json'), 'utf8'));
   const report = auditSchoolProvenance(provenance, DISTRICT_REGISTRY, {
     readLocal: local => JSON.parse(fs.readFileSync(path.join(root, local), 'utf8')),
+    supplementary: [mckinney],
   });
 
   if (report.summary) {
