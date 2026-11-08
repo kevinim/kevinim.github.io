@@ -1,6 +1,6 @@
 # P41 — CMS hospital and emergency access data (2026-11-08)
 
-**Status updated 2026-11-08:** CMS facility **city-search listing** is wired to the public dashboard via `features/dashboard-extras.js` (PR #63). Source-aware drive-time calculations remain standalone and not wired; no coordinates, actual drive times, verified 24/7 status or trauma designations were acquired.
+**Status updated 2026-11-08:** CMS facility **city-search listing** (PR #63) and **separate hospital map layer** (PR #66) are deployed. Census address-range coordinates available for 83 of 104 facilities; 21 remain unmatched. DSHS verified 288 state-designated trauma facilities and EXACT name/city/ZIP matches for 34 CMS registrations. Actual driving times, precise ED entrance coordinates, verified 24/7 status and unmatched trauma designations are still unavailable.
 
 ## Official CMS acquisition
 
@@ -34,3 +34,9 @@ Texas DSHS Texas Trauma Facilities: https://www.dshs.texas.gov/dshs-ems-trauma-s
 6. Browser QA, existing school/hazard/crime overlays regression, eventual production deploy.
 
 This branch has no modifications to index.html, HANDOFF.md, crime, school, FEMA, or P40 files.
+
+## PR #66 completed additions / pending QA
+
+- `cms-dfw-census-points-2026.json`: official U.S. Census interpolated locations for 83/104 CMS entries, 21 unmatched and deliberately unplotted. **Census geocoder produces address-range estimates**; not verified facility entrances or drive-time destinations.
+- `dshs-trauma-facilities-2026.json`: 288 DSHS facility rows, 22/31/62/173 Level I/II/III/IV. `dshs-cms-exact-matches-2026.json`: 34 strict verified matches; missing join means **unknown**, not No.
+- `features/healthcare/map-layer.js` browser map uses these files, filtering ED flag and selected city. UI is already deployed; earlier 'add hospital layer' steps above are now obsolete. Validate current operations before working on route ETA or trauma enrichment.

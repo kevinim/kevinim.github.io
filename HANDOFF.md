@@ -4,7 +4,7 @@
 **Production:** https://kevinim.github.io/  
 **Repository:** `kevinim/kevinim.github.io` (`main`)  
 **Decision captured:** 2026-11-07, America/New_York  
-**Status updated 2026-11-08:** P40–P42 have **partially implemented, deployed UI** with explicit source limitations; city-level FBI Crime Map already exists separately from P43 source-native data preparation. No address-specific outage score, automatic NTTA quote, nearest-ED time, or P43 severity score is implemented. Read the 2026-11-08 addendum before new development.
+**Status updated 2026-11-08:** P40–P42 have **partially deployed UI**, including newly mapped CMS hospital points and FEMA NRI Census tract winter risks from PR #66. Existing FBI Crime Map is separate from P43 source-native records. No address-specific outage probability, licensed utility service-area map, automatic NTTA quote, verified nearest-ED time, or P43 severity score is implemented. Read the latest 2026-11-08 addenda.
 
 ## 0. Read this before making changes
 
@@ -184,3 +184,15 @@ This addendum supersedes the historical **'no implementation'** status lines abo
 - The live-browser run **did not draw a real commute route** or switch from West Plano to Allen ZIP 75013; do **not** misreport this run as visual confirmation of work destination pin placement or Allen-specific live school markers. The shared work-pin source and marker constructor passed unit/browser integration checks, and school/viewport regression passed in the PR Chromium suite. If needed, run targeted production route+Allen smoke separately.
 - Exact smoke log: https://agent.tinyfish.ai/runs/4e9545bf-35c2-4f86-8c55-214b7b2e7d48
 
+
+## 2026-11-08 Map release — hospitals & FEMA winter hazards (PR #66)
+
+**Production code:** PR #66 merged as `d5b6cc8e3620b2abcde3c97034cbfe185ee5a3db`. GitHub Pages deployment run #42513304505 succeeded.
+
+- **Hospital map:** `features/healthcare/map-layer.js` displays a standalone Leaflet marker layer; it never clears school, ZIP or boundary layers. Census Geocoder `Public_AR_Current` returned **83/104 strictly validated** CMS addresses, with **21 not mapped**. These are interpolated street address-range locations, not ER entrances. Default ED-only map checkbox displays **67 verified-coordinate / CMS ED-flag Yes** entries; PLN/Plano city filtered ED-only map displayed 6 in browser test. CMS emergency-service flag is not proof of 24h availability.
+- **Trauma:** `data/healthcare/dshs-trauma-facilities-2026.json` contains **288 official DSHS entries**, validated level counts I 22, II 31, III 62, IV 173. `dshs-cms-exact-matches-2026.json` has **34 exact name/city/ZIP joins**; other CMS hospitals show **unverified designation**, NOT 'no trauma designation'. DSHS contingent/probationary status preserved.
+- **Winter hazards:** `data/resilience/fema-nri-dfw-winter-2025.json` covers **1,734 December 2025 NRI v1.20.0 Census tracts** in the same 12-county geography as existing FEMA polygons. `features/resilience/winter-map.js` provides **Cold Wave / Ice Storm / Winter Weather** relative-risk map; pale→red categories, no-data/no-rating transparent. Not a power outage, current storm, real-time grid vulnerability or home-specific score.
+- **Controls:** Separate color-coded 병원·응급실 / 겨울 위험 map toolbar controls and card checkboxes; school map, crime, FEMA flood, ZIP demographic layers are not replaced.
+- **QA:** All 8 PR checks passed, including new source integrity tests, real Chromium 390px/1360px browser QA (hospital markers; Plano filter; winter switch; Allen marker; no page overflow) and existing Phase 2A regression.
+
+**Remaining:** Certified/publishable PUCT utility service-area polygons are **not** included. Current PUCT public GIS is explicitly **unofficial** and its Platts source metadata carries restricted use rights (verify licensing before redistribution); do not scrape/republish as though cleared. Official Oncor service-area lookup: https://www.oncor.com/content/oncorwww/us/en/home/about-us/service-area-map.html . Utility-specific SAIDI/SAIFI, address-level outage history, real 15/30 minute ED drive routing with verified facility entrances, additional freestanding ER facilities, and NTTA automatic route quotes remain future work. No invented data/ETA permitted.
