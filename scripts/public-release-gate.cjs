@@ -23,6 +23,11 @@ function isRuntimeAsset(file){
  if(/^(?:features|vendor|data)\//.test(file))return /\.(?:js|css|json|geojson)$/i.test(file);
  return !file.includes('/')&&/\.(?:js|css|json|geojson)$/i.test(file);
 }
+function isPublishable(file){
+ if(isRuntimeAsset(file))return true;
+ if(/^(?:favicon\.ico|robots\.txt|manifest\.webmanifest|CNAME|\.nojekyll)$/.test(file))return true;
+ return /^(?:assets|images|vendor)\/[A-Za-z0-9_./-]+\.(?:png|jpe?g|webp|svg|ico|woff2?|ttf)$/i.test(file);
+}
 function countMatches(text,rule){return [...text.matchAll(new RegExp(rule.source,rule.flags.replace('g','')+'g'))].length;}
 function scanSecrets(file,content){
  const out=RULES.map(([kind,rule])=>({kind,file,count:countMatches(content,rule)})).filter(x=>x.count>0);
@@ -79,7 +84,8 @@ function analyze(files,opts={}){
  }
  return {credentials,personalization,newSensitive,domSinks,hosts:[...hosts].sort(),
   developmentFiles:files.filter(f=>PUBLIC_ROOT_DOC.test(f)||/^(?:scripts|tests|\.github)\//.test(f)),
-  runtimeCandidates:files.filter(isRuntimeAsset).length};
+  runtimeCandidates:files.filter(isRuntimeAsset).length,
+  nonPublishable:files.filter(f=>!isPublishable(f))};
 }
 function main(){
  const mode=process.argv[2]||'audit';
@@ -91,7 +97,7 @@ function main(){
  const data=analyze(files,{root:dir||'.',baseSha:release?null:process.env.GITHUB_BASE_SHA});
  const blockers=[...data.credentials,...(release?data.personalization:data.newSensitive)];
  if(release){
-  if(data.developmentFiles.length)blockers.push({kind:'development-file-in-bundle',file:'[distribution]',count:data.developmentFiles.length});
+  if(data.nonPublishable.length)blockers.push({kind:'unapproved-file-in-bundle',file:'[distribution]',count:data.nonPublishable.length});
   if(!files.includes('index.html'))blockers.push({kind:'missing-index',file:'index.html',count:1});
   if(process.env.PUBLIC_SOURCE_SEPARATED!=='confirmed')
    blockers.push({kind:'private-source-separation-not-verified',file:'[deployment-config]',count:1});
@@ -114,4 +120,4 @@ function main(){
  if(blockers.length){process.stderr.write('Blocked categories: '+[...new Set(blockers.map(x=>x.kind))].join(', ')+'\n');process.exitCode=1;}
 }
 if(require.main===module)try{main();}catch(e){process.stderr.write('Security check failed: '+e.message+'\n');process.exitCode=2;}
-module.exports={isRuntimeAsset,countMatches,scanSecrets,scanPersonalization,analyze};
+module.exports={isRuntimeAsset,isPublishable,countMatches,scanSecrets,scanPersonalization,analyze};
