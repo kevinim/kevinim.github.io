@@ -4,13 +4,14 @@
 function schoolLevelMatchesAssignment(s,level){
  return s?.type===level||(s?.district==='PISD'&&s?.type==='high'&&level==='senior');
 }
-function resolveAssignment({frisco=[],prosper=[],lewisville=[],plano=[],allen=null,planoFinderLive=false,lewisvilleFinderLive=false,ready=true,failed=false}) {
+function resolveAssignment({frisco=[],prosper=[],lewisville=[],plano=[],mckinney=[],allen=null,planoFinderLive=false,lewisvilleFinderLive=false,mckinneyFinderLive=false,ready=true,failed=false}) {
  const found=[];
  if(frisco.length) found.push({district:'FISD',status:'current',features:frisco});
  if(prosper.length) found.push({district:'PROSPER',status:'current',features:prosper});
  if(allen) found.push({district:'AISD',status:'unverified-year',allen});
  if(lewisville.length) found.push({district:'LISD',status:lewisvilleFinderLive?'finder-current':'reference',features:lewisville});
  if(plano.length) found.push({district:'PISD',status:planoFinderLive?'finder-current':'reference',features:plano});
+ if(mckinney.length&&mckinneyFinderLive) found.push({district:'043907',status:'finder-current',features:mckinney});
  if(found.length>1)return {status:'conflict',matches:found};
  if(found.length)return found[0];
  if(!ready)return {status:'loading'};
