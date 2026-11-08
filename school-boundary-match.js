@@ -29,6 +29,20 @@ function knownBoundaryException(s){
   reason:'Mill Street Elementary는 2026–27학년도부터 일반 초등학교가 아닌 유아교육 시설로 전환됩니다.',
   footnote:'Lewisville ISD 공식 Turnaround Plan에 따라 기존 학생은 다른 초등학교로 재배정됐습니다. 과거 Mill Street의 통학구역을 현재 초등 배정도로 표시하지 않습니다.',
   sourceUrl:'https://www.lisd.net/resources/families/school-improvement/2025-2026-plans/mill-street'};
+ // McKinney ISD closed and repurposed three elementary campuses for 2026-27
+ // (board vote November 2025); the 2026-27 finder has no zones for them.
+ if(district==='043907'&&/\b(mcneil|eddins|wolford)\b/.test(key))return {
+  reason:'이 학교는 2026–27학년도부터 일반 초등학교로 운영되지 않습니다.',
+  footnote:'McKinney ISD 교육위원회는 2025년 11월 Eddins·McNeil·Wolford 초등학교를 폐교 후 다른 용도로 전환하기로 의결했습니다. 학생들은 2025년 12월 승인된 2026–27 배정 지도에 따라 다른 초등학교로 재배정됐습니다. 과거 통학구역을 현재 배정으로 표시하지 않습니다.',
+  sourceUrl:'https://www.mckinneyisd.net/page/efac',sourceLinkLabel:'McKinney ISD 시설 조정(EFAC) 공식 페이지'};
+ if(district==='043907'&&key==='serenity')return {
+  reason:'Serenity High는 2026–27 McKinney ISD 공식 School Zone Finder의 일반 고등학교 통학구역(Boyd·McKinney·North)에 포함되지 않는 캠퍼스입니다.',
+  footnote:'주소별 일반 배정 대상이 아니므로 다른 고등학교의 구역을 대신 표시하지 않습니다. 입학 방식은 학군에 확인하세요.',
+  sourceUrl:'https://www.mckinneyisd.net/page/efac',sourceLinkLabel:'McKinney ISD 공식 페이지'};
+ if(district==='043907'&&key==='caldwell')return {
+  reason:'Caldwell은 2026–27 McKinney ISD 공식 School Zone Finder에 일반 통학구역이 없는 캠퍼스입니다.',
+  footnote:'공식 Finder의 학교 레이어에는 Caldwell Dual Language Academy로 표시됩니다. 입학 방식은 학군에 확인하세요. 인근 초등학교 구역을 대신 표시하지 않습니다.',
+  sourceUrl:'https://www.mckinneyisd.net/page/efac',sourceLinkLabel:'McKinney ISD 공식 페이지'};
  if(district==='CFB'&&key==='early college')return {
   reason:'CFB Early College High School은 일반 주소별 고등학교 배정 대신 별도 지원·추첨 절차로 입학합니다.',
   footnote:'CFB 공식 Early College High School 입학 정책은 지원서와 weighted lottery를 명시합니다. 인근 일반 고등학교의 통학구역을 이 캠퍼스에 복제하면 잘못된 배정 정보가 되므로 표시하지 않습니다.',
@@ -51,7 +65,7 @@ function findSchoolBoundary(s,geo,ratings){
   if(boundarySchoolKey(p.school)===key)return true;
   if(!selected?.id||typeof ratings!=='function')return false;
   const rated=ratings(p.school,s.district);
-  return rated?.id===selected.id||(['LISD','PROSPER'].includes(s.district)&&p.campusId===selected.id);
+  return rated?.id===selected.id||(['LISD','PROSPER','043907'].includes(s.district)&&p.campusId===selected.id);
  });
  // Allen's historical polygons sometimes use only the surname, while
  // the school directory includes a honoree's complete name. Unique only.
@@ -67,7 +81,7 @@ function findSchoolBoundary(s,geo,ratings){
 }
 function boundaryMissingExplanation(s, result, sourceVintage, sourceLoadError){
  const district=s?.district||'';
- const finder=({FISD:'Frisco',PISD:'Plano',AISD:'Allen',LISD:'Lewisville',PROSPER:'Prosper',CFB:'CFB'})[district]||district||'해당 학군';
+ const finder=({FISD:'Frisco',PISD:'Plano',AISD:'Allen',LISD:'Lewisville',PROSPER:'Prosper',CFB:'CFB','043907':'McKinney'})[district]||district||'해당 학군';
  const special=knownBoundaryException(s);
  if(special&&result?.status!=='matched')return special;
  if(sourceLoadError)return {reason:finder+' 학군 배정구역 데이터가 이번 접속에서 로딩되지 않았습니다.',

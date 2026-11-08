@@ -149,7 +149,7 @@
 <script src="./school-lifecycle.js?v=1"></script>
 <script src="./geocode-quality.js?v=1"></script>
 <script src="./school-zone-risk.js?v=1"></script>
-<script src="./school-boundary-match.js?v=1"></script>
+<script src="./school-boundary-match.js?v=2"></script>
 <script src="./phase2a-fema-hazards.js?v=3"></script>
 <script src="./phase2a-nfhl-flood.js?v=2"></script>
 <script src="./txwrap-wildfire-potential.js?v=1"></script>
@@ -557,14 +557,18 @@ function convertFriscoZones(data){
  });
 }
 // Official Lewisville locator embeds Web Mercator rings; preserve islands and holes.
-function convertLewisvilleZones(webmap){
- const specs=[['Elementary_Boundaries','ELEM_PLAN1','elementary'],['Middle_Boundaries','MID_NAME','middle'],['High_Boundaries','HIGH_NAME','high']];
+// Same MetroStudy finder format serves Lewisville and McKinney ISD; cfg holds
+// the district-specific layer titles, elementary field, TEA prefix and vintage.
+const LEWISVILLE_FINDER={label:'루이스빌',prefix:'061902',layers:[['Elementary_Boundaries','ELEM_PLAN1','elementary'],['Middle_Boundaries','MID_NAME','middle'],['High_Boundaries','HIGH_NAME','high']],vintage:level=>level==='high'?'공식 검색기 연결 · 고등 레이어 2025–26 표기':'공식 검색기 연결 · 학년도 미확인'};
+const MCKINNEY_FINDER={label:'매키니',prefix:'043907',layers:[['Elementary Boundaries','ELEM_NAME','elementary'],['Middle Boundaries','MID_NAME','middle'],['High Boundaries','HIGH_NAME','high']],vintage:()=>'2026–27 공식 School Zone Finder'};
+function convertMetrostudyZones(webmap,cfg=LEWISVILLE_FINDER){
+ const specs=cfg.layers;
  // The locator's Schools layer uses the three-digit TEA campus suffix. Only use
  // a campus identity when its locator name and school level are unambiguous.
  const campusIndex=new Map(),classes={ELEM:'elementary',MID:'middle',HIGH:'high'};
  const campuses=webmap.operationalLayers?.find(l=>l.title==='Schools')?.featureCollection?.layers?.[0]?.featureSet?.features||[];
- for(const f of campuses){const a=f.attributes||{},level=classes[a.CLASS],n=String(a.NAME||'').trim().toUpperCase(),id=Number(a.CAMPUS_ID);if(!level||!n||!Number.isInteger(id)||id<1||id>999)continue;const k=level+'|'+n,items=campusIndex.get(k)||[];items.push('061902'+String(id).padStart(3,'0'));campusIndex.set(k,items)}
- const out=[];for(const [title,field,level] of specs){const layer=webmap.operationalLayers?.find(l=>l.title===title)?.featureCollection?.layers?.[0];if(!layer?.featureSet?.features)throw Error('루이스빌 경계 레이어 없음: '+title);
+ for(const f of campuses){const a=f.attributes||{},level=classes[a.CLASS],n=String(a.NAME||'').trim().toUpperCase(),id=Number(a.CAMPUS_ID);if(!level||!n||!Number.isInteger(id)||id<1||id>999)continue;const k=level+'|'+n,items=campusIndex.get(k)||[];items.push(cfg.prefix+String(id).padStart(3,'0'));campusIndex.set(k,items)}
+ const out=[];for(const [title,field,level] of specs){const layer=webmap.operationalLayers?.find(l=>l.title===title)?.featureCollection?.layers?.[0];if(!layer?.featureSet?.features)throw Error(cfg.label+' 경계 레이어 없음: '+title);
  for(const f of layer.featureSet.features){const name=f.attributes?.[field];if(!name||!f.geometry?.rings?.length)continue;
  const rings=f.geometry.rings.filter(r=>r.length>=4).map(r=>r.map(([x,y])=>{const ll=L.CRS.EPSG3857.unproject(L.point(x,y));return [ll.lng,ll.lat]}));
  const area=r=>Math.abs(r.reduce((v,p,i)=>{const q=r[(i+1)%r.length];return v+p[0]*q[1]-q[0]*p[1]},0));
@@ -572,7 +576,7 @@ function convertLewisvilleZones(webmap){
  for(let i=0;i<ordered.length;i++){const child=ordered[i];const parents=ordered.slice(0,i).filter(p=>ringContains(child.r[0],p.r));if(parents.length){child.parent=parents.reduce((a,b)=>a.area<b.area?a:b);child.depth=child.parent.depth+1}}
  const polys=ordered.filter(r=>r.depth%2===0).map(r=>[r.r,...ordered.filter(h=>h.parent===r&&h.depth%2===1).map(h=>h.r)]);if(!polys.length)continue;
  const ids=campusIndex.get(level+'|'+String(name).trim().toUpperCase())||[];
- out.push({type:'Feature',properties:{school:name,gradeLevel:level,campusId:ids.length===1?ids[0]:null,sourceVintage:level==='high'?'공식 검색기 연결 · 고등 레이어 2025–26 표기':'공식 검색기 연결 · 학년도 미확인'},geometry:{type:'MultiPolygon',coordinates:polys}});
+ out.push({type:'Feature',properties:{school:name,gradeLevel:level,campusId:ids.length===1?ids[0]:null,sourceVintage:cfg.vintage(level)},geometry:{type:'MultiPolygon',coordinates:polys}});
  }}return out;
 }
 async function loadBoundaryData(){
@@ -587,6 +591,7 @@ async function loadBoundaryData(){
   {district:'FISD',url:'https://static.friscoisd.org/js/json/school.borders.2627.json',label:'프리스코 2026–27 (공식 검색기)'},
   {district:'LISD',url:'https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/03c099e24d304c4fa0f4ce8a76c10062/data?f=json',label:'루이스빌 현재 공식 Finder 지도 (고등학교 2025–26 표기)'},
   {district:'PISD_LOOKUP',url:'./plano-locator-reference.geojson',label:'플레이노 현재 공식 Finder GIS (원본 2025–26)'},
+  {district:'043907',url:'https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/23b28d101ba947498650f6c7b9ef251b/data?f=json',label:'매키니 2026–27 공식 School Zone Finder'},
   {district:'PROSPER',url:'./prosper-attendance-2026.geojson',label:'프로스퍼 2026–27 (공식 검색기 · 31개 학교 배정구역)'},
 
   {district:'AISD',url:'./allen-attendance-historical.geojson',label:'Allen 2019·2023'}
@@ -604,7 +609,16 @@ async function loadBoundaryData(){
    if(!r.ok)throw Error('HTTP '+r.status);
    const j=await r.json();
    if(x.district==='FISD')state.zoneData.FISD=convertFriscoZones(j);
-   else if(x.district==='LISD'){state.zoneData.LISD=convertLewisvilleZones(j);if(state.zoneData.LISD.length<19)throw Error('Incomplete Lewisville Finder map');state.liveFinder.LISD=true;}
+   else if(x.district==='LISD'){state.zoneData.LISD=convertMetrostudyZones(j,LEWISVILLE_FINDER);if(state.zoneData.LISD.length<19)throw Error('Incomplete Lewisville Finder map');state.liveFinder.LISD=true;}
+   else if(x.district==='043907'){
+    // Every elementary piece must carry the finder's 2026-27 school year.
+    const elem=j.operationalLayers?.find(l=>l.title==='Elementary Boundaries')?.featureCollection?.layers?.[0]?.featureSet?.features||[];
+    if(!elem.length||elem.some(f=>f.attributes?.SCHL_YEAR!=='2026-27'))throw Error('매키니 2026–27 학년도 검증 실패');
+    const zones=convertMetrostudyZones(j,MCKINNEY_FINDER);
+    const count=lv=>new Set(zones.filter(f=>f.properties.gradeLevel===lv).map(f=>f.properties.school)).size;
+    if(count('elementary')<15||count('middle')!==5||count('high')!==3)throw Error('매키니 Finder 학교 수 불일치');
+    state.zoneData['043907']=zones;state.liveFinder['043907']=true;
+   }
    else if(x.district==='PROSPER'){
     if(j.type!=='FeatureCollection'||j.metadata?.sourceYear!=='2026–27'||j.metadata?.currentYearConfirmed!==true||j.features?.length!==31||new Set(j.features.map(f=>f.properties?.campusId)).size!==31||j.features.some(f=>f.properties?.current!==true||f.properties?.sourceDistrict!=='PROSPER'||f.properties?.sourceVintage!=='2026–27'||f.geometry?.type!=='MultiPolygon'))throw Error('프로스퍼 최신 학년도/학교별 경계 검증 실패');
     state.zoneData.PROSPER=j.features;
@@ -717,12 +731,12 @@ function drawBoundary(){
  const match=window.SchoolBoundaryMatch.findSchoolBoundary(s,geo,(name,district)=>scoreRecord(name,district));
  const found=match.features;
  if(found.length){
-  const current=s.district==='FISD'||s.district==='PROSPER';
+  const current=s.district==='FISD'||s.district==='PROSPER'||(s.district==='043907'&&state.liveFinder['043907']);
   const layer=L.geoJSON({type:'FeatureCollection',features:found},{style:{color:current?'#087f69':finderLinked?'#285ac0':'#d37125',weight:3,dashArray:current||finderLinked?null:'7 5',fillColor:current?'#70cbb4':finderLinked?'#8db6f8':'#ffc078',fillOpacity:.25}}).addTo(zoneGroup);
   if(layer.getBounds().isValid())map.fitBounds(layer.getBounds(),{padding:[28,28],maxZoom:13});
   const yrs=[...new Set(found.map(f=>f.properties?.sourceVintage).filter(Boolean))].join(', ');
   const grades=[...new Set(found.map(f=>f.properties?.grades).filter(Boolean))].join(', ');
-  if(note)note.innerHTML=s.district==='PISD'&&finderLinked?'<b>Plano 현행 공식 Finder가 사용하는 배정선</b> · 원본 레이어는 2025–26 명칭입니다. 실제 주소·학년·호수는 Finder로 확인하세요.':s.district==='LISD'&&finderLinked?'<b>Lewisville 현행 공식 Finder가 사용하는 배정선</b> · 고등 레이어의 내부 연도는 2025–26. 실제 주소·아파트 호수는 Finder로 확인하세요.':s.district==='PROSPER'?'<b>Prosper 공식 검색기 배정구역 2026–27 · '+escape(yrs)+'</b> · 초등 20개, 중등 7개, 고등 4개 전체 구역 원본을 학군 검색기 좌표와 교차 검증했습니다. 녹색 도형은 배정구역 참고이며 실제 집 주소·학년·특수 프로그램/예외·등록 자격은 공식 Prosper ISD 검색기로 확인하세요.':current?'<b>Frisco 공식 검색기 경계 '+escape(yrs)+'</b> · 녹색 도형, 학년 '+escape(grades)+(grades.includes(',')?' (여러 학년의 구역을 함께 표시)':'')+'. 배정 예외와 정원 제한이 있을 수 있으므로 학군에 최종 확인하세요.':'<b style="color:#ab531b">과거 GIS 경계 '+escape(yrs)+' (현재 배정 보장 X)</b> · 주황색 점선 '+found.length+'개 도형 표시. 실제 2026–27 배정은 해당 주소로 공식 학군 검색에서 확인하세요.';
+  if(note)note.innerHTML=s.district==='043907'?'<b>McKinney ISD 2026–27 공식 School Zone Finder 배정구역</b> · 2025년 12월 교육위원회 승인 지도 기준입니다. 5·8·12학년 기존 학교 유지(grandfather) 등 예외가 있으니 실제 주소는 학군 Finder로 확인하세요.':s.district==='PISD'&&finderLinked?'<b>Plano 현행 공식 Finder가 사용하는 배정선</b> · 원본 레이어는 2025–26 명칭입니다. 실제 주소·학년·호수는 Finder로 확인하세요.':s.district==='LISD'&&finderLinked?'<b>Lewisville 현행 공식 Finder가 사용하는 배정선</b> · 고등 레이어의 내부 연도는 2025–26. 실제 주소·아파트 호수는 Finder로 확인하세요.':s.district==='PROSPER'?'<b>Prosper 공식 검색기 배정구역 2026–27 · '+escape(yrs)+'</b> · 초등 20개, 중등 7개, 고등 4개 전체 구역 원본을 학군 검색기 좌표와 교차 검증했습니다. 녹색 도형은 배정구역 참고이며 실제 집 주소·학년·특수 프로그램/예외·등록 자격은 공식 Prosper ISD 검색기로 확인하세요.':current?'<b>Frisco 공식 검색기 경계 '+escape(yrs)+'</b> · 녹색 도형, 학년 '+escape(grades)+(grades.includes(',')?' (여러 학년의 구역을 함께 표시)':'')+'. 배정 예외와 정원 제한이 있을 수 있으므로 학군에 최종 확인하세요.':'<b style="color:#ab531b">과거 GIS 경계 '+escape(yrs)+' (현재 배정 보장 X)</b> · 주황색 점선 '+found.length+'개 도형 표시. 실제 2026–27 배정은 해당 주소로 공식 학군 검색에서 확인하세요.';
   if(note&&s.district==='FISD'&&window.SchoolBoundaryMatch.boundarySchoolKey(s.name)==='isbell'){
    const gradeLabels=[...new Set(found.map(f=>f.properties?.grades).filter(Boolean))];
    const explain=document.createElement('small');explain.className='source boundary-footnote';
@@ -730,7 +744,7 @@ function drawBoundary(){
    note.appendChild(explain);
   }
   if(note&&s.district==='PISD'&&/\bJackson\b/i.test(s.name))note.innerHTML+='<br><b>Jackson Elementary 진학 경로 예외:</b> Coit Rd 동쪽은 Wilson Middle → Vines High → Plano Senior, 서쪽은 Frankford Middle → Shepton High → Plano West Senior입니다. 정확한 주소로 학군 공식 SchoolFinder를 확인하세요.';
- }else if(!state.zoneReady&&['AISD','PISD','FISD','LISD','PROSPER'].includes(s.district)){
+ }else if(!state.zoneReady&&['AISD','PISD','FISD','LISD','PROSPER','043907'].includes(s.district)){
   if(note)note.textContent='배정구역 데이터를 불러오는 중입니다…';
  }else if(note){
   const source=window.SchoolBoundaryMatch.boundarySchoolSource(s.district);

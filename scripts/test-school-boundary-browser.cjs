@@ -222,6 +222,21 @@ mkdirSync(out,{recursive:true});
   console.log('PASS actual Allen ZIP dropdown selection retains visible markers '+JSON.stringify(realAllen));
   assert.equal(await page.locator('#schoolOverlay').isChecked(),true);
   console.log('PASS Allen campus markers automatically at zoom 9, 10, 11 and 13 without shortcut: '+JSON.stringify(allenZoomAudits));
+  // McKinney ISD 2026-27 official finder: matched campus shows its zone,
+  // closed campuses explain why instead of drawing an old zone.
+  const mk=await page.evaluate(()=>{const z=state.zoneData['043907']||[];const n=l=>new Set(z.filter(f=>f.properties.gradeLevel===l).map(f=>f.properties.school)).size;
+   return {err:state.zoneLoadErrors['043907']||null,el:n('elementary'),mid:n('middle'),high:n('high'),cov:window.getSchoolBoundaryCoverage().byDistrict['043907']}});
+  assert.equal(mk.err,null,'McKinney finder must load: '+JSON.stringify(mk));
+  assert.ok(mk.el>=15&&mk.mid===5&&mk.high===3,'McKinney zone counts: '+JSON.stringify(mk));
+  assert.ok(mk.cov.matched>=20,'McKinney campuses must match zones: '+JSON.stringify(mk));
+  for(const [name,expectZone,text] of [['FINCH EL',true,'McKinney ISD 2026–27'],['ARTHUR H MCNEIL EL',false,'2026–27학년도부터']]){
+   await page.evaluate(n=>{zoneGroup.clearLayers();return schoolClicked(state.schools.find(s=>s.district==='043907'&&s.name===n))},name);
+   await page.waitForTimeout(300);
+   const r=await page.evaluate(()=>({layers:zoneGroup.getLayers().length,note:document.getElementById('zoneNotice')?.innerText||''}));
+   assert.equal(r.layers>0,expectZone,name+' zone display: '+JSON.stringify(r));
+   assert.ok(r.note.includes(text),name+' note: '+JSON.stringify(r));
+  }
+  console.log('PASS McKinney ISD 2026-27 finder zones '+JSON.stringify(mk));
   console.log('PASS school boundary auto display, per-school source footnote, district coverage audit');
   console.log('Page JavaScript errors: '+JSON.stringify(errors.slice(0,6)));
  }finally{await browser?.close().catch(()=>{})}
