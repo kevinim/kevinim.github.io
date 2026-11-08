@@ -22,7 +22,7 @@ test('workplace briefcase marker shared by home and ZIP route',()=>{
 });
 
 test('functional scripts and source files are loaded without an extra map library',()=>{
- for(const file of ['features/dashboard-extras.css?v=2','features/commute/workplace-marker.js?v=1',
+ for(const file of ['features/dashboard-extras.css?v=3','features/commute/workplace-marker.js?v=1',
  'features/commute/cost-model.js?v=1','features/dashboard-extras.js?v=1']){
   assert.ok(index.includes(file),file+' not loaded');
  }
