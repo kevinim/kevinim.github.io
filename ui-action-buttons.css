@@ -228,3 +228,120 @@
 @media(prefers-reduced-motion:reduce){
  .home-address-autocomplete .home-input-clear{transition:none}
 }
+
+/* School / area / commute settings: theme-only grouping.
+   The existing filter IDs and map listeners are unchanged. */
+.filter-panel>.filter-settings-group{
+  min-width:0;
+  margin:12px 0 14px;
+  padding:14px 13px 11px;
+  border:1px solid #dde6f2;
+  border-radius:13px;
+  background:#f9fbff;
+}
+.filter-panel>.area-settings{
+  border-color:#d6e6f9;
+  background:linear-gradient(135deg,#f5f9ff,#ffffff 85%);
+}
+.filter-panel>.school-settings{
+  border-color:#bfd9ff;
+  background:linear-gradient(135deg,#f0f6ff,#ffffff 85%);
+}
+.filter-panel>.commute-settings{
+  border-color:#f2dec1;
+  background:linear-gradient(135deg,#fff8ed,#ffffff 85%);
+}
+.filter-panel .settings-group-title{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin:0 0 11px;
+  font-size:13px;
+  font-weight:800;
+  color:#233b5c;
+}
+.filter-panel .settings-icon{
+  display:grid;
+  place-items:center;
+  flex:none;
+  width:30px;
+  height:30px;
+  border-radius:9px;
+  background:#e4f0ff;
+  color:#3159b3;
+}
+.filter-panel .school-settings .settings-icon{
+  background:#dceaff;
+  color:#25549d;
+}
+.filter-panel .commute-settings .settings-icon{
+  background:#ffecd4;
+  color:#97601c;
+}
+.filter-panel .settings-icon svg{width:17px;height:17px}
+.filter-panel .settings-group-note{
+  font-size:11px;
+  line-height:1.55;
+  color:#5f7695;
+  margin:0 0 13px;
+}
+.filter-panel .filter-settings-group .field{margin-bottom:11px}
+.filter-panel .school-settings .seg{
+  width:100%;
+  min-width:0;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:3px;
+}
+.filter-panel .school-settings .seg button{
+  min-width:0;
+  min-height:36px;
+  padding:7px 2px;
+  font-size:11px;
+  white-space:nowrap;
+}
+.filter-panel .school-settings .seg button.active{
+  background:#2e60b7;
+  color:#fff;
+  box-shadow:0 2px 6px rgba(36,81,155,.18);
+}
+.filter-panel .school-settings .seg button:focus-visible,
+.filter-panel .school-visibility-options input:focus-visible{
+  outline:3px solid #2d5dc1;
+  outline-offset:2px;
+}
+.filter-panel .school-visibility-options{
+  display:grid;
+  gap:7px;
+  padding:10px;
+  border:1px solid #d6e6f8;
+  background:#ffffffd9;
+  border-radius:10px;
+}
+.filter-panel .school-visibility-options .check{
+  display:flex;
+  gap:10px;
+  margin:0;
+  padding:7px 3px;
+  align-items:flex-start;
+  min-width:0;
+  line-height:1.45;
+  overflow-wrap:anywhere;
+  color:#34455f;
+}
+.filter-panel .school-visibility-options .check input{
+  flex:none;
+  margin-top:2px;
+  width:16px;
+  height:16px;
+}
+.filter-panel .filter-settings-group>.check{
+  overflow-wrap:anywhere;
+  line-height:1.5;
+  min-width:0;
+}
+@media(max-width:480px){
+  .filter-panel>.filter-settings-group{padding:12px 10px 10px;margin:10px 0}
+  .filter-panel .school-settings .seg button{min-height:42px;font-size:12px}
+  .filter-panel .school-visibility-options .check{min-height:36px}
+}
