@@ -4,8 +4,11 @@
 function schoolLevelMatchesAssignment(s,level){
  return s?.type===level||(s?.district==='PISD'&&s?.type==='high'&&level==='senior');
 }
-function resolveAssignment({frisco=[],prosper=[],lewisville=[],plano=[],mckinney=[],allen=null,planoFinderLive=false,lewisvilleFinderLive=false,mckinneyFinderLive=false,ready=true,failed=false}) {
+// polygons: [{district,status,features}] built from the district registry.
+// The named arguments are kept for existing callers and tests.
+function resolveAssignment({frisco=[],prosper=[],lewisville=[],plano=[],mckinney=[],allen=null,planoFinderLive=false,lewisvilleFinderLive=false,mckinneyFinderLive=false,polygons=[],ready=true,failed=false}) {
  const found=[];
+ for(const p of polygons)if(p?.status&&p.features?.length)found.push({district:p.district,status:p.status,features:p.features});
  if(frisco.length) found.push({district:'FISD',status:'current',features:frisco});
  if(prosper.length) found.push({district:'PROSPER',status:'current',features:prosper});
  if(allen) found.push({district:'AISD',status:'unverified-year',allen});

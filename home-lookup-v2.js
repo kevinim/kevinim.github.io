@@ -40,19 +40,21 @@ function schoolAssignmentFor(item){
  if(!item?.geocodeQuality?.usableForSchoolCandidate)return {status:'needs-address-verification'};
  const split=allenSplitApartmentException(item.typedAddress)||allenSplitApartmentException(item.address);
  if(split)return {status:'apartment-split-review',district:'AISD',exception:split};
- const found=resolveAssignment({frisco:homeFriscoMatches(item.ll),prosper:homeZoneMatches(item.ll,'PROSPER'),lewisville:homeZoneMatches(item.ll,'LISD'),mckinney:homeZoneMatches(item.ll,'043907'),mckinneyFinderLive:!!state.liveFinder['043907'],plano:homeZoneMatches(item.ll,'PISD_LOOKUP'),allen:window.allenAssignment?.(item.address,item.ll),planoFinderLive:!!state.liveFinder.PISD_LOOKUP,lewisvilleFinderLive:!!state.liveFinder.LISD,ready:state.zoneReady&&!window.allenAssignmentLoading?.(),failed:!!state.assignmentLoadFailed||!!window.allenAssignmentFailed?.()});
+ // Every polygon district in the registry is checked; no per-district list here.
+ const polygons=Object.entries(DISTRICT_REGISTRY).map(([code,d])=>({district:code,status:districtPolygonStatus(code,state.liveFinder),features:d.address==='frisco'?homeFriscoMatches(item.ll):d.address==='polygon'?homeZoneMatches(item.ll,d.zoneKey):[]})).filter(p=>p.status);
+ const found=resolveAssignment({polygons,allen:window.allenAssignment?.(item.address,item.ll),ready:state.zoneReady&&!window.allenAssignmentLoading?.(),failed:!!state.assignmentLoadFailed||!!window.allenAssignmentFailed?.()});
  if(!['current','finder-current'].includes(found.status))return found;
  if(found.district==='PISD'&&found.status==='finder-current'){
   const feeder=evaluatePlanoFeederAssignment(found.features,state.planoFeederReference);
   if(feeder.status!=='consistent')return {...found,status:'feeder-review',feeder};
  }
- const src=state.zoneData[found.district==='PISD'?'PISD_LOOKUP':found.district]||[];
+ const src=state.zoneData[districtZoneKey(found.district)]||[];
  const zoneKey=p=>p.school+'|'+p.gradeLevel+'|'+(p.grades||'');
  const near=zoneBoundaryProximity([item.ll[1],item.ll[0]],found.features,undefined,found.features.map(f=>src.filter(g=>zoneKey(g.properties)===zoneKey(f.properties))));
  return near?.review?{...found,status:found.status==='current'?'boundary-review':'finder-boundary-review',edge:near}:{...found,edge:near};
 }
 function assignmentRating(p,district){
- if(['LISD','PROSPER','043907'].includes(district)&&p.campusId){const byId=state.ratings.filter(r=>r.district===district&&r.id===p.campusId);if(byId.length===1)return byId[0]}
+ if(districtUsesCampusId(district)&&p.campusId){const byId=state.ratings.filter(r=>r.district===district&&r.id===p.campusId);if(byId.length===1)return byId[0]}
  const key=zoneNameKey(canonical(p.school));
  const hits=state.schools.filter(s=>s.district===district&&s.type===p.gradeLevel&&zoneNameKey(canonical(s.name))===key);
  return hits.length===1?scoreRecord(hits[0].name,district):scoreRecord(p.school,district);
@@ -76,8 +78,8 @@ function assignmentHtml(result){
  if(result.status==='error')return '학교 배정 자료를 불러오지 못했습니다. 새로고침하거나 학군 공식 검색기에서 확인하세요.';
  if(result.status==='unavailable')return '자동 연결 자료가 없습니다. 학교가 없다는 뜻은 아닙니다. 아래 학군 공식 검색기에서 주소를 확인하세요.';
  if(result.district==='AISD')return '<b>확인 필요 · 앨런 공식 주소표 (학년도 미표기)</b><br>'+[[result.allen[2],'elementary','K–6'],[result.allen[3],'middle','7–8'],[result.allen[4],'freshman','9'],[result.allen[5],'high','10–12']].map(([n,type,g])=>escape(n+' · '+g)+' <b>'+escape(allenSchoolRating(n,type))+'</b>').join('<br>')+'<br><span class="source">학군 경계와 실제 배정, 건물·호수별 예외는 학군에 확인하세요.</span>';
- const frisco=result.district==='FISD',prosper=result.district==='PROSPER',current=frisco||prosper,near=['boundary-review','finder-boundary-review'].includes(result.status);
- return '<b>'+(near?'경계 인접 · 학교 배정 확인 필요':frisco?'최신 경계상 후보 · 프리스코 2026–27':prosper?'최신 경계상 후보 · 프로스퍼 2026–27':result.district==='043907'?'2026–27 공식 Finder 경계 · 매키니':(result.district==='PISD'?(result.status==='reference'?'2025–26 저장본 참고 · 플레이노':'현행 공식 Finder 경계 · 플레이노'):(result.status==='reference'?'과거 GIS 참고 · 루이스빌':'현행 공식 Finder 경계 · 루이스빌')))+'</b><br>'+(near?'<span class="source">집 지도 핀이 현재 GIS 경계에서 약 '+result.edge.distanceMeters+'m 떨어져 있습니다. '+result.edge.thresholdMeters+'m 검토 구간이므로 주소·학년·건물별 배정을 공식 검색기로 확인하세요.</span><br>':'')+result.features.map(f=>{const p=f.properties;return escape(p.school+' · '+(p.grades||({elementary:'초등',middle:'중등',high:'고등'})[p.gradeLevel]||'학년 미확인'))+' <b>'+escape(ratingText(assignmentRating(p,result.district)))+'</b>'}).join('<br>')+(frisco&&result.features.some(f=>/nelson/i.test(f.properties.school))?'<br>넬슨 신규 학생은 웨스터 배정 예외 확인':'')+(current?'<br><span class="source">2026–27 공식 경계 기반 후보입니다. 실제 집 주소·학년·전학/특수 프로그램 예외·등록 자격은 학군 공식 검색기에서 확인하세요.</span>':'<br><span class="source">일부 레이어에 2025–26 표기. 현재 학년도 배정과 아파트 예외는 반드시 학군에 확인하세요.</span>');
+ const frisco=result.district==='FISD',current=districtZoneDisplay(result.district,state.liveFinder)==='official',near=['boundary-review','finder-boundary-review'].includes(result.status);
+ return '<b>'+(near?'경계 인접 · 학교 배정 확인 필요':districtInfo(result.district)?.label?.[result.status]||'공식 경계 참고 · '+(districtName(result.district,'ko')||result.district))+'</b><br>'+(near?'<span class="source">집 지도 핀이 현재 GIS 경계에서 약 '+result.edge.distanceMeters+'m 떨어져 있습니다. '+result.edge.thresholdMeters+'m 검토 구간이므로 주소·학년·건물별 배정을 공식 검색기로 확인하세요.</span><br>':'')+result.features.map(f=>{const p=f.properties;return escape(p.school+' · '+(p.grades||({elementary:'초등',middle:'중등',high:'고등'})[p.gradeLevel]||'학년 미확인'))+' <b>'+escape(ratingText(assignmentRating(p,result.district)))+'</b>'}).join('<br>')+(frisco&&result.features.some(f=>/nelson/i.test(f.properties.school))?'<br>넬슨 신규 학생은 웨스터 배정 예외 확인':'')+(current?'<br><span class="source">2026–27 공식 경계 기반 후보입니다. 실제 집 주소·학년·전학/특수 프로그램 예외·등록 자격은 학군 공식 검색기에서 확인하세요.</span>':'<br><span class="source">일부 레이어에 2025–26 표기. 현재 학년도 배정과 아파트 예외는 반드시 학군에 확인하세요.</span>');
 }
 function homeSchoolMatches(s){
  if(!home)return false;
@@ -115,7 +117,7 @@ function renderHome(){
   const matches=homeZipMatches(home.ll),schools=homeFriscoMatches(home.ll);home.matches=schools;
   const zipText=matches.length?matches.map(d=>escape(d.z+' · '+d.name)).join(', '):'지도에 포함된 ZIP 경계를 확인하지 못했습니다.';
   home.assignment=schoolAssignmentFor(home);const schoolText=assignmentHtml(home.assignment);
-  const official='<details'+(['unavailable','error','conflict','needs-address-verification','boundary-review','finder-boundary-review','feeder-review','apartment-split-review'].includes(home.assignment.status)?' open':'')+'><summary>학군별 공식 배정 확인</summary>'+Object.entries(OFFICIAL).map(([id,url])=>'<a class="cardlink" href="'+escape(url)+'" target="_blank" rel="noopener">'+escape(({FISD:'프리스코',PISD:'플레이노',AISD:'앨런',PROSPER:'프로스퍼',LISD:'루이스빌',CFB:'캐럴턴–파머스브랜치'})[id]||id)+' ↗</a>').join('')+'</details>';
+  const official='<details'+(['unavailable','error','conflict','needs-address-verification','boundary-review','finder-boundary-review','feeder-review','apartment-split-review'].includes(home.assignment.status)?' open':'')+'><summary>학군별 공식 배정 확인</summary>'+Object.entries(OFFICIAL).map(([id,url])=>'<a class="cardlink" href="'+escape(url)+'" target="_blank" rel="noopener">'+escape(districtName(id,'ko')||id)+' ↗</a>').join('')+'</details>';
   const office=el('destination').value.trim();
   const parcel=home.parcel||{status:'idle'};
   const message=parcel.status==='idle'?'별도 필지 주소 대조를 실행할 수 있습니다.':parcel.status==='checking'?'Collin CAD 필지 확인 중…':parcel.reason||'필지 확인 불가';
@@ -148,7 +150,7 @@ async function checkHomeParcel(){
 function officialReviewPanelHtml(item){
  const a=item.assignment||{},prior=item.officialDraft||{},v=k=>escape(String(prior[k]||''));
  const district=prior.district||a.district||'';
- const districts=OFFICIAL_REVIEW_DISTRICTS.map(x=>'<option value="'+x+'"'+(x===district?' selected':'')+'>'+escape(({FISD:'Frisco',PROSPER:'Prosper',PISD:'Plano',AISD:'Allen',LISD:'Lewisville',CFB:'CFB'})[x])+'</option>').join('');
+ const districts=OFFICIAL_REVIEW_DISTRICTS.map(x=>'<option value="'+x+'"'+(x===district?' selected':'')+'>'+escape(districtName(x)||x)+'</option>').join('');
  const level=prior.gradeLevel||'';
  const grades=OFFICIAL_REVIEW_LEVELS.map(x=>'<option value="'+x+'"'+(x===level?' selected':'')+'>'+escape(({elementary:'초등',middle:'중등',freshman:'9학년',high:'고등',senior:'Senior High'})[x])+'</option>').join('');
  const year=prior.schoolYear||'';

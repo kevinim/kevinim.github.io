@@ -146,10 +146,11 @@
 <section class="panel"><div class="secHead"><h2>지역 전체 비교</h2><span class="pill">우편번호별</span></div><div class="scroll-table" tabindex="0" role="region" aria-label="지역별 통계 비교"><table class="data-table" id="compareTable"><thead><tr><th scope="col" data-sort="z"><button type="button" data-sort="z">지역 ↕</button></th><th scope="col" data-sort="korean"><button type="button" data-sort="korean">한국 ↕</button></th><th scope="col" data-sort="indian"><button type="button" data-sort="indian">인도 ↕</button></th><th scope="col" data-sort="chinese"><button type="button" data-sort="chinese">중국 ↕</button></th><th scope="col" data-sort="kids"><button type="button" data-sort="kids">18세 미만 ↕</button></th><th scope="col" data-sort="childHH"><button type="button" data-sort="childHH">자녀가구 ↕</button></th><th scope="col" data-sort="income"><button type="button" data-sort="income">중위 소득 ↕</button></th></tr></thead><tbody></tbody></table></div><div class="source">Census ZCTA 경계는 USPS 배달 ZIP과 완전히 일치하지 않습니다. 열 제목을 누르면 정렬됩니다.</div></section></div></div>
 <div class="footer"><details><summary>자료 출처 및 기준</summary>자료 검증: 2026-11-06. TEA 2026 preliminary campus accountability summary (downloaded November 3, 2026); U.S. Census ACS 2020–2024 (B01001, B01002, B11005, B19013, B02018); North Central Texas Council of Governments (2020 ZCTA polygons; 2021 service); City of Plano GIS (school positions last updated Oct 2022); OpenStreetMap tiles; Frisco ISD / Plano ISD / Allen ISD / Prosper ISD / Lewisville ISD / Carrollton-Farmers Branch ISD; Texas Education Agency accountability portal (school scores must be checked individually). Static demographics are 5-year estimates, not a 2026 census. Map tiles © OpenStreetMap contributors. 도로망 시간: OSRM, 도달선: Valhalla / © OpenStreetMap contributors, ODbL.</details></div></div><div id="toast" class="toast"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="./district-registry.js?v=1"></script>
 <script src="./school-lifecycle.js?v=1"></script>
 <script src="./geocode-quality.js?v=1"></script>
 <script src="./school-zone-risk.js?v=2"></script>
-<script src="./school-boundary-match.js?v=2"></script>
+<script src="./school-boundary-match.js?v=3"></script>
 <script src="./phase2a-fema-hazards.js?v=3"></script>
 <script src="./phase2a-nfhl-flood.js?v=2"></script>
 <script src="./txwrap-wildfire-potential.js?v=1"></script>
@@ -177,7 +178,7 @@ const DATA=[
 {z:'75056',name:'The Colony',pop:69628,korean:3.8,indian:7.4,chinese:1.8,vietnamese:2.5,filipino:1.0,kids:20.4,childHH:30.7,income:119682,age:37.4,ll:[33.089,-96.887]},
 {z:'75010',name:'Carrollton North',pop:33326,korean:7.5,indian:7.7,chinese:2.6,vietnamese:3.1,filipino:1.7,kids:20.5,childHH:31.6,income:107317,age:38.4,ll:[33.045,-96.918]}
 ];
-const OFFICIAL={PISD:'https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder',FISD:'https://www.friscoisd.org/page/2026-2027-zones/',AISD:'https://www.allenisd.org/page/findaschool',PROSPER:'https://www.prosper-isd.net/page/attendance-boundaries/',LISD:'https://www.lisd.net/resources/families/school-locator',CFB:'https://www.cfbisd.edu/students/school-maps-locator-system'};
+const OFFICIAL=Object.fromEntries(Object.entries(DISTRICT_REGISTRY).map(([k,v])=>[k,v.official]));
 const PROSPER_MAPS={elementary:'https://aptg.co/vgDpkm',middle:'https://aptg.co/ty_VGv',high:'https://aptg.co/hmz4Ps'};
 const FISD_MAPS={elementary:'https://www.friscoisd.org/docs/default-source/attendance-zones/2026-27/2026-27-elementary-school.pdf?sfvrsn=692050e1_3',middle:'https://sf1.friscoisd.org/docs/default-source/attendance-zones/2026-27/2026-27-middle-school.pdf?sfvrsn=4e66667_3',high:'https://www.friscoisd.org/docs/default-source/attendance-zones/2026-27/2026-27-high-school.pdf?sfvrsn=1bf3f52f_3'};
 const RATINGS={}; // School-level numeric ratings are not yet verified against TEA.
@@ -720,18 +721,18 @@ function drawBoundary(){
  const s=state.selectedSchool;
  if(!s)return;
  const note=el('zoneNotice');
- const officialYear=s.district==='FISD'||s.district==='PROSPER';
- const finderLinked=!!((s.district==='PISD'&&state.liveFinder.PISD_LOOKUP)||(s.district==='LISD'&&state.liveFinder.LISD));
+ const zoneDisplay=districtZoneDisplay(s.district,state.liveFinder);
+ const officialYear=zoneDisplay==='official',finderLinked=zoneDisplay==='finder';
  const historical=!officialYear&&!finderLinked;
  if((historical&&!state.showOldZones)||(!historical&&!state.showHistoric)){
    if(note)note.textContent='배정 경계선 표시를 직접 끈 상태입니다. 학교를 다시 선택하면 해당 경계선을 자동으로 표시합니다.';
    return;
  }
- const geo=(s.district==='PISD'?state.zoneData.PISD_LOOKUP:s.district==='PROSPER'?state.zoneData.PROSPER:state.zoneData[s.district])||[];
+ const geo=state.zoneData[districtZoneKey(s.district)]||[];
  const match=window.SchoolBoundaryMatch.findSchoolBoundary(s,geo,(name,district)=>scoreRecord(name,district));
  const found=match.features;
  if(found.length){
-  const current=s.district==='FISD'||s.district==='PROSPER'||(s.district==='043907'&&state.liveFinder['043907']);
+  const current=officialYear;
   const layer=L.geoJSON({type:'FeatureCollection',features:found},{style:{color:current?'#087f69':finderLinked?'#285ac0':'#d37125',weight:3,dashArray:current||finderLinked?null:'7 5',fillColor:current?'#70cbb4':finderLinked?'#8db6f8':'#ffc078',fillOpacity:.25}}).addTo(zoneGroup);
   if(layer.getBounds().isValid())map.fitBounds(layer.getBounds(),{padding:[28,28],maxZoom:13});
   const yrs=[...new Set(found.map(f=>f.properties?.sourceVintage).filter(Boolean))].join(', ');
@@ -744,7 +745,7 @@ function drawBoundary(){
    note.appendChild(explain);
   }
   if(note&&s.district==='PISD'&&/\bJackson\b/i.test(s.name))note.innerHTML+='<br><b>Jackson Elementary 진학 경로 예외:</b> Coit Rd 동쪽은 Wilson Middle → Vines High → Plano Senior, 서쪽은 Frankford Middle → Shepton High → Plano West Senior입니다. 정확한 주소로 학군 공식 SchoolFinder를 확인하세요.';
- }else if(!state.zoneReady&&['AISD','PISD','FISD','LISD','PROSPER','043907'].includes(s.district)){
+ }else if(!state.zoneReady&&districtInfo(s.district)?.zoneKey){
   if(note)note.textContent='배정구역 데이터를 불러오는 중입니다…';
  }else if(note){
   const source=window.SchoolBoundaryMatch.boundarySchoolSource(s.district);
@@ -777,5 +778,5 @@ function drawCommute(){const d=getZip(),v=state.times[d.z];el('routeStatus').inn
 let routeRequestSeq=0;
 async function drawSelectedRoute(){if(!map||!state.dest)return;const seq=++routeRequestSeq;routeGroup.clearLayers();const d=getZip(),p=state.dest.ll;try{const uri='https://router.project-osrm.org/route/v1/driving/'+d.ll[1]+','+d.ll[0]+';'+p[1]+','+p[0]+'?overview=full&geometries=geojson';const r=await fetch(uri);if(!r.ok)throw Error('route HTTP '+r.status);const j=await r.json();if(seq!==routeRequestSeq||d.z!==state.zip)return;const line=j.routes?.[0]?.geometry;if(line){L.geoJSON(line,{style:{color:'#1d57d4',weight:4,opacity:.8}}).addTo(routeGroup);const mid=line.coordinates[Math.floor(line.coordinates.length/2)],minutes=j.routes?.[0]?.duration;if(mid&&Number.isFinite(minutes))L.marker([mid[1],mid[0]],{interactive:false,icon:L.divIcon({className:'',html:'<span class="route-label">ZIP 대표점 '+Math.round(minutes/60)+'분</span>',iconSize:[120,30]})}).addTo(routeGroup)}}catch(e){if(seq===routeRequestSeq)console.warn('route overlay',e)}}
 document.addEventListener('DOMContentLoaded',async()=>{try{const r=await fetch('./dfw-demographics.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const j=await r.json();if(j.year!==2024||!Array.isArray(j.data)||j.data.length!==292)throw Error('DFW 데이터 형식 오류');const existing=new Map(DATA.map(d=>[d.z,d]));for(const row of j.data){const prior=existing.get(row.z);if(prior){const name=prior.name;Object.assign(prior,row,{name})}else DATA.push(row)}}catch(e){console.error('DFW demographics:',e);toast('DFW 통계 데이터를 불러오지 못해 기존 11개 지역만 표시합니다.')}try{const r=await fetch('./jpm-outside-dfw.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);outsideData=await r.json();if(!Array.isArray(outsideData.data)||!Array.isArray(outsideData.shapes?.features))throw Error('주변 ZIP 데이터 형식 오류');for(const d of outsideData.data){Object.assign(d,outsideData.race[d.z]||{},{jpmMinutes:outsideData.minutes[d.z]??null});DATA.push(d)}}catch(e){console.error('주변 ZIP 자료 오류:',e);toast('DFW 바깥 일부 ZIP을 불러오지 못했습니다.')}init()});
-</script><script src="./rating-context.js?v=1"></script><script src="./school-identity.js?v=1"></script><script src="./school-assignment.js?v=5"></script><script src="./home-lookup-v2.js?v=12"></script><script src="./allen-lookup.js?v=5"></script><script src="./candidate-compare.js?v=4"></script></body></html>
+</script><script src="./rating-context.js?v=1"></script><script src="./school-identity.js?v=1"></script><script src="./school-assignment.js?v=6"></script><script src="./home-lookup-v2.js?v=13"></script><script src="./allen-lookup.js?v=5"></script><script src="./candidate-compare.js?v=4"></script></body></html>
 
