@@ -16,7 +16,7 @@
 | CFB | lookup-only | Official GuideK12 address Finder only; no verified school-specific vector polygons |
 | McKinney (043907) | live-finder-year-gated | Current 2026–27 locator has a runtime elementary-year field gate plus grade-level campus count checks. The district approved new zones on 2025-12-15; middle/high year and actual residence assignments are **not independently verified** |
 
-After the 2026-11-08 evidence addendum, the provenance document lists **seven of seven** district registry entries. Two districts (Frisco/Prosper) meet the separate independently year-verified source claim; McKinney is **operationally live and gated against a non-2026–27 elementary year**, but independent address and all-level source verification are pending. This distinction is not proof of a map defect or an exact household assignment.
+After the 2026-11-08 evidence addendum, the **combined audit inventory** documents seven of seven district registry entries: **six in the unchanged runtime manifest** and **one McKinney sidecar** in data/mckinney-2026-27-provenance.json. Two districts (Frisco/Prosper) meet the separate independently year-verified source claim; McKinney is **operationally live and gated against a non-2026–27 elementary year**, but independent address and all-level source verification are pending. This distinction is not proof of a map defect or an exact household assignment.
 
 ## New isolated checks in this PR
 
@@ -40,6 +40,6 @@ The audit does **not** fetch official live school data, choose an address, chang
 
 ## Operational and collaboration constraints
 
-- Files added: scripts/audit-school-provenance.cjs, tests/audit-school-provenance.test.cjs, .github/workflows/audit-school-provenance.yml, this document. Additional **metadata-only** edit: school-data-provenance.json (one new McKinney record).
-- No edits to index.html, map layers, district-registry.js, existing workflows, Claude PR #72, or public runtime configuration.
+- Files added only: scripts/audit-school-provenance.cjs, tests/audit-school-provenance.test.cjs, .github/workflows/audit-school-provenance.yml, this document, and data/mckinney-2026-27-provenance.json. The existing top-level school-data-provenance.json remains unchanged so unrelated main dashboard QA continues to pass.
+- No edits to index.html, map layers, district-registry.js, school-data-provenance.json, existing workflows, Claude PR #72, or public runtime configuration.
 - Keep this PR draft until CI reports are checked. No merge, Pages deploy, or public launch authorization.
