@@ -1,0 +1,284 @@
+{
+  "metadata": {
+    "sourceUrl": "https://www.dshs.texas.gov/dshs-ems-trauma-systems/trauma-system-development/texas-trauma-facilities",
+    "extractedOn": "2026-11-08",
+    "matching": "Strict canonical facility name AND city AND ZIP; DSHS data if no exact match remains unavailable, not no designation.",
+    "matchingCount": 34,
+    "cmsRegistryCount": 104,
+    "totalDesignations": 288
+  },
+  "records": [
+    {
+      "cmsFacilityId": "450885",
+      "level": 3,
+      "status": "STANDARD",
+      "designationName": "BAYLOR SCOTT & WHITE MEDICAL CENTER - CENTENNIAL",
+      "expiration": "11/1/2028",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "670082",
+      "level": 2,
+      "status": "CONTINGENT",
+      "designationName": "BAYLOR SCOTT & WHITE MEDICAL CENTER - MCKINNEY",
+      "expiration": "3/1/2029",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "453316",
+      "level": 3,
+      "status": "CONTINGENT",
+      "designationName": "CHILDRENS MEDICAL CENTER PLANO",
+      "expiration": "1/1/2028",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450651",
+      "level": 1,
+      "status": "STANDARD",
+      "designationName": "MEDICAL CITY PLANO",
+      "expiration": "5/1/2027",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450537",
+      "level": 3,
+      "status": "PROBATIONARY",
+      "designationName": "METHODIST RICHARDSON MEDICAL CENTER",
+      "expiration": "10/1/2028",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450771",
+      "level": 2,
+      "status": "STANDARD",
+      "designationName": "TEXAS HEALTH PRESBYTERIAN HOSPITAL PLANO",
+      "expiration": "8/1/2027",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450742",
+      "level": 3,
+      "status": "STANDARD",
+      "designationName": "BAYLOR SCOTT & WHITE MEDICAL CENTER - LAKE POINTE",
+      "expiration": "1/1/2029",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450021",
+      "level": 1,
+      "status": "STANDARD",
+      "designationName": "BAYLOR UNIVERSITY MEDICAL CENTER",
+      "expiration": "4/1/2028",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450379",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "designationName": "DALLAS MEDICAL CENTER",
+      "expiration": "6/1/2028",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450647",
+      "level": 3,
+      "status": "STANDARD",
+      "designationName": "MEDICAL CITY DALLAS HOSPITAL",
+      "expiration": "12/1/2028",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450822",
+      "level": 3,
+      "status": "STANDARD",
+      "designationName": "MEDICAL CITY LAS COLINAS",
+      "expiration": "8/1/2029",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450051",
+      "level": 1,
+      "status": "STANDARD",
+      "designationName": "METHODIST DALLAS MEDICAL CENTER",
+      "expiration": "12/1/2027",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450462",
+      "level": 1,
+      "status": "STANDARD",
+      "designationName": "TEXAS HEALTH PRESBYTERIAN HOSPITAL DALLAS",
+      "expiration": "5/1/2028",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450678",
+      "level": 4,
+      "status": "CONTINGENT",
+      "designationName": "WHITE ROCK MEDICAL CENTER",
+      "expiration": "12/1/2026",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450634",
+      "level": 2,
+      "status": "STANDARD",
+      "designationName": "MEDICAL CITY DENTON",
+      "expiration": "1/1/2028",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450669",
+      "level": 3,
+      "status": "STANDARD",
+      "designationName": "MEDICAL CITY LEWISVILLE",
+      "expiration": "6/1/2028",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "670260",
+      "level": 3,
+      "status": "STANDARD",
+      "designationName": "TEXAS HEALTH HOSPITAL FRISCO",
+      "expiration": "2/1/2027",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450743",
+      "level": 3,
+      "status": "STANDARD",
+      "designationName": "TEXAS HEALTH PRESBYTERIAN HOSPITAL DENTON",
+      "expiration": "10/1/2029",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450372",
+      "level": 4,
+      "status": "STANDARD",
+      "designationName": "BAYLOR SCOTT & WHITE MEDICAL CENTER - WAXAHACHIE",
+      "expiration": "5/1/2028",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450833",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "designationName": "ENNIS REGIONAL MEDICAL CENTER",
+      "expiration": "5/1/2029",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "670300",
+      "level": 4,
+      "status": "STANDARD",
+      "designationName": "METHODIST MIDLOTHIAN MEDICAL CENTER",
+      "expiration": "8/1/2027",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450596",
+      "level": 4,
+      "status": "CONTINGENT",
+      "designationName": "LAKE GRANBURY MEDICAL CENTER",
+      "expiration": "2/1/2027",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450352",
+      "level": 3,
+      "status": "PROBATIONARY",
+      "designationName": "HUNT REGIONAL MEDICAL CENTER",
+      "expiration": "12/1/2029",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450203",
+      "level": 3,
+      "status": "STANDARD",
+      "designationName": "MEDICAL CITY WEATHERFORD",
+      "expiration": "2/1/2027",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450563",
+      "level": 2,
+      "status": "STANDARD",
+      "designationName": "BAYLOR SCOTT & WHITE MEDICAL CENTER - GRAPEVINE",
+      "expiration": "7/1/2027",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "453300",
+      "level": 2,
+      "status": "CONTINGENT",
+      "designationName": "COOK CHILDRENS MEDICAL CENTER",
+      "expiration": "11/1/2029",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "670103",
+      "level": 3,
+      "status": "STANDARD",
+      "designationName": "MEDICAL CITY ALLIANCE",
+      "expiration": "7/1/2029",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450675",
+      "level": 2,
+      "status": "STANDARD",
+      "designationName": "MEDICAL CITY ARLINGTON",
+      "expiration": "6/1/2029",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450087",
+      "level": 3,
+      "status": "STANDARD",
+      "designationName": "MEDICAL CITY NORTH HILLS",
+      "expiration": "8/1/2029",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "670023",
+      "level": 3,
+      "status": "STANDARD",
+      "designationName": "METHODIST MANSFIELD MEDICAL CENTER",
+      "expiration": "11/1/2027",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450064",
+      "level": 3,
+      "status": "STANDARD",
+      "designationName": "TEXAS HEALTH ARLINGTON MEMORIAL HOSPITAL",
+      "expiration": "3/1/2029",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "670085",
+      "level": 3,
+      "status": "STANDARD",
+      "designationName": "TEXAS HEALTH HARRIS METHODIST HOSPITAL ALLIANCE",
+      "expiration": "6/1/2027",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "450419",
+      "level": 4,
+      "status": "STANDARD",
+      "designationName": "TEXAS HEALTH HARRIS METHODIST HOSPITAL AZLE",
+      "expiration": "5/1/2027",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    },
+    {
+      "cmsFacilityId": "670309",
+      "level": 4,
+      "status": "STANDARD",
+      "designationName": "TEXAS HEALTH HOSPITAL MANSFIELD",
+      "expiration": "6/1/2028",
+      "matchMethod": "EXACT_NAME_CITY_ZIP"
+    }
+  ]
+}
