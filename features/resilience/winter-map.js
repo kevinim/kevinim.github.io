@@ -21,12 +21,12 @@ function validScores(j){
 }
 function initWinterHazardMap(map,d){
  d=d||document;
- const quick=d.getElementById('winterMapQuickToggle'),legend=d.getElementById('winterMapLegend'),status=d.getElementById('winterMapStatus');
+ const quick=d.getElementById('winterMapQuickToggle'),legend=d.getElementById('winterMapLegend');
  if(!map||!quick||!legend||!root.L)return null;
  const selected=()=>TYPES[d.getElementById('winterHazardType')?.value]?
  d.getElementById('winterHazardType').value:'cwav';
  const selectedRec=(r)=>r?.[TYPES[selected()].key]||null;
- const setStatus=x=>{if(status)status.textContent=x};
+ const setStatus=x=>{const status=d.getElementById('winterMapStatus');if(status)status.textContent=x};
  const zip=d.getElementById('zipOverlay');
  let enabled=false,pending=null,tracts=null,geo=null,layer=null,restoreZip=null,request=0;
  function sync(){
