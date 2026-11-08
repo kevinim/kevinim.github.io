@@ -186,3 +186,45 @@
 @media(prefers-reduced-motion:reduce){
  .maphead .hazard-chip,.controls-grid .btn.action-btn,.crime-seg button{transition:none;transform:none!important}
 }
+
+/* Inline clear action for the address combobox.
+   Reuses #homeClear's existing reset handler; does not submit the form. */
+.home-address-autocomplete{position:relative}
+.home-address-autocomplete #homeAddress{padding-right:54px}
+.home-address-autocomplete .home-input-clear{
+ position:absolute;
+ inset-block-start:50%;
+ inset-inline-end:6px;
+ z-index:2;
+ display:grid;
+ place-items:center;
+ width:38px;
+ height:38px;
+ padding:0;
+ transform:translateY(-50%);
+ border:1px solid #dce5ee;
+ border-radius:50%;
+ background:#eef2f7;
+ color:#46566e;
+ cursor:pointer;
+ transition:background .16s ease,border-color .16s ease,box-shadow .16s ease;
+}
+.home-address-autocomplete .home-input-clear[hidden]{display:none!important}
+.home-address-autocomplete .home-input-clear svg{
+ width:16px;height:16px;
+ fill:none;stroke:currentColor;stroke-width:2.7;
+ stroke-linecap:round;stroke-linejoin:round;
+}
+.home-address-autocomplete .home-input-clear:hover{background:#dce6f4;color:#253956;border-color:#b9cce4}
+.home-address-autocomplete .home-input-clear:focus-visible{
+ outline:3px solid #2e5bb7;
+ outline-offset:2px;
+ box-shadow:0 0 0 5px #e7efff;
+}
+@media(max-width:480px){
+ .home-address-autocomplete #homeAddress{font-size:16px;padding-right:56px}
+ .home-address-autocomplete .home-input-clear{width:40px;height:40px;inset-inline-end:5px}
+}
+@media(prefers-reduced-motion:reduce){
+ .home-address-autocomplete .home-input-clear{transition:none}
+}
