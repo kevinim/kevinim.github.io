@@ -1,0 +1,188 @@
+/* Feature controls — 2026-11-08
+   Visual-only enhancement. Existing map buttons, IDs and event handlers stay intact.
+   No unimplemented commute toll, healthcare or grid feature controls are fabricated. */
+.maphead{
+  background:linear-gradient(120deg,#ffffff 0%,#f7faff 100%);
+  border-bottom:1px solid #e8eef7;
+}
+.maphead .hazard-chips{
+  padding:5px 7px;
+  gap:7px;
+  border:1px solid #e9eef6;
+  border-radius:15px;
+  background:#fff;
+}
+.maphead .hazard-chips-label{
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.01em;
+  color:#52647f;
+  padding:0 4px;
+}
+.maphead .hazard-chip{
+  --feature-pale:#f1f5f9;
+  --feature-border:#d7e3ee;
+  --feature-text:#314157;
+  --feature-icon:#334155;
+  --feature-strong:#3150a3;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:42px;
+  padding:6px 13px 6px 6px;
+  border-radius:12px;
+  border:1px solid var(--feature-border);
+  background:var(--feature-pale);
+  color:var(--feature-text);
+  font-weight:750;
+  font-size:12px;
+  letter-spacing:-.01em;
+  box-shadow:0 1px 2px rgba(35,55,87,.05);
+  transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease;
+}
+.maphead .hazard-chip.ifld{
+  --feature-pale:#eaf4ff; --feature-border:#c5ddfa;
+  --feature-text:#174f92; --feature-icon:#2563eb; --feature-strong:#2563eb;
+}
+.maphead .hazard-chip.wfir{
+  --feature-pale:#fff1e7; --feature-border:#ffd3b8;
+  --feature-text:#a44717; --feature-icon:#c34d1b; --feature-strong:#c44816;
+}
+.maphead .hazard-chip.hrcn{
+  --feature-pale:#edf3ff; --feature-border:#d0defa;
+  --feature-text:#3a528d; --feature-icon:#536cac; --feature-strong:#475f9e;
+}
+.maphead .hazard-chip.crime{
+  --feature-pale:#f3edff; --feature-border:#d9c8f6;
+  --feature-text:#624097; --feature-icon:#6b49a6; --feature-strong:#6741a1;
+}
+.maphead .hazard-chip svg{
+  display:block;
+  width:29px;
+  height:29px;
+  padding:6px;
+  flex:none;
+  border-radius:9px;
+  color:var(--feature-icon);
+  background:rgba(255,255,255,.78);
+  box-shadow:0 0 0 1px rgba(255,255,255,.40);
+}
+.maphead .hazard-chip.ifld svg,
+.maphead .hazard-chip.wfir svg,
+.maphead .hazard-chip.hrcn svg,
+.maphead .hazard-chip.crime svg{color:var(--feature-icon)}
+.maphead .hazard-chip:hover:not(:disabled){
+  background:#fff;
+  border-color:var(--feature-strong);
+  box-shadow:0 3px 12px rgba(39,55,91,.15);
+  transform:translateY(-1px);
+}
+.maphead .hazard-chip[aria-pressed="true"]{
+  background:var(--feature-strong);
+  border-color:var(--feature-strong);
+  color:#fff;
+  box-shadow:0 3px 9px rgba(32,54,92,.23);
+}
+.maphead .hazard-chip[aria-pressed="true"] svg{
+  color:#fff;
+  background:rgba(255,255,255,.18);
+  box-shadow:none;
+}
+.maphead .hazard-chip[aria-pressed="true"]:hover:not(:disabled){
+  background:var(--feature-strong);
+  filter:brightness(1.07);
+}
+.maphead .hazard-chip:focus-visible,
+.controls-grid .action-btn:focus-visible,
+.crime-seg button:focus-visible{
+  outline:3px solid #315fcb;
+  outline-offset:3px;
+}
+.maphead .hazard-chip:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+/* The existing violence/property category switch follows the same visual language. */
+.crime-seg{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.crime-seg button{
+  border-color:#ddcef4;
+  background:#f7f3ff;
+  color:#5a3b8a;
+  min-height:34px;
+  padding:6px 13px;
+  border-radius:10px;
+  font-size:12px;
+  transition:background-color .15s ease,box-shadow .15s ease;
+}
+.crime-seg button:hover:not(:disabled){background:#ece2ff;box-shadow:0 2px 8px rgba(74,44,133,.10)}
+.crime-seg button[aria-pressed="true"]{background:#6741a1;color:#fff;box-shadow:0 2px 7px rgba(74,44,133,.2)}
+/* Existing address and driving-time actions; no new endpoint or handler. */
+.controls-grid .feature-heading{
+  display:flex;
+  gap:9px;
+  align-items:center;
+  line-height:1.4;
+}
+.controls-grid .feature-heading .heading-glyph{
+  display:grid;
+  place-items:center;
+  width:32px;
+  height:32px;
+  flex:none;
+  border-radius:10px;
+}
+.controls-grid .feature-heading .heading-glyph svg{
+  width:18px;
+  height:18px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.controls-grid .feature-heading.home .heading-glyph{background:#eaf3ff;color:#315cc3}
+.controls-grid .feature-heading.commute .heading-glyph{background:#fff0df;color:#9b590c}
+.controls-grid .btn.action-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:42px;
+  padding:9px 14px;
+  border-radius:11px;
+  box-shadow:0 2px 8px rgba(28,48,80,.10);
+  transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease;
+}
+.controls-grid .btn.action-btn .action-icon{
+  width:18px;height:18px;flex:none;
+  fill:none;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.controls-grid .btn.action-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 5px 12px rgba(28,48,80,.17)}
+.controls-grid .btn.action-btn:active:not(:disabled){transform:translateY(0);box-shadow:0 1px 5px rgba(28,48,80,.10)}
+.controls-grid .btn.action-search{background:#2d59be;color:#fff}
+.controls-grid .btn.action-search:hover:not(:disabled){background:#244da9}
+.controls-grid .btn.action-clear{background:#eef3fb;color:#405575;box-shadow:none;border:1px solid #dbe5f3}
+.controls-grid .btn.action-save{background:#e8f7f1;color:#176b4d;box-shadow:none;border:1px solid #bde7d5}
+.controls-grid .btn.action-commute{background:#b56e10;color:#fff}
+.controls-grid .btn.action-commute:hover:not(:disabled){background:#955806}
+@media(max-width:860px){
+ .maphead{justify-content:flex-start;column-gap:12px}
+ .maphead h2{flex-basis:100%}
+ .maphead .hazard-chips{max-width:100%}
+}
+@media(max-width:540px){
+ .maphead .hazard-chips{width:100%;padding:6px;gap:6px}
+ .maphead .hazard-chips-label{width:100%;padding:0 4px 2px}
+ .maphead .hazard-chip{flex:1 1 0;min-width:85px;min-height:44px;padding:6px 8px;white-space:nowrap}
+ .maphead .hazard-chip svg{width:27px;height:27px;padding:5px}
+ .controls-grid .btn.action-btn{width:100%;margin:0 0 7px}
+}
+@media(prefers-reduced-motion:reduce){
+ .maphead .hazard-chip,.controls-grid .btn.action-btn,.crime-seg button{transition:none;transform:none!important}
+}
