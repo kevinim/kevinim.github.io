@@ -5,7 +5,7 @@
  const $=id=>document.getElementById(id);
  const place=(parent,tag,text,klass)=>{const x=document.createElement(tag);if(klass)x.className=klass;x.textContent=text;parent.appendChild(x);return x;};
  function init(){
-  if(!$('destination')||!$('.nonexistent')&&false)return; // no-op keep init idempotent in multi-script pages
+  if(!$('destination'))return;
   if($('tollCostPanel'))return;
   const office=document.querySelector('.office-controls');
   const commuteGroup=document.querySelector('.filter-panel .commute-settings');
