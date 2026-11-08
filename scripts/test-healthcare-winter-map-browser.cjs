@@ -36,7 +36,7 @@ mkdirSync(folder,{recursive:true});
     await page.locator('#winterMapQuickToggle').click();
     await page.waitForFunction(()=>document.querySelector('#winterMapLegend')?.textContent?.includes('한파')&&
       document.querySelector('#winterMapQuickToggle')?.getAttribute('aria-pressed')==='true',null,{timeout:90000});
-    await page.waitForFunction(()=>document.querySelectorAll('.leaflet-femaWinterPane-pane path').length>200,null,{timeout:45000});
+    await page.waitForFunction(()=>window.winterOverlayController?.getLoadedCount()===1734,null,{timeout:45000});
     assert.ok(!(await page.locator('#winterMapLegend').isHidden()));
     await page.locator('#gridResiliencePanel>summary').click();
     await page.locator('#winterHazardType').selectOption('istm');
