@@ -1,0 +1,28 @@
+name: Audit public GitHub Pages exposure
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan-public-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out source without persistent credentials
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test scanner and redaction
+        run: node --test tests/audit-public-exposure.test.mjs
+      - name: Scan the tracked public source tree
+        run: node scripts/audit-public-exposure.mjs
