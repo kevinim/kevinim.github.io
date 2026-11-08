@@ -174,3 +174,13 @@ Reproducible snapshot validation: `node scripts/check-crime-staging.mjs`; GitHub
 5. Keep P0 Allen schools and map viewport/marker-count smoke tests gating releases; no new overlays may clear school layers.
 
 This addendum supersedes the historical **'no implementation'** status lines above where they conflict. The earlier architectural acceptance criteria remain useful for unfinished subfeatures.
+
+### Post-deployment smoke check (2026-11-08)
+
+- GitHub Pages deployment for `7ba5f1c`: **success** (run #42509138767).
+- Independent live-browser check: the TollTag sample (20 office days, roundtrip 20/25 miles, 30 MPG, $3/gallon, $1.25/$1.75 per-direction TollTag) produced **$150/month** ($60 toll + $90 fuel); clearing return toll produced `미확인`, not $0.
+- Live CMS city filter: **PLANO displayed 7 emergency-service-flagged CMS entries** with links (not necessarily every operating ER in Plano).
+- Live EIA panel: **2024 & 2025 Texas-state SAIDI/SAIFI displayed** with the explicitly statewide-only disclaimer.
+- The live-browser run **did not draw a real commute route** or switch from West Plano to Allen ZIP 75013; do **not** misreport this run as visual confirmation of work destination pin placement or Allen-specific live school markers. The shared work-pin source and marker constructor passed unit/browser integration checks, and school/viewport regression passed in the PR Chromium suite. If needed, run targeted production route+Allen smoke separately.
+- Exact smoke log: https://agent.tinyfish.ai/runs/4e9545bf-35c2-4f86-8c55-214b7b2e7d48
+
