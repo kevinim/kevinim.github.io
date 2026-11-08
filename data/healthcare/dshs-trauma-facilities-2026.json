@@ -1,0 +1,2611 @@
+{
+  "metadata": {
+    "sourceUrl": "https://www.dshs.texas.gov/dshs-ems-trauma-systems/trauma-system-development/texas-trauma-facilities",
+    "publisher": "Texas DSHS",
+    "sourceTableAsOf": "October 1, 2026",
+    "extractedOn": "2026-11-08",
+    "count": 288,
+    "countsByLevel": {
+      "I": 22,
+      "II": 31,
+      "III": 62,
+      "IV": 173
+    },
+    "validation": "All 288 source rows parsed; two table rows with pipe in facility name were preserved. Per-level sums checked against DSHS published table. Contingent and probationary statuses preserved.",
+    "limitation": "Trauma designations not proof of active emergency department, availability, pediatric capacity or current operating status."
+  },
+  "records": [
+    {
+      "facility": "BAYLOR SCOTT & WHITE MEDICAL CENTER - TEMPLE",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "4/1/2028",
+      "tsa": "L",
+      "city": "TEMPLE",
+      "zip": "76508"
+    },
+    {
+      "facility": "BAYLOR UNIVERSITY MEDICAL CENTER",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "4/1/2028",
+      "tsa": "E",
+      "city": "DALLAS",
+      "zip": "75246"
+    },
+    {
+      "facility": "BROOKE ARMY MEDICAL CENTER",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "4/1/2028",
+      "tsa": "P",
+      "city": "SAN ANTONIO",
+      "zip": "78234"
+    },
+    {
+      "facility": "CHILDRENS MEDICAL CENTER OF DALLAS",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "2/1/2027",
+      "tsa": "E",
+      "city": "DALLAS",
+      "zip": "75235"
+    },
+    {
+      "facility": "DELL CHILDRENS MEDICAL CENTER",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "11/1/2028",
+      "tsa": "O",
+      "city": "AUSTIN",
+      "zip": "78723"
+    },
+    {
+      "facility": "DELL SETON MEDICAL CENTER AT THE UNIVERSITY OF TEXAS",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "10/1/2028",
+      "tsa": "O",
+      "city": "AUSTIN",
+      "zip": "78701"
+    },
+    {
+      "facility": "DOCTORS HOSPITAL AT RENAISSANCE",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "10/1/2027",
+      "tsa": "V",
+      "city": "EDINBURG",
+      "zip": "78539"
+    },
+    {
+      "facility": "HARRIS HEALTH BEN TAUB HOSPITAL",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "4/1/2028",
+      "tsa": "Q",
+      "city": "HOUSTON",
+      "zip": "77030"
+    },
+    {
+      "facility": "JOHN PETER SMITH HOSPITAL",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "11/1/2028",
+      "tsa": "E",
+      "city": "FORT WORTH",
+      "zip": "76104"
+    },
+    {
+      "facility": "MEDICAL CITY PLANO",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "5/1/2027",
+      "tsa": "E",
+      "city": "PLANO",
+      "zip": "75075"
+    },
+    {
+      "facility": "MEMORIAL HERMANN - TEXAS MEDICAL CENTER",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "5/1/2028",
+      "tsa": "Q",
+      "city": "HOUSTON",
+      "zip": "77030"
+    },
+    {
+      "facility": "METHODIST DALLAS MEDICAL CENTER",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "12/1/2027",
+      "tsa": "E",
+      "city": "DALLAS",
+      "zip": "75203"
+    },
+    {
+      "facility": "PARKLAND MEMORIAL HOSPITAL",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "7/1/2028",
+      "tsa": "E",
+      "city": "DALLAS",
+      "zip": "75235"
+    },
+    {
+      "facility": "SOUTH TEXAS HEALTH SYSTEM MCALLEN",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "11/1/2028",
+      "tsa": "V",
+      "city": "MCALLEN",
+      "zip": "78503"
+    },
+    {
+      "facility": "TEXAS CHILDRENS HOSPITAL",
+      "level": 1,
+      "status": "CONTINGENT",
+      "expiration": "1/1/2030",
+      "tsa": "Q",
+      "city": "HOUSTON",
+      "zip": "77030"
+    },
+    {
+      "facility": "TEXAS HEALTH HARRIS METHODIST HOSPITAL FORT WORTH",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "1/1/2029",
+      "tsa": "E",
+      "city": "FORT WORTH",
+      "zip": "76104"
+    },
+    {
+      "facility": "TEXAS HEALTH PRESBYTERIAN HOSPITAL DALLAS",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "5/1/2028",
+      "tsa": "E",
+      "city": "DALLAS",
+      "zip": "75231"
+    },
+    {
+      "facility": "UNIVERSITY HOSPITAL",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "7/1/2029",
+      "tsa": "P",
+      "city": "SAN ANTONIO",
+      "zip": "78229"
+    },
+    {
+      "facility": "UNIVERSITY MEDICAL CENTER",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "10/1/2028",
+      "tsa": "B",
+      "city": "LUBBOCK",
+      "zip": "79415"
+    },
+    {
+      "facility": "UNIVERSITY MEDICAL CENTER OF EL PASO",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "12/1/2027",
+      "tsa": "I",
+      "city": "EL PASO",
+      "zip": "79905"
+    },
+    {
+      "facility": "UNIVERSITY OF TEXAS MEDICAL BRANCH",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "4/1/2027",
+      "tsa": "R",
+      "city": "GALVESTON",
+      "zip": "77555"
+    },
+    {
+      "facility": "UT HEALTH EAST TEXAS TYLER REGIONAL HOSPITAL",
+      "level": 1,
+      "status": "STANDARD",
+      "expiration": "3/1/2029",
+      "tsa": "G",
+      "city": "TYLER",
+      "zip": "75701"
+    },
+    {
+      "facility": "ASCENSION SETON HAYS",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "12/1/2028",
+      "tsa": "O",
+      "city": "KYLE",
+      "zip": "78640"
+    },
+    {
+      "facility": "ASCENSION SETON WILLIAMSON",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "6/1/2027",
+      "tsa": "O",
+      "city": "ROUND ROCK",
+      "zip": "78665"
+    },
+    {
+      "facility": "BAYLOR SCOTT & WHITE MCLANE CHILDRENS MEDICAL CENTER",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "11/1/2029",
+      "tsa": "L",
+      "city": "TEMPLE",
+      "zip": "76502"
+    },
+    {
+      "facility": "BAYLOR SCOTT & WHITE MEDICAL CENTER - GRAPEVINE",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "7/1/2027",
+      "tsa": "E",
+      "city": "GRAPEVINE",
+      "zip": "76051"
+    },
+    {
+      "facility": "BAYLOR SCOTT & WHITE MEDICAL CENTER - HILLCREST",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "9/1/2027",
+      "tsa": "M",
+      "city": "WACO",
+      "zip": "76712"
+    },
+    {
+      "facility": "BAYLOR SCOTT & WHITE MEDICAL CENTER - MCKINNEY",
+      "level": 2,
+      "status": "CONTINGENT",
+      "expiration": "3/1/2029",
+      "tsa": "E",
+      "city": "MCKINNEY",
+      "zip": "75071"
+    },
+    {
+      "facility": "CHRISTUS MOTHER FRANCES HOSPITAL - TYLER",
+      "level": 2,
+      "status": "CONTINGENT",
+      "expiration": "8/1/2029",
+      "tsa": "G",
+      "city": "TYLER",
+      "zip": "75701"
+    },
+    {
+      "facility": "CHRISTUS SPOHN HOSPITAL CORPUS CHRISTI SHORELINE",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "6/1/2029",
+      "tsa": "U",
+      "city": "CORPUS CHRISTI",
+      "zip": "78404"
+    },
+    {
+      "facility": "COOK CHILDRENS MEDICAL CENTER",
+      "level": 2,
+      "status": "CONTINGENT",
+      "expiration": "11/1/2029",
+      "tsa": "E",
+      "city": "FORT WORTH",
+      "zip": "76104"
+    },
+    {
+      "facility": "CORPUS CHRISTI MEDICAL CENTER BAY AREA",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "4/1/2028",
+      "tsa": "U",
+      "city": "CORPUS CHRISTI",
+      "zip": "78412"
+    },
+    {
+      "facility": "COVENANT CHILDRENS HOSPITAL",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "5/1/2028",
+      "tsa": "B",
+      "city": "LUBBOCK",
+      "zip": "79410"
+    },
+    {
+      "facility": "COVENANT MEDICAL CENTER",
+      "level": 2,
+      "status": "CONTINGENT",
+      "expiration": "5/1/2028",
+      "tsa": "B",
+      "city": "LUBBOCK",
+      "zip": "79410"
+    },
+    {
+      "facility": "DEL SOL MEDICAL CENTER A CAMPUS OF LPDS HEALTHCARE",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "3/1/2028",
+      "tsa": "I",
+      "city": "EL PASO",
+      "zip": "79925"
+    },
+    {
+      "facility": "HCA HOUSTON HEALTHCARE CLEAR LAKE",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "12/1/2029",
+      "tsa": "Q",
+      "city": "WEBSTER",
+      "zip": "77598"
+    },
+    {
+      "facility": "HCA HOUSTON HEALTHCARE CONROE",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "12/1/2029",
+      "tsa": "Q",
+      "city": "CONROE",
+      "zip": "77304"
+    },
+    {
+      "facility": "HCA HOUSTON HEALTHCARE KINGWOOD",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "8/1/2029",
+      "tsa": "Q",
+      "city": "KINGWOOD",
+      "zip": "77339"
+    },
+    {
+      "facility": "HCA HOUSTON HEALTHCARE NORTHWEST",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "4/1/2028",
+      "tsa": "Q",
+      "city": "HOUSTON",
+      "zip": "77090"
+    },
+    {
+      "facility": "HENDRICK MEDICAL CENTER",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "5/1/2030",
+      "tsa": "D",
+      "city": "ABILENE",
+      "zip": "79601"
+    },
+    {
+      "facility": "MEDICAL CENTER HOSPITAL",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "2/1/2029",
+      "tsa": "J",
+      "city": "ODESSA",
+      "zip": "79761"
+    },
+    {
+      "facility": "MEDICAL CITY ARLINGTON",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "6/1/2029",
+      "tsa": "E",
+      "city": "ARLINGTON",
+      "zip": "76015"
+    },
+    {
+      "facility": "MEDICAL CITY DENTON",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "1/1/2028",
+      "tsa": "E",
+      "city": "DENTON",
+      "zip": "76210"
+    },
+    {
+      "facility": "MEDICAL CITY MCKINNEY",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "12/1/2028",
+      "tsa": "E",
+      "city": "MCKINNEY",
+      "zip": "75069"
+    },
+    {
+      "facility": "MEMORIAL HERMANN THE WOODLANDS MEDICAL CENTER",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "12/1/2027",
+      "tsa": "Q",
+      "city": "SHENANDOAH",
+      "zip": "77380"
+    },
+    {
+      "facility": "NORTHWEST TEXAS HOSPITAL",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "11/1/2029",
+      "tsa": "A",
+      "city": "AMARILLO",
+      "zip": "79106"
+    },
+    {
+      "facility": "ROUND ROCK MEDICAL CENTER",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "4/1/2028",
+      "tsa": "O",
+      "city": "ROUND ROCK",
+      "zip": "78681"
+    },
+    {
+      "facility": "ST DAVIDS SOUTH AUSTIN MEDICAL CENTER",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "10/1/2028",
+      "tsa": "O",
+      "city": "AUSTIN",
+      "zip": "78704"
+    },
+    {
+      "facility": "TEXAS HEALTH PRESBYTERIAN HOSPITAL PLANO",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "8/1/2027",
+      "tsa": "E",
+      "city": "PLANO",
+      "zip": "75093"
+    },
+    {
+      "facility": "THE HOSPITALS OF PROVIDENCE EAST CAMPUS",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "7/1/2027",
+      "tsa": "I",
+      "city": "EL PASO",
+      "zip": "79938"
+    },
+    {
+      "facility": "UNITED REGIONAL HEALTH CARE SYSTEM",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "6/1/2028",
+      "tsa": "C",
+      "city": "WICHITA FALLS",
+      "zip": "76301"
+    },
+    {
+      "facility": "UNIVERSITY OF TEXAS MEDICAL BRANCH - CLEAR LAKE CAMPUS",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "1/1/2029",
+      "tsa": "Q",
+      "city": "WEBSTER",
+      "zip": "77598"
+    },
+    {
+      "facility": "VALLEY BAPTIST MEDICAL CENTER",
+      "level": 2,
+      "status": "STANDARD",
+      "expiration": "1/1/2029",
+      "tsa": "V",
+      "city": "HARLINGEN",
+      "zip": "78550"
+    },
+    {
+      "facility": "BAYLOR SCOTT & WHITE ALL SAINTS MEDICAL CENTER - FORT WORTH",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "9/1/2029",
+      "tsa": "E",
+      "city": "FORT WORTH",
+      "zip": "76104"
+    },
+    {
+      "facility": "BAYLOR SCOTT & WHITE MEDICAL CENTER - CENTENNIAL",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "11/1/2028",
+      "tsa": "E",
+      "city": "FRISCO",
+      "zip": "75035"
+    },
+    {
+      "facility": "BAYLOR SCOTT & WHITE MEDICAL CENTER - COLLEGE STATION",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "9/1/2028",
+      "tsa": "N",
+      "city": "COLLEGE STATION",
+      "zip": "77845"
+    },
+    {
+      "facility": "BAYLOR SCOTT & WHITE MEDICAL CENTER - LAKE POINTE",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "1/1/2029",
+      "tsa": "E",
+      "city": "ROWLETT",
+      "zip": "75088"
+    },
+    {
+      "facility": "BSA HOSPITAL LLC",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "6/1/2029",
+      "tsa": "A",
+      "city": "AMARILLO",
+      "zip": "79106"
+    },
+    {
+      "facility": "CARL R DARNALL ARMY MEDICAL CENTER",
+      "level": 3,
+      "status": "CONTINGENT",
+      "expiration": "6/1/2029",
+      "tsa": "L",
+      "city": "FORT CAVAZOS",
+      "zip": "76544"
+    },
+    {
+      "facility": "CHILDRENS MEDICAL CENTER PLANO",
+      "level": 3,
+      "status": "CONTINGENT",
+      "expiration": "1/1/2028",
+      "tsa": "E",
+      "city": "PLANO",
+      "zip": "75024"
+    },
+    {
+      "facility": "CHRISTUS CHILDRENS",
+      "level": 3,
+      "status": "PROBATIONARY",
+      "expiration": "3/1/2029",
+      "tsa": "P",
+      "city": "SAN ANTONIO",
+      "zip": "78207"
+    },
+    {
+      "facility": "CHRISTUS GOOD SHEPHERD MEDICAL CENTER - LONGVIEW",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "9/1/2028",
+      "tsa": "G",
+      "city": "LONGVIEW",
+      "zip": "75601"
+    },
+    {
+      "facility": "CHRISTUS SANTA ROSA HOSPITAL - WESTOVER HILLS",
+      "level": 3,
+      "status": "PROBATIONARY",
+      "expiration": "3/1/2029",
+      "tsa": "P",
+      "city": "SAN ANTONIO",
+      "zip": "78251"
+    },
+    {
+      "facility": "CHRISTUS SOUTHEAST TEXAS - ST ELIZABETH",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "3/1/2027",
+      "tsa": "R",
+      "city": "BEAUMONT",
+      "zip": "77702"
+    },
+    {
+      "facility": "CHRISTUS ST MICHAEL HEALTH SYSTEM",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "6/1/2029",
+      "tsa": "F",
+      "city": "TEXARKANA",
+      "zip": "75503"
+    },
+    {
+      "facility": "CITIZENS MEDICAL CENTER",
+      "level": 3,
+      "status": "CONTINGENT",
+      "expiration": "4/1/2028",
+      "tsa": "S",
+      "city": "VICTORIA",
+      "zip": "77901"
+    },
+    {
+      "facility": "DELL CHILDRENS MEDICAL CENTER NORTH CAMPUS",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "1/1/2028",
+      "tsa": "O",
+      "city": "AUSTIN",
+      "zip": "78717"
+    },
+    {
+      "facility": "DETAR HEALTHCARE SYSTEM",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "2/1/2028",
+      "tsa": "S",
+      "city": "VICTORIA",
+      "zip": "77901"
+    },
+    {
+      "facility": "DOCTORS HOSPITAL OF LAREDO",
+      "level": 3,
+      "status": "PROBATIONARY",
+      "expiration": "5/1/2028",
+      "tsa": "T",
+      "city": "LAREDO",
+      "zip": "78045"
+    },
+    {
+      "facility": "DRISCOLL CHILDRENS HOSPITAL",
+      "level": 3,
+      "status": "CONTINGENT",
+      "expiration": "4/1/2027",
+      "tsa": "U",
+      "city": "CORPUS CHRISTI",
+      "zip": "78411"
+    },
+    {
+      "facility": "HARRIS HEALTH LYNDON B JOHNSON HOSPITAL",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "2/1/2027",
+      "tsa": "Q",
+      "city": "HOUSTON",
+      "zip": "77026"
+    },
+    {
+      "facility": "HCA HOUSTON HEALTHCARE NORTH CYPRESS",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "12/1/2028",
+      "tsa": "Q",
+      "city": "CYPRESS",
+      "zip": "77429"
+    },
+    {
+      "facility": "HCA HOUSTON HEALTHCARE SOUTHEAST",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "2/1/2029",
+      "tsa": "Q",
+      "city": "PASADENA",
+      "zip": "77504"
+    },
+    {
+      "facility": "HCA HOUSTON HEALTHCARE TOMBALL",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "5/1/2028",
+      "tsa": "Q",
+      "city": "TOMBALL",
+      "zip": "77375"
+    },
+    {
+      "facility": "HUNT REGIONAL MEDICAL CENTER",
+      "level": 3,
+      "status": "PROBATIONARY",
+      "expiration": "12/1/2029",
+      "tsa": "E",
+      "city": "GREENVILLE",
+      "zip": "75401"
+    },
+    {
+      "facility": "LAREDO MEDICAL CENTER",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "3/1/2029",
+      "tsa": "T",
+      "city": "LAREDO",
+      "zip": "78041"
+    },
+    {
+      "facility": "LAS PALMAS MEDICAL CENTER A CAMPUS OF LPDS HEALTHCARE",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "4/1/2027",
+      "tsa": "I",
+      "city": "EL PASO",
+      "zip": "79902"
+    },
+    {
+      "facility": "LONGVIEW REGIONAL MEDICAL CENTER",
+      "level": 3,
+      "status": "PROBATIONARY",
+      "expiration": "7/1/2029",
+      "tsa": "G",
+      "city": "LONGVIEW",
+      "zip": "75605"
+    },
+    {
+      "facility": "MEDICAL CITY ALLIANCE",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "7/1/2029",
+      "tsa": "E",
+      "city": "FORT WORTH",
+      "zip": "76177"
+    },
+    {
+      "facility": "MEDICAL CITY DALLAS HOSPITAL",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "12/1/2028",
+      "tsa": "E",
+      "city": "DALLAS",
+      "zip": "75230"
+    },
+    {
+      "facility": "MEDICAL CITY FRISCO A MEDICAL CENTER OF PLANO FACILITY",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "11/1/2027",
+      "tsa": "E",
+      "city": "FRISCO",
+      "zip": "75034"
+    },
+    {
+      "facility": "MEDICAL CITY LAS COLINAS",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "8/1/2029",
+      "tsa": "E",
+      "city": "IRVING",
+      "zip": "75039"
+    },
+    {
+      "facility": "MEDICAL CITY LEWISVILLE",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "6/1/2028",
+      "tsa": "E",
+      "city": "LEWISVILLE",
+      "zip": "75057"
+    },
+    {
+      "facility": "MEDICAL CITY NORTH HILLS",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "8/1/2029",
+      "tsa": "E",
+      "city": "NORTH RICHLAND HILLS",
+      "zip": "76180"
+    },
+    {
+      "facility": "MEDICAL CITY WEATHERFORD",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "2/1/2027",
+      "tsa": "E",
+      "city": "WEATHERFORD",
+      "zip": "76086"
+    },
+    {
+      "facility": "MEMORIAL HERMANN CYPRESS HOSPITAL",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "3/1/2027",
+      "tsa": "Q",
+      "city": "CYPRESS",
+      "zip": "77433"
+    },
+    {
+      "facility": "MEMORIAL HERMANN GREATER HEIGHTS HOSPITAL",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "9/1/2029",
+      "tsa": "Q",
+      "city": "HOUSTON",
+      "zip": "77008"
+    },
+    {
+      "facility": "MEMORIAL HERMANN KATY HOSPITAL",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "8/1/2029",
+      "tsa": "Q",
+      "city": "KATY",
+      "zip": "77494"
+    },
+    {
+      "facility": "MEMORIAL HERMANN SOUTHEAST HOSPITAL",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "8/1/2028",
+      "tsa": "Q",
+      "city": "HOUSTON",
+      "zip": "77089"
+    },
+    {
+      "facility": "METHODIST HOSPITAL",
+      "level": 3,
+      "status": "PROBATIONARY",
+      "expiration": "8/1/2028",
+      "tsa": "P",
+      "city": "SAN ANTONIO",
+      "zip": "78229"
+    },
+    {
+      "facility": "METHODIST HOSPITAL | STONE OAK",
+      "level": 3,
+      "status": "PROBATIONARY",
+      "expiration": "11/1/2029",
+      "tsa": "P",
+      "city": "SAN ANTONIO",
+      "zip": "78258"
+    },
+    {
+      "facility": "METHODIST MANSFIELD MEDICAL CENTER",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "11/1/2027",
+      "tsa": "E",
+      "city": "MANSFIELD",
+      "zip": "76063"
+    },
+    {
+      "facility": "METHODIST RICHARDSON MEDICAL CENTER",
+      "level": 3,
+      "status": "PROBATIONARY",
+      "expiration": "10/1/2028",
+      "tsa": "E",
+      "city": "RICHARDSON",
+      "zip": "75082"
+    },
+    {
+      "facility": "METHODIST SOUTHWEST MEDICAL CENTER",
+      "level": 3,
+      "status": "PROBATIONARY",
+      "expiration": "7/1/2027",
+      "tsa": "E",
+      "city": "DALLAS",
+      "zip": "75237"
+    },
+    {
+      "facility": "MIDLAND MEMORIAL HOSPITAL",
+      "level": 3,
+      "status": "PROBATIONARY",
+      "expiration": "10/1/2029",
+      "tsa": "J",
+      "city": "MIDLAND",
+      "zip": "79701"
+    },
+    {
+      "facility": "NORTH CENTRAL BAPTIST HOSPITAL",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "7/1/2027",
+      "tsa": "P",
+      "city": "SAN ANTONIO",
+      "zip": "78258"
+    },
+    {
+      "facility": "NORTHEAST BAPTIST HOSPITAL",
+      "level": 3,
+      "status": "PROBATIONARY",
+      "expiration": "4/1/2028",
+      "tsa": "P",
+      "city": "SAN ANTONIO",
+      "zip": "78217"
+    },
+    {
+      "facility": "NORTHEAST METHODIST HOSPITAL",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "1/1/2028",
+      "tsa": "P",
+      "city": "LIVE OAK",
+      "zip": "78233"
+    },
+    {
+      "facility": "PARIS REGIONAL MEDICAL CENTER NORTH CAMPUS",
+      "level": 3,
+      "status": "PROBATIONARY",
+      "expiration": "2/1/2028",
+      "tsa": "F",
+      "city": "PARIS",
+      "zip": "75460"
+    },
+    {
+      "facility": "RIO GRANDE REGIONAL HOSPITAL",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "6/1/2028",
+      "tsa": "V",
+      "city": "MCALLEN",
+      "zip": "78503"
+    },
+    {
+      "facility": "SHANNON MEDICAL CENTER",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "2/1/2028",
+      "tsa": "K",
+      "city": "SAN ANGELO",
+      "zip": "76903"
+    },
+    {
+      "facility": "ST JOSEPH REGIONAL HEALTH CENTER",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "4/1/2027",
+      "tsa": "N",
+      "city": "BRYAN",
+      "zip": "77802"
+    },
+    {
+      "facility": "TEXAS HEALTH ARLINGTON MEMORIAL HOSPITAL",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "3/1/2029",
+      "tsa": "E",
+      "city": "ARLINGTON",
+      "zip": "76012"
+    },
+    {
+      "facility": "TEXAS HEALTH HARRIS METHODIST HOSPITAL ALLIANCE",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "6/1/2027",
+      "tsa": "E",
+      "city": "FORT WORTH",
+      "zip": "76244"
+    },
+    {
+      "facility": "TEXAS HEALTH HARRIS METHODIST HOSPITAL HURST-EULESS-BEDFORD",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "3/1/2028",
+      "tsa": "E",
+      "city": "BEDFORD",
+      "zip": "76022"
+    },
+    {
+      "facility": "TEXAS HEALTH HARRIS METHODIST HOSPITAL SOUTHWEST FORT WORTH",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "2/1/2028",
+      "tsa": "E",
+      "city": "FORT WORTH",
+      "zip": "76132"
+    },
+    {
+      "facility": "TEXAS HEALTH HOSPITAL FRISCO",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "2/1/2027",
+      "tsa": "E",
+      "city": "FRISCO",
+      "zip": "75033"
+    },
+    {
+      "facility": "TEXAS HEALTH HUGULEY HOSPITAL",
+      "level": 3,
+      "status": "CONTINGENT",
+      "expiration": "12/1/2027",
+      "tsa": "E",
+      "city": "BURLESON",
+      "zip": "76028"
+    },
+    {
+      "facility": "TEXAS HEALTH PRESBYTERIAN HOSPITAL DENTON",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "10/1/2029",
+      "tsa": "E",
+      "city": "DENTON",
+      "zip": "76201"
+    },
+    {
+      "facility": "TEXOMA MEDICAL CENTER",
+      "level": 3,
+      "status": "CONTINGENT",
+      "expiration": "3/1/2027",
+      "tsa": "E",
+      "city": "DENISON",
+      "zip": "75020"
+    },
+    {
+      "facility": "THE HOSPITALS OF PROVIDENCE MEMORIAL CAMPUS",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "7/1/2028",
+      "tsa": "I",
+      "city": "EL PASO",
+      "zip": "79902"
+    },
+    {
+      "facility": "UNIVERSITY OF TEXAS MEDICAL BRANCH - LEAGUE CITY CAMPUS",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "6/1/2028",
+      "tsa": "R",
+      "city": "LEAGUE CITY",
+      "zip": "77573"
+    },
+    {
+      "facility": "VALLEY BAPTIST MEDICAL CENTER - BROWNSVILLE",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "5/1/2028",
+      "tsa": "V",
+      "city": "BROWNSVILLE",
+      "zip": "78520"
+    },
+    {
+      "facility": "VALLEY REGIONAL MEDICAL CENTER",
+      "level": 3,
+      "status": "CONTINGENT",
+      "expiration": "10/1/2029",
+      "tsa": "V",
+      "city": "BROWNSVILLE",
+      "zip": "78526"
+    },
+    {
+      "facility": "WILLIAM BEAUMONT ARMY MEDICAL CENTER",
+      "level": 3,
+      "status": "STANDARD",
+      "expiration": "6/1/2028",
+      "tsa": "I",
+      "city": "EL PASO",
+      "zip": "79918"
+    },
+    {
+      "facility": "ADVENTHEALTH CENTRAL TEXAS",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "1/1/2029",
+      "tsa": "L",
+      "city": "KILLEEN",
+      "zip": "76549"
+    },
+    {
+      "facility": "ADVENTHEALTH ROLLINS BROOK",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "6/1/2027",
+      "tsa": "L",
+      "city": "LAMPASAS",
+      "zip": "76550"
+    },
+    {
+      "facility": "ASCENSION PROVIDENCE",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "5/1/2028",
+      "tsa": "M",
+      "city": "WACO",
+      "zip": "76712"
+    },
+    {
+      "facility": "ASCENSION SETON CEDAR PARK",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "1/1/2027",
+      "tsa": "O",
+      "city": "CEDAR PARK",
+      "zip": "78613"
+    },
+    {
+      "facility": "ASCENSION SETON EDGAR B DAVIS",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "1/1/2030",
+      "tsa": "O",
+      "city": "LULING",
+      "zip": "78648"
+    },
+    {
+      "facility": "ASCENSION SETON HIGHLAND LAKES",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "8/1/2029",
+      "tsa": "O",
+      "city": "BURNET",
+      "zip": "78611"
+    },
+    {
+      "facility": "ASCENSION SETON MEDICAL CENTER AUSTIN",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "1/1/2030",
+      "tsa": "O",
+      "city": "AUSTIN",
+      "zip": "78705"
+    },
+    {
+      "facility": "ASCENSION SETON NORTHWEST",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "12/1/2029",
+      "tsa": "O",
+      "city": "AUSTIN",
+      "zip": "78759"
+    },
+    {
+      "facility": "ASCENSION SETON SOUTHWEST",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "12/1/2029",
+      "tsa": "O",
+      "city": "AUSTIN",
+      "zip": "78737"
+    },
+    {
+      "facility": "BALLINGER MEMORIAL HOSPITAL DISTRICT",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "9/1/2028",
+      "tsa": "K",
+      "city": "BALLINGER",
+      "zip": "76821"
+    },
+    {
+      "facility": "BAPTIST HOSPITALS OF SOUTHEAST TEXAS",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "4/1/2027",
+      "tsa": "R",
+      "city": "BEAUMONT",
+      "zip": "77701"
+    },
+    {
+      "facility": "BAPTIST MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "4/1/2028",
+      "tsa": "P",
+      "city": "SAN ANTONIO",
+      "zip": "78205"
+    },
+    {
+      "facility": "BAYLOR SCOTT & WHITE MEDICAL CENTER - BRENHAM",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "2/1/2029",
+      "tsa": "N",
+      "city": "BRENHAM",
+      "zip": "77833"
+    },
+    {
+      "facility": "BAYLOR SCOTT & WHITE MEDICAL CENTER - LAKEWAY",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "8/1/2029",
+      "tsa": "O",
+      "city": "LAKEWAY",
+      "zip": "78738"
+    },
+    {
+      "facility": "BAYLOR SCOTT & WHITE MEDICAL CENTER - MARBLE FALLS",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "12/1/2028",
+      "tsa": "O",
+      "city": "MARBLE FALLS",
+      "zip": "78654"
+    },
+    {
+      "facility": "BAYLOR SCOTT & WHITE MEDICAL CENTER - PFLUGERVILLE",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "6/1/2029",
+      "tsa": "O",
+      "city": "PFLUGERVILLE",
+      "zip": "78660"
+    },
+    {
+      "facility": "BAYLOR SCOTT & WHITE MEDICAL CENTER - ROUND ROCK",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "9/1/2029",
+      "tsa": "O",
+      "city": "ROUND ROCK",
+      "zip": "78665"
+    },
+    {
+      "facility": "BAYLOR SCOTT & WHITE MEDICAL CENTER - TAYLOR",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "7/1/2029",
+      "tsa": "O",
+      "city": "TAYLOR",
+      "zip": "76574"
+    },
+    {
+      "facility": "BAYLOR SCOTT & WHITE MEDICAL CENTER - WAXAHACHIE",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "5/1/2028",
+      "tsa": "E",
+      "city": "WAXAHACHIE",
+      "zip": "75165"
+    },
+    {
+      "facility": "BIG BEND REGIONAL MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "6/1/2028",
+      "tsa": "J",
+      "city": "ALPINE",
+      "zip": "79830"
+    },
+    {
+      "facility": "BROWNFIELD REGIONAL MEDICAL CENTER",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "6/1/2028",
+      "tsa": "B",
+      "city": "BROWNFIELD",
+      "zip": "79316"
+    },
+    {
+      "facility": "CHI ST JOSEPH HEALTH BURLESON HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "9/1/2028",
+      "tsa": "N",
+      "city": "CALDWELL",
+      "zip": "77836"
+    },
+    {
+      "facility": "CHI ST JOSEPH HEALTH GRIMES HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "6/1/2027",
+      "tsa": "N",
+      "city": "NAVASOTA",
+      "zip": "77868"
+    },
+    {
+      "facility": "CHI ST JOSEPH HEALTH MADISON HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "5/1/2027",
+      "tsa": "N",
+      "city": "MADISONVILLE",
+      "zip": "77864"
+    },
+    {
+      "facility": "CHI ST LUKES HEALTH MEMORIAL LIVINGSTON",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "5/1/2029",
+      "tsa": "H",
+      "city": "LIVINGSTON",
+      "zip": "77351"
+    },
+    {
+      "facility": "CHI ST LUKES HEALTH MEMORIAL LUFKIN",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "8/1/2029",
+      "tsa": "H",
+      "city": "LUFKIN",
+      "zip": "75904"
+    },
+    {
+      "facility": "CHILDRESS REGIONAL MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "3/1/2028",
+      "tsa": "A",
+      "city": "CHILDRESS",
+      "zip": "79201"
+    },
+    {
+      "facility": "CHRISTUS GOOD SHEPHERD MEDICAL CENTER - MARSHALL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "10/1/2029",
+      "tsa": "G",
+      "city": "MARSHALL",
+      "zip": "75670"
+    },
+    {
+      "facility": "CHRISTUS MOTHER FRANCES HOSPITAL - JACKSONVILLE",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "11/1/2029",
+      "tsa": "G",
+      "city": "JACKSONVILLE",
+      "zip": "75766"
+    },
+    {
+      "facility": "CHRISTUS MOTHER FRANCES HOSPITAL - SULPHUR SPRINGS",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "12/1/2029",
+      "tsa": "F",
+      "city": "SULPHUR SPRINGS",
+      "zip": "75482"
+    },
+    {
+      "facility": "CHRISTUS MOTHER FRANCES HOSPITAL - WINNSBORO",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "9/1/2027",
+      "tsa": "G",
+      "city": "WINNSBORO",
+      "zip": "75494"
+    },
+    {
+      "facility": "CHRISTUS SANTA ROSA HOSPITAL - NEW BRAUNFELS",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "12/1/2027",
+      "tsa": "P",
+      "city": "NEW BRAUNFELS",
+      "zip": "78130"
+    },
+    {
+      "facility": "CHRISTUS SANTA ROSA HOSPITAL - SAN MARCOS",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "2/1/2028",
+      "tsa": "O",
+      "city": "SAN MARCOS",
+      "zip": "78666"
+    },
+    {
+      "facility": "CHRISTUS SOUTHEAST TEXAS - JASPER MEMORIAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "5/1/2028",
+      "tsa": "R",
+      "city": "JASPER",
+      "zip": "75951"
+    },
+    {
+      "facility": "CHRISTUS SPOHN HOSPITAL ALICE",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "8/1/2027",
+      "tsa": "U",
+      "city": "ALICE",
+      "zip": "78332"
+    },
+    {
+      "facility": "CHRISTUS SPOHN HOSPITAL BEEVILLE",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "1/1/2027",
+      "tsa": "U",
+      "city": "BEEVILLE",
+      "zip": "78102"
+    },
+    {
+      "facility": "CHRISTUS SPOHN HOSPITAL CORPUS CHRISTI SOUTH",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "9/1/2029",
+      "tsa": "U",
+      "city": "CORPUS CHRISTI",
+      "zip": "78414"
+    },
+    {
+      "facility": "CHRISTUS SPOHN HOSPITAL KLEBERG",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "7/1/2028",
+      "tsa": "U",
+      "city": "KINGSVILLE",
+      "zip": "78363"
+    },
+    {
+      "facility": "CHRISTUS ST MICHAEL HOSPITAL - ATLANTA",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "10/1/2029",
+      "tsa": "F",
+      "city": "ATLANTA",
+      "zip": "75551"
+    },
+    {
+      "facility": "COLEMAN COUNTY MEDICAL CENTER COMPANY",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "12/1/2028",
+      "tsa": "D",
+      "city": "COLEMAN",
+      "zip": "76834"
+    },
+    {
+      "facility": "COLLINGSWORTH GENERAL HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "6/1/2027",
+      "tsa": "A",
+      "city": "WELLINGTON",
+      "zip": "79095"
+    },
+    {
+      "facility": "COLUMBUS COMMUNITY HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "12/1/2026",
+      "tsa": "Q",
+      "city": "COLUMBUS",
+      "zip": "78934"
+    },
+    {
+      "facility": "COMANCHE COUNTY MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "2/1/2027",
+      "tsa": "D",
+      "city": "COMANCHE",
+      "zip": "76442"
+    },
+    {
+      "facility": "CONCHO COUNTY HOSPITAL",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "11/1/2028",
+      "tsa": "K",
+      "city": "EDEN",
+      "zip": "76837"
+    },
+    {
+      "facility": "CONNALLY MEMORIAL MEDICAL CENTER",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "8/1/2027",
+      "tsa": "P",
+      "city": "FLORESVILLE",
+      "zip": "78114"
+    },
+    {
+      "facility": "COON MEMORIAL HOSPITAL AND HOME",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "8/1/2029",
+      "tsa": "A",
+      "city": "DALHART",
+      "zip": "79022"
+    },
+    {
+      "facility": "CORPUS CHRISTI MEDICAL CENTER DOCTORS REGIONAL",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "12/1/2029",
+      "tsa": "U",
+      "city": "CORPUS CHRISTI",
+      "zip": "78411"
+    },
+    {
+      "facility": "CORYELL MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "1/1/2029",
+      "tsa": "L",
+      "city": "GATESVILLE",
+      "zip": "76528"
+    },
+    {
+      "facility": "COVENANT HOSPITAL LEVELLAND",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "10/1/2028",
+      "tsa": "B",
+      "city": "LEVELLAND",
+      "zip": "79336"
+    },
+    {
+      "facility": "COVENANT HOSPITAL PLAINVIEW",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "1/1/2029",
+      "tsa": "B",
+      "city": "PLAINVIEW",
+      "zip": "79072"
+    },
+    {
+      "facility": "CUERO REGIONAL HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "2/1/2030",
+      "tsa": "S",
+      "city": "CUERO",
+      "zip": "77954"
+    },
+    {
+      "facility": "CULBERSON HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "5/1/2029",
+      "tsa": "I",
+      "city": "VAN HORN",
+      "zip": "79855"
+    },
+    {
+      "facility": "DALLAS MEDICAL CENTER",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "6/1/2028",
+      "tsa": "E",
+      "city": "DALLAS",
+      "zip": "75234"
+    },
+    {
+      "facility": "DETAR HEALTHCARE SYSTEM",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "10/1/2029",
+      "tsa": "S",
+      "city": "VICTORIA",
+      "zip": "77904"
+    },
+    {
+      "facility": "DHR HEALTH BROWNSVILLE",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "9/1/2029",
+      "tsa": "V",
+      "city": "BROWNSVILLE",
+      "zip": "78526"
+    },
+    {
+      "facility": "DIMMIT REGIONAL HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "9/1/2028",
+      "tsa": "P",
+      "city": "CARRIZO SPRINGS",
+      "zip": "78834"
+    },
+    {
+      "facility": "EL CAMPO MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "2/1/2029",
+      "tsa": "Q",
+      "city": "EL CAMPO",
+      "zip": "77437"
+    },
+    {
+      "facility": "ELECTRA MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "7/1/2027",
+      "tsa": "C",
+      "city": "ELECTRA",
+      "zip": "76360"
+    },
+    {
+      "facility": "ENNIS REGIONAL MEDICAL CENTER",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "5/1/2029",
+      "tsa": "E",
+      "city": "ENNIS",
+      "zip": "75119"
+    },
+    {
+      "facility": "FISHER COUNTY HOSPITAL DISTRICT",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "3/1/2027",
+      "tsa": "D",
+      "city": "ROTAN",
+      "zip": "79546"
+    },
+    {
+      "facility": "FORT DUNCAN REGIONAL MEDICAL CENTER",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "3/1/2029",
+      "tsa": "P",
+      "city": "EAGLE PASS",
+      "zip": "78852"
+    },
+    {
+      "facility": "FREESTONE MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "2/1/2028",
+      "tsa": "G",
+      "city": "FAIRFIELD",
+      "zip": "75840"
+    },
+    {
+      "facility": "FRIO REGIONAL HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "2/1/2027",
+      "tsa": "P",
+      "city": "PEARSALL",
+      "zip": "78061"
+    },
+    {
+      "facility": "GOLDEN PLAINS COMMUNITY HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "2/1/2029",
+      "tsa": "A",
+      "city": "BORGER",
+      "zip": "79007"
+    },
+    {
+      "facility": "GOODALL-WITCHER HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "9/1/2028",
+      "tsa": "M",
+      "city": "CLIFTON",
+      "zip": "76634"
+    },
+    {
+      "facility": "GRAHAM HOSPITAL DISTRICT",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "1/1/2028",
+      "tsa": "C",
+      "city": "GRAHAM",
+      "zip": "76450"
+    },
+    {
+      "facility": "GUADALUPE REGIONAL MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "7/1/2028",
+      "tsa": "P",
+      "city": "SEGUIN",
+      "zip": "78155"
+    },
+    {
+      "facility": "HAMILTON GENERAL HOSPITAL",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "1/1/2029",
+      "tsa": "L",
+      "city": "HAMILTON",
+      "zip": "76531"
+    },
+    {
+      "facility": "HANSFORD COUNTY HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "8/1/2028",
+      "tsa": "A",
+      "city": "SPEARMAN",
+      "zip": "79081"
+    },
+    {
+      "facility": "HARDEMAN COUNTY MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "10/1/2029",
+      "tsa": "C",
+      "city": "QUANAH",
+      "zip": "79252"
+    },
+    {
+      "facility": "HARLINGEN MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "10/1/2028",
+      "tsa": "V",
+      "city": "HARLINGEN",
+      "zip": "78550"
+    },
+    {
+      "facility": "HCA HOUSTON HEALTHCARE MAINLAND",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "6/1/2029",
+      "tsa": "R",
+      "city": "TEXAS CITY",
+      "zip": "77591"
+    },
+    {
+      "facility": "HCA HOUSTON HEALTHCARE PEARLAND",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "6/1/2027",
+      "tsa": "R",
+      "city": "PEARLAND",
+      "zip": "77584"
+    },
+    {
+      "facility": "HCA HOUSTON HEALTHCARE WEST",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "6/1/2028",
+      "tsa": "Q",
+      "city": "HOUSTON",
+      "zip": "77082"
+    },
+    {
+      "facility": "HEART OF TEXAS HEALTHCARE SYSTEM",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "7/1/2028",
+      "tsa": "K",
+      "city": "BRADY",
+      "zip": "76825"
+    },
+    {
+      "facility": "HENDRICK MEDICAL CENTER BROWNWOOD",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "2/1/2029",
+      "tsa": "D",
+      "city": "BROWNWOOD",
+      "zip": "76801"
+    },
+    {
+      "facility": "HEREFORD REGIONAL MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "4/1/2027",
+      "tsa": "A",
+      "city": "HEREFORD",
+      "zip": "79045"
+    },
+    {
+      "facility": "HILL REGIONAL HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "2/1/2029",
+      "tsa": "M",
+      "city": "HILLSBORO",
+      "zip": "76645"
+    },
+    {
+      "facility": "HUNTSVILLE MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "2/1/2027",
+      "tsa": "Q",
+      "city": "HUNTSVILLE",
+      "zip": "77340"
+    },
+    {
+      "facility": "JACKSON COUNTY HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "11/1/2028",
+      "tsa": "S",
+      "city": "EDNA",
+      "zip": "77957"
+    },
+    {
+      "facility": "KIMBLE HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "7/1/2027",
+      "tsa": "K",
+      "city": "JUNCTION",
+      "zip": "76849"
+    },
+    {
+      "facility": "KNAPP MEDICAL CENTER",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "8/1/2028",
+      "tsa": "V",
+      "city": "WESLACO",
+      "zip": "78596"
+    },
+    {
+      "facility": "LAKE GRANBURY MEDICAL CENTER",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "2/1/2027",
+      "tsa": "E",
+      "city": "GRANBURY",
+      "zip": "76048"
+    },
+    {
+      "facility": "LAMB HEALTHCARE CENTER",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "7/1/2028",
+      "tsa": "B",
+      "city": "LITTLEFIELD",
+      "zip": "79339"
+    },
+    {
+      "facility": "LAVACA MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "7/1/2028",
+      "tsa": "S",
+      "city": "HALLETTSVILLE",
+      "zip": "77964"
+    },
+    {
+      "facility": "LILLIAN M HUDSPETH MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "4/1/2028",
+      "tsa": "K",
+      "city": "SONORA",
+      "zip": "76950"
+    },
+    {
+      "facility": "LIMESTONE MEDICAL CENTER",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "10/1/2029",
+      "tsa": "M",
+      "city": "GROESBECK",
+      "zip": "76642"
+    },
+    {
+      "facility": "LLANO REGIONAL HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "8/1/2029",
+      "tsa": "O",
+      "city": "LLANO",
+      "zip": "78643"
+    },
+    {
+      "facility": "MATAGORDA REGIONAL MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "9/1/2029",
+      "tsa": "Q",
+      "city": "BAY CITY",
+      "zip": "77414"
+    },
+    {
+      "facility": "MEDICAL ARTS HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "1/1/2028",
+      "tsa": "B",
+      "city": "LAMESA",
+      "zip": "79331"
+    },
+    {
+      "facility": "MEDINA REGIONAL HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "7/1/2027",
+      "tsa": "P",
+      "city": "HONDO",
+      "zip": "78861"
+    },
+    {
+      "facility": "MEMORIAL HERMANN MEMORIAL CITY MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "2/1/2029",
+      "tsa": "Q",
+      "city": "HOUSTON",
+      "zip": "77024"
+    },
+    {
+      "facility": "MEMORIAL HERMANN PEARLAND HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "6/1/2028",
+      "tsa": "R",
+      "city": "PEARLAND",
+      "zip": "77584"
+    },
+    {
+      "facility": "MEMORIAL HERMANN SOUTHWEST HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "9/1/2029",
+      "tsa": "Q",
+      "city": "HOUSTON",
+      "zip": "77074"
+    },
+    {
+      "facility": "MEMORIAL HERMANN SUGAR LAND HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "1/1/2030",
+      "tsa": "Q",
+      "city": "SUGAR LAND",
+      "zip": "77479"
+    },
+    {
+      "facility": "MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "4/1/2029",
+      "tsa": "A",
+      "city": "DUMAS",
+      "zip": "79029"
+    },
+    {
+      "facility": "MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "10/1/2027",
+      "tsa": "P",
+      "city": "GONZALES",
+      "zip": "78629"
+    },
+    {
+      "facility": "MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "2/1/2029",
+      "tsa": "B",
+      "city": "SEMINOLE",
+      "zip": "79360"
+    },
+    {
+      "facility": "MEMORIAL MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "8/1/2027",
+      "tsa": "S",
+      "city": "PORT LAVACA",
+      "zip": "77979"
+    },
+    {
+      "facility": "METHODIST HOSPITAL HILL COUNTRY",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "11/1/2027",
+      "tsa": "P",
+      "city": "FREDERICKSBURG",
+      "zip": "78624"
+    },
+    {
+      "facility": "METHODIST HOSPITAL | ATASCOSA",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "6/1/2029",
+      "tsa": "P",
+      "city": "JOURDANTON",
+      "zip": "78026"
+    },
+    {
+      "facility": "METHODIST MIDLOTHIAN MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "8/1/2027",
+      "tsa": "E",
+      "city": "MIDLOTHIAN",
+      "zip": "76065"
+    },
+    {
+      "facility": "METHODIST SPECIALTY & TRANSPLANT HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "12/1/2026",
+      "tsa": "P",
+      "city": "SAN ANTONIO",
+      "zip": "78229"
+    },
+    {
+      "facility": "METHODIST TEXSAN HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "4/1/2028",
+      "tsa": "P",
+      "city": "SAN ANTONIO",
+      "zip": "78201"
+    },
+    {
+      "facility": "METROPOLITAN METHODIST HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "12/1/2026",
+      "tsa": "P",
+      "city": "SAN ANTONIO",
+      "zip": "78212"
+    },
+    {
+      "facility": "MISSION REGIONAL MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "4/1/2028",
+      "tsa": "V",
+      "city": "MISSION",
+      "zip": "78572"
+    },
+    {
+      "facility": "MISSION TRAIL BAPTIST HOSPITAL",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "12/1/2029",
+      "tsa": "P",
+      "city": "SAN ANTONIO",
+      "zip": "78235"
+    },
+    {
+      "facility": "MITCHELL COUNTY HOSPITAL DISTRICT",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "12/1/2028",
+      "tsa": "D",
+      "city": "COLORADO CITY",
+      "zip": "79512"
+    },
+    {
+      "facility": "MUENSTER MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "9/1/2027",
+      "tsa": "E",
+      "city": "MUENSTER",
+      "zip": "76252"
+    },
+    {
+      "facility": "NACOGDOCHES MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "6/1/2027",
+      "tsa": "H",
+      "city": "NACOGDOCHES",
+      "zip": "75965"
+    },
+    {
+      "facility": "NAVARRO REGIONAL HOSPITAL",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "5/1/2028",
+      "tsa": "E",
+      "city": "CORSICANA",
+      "zip": "75110"
+    },
+    {
+      "facility": "NORTH TEXAS MEDICAL CENTER",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "8/1/2028",
+      "tsa": "E",
+      "city": "GAINESVILLE",
+      "zip": "76240"
+    },
+    {
+      "facility": "OAKBEND MEDICAL CENTER",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "9/1/2029",
+      "tsa": "Q",
+      "city": "RICHMOND",
+      "zip": "77469"
+    },
+    {
+      "facility": "OCHILTREE GENERAL HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "10/1/2029",
+      "tsa": "A",
+      "city": "PERRYTON",
+      "zip": "79070"
+    },
+    {
+      "facility": "OTTO KAISER MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "8/1/2027",
+      "tsa": "P",
+      "city": "KENEDY",
+      "zip": "78119"
+    },
+    {
+      "facility": "PALO PINTO GENERAL HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "4/1/2027",
+      "tsa": "E",
+      "city": "MINERAL WELLS",
+      "zip": "76067"
+    },
+    {
+      "facility": "PAMPA REGIONAL MEDICAL CENTER",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "7/1/2029",
+      "tsa": "A",
+      "city": "PAMPA",
+      "zip": "79065"
+    },
+    {
+      "facility": "PARKVIEW HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "11/1/2026",
+      "tsa": "A",
+      "city": "WHEELER",
+      "zip": "79096"
+    },
+    {
+      "facility": "PARKVIEW REGIONAL HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "10/1/2029",
+      "tsa": "M",
+      "city": "MEXIA",
+      "zip": "76667"
+    },
+    {
+      "facility": "PECOS COUNTY MEMORIAL HOSPITAL DISTRICT",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "4/1/2029",
+      "tsa": "J",
+      "city": "FORT STOCKTON",
+      "zip": "79735"
+    },
+    {
+      "facility": "PERMIAN REGIONAL MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "2/1/2029",
+      "tsa": "J",
+      "city": "ANDREWS",
+      "zip": "79714"
+    },
+    {
+      "facility": "PETERSON REGIONAL MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "7/1/2027",
+      "tsa": "P",
+      "city": "KERRVILLE",
+      "zip": "78028"
+    },
+    {
+      "facility": "PLAINS MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "10/1/2028",
+      "tsa": "B",
+      "city": "DIMMITT",
+      "zip": "79027"
+    },
+    {
+      "facility": "REAGAN MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "12/1/2027",
+      "tsa": "K",
+      "city": "BIG LAKE",
+      "zip": "76932"
+    },
+    {
+      "facility": "REEVES REGIONAL HEALTH",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "9/1/2027",
+      "tsa": "J",
+      "city": "PECOS",
+      "zip": "79772"
+    },
+    {
+      "facility": "REFUGIO COUNTY MEMORIAL HOSPITAL DISTRICT",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "8/1/2028",
+      "tsa": "U",
+      "city": "REFUGIO",
+      "zip": "78377"
+    },
+    {
+      "facility": "RESOLUTE BAPTIST HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "12/1/2026",
+      "tsa": "P",
+      "city": "NEW BRAUNFELS",
+      "zip": "78130"
+    },
+    {
+      "facility": "RICE MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "1/1/2028",
+      "tsa": "Q",
+      "city": "EAGLE LAKE",
+      "zip": "77434"
+    },
+    {
+      "facility": "ROLLING PLAINS MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "9/1/2027",
+      "tsa": "D",
+      "city": "SWEETWATER",
+      "zip": "79556"
+    },
+    {
+      "facility": "SABINE COUNTY HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "3/1/2029",
+      "tsa": "H",
+      "city": "HEMPHILL",
+      "zip": "75948"
+    },
+    {
+      "facility": "SCHLEICHER COUNTY MEDICAL CENTER",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "3/1/2029",
+      "tsa": "K",
+      "city": "ELDORADO",
+      "zip": "76936"
+    },
+    {
+      "facility": "SETON MEDICAL CENTER HARKER HEIGHTS",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "4/1/2027",
+      "tsa": "L",
+      "city": "HARKER HEIGHTS",
+      "zip": "76548"
+    },
+    {
+      "facility": "SEYMOUR HOSPITAL",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "6/1/2029",
+      "tsa": "C",
+      "city": "SEYMOUR",
+      "zip": "76380"
+    },
+    {
+      "facility": "SOUTH TEXAS HEALTH SYSTEM EDINBURG",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "3/1/2027",
+      "tsa": "V",
+      "city": "EDINBURG",
+      "zip": "78539"
+    },
+    {
+      "facility": "SOUTH TEXAS HEALTH SYSTEM HEART",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "4/1/2027",
+      "tsa": "V",
+      "city": "MCALLEN",
+      "zip": "78503"
+    },
+    {
+      "facility": "ST DAVIDS GEORGETOWN HOSPITAL A ST DAVIDS MEDICAL CENTER FACILI",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "4/1/2028",
+      "tsa": "O",
+      "city": "GEORGETOWN",
+      "zip": "78626"
+    },
+    {
+      "facility": "ST DAVIDS MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "3/1/2027",
+      "tsa": "O",
+      "city": "AUSTIN",
+      "zip": "78705"
+    },
+    {
+      "facility": "ST DAVIDS NORTH AUSTIN MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "12/1/2028",
+      "tsa": "O",
+      "city": "AUSTIN",
+      "zip": "78758"
+    },
+    {
+      "facility": "ST JOSEPH HEALTH - COLLEGE STATION HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "6/1/2027",
+      "tsa": "N",
+      "city": "COLLEGE STATION",
+      "zip": "77845"
+    },
+    {
+      "facility": "ST LUKES BAPTIST HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "4/1/2028",
+      "tsa": "P",
+      "city": "SAN ANTONIO",
+      "zip": "78229"
+    },
+    {
+      "facility": "STARR COUNTY MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "7/1/2028",
+      "tsa": "V",
+      "city": "RIO GRANDE CITY",
+      "zip": "78582"
+    },
+    {
+      "facility": "STEPHENS MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "12/1/2029",
+      "tsa": "D",
+      "city": "BRECKENRIDGE",
+      "zip": "76424"
+    },
+    {
+      "facility": "SWEENY COMMUNITY HOSPITAL",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "10/1/2029",
+      "tsa": "R",
+      "city": "SWEENY",
+      "zip": "77480"
+    },
+    {
+      "facility": "SWISHER MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "1/1/2029",
+      "tsa": "A",
+      "city": "TULIA",
+      "zip": "79088"
+    },
+    {
+      "facility": "TEXAS CHILDRENS HOSPITAL THE WOODLANDS",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "8/1/2029",
+      "tsa": "Q",
+      "city": "THE WOODLANDS",
+      "zip": "77384"
+    },
+    {
+      "facility": "TEXAS CHILDRENS HOSPITAL WEST CAMPUS",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "4/1/2029",
+      "tsa": "Q",
+      "city": "HOUSTON",
+      "zip": "77094"
+    },
+    {
+      "facility": "TEXAS HEALTH HARRIS METHODIST HOSPITAL AZLE",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "5/1/2027",
+      "tsa": "E",
+      "city": "AZLE",
+      "zip": "76020"
+    },
+    {
+      "facility": "TEXAS HEALTH HARRIS METHODIST HOSPITAL CLEBURNE",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "7/1/2027",
+      "tsa": "E",
+      "city": "CLEBURNE",
+      "zip": "76033"
+    },
+    {
+      "facility": "TEXAS HEALTH HARRIS METHODIST HOSPITAL STEPHENVILLE",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "7/1/2027",
+      "tsa": "E",
+      "city": "STEPHENVILLE",
+      "zip": "76401"
+    },
+    {
+      "facility": "TEXAS HEALTH HOSPITAL MANSFIELD",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "6/1/2028",
+      "tsa": "E",
+      "city": "MANSFIELD",
+      "zip": "76063"
+    },
+    {
+      "facility": "THE HOSPITALS OF PROVIDENCE SIERRA CAMPUS",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "4/1/2029",
+      "tsa": "I",
+      "city": "EL PASO",
+      "zip": "79902"
+    },
+    {
+      "facility": "THE HOSPITALS OF PROVIDENCE TRANSMOUNTAIN CAMPUS",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "11/1/2027",
+      "tsa": "I",
+      "city": "EL PASO",
+      "zip": "79911"
+    },
+    {
+      "facility": "TMC BONHAM HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "12/1/2027",
+      "tsa": "E",
+      "city": "BONHAM",
+      "zip": "75418"
+    },
+    {
+      "facility": "TYLER COUNTY HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "11/1/2028",
+      "tsa": "H",
+      "city": "WOODVILLE",
+      "zip": "75979"
+    },
+    {
+      "facility": "UMC HEALTH & WELLNESS HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "3/1/2028",
+      "tsa": "B",
+      "city": "LUBBOCK",
+      "zip": "79424"
+    },
+    {
+      "facility": "UNIVERSITY OF TEXAS HEALTH SCIENCE CENTER AT TYLER",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "3/1/2029",
+      "tsa": "G",
+      "city": "TYLER",
+      "zip": "75708"
+    },
+    {
+      "facility": "UNIVERSITY OF TEXAS MEDICAL BRANCH - ANGLETON",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "5/1/2028",
+      "tsa": "R",
+      "city": "ANGLETON",
+      "zip": "77515"
+    },
+    {
+      "facility": "UT HEALTH EAST TEXAS ATHENS HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "1/1/2028",
+      "tsa": "G",
+      "city": "ATHENS",
+      "zip": "75751"
+    },
+    {
+      "facility": "UT HEALTH EAST TEXAS CARTHAGE HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "7/1/2028",
+      "tsa": "G",
+      "city": "CARTHAGE",
+      "zip": "75633"
+    },
+    {
+      "facility": "UT HEALTH EAST TEXAS HENDERSON HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "4/1/2028",
+      "tsa": "G",
+      "city": "HENDERSON",
+      "zip": "75652"
+    },
+    {
+      "facility": "UT HEALTH EAST TEXAS JACKSONVILLE HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "7/1/2028",
+      "tsa": "G",
+      "city": "JACKSONVILLE",
+      "zip": "75766"
+    },
+    {
+      "facility": "UT HEALTH EAST TEXAS PITTSBURG HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "12/1/2027",
+      "tsa": "G",
+      "city": "PITTSBURG",
+      "zip": "75686"
+    },
+    {
+      "facility": "UT HEALTH EAST TEXAS QUITMAN HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "3/1/2028",
+      "tsa": "G",
+      "city": "QUITMAN",
+      "zip": "75783"
+    },
+    {
+      "facility": "UVALDE MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "8/1/2028",
+      "tsa": "P",
+      "city": "UVALDE",
+      "zip": "78801"
+    },
+    {
+      "facility": "VAL VERDE REGIONAL MEDICAL CENTER",
+      "level": 4,
+      "status": "PROBATIONARY",
+      "expiration": "7/1/2029",
+      "tsa": "P",
+      "city": "DEL RIO",
+      "zip": "78840"
+    },
+    {
+      "facility": "WARD MEMORIAL HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "5/1/2029",
+      "tsa": "J",
+      "city": "MONAHANS",
+      "zip": "79756"
+    },
+    {
+      "facility": "WHITE ROCK MEDICAL CENTER",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "12/1/2026",
+      "tsa": "E",
+      "city": "DALLAS",
+      "zip": "75218"
+    },
+    {
+      "facility": "WILBARGER GENERAL HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "12/1/2026",
+      "tsa": "C",
+      "city": "VERNON",
+      "zip": "76384"
+    },
+    {
+      "facility": "WILLIAM P CLEMENTS UNIVERSITY HOSPITAL",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "9/1/2028",
+      "tsa": "E",
+      "city": "DALLAS",
+      "zip": "75390"
+    },
+    {
+      "facility": "WOMANS HOSPITAL OF TEXAS",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "12/1/2027",
+      "tsa": "Q",
+      "city": "HOUSTON",
+      "zip": "77054"
+    },
+    {
+      "facility": "WOODLAND HEIGHTS MEDICAL CENTER",
+      "level": 4,
+      "status": "STANDARD",
+      "expiration": "5/1/2028",
+      "tsa": "H",
+      "city": "LUFKIN",
+      "zip": "75904"
+    },
+    {
+      "facility": "YOAKUM COMMUNITY HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "11/1/2029",
+      "tsa": "S",
+      "city": "YOAKUM",
+      "zip": "77995"
+    },
+    {
+      "facility": "YOAKUM COUNTY HOSPITAL",
+      "level": 4,
+      "status": "CONTINGENT",
+      "expiration": "7/1/2027",
+      "tsa": "B",
+      "city": "DENVER CITY",
+      "zip": "79323"
+    }
+  ]
+}
