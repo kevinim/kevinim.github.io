@@ -9,7 +9,8 @@ const root = path.join(__dirname, '..');
 function actual() {
   const data = JSON.parse(fs.readFileSync(path.join(root, 'school-data-provenance.json'), 'utf8'));
   const { DISTRICT_REGISTRY } = require('../district-registry.js');
-  return { data, registry: DISTRICT_REGISTRY };
+  const supplementary = [JSON.parse(fs.readFileSync(path.join(root, 'data/mckinney-2026-27-provenance.json'), 'utf8'))];
+  return { data, registry: DISTRICT_REGISTRY, supplementary };
 }
 
 function sample() {
@@ -36,9 +37,10 @@ function sample() {
 }
 
 test('current repository source claims have structurally consistent registry', () => {
-  const { data, registry } = actual();
+  const { data, registry, supplementary } = actual();
   const r = auditSchoolProvenance(data, registry, {
     readLocal: name => JSON.parse(fs.readFileSync(path.join(root, name), 'utf8')),
+    supplementary,
   });
   assert.deepEqual(r.errors, []);
   assert.equal(r.summary.independentlyCurrentClaimed, 2);
