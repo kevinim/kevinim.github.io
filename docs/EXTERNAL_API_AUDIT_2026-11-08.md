@@ -15,7 +15,7 @@ Linked issue: https://github.com/kevinim/kevinim.github.io/issues/74
 | Optional Collin parcel lookup | Explicit user action | Home pin coordinates to Collin CAD ArcGIS; fields OBJECTID, situsConcat, propYear only |
 | Google Maps links | Click external directions link | Origin/destination passed to Google |
 | Alternate reviewed.html | Destination search and routing | Destination text to Nominatim, coordinates to OSRM; verify privacy notice or retire this entrypoint |
-| Basemap | Display/move map | Map tile requests, HTTP metadata to OSM or Esri |
+| Basemap | Display/move map | Map tile requests, HTTP metadata to OSM or Esri; alternate reviewed.html uses a legacy Leaflet {s}.tile.openstreetmap.org subdomain URL |
 
 ## Official usage-policy checks
 
@@ -23,7 +23,7 @@ Linked issue: https://github.com/kevinim/kevinim.github.io/issues/74
 
 **OSRM public demo**: reasonable **noncommercial** use, not over 1 request/sec, no SLA or guaranteed availability/updates. Source: https://github.com/Project-OSRM/osrm-backend/wiki/Demo-server
 
-**OSM tiles**: HTTPS endpoint, attribution visible on all viewports, suitable Referer and caching, no bulk/offline prefetch. Source: https://operations.osmfoundation.org/policies/tiles/
+**OSM tiles**: Official policy now specifies exactly https://tile.openstreetmap.org/{z}/{x}/{y}.png (not the historical {s}.tile.openstreetmap.org template), attribution visible on all viewports, suitable Referer and caching, no bulk/offline prefetch. Main uses canonical tile address but reviewed.html uses legacy subdomains; flagged as follow-up to correct in a separate runtime PR. Source: https://operations.osmfoundation.org/policies/tiles/
 
 **Esri geocoding**: current house search sends forStorage=false; confirm correct tier, billing, authentication, license, result retention and use cases before broad public exposure. Source: https://developers.arcgis.com/rest/geocode/find-address-candidates/
 
@@ -38,7 +38,7 @@ Linked issue: https://github.com/kevinim/kevinim.github.io/issues/74
 ## Follow-ups required for external promotion
 
 1. Decide on a licensed, production-suitable geocoding/routing provider or maintained proxy with global quotas, caching, abuse limits and documented data handling. Public demo services cannot guarantee reliability at scale.
-2. Review and improve disclosure for each address/office/parcel flow, including alternate reviewed.html; do not promise providers delete submitted coordinates or text.
+2. Review and improve disclosure for each address/office/parcel flow, including alternate reviewed.html; migrate that page's legacy {s}.tile.openstreetmap.org URL to the canonical endpoint or retire the legacy page. Do not promise providers delete submitted coordinates or text.
 3. Test provider 429/503/timeout and graceful fallback in a separate runtime PR coordinated with Claude. Preserve all school markers and map controls.
 4. Request actual provider quotes/capacity before calculating cost. Do not invent pricing or hidden usage entitlements.
 5. Run mobile/desktop attribution and browser network verification before any GO to public marketing.
