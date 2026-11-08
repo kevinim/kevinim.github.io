@@ -1,6 +1,6 @@
 # P42 — Winter Storm / Electric Grid resilience research-only staging
 
-**Status as of November 8, 2026:** state-level reliability figures and ERCOT regional event reference captured; local grid stability, winter hazard tract scores, and historical neighborhood outages **NOT IMPLEMENTED**. No map/UI integration, no address scores.
+**Status updated 2026-11-08:** Texas-state EIA reliability metrics are **visible in a standalone informational panel** (`features/dashboard-extras.js`, PR #63). There is no local grid stability, winter hazard tract scores, historical neighborhood outage UI, map risk layer or address score. The ERCOT event reference remains a staged source, not a map.
 
 ## Actual data saved
 
