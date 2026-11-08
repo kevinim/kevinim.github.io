@@ -1,6 +1,6 @@
 # P42 — Winter Storm / Electric Grid resilience research-only staging
 
-**Status updated 2026-11-08:** Texas-state EIA reliability metrics are **visible in a standalone informational panel** (`features/dashboard-extras.js`, PR #63). There is no local grid stability, winter hazard tract scores, historical neighborhood outage UI, map risk layer or address score. The ERCOT event reference remains a staged source, not a map.
+**Status updated 2026-11-08:** Texas-state EIA reliability remains a standalone **informational panel** (PR #63). FEMA NRI December 2025 relative Cold Wave / Ice Storm / Winter Weather **Census tract map layer** is now deployed (PR #66). There is still no licensed verified utility delivery-territory layer, local historical outage duration, neighborhood blackout probability or address score. The ERCOT event reference remains a staged regional source.
 
 ## Actual data saved
 
@@ -29,3 +29,9 @@
 Test: `node --test tests/p42-resilience-scope.test.cjs` — refuses to display statewide data as ZIP/address/utility outage score.
 
 This branch does **not** edit `index.html`, `HANDOFF.md`, school, crime, or layout files.
+
+## PR #66 mapped FEMA winter weather (not electric outages)
+
+- `fema-nri-dfw-winter-2025.json` contains 1,734 FEMA NRI December 2025 Census tracts joined to the already deployed `data/phase2a-fema-nri-dfw-2025.geojson` geometry by exact tract FIPS; fields CWAV, ISTM, WNTW risk scores and published rating categories. No-color means missing or unrated, **not zero**.
+- `features/resilience/winter-map.js` is now deployed as a separate Leaflet risk layer, sharing existing polygon shape without changing school or flood geography; explicit controls for Cold Wave, Ice Storm and Winter Weather.
+- **Do not confuse this map with a distribution-system outage map.** Statewide EIA reliability cannot be mapped to a ZIP without utility-specific evidence. PUCT unofficial service territory polygons include licensed-source/Platts restrictions in metadata. The public Oncor service-area map is a safer external lookup until licensing and address-level utility verification are resolved.
