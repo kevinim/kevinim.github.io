@@ -4,7 +4,7 @@
 **Production:** https://kevinim.github.io/  
 **Repository:** `kevinim/kevinim.github.io` (`main`)  
 **Decision captured:** 2026-11-07, America/New_York  
-**Status:** **PLAN APPROVED — NOT IMPLEMENTED.** No functionality, ingestion, or production deployment is claimed by this handoff.
+**Status:** P40–P42 remain planned/unimplemented; P43 has **partial official aggregate DATA staging** in `data/crime/` (research only, not map/UI). No P43 safety score, visualization, or production feature is implemented. See the P43 status addendum below.
 
 ## 0. Read this before making changes
 
@@ -23,7 +23,7 @@ The user approved four proposed capabilities:
 | **P40** | Vehicle commute and DFW toll cost simulation, peak congestion | Implement after P0 stability and source feasibility | Proposed; no implementation |
 | **P41** | Hospital / emergency-care accessibility | Implement after P40, or in parallel if isolated | Proposed; no implementation |
 | **P42** | Cold-wave, winter storm and electric-grid resilience | Implement with evidence-tier labels; never invent neighborhood outage scores | Proposed; no implementation |
-| **P43** | Crime Map **data acquisition and normalization only** | Begin research/collection; **do not publish a crime map or safety score yet** | Proposed; source candidates identified, data not ingested |
+| **P43** | Crime Map **data acquisition and normalization only** | Begin research/collection; **do not publish a crime map or safety score yet** | P43 **partial aggregate dataset staged** (Dallas, Fort Worth, Frisco, Plano, McKinney); other cities/data gaps unresolved; map not implemented |
 
 Preserve existing school, school-boundary, address lookup, and FEMA flood work. These new features are additional decision-support layers, not replacements.
 
@@ -133,3 +133,15 @@ A documented per-city/source coverage matrix, permitted raw downloads or machine
 - Existing active PRs, code state, data freshness and deployment status can change; re-check before executing.
 
 This document is an execution backlog and context bridge, not a claim of built features.
+
+## P43 pilot acquisition status — update 2026-11-07
+
+The original handoff above recorded planning decisions before acquisition. A subsequent **P43 data-only pilot** now stages seven source-specific aggregate files under [data/crime/](data/crime/) and a provenance matrix in [data/crime/README.md](data/crime/README.md):
+
+- Dallas: 2021–2026 published offense-category counts (317 groups); 2025 ZIP × category counts (1,216 groups), with small cells suppressed. **Not full crime coverage** due to source public-release exclusions.
+- Fort Worth: 2021–2026 published offense-type counts (3,764 groups); 2025 Police Beat totals (104 retained groups). A `Beat × Offense` API grouped query silently ignored paging offsets, so **do not use it** until redesigned.
+- Frisco: 2025–2026 offense group aggregates (54 groups), only Nov 2025–Nov 2026 represented in current source; both years partial.
+- Plano and McKinney: 2021–2025 annual totals transcribed from official police year-end PDF reports (5 rows each); category definitions are **not fully comparable across cities**.
+- **Unresolved:** Allen authoritative counts and conflicting secondary-source numbers; Prosper/Celina/Lewisville/CFB and other DFW; sub-city geometries, normalization, source licensing/refresh policies, population denominators, completeness by offense/year.
+
+Reproducible snapshot validation: `node scripts/check-crime-staging.mjs`; GitHub Actions `.github/workflows/verify-crime-staging.yml` (PR/push data-only QA). The row count is **5,465 aggregate groups**, not incidents. No names, incident IDs, precise addresses or coordinates saved; no JS map integration/deployment authorized. This addendum documents **partial progress only**, not completion of P43 or the map.

@@ -1,0 +1,297 @@
+{
+  "metadata": {
+    "sourceId": "frisco-crime-map-feature-server-1",
+    "publisher": "City of Frisco GIS / Frisco Police Department",
+    "acquiredOn": "2026-11-07",
+    "endpoint": "https://maps.friscotexas.gov/gis/rest/services/Public/Crime_Mapping_View__Dashboard/FeatureServer/1",
+    "sourceDateReportedMin": "2025-11-06",
+    "sourceDateReportedMax": "2026-11-06",
+    "sourceRangeNote": "Observed source min/max dates; this is NOT five full years or even a full 2025 calendar year",
+    "coveredYears": [
+      2025,
+      2026
+    ],
+    "partialYears": [
+      2025,
+      2026
+    ],
+    "unit": "published offense-group record counts per calendar year by DateReported",
+    "aggregation": "count(OBJECTID) grouped by OffenseGroup",
+    "sourceTotalRecordCount": 5806,
+    "privacy": "City says public crime dashboard masks residential address to closest block",
+    "limitations": "The website filters to recent 30-day view, but source FeatureServer currently contains a longer date range; use date filtering and source range; group labels are not normalized FBI NIBRS codes. No per-neighborhood incidents or score should be generated from this staging.",
+    "publicDisplay": false
+  },
+  "records": [
+    {
+      "year": 2025,
+      "sourceCategory": "Arson",
+      "offenseRows": 1
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Assault",
+      "offenseRows": 140
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Blackmail",
+      "offenseRows": 2
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Burglary",
+      "offenseRows": 11
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Burglary of Vehicle",
+      "offenseRows": 40
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Counterfeit/Forgery",
+      "offenseRows": 12
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Disorderly Conduct",
+      "offenseRows": 11
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Drug Paraphernalia",
+      "offenseRows": 48
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Drugs",
+      "offenseRows": 58
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "DUI",
+      "offenseRows": 70
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Embezzlement",
+      "offenseRows": 6
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Fraud",
+      "offenseRows": 104
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Harassment",
+      "offenseRows": 35
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Hit and Run",
+      "offenseRows": 27
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Homicide",
+      "offenseRows": 1
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Kidnapping/Unlawful Restr",
+      "offenseRows": 4
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Liquor Law Violation",
+      "offenseRows": 4
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Motor Vehicle Theft",
+      "offenseRows": 22
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Prostitution",
+      "offenseRows": 2
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Robbery",
+      "offenseRows": 4
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Sexual Assault",
+      "offenseRows": 18
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Theft",
+      "offenseRows": 229
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Trespassing",
+      "offenseRows": 12
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Vandalism",
+      "offenseRows": 48
+    },
+    {
+      "year": 2025,
+      "sourceCategory": "Weapons",
+      "offenseRows": 12
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Animal Cruelty",
+      "offenseRows": 8
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Arson",
+      "offenseRows": 2
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Assault",
+      "offenseRows": 682
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Blackmail",
+      "offenseRows": 36
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Bribery",
+      "offenseRows": 1
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Burglary",
+      "offenseRows": 98
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Burglary of Vehicle",
+      "offenseRows": 215
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Counterfeit/Forgery",
+      "offenseRows": 61
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Disorderly Conduct",
+      "offenseRows": 32
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Drug Paraphernalia",
+      "offenseRows": 251
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Drugs",
+      "offenseRows": 291
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "DUI",
+      "offenseRows": 378
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Embezzlement",
+      "offenseRows": 25
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Fraud",
+      "offenseRows": 618
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Hacking",
+      "offenseRows": 19
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Harassment",
+      "offenseRows": 185
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Hit and Run",
+      "offenseRows": 320
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Human Trafficking",
+      "offenseRows": 2
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Illegal Gambling",
+      "offenseRows": 1
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Kidnapping/Unlawful Restr",
+      "offenseRows": 16
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Liquor Law Violation",
+      "offenseRows": 10
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Motor Vehicle Theft",
+      "offenseRows": 80
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Prostitution",
+      "offenseRows": 8
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Robbery",
+      "offenseRows": 18
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Sexual Assault",
+      "offenseRows": 59
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Theft",
+      "offenseRows": 1100
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Trespassing",
+      "offenseRows": 59
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Vandalism",
+      "offenseRows": 244
+    },
+    {
+      "year": 2026,
+      "sourceCategory": "Weapons",
+      "offenseRows": 66
+    }
+  ]
+}

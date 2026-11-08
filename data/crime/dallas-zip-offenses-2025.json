@@ -1,0 +1,6099 @@
+{
+  "metadata": {
+    "sourceId": "dallas-socrata-qv6i-rri7",
+    "publisher": "City of Dallas / Dallas Police Department",
+    "acquiredOn": "2026-11-07",
+    "endpoint": "https://www.dallasopendata.com/resource/qv6i-rri7.json",
+    "query": "https://www.dallasopendata.com/resource/qv6i-rri7.json?%24select=zip_code%2Cnibrs_code%2Ccount(*)%20AS%20offense_rows&%24where=year1%3D'2025'%20and%20zip_code%20is%20not%20null&%24group=zip_code%2Cnibrs_code&%24order=zip_code%2Cnibrs_code&%24limit=20000",
+    "geography": "reported ZIP code (not census tract or neighborhood)",
+    "period": "2025 occurrence-year only",
+    "unit": "published offense rows by ZIP and NIBRS code",
+    "minimumCellCount": 5,
+    "recordsBelowThresholdSuppressed": 563,
+    "droppedNon75ZipGroups": 14,
+    "limitations": "ZIPs are postal geography, not neighborhoods; small cells omitted; not suitable for per-capita comparison without consistent denominator and dataset coverage.",
+    "publicDisplay": false
+  },
+  "records": [
+    {
+      "zip": "75007",
+      "offenseCode": "999",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75019",
+      "offenseCode": "23D",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75019",
+      "offenseCode": "23F",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75019",
+      "offenseCode": "23G",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75019",
+      "offenseCode": "23H",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75019",
+      "offenseCode": "240",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75019",
+      "offenseCode": "290",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75019",
+      "offenseCode": "999",
+      "offenseRows": 22
+    },
+    {
+      "zip": "75051",
+      "offenseCode": "999",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75052",
+      "offenseCode": "999",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75116",
+      "offenseCode": "240",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75116",
+      "offenseCode": "999",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75134",
+      "offenseCode": "240",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75201",
+      "offenseCode": null,
+      "offenseRows": 70
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "120",
+      "offenseRows": 32
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "13A",
+      "offenseRows": 57
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "13B",
+      "offenseRows": 133
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "13C",
+      "offenseRows": 68
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "220",
+      "offenseRows": 82
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "23A",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "23C",
+      "offenseRows": 39
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "23D",
+      "offenseRows": 58
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "23F",
+      "offenseRows": 680
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "23G",
+      "offenseRows": 96
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "23H",
+      "offenseRows": 154
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "240",
+      "offenseRows": 646
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "250",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "26A",
+      "offenseRows": 37
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "26B",
+      "offenseRows": 13
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "26E",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "26F",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "270",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "290",
+      "offenseRows": 252
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "35A",
+      "offenseRows": 97
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "35B",
+      "offenseRows": 35
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "520",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "90C",
+      "offenseRows": 40
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "90D",
+      "offenseRows": 53
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "90J",
+      "offenseRows": 56
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "90Z",
+      "offenseRows": 386
+    },
+    {
+      "zip": "75201",
+      "offenseCode": "999",
+      "offenseRows": 1158
+    },
+    {
+      "zip": "75202",
+      "offenseCode": null,
+      "offenseRows": 36
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "120",
+      "offenseRows": 39
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "13A",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "13B",
+      "offenseRows": 70
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "13C",
+      "offenseRows": 40
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "220",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "23C",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "23D",
+      "offenseRows": 19
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "23F",
+      "offenseRows": 364
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "23G",
+      "offenseRows": 44
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "23H",
+      "offenseRows": 80
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "240",
+      "offenseRows": 399
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "26A",
+      "offenseRows": 36
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "26B",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "26F",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "290",
+      "offenseRows": 137
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "35A",
+      "offenseRows": 164
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "35B",
+      "offenseRows": 30
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "520",
+      "offenseRows": 26
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "90C",
+      "offenseRows": 33
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "90D",
+      "offenseRows": 34
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "90J",
+      "offenseRows": 72
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "90Z",
+      "offenseRows": 283
+    },
+    {
+      "zip": "75202",
+      "offenseCode": "999",
+      "offenseRows": 764
+    },
+    {
+      "zip": "75203",
+      "offenseCode": null,
+      "offenseRows": 7
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "120",
+      "offenseRows": 37
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "13A",
+      "offenseRows": 55
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "13B",
+      "offenseRows": 39
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "13C",
+      "offenseRows": 33
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "220",
+      "offenseRows": 103
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "23C",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "23D",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "23F",
+      "offenseRows": 123
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "23G",
+      "offenseRows": 58
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "23H",
+      "offenseRows": 96
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "240",
+      "offenseRows": 433
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "26A",
+      "offenseRows": 21
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "280",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "290",
+      "offenseRows": 128
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "35A",
+      "offenseRows": 145
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "35B",
+      "offenseRows": 39
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "520",
+      "offenseRows": 27
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "90C",
+      "offenseRows": 23
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "90D",
+      "offenseRows": 30
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "90J",
+      "offenseRows": 27
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "90Z",
+      "offenseRows": 133
+    },
+    {
+      "zip": "75203",
+      "offenseCode": "999",
+      "offenseRows": 570
+    },
+    {
+      "zip": "75204",
+      "offenseCode": null,
+      "offenseRows": 55
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "120",
+      "offenseRows": 76
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "13A",
+      "offenseRows": 53
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "13B",
+      "offenseRows": 98
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "13C",
+      "offenseRows": 73
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "200",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "220",
+      "offenseRows": 259
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "23A",
+      "offenseRows": 21
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "23C",
+      "offenseRows": 242
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "23D",
+      "offenseRows": 73
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "23F",
+      "offenseRows": 791
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "23G",
+      "offenseRows": 156
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "23H",
+      "offenseRows": 273
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "240",
+      "offenseRows": 1024
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "26A",
+      "offenseRows": 46
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "26B",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "26E",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "26F",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "270",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "280",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "290",
+      "offenseRows": 286
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "35A",
+      "offenseRows": 137
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "35B",
+      "offenseRows": 43
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "520",
+      "offenseRows": 36
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "90C",
+      "offenseRows": 44
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "90D",
+      "offenseRows": 61
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "90J",
+      "offenseRows": 43
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "90Z",
+      "offenseRows": 313
+    },
+    {
+      "zip": "75204",
+      "offenseCode": "999",
+      "offenseRows": 1079
+    },
+    {
+      "zip": "75205",
+      "offenseCode": "13B",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75205",
+      "offenseCode": "220",
+      "offenseRows": 26
+    },
+    {
+      "zip": "75205",
+      "offenseCode": "23C",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75205",
+      "offenseCode": "23D",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75205",
+      "offenseCode": "23F",
+      "offenseRows": 94
+    },
+    {
+      "zip": "75205",
+      "offenseCode": "23G",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75205",
+      "offenseCode": "23H",
+      "offenseRows": 41
+    },
+    {
+      "zip": "75205",
+      "offenseCode": "240",
+      "offenseRows": 108
+    },
+    {
+      "zip": "75205",
+      "offenseCode": "26B",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75205",
+      "offenseCode": "290",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75205",
+      "offenseCode": "35A",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75205",
+      "offenseCode": "90C",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75205",
+      "offenseCode": "90Z",
+      "offenseRows": 39
+    },
+    {
+      "zip": "75205",
+      "offenseCode": "999",
+      "offenseRows": 112
+    },
+    {
+      "zip": "75206",
+      "offenseCode": null,
+      "offenseRows": 42
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "120",
+      "offenseRows": 39
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "13A",
+      "offenseRows": 33
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "13B",
+      "offenseRows": 51
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "13C",
+      "offenseRows": 49
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "220",
+      "offenseRows": 196
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "23A",
+      "offenseRows": 20
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "23C",
+      "offenseRows": 210
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "23D",
+      "offenseRows": 69
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "23F",
+      "offenseRows": 661
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "23G",
+      "offenseRows": 147
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "23H",
+      "offenseRows": 246
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "240",
+      "offenseRows": 890
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "250",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "26A",
+      "offenseRows": 52
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "26B",
+      "offenseRows": 20
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "26E",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "26F",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "270",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "280",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "290",
+      "offenseRows": 196
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "35A",
+      "offenseRows": 77
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "35B",
+      "offenseRows": 26
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "520",
+      "offenseRows": 13
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "90C",
+      "offenseRows": 29
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "90D",
+      "offenseRows": 66
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "90F",
+      "offenseRows": 29
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "90J",
+      "offenseRows": 38
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "90Z",
+      "offenseRows": 283
+    },
+    {
+      "zip": "75206",
+      "offenseCode": "999",
+      "offenseRows": 932
+    },
+    {
+      "zip": "75207",
+      "offenseCode": null,
+      "offenseRows": 16
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "120",
+      "offenseRows": 19
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "13A",
+      "offenseRows": 28
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "13B",
+      "offenseRows": 34
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "13C",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "220",
+      "offenseRows": 40
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "23C",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "23D",
+      "offenseRows": 21
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "23F",
+      "offenseRows": 465
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "23G",
+      "offenseRows": 81
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "23H",
+      "offenseRows": 95
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "240",
+      "offenseRows": 524
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "26A",
+      "offenseRows": 28
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "26E",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "290",
+      "offenseRows": 116
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "35A",
+      "offenseRows": 87
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "35B",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "520",
+      "offenseRows": 23
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "90C",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "90D",
+      "offenseRows": 32
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "90J",
+      "offenseRows": 25
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "90Z",
+      "offenseRows": 183
+    },
+    {
+      "zip": "75207",
+      "offenseCode": "999",
+      "offenseRows": 467
+    },
+    {
+      "zip": "75208",
+      "offenseCode": null,
+      "offenseRows": 24
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "120",
+      "offenseRows": 61
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "13A",
+      "offenseRows": 51
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "13B",
+      "offenseRows": 77
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "13C",
+      "offenseRows": 40
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "220",
+      "offenseRows": 225
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "23C",
+      "offenseRows": 40
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "23D",
+      "offenseRows": 36
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "23F",
+      "offenseRows": 326
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "23G",
+      "offenseRows": 113
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "23H",
+      "offenseRows": 149
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "240",
+      "offenseRows": 851
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "250",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "26A",
+      "offenseRows": 33
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "26B",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "26E",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "26F",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "270",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "280",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "290",
+      "offenseRows": 205
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "35A",
+      "offenseRows": 146
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "35B",
+      "offenseRows": 33
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "520",
+      "offenseRows": 45
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "720",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "90C",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "90D",
+      "offenseRows": 78
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "90F",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "90J",
+      "offenseRows": 67
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "90Z",
+      "offenseRows": 244
+    },
+    {
+      "zip": "75208",
+      "offenseCode": "999",
+      "offenseRows": 843
+    },
+    {
+      "zip": "75209",
+      "offenseCode": null,
+      "offenseRows": 7
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "120",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "13A",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "13B",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "13C",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "220",
+      "offenseRows": 59
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "23C",
+      "offenseRows": 139
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "23D",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "23F",
+      "offenseRows": 101
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "23G",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "23H",
+      "offenseRows": 58
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "240",
+      "offenseRows": 201
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "26A",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "26E",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "290",
+      "offenseRows": 45
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "35A",
+      "offenseRows": 41
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "90C",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "90D",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "90J",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "90Z",
+      "offenseRows": 67
+    },
+    {
+      "zip": "75209",
+      "offenseCode": "999",
+      "offenseRows": 281
+    },
+    {
+      "zip": "75210",
+      "offenseCode": null,
+      "offenseRows": 12
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "120",
+      "offenseRows": 40
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "13A",
+      "offenseRows": 56
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "13B",
+      "offenseRows": 67
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "13C",
+      "offenseRows": 27
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "220",
+      "offenseRows": 78
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "23D",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "23F",
+      "offenseRows": 67
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "23G",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "23H",
+      "offenseRows": 68
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "240",
+      "offenseRows": 200
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "26A",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "280",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "290",
+      "offenseRows": 88
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "35A",
+      "offenseRows": 263
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "35B",
+      "offenseRows": 23
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "520",
+      "offenseRows": 54
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "90C",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "90D",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "90J",
+      "offenseRows": 21
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "90Z",
+      "offenseRows": 104
+    },
+    {
+      "zip": "75210",
+      "offenseCode": "999",
+      "offenseRows": 469
+    },
+    {
+      "zip": "75211",
+      "offenseCode": null,
+      "offenseRows": 19
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "120",
+      "offenseRows": 63
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "13A",
+      "offenseRows": 81
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "13B",
+      "offenseRows": 54
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "13C",
+      "offenseRows": 59
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "200",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "220",
+      "offenseRows": 180
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "23C",
+      "offenseRows": 215
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "23D",
+      "offenseRows": 27
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "23F",
+      "offenseRows": 319
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "23G",
+      "offenseRows": 166
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "23H",
+      "offenseRows": 162
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "240",
+      "offenseRows": 1121
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "250",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "26A",
+      "offenseRows": 71
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "26B",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "26E",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "26F",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "270",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "280",
+      "offenseRows": 22
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "290",
+      "offenseRows": 238
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "35A",
+      "offenseRows": 161
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "35B",
+      "offenseRows": 43
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "520",
+      "offenseRows": 53
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "90C",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "90D",
+      "offenseRows": 56
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "90F",
+      "offenseRows": 57
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "90J",
+      "offenseRows": 70
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "90Z",
+      "offenseRows": 235
+    },
+    {
+      "zip": "75211",
+      "offenseCode": "999",
+      "offenseRows": 1269
+    },
+    {
+      "zip": "75212",
+      "offenseCode": null,
+      "offenseRows": 14
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "09A",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "120",
+      "offenseRows": 46
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "13A",
+      "offenseRows": 57
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "13B",
+      "offenseRows": 57
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "13C",
+      "offenseRows": 46
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "220",
+      "offenseRows": 109
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "23C",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "23D",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "23F",
+      "offenseRows": 197
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "23G",
+      "offenseRows": 68
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "23H",
+      "offenseRows": 127
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "240",
+      "offenseRows": 558
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "26A",
+      "offenseRows": 23
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "26B",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "270",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "280",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "290",
+      "offenseRows": 187
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "35A",
+      "offenseRows": 168
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "35B",
+      "offenseRows": 30
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "520",
+      "offenseRows": 54
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "90C",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "90D",
+      "offenseRows": 27
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "90F",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "90J",
+      "offenseRows": 35
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "90Z",
+      "offenseRows": 175
+    },
+    {
+      "zip": "75212",
+      "offenseCode": "999",
+      "offenseRows": 795
+    },
+    {
+      "zip": "75214",
+      "offenseCode": null,
+      "offenseRows": 15
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "120",
+      "offenseRows": 21
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "13A",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "13B",
+      "offenseRows": 21
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "13C",
+      "offenseRows": 20
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "220",
+      "offenseRows": 140
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "23C",
+      "offenseRows": 39
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "23D",
+      "offenseRows": 13
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "23F",
+      "offenseRows": 257
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "23G",
+      "offenseRows": 48
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "23H",
+      "offenseRows": 149
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "240",
+      "offenseRows": 349
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "26A",
+      "offenseRows": 19
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "26B",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "26E",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "26F",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "290",
+      "offenseRows": 104
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "35A",
+      "offenseRows": 78
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "35B",
+      "offenseRows": 39
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "520",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "90C",
+      "offenseRows": 23
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "90D",
+      "offenseRows": 29
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "90F",
+      "offenseRows": 13
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "90J",
+      "offenseRows": 20
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "90Z",
+      "offenseRows": 107
+    },
+    {
+      "zip": "75214",
+      "offenseCode": "999",
+      "offenseRows": 446
+    },
+    {
+      "zip": "75215",
+      "offenseCode": null,
+      "offenseRows": 22
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "09A",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "120",
+      "offenseRows": 78
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "13A",
+      "offenseRows": 123
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "13B",
+      "offenseRows": 100
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "13C",
+      "offenseRows": 70
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "220",
+      "offenseRows": 143
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "23C",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "23D",
+      "offenseRows": 22
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "23F",
+      "offenseRows": 180
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "23G",
+      "offenseRows": 42
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "23H",
+      "offenseRows": 171
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "240",
+      "offenseRows": 382
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "250",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "26A",
+      "offenseRows": 66
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "26B",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "26E",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "26F",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "270",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "280",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "290",
+      "offenseRows": 209
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "35A",
+      "offenseRows": 1072
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "35B",
+      "offenseRows": 100
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "39A",
+      "offenseRows": 35
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "520",
+      "offenseRows": 95
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "90C",
+      "offenseRows": 25
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "90D",
+      "offenseRows": 23
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "90F",
+      "offenseRows": 51
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "90J",
+      "offenseRows": 50
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "90Z",
+      "offenseRows": 383
+    },
+    {
+      "zip": "75215",
+      "offenseCode": "999",
+      "offenseRows": 1315
+    },
+    {
+      "zip": "75216",
+      "offenseCode": null,
+      "offenseRows": 28
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "09A",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "120",
+      "offenseRows": 156
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "13A",
+      "offenseRows": 170
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "13B",
+      "offenseRows": 109
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "13C",
+      "offenseRows": 117
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "200",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "220",
+      "offenseRows": 206
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "23C",
+      "offenseRows": 22
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "23D",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "23F",
+      "offenseRows": 216
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "23G",
+      "offenseRows": 75
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "23H",
+      "offenseRows": 180
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "240",
+      "offenseRows": 927
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "250",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "26A",
+      "offenseRows": 60
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "26B",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "26E",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "26F",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "270",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "280",
+      "offenseRows": 44
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "290",
+      "offenseRows": 402
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "35A",
+      "offenseRows": 522
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "35B",
+      "offenseRows": 156
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "520",
+      "offenseRows": 97
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "720",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "90C",
+      "offenseRows": 34
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "90D",
+      "offenseRows": 55
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "90F",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "90J",
+      "offenseRows": 65
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "90Z",
+      "offenseRows": 286
+    },
+    {
+      "zip": "75216",
+      "offenseCode": "999",
+      "offenseRows": 1599
+    },
+    {
+      "zip": "75217",
+      "offenseCode": null,
+      "offenseRows": 14
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "09A",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "100",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "120",
+      "offenseRows": 168
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "13A",
+      "offenseRows": 161
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "13B",
+      "offenseRows": 103
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "13C",
+      "offenseRows": 101
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "220",
+      "offenseRows": 253
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "23C",
+      "offenseRows": 277
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "23D",
+      "offenseRows": 27
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "23F",
+      "offenseRows": 175
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "23G",
+      "offenseRows": 107
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "23H",
+      "offenseRows": 194
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "240",
+      "offenseRows": 933
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "250",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "26A",
+      "offenseRows": 55
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "26E",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "26F",
+      "offenseRows": 22
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "270",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "280",
+      "offenseRows": 26
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "290",
+      "offenseRows": 386
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "35A",
+      "offenseRows": 454
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "35B",
+      "offenseRows": 117
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "520",
+      "offenseRows": 118
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "720",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "90C",
+      "offenseRows": 25
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "90D",
+      "offenseRows": 52
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "90F",
+      "offenseRows": 30
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "90J",
+      "offenseRows": 46
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "90Z",
+      "offenseRows": 245
+    },
+    {
+      "zip": "75217",
+      "offenseCode": "999",
+      "offenseRows": 1448
+    },
+    {
+      "zip": "75218",
+      "offenseCode": null,
+      "offenseRows": 5
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "120",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "13A",
+      "offenseRows": 22
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "13B",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "13C",
+      "offenseRows": 22
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "220",
+      "offenseRows": 81
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "23C",
+      "offenseRows": 92
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "23D",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "23F",
+      "offenseRows": 106
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "23G",
+      "offenseRows": 34
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "23H",
+      "offenseRows": 70
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "240",
+      "offenseRows": 168
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "26A",
+      "offenseRows": 35
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "26E",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "290",
+      "offenseRows": 71
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "35A",
+      "offenseRows": 37
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "35B",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "520",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "90C",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "90D",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "90J",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "90Z",
+      "offenseRows": 99
+    },
+    {
+      "zip": "75218",
+      "offenseCode": "999",
+      "offenseRows": 356
+    },
+    {
+      "zip": "75219",
+      "offenseCode": null,
+      "offenseRows": 23
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "120",
+      "offenseRows": 43
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "13A",
+      "offenseRows": 38
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "13B",
+      "offenseRows": 90
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "13C",
+      "offenseRows": 39
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "200",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "220",
+      "offenseRows": 131
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "23A",
+      "offenseRows": 46
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "23C",
+      "offenseRows": 97
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "23D",
+      "offenseRows": 50
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "23F",
+      "offenseRows": 516
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "23G",
+      "offenseRows": 76
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "23H",
+      "offenseRows": 241
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "240",
+      "offenseRows": 555
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "26A",
+      "offenseRows": 28
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "26B",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "26F",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "290",
+      "offenseRows": 167
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "35A",
+      "offenseRows": 64
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "35B",
+      "offenseRows": 21
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "520",
+      "offenseRows": 13
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "90C",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "90D",
+      "offenseRows": 57
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "90J",
+      "offenseRows": 34
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "90Z",
+      "offenseRows": 215
+    },
+    {
+      "zip": "75219",
+      "offenseCode": "999",
+      "offenseRows": 782
+    },
+    {
+      "zip": "75220",
+      "offenseCode": null,
+      "offenseRows": 78
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "120",
+      "offenseRows": 94
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "13A",
+      "offenseRows": 89
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "13B",
+      "offenseRows": 120
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "13C",
+      "offenseRows": 49
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "200",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "220",
+      "offenseRows": 161
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "23C",
+      "offenseRows": 38
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "23D",
+      "offenseRows": 19
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "23E",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "23F",
+      "offenseRows": 424
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "23G",
+      "offenseRows": 97
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "23H",
+      "offenseRows": 129
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "240",
+      "offenseRows": 968
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "26A",
+      "offenseRows": 44
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "26B",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "26E",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "26F",
+      "offenseRows": 19
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "270",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "280",
+      "offenseRows": 29
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "290",
+      "offenseRows": 259
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "35A",
+      "offenseRows": 343
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "35B",
+      "offenseRows": 85
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "39A",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "520",
+      "offenseRows": 74
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "720",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "90C",
+      "offenseRows": 19
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "90D",
+      "offenseRows": 99
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "90J",
+      "offenseRows": 46
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "90Z",
+      "offenseRows": 606
+    },
+    {
+      "zip": "75220",
+      "offenseCode": "999",
+      "offenseRows": 1557
+    },
+    {
+      "zip": "75223",
+      "offenseCode": null,
+      "offenseRows": 9
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "120",
+      "offenseRows": 25
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "13A",
+      "offenseRows": 45
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "13B",
+      "offenseRows": 31
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "13C",
+      "offenseRows": 21
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "220",
+      "offenseRows": 60
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "23C",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "23D",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "23F",
+      "offenseRows": 72
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "23G",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "23H",
+      "offenseRows": 58
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "240",
+      "offenseRows": 269
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "26A",
+      "offenseRows": 22
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "26F",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "280",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "290",
+      "offenseRows": 67
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "35A",
+      "offenseRows": 114
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "35B",
+      "offenseRows": 20
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "39A",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "520",
+      "offenseRows": 25
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "90C",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "90D",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "90J",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "90Z",
+      "offenseRows": 78
+    },
+    {
+      "zip": "75223",
+      "offenseCode": "999",
+      "offenseRows": 384
+    },
+    {
+      "zip": "75224",
+      "offenseCode": null,
+      "offenseRows": 12
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "120",
+      "offenseRows": 75
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "13A",
+      "offenseRows": 44
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "13B",
+      "offenseRows": 47
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "13C",
+      "offenseRows": 33
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "220",
+      "offenseRows": 149
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "23C",
+      "offenseRows": 86
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "23D",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "23F",
+      "offenseRows": 129
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "23G",
+      "offenseRows": 58
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "23H",
+      "offenseRows": 82
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "240",
+      "offenseRows": 460
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "250",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "26A",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "26B",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "26E",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "270",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "280",
+      "offenseRows": 19
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "290",
+      "offenseRows": 162
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "35A",
+      "offenseRows": 143
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "35B",
+      "offenseRows": 32
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "520",
+      "offenseRows": 46
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "90C",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "90D",
+      "offenseRows": 30
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "90F",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "90J",
+      "offenseRows": 20
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "90Z",
+      "offenseRows": 130
+    },
+    {
+      "zip": "75224",
+      "offenseCode": "999",
+      "offenseRows": 704
+    },
+    {
+      "zip": "75225",
+      "offenseCode": null,
+      "offenseRows": 8
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "120",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "13B",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "13C",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "220",
+      "offenseRows": 28
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "23C",
+      "offenseRows": 171
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "23D",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "23F",
+      "offenseRows": 198
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "23G",
+      "offenseRows": 32
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "23H",
+      "offenseRows": 43
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "240",
+      "offenseRows": 277
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "26A",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "26B",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "26F",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "270",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "290",
+      "offenseRows": 38
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "35A",
+      "offenseRows": 22
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "90C",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "90D",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "90F",
+      "offenseRows": 23
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "90J",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "90Z",
+      "offenseRows": 98
+    },
+    {
+      "zip": "75225",
+      "offenseCode": "999",
+      "offenseRows": 322
+    },
+    {
+      "zip": "75226",
+      "offenseCode": null,
+      "offenseRows": 153
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "120",
+      "offenseRows": 28
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "13A",
+      "offenseRows": 68
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "13B",
+      "offenseRows": 117
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "13C",
+      "offenseRows": 26
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "220",
+      "offenseRows": 55
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "23A",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "23C",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "23D",
+      "offenseRows": 34
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "23F",
+      "offenseRows": 278
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "23G",
+      "offenseRows": 33
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "23H",
+      "offenseRows": 94
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "240",
+      "offenseRows": 327
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "26A",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "26B",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "26E",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "26F",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "280",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "290",
+      "offenseRows": 127
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "35A",
+      "offenseRows": 312
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "35B",
+      "offenseRows": 70
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "520",
+      "offenseRows": 63
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "90C",
+      "offenseRows": 56
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "90D",
+      "offenseRows": 52
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "90G",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "90J",
+      "offenseRows": 19
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "90Z",
+      "offenseRows": 432
+    },
+    {
+      "zip": "75226",
+      "offenseCode": "999",
+      "offenseRows": 921
+    },
+    {
+      "zip": "75227",
+      "offenseCode": null,
+      "offenseRows": 7
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "120",
+      "offenseRows": 72
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "13A",
+      "offenseRows": 74
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "13B",
+      "offenseRows": 67
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "13C",
+      "offenseRows": 52
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "220",
+      "offenseRows": 144
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "23C",
+      "offenseRows": 56
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "23D",
+      "offenseRows": 27
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "23F",
+      "offenseRows": 148
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "23G",
+      "offenseRows": 84
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "23H",
+      "offenseRows": 118
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "240",
+      "offenseRows": 646
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "26A",
+      "offenseRows": 39
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "26B",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "26E",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "26F",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "270",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "280",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "290",
+      "offenseRows": 211
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "35A",
+      "offenseRows": 180
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "35B",
+      "offenseRows": 34
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "520",
+      "offenseRows": 63
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "720",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "90C",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "90D",
+      "offenseRows": 35
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "90F",
+      "offenseRows": 19
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "90J",
+      "offenseRows": 20
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "90Z",
+      "offenseRows": 148
+    },
+    {
+      "zip": "75227",
+      "offenseCode": "999",
+      "offenseRows": 771
+    },
+    {
+      "zip": "75228",
+      "offenseCode": null,
+      "offenseRows": 16
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "120",
+      "offenseRows": 87
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "13A",
+      "offenseRows": 105
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "13B",
+      "offenseRows": 99
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "13C",
+      "offenseRows": 83
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "200",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "220",
+      "offenseRows": 239
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "23C",
+      "offenseRows": 48
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "23D",
+      "offenseRows": 36
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "23F",
+      "offenseRows": 319
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "23G",
+      "offenseRows": 123
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "23H",
+      "offenseRows": 249
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "240",
+      "offenseRows": 845
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "26A",
+      "offenseRows": 55
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "26B",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "26E",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "26F",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "270",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "280",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "290",
+      "offenseRows": 314
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "35A",
+      "offenseRows": 283
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "35B",
+      "offenseRows": 57
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "520",
+      "offenseRows": 85
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "720",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "90C",
+      "offenseRows": 29
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "90D",
+      "offenseRows": 39
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "90F",
+      "offenseRows": 36
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "90J",
+      "offenseRows": 78
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "90Z",
+      "offenseRows": 290
+    },
+    {
+      "zip": "75228",
+      "offenseCode": "999",
+      "offenseRows": 1286
+    },
+    {
+      "zip": "75229",
+      "offenseCode": null,
+      "offenseRows": 13
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "120",
+      "offenseRows": 49
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "13A",
+      "offenseRows": 32
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "13B",
+      "offenseRows": 44
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "13C",
+      "offenseRows": 29
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "200",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "220",
+      "offenseRows": 161
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "23C",
+      "offenseRows": 144
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "23D",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "23F",
+      "offenseRows": 317
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "23G",
+      "offenseRows": 58
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "23H",
+      "offenseRows": 136
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "240",
+      "offenseRows": 387
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "250",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "26A",
+      "offenseRows": 75
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "26E",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "26F",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "270",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "280",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "290",
+      "offenseRows": 120
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "35A",
+      "offenseRows": 179
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "35B",
+      "offenseRows": 27
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "520",
+      "offenseRows": 23
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "90C",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "90D",
+      "offenseRows": 35
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "90J",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "90Z",
+      "offenseRows": 467
+    },
+    {
+      "zip": "75229",
+      "offenseCode": "999",
+      "offenseRows": 880
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "120",
+      "offenseRows": 13
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "13A",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "13B",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "13C",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "220",
+      "offenseRows": 63
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "23C",
+      "offenseRows": 87
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "23D",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "23F",
+      "offenseRows": 210
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "23G",
+      "offenseRows": 39
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "23H",
+      "offenseRows": 86
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "240",
+      "offenseRows": 260
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "250",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "26A",
+      "offenseRows": 21
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "26B",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "26E",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "290",
+      "offenseRows": 89
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "35A",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "520",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "90C",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "90D",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "90J",
+      "offenseRows": 22
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "90Z",
+      "offenseRows": 103
+    },
+    {
+      "zip": "75230",
+      "offenseCode": "999",
+      "offenseRows": 368
+    },
+    {
+      "zip": "75231",
+      "offenseCode": null,
+      "offenseRows": 22
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "120",
+      "offenseRows": 86
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "13A",
+      "offenseRows": 60
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "13B",
+      "offenseRows": 81
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "13C",
+      "offenseRows": 67
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "220",
+      "offenseRows": 183
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "23C",
+      "offenseRows": 432
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "23D",
+      "offenseRows": 31
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "23F",
+      "offenseRows": 460
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "23G",
+      "offenseRows": 141
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "23H",
+      "offenseRows": 134
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "240",
+      "offenseRows": 744
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "250",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "26A",
+      "offenseRows": 55
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "26B",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "26F",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "270",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "280",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "290",
+      "offenseRows": 243
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "35A",
+      "offenseRows": 117
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "35B",
+      "offenseRows": 22
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "520",
+      "offenseRows": 44
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "720",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "90C",
+      "offenseRows": 25
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "90D",
+      "offenseRows": 25
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "90J",
+      "offenseRows": 45
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "90Z",
+      "offenseRows": 277
+    },
+    {
+      "zip": "75231",
+      "offenseCode": "999",
+      "offenseRows": 980
+    },
+    {
+      "zip": "75232",
+      "offenseCode": null,
+      "offenseRows": 10
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "120",
+      "offenseRows": 41
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "13A",
+      "offenseRows": 55
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "13B",
+      "offenseRows": 38
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "13C",
+      "offenseRows": 35
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "220",
+      "offenseRows": 138
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "23C",
+      "offenseRows": 70
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "23D",
+      "offenseRows": 27
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "23F",
+      "offenseRows": 112
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "23G",
+      "offenseRows": 46
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "23H",
+      "offenseRows": 131
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "240",
+      "offenseRows": 482
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "26A",
+      "offenseRows": 32
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "26B",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "270",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "280",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "290",
+      "offenseRows": 150
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "35A",
+      "offenseRows": 107
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "35B",
+      "offenseRows": 29
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "520",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "90C",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "90D",
+      "offenseRows": 30
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "90F",
+      "offenseRows": 27
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "90J",
+      "offenseRows": 44
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "90Z",
+      "offenseRows": 109
+    },
+    {
+      "zip": "75232",
+      "offenseCode": "999",
+      "offenseRows": 655
+    },
+    {
+      "zip": "75233",
+      "offenseCode": null,
+      "offenseRows": 5
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "120",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "13A",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "13B",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "13C",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "220",
+      "offenseRows": 53
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "23C",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "23F",
+      "offenseRows": 46
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "23G",
+      "offenseRows": 39
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "23H",
+      "offenseRows": 44
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "240",
+      "offenseRows": 362
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "26A",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "290",
+      "offenseRows": 66
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "35A",
+      "offenseRows": 26
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "35B",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "520",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "90C",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "90D",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "90F",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "90J",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "90Z",
+      "offenseRows": 44
+    },
+    {
+      "zip": "75233",
+      "offenseCode": "999",
+      "offenseRows": 240
+    },
+    {
+      "zip": "75234",
+      "offenseCode": "13A",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75234",
+      "offenseCode": "13B",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75234",
+      "offenseCode": "13C",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75234",
+      "offenseCode": "220",
+      "offenseRows": 33
+    },
+    {
+      "zip": "75234",
+      "offenseCode": "23C",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75234",
+      "offenseCode": "23F",
+      "offenseRows": 53
+    },
+    {
+      "zip": "75234",
+      "offenseCode": "23G",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75234",
+      "offenseCode": "23H",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75234",
+      "offenseCode": "240",
+      "offenseRows": 124
+    },
+    {
+      "zip": "75234",
+      "offenseCode": "26A",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75234",
+      "offenseCode": "290",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75234",
+      "offenseCode": "35A",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75234",
+      "offenseCode": "90D",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75234",
+      "offenseCode": "90Z",
+      "offenseRows": 30
+    },
+    {
+      "zip": "75234",
+      "offenseCode": "999",
+      "offenseRows": 137
+    },
+    {
+      "zip": "75235",
+      "offenseCode": null,
+      "offenseRows": 31
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "120",
+      "offenseRows": 38
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "13A",
+      "offenseRows": 34
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "13B",
+      "offenseRows": 47
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "13C",
+      "offenseRows": 49
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "220",
+      "offenseRows": 175
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "23C",
+      "offenseRows": 68
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "23D",
+      "offenseRows": 39
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "23F",
+      "offenseRows": 240
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "23G",
+      "offenseRows": 94
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "23H",
+      "offenseRows": 137
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "240",
+      "offenseRows": 462
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "26A",
+      "offenseRows": 53
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "26F",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "270",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "280",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "290",
+      "offenseRows": 172
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "35A",
+      "offenseRows": 123
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "35B",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "520",
+      "offenseRows": 81
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "90C",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "90D",
+      "offenseRows": 31
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "90F",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "90J",
+      "offenseRows": 42
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "90Z",
+      "offenseRows": 184
+    },
+    {
+      "zip": "75235",
+      "offenseCode": "999",
+      "offenseRows": 857
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "120",
+      "offenseRows": 22
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "13A",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "13B",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "13C",
+      "offenseRows": 30
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "220",
+      "offenseRows": 72
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "23C",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "23D",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "23F",
+      "offenseRows": 75
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "23G",
+      "offenseRows": 35
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "23H",
+      "offenseRows": 55
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "240",
+      "offenseRows": 268
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "26A",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "290",
+      "offenseRows": 97
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "35A",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "520",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "90C",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "90D",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "90F",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "90J",
+      "offenseRows": 13
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "90Z",
+      "offenseRows": 46
+    },
+    {
+      "zip": "75236",
+      "offenseCode": "999",
+      "offenseRows": 238
+    },
+    {
+      "zip": "75237",
+      "offenseCode": null,
+      "offenseRows": 12
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "120",
+      "offenseRows": 90
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "13A",
+      "offenseRows": 58
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "13B",
+      "offenseRows": 60
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "13C",
+      "offenseRows": 60
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "200",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "220",
+      "offenseRows": 150
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "23C",
+      "offenseRows": 57
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "23D",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "23F",
+      "offenseRows": 166
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "23G",
+      "offenseRows": 57
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "23H",
+      "offenseRows": 88
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "240",
+      "offenseRows": 692
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "26A",
+      "offenseRows": 39
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "26B",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "26E",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "26F",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "270",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "280",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "290",
+      "offenseRows": 223
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "35A",
+      "offenseRows": 147
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "35B",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "520",
+      "offenseRows": 29
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "90C",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "90D",
+      "offenseRows": 13
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "90F",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "90J",
+      "offenseRows": 29
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "90Z",
+      "offenseRows": 144
+    },
+    {
+      "zip": "75237",
+      "offenseCode": "999",
+      "offenseRows": 736
+    },
+    {
+      "zip": "75238",
+      "offenseCode": null,
+      "offenseRows": 12
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "120",
+      "offenseRows": 26
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "13A",
+      "offenseRows": 32
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "13B",
+      "offenseRows": 32
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "13C",
+      "offenseRows": 27
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "220",
+      "offenseRows": 94
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "23C",
+      "offenseRows": 49
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "23D",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "23F",
+      "offenseRows": 137
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "23G",
+      "offenseRows": 45
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "23H",
+      "offenseRows": 100
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "240",
+      "offenseRows": 382
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "26A",
+      "offenseRows": 34
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "26B",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "26E",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "26F",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "270",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "280",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "290",
+      "offenseRows": 109
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "35A",
+      "offenseRows": 83
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "35B",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "520",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "90C",
+      "offenseRows": 19
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "90D",
+      "offenseRows": 25
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "90F",
+      "offenseRows": 31
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "90J",
+      "offenseRows": 22
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "90Z",
+      "offenseRows": 139
+    },
+    {
+      "zip": "75238",
+      "offenseCode": "999",
+      "offenseRows": 693
+    },
+    {
+      "zip": "75240",
+      "offenseCode": null,
+      "offenseRows": 20
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "120",
+      "offenseRows": 59
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "13A",
+      "offenseRows": 49
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "13B",
+      "offenseRows": 30
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "13C",
+      "offenseRows": 38
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "220",
+      "offenseRows": 154
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "23C",
+      "offenseRows": 230
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "23D",
+      "offenseRows": 26
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "23F",
+      "offenseRows": 246
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "23G",
+      "offenseRows": 70
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "23H",
+      "offenseRows": 106
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "240",
+      "offenseRows": 350
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "26A",
+      "offenseRows": 32
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "26B",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "26E",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "26F",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "270",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "280",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "290",
+      "offenseRows": 156
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "35A",
+      "offenseRows": 99
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "35B",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "520",
+      "offenseRows": 21
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "90C",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "90D",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "90F",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "90J",
+      "offenseRows": 28
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "90Z",
+      "offenseRows": 168
+    },
+    {
+      "zip": "75240",
+      "offenseCode": "999",
+      "offenseRows": 691
+    },
+    {
+      "zip": "75241",
+      "offenseCode": null,
+      "offenseRows": 13
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "120",
+      "offenseRows": 72
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "13A",
+      "offenseRows": 87
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "13B",
+      "offenseRows": 62
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "13C",
+      "offenseRows": 50
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "220",
+      "offenseRows": 95
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "23C",
+      "offenseRows": 23
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "23D",
+      "offenseRows": 23
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "23F",
+      "offenseRows": 454
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "23G",
+      "offenseRows": 62
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "23H",
+      "offenseRows": 191
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "240",
+      "offenseRows": 679
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "26A",
+      "offenseRows": 36
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "26B",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "26F",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "270",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "280",
+      "offenseRows": 20
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "290",
+      "offenseRows": 310
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "35A",
+      "offenseRows": 242
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "35B",
+      "offenseRows": 68
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "520",
+      "offenseRows": 72
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "720",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "90C",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "90D",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "90F",
+      "offenseRows": 26
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "90J",
+      "offenseRows": 37
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "90Z",
+      "offenseRows": 209
+    },
+    {
+      "zip": "75241",
+      "offenseCode": "999",
+      "offenseRows": 1080
+    },
+    {
+      "zip": "75243",
+      "offenseCode": null,
+      "offenseRows": 21
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "120",
+      "offenseRows": 89
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "13A",
+      "offenseRows": 129
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "13B",
+      "offenseRows": 111
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "13C",
+      "offenseRows": 99
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "200",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "220",
+      "offenseRows": 481
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "23C",
+      "offenseRows": 51
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "23D",
+      "offenseRows": 64
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "23F",
+      "offenseRows": 406
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "23G",
+      "offenseRows": 128
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "23H",
+      "offenseRows": 264
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "240",
+      "offenseRows": 664
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "250",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "26A",
+      "offenseRows": 60
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "26B",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "26E",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "26F",
+      "offenseRows": 22
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "270",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "280",
+      "offenseRows": 32
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "290",
+      "offenseRows": 418
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "35A",
+      "offenseRows": 310
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "35B",
+      "offenseRows": 41
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "520",
+      "offenseRows": 75
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "90C",
+      "offenseRows": 48
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "90D",
+      "offenseRows": 43
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "90F",
+      "offenseRows": 13
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "90J",
+      "offenseRows": 80
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "90Z",
+      "offenseRows": 395
+    },
+    {
+      "zip": "75243",
+      "offenseCode": "999",
+      "offenseRows": 1531
+    },
+    {
+      "zip": "75244",
+      "offenseCode": "13A",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75244",
+      "offenseCode": "13C",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75244",
+      "offenseCode": "220",
+      "offenseRows": 21
+    },
+    {
+      "zip": "75244",
+      "offenseCode": "23C",
+      "offenseRows": 27
+    },
+    {
+      "zip": "75244",
+      "offenseCode": "23D",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75244",
+      "offenseCode": "23F",
+      "offenseRows": 69
+    },
+    {
+      "zip": "75244",
+      "offenseCode": "23G",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75244",
+      "offenseCode": "23H",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75244",
+      "offenseCode": "240",
+      "offenseRows": 108
+    },
+    {
+      "zip": "75244",
+      "offenseCode": "26A",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75244",
+      "offenseCode": "290",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75244",
+      "offenseCode": "90C",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75244",
+      "offenseCode": "90D",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75244",
+      "offenseCode": "90Z",
+      "offenseRows": 50
+    },
+    {
+      "zip": "75244",
+      "offenseCode": "999",
+      "offenseRows": 152
+    },
+    {
+      "zip": "75246",
+      "offenseCode": "120",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75246",
+      "offenseCode": "13B",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75246",
+      "offenseCode": "13C",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75246",
+      "offenseCode": "220",
+      "offenseRows": 46
+    },
+    {
+      "zip": "75246",
+      "offenseCode": "23D",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75246",
+      "offenseCode": "23F",
+      "offenseRows": 46
+    },
+    {
+      "zip": "75246",
+      "offenseCode": "23G",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75246",
+      "offenseCode": "23H",
+      "offenseRows": 42
+    },
+    {
+      "zip": "75246",
+      "offenseCode": "240",
+      "offenseRows": 48
+    },
+    {
+      "zip": "75246",
+      "offenseCode": "290",
+      "offenseRows": 30
+    },
+    {
+      "zip": "75246",
+      "offenseCode": "35A",
+      "offenseRows": 29
+    },
+    {
+      "zip": "75246",
+      "offenseCode": "35B",
+      "offenseRows": 13
+    },
+    {
+      "zip": "75246",
+      "offenseCode": "90J",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75246",
+      "offenseCode": "90Z",
+      "offenseRows": 19
+    },
+    {
+      "zip": "75246",
+      "offenseCode": "999",
+      "offenseRows": 182
+    },
+    {
+      "zip": "75247",
+      "offenseCode": null,
+      "offenseRows": 10
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "120",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "13A",
+      "offenseRows": 19
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "13B",
+      "offenseRows": 35
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "13C",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "220",
+      "offenseRows": 51
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "23C",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "23D",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "23F",
+      "offenseRows": 182
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "23G",
+      "offenseRows": 59
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "23H",
+      "offenseRows": 89
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "240",
+      "offenseRows": 394
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "26A",
+      "offenseRows": 34
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "270",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "290",
+      "offenseRows": 87
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "35A",
+      "offenseRows": 33
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "520",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "90D",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "90J",
+      "offenseRows": 23
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "90Z",
+      "offenseRows": 47
+    },
+    {
+      "zip": "75247",
+      "offenseCode": "999",
+      "offenseRows": 375
+    },
+    {
+      "zip": "75248",
+      "offenseCode": null,
+      "offenseRows": 7
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "120",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "13A",
+      "offenseRows": 13
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "13B",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "13C",
+      "offenseRows": 33
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "220",
+      "offenseRows": 51
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "23C",
+      "offenseRows": 119
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "23D",
+      "offenseRows": 11
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "23F",
+      "offenseRows": 106
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "23G",
+      "offenseRows": 46
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "23H",
+      "offenseRows": 53
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "240",
+      "offenseRows": 100
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "250",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "26A",
+      "offenseRows": 25
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "26F",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "270",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "290",
+      "offenseRows": 77
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "35A",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "90C",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "90D",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "90F",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "90J",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "90Z",
+      "offenseRows": 81
+    },
+    {
+      "zip": "75248",
+      "offenseCode": "999",
+      "offenseRows": 342
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "13A",
+      "offenseRows": 16
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "13C",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "220",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "23D",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "23F",
+      "offenseRows": 64
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "23G",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "23H",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "240",
+      "offenseRows": 77
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "26A",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "290",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "35A",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "520",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "90C",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "90F",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "90J",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "90Z",
+      "offenseRows": 39
+    },
+    {
+      "zip": "75249",
+      "offenseCode": "999",
+      "offenseRows": 124
+    },
+    {
+      "zip": "75251",
+      "offenseCode": null,
+      "offenseRows": 5
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "120",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "13A",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "13B",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "13C",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "220",
+      "offenseRows": 41
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "23D",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "23F",
+      "offenseRows": 120
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "23G",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "23H",
+      "offenseRows": 51
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "240",
+      "offenseRows": 138
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "26A",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "280",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "290",
+      "offenseRows": 66
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "35A",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "90C",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "90D",
+      "offenseRows": 10
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "90J",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "90Z",
+      "offenseRows": 49
+    },
+    {
+      "zip": "75251",
+      "offenseCode": "999",
+      "offenseRows": 212
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "120",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "13A",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "13B",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "13C",
+      "offenseRows": 31
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "220",
+      "offenseRows": 104
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "23C",
+      "offenseRows": 20
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "23D",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "23F",
+      "offenseRows": 55
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "23G",
+      "offenseRows": 34
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "23H",
+      "offenseRows": 62
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "240",
+      "offenseRows": 67
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "26A",
+      "offenseRows": 19
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "26E",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "270",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "290",
+      "offenseRows": 52
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "35A",
+      "offenseRows": 23
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "90C",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "90D",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "90J",
+      "offenseRows": 13
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "90Z",
+      "offenseRows": 65
+    },
+    {
+      "zip": "75252",
+      "offenseCode": "999",
+      "offenseRows": 369
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "120",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "13A",
+      "offenseRows": 33
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "13B",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "13C",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "200",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "220",
+      "offenseRows": 57
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "23C",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "23D",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "23F",
+      "offenseRows": 43
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "23G",
+      "offenseRows": 22
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "23H",
+      "offenseRows": 64
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "240",
+      "offenseRows": 221
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "26A",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "290",
+      "offenseRows": 89
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "35A",
+      "offenseRows": 19
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "520",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "90C",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "90F",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "90J",
+      "offenseRows": 12
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "90Z",
+      "offenseRows": 31
+    },
+    {
+      "zip": "75253",
+      "offenseCode": "999",
+      "offenseRows": 273
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "120",
+      "offenseRows": 29
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "13A",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "13B",
+      "offenseRows": 22
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "13C",
+      "offenseRows": 20
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "220",
+      "offenseRows": 47
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "23C",
+      "offenseRows": 106
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "23D",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "23F",
+      "offenseRows": 133
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "23G",
+      "offenseRows": 53
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "23H",
+      "offenseRows": 57
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "240",
+      "offenseRows": 184
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "250",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "26A",
+      "offenseRows": 20
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "26B",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "26F",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "270",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "290",
+      "offenseRows": 92
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "35A",
+      "offenseRows": 29
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "520",
+      "offenseRows": 9
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "90C",
+      "offenseRows": 14
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "90D",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "90F",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "90J",
+      "offenseRows": 18
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "90Z",
+      "offenseRows": 118
+    },
+    {
+      "zip": "75254",
+      "offenseCode": "999",
+      "offenseRows": 341
+    },
+    {
+      "zip": "75287",
+      "offenseCode": null,
+      "offenseRows": 21
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "120",
+      "offenseRows": 32
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "13A",
+      "offenseRows": 53
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "13B",
+      "offenseRows": 52
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "13C",
+      "offenseRows": 63
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "220",
+      "offenseRows": 102
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "23C",
+      "offenseRows": 24
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "23D",
+      "offenseRows": 30
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "23F",
+      "offenseRows": 197
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "23G",
+      "offenseRows": 112
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "23H",
+      "offenseRows": 147
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "240",
+      "offenseRows": 545
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "250",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "26A",
+      "offenseRows": 63
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "26B",
+      "offenseRows": 5
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "26E",
+      "offenseRows": 8
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "26F",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "270",
+      "offenseRows": 6
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "290",
+      "offenseRows": 202
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "35A",
+      "offenseRows": 49
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "520",
+      "offenseRows": 13
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "720",
+      "offenseRows": 7
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "90C",
+      "offenseRows": 17
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "90D",
+      "offenseRows": 25
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "90F",
+      "offenseRows": 19
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "90J",
+      "offenseRows": 15
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "90Z",
+      "offenseRows": 152
+    },
+    {
+      "zip": "75287",
+      "offenseCode": "999",
+      "offenseRows": 695
+    }
+  ]
+}

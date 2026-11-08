@@ -1,0 +1,435 @@
+{
+  "metadata": {
+    "sourceId": "fort-worth-civic-crime-data-mapserver-0",
+    "publisher": "Fort Worth Police Department / City of Fort Worth",
+    "acquiredOn": "2026-11-07",
+    "endpoint": "https://mapit.fortworthtexas.gov/ags/rest/services/CIVIC/Crime_Data/MapServer/0",
+    "query": "https://mapit.fortworthtexas.gov/ags/rest/services/CIVIC/Crime_Data/MapServer/0/query?where=Reported_Date%20%3E%3D%20timestamp%20'2025-01-01%2000%3A00%3A00'%20AND%20Reported_Date%20%3C%20timestamp%20'2026-01-01%2000%3A00%3A00'&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22n%22%7D%5D&groupByFieldsForStatistics=Beat&returnGeometry=false&f=json",
+    "period": "2025 reported-year",
+    "geography": "Fort Worth police beat (geometry/official polygon boundaries not yet acquired)",
+    "unit": "public offense records per police beat",
+    "minimumCellCount": 5,
+    "suppressedOrMissingBeatGroups": 8,
+    "sourceAnnual2025Rows": 56936,
+    "limitations": "Police beats are not ZIP or Census Tracts. The beat groups may include multiple offenses and rows per case; figures cannot be summed with incident counts from other sources. No neighborhood safety ranking.",
+    "publicDisplay": false
+  },
+  "records": [
+    {
+      "beat": "A11",
+      "offenseRows": 634
+    },
+    {
+      "beat": "A12",
+      "offenseRows": 590
+    },
+    {
+      "beat": "A13",
+      "offenseRows": 530
+    },
+    {
+      "beat": "A14",
+      "offenseRows": 665
+    },
+    {
+      "beat": "A15",
+      "offenseRows": 803
+    },
+    {
+      "beat": "A16",
+      "offenseRows": 791
+    },
+    {
+      "beat": "A17",
+      "offenseRows": 274
+    },
+    {
+      "beat": "A18",
+      "offenseRows": 111
+    },
+    {
+      "beat": "A19",
+      "offenseRows": 341
+    },
+    {
+      "beat": "B11",
+      "offenseRows": 905
+    },
+    {
+      "beat": "B12",
+      "offenseRows": 831
+    },
+    {
+      "beat": "B13",
+      "offenseRows": 431
+    },
+    {
+      "beat": "B14",
+      "offenseRows": 495
+    },
+    {
+      "beat": "B15",
+      "offenseRows": 450
+    },
+    {
+      "beat": "B16",
+      "offenseRows": 464
+    },
+    {
+      "beat": "B17",
+      "offenseRows": 782
+    },
+    {
+      "beat": "B18",
+      "offenseRows": 745
+    },
+    {
+      "beat": "B19",
+      "offenseRows": 212
+    },
+    {
+      "beat": "C11",
+      "offenseRows": 602
+    },
+    {
+      "beat": "C12",
+      "offenseRows": 468
+    },
+    {
+      "beat": "C13",
+      "offenseRows": 863
+    },
+    {
+      "beat": "C14",
+      "offenseRows": 614
+    },
+    {
+      "beat": "C15",
+      "offenseRows": 478
+    },
+    {
+      "beat": "C16",
+      "offenseRows": 681
+    },
+    {
+      "beat": "C17",
+      "offenseRows": 320
+    },
+    {
+      "beat": "D11",
+      "offenseRows": 576
+    },
+    {
+      "beat": "D12",
+      "offenseRows": 814
+    },
+    {
+      "beat": "D13",
+      "offenseRows": 446
+    },
+    {
+      "beat": "D14",
+      "offenseRows": 398
+    },
+    {
+      "beat": "D15",
+      "offenseRows": 641
+    },
+    {
+      "beat": "D16",
+      "offenseRows": 216
+    },
+    {
+      "beat": "D17",
+      "offenseRows": 125
+    },
+    {
+      "beat": "E11",
+      "offenseRows": 862
+    },
+    {
+      "beat": "E12",
+      "offenseRows": 586
+    },
+    {
+      "beat": "E13",
+      "offenseRows": 403
+    },
+    {
+      "beat": "E14",
+      "offenseRows": 722
+    },
+    {
+      "beat": "E15",
+      "offenseRows": 490
+    },
+    {
+      "beat": "E16",
+      "offenseRows": 208
+    },
+    {
+      "beat": "E17",
+      "offenseRows": 329
+    },
+    {
+      "beat": "E18",
+      "offenseRows": 177
+    },
+    {
+      "beat": "F11",
+      "offenseRows": 594
+    },
+    {
+      "beat": "F12",
+      "offenseRows": 436
+    },
+    {
+      "beat": "F13",
+      "offenseRows": 188
+    },
+    {
+      "beat": "F14",
+      "offenseRows": 240
+    },
+    {
+      "beat": "F15",
+      "offenseRows": 387
+    },
+    {
+      "beat": "F16",
+      "offenseRows": 512
+    },
+    {
+      "beat": "F17",
+      "offenseRows": 522
+    },
+    {
+      "beat": "G11",
+      "offenseRows": 642
+    },
+    {
+      "beat": "G12",
+      "offenseRows": 516
+    },
+    {
+      "beat": "G13",
+      "offenseRows": 814
+    },
+    {
+      "beat": "G14",
+      "offenseRows": 615
+    },
+    {
+      "beat": "G15",
+      "offenseRows": 629
+    },
+    {
+      "beat": "G16",
+      "offenseRows": 686
+    },
+    {
+      "beat": "G17",
+      "offenseRows": 573
+    },
+    {
+      "beat": "G18",
+      "offenseRows": 433
+    },
+    {
+      "beat": "G19",
+      "offenseRows": 469
+    },
+    {
+      "beat": "H11",
+      "offenseRows": 924
+    },
+    {
+      "beat": "H12",
+      "offenseRows": 759
+    },
+    {
+      "beat": "H13",
+      "offenseRows": 580
+    },
+    {
+      "beat": "H14",
+      "offenseRows": 675
+    },
+    {
+      "beat": "H15",
+      "offenseRows": 998
+    },
+    {
+      "beat": "H16",
+      "offenseRows": 511
+    },
+    {
+      "beat": "H17",
+      "offenseRows": 444
+    },
+    {
+      "beat": "H18",
+      "offenseRows": 139
+    },
+    {
+      "beat": "H19",
+      "offenseRows": 132
+    },
+    {
+      "beat": "I11",
+      "offenseRows": 509
+    },
+    {
+      "beat": "I12",
+      "offenseRows": 506
+    },
+    {
+      "beat": "I13",
+      "offenseRows": 366
+    },
+    {
+      "beat": "I14",
+      "offenseRows": 568
+    },
+    {
+      "beat": "I15",
+      "offenseRows": 810
+    },
+    {
+      "beat": "I16",
+      "offenseRows": 453
+    },
+    {
+      "beat": "I17",
+      "offenseRows": 670
+    },
+    {
+      "beat": "I18",
+      "offenseRows": 704
+    },
+    {
+      "beat": "I19",
+      "offenseRows": 568
+    },
+    {
+      "beat": "J11",
+      "offenseRows": 537
+    },
+    {
+      "beat": "J12",
+      "offenseRows": 482
+    },
+    {
+      "beat": "J13",
+      "offenseRows": 532
+    },
+    {
+      "beat": "J14",
+      "offenseRows": 436
+    },
+    {
+      "beat": "J15",
+      "offenseRows": 623
+    },
+    {
+      "beat": "J16",
+      "offenseRows": 693
+    },
+    {
+      "beat": "J17",
+      "offenseRows": 644
+    },
+    {
+      "beat": "J18",
+      "offenseRows": 674
+    },
+    {
+      "beat": "J19",
+      "offenseRows": 463
+    },
+    {
+      "beat": "J21",
+      "offenseRows": 182
+    },
+    {
+      "beat": "K11",
+      "offenseRows": 455
+    },
+    {
+      "beat": "K12",
+      "offenseRows": 1097
+    },
+    {
+      "beat": "K13",
+      "offenseRows": 495
+    },
+    {
+      "beat": "K14",
+      "offenseRows": 326
+    },
+    {
+      "beat": "K15",
+      "offenseRows": 477
+    },
+    {
+      "beat": "K16",
+      "offenseRows": 570
+    },
+    {
+      "beat": "K17",
+      "offenseRows": 524
+    },
+    {
+      "beat": "K18",
+      "offenseRows": 1359
+    },
+    {
+      "beat": "K19",
+      "offenseRows": 970
+    },
+    {
+      "beat": "L11",
+      "offenseRows": 451
+    },
+    {
+      "beat": "L12",
+      "offenseRows": 659
+    },
+    {
+      "beat": "L13",
+      "offenseRows": 462
+    },
+    {
+      "beat": "L14",
+      "offenseRows": 434
+    },
+    {
+      "beat": "L15",
+      "offenseRows": 592
+    },
+    {
+      "beat": "L16",
+      "offenseRows": 877
+    },
+    {
+      "beat": "L17",
+      "offenseRows": 558
+    },
+    {
+      "beat": "L18",
+      "offenseRows": 359
+    },
+    {
+      "beat": "L19",
+      "offenseRows": 74
+    },
+    {
+      "beat": "L21",
+      "offenseRows": 27
+    },
+    {
+      "beat": "OUT",
+      "offenseRows": 9
+    }
+  ]
+}
