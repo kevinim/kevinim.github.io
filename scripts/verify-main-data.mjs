@@ -273,8 +273,8 @@ test('P0 Plano senior-high home marker and map source legend are accurate',()=>{
  const home=readText('home-lookup-v2.js');
  assert.ok(home.includes('schoolLevelMatchesAssignment(s,f.properties.gradeLevel)'));
  assert.ok(home.includes("result.district!==s.district)return false"));
- assert.ok(html.includes('./school-assignment.js?v=4'));
- assert.ok(html.includes('./home-lookup-v2.js?v=11'));
+ assert.ok(html.includes('./school-assignment.js?v=5'));
+ assert.ok(html.includes('./home-lookup-v2.js?v=12'));
  assert.ok(html.includes('현행 공식 Finder가 사용하는 플레이노·루이스빌 경계는 파란색'));
  assert.ok(html.includes('플레이노 저장본과 앨런 과거 GIS는 주황색 점선 참고'));
 });
@@ -635,8 +635,8 @@ test('P0 zone-edge warning uses closest official polygon ring',()=>{
  assert.ok(hole.review);
  const h=readText('home-lookup-v2.js');
  assert.ok(h.includes("'boundary-review':'finder-boundary-review'"));
- assert.ok(h.includes('zoneBoundaryProximity([item.ll[1],item.ll[0]],found.features)'));
- assert.ok(html.includes('./school-zone-risk.js?v=1'));
+ assert.ok(h.includes('zoneBoundaryProximity([item.ll[1],item.ll[0]],found.features,undefined,found.features.map('));
+ assert.ok(html.includes('./school-zone-risk.js?v=2'));
 });
 test('P0 Collin CAD on-demand parcel crosscheck is address-only, fail closed',()=>{
  const u=new URL(buildCollinParcelUrl([33.10880474891,-96.65977951915]));
@@ -1226,6 +1226,25 @@ test('Allen address-table result highlights exactly its four campuses (270 S Wat
  assert.deepEqual(hit,['Frances E Norton Elementary School','Ereckson Middle School','Lowery Freshman Center','Allen High School']);
  assert.equal(allenRowMatchesSchool({name:'Norton',type:'elementary',district:'PISD'},row,schools,canonical),false);
  assert.ok(readText('home-lookup-v2.js').includes("result.status==='unverified-year')return allenRowMatchesSchool("));
+});
+test('Address results: piece-internal edges are not boundaries; near-boundary and McKinney results highlight',()=>{
+ const sq=(x0,y0,x1,y1,school)=>({type:'Feature',properties:{school,gradeLevel:'elementary'},geometry:{type:'Polygon',coordinates:[[[x0,y0],[x1,y0],[x1,y1],[x0,y1],[x0,y0]]]}});
+ // Two ~1.1 km pieces of zone A share the edge x=-96.70; the point is ~19 m west of it.
+ const a1=sq(-96.71,33.00,-96.70,33.01,'A'),a2=sq(-96.70,33.00,-96.69,33.01,'A'),b=sq(-96.70,33.00,-96.69,33.01,'B');
+ const p=[-96.7002,33.005];
+ assert.equal(zoneBoundaryProximity(p,[a1]).review,true,'single piece: shared edge looks like a boundary');
+ const internal=zoneBoundaryProximity(p,[a1],undefined,[[a1,a2]]);
+ assert.equal(internal.review,false,'same-school piece edge must be ignored: '+JSON.stringify(internal));
+ assert.ok(internal.distanceMeters>400);
+ assert.equal(zoneBoundaryProximity(p,[a1],undefined,[[a1]]).review,true,'edge shared with a different school (b) still counts');
+ const require=createRequire(import.meta.url);
+ const {resolveAssignment}=require('../school-assignment.js');
+ const mk=[{properties:{school:'FINCH',gradeLevel:'elementary'}}];
+ assert.equal(resolveAssignment({mckinney:mk,mckinneyFinderLive:true}).district,'043907');
+ assert.equal(resolveAssignment({mckinney:mk,mckinneyFinderLive:false}).status,'unavailable','McKinney only from the verified live 2026-27 finder');
+ const home=readText('home-lookup-v2.js');
+ assert.ok(home.includes("['current','finder-current','boundary-review','finder-boundary-review'].includes(result.status)"),'near-boundary candidates highlighted like the panel lists them');
+ assert.ok(home.includes("'2026–27 공식 Finder 경계 · 매키니'"),'McKinney must not fall through to the Lewisville label');
 });
 await Promise.all(asyncChecks);
 console.log('Main website QA: ' + total + ' tests passed.');
