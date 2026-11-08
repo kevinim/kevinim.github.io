@@ -172,3 +172,52 @@
 @media(prefers-reduced-motion:reduce){
   .extra-feature>summary:after{transition:none}
 }
+
+/* Map: medically verified points and FEMA winter-weather layers */
+.maphead .hazard-chip.healthcare{
+  --feature-pale:#e7f7f1;--feature-border:#b4e2d3;--feature-text:#13654d;
+  --feature-icon:#087e60;--feature-strong:#08765c;
+}
+.maphead .hazard-chip.winter{
+  --feature-pale:#ebf2ff;--feature-border:#c3d5fa;--feature-text:#31599a;
+  --feature-icon:#2d64ba;--feature-strong:#305ab0;
+}
+.healthcare-map-status{
+  font-size:11px;
+  line-height:1.6;
+  padding:6px 14px;
+  border-bottom:1px solid #e2e9f1;
+  color:#426852;
+}
+.healthcare-map-status:empty{display:none}
+.hospital-map-pin{
+  background:transparent!important;
+  border:0!important;
+  overflow:visible!important;
+}
+.hospital-pin-inner{
+  width:31px;
+  height:31px;
+  display:grid;
+  place-items:center;
+  color:white;
+  background:var(--hospital-pin,#08765c);
+  border-radius:9px 9px 9px 3px;
+  border:2px solid white;
+  box-shadow:0 2px 9px rgba(20,58,55,.3),0 0 0 1px rgba(20,90,70,.2);
+}
+.hospital-pin-inner span{font-size:21px;font-weight:900;line-height:1}
+.healthcare-popup{
+  font-size:12px;
+  line-height:1.65;
+  max-width:310px;
+  overflow-wrap:anywhere;
+}
+.healthcare-popup strong{display:block;font-size:13px;color:#1d6048;margin-bottom:5px}
+.healthcare-popup small{display:block;margin-top:5px;color:#697787}
+.healthcare-popup a{display:inline-block;margin-top:7px;font-weight:700}
+.extra-divider{height:1px;background:#dce5ef;margin:5px 0}
+@media(max-width:540px){
+ .maphead .hazard-chip.healthcare,
+ .maphead .hazard-chip.winter{min-width:118px}
+}

@@ -10,6 +10,7 @@ on:
       - 'data/resilience/**'
       - 'scripts/test-integrated-features.*'
       - 'scripts/test-integrated-features-browser.cjs'
+      - 'scripts/test-healthcare-winter-map*'
       - '.github/workflows/verify-relocation-extras.yml'
   workflow_dispatch:
 permissions:
@@ -25,6 +26,8 @@ jobs:
           node-version: '22'
       - name: Verify icon, preserved controls and cost math
         run: node --test scripts/test-integrated-features.cjs
+      - name: Validate official Census, DSHS and winter NRI map datasets
+        run: node --test scripts/test-healthcare-winter-map.cjs
       - name: Install Chromium into isolated temporary folder
         run: |
           mkdir -p integration-browser-tmp
@@ -40,10 +43,16 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/integration-browser-tmp/node_modules
         run: node scripts/test-integrated-features-browser.cjs
+      - name: Verify hospital markers, official winter polygons and school overlays
+        env:
+          NODE_PATH: ${{ github.workspace }}/integration-browser-tmp/node_modules
+        run: node scripts/test-healthcare-winter-map-browser.cjs
       - name: Upload desktop and mobile screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: relocation-extras-browser
-          path: artifacts/feature-integration/
+          path: |
+            artifacts/feature-integration/
+            artifacts/health-winter-map/
           if-no-files-found: warn
