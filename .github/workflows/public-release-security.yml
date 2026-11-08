@@ -7,6 +7,9 @@ on:
     paths:
       - 'scripts/public-release-gate.cjs'
       - 'tests/public-release-gate.test.cjs'
+      - 'tests/public-preview-build.test.cjs'
+      - 'scripts/build-public-preview.cjs'
+      - 'scripts/verify-public-preview.cjs'
       - '.github/workflows/public-release-security.yml'
   workflow_dispatch:
   schedule:
@@ -30,8 +33,12 @@ jobs:
           node-version: '24'
           package-manager-cache: false
       - name: Test security gate rules
-        run: node --test tests/public-release-gate.test.cjs
+        run: node --test tests/public-release-gate.test.cjs tests/public-preview-build.test.cjs
       - name: Run non-deploying public release audit
+        run: node scripts/public-release-gate.cjs audit
+      - name: Build and verify isolated public preview (no deploy)
+        run: node scripts/verify-public-preview.cjs
+      - name: Re-run source audit for final artifact metadata
         run: node scripts/public-release-gate.cjs audit
       - name: Upload redacted audit report
         if: always()
