@@ -935,7 +935,7 @@ test('P0 current Plano official Finder zoning GIS is live, all levels complete, 
 test('P0 current Finder and prior unlinked GIS are visually distinct without falsely promoting year',()=>{
  const web=readText('index.html'),home=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
  assert.ok(web.includes('id="referenceBoundaryOverlay"'));
- assert.ok(web.includes('loadPlanoLiveFinder()'));
+ assert.ok(web.includes('loadPlanoLiveFinder(zoneFetch)'));
  assert.ok(web.includes('state.liveFinder.PISD_LOOKUP=true'));
  assert.ok(web.includes('state.liveFinder.LISD=true'));
  assert.ok(web.includes('historical&&!state.showOldZones'));

@@ -106,17 +106,23 @@ function initWinterHazardMap(map,d){
   if(restoreZip!==null&&zip){zip.checked=restoreZip;zip.dispatchEvent(new Event('change',{bubbles:true}));restoreZip=null;}
  }
  async function toggle(next){
-  const id=++request;enabled=Boolean(next);sync();
+  const id=++request;
+  if(next&&!enabled){
+   // Turn competing layers off while this layer is still disabled: their ZIP
+   // restore and the crime button click must not reach this layer's own
+   // "competitor switched on" listeners below and cancel it.
+   for(const name of ['femaHazardEnabled','nfhlEnabled','txwrapWHPEnabled']){
+    const control=d.getElementById(name);
+    if(control?.checked){control.checked=false;control.dispatchEvent(new Event('change',{bubbles:true}));}
+   }
+   const crime=d.getElementById('crimeMapToggle');
+   if(crime?.getAttribute('aria-pressed')==='true')crime.click();
+  }
+  enabled=Boolean(next);sync();
   if(!enabled){
    if(layer&&map.hasLayer(layer))map.removeLayer(layer);
    restore();paintLegend();setStatus('겨울 위험 지도 꺼짐');return;
   }
-  for(const name of ['femaHazardEnabled','nfhlEnabled','txwrapWHPEnabled']){
-   const control=d.getElementById(name);
-   if(control?.checked){control.checked=false;control.dispatchEvent(new Event('change',{bubbles:true}));}
-  }
-  const crime=d.getElementById('crimeMapToggle');
-  if(crime?.getAttribute('aria-pressed')==='true')crime.click();
   if(zip&&restoreZip===null){restoreZip=zip.checked;if(zip.checked){zip.checked=false;zip.dispatchEvent(new Event('change',{bubbles:true}));}}
   setStatus('2025 FEMA 겨울 위험과 Census tract 경계를 확인하는 중…');paintLegend();
   try{

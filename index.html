@@ -591,6 +591,12 @@ function convertMetrostudyZones(webmap,cfg=LEWISVILLE_FINDER){
  out.push({type:'Feature',properties:{school:name,gradeLevel:level,campusId:ids.length===1?ids[0]:null,sourceVintage:cfg.vintage(level)},geometry:{type:'MultiPolygon',coordinates:polys}});
  }}return out;
 }
+// External finders (Frisco, MetroStudy for Lewisville/McKinney, Plano ArcGIS)
+// are read live. Without a limit, one hung server keeps Promise.all pending
+// and every district shows "loading" forever. Timeout -> error message +
+// official finder link (Plano falls back to its stored copy).
+const ZONE_FETCH_TIMEOUT_MS=window.__zoneFetchTimeoutMs||20000;
+const zoneFetch=(url,opt={})=>fetch(url,{...opt,signal:window.AbortSignal?.timeout?AbortSignal.timeout(ZONE_FETCH_TIMEOUT_MS):undefined});
 async function loadBoundaryData(){
  // Keep the separately published official feeder chains independent of live GIS.
  // Missing/invalid reference never silently validates an address assignment.
@@ -612,12 +618,12 @@ async function loadBoundaryData(){
   try{
    if(x.district==='PISD_LOOKUP'){
      try{
-      const zones=await loadPlanoLiveFinder();
+      const zones=await loadPlanoLiveFinder(zoneFetch);
       state.zoneData.PISD_LOOKUP=zones;state.liveFinder.PISD_LOOKUP=true;
       return x.label+': '+zones.length+'개 · 공식 서비스 실시간 확인';
      }catch(err){console.warn('Plano official Finder live read failed; cached reference only',err)}
     }
-    const r=await fetch(x.url,{cache:'no-store'});
+    const r=await zoneFetch(x.url,{cache:'no-store'});
    if(!r.ok)throw Error('HTTP '+r.status);
    const j=await r.json();
    if(x.district==='FISD')state.zoneData.FISD=convertFriscoZones(j);
@@ -789,5 +795,5 @@ function drawCommute(){const d=getZip(),v=state.times[d.z];el('routeStatus').inn
 let routeRequestSeq=0;
 async function drawSelectedRoute(){if(!map||!state.dest)return;const seq=++routeRequestSeq;routeGroup.clearLayers();const d=getZip(),p=state.dest.ll;try{const uri='https://router.project-osrm.org/route/v1/driving/'+d.ll[1]+','+d.ll[0]+';'+p[1]+','+p[0]+'?overview=full&geometries=geojson';const r=await fetch(uri);if(!r.ok)throw Error('route HTTP '+r.status);const j=await r.json();if(seq!==routeRequestSeq||d.z!==state.zip)return;const line=j.routes?.[0]?.geometry;if(line){window.noteCommuteRouteDistance?.(j.routes?.[0]?.distance,'zip');L.geoJSON(line,{style:{color:'#1d57d4',weight:4,opacity:.8}}).addTo(routeGroup);const mid=line.coordinates[Math.floor(line.coordinates.length/2)],minutes=j.routes?.[0]?.duration;if(mid&&Number.isFinite(minutes))L.marker([mid[1],mid[0]],{interactive:false,icon:L.divIcon({className:'',html:'<span class="route-label">ZIP 대표점 '+Math.round(minutes/60)+'분</span>',iconSize:[120,30]})}).addTo(routeGroup)}}catch(e){if(seq===routeRequestSeq)console.warn('route overlay',e)}}
 document.addEventListener('DOMContentLoaded',async()=>{try{const r=await fetch('./dfw-demographics.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const j=await r.json();if(j.year!==2024||!Array.isArray(j.data)||j.data.length!==292)throw Error('DFW 데이터 형식 오류');const existing=new Map(DATA.map(d=>[d.z,d]));for(const row of j.data){const prior=existing.get(row.z);if(prior){const name=prior.name;Object.assign(prior,row,{name})}else DATA.push(row)}}catch(e){console.error('DFW demographics:',e);toast('DFW 통계 데이터를 불러오지 못해 기존 11개 지역만 표시합니다.')}try{const r=await fetch('./jpm-outside-dfw.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);outsideData=await r.json();if(!Array.isArray(outsideData.data)||!Array.isArray(outsideData.shapes?.features))throw Error('주변 ZIP 데이터 형식 오류');for(const d of outsideData.data){Object.assign(d,outsideData.race[d.z]||{},{jpmMinutes:outsideData.minutes[d.z]??null});DATA.push(d)}}catch(e){console.error('주변 ZIP 자료 오류:',e);toast('DFW 바깥 일부 ZIP을 불러오지 못했습니다.')}init()});
-</script><script src="./features/commute/workplace-marker.js?v=1"></script><script src="./features/healthcare/map-layer.js?v=1"></script><script src="./features/resilience/winter-map.js?v=1"></script><script src="./rating-context.js?v=1"></script><script src="./school-identity.js?v=1"></script><script src="./school-assignment.js?v=6"></script><script src="./home-lookup-v2.js?v=15"></script><script src="./allen-lookup.js?v=5"></script><script src="./candidate-compare.js?v=4"></script><script src="./features/commute/cost-model.js?v=1"></script><script src="./features/dashboard-extras.js?v=1"></script></body></html>
+</script><script src="./features/commute/workplace-marker.js?v=1"></script><script src="./features/healthcare/map-layer.js?v=1"></script><script src="./features/resilience/winter-map.js?v=2"></script><script src="./rating-context.js?v=1"></script><script src="./school-identity.js?v=1"></script><script src="./school-assignment.js?v=6"></script><script src="./home-lookup-v2.js?v=15"></script><script src="./allen-lookup.js?v=5"></script><script src="./candidate-compare.js?v=4"></script><script src="./features/commute/cost-model.js?v=1"></script><script src="./features/dashboard-extras.js?v=1"></script></body></html>
 

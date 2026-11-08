@@ -47,6 +47,6 @@ test('Map controls lazy-load independent layers and do not change old school sel
  assert.ok(html.includes('window.initHealthcareMap?.(map,document)'));
  assert.ok(html.includes('window.initWinterHazardMap?.(map,document)'));
  assert.ok(html.includes('features/healthcare/map-layer.js?v=1'));
- assert.ok(html.includes('features/resilience/winter-map.js?v=1'));
+ assert.ok(html.includes('features/resilience/winter-map.js?v=2'));
  for(const id of ['hospitalMapEnabled','winterMapEnabled','winterHazardType'])assert.ok(extra.includes('id="'+id+'"'));
 });
