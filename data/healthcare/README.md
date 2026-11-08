@@ -1,6 +1,6 @@
 # P41 — CMS hospital and emergency access data (2026-11-08)
 
-**Status:** standalone DFW facility inventory + source-aware access calculation core. **Not yet wired to the public dashboard.** No driving times, coordinates, verified 24/7 status or trauma designations were collected.
+**Status updated 2026-11-08:** CMS facility **city-search listing** is wired to the public dashboard via `features/dashboard-extras.js` (PR #63). Source-aware drive-time calculations remain standalone and not wired; no coordinates, actual drive times, verified 24/7 status or trauma designations were acquired.
 
 ## Official CMS acquisition
 
