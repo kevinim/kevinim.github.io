@@ -9,8 +9,8 @@ function tag(id){const m=html.match(new RegExp('<button\\b[^>]*id="'+id+'"[^>]*>
 for(const id of ['homeSearch','homeClear','addComparison','calcCommute','crimeMapToggle'])unique('id="'+id+'"',id);
 for(const id of ['femaHazardEnabled','femaHazardType','hazardMapQuickToggle','schoolOverlay','zipOverlay','oneHourOverlay'])unique('id="'+id+'"',id);
 for(const kind of ['ifld','wfir','hrcn'])unique('data-hazard="'+kind+'"',kind);
-assert.match(html,/<link rel="stylesheet" href="\.\/ui-action-buttons\.css\?v=1">/);
-assert.ok(html.indexOf('ui-action-buttons.css?v=1')>html.indexOf('phase2HazardStyles'),'override stylesheet must load after existing CSS');
+assert.match(html,/<link rel="stylesheet" href="\.\/ui-action-buttons\.css\?v=2">/);
+assert.ok(html.indexOf('ui-action-buttons.css?v=2')>html.indexOf('phase2HazardStyles'),'override stylesheet must load after existing CSS');
 for(const [id,text] of [['homeSearch','주소 검색'],
  ['addComparison','집 비교함에 추가'],['calcCommute','자동차 출퇴근 시간 확인']]){
  const button=tag(id);
