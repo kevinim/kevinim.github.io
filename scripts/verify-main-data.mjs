@@ -1331,6 +1331,7 @@ test('Layout: ZIP subgroup details live in the wide card under the map, not the 
  assert.ok(web.includes('function drawZipInsights(d)')&&web.includes('function drawDetail(){const d=getZip();drawZipInsights(d);'),'insights refresh with every detail redraw');
  assert.ok(!web.includes("+menaHtml(d.z);el('detailContent').innerHTML=html;"),'subgroups no longer appended to the narrow right column');
  assert.ok(web.includes('.main>.section{grid-column:1 / -1'),'school finder + comparison use the full width');
+ assert.ok(web.includes('repeat(auto-fit,minmax(200px,1fr))'),'3 insight cards fit one row even with a classic 15px desktop scrollbar (724px card)');
 });
 await Promise.all(asyncChecks);
 console.log('Main website QA: ' + total + ' tests passed.');
