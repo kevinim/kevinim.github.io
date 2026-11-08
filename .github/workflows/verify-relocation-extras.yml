@@ -9,6 +9,7 @@ on:
       - 'data/healthcare/**'
       - 'data/resilience/**'
       - 'scripts/test-integrated-features.*'
+      - 'scripts/test-integrated-features-browser.cjs'
       - '.github/workflows/verify-relocation-extras.yml'
   workflow_dispatch:
 permissions:
