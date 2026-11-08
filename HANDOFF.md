@@ -1,0 +1,135 @@
+# TX Relocation Dashboard — Agent Handoff / Future Roadmap
+
+**Project:** North Dallas Neighborhood Explorer  
+**Production:** https://kevinim.github.io/  
+**Repository:** `kevinim/kevinim.github.io` (`main`)  
+**Decision captured:** 2026-11-07, America/New_York  
+**Status:** **PLAN APPROVED — NOT IMPLEMENTED.** No functionality, ingestion, or production deployment is claimed by this handoff.
+
+## 0. Read this before making changes
+
+1. Read `BOUNDARIES.md` and the active school-data provenance and test files first. Current school assignment is a primary feature.
+2. Inspect **current** GitHub branches, open PRs, deployments, and production regressions. At the time of this note, PR #53 (`refactor/district-registry-20261107`) was open; do not assume its current status.
+3. Address outstanding P0 regressions (especially **Allen schools/markers disappearing or showing 0 results**) before adding new map layers. Earlier fixes/tests did not always prevent production recurrence. Verify the deployed site, not only unit tests.
+4. Existing commute datasets and hazard modules (`jpm-road-times-2026-11-04.json`, `jpm-60min-isochrone-2026-11-04.geojson`, `phase2a-fema-hazards.js`, `phase2a-nfhl-flood.js`) should be examined before extending or duplicating logic.
+5. P40–P43 below are **proposed work labels**, not proof that GitHub issues, PRs, or implementation branches exist. Check for naming collisions before registering.
+
+## 1. Approved goals and order
+
+The user approved four proposed capabilities:
+
+| ID | Feature | Order / Release policy | Current status |
+| --- | --- | --- | --- |
+| **P40** | Vehicle commute and DFW toll cost simulation, peak congestion | Implement after P0 stability and source feasibility | Proposed; no implementation |
+| **P41** | Hospital / emergency-care accessibility | Implement after P40, or in parallel if isolated | Proposed; no implementation |
+| **P42** | Cold-wave, winter storm and electric-grid resilience | Implement with evidence-tier labels; never invent neighborhood outage scores | Proposed; no implementation |
+| **P43** | Crime Map **data acquisition and normalization only** | Begin research/collection; **do not publish a crime map or safety score yet** | Proposed; source candidates identified, data not ingested |
+
+Preserve existing school, school-boundary, address lookup, and FEMA flood work. These new features are additional decision-support layers, not replacements.
+
+## 2. P40 — Vehicle commute + Toll simulator
+
+### User-facing outcome
+From an origin or selected neighborhood/address to a chosen workplace/destination:
+- Compare toll-enabled and toll-avoiding routes, when defensible route data are available.
+- Display peak AM/PM driving-time **range/variability**, not only a single optimistic ETA; identify key bottlenecks with documented measurements.
+- Estimate tolls by route and month, clearly distinguishing **NTTA TollTag vs. ZipCash/non-tag** prices and independently operated / variable-price **TEXpress** lanes.
+- Show editable monthly office days, vehicle MPG, gasoline price, toll assumption, distance, parking (optional), and calculate monthly toll, fuel and total outlay.
+- Explicitly label user-entered assumptions, sample estimates, dated rates and live/observed conditions. Never call an illustrative toll value an official quote.
+
+### Calculation / engineering rules
+- For repeated symmetrical round trips, monthly toll = (outbound toll + return toll) × commute days; monthly fuel = (outbound + return miles) × commute days ÷ MPG × $/gallon. Allow routes with asymmetric tolls/distances.
+- Dynamic TEXpress prices must be treated as time-sensitive or a range, not a fixed NTTA rate. No hidden routing API keys or paid services without an integration plan.
+- Reuse existing commute views/data where valid. If live route data cannot be licensed or obtained, start with explicitly labeled estimates/manual inputs rather than fabricate travel times or tolls.
+- Potential sources to verify: NTTA official toll calculator and rate sheets; TxDOT mobility/reliability datasets; official TEXpress operator rate information; licensed routing API if available.
+- Suggested QA: zero workdays, toll-free route, one-way vs. round-trip, rate vintage, missing traffic data, variable pricing, weekday AM/PM, rerouting, numeric input validation.
+
+### Definition of done
+Reproducible formulas + tested route/cost assumptions + date/source disclosure + correct toll vs no-toll comparison + no regressions in school markers or existing map behavior.
+
+## 3. P41 — Healthcare / emergency accessibility
+
+### User-facing outcome
+- Locate nearest **hospital emergency department** and major hospitals, optionally pediatric facilities.
+- Show **drive time** and the number of emergency facilities within indicative 15-/30-minute travel windows when genuine route-time coverage is available.
+- Distinguish ordinary hospitals, open emergency departments, trauma designations (Texas DSHS Level I–IV), and pediatric capability; do not equate general hospital star ratings with emergency/trauma capability.
+- When only geometric proximity is available, label it **straight-line distance**, not estimated driving time. Confirm emergency service status before claiming 24/7 availability.
+
+### Candidate sources / implementation
+- CMS Care Compare / Provider of Services datasets: facility address, type, emergency-service indicator, source vintage.
+- Texas DSHS designated trauma facilities and pediatric designations, as available.
+- Geocode/QA facilities, de-duplicate locations, join drive-time service separately. Store provider IDs, coordinates, type, ED availability verification, designation, source URL and `asOf` date.
+- QA: hospital without ED, duplicate campus, closed/renamed facilities, out-of-scope locations, missing coordinates, routing failure, cross-border access.
+
+### Definition of done
+Accurate facility taxonomy and provenance, useful proximity/ETA labels, verified ED/trauma claims, and clean unavailable-state UI.
+
+## 4. P42 — Winter storm / power resilience
+
+**Do not collapse these into one false-precision neighborhood score.** Keep independent dimensions and provenance.
+
+1. **Cold weather / winter storm hazard exposure** — FEMA National Risk Index / RAPT or successor, using the available relevant hazard categories and their actual geography, vintage and methodology. Risk is not the same as historical outages.
+2. **Utility reliability** — EIA distribution utility reliability statistics (e.g., SAIDI/SAIFI), with utility/year coverage and metric caveats. Verify utility service territory by address before assigning a utility-level figure; ERCOT wholesale grid is not an address-level distribution utility.
+3. **Historical storm outage footprint** — research 2021 winter storm and subsequent event reports from utilities, PUCT/official incident reports and defensible spatial records. Only show street/neighborhood-level outage claims with verifiable local evidence; otherwise `unavailable` / broader-area context.
+
+### UX and source-quality rules
+- Display three separate cards/metrics with **source, geography, reporting year, uncertainty, and coverage**.
+- Prefer neutral/no fill for missing data; progressively redder as validated adverse risk increases.
+- Do not conflate ERCOT grid-level incidents with actual outage durations at a particular residence; do not derive an exact neighborhood score from utility-wide figures.
+- Confirm any existing FEMA flood/hazard styling and source semantics to avoid mixing flood risk with winter risk.
+
+### Definition of done
+Documented geographic attribution, accurate data vintage, separate indicators, and no misleading local outage assertions.
+
+## 5. P43 — Crime Map DATA PREPARATION ONLY
+
+**Scope now:** discover, obtain (if permitted), inventory and normalize official data. **OUT OF SCOPE now:** public map, geocoded resident safety score, city rankings, visual crime heatmap, or release.
+
+### Source candidates to verify
+- Texas DPS Crime Portal: https://txucr.nibrs.com/
+- FBI Crime Data Explorer: https://cde.ucr.cjis.gov/
+- City of Dallas police incident open data: https://www.dallasopendata.com/Public-Safety/Police-Incidents/qv6i-rri7/about_data
+- Fort Worth Police Crime Data Center: https://police.fortworthtexas.gov/Crime-Public-Info/Crime-Data-Center
+- Frisco GIS crime map service: https://maps.friscotexas.gov/gis/rest/services/Public/Crime_Mapping_View__Dashboard/FeatureServer
+- McKinney crime statistics: https://www.mckinneytexas.org/1199/Crime-Statistics
+- Plano crime statistics: https://www.plano.gov/crime-statistics
+- Allen: source with incident-level coordinate coverage **not confirmed**; research further. Do not state data are absent merely because not yet found.
+
+### Data contract
+Capture `sourceAuthority`, `sourceUrl`, `downloadedAt`, `incidentDate`, `reportDate`, `offenseCode`, `offenseCategory`, `geographyType`, `geoPrecision`, `latitude/longitude (if lawfully available)`, `city`, `coverageStart/End`, `aggregation`, `redactionPolicy`, `reportingStandard`, and `license`. Keep raw data immutable and normalized data versioned.
+
+Prefer comparable **2021–2025** annual periods plus **2026 provisional** data if available. Separate violent from property crimes. Track NIBRS vs older/UCR or city-specific classification and the year of transitions. Record complete vs incomplete city participation, missing months, duplicate/corrected incidents, privacy-obfuscated points and source refresh cadence. Where comparability fails, store the data but **do not issue a cross-city ranking or per-capita comparison**. Missing data ≠ zero incidents or low risk.
+
+### Definition of done for data preparation
+A documented per-city/source coverage matrix, permitted raw downloads or machine-readable connectors, normalized sample sets, reproducible ingest scripts, QA/reporting checks, provenance manifest, and a list of unresolved gaps; **no visual layer deployment yet**.
+
+## 6. Cross-feature design / guardrails
+
+- Site is GitHub Pages / static frontend: favor separated data-generation scripts and versioned static outputs; evaluate external API licensing/CORS/cost before embedding runtime requests.
+- Existing map schools must remain visible when non-school layers fetch, fail, toggle or refresh. New overlay components must not overwrite school feature collections, marker state, map source IDs or default viewport logic.
+- Respect selected area on default zoom / initial view. Don't change existing geographic selection precedence as a side-effect.
+- Production **P0 marker-count guardrail**: test Allen and other school selections with expected nonzero marker/campus coverage and visible layers; include an explicit loaded vs empty vs failed state. Never silently replace nonempty school data with empty results upon fetch error or state change.
+- A previous map-marker fix was reported as passing tests but production later showed 0 schools. Require deployed-site smoke tests with the same selection/zoom states and cache considerations, not just passing unit tests.
+- Data confidence: include source URL, publisher, update/check date, reference period, geographic resolution, completeness, limitations, and interpretation note for every derived layer.
+- Cartography: missing data remains **unfilled/neutral**; increasing verified adverse risk moves toward **red**. Never merge `unrated` with `no data` in one legend entry; avoid blue-to-red ambiguous scales.
+- Accessibility and performance: independent lazy-loadable overlays; loading/error/empty status; keyboard-friendly toggles; responsive legend; avoid loading nationwide incident point clouds on initial map. Use spatial simplification/tiles or aggregation only where statistically valid.
+- No fabricated numbers, artificial ranking, inferred person-level claims, or precise claims derived from coarse aggregates.
+- Record source-to-transformation-to-UI lineage and include regression tests in each feature PR.
+
+## 7. Recommended execution sequence for the next Claude/GPT agent
+
+1. Inspect `main`, active PRs/issues and deployed `https://kevinim.github.io/` and revalidate school P0 problems and current school map; **do not mistake this roadmap for completed work**.
+2. Create separate issue/branch for P40 only after checking roadmap/numbering and the existing commute implementation. Source viability / API pricing first; then UI + formulas + coverage tests.
+3. P41: CMS/DSHS source audit and facility model; route-time service only if licensed and available.
+4. P42: geospatial join feasibility and utilities geography, publish only defensible indicators.
+5. P43: build source inventory and ingest/QA pipeline only; reserve any safety visualization for a separately approved phase.
+6. For each shipped feature: review source freshness and ethics/privacy, run automated tests plus deployed smoke tests, document deltas and actual commit/PR/deploy status. Do **not** auto-promote plans to completed states.
+
+## 8. Status at handoff creation
+
+- Approval: conceptual feature priorities and boundaries accepted by user.
+- Done in this task: written agent handoff only.
+- Not done in this task: public datasets downloaded, API integrations, UI/code updates, new tests, PR merges, production deployments.
+- Existing active PRs, code state, data freshness and deployment status can change; re-check before executing.
+
+This document is an execution backlog and context bridge, not a claim of built features.
