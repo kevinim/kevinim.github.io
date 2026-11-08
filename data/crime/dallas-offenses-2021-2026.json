@@ -1,0 +1,2245 @@
+{
+  "metadata": {
+    "sourceId": "dallas-socrata-qv6i-rri7",
+    "publisher": "City of Dallas / Dallas Police Department",
+    "acquiredOn": "2026-11-07",
+    "endpoint": "https://www.dallasopendata.com/resource/qv6i-rri7.json",
+    "query": "https://www.dallasopendata.com/resource/qv6i-rri7.json?%24select=year1%2Cnibrs_code%2Cnibrs_crime%2Ccount(*)%20AS%20offense_rows%2Ccount(distinct%20incidentnum)%20AS%20distinct_case_ids&%24where=year1%20between%20'2021'%20and%20'2026'&%24group=year1%2Cnibrs_code%2Cnibrs_crime&%24order=year1%2Cnibrs_code%2Cnibrs_crime&%24limit=20000",
+    "unit": "offense-row count by NIBRS code-year; distinct case IDs are deduped only within each code-year",
+    "geography": "Dallas police dataset city reporting scope; city attribution not independently rechecked",
+    "coverageYears": [
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "provisionalYears": [
+      2026
+    ],
+    "scopeWarning": "This public incident dataset excludes selected sensitive/juvenile/sexual offenses; counts are NOT complete FBI offense totals and should not be used as a comparable safety score.",
+    "publicDisplay": false
+  },
+  "records": [
+    {
+      "year": 2021,
+      "offenseCode": "09A",
+      "offenseLabel": "MURDER & NONNEGLIGENT MANSLAUGHTER",
+      "offenseRows": 80,
+      "distinctCaseIds": 79
+    },
+    {
+      "year": 2021,
+      "offenseCode": "09B",
+      "offenseLabel": "NEGLIGENT MANSLAUGHTER",
+      "offenseRows": 8,
+      "distinctCaseIds": 7
+    },
+    {
+      "year": 2021,
+      "offenseCode": "09C",
+      "offenseLabel": "JUSTIFIABLE HOMICIDE",
+      "offenseRows": 13,
+      "distinctCaseIds": 13
+    },
+    {
+      "year": 2021,
+      "offenseCode": "100",
+      "offenseLabel": "KIDNAPPING/ ABDUCTION",
+      "offenseRows": 29,
+      "distinctCaseIds": 28
+    },
+    {
+      "year": 2021,
+      "offenseCode": "120",
+      "offenseLabel": "ROBBERY-BUSINESS",
+      "offenseRows": 790,
+      "distinctCaseIds": 373
+    },
+    {
+      "year": 2021,
+      "offenseCode": "120",
+      "offenseLabel": "ROBBERY-INDIVIDUAL",
+      "offenseRows": 1691,
+      "distinctCaseIds": 1499
+    },
+    {
+      "year": 2021,
+      "offenseCode": "13A",
+      "offenseLabel": "AGG ASSAULT - NFV",
+      "offenseRows": 3603,
+      "distinctCaseIds": 2915
+    },
+    {
+      "year": 2021,
+      "offenseCode": "13B",
+      "offenseLabel": "SIMPLE ASSAULT",
+      "offenseRows": 2352,
+      "distinctCaseIds": 2229
+    },
+    {
+      "year": 2021,
+      "offenseCode": "13C",
+      "offenseLabel": "INTIMIDATION",
+      "offenseRows": 2775,
+      "distinctCaseIds": 2667
+    },
+    {
+      "year": 2021,
+      "offenseCode": "200",
+      "offenseLabel": "ARSON",
+      "offenseRows": 222,
+      "distinctCaseIds": 215
+    },
+    {
+      "year": 2021,
+      "offenseCode": "210",
+      "offenseLabel": "EXTORTION/ BLACKMAIL",
+      "offenseRows": 9,
+      "distinctCaseIds": 9
+    },
+    {
+      "year": 2021,
+      "offenseCode": "220",
+      "offenseLabel": "BURGLARY-BUSINESS",
+      "offenseRows": 3858,
+      "distinctCaseIds": 3688
+    },
+    {
+      "year": 2021,
+      "offenseCode": "220",
+      "offenseLabel": "BURGLARY-RESIDENCE",
+      "offenseRows": 3125,
+      "distinctCaseIds": 2957
+    },
+    {
+      "year": 2021,
+      "offenseCode": "23A",
+      "offenseLabel": "POCKET-PICKING",
+      "offenseRows": 99,
+      "distinctCaseIds": 96
+    },
+    {
+      "year": 2021,
+      "offenseCode": "23B",
+      "offenseLabel": "PURSE-SNATCHING",
+      "offenseRows": 52,
+      "distinctCaseIds": 52
+    },
+    {
+      "year": 2021,
+      "offenseCode": "23C",
+      "offenseLabel": "SHOPLIFTING",
+      "offenseRows": 1750,
+      "distinctCaseIds": 1746
+    },
+    {
+      "year": 2021,
+      "offenseCode": "23D",
+      "offenseLabel": "THEFT OF BUILDING",
+      "offenseRows": 1355,
+      "distinctCaseIds": 1297
+    },
+    {
+      "year": 2021,
+      "offenseCode": "23E",
+      "offenseLabel": "THEFT OF COIN-OPERATED MACHINE OR DEVICE",
+      "offenseRows": 46,
+      "distinctCaseIds": 39
+    },
+    {
+      "year": 2021,
+      "offenseCode": "23F",
+      "offenseLabel": "THEFT FROM MOTOR VEHICLE",
+      "offenseRows": 12950,
+      "distinctCaseIds": 12330
+    },
+    {
+      "year": 2021,
+      "offenseCode": "23G",
+      "offenseLabel": "THEFT OF MOTOR VEHICLE PARTS OR ACCESSORIES",
+      "offenseRows": 5800,
+      "distinctCaseIds": 5629
+    },
+    {
+      "year": 2021,
+      "offenseCode": "23H",
+      "offenseLabel": "ALL OTHER LARCENY",
+      "offenseRows": 6796,
+      "distinctCaseIds": 6466
+    },
+    {
+      "year": 2021,
+      "offenseCode": "240",
+      "offenseLabel": "UUMV",
+      "offenseRows": 23105,
+      "distinctCaseIds": 11439
+    },
+    {
+      "year": 2021,
+      "offenseCode": "250",
+      "offenseLabel": "COUNTERFEITING / FORGERY",
+      "offenseRows": 320,
+      "distinctCaseIds": 306
+    },
+    {
+      "year": 2021,
+      "offenseCode": "26A",
+      "offenseLabel": "FALSE PRETENSES/ SWINDLE/ CONFIDENCE GAME",
+      "offenseRows": 1067,
+      "distinctCaseIds": 1014
+    },
+    {
+      "year": 2021,
+      "offenseCode": "26B",
+      "offenseLabel": "CREDIT CARD/ ATM FRAUD",
+      "offenseRows": 269,
+      "distinctCaseIds": 262
+    },
+    {
+      "year": 2021,
+      "offenseCode": "26C",
+      "offenseLabel": "IMPERSONATION",
+      "offenseRows": 22,
+      "distinctCaseIds": 22
+    },
+    {
+      "year": 2021,
+      "offenseCode": "26D",
+      "offenseLabel": "WELFARE FRAUD",
+      "offenseRows": 2,
+      "distinctCaseIds": 2
+    },
+    {
+      "year": 2021,
+      "offenseCode": "26E",
+      "offenseLabel": "WIRE FRAUD",
+      "offenseRows": 1,
+      "distinctCaseIds": 1
+    },
+    {
+      "year": 2021,
+      "offenseCode": "26F",
+      "offenseLabel": "IDENTITY THEFT",
+      "offenseRows": 355,
+      "distinctCaseIds": 274
+    },
+    {
+      "year": 2021,
+      "offenseCode": "26G",
+      "offenseLabel": "HACKING/COMPUTER INVASION",
+      "offenseRows": 5,
+      "distinctCaseIds": 5
+    },
+    {
+      "year": 2021,
+      "offenseCode": "270",
+      "offenseLabel": "EMBEZZELMENT",
+      "offenseRows": 313,
+      "distinctCaseIds": 294
+    },
+    {
+      "year": 2021,
+      "offenseCode": "280",
+      "offenseLabel": "STOLEN PROPERTY OFFENSES",
+      "offenseRows": 300,
+      "distinctCaseIds": 282
+    },
+    {
+      "year": 2021,
+      "offenseCode": "290",
+      "offenseLabel": "DESTRUCTION/ DAMAGE/ VANDALISM OF PROPERTY",
+      "offenseRows": 10210,
+      "distinctCaseIds": 9716
+    },
+    {
+      "year": 2021,
+      "offenseCode": "35A",
+      "offenseLabel": "DRUG/ NARCOTIC VIOLATIONS",
+      "offenseRows": 6670,
+      "distinctCaseIds": 5502
+    },
+    {
+      "year": 2021,
+      "offenseCode": "35B",
+      "offenseLabel": "DRUG EQUIPMENT VIOLATIONS",
+      "offenseRows": 606,
+      "distinctCaseIds": 601
+    },
+    {
+      "year": 2021,
+      "offenseCode": "370",
+      "offenseLabel": "PORNOGRAPHY/ OBSCENE MATERIAL",
+      "offenseRows": 8,
+      "distinctCaseIds": 5
+    },
+    {
+      "year": 2021,
+      "offenseCode": "39A",
+      "offenseLabel": "BETTING/ WAGERING",
+      "offenseRows": 58,
+      "distinctCaseIds": 58
+    },
+    {
+      "year": 2021,
+      "offenseCode": "510",
+      "offenseLabel": "BRIBERY",
+      "offenseRows": 1,
+      "distinctCaseIds": 1
+    },
+    {
+      "year": 2021,
+      "offenseCode": "520",
+      "offenseLabel": "WEAPON LAW VIOLATIONS",
+      "offenseRows": 1886,
+      "distinctCaseIds": 1832
+    },
+    {
+      "year": 2021,
+      "offenseCode": "720",
+      "offenseLabel": "ANIMAL CRUELTY",
+      "offenseRows": 78,
+      "distinctCaseIds": 76
+    },
+    {
+      "year": 2021,
+      "offenseCode": "90C",
+      "offenseLabel": "DISORDERLY CONDUCT",
+      "offenseRows": 222,
+      "distinctCaseIds": 214
+    },
+    {
+      "year": 2021,
+      "offenseCode": "90D",
+      "offenseLabel": "DUI",
+      "offenseRows": 1496,
+      "distinctCaseIds": 1470
+    },
+    {
+      "year": 2021,
+      "offenseCode": "90F",
+      "offenseLabel": "FAMILY OFFENSES, NONVIOLENT",
+      "offenseRows": 450,
+      "distinctCaseIds": 450
+    },
+    {
+      "year": 2021,
+      "offenseCode": "90G",
+      "offenseLabel": "LIQUOR LAW VIOLATIONS",
+      "offenseRows": 4,
+      "distinctCaseIds": 4
+    },
+    {
+      "year": 2021,
+      "offenseCode": "90J",
+      "offenseLabel": "TRESPASS OF REAL PROPERTY",
+      "offenseRows": 999,
+      "distinctCaseIds": 982
+    },
+    {
+      "year": 2021,
+      "offenseCode": "90Z",
+      "offenseLabel": "ALL OTHER OFFENSES",
+      "offenseRows": 5105,
+      "distinctCaseIds": 4697
+    },
+    {
+      "year": 2021,
+      "offenseCode": "90Z",
+      "offenseLabel": "PUBLIC INTOXICATION",
+      "offenseRows": 3090,
+      "distinctCaseIds": 3086
+    },
+    {
+      "year": 2021,
+      "offenseCode": "999",
+      "offenseLabel": "MISCELLANEOUS",
+      "offenseRows": 31409,
+      "distinctCaseIds": 30547
+    },
+    {
+      "year": 2021,
+      "offenseCode": "999",
+      "offenseLabel": "TRAFFIC VIOLATION - HAZARDOUS",
+      "offenseRows": 3605,
+      "distinctCaseIds": 3336
+    },
+    {
+      "year": 2021,
+      "offenseCode": "999",
+      "offenseLabel": "TRAFFIC VIOLATION - NON HAZARDOUS",
+      "offenseRows": 83,
+      "distinctCaseIds": 81
+    },
+    {
+      "year": 2022,
+      "offenseCode": null,
+      "offenseLabel": null,
+      "offenseRows": 13,
+      "distinctCaseIds": 13
+    },
+    {
+      "year": 2022,
+      "offenseCode": "09A",
+      "offenseLabel": "MURDER & NONNEGLIGENT MANSLAUGHTER",
+      "offenseRows": 96,
+      "distinctCaseIds": 92
+    },
+    {
+      "year": 2022,
+      "offenseCode": "09B",
+      "offenseLabel": "NEGLIGENT MANSLAUGHTER",
+      "offenseRows": 14,
+      "distinctCaseIds": 13
+    },
+    {
+      "year": 2022,
+      "offenseCode": "09C",
+      "offenseLabel": "JUSTIFIABLE HOMICIDE",
+      "offenseRows": 17,
+      "distinctCaseIds": 17
+    },
+    {
+      "year": 2022,
+      "offenseCode": "100",
+      "offenseLabel": "KIDNAPPING/ ABDUCTION",
+      "offenseRows": 31,
+      "distinctCaseIds": 28
+    },
+    {
+      "year": 2022,
+      "offenseCode": "120",
+      "offenseLabel": "ROBBERY-BUSINESS",
+      "offenseRows": 832,
+      "distinctCaseIds": 387
+    },
+    {
+      "year": 2022,
+      "offenseCode": "120",
+      "offenseLabel": "ROBBERY-INDIVIDUAL",
+      "offenseRows": 1763,
+      "distinctCaseIds": 1561
+    },
+    {
+      "year": 2022,
+      "offenseCode": "120",
+      "offenseLabel": "SHOPLIFT CONTACT",
+      "offenseRows": 2,
+      "distinctCaseIds": 1
+    },
+    {
+      "year": 2022,
+      "offenseCode": "13A",
+      "offenseLabel": "AGG ASSAULT - NFV",
+      "offenseRows": 3477,
+      "distinctCaseIds": 2815
+    },
+    {
+      "year": 2022,
+      "offenseCode": "13B",
+      "offenseLabel": "SIMPLE ASSAULT",
+      "offenseRows": 2573,
+      "distinctCaseIds": 2446
+    },
+    {
+      "year": 2022,
+      "offenseCode": "13C",
+      "offenseLabel": "INTIMIDATION",
+      "offenseRows": 2439,
+      "distinctCaseIds": 2357
+    },
+    {
+      "year": 2022,
+      "offenseCode": "200",
+      "offenseLabel": "ARSON",
+      "offenseRows": 184,
+      "distinctCaseIds": 184
+    },
+    {
+      "year": 2022,
+      "offenseCode": "210",
+      "offenseLabel": "EXTORTION/ BLACKMAIL",
+      "offenseRows": 8,
+      "distinctCaseIds": 8
+    },
+    {
+      "year": 2022,
+      "offenseCode": "220",
+      "offenseLabel": "BURGLARY-BUSINESS",
+      "offenseRows": 3707,
+      "distinctCaseIds": 3538
+    },
+    {
+      "year": 2022,
+      "offenseCode": "220",
+      "offenseLabel": "BURGLARY-RESIDENCE",
+      "offenseRows": 3017,
+      "distinctCaseIds": 2821
+    },
+    {
+      "year": 2022,
+      "offenseCode": "23A",
+      "offenseLabel": "POCKET-PICKING",
+      "offenseRows": 116,
+      "distinctCaseIds": 116
+    },
+    {
+      "year": 2022,
+      "offenseCode": "23B",
+      "offenseLabel": "PURSE-SNATCHING",
+      "offenseRows": 40,
+      "distinctCaseIds": 40
+    },
+    {
+      "year": 2022,
+      "offenseCode": "23C",
+      "offenseLabel": "SHOPLIFTING",
+      "offenseRows": 1434,
+      "distinctCaseIds": 1433
+    },
+    {
+      "year": 2022,
+      "offenseCode": "23D",
+      "offenseLabel": "THEFT OF BUILDING",
+      "offenseRows": 1029,
+      "distinctCaseIds": 1001
+    },
+    {
+      "year": 2022,
+      "offenseCode": "23E",
+      "offenseLabel": "THEFT OF COIN-OPERATED MACHINE OR DEVICE",
+      "offenseRows": 29,
+      "distinctCaseIds": 26
+    },
+    {
+      "year": 2022,
+      "offenseCode": "23F",
+      "offenseLabel": "THEFT FROM MOTOR VEHICLE",
+      "offenseRows": 13123,
+      "distinctCaseIds": 12506
+    },
+    {
+      "year": 2022,
+      "offenseCode": "23G",
+      "offenseLabel": "THEFT OF MOTOR VEHICLE PARTS OR ACCESSORIES",
+      "offenseRows": 6894,
+      "distinctCaseIds": 6754
+    },
+    {
+      "year": 2022,
+      "offenseCode": "23H",
+      "offenseLabel": "ALL OTHER LARCENY",
+      "offenseRows": 7206,
+      "distinctCaseIds": 6829
+    },
+    {
+      "year": 2022,
+      "offenseCode": "240",
+      "offenseLabel": "UUMV",
+      "offenseRows": 25976,
+      "distinctCaseIds": 12863
+    },
+    {
+      "year": 2022,
+      "offenseCode": "250",
+      "offenseLabel": "COUNTERFEITING / FORGERY",
+      "offenseRows": 296,
+      "distinctCaseIds": 294
+    },
+    {
+      "year": 2022,
+      "offenseCode": "26A",
+      "offenseLabel": "FALSE PRETENSES/ SWINDLE/ CONFIDENCE GAME",
+      "offenseRows": 1145,
+      "distinctCaseIds": 1089
+    },
+    {
+      "year": 2022,
+      "offenseCode": "26B",
+      "offenseLabel": "CREDIT CARD/ ATM FRAUD",
+      "offenseRows": 301,
+      "distinctCaseIds": 297
+    },
+    {
+      "year": 2022,
+      "offenseCode": "26C",
+      "offenseLabel": "IMPERSONATION",
+      "offenseRows": 27,
+      "distinctCaseIds": 25
+    },
+    {
+      "year": 2022,
+      "offenseCode": "26D",
+      "offenseLabel": "WELFARE FRAUD",
+      "offenseRows": 2,
+      "distinctCaseIds": 2
+    },
+    {
+      "year": 2022,
+      "offenseCode": "26F",
+      "offenseLabel": "IDENTITY THEFT",
+      "offenseRows": 260,
+      "distinctCaseIds": 221
+    },
+    {
+      "year": 2022,
+      "offenseCode": "26G",
+      "offenseLabel": "HACKING/COMPUTER INVASION",
+      "offenseRows": 7,
+      "distinctCaseIds": 7
+    },
+    {
+      "year": 2022,
+      "offenseCode": "270",
+      "offenseLabel": "EMBEZZELMENT",
+      "offenseRows": 353,
+      "distinctCaseIds": 348
+    },
+    {
+      "year": 2022,
+      "offenseCode": "280",
+      "offenseLabel": "STOLEN PROPERTY OFFENSES",
+      "offenseRows": 360,
+      "distinctCaseIds": 338
+    },
+    {
+      "year": 2022,
+      "offenseCode": "290",
+      "offenseLabel": "DESTRUCTION/ DAMAGE/ VANDALISM OF PROPERTY",
+      "offenseRows": 9544,
+      "distinctCaseIds": 9162
+    },
+    {
+      "year": 2022,
+      "offenseCode": "35A",
+      "offenseLabel": "DRUG/ NARCOTIC VIOLATIONS",
+      "offenseRows": 6136,
+      "distinctCaseIds": 5189
+    },
+    {
+      "year": 2022,
+      "offenseCode": "35B",
+      "offenseLabel": "DRUG EQUIPMENT VIOLATIONS",
+      "offenseRows": 579,
+      "distinctCaseIds": 577
+    },
+    {
+      "year": 2022,
+      "offenseCode": "39A",
+      "offenseLabel": "BETTING/ WAGERING",
+      "offenseRows": 60,
+      "distinctCaseIds": 60
+    },
+    {
+      "year": 2022,
+      "offenseCode": "510",
+      "offenseLabel": "BRIBERY",
+      "offenseRows": 2,
+      "distinctCaseIds": 2
+    },
+    {
+      "year": 2022,
+      "offenseCode": "520",
+      "offenseLabel": "WEAPON LAW VIOLATIONS",
+      "offenseRows": 1545,
+      "distinctCaseIds": 1502
+    },
+    {
+      "year": 2022,
+      "offenseCode": "64A",
+      "offenseLabel": "HUMAN TRAFFICKING, COMMERCIAL SEX ACTS",
+      "offenseRows": 1,
+      "distinctCaseIds": 1
+    },
+    {
+      "year": 2022,
+      "offenseCode": "64B",
+      "offenseLabel": "HUMAN TRAFFICKING, INVOLUNTARY SERVITUDE",
+      "offenseRows": 1,
+      "distinctCaseIds": 1
+    },
+    {
+      "year": 2022,
+      "offenseCode": "720",
+      "offenseLabel": "ANIMAL CRUELTY",
+      "offenseRows": 124,
+      "distinctCaseIds": 122
+    },
+    {
+      "year": 2022,
+      "offenseCode": "90C",
+      "offenseLabel": "DISORDERLY CONDUCT",
+      "offenseRows": 206,
+      "distinctCaseIds": 194
+    },
+    {
+      "year": 2022,
+      "offenseCode": "90D",
+      "offenseLabel": "DUI",
+      "offenseRows": 1371,
+      "distinctCaseIds": 1346
+    },
+    {
+      "year": 2022,
+      "offenseCode": "90F",
+      "offenseLabel": "FAMILY OFFENSES, NONVIOLENT",
+      "offenseRows": 506,
+      "distinctCaseIds": 506
+    },
+    {
+      "year": 2022,
+      "offenseCode": "90G",
+      "offenseLabel": "LIQUOR LAW VIOLATIONS",
+      "offenseRows": 8,
+      "distinctCaseIds": 8
+    },
+    {
+      "year": 2022,
+      "offenseCode": "90J",
+      "offenseLabel": "TRESPASS OF REAL PROPERTY",
+      "offenseRows": 1073,
+      "distinctCaseIds": 1059
+    },
+    {
+      "year": 2022,
+      "offenseCode": "90Z",
+      "offenseLabel": "ALL OTHER OFFENSES",
+      "offenseRows": 4235,
+      "distinctCaseIds": 3935
+    },
+    {
+      "year": 2022,
+      "offenseCode": "90Z",
+      "offenseLabel": "PUBLIC INTOXICATION",
+      "offenseRows": 2402,
+      "distinctCaseIds": 2393
+    },
+    {
+      "year": 2022,
+      "offenseCode": "999",
+      "offenseLabel": "MISCELLANEOUS",
+      "offenseRows": 29832,
+      "distinctCaseIds": 29057
+    },
+    {
+      "year": 2022,
+      "offenseCode": "999",
+      "offenseLabel": "TRAFFIC VIOLATION - HAZARDOUS",
+      "offenseRows": 3544,
+      "distinctCaseIds": 3275
+    },
+    {
+      "year": 2022,
+      "offenseCode": "999",
+      "offenseLabel": "TRAFFIC VIOLATION - NON HAZARDOUS",
+      "offenseRows": 67,
+      "distinctCaseIds": 66
+    },
+    {
+      "year": 2023,
+      "offenseCode": null,
+      "offenseLabel": null,
+      "offenseRows": 1020,
+      "distinctCaseIds": 1019
+    },
+    {
+      "year": 2023,
+      "offenseCode": "09A",
+      "offenseLabel": "MURDER & NONNEGLIGENT MANSLAUGHTER",
+      "offenseRows": 102,
+      "distinctCaseIds": 99
+    },
+    {
+      "year": 2023,
+      "offenseCode": "09B",
+      "offenseLabel": "NEGLIGENT MANSLAUGHTER",
+      "offenseRows": 10,
+      "distinctCaseIds": 8
+    },
+    {
+      "year": 2023,
+      "offenseCode": "09C",
+      "offenseLabel": "JUSTIFIABLE HOMICIDE",
+      "offenseRows": 17,
+      "distinctCaseIds": 17
+    },
+    {
+      "year": 2023,
+      "offenseCode": "100",
+      "offenseLabel": "KIDNAPPING/ ABDUCTION",
+      "offenseRows": 39,
+      "distinctCaseIds": 35
+    },
+    {
+      "year": 2023,
+      "offenseCode": "120",
+      "offenseLabel": "ROBBERY-BUSINESS",
+      "offenseRows": 785,
+      "distinctCaseIds": 364
+    },
+    {
+      "year": 2023,
+      "offenseCode": "120",
+      "offenseLabel": "ROBBERY-INDIVIDUAL",
+      "offenseRows": 1550,
+      "distinctCaseIds": 1391
+    },
+    {
+      "year": 2023,
+      "offenseCode": "13A",
+      "offenseLabel": "AGG ASSAULT - NFV",
+      "offenseRows": 2813,
+      "distinctCaseIds": 2317
+    },
+    {
+      "year": 2023,
+      "offenseCode": "13B",
+      "offenseLabel": "SIMPLE ASSAULT",
+      "offenseRows": 2567,
+      "distinctCaseIds": 2396
+    },
+    {
+      "year": 2023,
+      "offenseCode": "13C",
+      "offenseLabel": "INTIMIDATION",
+      "offenseRows": 2538,
+      "distinctCaseIds": 2400
+    },
+    {
+      "year": 2023,
+      "offenseCode": "200",
+      "offenseLabel": "ARSON",
+      "offenseRows": 148,
+      "distinctCaseIds": 138
+    },
+    {
+      "year": 2023,
+      "offenseCode": "210",
+      "offenseLabel": "EXTORTION/ BLACKMAIL",
+      "offenseRows": 4,
+      "distinctCaseIds": 4
+    },
+    {
+      "year": 2023,
+      "offenseCode": "220",
+      "offenseLabel": "BURGLARY-BUSINESS",
+      "offenseRows": 3715,
+      "distinctCaseIds": 3606
+    },
+    {
+      "year": 2023,
+      "offenseCode": "220",
+      "offenseLabel": "BURGLARY-RESIDENCE",
+      "offenseRows": 2440,
+      "distinctCaseIds": 2289
+    },
+    {
+      "year": 2023,
+      "offenseCode": "23A",
+      "offenseLabel": "POCKET-PICKING",
+      "offenseRows": 92,
+      "distinctCaseIds": 90
+    },
+    {
+      "year": 2023,
+      "offenseCode": "23B",
+      "offenseLabel": "PURSE-SNATCHING",
+      "offenseRows": 35,
+      "distinctCaseIds": 35
+    },
+    {
+      "year": 2023,
+      "offenseCode": "23C",
+      "offenseLabel": "SHOPLIFTING",
+      "offenseRows": 2456,
+      "distinctCaseIds": 2450
+    },
+    {
+      "year": 2023,
+      "offenseCode": "23D",
+      "offenseLabel": "THEFT OF BUILDING",
+      "offenseRows": 854,
+      "distinctCaseIds": 831
+    },
+    {
+      "year": 2023,
+      "offenseCode": "23E",
+      "offenseLabel": "THEFT OF COIN-OPERATED MACHINE OR DEVICE",
+      "offenseRows": 22,
+      "distinctCaseIds": 20
+    },
+    {
+      "year": 2023,
+      "offenseCode": "23F",
+      "offenseLabel": "THEFT FROM MOTOR VEHICLE",
+      "offenseRows": 14041,
+      "distinctCaseIds": 13286
+    },
+    {
+      "year": 2023,
+      "offenseCode": "23G",
+      "offenseLabel": "THEFT OF MOTOR VEHICLE PARTS OR ACCESSORIES",
+      "offenseRows": 3926,
+      "distinctCaseIds": 3842
+    },
+    {
+      "year": 2023,
+      "offenseCode": "23H",
+      "offenseLabel": "ALL OTHER LARCENY",
+      "offenseRows": 8025,
+      "distinctCaseIds": 7303
+    },
+    {
+      "year": 2023,
+      "offenseCode": "240",
+      "offenseLabel": "UUMV",
+      "offenseRows": 35986,
+      "distinctCaseIds": 17827
+    },
+    {
+      "year": 2023,
+      "offenseCode": "250",
+      "offenseLabel": "COUNTERFEITING / FORGERY",
+      "offenseRows": 245,
+      "distinctCaseIds": 240
+    },
+    {
+      "year": 2023,
+      "offenseCode": "26A",
+      "offenseLabel": "FALSE PRETENSES/ SWINDLE/ CONFIDENCE GAME",
+      "offenseRows": 1364,
+      "distinctCaseIds": 1246
+    },
+    {
+      "year": 2023,
+      "offenseCode": "26B",
+      "offenseLabel": "CREDIT CARD/ ATM FRAUD",
+      "offenseRows": 285,
+      "distinctCaseIds": 277
+    },
+    {
+      "year": 2023,
+      "offenseCode": "26C",
+      "offenseLabel": "IMPERSONATION",
+      "offenseRows": 14,
+      "distinctCaseIds": 13
+    },
+    {
+      "year": 2023,
+      "offenseCode": "26D",
+      "offenseLabel": "WELFARE FRAUD",
+      "offenseRows": 3,
+      "distinctCaseIds": 3
+    },
+    {
+      "year": 2023,
+      "offenseCode": "26E",
+      "offenseLabel": "WIRE FRAUD",
+      "offenseRows": 2,
+      "distinctCaseIds": 2
+    },
+    {
+      "year": 2023,
+      "offenseCode": "26F",
+      "offenseLabel": "IDENTITY THEFT",
+      "offenseRows": 236,
+      "distinctCaseIds": 198
+    },
+    {
+      "year": 2023,
+      "offenseCode": "26G",
+      "offenseLabel": "HACKING/COMPUTER INVASION",
+      "offenseRows": 5,
+      "distinctCaseIds": 5
+    },
+    {
+      "year": 2023,
+      "offenseCode": "270",
+      "offenseLabel": "EMBEZZELMENT",
+      "offenseRows": 292,
+      "distinctCaseIds": 287
+    },
+    {
+      "year": 2023,
+      "offenseCode": "280",
+      "offenseLabel": "STOLEN PROPERTY OFFENSES",
+      "offenseRows": 474,
+      "distinctCaseIds": 430
+    },
+    {
+      "year": 2023,
+      "offenseCode": "290",
+      "offenseLabel": "DESTRUCTION/ DAMAGE/ VANDALISM OF PROPERTY",
+      "offenseRows": 9619,
+      "distinctCaseIds": 9070
+    },
+    {
+      "year": 2023,
+      "offenseCode": "35A",
+      "offenseLabel": "DRUG/ NARCOTIC VIOLATIONS",
+      "offenseRows": 6705,
+      "distinctCaseIds": 5613
+    },
+    {
+      "year": 2023,
+      "offenseCode": "35B",
+      "offenseLabel": "DRUG EQUIPMENT VIOLATIONS",
+      "offenseRows": 742,
+      "distinctCaseIds": 742
+    },
+    {
+      "year": 2023,
+      "offenseCode": "370",
+      "offenseLabel": "PORNOGRAPHY/ OBSCENE MATERIAL",
+      "offenseRows": 2,
+      "distinctCaseIds": 1
+    },
+    {
+      "year": 2023,
+      "offenseCode": "39A",
+      "offenseLabel": "BETTING/ WAGERING",
+      "offenseRows": 72,
+      "distinctCaseIds": 72
+    },
+    {
+      "year": 2023,
+      "offenseCode": "39B",
+      "offenseLabel": "OPERATING/ PROMOTING/ ASSISTING GAMBLING",
+      "offenseRows": 1,
+      "distinctCaseIds": 1
+    },
+    {
+      "year": 2023,
+      "offenseCode": "520",
+      "offenseLabel": "WEAPON LAW VIOLATIONS",
+      "offenseRows": 1463,
+      "distinctCaseIds": 1426
+    },
+    {
+      "year": 2023,
+      "offenseCode": "64B",
+      "offenseLabel": "HUMAN TRAFFICKING, INVOLUNTARY SERVITUDE",
+      "offenseRows": 1,
+      "distinctCaseIds": 1
+    },
+    {
+      "year": 2023,
+      "offenseCode": "720",
+      "offenseLabel": "ANIMAL CRUELTY",
+      "offenseRows": 83,
+      "distinctCaseIds": 81
+    },
+    {
+      "year": 2023,
+      "offenseCode": "90B",
+      "offenseLabel": "CURFEW/ LOITERING/ VAGRANCY VIOLATIONS",
+      "offenseRows": 2,
+      "distinctCaseIds": 2
+    },
+    {
+      "year": 2023,
+      "offenseCode": "90C",
+      "offenseLabel": "DISORDERLY CONDUCT",
+      "offenseRows": 260,
+      "distinctCaseIds": 247
+    },
+    {
+      "year": 2023,
+      "offenseCode": "90D",
+      "offenseLabel": "DUI",
+      "offenseRows": 1297,
+      "distinctCaseIds": 1279
+    },
+    {
+      "year": 2023,
+      "offenseCode": "90F",
+      "offenseLabel": "FAMILY OFFENSES, NONVIOLENT",
+      "offenseRows": 533,
+      "distinctCaseIds": 532
+    },
+    {
+      "year": 2023,
+      "offenseCode": "90G",
+      "offenseLabel": "LIQUOR LAW VIOLATIONS",
+      "offenseRows": 6,
+      "distinctCaseIds": 6
+    },
+    {
+      "year": 2023,
+      "offenseCode": "90J",
+      "offenseLabel": "TRESPASS OF REAL PROPERTY",
+      "offenseRows": 926,
+      "distinctCaseIds": 907
+    },
+    {
+      "year": 2023,
+      "offenseCode": "90Z",
+      "offenseLabel": "ALL OTHER OFFENSES",
+      "offenseRows": 4071,
+      "distinctCaseIds": 3738
+    },
+    {
+      "year": 2023,
+      "offenseCode": "90Z",
+      "offenseLabel": "PUBLIC INTOXICATION",
+      "offenseRows": 891,
+      "distinctCaseIds": 886
+    },
+    {
+      "year": 2023,
+      "offenseCode": "999",
+      "offenseLabel": "MISCELLANEOUS",
+      "offenseRows": 28306,
+      "distinctCaseIds": 27498
+    },
+    {
+      "year": 2023,
+      "offenseCode": "999",
+      "offenseLabel": "TRAFFIC VIOLATION - HAZARDOUS",
+      "offenseRows": 3539,
+      "distinctCaseIds": 3267
+    },
+    {
+      "year": 2023,
+      "offenseCode": "999",
+      "offenseLabel": "TRAFFIC VIOLATION - NON HAZARDOUS",
+      "offenseRows": 54,
+      "distinctCaseIds": 54
+    },
+    {
+      "year": 2024,
+      "offenseCode": null,
+      "offenseLabel": null,
+      "offenseRows": 998,
+      "distinctCaseIds": 994
+    },
+    {
+      "year": 2024,
+      "offenseCode": "09A",
+      "offenseLabel": "MURDER & NONNEGLIGENT MANSLAUGHTER",
+      "offenseRows": 81,
+      "distinctCaseIds": 79
+    },
+    {
+      "year": 2024,
+      "offenseCode": "09B",
+      "offenseLabel": "NEGLIGENT MANSLAUGHTER",
+      "offenseRows": 14,
+      "distinctCaseIds": 12
+    },
+    {
+      "year": 2024,
+      "offenseCode": "09C",
+      "offenseLabel": "JUSTIFIABLE HOMICIDE",
+      "offenseRows": 16,
+      "distinctCaseIds": 15
+    },
+    {
+      "year": 2024,
+      "offenseCode": "100",
+      "offenseLabel": "KIDNAPPING/ ABDUCTION",
+      "offenseRows": 34,
+      "distinctCaseIds": 32
+    },
+    {
+      "year": 2024,
+      "offenseCode": "120",
+      "offenseLabel": "ROBBERY-BUSINESS",
+      "offenseRows": 788,
+      "distinctCaseIds": 374
+    },
+    {
+      "year": 2024,
+      "offenseCode": "120",
+      "offenseLabel": "ROBBERY-INDIVIDUAL",
+      "offenseRows": 1505,
+      "distinctCaseIds": 1336
+    },
+    {
+      "year": 2024,
+      "offenseCode": "13A",
+      "offenseLabel": "AGG ASSAULT - NFV",
+      "offenseRows": 2587,
+      "distinctCaseIds": 2157
+    },
+    {
+      "year": 2024,
+      "offenseCode": "13B",
+      "offenseLabel": "SIMPLE ASSAULT",
+      "offenseRows": 2662,
+      "distinctCaseIds": 2486
+    },
+    {
+      "year": 2024,
+      "offenseCode": "13C",
+      "offenseLabel": "INTIMIDATION",
+      "offenseRows": 2573,
+      "distinctCaseIds": 2464
+    },
+    {
+      "year": 2024,
+      "offenseCode": "200",
+      "offenseLabel": "ARSON",
+      "offenseRows": 137,
+      "distinctCaseIds": 129
+    },
+    {
+      "year": 2024,
+      "offenseCode": "210",
+      "offenseLabel": "EXTORTION/ BLACKMAIL",
+      "offenseRows": 6,
+      "distinctCaseIds": 6
+    },
+    {
+      "year": 2024,
+      "offenseCode": "220",
+      "offenseLabel": "BURGLARY-BUSINESS",
+      "offenseRows": 3919,
+      "distinctCaseIds": 3806
+    },
+    {
+      "year": 2024,
+      "offenseCode": "220",
+      "offenseLabel": "BURGLARY-RESIDENCE",
+      "offenseRows": 2054,
+      "distinctCaseIds": 1922
+    },
+    {
+      "year": 2024,
+      "offenseCode": "23A",
+      "offenseLabel": "POCKET-PICKING",
+      "offenseRows": 91,
+      "distinctCaseIds": 90
+    },
+    {
+      "year": 2024,
+      "offenseCode": "23B",
+      "offenseLabel": "PURSE-SNATCHING",
+      "offenseRows": 21,
+      "distinctCaseIds": 21
+    },
+    {
+      "year": 2024,
+      "offenseCode": "23C",
+      "offenseLabel": "SHOPLIFTING",
+      "offenseRows": 2830,
+      "distinctCaseIds": 2820
+    },
+    {
+      "year": 2024,
+      "offenseCode": "23D",
+      "offenseLabel": "THEFT OF BUILDING",
+      "offenseRows": 704,
+      "distinctCaseIds": 697
+    },
+    {
+      "year": 2024,
+      "offenseCode": "23E",
+      "offenseLabel": "THEFT OF COIN-OPERATED MACHINE OR DEVICE",
+      "offenseRows": 13,
+      "distinctCaseIds": 13
+    },
+    {
+      "year": 2024,
+      "offenseCode": "23F",
+      "offenseLabel": "THEFT FROM MOTOR VEHICLE",
+      "offenseRows": 10864,
+      "distinctCaseIds": 10364
+    },
+    {
+      "year": 2024,
+      "offenseCode": "23G",
+      "offenseLabel": "THEFT OF MOTOR VEHICLE PARTS OR ACCESSORIES",
+      "offenseRows": 2968,
+      "distinctCaseIds": 2935
+    },
+    {
+      "year": 2024,
+      "offenseCode": "23H",
+      "offenseLabel": "ALL OTHER LARCENY",
+      "offenseRows": 7790,
+      "distinctCaseIds": 7077
+    },
+    {
+      "year": 2024,
+      "offenseCode": "240",
+      "offenseLabel": "UUMV",
+      "offenseRows": 28495,
+      "distinctCaseIds": 14112
+    },
+    {
+      "year": 2024,
+      "offenseCode": "250",
+      "offenseLabel": "COUNTERFEITING / FORGERY",
+      "offenseRows": 190,
+      "distinctCaseIds": 188
+    },
+    {
+      "year": 2024,
+      "offenseCode": "26A",
+      "offenseLabel": "FALSE PRETENSES/ SWINDLE/ CONFIDENCE GAME",
+      "offenseRows": 1454,
+      "distinctCaseIds": 1403
+    },
+    {
+      "year": 2024,
+      "offenseCode": "26B",
+      "offenseLabel": "CREDIT CARD/ ATM FRAUD",
+      "offenseRows": 234,
+      "distinctCaseIds": 231
+    },
+    {
+      "year": 2024,
+      "offenseCode": "26C",
+      "offenseLabel": "IMPERSONATION",
+      "offenseRows": 16,
+      "distinctCaseIds": 16
+    },
+    {
+      "year": 2024,
+      "offenseCode": "26D",
+      "offenseLabel": "WELFARE FRAUD",
+      "offenseRows": 10,
+      "distinctCaseIds": 10
+    },
+    {
+      "year": 2024,
+      "offenseCode": "26E",
+      "offenseLabel": "WIRE FRAUD",
+      "offenseRows": 28,
+      "distinctCaseIds": 27
+    },
+    {
+      "year": 2024,
+      "offenseCode": "26F",
+      "offenseLabel": "IDENTITY THEFT",
+      "offenseRows": 311,
+      "distinctCaseIds": 219
+    },
+    {
+      "year": 2024,
+      "offenseCode": "26G",
+      "offenseLabel": "HACKING/COMPUTER INVASION",
+      "offenseRows": 17,
+      "distinctCaseIds": 16
+    },
+    {
+      "year": 2024,
+      "offenseCode": "270",
+      "offenseLabel": "EMBEZZELMENT",
+      "offenseRows": 180,
+      "distinctCaseIds": 176
+    },
+    {
+      "year": 2024,
+      "offenseCode": "280",
+      "offenseLabel": "STOLEN PROPERTY OFFENSES",
+      "offenseRows": 453,
+      "distinctCaseIds": 414
+    },
+    {
+      "year": 2024,
+      "offenseCode": "290",
+      "offenseLabel": "DESTRUCTION/ DAMAGE/ VANDALISM OF PROPERTY",
+      "offenseRows": 8261,
+      "distinctCaseIds": 7769
+    },
+    {
+      "year": 2024,
+      "offenseCode": "35A",
+      "offenseLabel": "DRUG/ NARCOTIC VIOLATIONS",
+      "offenseRows": 6962,
+      "distinctCaseIds": 5874
+    },
+    {
+      "year": 2024,
+      "offenseCode": "35B",
+      "offenseLabel": "DRUG EQUIPMENT VIOLATIONS",
+      "offenseRows": 965,
+      "distinctCaseIds": 961
+    },
+    {
+      "year": 2024,
+      "offenseCode": "370",
+      "offenseLabel": "PORNOGRAPHY/ OBSCENE MATERIAL",
+      "offenseRows": 4,
+      "distinctCaseIds": 4
+    },
+    {
+      "year": 2024,
+      "offenseCode": "39A",
+      "offenseLabel": "BETTING/ WAGERING",
+      "offenseRows": 78,
+      "distinctCaseIds": 77
+    },
+    {
+      "year": 2024,
+      "offenseCode": "39B",
+      "offenseLabel": "OPERATING/ PROMOTING/ ASSISTING GAMBLING",
+      "offenseRows": 1,
+      "distinctCaseIds": 1
+    },
+    {
+      "year": 2024,
+      "offenseCode": "510",
+      "offenseLabel": "BRIBERY",
+      "offenseRows": 2,
+      "distinctCaseIds": 2
+    },
+    {
+      "year": 2024,
+      "offenseCode": "520",
+      "offenseLabel": "WEAPON LAW VIOLATIONS",
+      "offenseRows": 1431,
+      "distinctCaseIds": 1398
+    },
+    {
+      "year": 2024,
+      "offenseCode": "64A",
+      "offenseLabel": "HUMAN TRAFFICKING, COMMERCIAL SEX ACTS",
+      "offenseRows": 2,
+      "distinctCaseIds": 1
+    },
+    {
+      "year": 2024,
+      "offenseCode": "720",
+      "offenseLabel": "ANIMAL CRUELTY",
+      "offenseRows": 127,
+      "distinctCaseIds": 125
+    },
+    {
+      "year": 2024,
+      "offenseCode": "90B",
+      "offenseLabel": "CURFEW/ LOITERING/ VAGRANCY VIOLATIONS",
+      "offenseRows": 1,
+      "distinctCaseIds": 1
+    },
+    {
+      "year": 2024,
+      "offenseCode": "90C",
+      "offenseLabel": "DISORDERLY CONDUCT",
+      "offenseRows": 326,
+      "distinctCaseIds": 312
+    },
+    {
+      "year": 2024,
+      "offenseCode": "90D",
+      "offenseLabel": "DUI",
+      "offenseRows": 1128,
+      "distinctCaseIds": 1114
+    },
+    {
+      "year": 2024,
+      "offenseCode": "90F",
+      "offenseLabel": "FAMILY OFFENSES, NONVIOLENT",
+      "offenseRows": 590,
+      "distinctCaseIds": 590
+    },
+    {
+      "year": 2024,
+      "offenseCode": "90G",
+      "offenseLabel": "LIQUOR LAW VIOLATIONS",
+      "offenseRows": 19,
+      "distinctCaseIds": 19
+    },
+    {
+      "year": 2024,
+      "offenseCode": "90J",
+      "offenseLabel": "TRESPASS OF REAL PROPERTY",
+      "offenseRows": 1171,
+      "distinctCaseIds": 1154
+    },
+    {
+      "year": 2024,
+      "offenseCode": "90Z",
+      "offenseLabel": "ALL OTHER OFFENSES",
+      "offenseRows": 6615,
+      "distinctCaseIds": 6224
+    },
+    {
+      "year": 2024,
+      "offenseCode": "90Z",
+      "offenseLabel": "PUBLIC INTOXICATION",
+      "offenseRows": 1054,
+      "distinctCaseIds": 1050
+    },
+    {
+      "year": 2024,
+      "offenseCode": "999",
+      "offenseLabel": "MISCELLANEOUS",
+      "offenseRows": 29260,
+      "distinctCaseIds": 28351
+    },
+    {
+      "year": 2024,
+      "offenseCode": "999",
+      "offenseLabel": "TRAFFIC VIOLATION - HAZARDOUS",
+      "offenseRows": 2276,
+      "distinctCaseIds": 2033
+    },
+    {
+      "year": 2024,
+      "offenseCode": "999",
+      "offenseLabel": "TRAFFIC VIOLATION - NON HAZARDOUS",
+      "offenseRows": 85,
+      "distinctCaseIds": 85
+    },
+    {
+      "year": 2025,
+      "offenseCode": null,
+      "offenseLabel": null,
+      "offenseRows": 916,
+      "distinctCaseIds": 910
+    },
+    {
+      "year": 2025,
+      "offenseCode": "09A",
+      "offenseLabel": "MURDER & NONNEGLIGENT MANSLAUGHTER",
+      "offenseRows": 63,
+      "distinctCaseIds": 58
+    },
+    {
+      "year": 2025,
+      "offenseCode": "09B",
+      "offenseLabel": "NEGLIGENT MANSLAUGHTER",
+      "offenseRows": 12,
+      "distinctCaseIds": 11
+    },
+    {
+      "year": 2025,
+      "offenseCode": "09C",
+      "offenseLabel": "JUSTIFIABLE HOMICIDE",
+      "offenseRows": 25,
+      "distinctCaseIds": 25
+    },
+    {
+      "year": 2025,
+      "offenseCode": "100",
+      "offenseLabel": "KIDNAPPING/ ABDUCTION",
+      "offenseRows": 36,
+      "distinctCaseIds": 31
+    },
+    {
+      "year": 2025,
+      "offenseCode": "120",
+      "offenseLabel": "ROBBERY-BUSINESS",
+      "offenseRows": 792,
+      "distinctCaseIds": 371
+    },
+    {
+      "year": 2025,
+      "offenseCode": "120",
+      "offenseLabel": "ROBBERY-INDIVIDUAL",
+      "offenseRows": 1273,
+      "distinctCaseIds": 1130
+    },
+    {
+      "year": 2025,
+      "offenseCode": "120",
+      "offenseLabel": "SHOPLIFT CONTACT",
+      "offenseRows": 24,
+      "distinctCaseIds": 12
+    },
+    {
+      "year": 2025,
+      "offenseCode": "13A",
+      "offenseLabel": "AGG ASSAULT - FV",
+      "offenseRows": 15,
+      "distinctCaseIds": 12
+    },
+    {
+      "year": 2025,
+      "offenseCode": "13A",
+      "offenseLabel": "AGG ASSAULT - NFV",
+      "offenseRows": 2235,
+      "distinctCaseIds": 1860
+    },
+    {
+      "year": 2025,
+      "offenseCode": "13B",
+      "offenseLabel": "SIMPLE ASSAULT",
+      "offenseRows": 2452,
+      "distinctCaseIds": 2322
+    },
+    {
+      "year": 2025,
+      "offenseCode": "13C",
+      "offenseLabel": "INTIMIDATION",
+      "offenseRows": 1885,
+      "distinctCaseIds": 1798
+    },
+    {
+      "year": 2025,
+      "offenseCode": "200",
+      "offenseLabel": "ARSON",
+      "offenseRows": 133,
+      "distinctCaseIds": 127
+    },
+    {
+      "year": 2025,
+      "offenseCode": "210",
+      "offenseLabel": "EXTORTION/ BLACKMAIL",
+      "offenseRows": 16,
+      "distinctCaseIds": 15
+    },
+    {
+      "year": 2025,
+      "offenseCode": "220",
+      "offenseLabel": "BURGLARY-BUSINESS",
+      "offenseRows": 3490,
+      "distinctCaseIds": 3320
+    },
+    {
+      "year": 2025,
+      "offenseCode": "220",
+      "offenseLabel": "BURGLARY-RESIDENCE",
+      "offenseRows": 2071,
+      "distinctCaseIds": 1923
+    },
+    {
+      "year": 2025,
+      "offenseCode": "23A",
+      "offenseLabel": "POCKET-PICKING",
+      "offenseRows": 141,
+      "distinctCaseIds": 140
+    },
+    {
+      "year": 2025,
+      "offenseCode": "23B",
+      "offenseLabel": "PURSE-SNATCHING",
+      "offenseRows": 23,
+      "distinctCaseIds": 22
+    },
+    {
+      "year": 2025,
+      "offenseCode": "23C",
+      "offenseLabel": "SHOPLIFTING",
+      "offenseRows": 3447,
+      "distinctCaseIds": 3442
+    },
+    {
+      "year": 2025,
+      "offenseCode": "23D",
+      "offenseLabel": "THEFT OF BUILDING",
+      "offenseRows": 1080,
+      "distinctCaseIds": 1066
+    },
+    {
+      "year": 2025,
+      "offenseCode": "23E",
+      "offenseLabel": "THEFT OF COIN-OPERATED MACHINE OR DEVICE",
+      "offenseRows": 24,
+      "distinctCaseIds": 21
+    },
+    {
+      "year": 2025,
+      "offenseCode": "23F",
+      "offenseLabel": "THEFT FROM MOTOR VEHICLE",
+      "offenseRows": 11164,
+      "distinctCaseIds": 10747
+    },
+    {
+      "year": 2025,
+      "offenseCode": "23G",
+      "offenseLabel": "THEFT OF MOTOR VEHICLE PARTS OR ACCESSORIES",
+      "offenseRows": 3029,
+      "distinctCaseIds": 3020
+    },
+    {
+      "year": 2025,
+      "offenseCode": "23H",
+      "offenseLabel": "ALL OTHER LARCENY",
+      "offenseRows": 5434,
+      "distinctCaseIds": 5339
+    },
+    {
+      "year": 2025,
+      "offenseCode": "240",
+      "offenseLabel": "UUMV",
+      "offenseRows": 21847,
+      "distinctCaseIds": 10802
+    },
+    {
+      "year": 2025,
+      "offenseCode": "250",
+      "offenseLabel": "COUNTERFEITING / FORGERY",
+      "offenseRows": 162,
+      "distinctCaseIds": 158
+    },
+    {
+      "year": 2025,
+      "offenseCode": "26A",
+      "offenseLabel": "FALSE PRETENSES/ SWINDLE/ CONFIDENCE GAME",
+      "offenseRows": 1536,
+      "distinctCaseIds": 1493
+    },
+    {
+      "year": 2025,
+      "offenseCode": "26B",
+      "offenseLabel": "CREDIT CARD/ ATM FRAUD",
+      "offenseRows": 338,
+      "distinctCaseIds": 335
+    },
+    {
+      "year": 2025,
+      "offenseCode": "26C",
+      "offenseLabel": "IMPERSONATION",
+      "offenseRows": 15,
+      "distinctCaseIds": 15
+    },
+    {
+      "year": 2025,
+      "offenseCode": "26D",
+      "offenseLabel": "WELFARE FRAUD",
+      "offenseRows": 19,
+      "distinctCaseIds": 19
+    },
+    {
+      "year": 2025,
+      "offenseCode": "26E",
+      "offenseLabel": "WIRE FRAUD",
+      "offenseRows": 236,
+      "distinctCaseIds": 231
+    },
+    {
+      "year": 2025,
+      "offenseCode": "26F",
+      "offenseLabel": "IDENTITY THEFT",
+      "offenseRows": 357,
+      "distinctCaseIds": 269
+    },
+    {
+      "year": 2025,
+      "offenseCode": "26G",
+      "offenseLabel": "HACKING/COMPUTER INVASION",
+      "offenseRows": 23,
+      "distinctCaseIds": 22
+    },
+    {
+      "year": 2025,
+      "offenseCode": "270",
+      "offenseLabel": "EMBEZZELMENT",
+      "offenseRows": 280,
+      "distinctCaseIds": 276
+    },
+    {
+      "year": 2025,
+      "offenseCode": "280",
+      "offenseLabel": "STOLEN PROPERTY OFFENSES",
+      "offenseRows": 426,
+      "distinctCaseIds": 397
+    },
+    {
+      "year": 2025,
+      "offenseCode": "290",
+      "offenseLabel": "DESTRUCTION/ DAMAGE/ VANDALISM OF PROPERTY",
+      "offenseRows": 7337,
+      "distinctCaseIds": 6981
+    },
+    {
+      "year": 2025,
+      "offenseCode": "35A",
+      "offenseLabel": "DRUG/ NARCOTIC VIOLATIONS",
+      "offenseRows": 6833,
+      "distinctCaseIds": 5898
+    },
+    {
+      "year": 2025,
+      "offenseCode": "35B",
+      "offenseLabel": "DRUG EQUIPMENT VIOLATIONS",
+      "offenseRows": 1355,
+      "distinctCaseIds": 1350
+    },
+    {
+      "year": 2025,
+      "offenseCode": "370",
+      "offenseLabel": "PORNOGRAPHY/ OBSCENE MATERIAL",
+      "offenseRows": 4,
+      "distinctCaseIds": 4
+    },
+    {
+      "year": 2025,
+      "offenseCode": "39A",
+      "offenseLabel": "BETTING/ WAGERING",
+      "offenseRows": 72,
+      "distinctCaseIds": 72
+    },
+    {
+      "year": 2025,
+      "offenseCode": "510",
+      "offenseLabel": "BRIBERY",
+      "offenseRows": 1,
+      "distinctCaseIds": 1
+    },
+    {
+      "year": 2025,
+      "offenseCode": "520",
+      "offenseLabel": "WEAPON LAW VIOLATIONS",
+      "offenseRows": 1537,
+      "distinctCaseIds": 1501
+    },
+    {
+      "year": 2025,
+      "offenseCode": "720",
+      "offenseLabel": "ANIMAL CRUELTY",
+      "offenseRows": 121,
+      "distinctCaseIds": 121
+    },
+    {
+      "year": 2025,
+      "offenseCode": "90B",
+      "offenseLabel": "CURFEW/ LOITERING/ VAGRANCY VIOLATIONS",
+      "offenseRows": 1,
+      "distinctCaseIds": 1
+    },
+    {
+      "year": 2025,
+      "offenseCode": "90C",
+      "offenseLabel": "DISORDERLY CONDUCT",
+      "offenseRows": 834,
+      "distinctCaseIds": 806
+    },
+    {
+      "year": 2025,
+      "offenseCode": "90D",
+      "offenseLabel": "DUI",
+      "offenseRows": 1383,
+      "distinctCaseIds": 1369
+    },
+    {
+      "year": 2025,
+      "offenseCode": "90F",
+      "offenseLabel": "FAMILY OFFENSES, NONVIOLENT",
+      "offenseRows": 582,
+      "distinctCaseIds": 581
+    },
+    {
+      "year": 2025,
+      "offenseCode": "90G",
+      "offenseLabel": "LIQUOR LAW VIOLATIONS",
+      "offenseRows": 23,
+      "distinctCaseIds": 22
+    },
+    {
+      "year": 2025,
+      "offenseCode": "90J",
+      "offenseLabel": "TRESPASS OF REAL PROPERTY",
+      "offenseRows": 1402,
+      "distinctCaseIds": 1379
+    },
+    {
+      "year": 2025,
+      "offenseCode": "90Z",
+      "offenseLabel": "ALL OTHER OFFENSES",
+      "offenseRows": 7702,
+      "distinctCaseIds": 7105
+    },
+    {
+      "year": 2025,
+      "offenseCode": "90Z",
+      "offenseLabel": "PUBLIC INTOXICATION",
+      "offenseRows": 1260,
+      "distinctCaseIds": 1256
+    },
+    {
+      "year": 2025,
+      "offenseCode": "999",
+      "offenseLabel": "MISCELLANEOUS",
+      "offenseRows": 31247,
+      "distinctCaseIds": 30160
+    },
+    {
+      "year": 2025,
+      "offenseCode": "999",
+      "offenseLabel": "TRAFFIC VIOLATION - HAZARDOUS",
+      "offenseRows": 1600,
+      "distinctCaseIds": 1419
+    },
+    {
+      "year": 2025,
+      "offenseCode": "999",
+      "offenseLabel": "TRAFFIC VIOLATION - NON HAZARDOUS",
+      "offenseRows": 234,
+      "distinctCaseIds": 232
+    },
+    {
+      "year": 2026,
+      "offenseCode": null,
+      "offenseLabel": null,
+      "offenseRows": 643,
+      "distinctCaseIds": 643
+    },
+    {
+      "year": 2026,
+      "offenseCode": "09A",
+      "offenseLabel": "MURDER & NONNEGLIGENT MANSLAUGHTER",
+      "offenseRows": 47,
+      "distinctCaseIds": 45
+    },
+    {
+      "year": 2026,
+      "offenseCode": "09B",
+      "offenseLabel": "NEGLIGENT MANSLAUGHTER",
+      "offenseRows": 11,
+      "distinctCaseIds": 11
+    },
+    {
+      "year": 2026,
+      "offenseCode": "09C",
+      "offenseLabel": "JUSTIFIABLE HOMICIDE",
+      "offenseRows": 11,
+      "distinctCaseIds": 11
+    },
+    {
+      "year": 2026,
+      "offenseCode": "100",
+      "offenseLabel": "KIDNAPPING/ ABDUCTION",
+      "offenseRows": 28,
+      "distinctCaseIds": 27
+    },
+    {
+      "year": 2026,
+      "offenseCode": "120",
+      "offenseLabel": "ROBBERY-BUSINESS",
+      "offenseRows": 429,
+      "distinctCaseIds": 204
+    },
+    {
+      "year": 2026,
+      "offenseCode": "120",
+      "offenseLabel": "ROBBERY-INDIVIDUAL",
+      "offenseRows": 899,
+      "distinctCaseIds": 778
+    },
+    {
+      "year": 2026,
+      "offenseCode": "120",
+      "offenseLabel": "SHOPLIFT CONTACT",
+      "offenseRows": 42,
+      "distinctCaseIds": 21
+    },
+    {
+      "year": 2026,
+      "offenseCode": "13A",
+      "offenseLabel": "AGG ASSAULT - FV",
+      "offenseRows": 23,
+      "distinctCaseIds": 23
+    },
+    {
+      "year": 2026,
+      "offenseCode": "13A",
+      "offenseLabel": "AGG ASSAULT - NFV",
+      "offenseRows": 1800,
+      "distinctCaseIds": 1514
+    },
+    {
+      "year": 2026,
+      "offenseCode": "13B",
+      "offenseLabel": "SIMPLE ASSAULT",
+      "offenseRows": 2286,
+      "distinctCaseIds": 2154
+    },
+    {
+      "year": 2026,
+      "offenseCode": "13C",
+      "offenseLabel": "INTIMIDATION",
+      "offenseRows": 1698,
+      "distinctCaseIds": 1594
+    },
+    {
+      "year": 2026,
+      "offenseCode": "200",
+      "offenseLabel": "ARSON",
+      "offenseRows": 109,
+      "distinctCaseIds": 105
+    },
+    {
+      "year": 2026,
+      "offenseCode": "210",
+      "offenseLabel": "EXTORTION/ BLACKMAIL",
+      "offenseRows": 21,
+      "distinctCaseIds": 21
+    },
+    {
+      "year": 2026,
+      "offenseCode": "220",
+      "offenseLabel": "BURGLARY-BUSINESS",
+      "offenseRows": 2331,
+      "distinctCaseIds": 2171
+    },
+    {
+      "year": 2026,
+      "offenseCode": "220",
+      "offenseLabel": "BURGLARY-RESIDENCE",
+      "offenseRows": 1529,
+      "distinctCaseIds": 1399
+    },
+    {
+      "year": 2026,
+      "offenseCode": "23A",
+      "offenseLabel": "POCKET-PICKING",
+      "offenseRows": 115,
+      "distinctCaseIds": 115
+    },
+    {
+      "year": 2026,
+      "offenseCode": "23B",
+      "offenseLabel": "PURSE-SNATCHING",
+      "offenseRows": 20,
+      "distinctCaseIds": 20
+    },
+    {
+      "year": 2026,
+      "offenseCode": "23C",
+      "offenseLabel": "SHOPLIFTING",
+      "offenseRows": 3206,
+      "distinctCaseIds": 3168
+    },
+    {
+      "year": 2026,
+      "offenseCode": "23D",
+      "offenseLabel": "THEFT OF BUILDING",
+      "offenseRows": 1260,
+      "distinctCaseIds": 1246
+    },
+    {
+      "year": 2026,
+      "offenseCode": "23E",
+      "offenseLabel": "THEFT OF COIN-OPERATED MACHINE OR DEVICE",
+      "offenseRows": 25,
+      "distinctCaseIds": 25
+    },
+    {
+      "year": 2026,
+      "offenseCode": "23F",
+      "offenseLabel": "THEFT FROM MOTOR VEHICLE",
+      "offenseRows": 9814,
+      "distinctCaseIds": 9304
+    },
+    {
+      "year": 2026,
+      "offenseCode": "23G",
+      "offenseLabel": "THEFT OF MOTOR VEHICLE PARTS OR ACCESSORIES",
+      "offenseRows": 2724,
+      "distinctCaseIds": 2704
+    },
+    {
+      "year": 2026,
+      "offenseCode": "23H",
+      "offenseLabel": "ALL OTHER LARCENY",
+      "offenseRows": 4005,
+      "distinctCaseIds": 3939
+    },
+    {
+      "year": 2026,
+      "offenseCode": "240",
+      "offenseLabel": "UUMV",
+      "offenseRows": 13569,
+      "distinctCaseIds": 6712
+    },
+    {
+      "year": 2026,
+      "offenseCode": "250",
+      "offenseLabel": "COUNTERFEITING / FORGERY",
+      "offenseRows": 133,
+      "distinctCaseIds": 131
+    },
+    {
+      "year": 2026,
+      "offenseCode": "26A",
+      "offenseLabel": "FALSE PRETENSES/ SWINDLE/ CONFIDENCE GAME",
+      "offenseRows": 1142,
+      "distinctCaseIds": 1103
+    },
+    {
+      "year": 2026,
+      "offenseCode": "26B",
+      "offenseLabel": "CREDIT CARD/ ATM FRAUD",
+      "offenseRows": 238,
+      "distinctCaseIds": 231
+    },
+    {
+      "year": 2026,
+      "offenseCode": "26C",
+      "offenseLabel": "IMPERSONATION",
+      "offenseRows": 16,
+      "distinctCaseIds": 16
+    },
+    {
+      "year": 2026,
+      "offenseCode": "26D",
+      "offenseLabel": "WELFARE FRAUD",
+      "offenseRows": 5,
+      "distinctCaseIds": 5
+    },
+    {
+      "year": 2026,
+      "offenseCode": "26E",
+      "offenseLabel": "WIRE FRAUD",
+      "offenseRows": 394,
+      "distinctCaseIds": 388
+    },
+    {
+      "year": 2026,
+      "offenseCode": "26F",
+      "offenseLabel": "IDENTITY THEFT",
+      "offenseRows": 324,
+      "distinctCaseIds": 249
+    },
+    {
+      "year": 2026,
+      "offenseCode": "26G",
+      "offenseLabel": "HACKING/COMPUTER INVASION",
+      "offenseRows": 16,
+      "distinctCaseIds": 15
+    },
+    {
+      "year": 2026,
+      "offenseCode": "270",
+      "offenseLabel": "EMBEZZELMENT",
+      "offenseRows": 153,
+      "distinctCaseIds": 153
+    },
+    {
+      "year": 2026,
+      "offenseCode": "280",
+      "offenseLabel": "STOLEN PROPERTY OFFENSES",
+      "offenseRows": 235,
+      "distinctCaseIds": 217
+    },
+    {
+      "year": 2026,
+      "offenseCode": "290",
+      "offenseLabel": "DESTRUCTION/ DAMAGE/ VANDALISM OF PROPERTY",
+      "offenseRows": 5671,
+      "distinctCaseIds": 5471
+    },
+    {
+      "year": 2026,
+      "offenseCode": "35A",
+      "offenseLabel": "DRUG/ NARCOTIC VIOLATIONS",
+      "offenseRows": 7274,
+      "distinctCaseIds": 6017
+    },
+    {
+      "year": 2026,
+      "offenseCode": "35B",
+      "offenseLabel": "DRUG EQUIPMENT VIOLATIONS",
+      "offenseRows": 1675,
+      "distinctCaseIds": 1668
+    },
+    {
+      "year": 2026,
+      "offenseCode": "370",
+      "offenseLabel": "PORNOGRAPHY/ OBSCENE MATERIAL",
+      "offenseRows": 9,
+      "distinctCaseIds": 9
+    },
+    {
+      "year": 2026,
+      "offenseCode": "39A",
+      "offenseLabel": "BETTING/ WAGERING",
+      "offenseRows": 50,
+      "distinctCaseIds": 50
+    },
+    {
+      "year": 2026,
+      "offenseCode": "510",
+      "offenseLabel": "BRIBERY",
+      "offenseRows": 5,
+      "distinctCaseIds": 5
+    },
+    {
+      "year": 2026,
+      "offenseCode": "520",
+      "offenseLabel": "WEAPON LAW VIOLATIONS",
+      "offenseRows": 1347,
+      "distinctCaseIds": 1312
+    },
+    {
+      "year": 2026,
+      "offenseCode": "720",
+      "offenseLabel": "ANIMAL CRUELTY",
+      "offenseRows": 81,
+      "distinctCaseIds": 80
+    },
+    {
+      "year": 2026,
+      "offenseCode": "90B",
+      "offenseLabel": "CURFEW/ LOITERING/ VAGRANCY VIOLATIONS",
+      "offenseRows": 1,
+      "distinctCaseIds": 1
+    },
+    {
+      "year": 2026,
+      "offenseCode": "90C",
+      "offenseLabel": "DISORDERLY CONDUCT",
+      "offenseRows": 1224,
+      "distinctCaseIds": 1151
+    },
+    {
+      "year": 2026,
+      "offenseCode": "90D",
+      "offenseLabel": "DUI",
+      "offenseRows": 1253,
+      "distinctCaseIds": 1228
+    },
+    {
+      "year": 2026,
+      "offenseCode": "90F",
+      "offenseLabel": "FAMILY OFFENSES, NONVIOLENT",
+      "offenseRows": 417,
+      "distinctCaseIds": 417
+    },
+    {
+      "year": 2026,
+      "offenseCode": "90G",
+      "offenseLabel": "LIQUOR LAW VIOLATIONS",
+      "offenseRows": 11,
+      "distinctCaseIds": 11
+    },
+    {
+      "year": 2026,
+      "offenseCode": "90J",
+      "offenseLabel": "TRESPASS OF REAL PROPERTY",
+      "offenseRows": 1204,
+      "distinctCaseIds": 1181
+    },
+    {
+      "year": 2026,
+      "offenseCode": "90Z",
+      "offenseLabel": "ALL OTHER OFFENSES",
+      "offenseRows": 6855,
+      "distinctCaseIds": 6305
+    },
+    {
+      "year": 2026,
+      "offenseCode": "90Z",
+      "offenseLabel": "PUBLIC INTOXICATION",
+      "offenseRows": 1387,
+      "distinctCaseIds": 1383
+    },
+    {
+      "year": 2026,
+      "offenseCode": "999",
+      "offenseLabel": "MISCELLANEOUS",
+      "offenseRows": 26418,
+      "distinctCaseIds": 25510
+    },
+    {
+      "year": 2026,
+      "offenseCode": "999",
+      "offenseLabel": "TRAFFIC VIOLATION - HAZARDOUS",
+      "offenseRows": 1235,
+      "distinctCaseIds": 1147
+    },
+    {
+      "year": 2026,
+      "offenseCode": "999",
+      "offenseLabel": "TRAFFIC VIOLATION - NON HAZARDOUS",
+      "offenseRows": 253,
+      "distinctCaseIds": 253
+    }
+  ]
+}
