@@ -15,7 +15,13 @@ if(audit.status!==1)throw Error('Release gate must fail while private source sep
 const report=JSON.parse(fs.readFileSync('artifacts/security/public-release-audit.json','utf8'));
 assert.equal(report.mode,'release');
 assert.equal(report.status,'BLOCKED');
-assert.deepEqual(report.blockers.map(x=>x.kind),['private-source-separation-not-verified']);
+assert.deepEqual(report.blockers.map(x=>x.kind),[
+ 'private-source-separation-not-verified',
+ 'external-provider-terms-not-approved',
+ 'data-redistribution-licenses-not-approved',
+ 'live-browser-qa-not-approved',
+ 'owner-publication-approval-missing'
+]);
 assert.equal(report.credentials.length,0);
 assert.equal(report.personalization.length,0);
 assert.equal(report.nonPublishable.length,0);
@@ -29,4 +35,5 @@ for(const p of forbidden)assert.equal(fs.existsSync(path.join(base,p)),false,'Fo
 const outside=JSON.parse(fs.readFileSync(path.join(base,'dfw-outside-public.json'),'utf8'));
 assert.deepEqual(outside.minutes,{});
 assert.equal(outside.data.every(d=>!Object.hasOwn(d,'jpmMinutes')),true);
-process.stdout.write('Preview artifact validated; public launch remains BLOCKED pending explicit source/private-hosting separation. No deployment.\n');
+assert.equal(fs.readFileSync(path.join(base,'index.html'),'utf8').includes('nominatim.openstreetmap.org'),false);
+process.stdout.write('Preview artifact validated; public launch remains BLOCKED pending manual source, provider, licensing, browser QA, and owner approval. No deployment.\n');
