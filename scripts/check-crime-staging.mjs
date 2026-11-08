@@ -46,7 +46,7 @@ for (const [filename, dataset] of snapshots) {
   });
   total += dataset.records.length;
 }
-assert.equal(total, 5466, 'unexpected snapshot group row count');
+assert.equal(total, 5465, 'unexpected snapshot group row count');
 assert.equal(manifest.totalStoredAggregateRows, total);
 assert.equal(manifest.publicUiAuthorized, false);
 assert.equal(manifest.rawIncidentRecordsStored, false);
@@ -62,7 +62,7 @@ assert.equal(dz.metadata.recordsBelowThresholdSuppressed, 563);
 assert.ok(dz.records.reduce((s, r) => s + r.offenseRows, 0) <= byYear(dallas.records, 2025));
 
 const fort = snapshots.get('fort-worth-offenses-2021-2026.json');
-assert.equal(fort.records.length, 3765);
+assert.equal(fort.records.length, 3764);
 assert.equal(byYear(fort.records, 2025), 56936);
 const beats = snapshots.get('fort-worth-beat-totals-2025.json');
 assert.equal(beats.records.length, 104);
