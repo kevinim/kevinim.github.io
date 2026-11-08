@@ -11,6 +11,8 @@ on:
       - 'scripts/test-phase2a-browser.cjs'
       - 'scripts/test-school-boundary-browser.cjs'
       - 'scripts/test-map-viewport-sync-browser.cjs'
+      - 'features/resilience/winter-map.js'
+      - 'scripts/test-zone-timeout-browser.cjs'
       - 'crime-city-map.js'
       - 'data/dfw-crime-city-2023-2025.geojson'
       - 'school-boundary-match.js'
@@ -51,6 +53,10 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/phase2a-browser-tmp/node_modules
         run: node scripts/test-map-viewport-sync-browser.cjs
+      - name: Hung finder server does not block zone loading
+        env:
+          NODE_PATH: ${{ github.workspace }}/phase2a-browser-tmp/node_modules
+        run: node scripts/test-zone-timeout-browser.cjs
       - name: Attach phase2a browser screenshot
         if: always()
         uses: actions/upload-artifact@v4

@@ -214,6 +214,20 @@ const assert=require('node:assert/strict');
   await page.waitForTimeout(300);
   assert.equal((await crimeState()).zip,true,'ZIP colors restored after crime -> hazard -> off');
   console.log('PASS city crime map: police chip, lazy FBI data, legend categories, popup caveat, hazard exclusivity, ZIP restore');
+  // Crime on -> winter map on: winter must stay on (it used to cancel itself).
+  if(await page.locator('#winterMapEnabled').count()){
+   await page.locator('#crimeMapToggle').click();
+   await page.waitForFunction(()=>document.getElementById('crimeMapToggle').getAttribute('aria-pressed')==='true');
+   await page.evaluate(()=>{const e=document.getElementById('winterMapEnabled');e.checked=true;e.dispatchEvent(new Event('change',{bubbles:true}))});
+   await page.waitForTimeout(1500);
+   const w=await crimeState().then(async s=>({...s,winter:await page.locator('#winterMapEnabled').isChecked()}));
+   assert.equal(w.winter,true,'winter map stays on after switching from crime: '+JSON.stringify(w));
+   assert.equal(w.crime,'false');assert.equal(w.zip,false);
+   await page.evaluate(()=>{const e=document.getElementById('winterMapEnabled');e.checked=false;e.dispatchEvent(new Event('change',{bubbles:true}))});
+   await page.waitForTimeout(500);
+   assert.equal((await crimeState()).zip,true,'ZIP colors restored after crime -> winter -> off');
+   console.log('PASS crime -> winter map switch keeps winter on and restores ZIP colors');
+  }
   await page.locator('#zipSelect').selectOption('75093');
   await page.waitForSelector('#crimeZipTrend',{timeout:20000});
   const zipCrime=await page.locator('#zipInsights').innerText();
