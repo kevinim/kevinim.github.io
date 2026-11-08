@@ -72,3 +72,37 @@ jobs:
             -e GIT_CONFIG_VALUE_0=/repo \
             ghcr.io/gitleaks/gitleaks@sha256:b109bc5f8f76a38196a3e413704fc5b9e3c32360bce4e4b603bd6f45b3721dbb \
             git --redact --log-opts=--all /repo
+
+  public-preview-browser-qa:
+    name: Public preview browser smoke (offline third-party APIs)
+    needs: [privacy-regression]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Build isolated public preview
+        run: node scripts/build-public-preview.cjs
+      - name: Install isolated Playwright browser
+        run: |
+          mkdir -p preview-browser-tmp
+          cd preview-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Verify desktop/mobile privacy and map rendering
+        env:
+          NODE_PATH: ${{ github.workspace }}/preview-browser-tmp/node_modules
+        run: node scripts/test-public-preview-browser.cjs
+      - name: Attach browser QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-preview-browser-evidence
+          path: artifacts/security/public-preview-browser.json
+          if-no-files-found: warn
