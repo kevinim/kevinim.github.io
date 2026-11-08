@@ -1,0 +1,55 @@
+name: TX public release security gate (no deployment)
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/public-release-gate.cjs'
+      - 'tests/public-release-gate.test.cjs'
+      - '.github/workflows/public-release-security.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '20 14 * * 1'
+permissions:
+  contents: read
+jobs:
+  privacy-regression:
+    name: Privacy regression and credential scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GITHUB_BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Test security gate rules
+        run: node --test tests/public-release-gate.test.cjs
+      - name: Run non-deploying public release audit
+        run: node scripts/public-release-gate.cjs audit
+      - name: Upload redacted audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-release-security-audit
+          path: artifacts/security/public-release-audit.json
+          if-no-files-found: warn
+  history-secrets:
+    name: Full Git history secret scanning
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Inspect history with Gitleaks
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
