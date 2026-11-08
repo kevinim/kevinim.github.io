@@ -73,7 +73,111 @@
     if(!back.value || back.dataset.auto==='yes'){back.value=String(miles);back.dataset.auto='yes';}
     $('tollDistanceStatus').textContent=(kind==='home'?'선택한 집':'선택 ZIP 대표점')+'에서 직장까지 OSRM 편도 '+miles.toFixed(1)+'mile을 적용했습니다. 퇴근도 같은 거리로 임시 가정했으며 실제 귀가 경로가 다르면 수정하세요.';
   };
-  const money=n=>'$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const clearStaleRouteMiles=()=>{
+    let wasAuto=false;
+    for(const id of ['tollOutMiles','tollBackMiles']){
+      const input=$(id);
+      if(input?.dataset.auto==='yes'){input.value='';input.dataset.auto='no';wasAuto=true;}
+    }
+    if(wasAuto)$('tollDistanceStatus').textContent='출발 지역 또는 목적지가 변경됐습니다. 새로운 출퇴근 경로를 계산하거나 편도 거리를 직접 입력하세요.';
+  };
+  $('destination').addEventListener('input',clearStaleRouteMiles);
+  $('zipSelect')?.addEventListener('change',clearStaleRouteMiles);
+  $('homeClear')?.addEventListener('click',clearStaleRouteMiles);
+  const money=n=>'
+  $('tollCalculate').addEventListener('click',()=>{
+    const res=$('tollResults');res.replaceChildren();
+    try{
+      const lib=root.CommuteCostModel;
+      if(!lib)throw Error('통근비 계산 모듈을 불러오지 못했습니다.');
+      const n=id=>$(id).value.trim(),value=id=>n(id)===''?null:n(id);
+      const scenario={
+        daysPerMonth:value('tollDays'),
+        paymentMode:n('tollPaymentMode'),
+        nttaRoadsUsed:$('tollNttaUsed').checked,
+        expressLanesUsed:$('tollExpressUsed').checked,
+        outboundNttaTollTagUsd:value('tollOut'),
+        returnNttaTollTagUsd:value('tollBack'),
+        outboundExpressUsd:value('expressOut'),
+        returnExpressUsd:value('expressBack'),
+        outboundMiles:value('tollOutMiles'),
+        returnMiles:value('tollBackMiles'),
+        milesPerGallon:value('tollMpg'),
+        fuelPricePerGallon:value('tollFuel'),
+        parkingPerDayUsd:value('tollParking')
+      };
+      const computed=lib.calculateMonthlyCommute(scenario);
+      const c=computed.components;
+      const cells=[['월 통행료',c.tollPerMonthUsd],['월 유류비',c.fuelPerMonthUsd],['월 주차비',c.parkingPerMonthUsd],['월 합계',c.totalPerMonthUsd],['연간 환산',c.totalPerYearUsd]];
+      const wrap=place(res,'div','','extra-summary-grid');
+      for(const [name,v] of cells){const cell=place(wrap,'div','','extra-stat');place(cell,'small',name);place(cell,'strong',v===null?'미확인':money(v));}
+      if(computed.status==='INCOMPLETE_QUOTE')place(res,'p','통행료 견적이 누락되어 전체 합계는 계산하지 않았습니다. NTTA 또는 TEXpress 요금을 입력하세요.','extra-warning');
+      else place(res,'p','입력한 가정값 기반 예상치입니다. 실제 통행료 고지서나 교통상황과 차이가 날 수 있습니다.','extra-disclosure');
+    }catch(e){place(res,'p','입력값을 확인하세요: '+(e&&e.message?e.message:'유효하지 않은 값'),'extra-warning');}
+  });
+  let hospitalData=null,gridData=null;
+  async function loadHospitals(){
+    const status=$('hospitalStatus');status.textContent='공식 CMS 시설 목록을 불러오는 중…';
+    try{
+      const resp=await fetch('./data/healthcare/cms-dfw-hospitals-2026.json');
+      if(!resp.ok)throw Error('HTTP '+resp.status);
+      const data=await resp.json();
+      if(!Array.isArray(data.records))throw Error('시설 데이터 형식 오류');
+      hospitalData=data.records;
+      const cities=[...new Set(hospitalData.map(r=>r.city).filter(Boolean))].sort();
+      $('hospitalCity').replaceChildren(new Option('도시를 선택하세요',''),...cities.map(c=>new Option(c,c)));
+      const desired=(typeof getZip==='function'?String(getZip().name||''):'').toUpperCase();
+      const matched=cities.find(c=>desired.includes(c));
+      if(matched)$('hospitalCity').value=matched;
+      status.textContent='총 '+hospitalData.length+'개 CMS 등록 병원 자료. 도시와 응급서비스 여부로 필터링합니다.';
+      renderHospitals();
+    }catch(e){status.textContent='병원 목록을 불러오지 못했습니다: '+e.message;}
+  }
+  function renderHospitals(){
+    if(!hospitalData)return;
+    const dest=$('hospitalCity').value,edOnly=$('hospitalEdOnly').checked,box=$('hospitalList');
+    box.replaceChildren();
+    if(!dest){place(box,'p','시설이 있는 도시를 선택하세요.');return;}
+    const arr=hospitalData.filter(r=>r.city===dest&&(!edOnly||r.emergencyServices===true)).sort((a,b)=>a.name.localeCompare(b.name));
+    place(box,'p',dest+' · '+arr.length+'개 CMS 등록 시설','extra-caption');
+    if(!arr.length){place(box,'p','현재 CMS 자료에서 조건에 맞는 시설이 없습니다. 다른 응급시설이 없다는 의미는 아닙니다.');return;}
+    for(const r of arr.slice(0,20)){
+      const item=place(box,'div','','extra-hospital');
+      place(item,'strong',r.name);
+      place(item,'small',[r.address,r.city,r.state,r.zip].filter(Boolean).join(', '));
+      place(item,'small','CMS 응급서비스: '+(r.emergencyServices===true?'Yes':r.emergencyServices===false?'No':'미확인'));
+      const link=place(item,'a','Google Maps에서 위치·경로 확인');
+      link.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent([r.name,r.address,r.city,r.state,r.zip].filter(Boolean).join(', '));
+      link.target='_blank';link.rel='noopener noreferrer';
+    }
+    if(arr.length>20)place(box,'p','추가 '+(arr.length-20)+'개 시설이 있습니다. 검색 범위를 좁혀 주세요.','extra-disclosure');
+  }
+  health.addEventListener('toggle',()=>{if(health.open&&!hospitalData)loadHospitals();});
+  $('hospitalCity').addEventListener('change',renderHospitals);
+  $('hospitalEdOnly').addEventListener('change',renderHospitals);
+  async function loadGrid(){
+    const status=$('gridResilienceStatus');status.textContent='EIA 텍사스 통계를 불러오는 중…';
+    try{
+      const response=await fetch('./data/resilience/eia-texas-grid-reliability-2024-2025.json');
+      if(!response.ok)throw Error('HTTP '+response.status);
+      const obj=await response.json();
+      if(obj.metadata?.geography!=='TX_STATE_ONLY'||!Array.isArray(obj.records))throw Error('자료 범위가 확인되지 않았습니다');
+      gridData=obj.records;
+      const box=$('gridResilienceData');box.replaceChildren();
+      for(const r of gridData){
+        const item=place(box,'div','','extra-hospital');
+        place(item,'strong',r.year+'년 · 텍사스 전체 평균');
+        place(item,'small','주요 사건 포함: 연간 평균 정전 '+r.allEvents.saidi+'분/고객 · '+r.allEvents.saifi+'회/고객');
+        place(item,'small','주요 사건 제외: 연간 평균 정전 '+r.excludingMajorEvents.saidi+'분/고객 · '+r.excludingMajorEvents.saifi+'회/고객');
+      }
+      status.textContent='EIA SAIDI(평균 정전시간)와 SAIFI(평균 빈도) — 광역 참고용이며 특정 주소의 위험도와 다릅니다.';
+    }catch(e){status.textContent='EIA 통계를 불러오지 못했습니다: '+e.message;}
+  }
+  grid.addEventListener('toggle',()=>{if(grid.open&&!gridData)loadGrid();});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})(typeof window!=='undefined'?window:globalThis);
++Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
   $('tollCalculate').addEventListener('click',()=>{
     const res=$('tollResults');res.replaceChildren();
     try{
