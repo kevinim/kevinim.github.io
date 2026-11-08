@@ -12,6 +12,8 @@ test('public preview removes personal default office and fixed commute sources',
  assert.equal(/<input id="destination" value=""/.test(preview),true);
  assert.equal(preview.includes('<option value="custom" selected>'),true);
  assert.equal(preview.includes("fetch('./jpm-road"),false);
+ assert.equal(preview.includes('nominatim.openstreetmap.org'),false);
+ assert.equal(preview.includes('const hits=await geocodeAddress(addr)'),true);
 });
 test('preview retains required map, school and address search hooks',()=>{
  for(const id of ['homeForm','homeAddress','officeSelect','oneHourOverlay','schoolList','map','destination']) {
