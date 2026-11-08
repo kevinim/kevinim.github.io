@@ -1,6 +1,6 @@
 # P40: DFW commute / Toll cost — independent calculation core
 
-**Status:** P40 step 1 complete **on feature branch only**. The calculation library and tests exist; **not wired to the live dashboard** and no route-specific toll quotes have been fetched automatically. Do not report the public calculator as shipped.
+**Status updated 2026-11-08:** Monthly cost model is **now wired to the live dashboard** in the collapsible `통행료 · 월 출퇴근 비용` UI (`features/dashboard-extras.js`, PR #63). Quotes remain **manual**; automatic NTTA route pricing, toll-free route selection, peak traffic and dynamic TEXpress quotes are NOT implemented.
 
 ## Existing assets to re-use
 - `index.html` contains the destination chooser, ZIP / selected-home OSRM driving route/road-network time, and saved commute overview.
