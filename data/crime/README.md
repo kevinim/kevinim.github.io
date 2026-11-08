@@ -10,13 +10,13 @@
 | --- | --- | --- | --- | ---: | --- |
 | Dallas | `dallas-offenses-2021-2026.json` | Entire published police incident dataset, by year + original NIBRS code | 2021–2026 YTD | 317 aggregate groups | Public release excludes some sex/juvenile and other sensitive incidents; offense rows are not unique crime incidents |
 | Dallas | `dallas-zip-offenses-2025.json` | Published ZIP × NIBRS code | 2025 | 1,216 retained groups | 563 ZIP/code groups with count < 5 suppressed; 14 non-75*** ZIP/code groups not stored |
-| Fort Worth | `fort-worth-offenses-2021-2026.json` | Entire published police incident dataset, by year/code/original description | 2021–2026 YTD | 3,765 aggregate groups | 2026 partial, duplicates across incident/codes possible, juvenile exclusions |
+| Fort Worth | `fort-worth-offenses-2021-2026.json` | Entire published police incident dataset, by year/code/original description | 2021–2026 YTD | 3,764 aggregate groups | 2026 partial, duplicates across incident/codes possible, juvenile exclusions |
 | Fort Worth | `fort-worth-beat-totals-2025.json` | Police Beat ID totals, not geographic polygons | 2025 | 104 retained beats | 8 null, missing or < 5 groups omitted; source 2025 total 56,936 offense records |
 | Frisco | `frisco-offenses-partial-2025-2026.json` | Citywide original `OffenseGroup` | ~Nov 2025–Nov 2026 | 54 aggregate groups | API date range is only ~1 year; **2025 is NOT full year**; public map has a narrower display window |
 | Plano | `plano-police-official-2021-2025.json` | City police annual statistics | 2021–2025 full year | 5 annual records | Transcribed from official one-page year-end PDF, UCR categories as published |
 | McKinney | `mckinney-police-official-2021-2025.json` | City police annual statistics | 2021–2025 full year | 5 annual records | Official city PDF includes `Arson` in its displayed property subtotal, unlike Plano |
 
-**Total staged:** 7 files and **5,466 aggregate data rows**. These are group rows, not incidents. The Dallas/Fort Worth/Fresco datasets remain source-native; **the 7 files cannot be merged into one cross-city ranking** without reporting-coverage and classification work.
+**Total staged:** 7 files and **5,465 aggregate data rows**. These are group rows, not incidents. The Dallas/Fort Worth/Frisco datasets remain source-native; **the 7 files cannot be merged into one cross-city ranking** without reporting-coverage and classification work.
 
 ## Source evidence, caveats and access
 
