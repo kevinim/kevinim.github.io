@@ -42,6 +42,20 @@ assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
 assert.match(css,/@media\(max-width:540px\)/);
 assert.match(html,/<h2 class="feature-heading home">/);
 assert.match(html,/<h2 class="feature-heading commute">/);
+for(const id of ['zipSelect','metric','heatScope','levels','ratingFilter','zipOverlay','oneHourOverlay',
+  'schoolOverlay','historicOverlay','referenceBoundaryOverlay'])unique('id="'+id+'"',id);
+const groupStart=html.indexOf('<section class="filter-settings-group school-settings" id="schoolSettings"');
+const groupEnd=html.indexOf('</section>',groupStart);
+assert.ok(groupStart>0&&groupEnd>groupStart,'school control section must exist');
+const schoolMarkup=html.slice(groupStart,groupEnd);
+for(const id of ['levels','ratingFilter','schoolOverlay','historicOverlay','referenceBoundaryOverlay']){
+  assert.ok(schoolMarkup.includes('id="'+id+'"'),'missing grouped school control '+id);
+}
+assert.ok(!schoolMarkup.includes('id="oneHourOverlay"'),'commute control should not be in school group');
+assert.ok(!schoolMarkup.includes('id="zipOverlay"'),'demographic ZIP overlay should not be in school group');
+assert.ok(html.includes('aria-labelledby="schoolSettingsTitle"'),'school group accessible title missing');
+assert.match(css,/\.filter-panel \.school-visibility-options/);
+assert.match(css,/@media\(max-width:480px\)/);
 assert.ok(!html.includes('id="healthcareToggle"'),'do not add dead control for unimplemented features');
 assert.ok(!html.includes('id="gridPowerToggle"'),'do not add dead control for unimplemented features');
 console.log('UI button quality check PASS — source IDs, labels, icons, state styles, accessibility, responsive CSS');
