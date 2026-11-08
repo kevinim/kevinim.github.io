@@ -4,7 +4,7 @@
 **Production:** https://kevinim.github.io/  
 **Repository:** `kevinim/kevinim.github.io` (`main`)  
 **Decision captured:** 2026-11-07, America/New_York  
-**Status:** P40–P42 remain planned/unimplemented; P43 has **partial official aggregate DATA staging** in `data/crime/` (research only, not map/UI). No P43 safety score, visualization, or production feature is implemented. See the P43 status addendum below.
+**Status updated 2026-11-08:** P40–P42 have **partially implemented, deployed UI** with explicit source limitations; city-level FBI Crime Map already exists separately from P43 source-native data preparation. No address-specific outage score, automatic NTTA quote, nearest-ED time, or P43 severity score is implemented. Read the 2026-11-08 addendum before new development.
 
 ## 0. Read this before making changes
 
@@ -20,10 +20,10 @@ The user approved four proposed capabilities:
 
 | ID | Feature | Order / Release policy | Current status |
 | --- | --- | --- | --- |
-| **P40** | Vehicle commute and DFW toll cost simulation, peak congestion | Implement after P0 stability and source feasibility | Proposed; no implementation |
-| **P41** | Hospital / emergency-care accessibility | Implement after P40, or in parallel if isolated | Proposed; no implementation |
-| **P42** | Cold-wave, winter storm and electric-grid resilience | Implement with evidence-tier labels; never invent neighborhood outage scores | Proposed; no implementation |
-| **P43** | Crime Map **data acquisition and normalization only** | Begin research/collection; **do not publish a crime map or safety score yet** | P43 **partial aggregate dataset staged** (Dallas, Fort Worth, Frisco, Plano, McKinney); other cities/data gaps unresolved; map not implemented |
+| **P40** | Vehicle commute and DFW toll cost simulation, peak congestion | Extend only verified route pricing/peak data | Monthly toll/fuel/parking cost UI **deployed**; manual NTTA/TEXpress quote inputs and OSRM route-distance prefill. Automatic toll and traffic still missing. |
+| **P41** | Hospital / emergency-care accessibility | Verify official ED/trauma and travel-time coverage | CMS DFW 12-county **city-filtered hospital directory deployed**; nearest ED and 15/30 minute ETA remain unimplemented. |
+| **P42** | Cold-wave, winter storm and electric-grid resilience | Acquire FEMA cold wave + utility data separately | EIA Texas-state 2024–2025 SAIDI/SAIFI **context panel deployed**. Local winter/utility/outage risk still unimplemented. |
+| **P43** | Official police crime dataset ingestion / normalization | Continue source reconciliation; **do not publish P43 severity maps/safety scores yet** | Existing FBI city Crime Map is already in production (`crime-city-map.js`). Separately, P43 police source-native aggregates are staged for five cities; not normalized/merged into map. |
 
 Preserve existing school, school-boundary, address lookup, and FEMA flood work. These new features are additional decision-support layers, not replacements.
 
@@ -145,3 +145,32 @@ The original handoff above recorded planning decisions before acquisition. A sub
 - **Unresolved:** Allen authoritative counts and conflicting secondary-source numbers; Prosper/Celina/Lewisville/CFB and other DFW; sub-city geometries, normalization, source licensing/refresh policies, population denominators, completeness by offense/year.
 
 Reproducible snapshot validation: `node scripts/check-crime-staging.mjs`; GitHub Actions `.github/workflows/verify-crime-staging.yml` (PR/push data-only QA). The row count is **5,465 aggregate groups**, not incidents. No names, incident IDs, precise addresses or coordinates saved; no JS map integration/deployment authorized. This addendum documents **partial progress only**, not completion of P43 or the map.
+
+## 2026-11-08 implementation update — Work marker + P40/P41/P42 user panels
+
+**Production target:** https://kevinim.github.io/ — source commit `7ba5f1c6675fc8e96829165d825506641a7d7bae` via PR #63; page build/deployment succeeded, full PR browser tests succeeded. Always revalidate the current main when resuming.
+
+### What is built, not merely proposed
+
+- **Map work-destination pin:** `features/commute/workplace-marker.js` creates one recognizable blue briefcase `직장` marker, reused by `index.html` for ZIP-to-office and `home-lookup-v2.js` for house-to-office routes. Prior map layer and school functions retain their IDs and handlers.
+- **Monthly commute + toll:** `features/commute/cost-model.js` (from PR #57) plus the collapsible `통행료 · 월 출퇴근 비용` section in `features/dashboard-extras.js`. The user must supply per-direction NTTA TollTag quotes, can select TollTag/ZipCash/ZipCash AutoPay, input separately quoted variable TEXpress lanes, office days, MPG/fuel and parking. Existing OSRM route distance fills a **clearly labeled symmetric return-distance assumption**, editable by the user; stale automatically filled miles are cleared when ZIP/destination changes. **No automatic NTTA quote or toll-free alternate route or peak traffic forecast.** A missing toll quote yields no final total rather than a fabricated $0.
+- **Healthcare:** `data/healthcare/cms-dfw-hospitals-2026.json` contains 104 CMS registrations across 12 DFW counties (87 labeled emergency services). The new `병원 · 응급실` panel lists by **facility city** and ED flag and offers external Maps links. This is **not** distance ranking, 24/7 certification, pediatric/trauma designation or verified 15/30-minute emergency travel time. The standalone `features/healthcare/access-core.js` is preserved for later time-calculation coverage.
+- **Electric grid / winter:** `data/resilience/eia-texas-grid-reliability-2024-2025.json` and the `겨울한파 · 전력 인프라` panel show statewide SAIDI/SAIFI with/without major events. **No utility service territory, local outage duration or Winter Storm Uri address score.** Existing FEMA/NOAA data remains separate and should not be relabeled as electricity outages.
+- **Already deployed surrounding UI:** PR #60 colored existing map hazard/crime controls; PR #61 school settings regrouping and inline address search clear; PR #62 CSS cache bust. Existing FBI Crime Map is present independently from P43 police source ingestion.
+
+### Evidence
+
+- Previously staged backend/source PRs: #57 (toll cost core), #58 (CMS facility inventory), #59 (Texas EIA/ERCOT scope metadata), all merged.
+- UI integration: #63, commit `7ba5f1c`. Seven GitHub Actions checks passed, including real Chromium browser interaction for toll math, missing quote behavior, CMS city filter, EIA two-year display, mobile widths and legacy school/FEMA/Crime overlay regression.
+- `features/dashboard-extras.css`, `features/dashboard-extras.js` and `features/commute/workplace-marker.js` contain the actual UI/marker code; avoid a second competing UI implementation.
+- The marker is shared by `drawSelectedRoute()` and `calculateHomeCommute()`. The latter's cache-busted source is `home-lookup-v2.js?v=15` as of this release.
+
+### Remaining development candidates — not completed
+
+1. **Toll:** licensed or official per-gantry NTTA route calculator integration and accurate outbound/reverse-route tolls; independent TEXpress time-sensitive prices; genuinely toll-free routes; historical AM/PM traffic and bottleneck reliability from suitable provider.
+2. **Healthcare:** DSHS trauma-level identity matching, facility location geocoding/quality review, freestanding ED + pediatric facilities, verified provider status; accurate routed 15/30-minute ED accessibility for selected home/ZIP.
+3. **Resilience:** FEMA 2025 cold-wave/ice-storm/winter-weather hazard at known geography, EIA Form 861 utility-level rows, actual service territories, verified 2021/other storm outage footprints. Never infer a neighborhood blackout score from Texas state averages.
+4. **Crime:** reconcile FBI city data against local agency records and missing periods, preserve source definitions, obtain comparable sub-city polygons; severity model and any new heatmap need separate user approval.
+5. Keep P0 Allen schools and map viewport/marker-count smoke tests gating releases; no new overlays may clear school layers.
+
+This addendum supersedes the historical **'no implementation'** status lines above where they conflict. The earlier architectural acceptance criteria remain useful for unfinished subfeatures.
