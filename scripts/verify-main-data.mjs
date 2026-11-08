@@ -109,7 +109,7 @@ test('six distinct district records and exact evidence vintages', () => {
 });
 test('school selection auto-displays available source polygons with a specific missing-boundary footnote',()=>{
  const inline=inlineScripts.join('\n');
- assert.ok(html.includes('<script src="./school-boundary-match.js?v=1"></script>'));
+ assert.ok(html.includes('<script src="./school-boundary-match.js?v=2"></script>'));
  assert.ok(html.includes('id="schoolBoundaryCoverageAudit"'));
  assert.ok(inline.includes('state.showOldZones=true;state.showHistoric=true;'));
  assert.ok(inline.includes("el('referenceBoundaryOverlay').checked=true"));
@@ -1201,6 +1201,18 @@ test('Middle Eastern / Arab ancestry (ACS B04006) covers every dashboard ZIP and
  assert.ok(html.includes("fetch('./data/dfw-mena-ancestry-2024.json')"));
  assert.ok(html.includes('중동·아랍계 (조상 응답)'));
  assert.ok(html.includes('항목끼리 더하지 않습니다'),'UI must say ancestry rows are not summed');
+});
+test('McKinney ISD 2026-27 official finder zones are wired with year and count guards',()=>{
+ assert.ok(html.includes('23b28d101ba947498650f6c7b9ef251b/data?f=json'),'McKinney 2627 School Zone Finder webmap');
+ assert.ok(html.includes("elem.some(f=>f.attributes?.SCHL_YEAR!=='2026-27')"),'reject non 2026-27 elementary pieces');
+ assert.ok(html.includes("count('middle')!==5||count('high')!==3"));
+ assert.ok(html.includes("state.zoneData.LISD=convertMetrostudyZones(j,LEWISVILLE_FINDER)"),'Lewisville keeps its own config');
+ const require=createRequire(import.meta.url);
+ const match=require('../school-boundary-match.js');
+ for(const n of ['ARTHUR H MCNEIL EL','C T EDDINS EL','EARL & LOTTIE WOLFORD EL','CALDWELL EL','SERENITY HIGH'])
+  assert.ok(match.knownBoundaryException({district:'043907',name:n}),'McKinney special campus explained: '+n);
+ assert.equal(match.knownBoundaryException({district:'043907',name:'FINCH EL'}),null);
+ assert.ok(!/[\x00-\x08]/.test(readText('school-boundary-match.js')),'no control characters in matcher');
 });
 await Promise.all(asyncChecks);
 console.log('Main website QA: ' + total + ' tests passed.');
