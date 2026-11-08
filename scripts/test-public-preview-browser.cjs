@@ -41,7 +41,7 @@ async function main(){
    });
    await page.goto(url,{waitUntil:'domcontentloaded',timeout:90000});
    await page.locator('#homeAddress').waitFor({timeout:30000});
-   await page.waitForFunction(()=>typeof window.L!=='undefined'&&!!document.querySelector('#map .leaflet-container'),null,{timeout:45000});
+   await page.waitForFunction(()=>typeof window.L!=='undefined'&&!!document.querySelector('#map.leaflet-container'),null,{timeout:45000});
    await page.waitForFunction(()=>typeof state!=='undefined'&&Array.isArray(state.schools)&&state.schools.length>0,null,{timeout:45000});
    const initial=await page.evaluate(()=>{
     const el=id=>document.getElementById(id);
