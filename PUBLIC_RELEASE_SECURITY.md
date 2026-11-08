@@ -11,7 +11,9 @@ Sharing a website URL does not make repository source private. This project curr
 - `scripts/public-release-gate.cjs audit`: reads tracked text and reports credential patterns, personalized commute indicators, external hostnames, and HTML sinks. Checks *new* sensitive indicators against the pull request base; existing personalized defaults are marked as launch blockers but do not interrupt ongoing feature development.
 - `tests/public-release-gate.test.cjs`: automated checks for rules and redacted findings.
 - `.github/workflows/public-release-security.yml`: CI for pull requests, weekly monitoring and manual review, including a full-history Gitleaks job. Read-only permissions. **No deploy job**.
-- `node scripts/public-release-gate.cjs release <dist-dir>`: strict dry-run on a future, separately built distribution. Fails for credentials, personalized commute markers, development files, missing entry HTML or missing private-source separation confirmation. Does not deploy. The release pipeline may set `PUBLIC_SOURCE_SEPARATED=confirmed` only after verifying source separation and the final Pages settings.
+- `node scripts/public-release-gate.cjs release <dist-dir>`: strict dry-run on a future, separately built distribution. Fails for credentials, personalized commute markers, any file outside the approved static-file allowlist (including development docs, old HTML, Git metadata and source maps), missing entry HTML or missing private-source separation confirmation. Does not deploy. The release pipeline may set `PUBLIC_SOURCE_SEPARATED=confirmed` only after verifying source separation and the final Pages settings.
+
+- `.gitignore`: excludes audit reports, local build products and common credential files from accidental new Git staging; **does not remove any file that is already tracked**.
 
 ## Required before external promotion
 
