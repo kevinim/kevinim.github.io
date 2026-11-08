@@ -40,8 +40,8 @@ jobs:
           name: public-release-security-audit
           path: artifacts/security/public-release-audit.json
           if-no-files-found: warn
-  history-secrets:
-    name: Full Git history secret scanning
+  pr-change-secrets:
+    name: PR change secret scanning
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -49,7 +49,26 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Inspect history with Gitleaks
+      - name: Scan PR change history with Gitleaks Action
         uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_COMMENTS: 'false'
+  full-history-secrets:
+    name: ALL refs and full Git history Gitleaks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Scan complete repository history (all refs, redacted results)
+        run: |
+          docker run --rm --network none \
+            -v "$PWD:/repo:ro" -w /repo \
+            -e GIT_CONFIG_COUNT=1 \
+            -e GIT_CONFIG_KEY_0=safe.directory \
+            -e GIT_CONFIG_VALUE_0=/repo \
+            ghcr.io/gitleaks/gitleaks@sha256:b109bc5f8f76a38196a3e413704fc5b9e3c32360bce4e4b603bd6f45b3721dbb \
+            git --redact --log-opts=--all /repo
