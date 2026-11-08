@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "sourceId": "EIA_EPA_TABLE_11_3",
+    "publisher": "U.S. Energy Information Administration",
+    "sourceUrl": "https://www.eia.gov/electricity/annual/table.php?t=epa_11_03.html",
+    "source": "Form EIA-861, Electric Power Annual, Table 11.3",
+    "sourceDataYears": [
+      2024,
+      2025
+    ],
+    "reportReleased": "2026-10-21",
+    "snapshotCheckedOn": "2026-11-08",
+    "geography": "TX_STATE_ONLY",
+    "method": "Reliability Metrics Using Any Method of U.S. Distribution System by State; includes reporters using IEEE and non-IEEE methods; reported coverage differs by year",
+    "measurementUnits": {
+      "saidi": "minutes per year per customer",
+      "saifi": "non-momentary interruptions per year per customer",
+      "caidi": "minutes per interruption"
+    },
+    "warning": "These statewide system averages cannot identify individual electric utilities, neighborhoods, feeders, homes or outage durations in Winter Storm Uri 2021; not a local risk score",
+    "uiIntegration": false
+  },
+  "records": [
+    {
+      "year": 2024,
+      "state": "TX",
+      "coveragePercent": 98.1,
+      "allEvents": {
+        "saidi": 1270.6,
+        "saifi": 2.114,
+        "caidi": 600.9
+      },
+      "excludingMajorEvents": {
+        "saidi": 129.4,
+        "saifi": 1.218,
+        "caidi": 106.2
+      }
+    },
+    {
+      "year": 2025,
+      "state": "TX",
+      "coveragePercent": 99.2,
+      "allEvents": {
+        "saidi": 223.5,
+        "saifi": 1.704,
+        "caidi": 131.2
+      },
+      "excludingMajorEvents": {
+        "saidi": 128.7,
+        "saifi": 1.287,
+        "caidi": 100
+      }
+    }
+  ]
+}
