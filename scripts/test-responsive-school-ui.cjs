@@ -55,6 +55,26 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
       assert.equal(await page.locator('#homeAddress').inputValue(),'','X empties address at '+width);
       assert.equal(await page.locator('#homeClear').isVisible(),false,'X hides after clearing at '+width);
       assert.equal(await page.locator('#homeCandidates').innerText(),'','X clears home candidates at '+width);
+      if(width===1280){
+        // Simulate a returned geocoder candidate through the real selection handler.
+        // This tests the post-search HOME pin and home state, without sending a private address.
+        await page.waitForFunction(()=>typeof useHomeCandidate==='function'&&typeof map!=='undefined'&&!!map&&
+          typeof state!=='undefined'&&Array.isArray(state.schools)&&state.schools.length>0,null,{timeout:90000});
+        const accepted=await page.evaluate(()=>{
+          document.getElementById('homeAddress').value='3400 Legacy Dr, Plano, TX 75024';
+          syncHomeClearVisibility();
+          return useHomeCandidate({address:'3400 Legacy Dr, Plano, TX 75024',
+            location:{x:-96.807,y:33.076},score:99});
+        });
+        assert.equal(accepted,true,'test address candidate should create a house marker');
+        assert.equal(await page.evaluate(()=>!!home&&!!homeMarker),true,'selected home should have a visible marker');
+        assert.equal(await page.locator('#homeClear').isVisible(),true,'X should show after a successful home selection');
+        await page.locator('#homeClear').click();
+        assert.equal(await page.evaluate(()=>home===null&&homeMarker===null),true,'X must clear selected home and map marker');
+        assert.equal(await page.locator('#homeAddress').inputValue(),'','X must also empty the completed search input');
+        assert.equal(await page.locator('#homeClear').isVisible(),false,'X hides after clearing a completed search');
+        report.addressClear.postSearchPin='pass';
+      }
       const maxScroll=Math.max(state.docScroll,state.bodyScroll);
       if(maxScroll>width+2)issueList.push('document horizontal overflow '+maxScroll+'px (viewport '+width+'px)');
       const gb=state.schoolGroup,ab=state.areaGroup,cb=state.commuteGroup;
