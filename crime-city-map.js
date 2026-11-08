@@ -20,6 +20,24 @@ function crimeCityRate(feature,category,year){
  const rate=y?.[category+'Rate'];
  return {rate:Number.isFinite(rate)?rate:null,count:y?.[category]??null,months:y?.[category+'Months']??0,population:y?.population??null};
 }
+// Trend from the first to the latest year, using rates per 100k so population
+// growth does not read as more crime. Within +/-10% counts as flat.
+function crimeTrend(years,category){
+ const ks=Object.keys(years||{}).sort();
+ const first=years?.[ks[0]]?.[category+'Rate'],last=years?.[ks.at(-1)]?.[category+'Rate'];
+ if(!ks.length||!Number.isFinite(first)||!Number.isFinite(last))return {dir:'unknown',label:'추세 판단 불가',from:ks[0],to:ks.at(-1)};
+ // Tiny counts (every year < 20 cases) swing wildly; 1 -> 7 cases is not a +600% trend.
+ if(ks.every(k=>(Number(years[k]?.[category])||0)<20))return {dir:'small',label:'건수 적음 · 추세 판단 보류',from:ks[0],to:ks.at(-1)};
+ const pct=first===0?(last===0?0:100):Math.round((last-first)/first*100);
+ const dir=pct>=10?'up':pct<=-10?'down':'flat';
+ return {dir,pct,from:ks[0],to:ks.at(-1),label:dir==='up'?'▲ 증가':dir==='down'?'▼ 감소':'― 비슷'};
+}
+function crimeYearsHtml(years,category,esc){
+ const ks=Object.keys(years||{}).sort(),t=crimeTrend(years,category);
+ const cells=ks.map(y=>{const v=years[y];return esc(y)+' '+(v?.[category+'Months']===12?Number(v[category]).toLocaleString('en-US')+'건':'보고 부족')}).join(' · ');
+ const cls=t.dir==='up'?'crime-up':t.dir==='down'?'crime-down':'crime-flat';
+ return cells+' <b class="'+cls+'">'+esc(t.label)+(Number.isFinite(t.pct)&&!['unknown','small'].includes(t.dir)?' '+(t.pct>0?'+':'')+t.pct+'%':'')+'</b>';
+}
 function validateCrimeGeojson(j){
  return j?.type==='FeatureCollection'&&Array.isArray(j.features)&&j.features.length>=100&&
   Array.isArray(j.metadata?.years)&&String(j.metadata?.source||'').includes('FBI Crime Data Explorer')&&
@@ -29,13 +47,13 @@ function validateCrimeGeojson(j){
 function createCrimeCityMap(map,documentRef){
  const d=documentRef||document;
  const button=d.getElementById('crimeMapToggle'),legend=d.getElementById('crimeLegend');
- const yearSelect=d.getElementById('crimeYear'),status=d.getElementById('crimeStatus');
+ const status=d.getElementById('crimeStatus');
  const zipToggle=d.getElementById('zipOverlay');
- if(!map||!button||!legend||!yearSelect||!status)return null;
+ if(!map||!button||!legend||!status)return null;
  let data=null,layer=null,pending=null,restoreZip=null,on=false,category='violent',requestId=0;
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const fmt=n=>Number.isFinite(n)?Math.round(n).toLocaleString('en-US'):'—';
- const year=()=>yearSelect.value;
+ const year=()=>String(data?.metadata?.years?.at(-1)||'');
  const setStatus=t=>{status.textContent=t};
  const style=f=>{
   const r=crimeCityRate(f,category,year()),cls=crimeRateClass(r.rate,category);
@@ -46,9 +64,10 @@ function createCrimeCityMap(map,documentRef){
  const popup=f=>{
   const p=f.properties,y=year(),ref=data?.metadata?.reference?.[y]||{};
   const row=cat=>{const r=crimeCityRate(f,cat,y),c=CRIME_CATEGORIES[cat],tx=ref[cat]?.texas;
-   return '<div>'+esc(c.label)+': '+(r.rate===null?'<b>자료 부족</b> ('+r.months+'/12개월 보고)':'<b>'+fmt(r.rate)+'</b> / 10만 명 · '+fmt(r.count)+'건'+(Number.isFinite(tx)?' <small>(텍사스 '+fmt(tx)+')</small>':''))+'</div>'};
+   return '<div style="margin-top:5px">'+esc(c.label)+' '+y+': '+(r.rate===null?'<b>자료 부족</b> ('+r.months+'/12개월 보고)':'<b>'+fmt(r.rate)+'</b> / 10만 명'+(Number.isFinite(tx)?' <small>(텍사스 '+fmt(tx)+')</small>':''))+
+    '<br><small>'+crimeYearsHtml(p.years,cat,esc)+'</small></div>'};
   const pop=f.properties.years?.[y]?.population;
-  return '<div class="fema-popup"><strong>'+esc(p.city)+' · '+esc(y)+'년</strong>'+row('violent')+row('property')+
+  return '<div class="fema-popup"><strong>'+esc(p.city)+'</strong>'+row('violent')+row('property')+
    '<div>경찰 관할 인구(FBI): '+fmt(pop)+'</div>'+
    ((pop||0)<CRIME_SMALL_CITY?'<small>인구 1만 명 미만이라 건수가 적어 해마다 크게 변할 수 있습니다.</small><br>':'')+
    '<small>시 경계 안에서 '+esc(p.agency)+'에 신고된 범죄입니다. 동네·주소별 위험이 아닙니다.</small></div>';
@@ -79,9 +98,7 @@ function createCrimeCityMap(map,documentRef){
  async function getData(){
   if(data)return data;
   pending=pending||fetch(CRIME_DATA_URL,{cache:'force-cache'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()})
-   .then(j=>{if(!validateCrimeGeojson(j))throw Error('범죄 자료 형식 검증 실패');data=j;
-    for(const y of [...j.metadata.years].reverse())if(![...yearSelect.options].some(o=>o.value===String(y))){const o=d.createElement('option');o.value=String(y);o.textContent=y+'년';yearSelect.appendChild(o)}
-    yearSelect.value=String(j.metadata.years.at(-1));return j})
+   .then(j=>{if(!validateCrimeGeojson(j))throw Error('범죄 자료 형식 검증 실패');data=j;return j})
    .finally(()=>{pending=null});
   return pending;
  }
@@ -110,7 +127,6 @@ function createCrimeCityMap(map,documentRef){
   }
  }
  button.addEventListener('click',()=>setOn(!on));
- yearSelect.addEventListener('change',recolor);
  // Capture phase: switch crime off (restoring ZIP colors) BEFORE the hazard
  // module's own handler records the ZIP state it must restore later.
  d.addEventListener('change',e=>{
@@ -119,5 +135,27 @@ function createCrimeCityMap(map,documentRef){
  setStatus('범죄율 지도 꺼짐 · 필요할 때만 자료를 불러옵니다.');drawLegend();
  return {setOn,isOn:()=>on,getLoadedFeatureCount:()=>data?.features?.length||0,setCategory:c=>{if(CRIME_CATEGORIES[c]){category=c;recolor()}}};
 }
-if(typeof module!=='undefined')module.exports={CRIME_CATEGORIES,CRIME_COLORS,crimeRateClass,crimeCityRate,validateCrimeGeojson};
+// ZIP detail: the cities this ZIP lies in and their 3-year trends (city-level).
+let crimeZipData=null;
+function crimeZipHtml(zip,data=crimeZipData){
+ if(!data)return '';
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const z=data.zips?.[zip],latest=String(data.metadata?.years?.at(-1)||'');
+ let html='<div id="crimeZipTrend" style="margin-top:18px;font-size:12px;font-weight:800">범죄 추세 (이 ZIP이 걸친 도시 기준)</div>';
+ if(!z||!z.cities.length)return html+'<p class="source">이 ZIP은 시 경찰 자료가 있는 도시와 거의 겹치지 않습니다(카운티 관할 등). 범죄 건수를 표시하지 않습니다.</p>';
+ for(const c of z.cities){
+  const city=data.cities[c.ori];if(!city)continue;
+  const rate=k=>city.years?.[latest]?.[k+'Rate'];
+  html+='<div class="crime-zip-city"><div><b>'+esc(city.city)+'</b> <span class="source">ZIP 면적의 약 '+Math.round(c.share*100)+'%'+((city.years?.[latest]?.population||0)<10000?' · 인구 1만 미만, 변동 큼':'')+'</span></div>'+
+   ['violent','property'].map(k=>'<div class="crime-zip-row"><span>'+esc(CRIME_CATEGORIES[k].label)+(Number.isFinite(rate(k))?' · '+latest+' 10만 명당 '+rate(k).toLocaleString('en-US'):'')+'</span><span>'+crimeYearsHtml(city.years,k,esc)+'</span></div>').join('')+'</div>';
+ }
+ if(z.outsideCityShare>=0.05)html+='<p class="source">ZIP 면적의 약 '+Math.round(z.outsideCityShare*100)+'%는 시 경찰 자료가 없는 지역(카운티 보안관 관할 등)입니다.</p>';
+ return html+'<p class="source">시 경찰에 신고된 건수(FBI)입니다. 도시 전체 수치이며 이 ZIP 안의 건수가 아닙니다. 추세는 '+esc(data.metadata.years[0])+'→'+latest+' 인구 10만 명당 비율 변화(±10% 이내는 비슷)입니다.</p>';
+}
+if(typeof window!=='undefined'){
+ // crimeZipHtml is already global (top-level function in a classic script).
+ fetch('./data/dfw-crime-zip-cities-2023-2025.json',{cache:'force-cache'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()})
+  .then(j=>{crimeZipData=j;if(typeof drawDetail==='function')drawDetail()}).catch(e=>console.error('ZIP 범죄 추세 자료 오류:',e));
+}
+if(typeof module!=='undefined')module.exports={CRIME_CATEGORIES,CRIME_COLORS,crimeRateClass,crimeCityRate,crimeTrend,crimeZipHtml,validateCrimeGeojson};
 if(typeof window!=='undefined')window.createCrimeCityMap=createCrimeCityMap;

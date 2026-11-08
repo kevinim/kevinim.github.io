@@ -1298,8 +1298,32 @@ test('City crime map: FBI NIBRS city rates on city limits, complete years only, 
  assert.equal(crimeCityRate(plano,'violent',2025).rate,plano.properties.years[2025].violentRate);
  const web=readText('index.html');
  assert.ok(web.includes('id="crimeMapToggle"')&&web.includes('id="crimeLegend"')&&web.includes('<details id="crimePanel"'));
- assert.ok(web.includes('<script src="./crime-city-map.js?v=1"></script>')&&web.includes('window.createCrimeCityMap?.(map,document)'));
+ assert.ok(web.includes('<script src="./crime-city-map.js?v=3"></script>')&&web.includes('window.createCrimeCityMap?.(map,document)'));
  assert.ok(web.includes('ZIP·동네·주소별 위험이 아닙니다'),'caveat: not ZIP/address risk');
+});
+test('Crime trends per ZIP: city-level 3-year counts and direction, never ZIP-allocated counts',()=>{
+ const require=createRequire(import.meta.url);
+ const {crimeTrend,crimeZipHtml}=require('../crime-city-map.js');
+ const zc=readJson('data/dfw-crime-zip-cities-2023-2025.json');
+ const rows=[...readJson('dfw-demographics.json').data,...readJson('jpm-outside-dfw.json').data];
+ assert.equal(Object.keys(zc.zips).length,new Set(rows.map(d=>d.z)).size,'every dashboard ZIP has an overlap entry');
+ for(const [zip,z] of Object.entries(zc.zips)){
+  const total=z.cities.reduce((a,c)=>a+c.share,0)+z.outsideCityShare;
+  assert.ok(total<=1.02,'shares <= 100% for '+zip);
+  for(const c of z.cities){assert.ok(zc.cities[c.ori],'city data for '+c.ori);assert.ok(c.share>=0.05)}
+ }
+ assert.equal(zc.cities[zc.zips['75093'].cities[0].ori].city,'Plano');
+ assert.equal(zc.cities[zc.zips['75013'].cities[0].ori].city,'Allen');
+ const yrs=(a,b,c)=>({2023:{violentRate:a,violent:100},2024:{violentRate:b,violent:100},2025:{violentRate:c,violent:100}});
+ assert.equal(crimeTrend({2023:{violentRate:20,violent:1},2024:{violentRate:40,violent:2},2025:{violentRate:140,violent:7}},'violent').dir,'small','1 -> 7 cases is not a trend');
+ assert.equal(crimeTrend(yrs(100,105,120),'violent').dir,'up');
+ assert.equal(crimeTrend(yrs(100,90,85),'violent').dir,'down');
+ assert.equal(crimeTrend(yrs(100,130,105),'violent').dir,'flat','within +/-10% is flat');
+ assert.equal(crimeTrend(yrs(null,90,85),'violent').dir,'unknown','incomplete first year: no trend');
+ const html=crimeZipHtml('75093',zc);
+ assert.ok(html.includes('Plano')&&/[▲▼―]/.test(html)&&html.includes('이 ZIP 안의 건수가 아닙니다'),'ZIP panel: city, trend, caveat');
+ assert.ok(crimeZipHtml('75002',zc).includes('시 경찰 자료가 없는 지역'),'county/unincorporated share disclosed');
+ assert.ok(!readText('index.html').includes('id="crimeYear"'),'heatmap uses the latest year; no year selector');
 });
 await Promise.all(asyncChecks);
 console.log('Main website QA: ' + total + ' tests passed.');
