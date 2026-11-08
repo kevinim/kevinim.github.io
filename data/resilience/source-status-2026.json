@@ -1,0 +1,69 @@
+{
+  "asOf": "2026-11-08",
+  "status": "SOURCE_RESEARCH_INCOMPLETE_NOT_A_MAP",
+  "dimensions": [
+    {
+      "key": "cold_wave",
+      "source": "FEMA National Risk Index / RAPT",
+      "sourceUrl": "https://hazards.fema.gov/nri/",
+      "timeframe": "2025 model",
+      "geography": "census tract candidate, separate hazard",
+      "state": "NOT_ACQUIRED",
+      "dataValue": null,
+      "notes": "Cold Wave hazard, not distribution outages. Verify field coding and 2025 NRI vintage before ingestion."
+    },
+    {
+      "key": "ice_storm",
+      "source": "FEMA National Risk Index / RAPT",
+      "sourceUrl": "https://hazards.fema.gov/nri/",
+      "timeframe": "2025 model",
+      "geography": "census tract candidate",
+      "state": "NOT_ACQUIRED",
+      "dataValue": null,
+      "notes": "Do not equate storm risk with a historical power outage."
+    },
+    {
+      "key": "winter_weather",
+      "source": "FEMA National Risk Index / RAPT",
+      "sourceUrl": "https://hazards.fema.gov/nri/",
+      "timeframe": "2025 model",
+      "geography": "census tract candidate",
+      "state": "NOT_ACQUIRED",
+      "dataValue": null,
+      "notes": "FEMA winter weather hazard is not a home-specific outage predictor."
+    },
+    {
+      "key": "utility_reliability",
+      "source": "EIA Form 861 detailed utility reliability",
+      "sourceUrl": "https://www.eia.gov/electricity/data/eia861/",
+      "timeframe": "2025 annual reports",
+      "geography": "distribution utility",
+      "state": "SOURCE_IDENTIFIED_UTILITY_ROWS_NOT_ACQUIRED",
+      "dataValue": null,
+      "notes": "Need identify utility serving each address before assigning utility reliability metrics. Compare IEEE/nonIEEE, with vs without major events."
+    },
+    {
+      "key": "ercot_storm_history",
+      "source": "ERCOT 2021 rotating outage announcement",
+      "sourceUrl": "https://www.ercot.com/news/release?id=9c552983-008a-3906-8066-8b76315ed3e7",
+      "timeframe": "Feb 2021",
+      "geography": "ERCOT system region",
+      "state": "REGIONAL_EVENT_METADATA_ACQUIRED",
+      "dataValue": null,
+      "notes": "The event is regional and cannot be counted as an address outage duration."
+    },
+    {
+      "key": "dfw_storm_history_existing",
+      "source": "NOAA NCEI existing dashboard snapshot",
+      "sourceUrl": "https://www.ncei.noaa.gov/access/storm-events-database/",
+      "timeframe": "2024-2025 as in site data",
+      "geography": "county",
+      "state": "EXISTING_SITE_ASSET_REUSE_ONLY",
+      "dataValue": null,
+      "notes": "Existing NOAA categories are not sufficient proof of winter outages; do not duplicate."
+    }
+  ],
+  "noNeighborhoodScore": true,
+  "noUnverifiedMap": true,
+  "noUnverifiedAddressUtility": true
+}
