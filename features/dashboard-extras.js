@@ -43,7 +43,7 @@
     <div class="extra-body">
       <p class="extra-disclosure">CMS 병원 등록자료(2026년 자료). 응급서비스 표시 여부를 확인할 수 있지만 24시간 운영·외상센터 등급 또는 실제 운전시간을 보장하지 않습니다. 가까운 응급실 순서가 아니라 선택 도시의 시설 목록입니다.</p>
       <label>시설이 있는 도시<select id="hospitalCity"><option value="">도시를 선택하세요</option></select></label>
-      <label class="extra-check"><input id="hospitalEdOnly" type="checkbox" checked> 응급서비스 표시 시설만</label>
+      <label class="extra-check"><input id="hospitalEdOnly" type="checkbox" checked> 응급서비스 표시 시설만</label><label class="extra-check"><input id="hospitalMapEnabled" type="checkbox"> 지도에 병원 위치 표시</label><p class="extra-disclosure">지도 마커는 Census 주소범위 기반의 대략적인 위치이며, 실제 응급실 출입구나 15·30분 운전권을 뜻하지 않습니다. 확인된 DSHS 외상센터 등급만 표시합니다.</p>
       <div id="hospitalStatus" class="extra-disclosure" role="status">열면 공식 병원 목록을 불러옵니다.</div>
       <div id="hospitalList" class="extra-list" aria-live="polite"></div>
       <p class="extra-disclosure"><a href="https://data.cms.gov/provider-data/dataset/xubh-q36u" target="_blank" rel="noopener noreferrer">CMS 공식 자료</a> · 선택 주소에서의 실제 소요시간은 링크를 연 뒤 지도 서비스에서 확인하세요.</p>
@@ -56,7 +56,7 @@
     <div class="extra-body">
       <p class="extra-disclosure">현재 확보한 통계는 텍사스 전체 평균입니다. <b>Allen·Plano·Frisco의 동네별 정전확률이나 2021년 실제 정전 시간을 나타내지 않습니다.</b></p>
       <div id="gridResilienceStatus" class="extra-disclosure" role="status">공식 EIA 통계를 불러오려면 이 항목을 펼치세요.</div>
-      <div id="gridResilienceData" class="extra-list"></div>
+      <div id="gridResilienceData" class="extra-list"></div><div class="extra-divider"></div><label class="extra-check"><input id="winterMapEnabled" type="checkbox"> 겨울 기상 위험을 지도에 표시</label><label>FEMA 지도 위험 종류<select id="winterHazardType"><option value="cwav">한파 · Cold Wave</option><option value="istm">얼음폭풍 · Ice Storm</option><option value="wntw">겨울 기상 · Winter Weather</option></select></label><div id="winterMapStatus" class="extra-disclosure" role="status" aria-live="polite">FEMA 2025 NRI Census tract 상대 위험입니다. 전력회사 정전율과 다른 자료입니다.</div>
       <p class="extra-disclosure">전력회사별 서비스 구역과 한파 노출도·과거 지역별 정전 기록은 미확보입니다. <a href="https://www.eia.gov/electricity/annual/table.php?t=epa_11_03.html" target="_blank" rel="noopener noreferrer">EIA 출처 보기</a></p>
     </div>`;
   health.insertAdjacentElement('afterend',grid);
