@@ -135,6 +135,21 @@ async function settle(page){await page.waitForTimeout(450)}
   const reloaded=await page.evaluate(audit);log.push({scenario:'reload',...reloaded});checkView(reloaded,'after reload');
   assert.deepEqual(errors,[],'No page errors');
   await ctx.close();
+  // Layout: right column about map height, insights card right under the map.
+  {
+   const ctx2=await browser.newContext({viewport:{width:1440,height:900}});const p2=await ctx2.newPage();
+   await p2.goto(BASE,{waitUntil:'domcontentloaded',timeout:80000});await ready(p2);
+   await p2.waitForSelector('#zipInsights .insight-card');
+   const lay=await p2.evaluate(()=>{const r=s=>document.querySelector(s).getBoundingClientRect();const m=r('.mapbox'),i=r('#zipInsights'),d=r('.panel.detail');
+    return {mapBottom:Math.round(m.bottom),insightsTop:Math.round(i.top),detailH:Math.round(d.height),mapH:Math.round(m.height),cards:document.querySelectorAll('#zipInsights .insight-card').length,
+     sameRow:new Set([...document.querySelectorAll('#zipInsights .insight-card')].map(c=>Math.round(c.getBoundingClientRect().top))).size,overflow:document.documentElement.scrollWidth>innerWidth}});
+   assert.ok(lay.insightsTop-lay.mapBottom<=24,'insights card directly under the map: '+JSON.stringify(lay));
+   assert.ok(lay.detailH<=lay.mapH+120,'right column about map height: '+JSON.stringify(lay));
+   assert.ok(lay.cards>=2&&lay.sameRow===1,'insight cards side by side: '+JSON.stringify(lay));
+   assert.equal(lay.overflow,false);
+   await ctx2.close();
+   console.log('PASS desktop layout: insights under map, short right column '+JSON.stringify(lay));
+  }
   writeFileSync(out+'/map-viewport-sync.json',JSON.stringify(log,null,2)+'\n');
   console.log('PASS map viewport sync: hidden-at-init, 75013/75093 zoom 9-13, drag, zoom controls, overlay toggle, filters, search, container resize, school boundary click, reload');
  }finally{await browser?.close().catch(()=>{})}
