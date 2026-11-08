@@ -1,0 +1,83 @@
+{
+  "asOf": "2026-11-07",
+  "stage": "P43-source-acquisition-pilot",
+  "publicUiAuthorized": false,
+  "rawIncidentRecordsStored": false,
+  "cityData": [
+    {
+      "city": "Dallas",
+      "status": "aggregate_staged",
+      "files": [
+        "dallas-offenses-2021-2026.json",
+        "dallas-zip-offenses-2025.json"
+      ],
+      "coverage": "2021-2026 published incidents annual groups; ZIP-by-code only 2025",
+      "sourceUrl": "https://www.dallasopendata.com/Public-Safety/Police-Incidents/qv6i-rri7",
+      "crossCityComparable": false
+    },
+    {
+      "city": "Fort Worth",
+      "status": "aggregate_staged",
+      "files": [
+        "fort-worth-offenses-2021-2026.json",
+        "fort-worth-beat-totals-2025.json"
+      ],
+      "coverage": "2021-2026 annual groups; Beat-only 2025",
+      "sourceUrl": "https://mapit.fortworthtexas.gov/ags/rest/services/CIVIC/Crime_Data/MapServer/0",
+      "crossCityComparable": false
+    },
+    {
+      "city": "Frisco",
+      "status": "aggregate_staged_partial",
+      "files": [
+        "frisco-offenses-partial-2025-2026.json"
+      ],
+      "coverage": "Nov 2025-Nov 2026 source window; partial 2025 and 2026",
+      "sourceUrl": "https://maps.friscotexas.gov/gis/rest/services/Public/Crime_Mapping_View__Dashboard/FeatureServer/1",
+      "crossCityComparable": false
+    },
+    {
+      "city": "Plano",
+      "status": "annual_city_totals_staged",
+      "files": [
+        "plano-police-official-2021-2025.json"
+      ],
+      "coverage": "Full annual 2021-2025 police PDF",
+      "sourceUrl": "https://content.civicplus.com/api/assets/3ddf77ec-8089-4d6b-90d8-4986172c0dec?cache=1800",
+      "crossCityComparable": false
+    },
+    {
+      "city": "McKinney",
+      "status": "annual_city_totals_staged",
+      "files": [
+        "mckinney-police-official-2021-2025.json"
+      ],
+      "coverage": "Full annual 2021-2025 police PDF",
+      "sourceUrl": "https://www.mckinneytexas.org/DocumentCenter/View/3681/UCR-Annual-Comparison-Report-2025",
+      "crossCityComparable": false
+    },
+    {
+      "city": "Allen",
+      "status": "primary_source_and_2025_revision_reconciliation_pending",
+      "files": [],
+      "coverage": "No verified stored agency statistics",
+      "sourceUrl": "https://txucr.nibrs.com/",
+      "crossCityComparable": false
+    },
+    {
+      "city": "Prosper/Celina/Lewisville/CFB and other DFW",
+      "status": "not_acquired",
+      "files": [],
+      "coverage": "source discovery pending",
+      "sourceUrl": null,
+      "crossCityComparable": false
+    }
+  ],
+  "totalStoredAggregateRows": 5466,
+  "notes": [
+    "Records are offense group rows, not incidents.",
+    "Small-area public visualization and safety scores not approved.",
+    "2025 Plano and McKinney police reports use different classification subtotals.",
+    "Read README.md for source-specific caveats and validation."
+  ]
+}
