@@ -109,7 +109,7 @@ test('six distinct district records and exact evidence vintages', () => {
 });
 test('school selection auto-displays available source polygons with a specific missing-boundary footnote',()=>{
  const inline=inlineScripts.join('\n');
- assert.ok(html.includes('<script src="./school-boundary-match.js?v=2"></script>'));
+ assert.ok(html.includes('<script src="./school-boundary-match.js?v=3"></script>'));
  assert.ok(html.includes('id="schoolBoundaryCoverageAudit"'));
  assert.ok(inline.includes('state.showOldZones=true;state.showHistoric=true;'));
  assert.ok(inline.includes("el('referenceBoundaryOverlay').checked=true"));
@@ -164,7 +164,7 @@ test('old Plano 2019 boundary removed from active code paths',()=>{
   assert.ok(inline.includes('./plano-locator-reference.geojson'));
   assert.ok(!inline.includes("url:'./plano-attendance-2019.geojson'"));
   assert.ok(!inline.includes('state.zoneData.PISD||[]'));
-  assert.ok(inline.includes("s.district==='PISD'?state.zoneData.PISD_LOOKUP"));
+  assert.ok(inline.includes("state.zoneData[districtZoneKey(s.district)]"),'Plano reads PISD_LOOKUP through the district registry');
 });
 test('Plano official 2025-26 contains 64 geometries',()=>{
   assert.equal(plano.type,'FeatureCollection');
@@ -254,7 +254,7 @@ test('P0 Allen four published split apartments halt automatic Frisco/Allen campu
  assert.equal(allenSplitApartmentException('4450 S Ridge Ln, McKinney, TX'),null);
  assert.equal(allenSplitApartmentException('4451 S Ridge Rd, McKinney, TX'),null);
  assert.equal(allenSplitApartmentException('123 Main Street, Allen, TX'),null);
- const app=readText('home-lookup-v2.js'),cmp=readText('candidate-compare.js');
+ const app=(readText('home-lookup-v2.js')+' '+readText('district-registry.js')),cmp=readText('candidate-compare.js');
  assert.ok(app.includes("status:'apartment-split-review'"));
  assert.ok(app.includes('allenSplitApartmentException(item.typedAddress)||allenSplitApartmentException(item.address)'));
  assert.ok(app.includes("if(result.status==='apartment-split-review')"));
@@ -270,11 +270,11 @@ test('P0 Plano senior-high home marker and map source legend are accurate',()=>{
  assert.equal(schoolLevelMatchesAssignment({district:'PISD',type:'middle'},'senior'),false);
  assert.equal(schoolLevelMatchesAssignment({district:'LISD',type:'high'},'senior'),false);
  assert.equal(schoolLevelMatchesAssignment({district:'FISD',type:'high'},'senior'),false);
- const home=readText('home-lookup-v2.js');
+ const home=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
  assert.ok(home.includes('schoolLevelMatchesAssignment(s,f.properties.gradeLevel)'));
  assert.ok(home.includes("result.district!==s.district)return false"));
- assert.ok(html.includes('./school-assignment.js?v=5'));
- assert.ok(html.includes('./home-lookup-v2.js?v=12'));
+ assert.ok(html.includes('./school-assignment.js?v=6'));
+ assert.ok(html.includes('./home-lookup-v2.js?v=13'));
  assert.ok(html.includes('현행 공식 Finder가 사용하는 플레이노·루이스빌 경계는 파란색'));
  assert.ok(html.includes('플레이노 저장본과 앨런 과거 GIS는 주황색 점선 참고'));
 });
@@ -307,7 +307,7 @@ test('P0 Plano four-level feeder guard detects Jackson Coit split and blocks mis
  assert.equal(evaluatePlanoFeederAssignment(west.slice(0,3),planoFeeder).status,'ambiguous');
  assert.equal(evaluatePlanoFeederAssignment([...west,features('Haun','Robinson','Jasper','Plano West')[0]],planoFeeder).status,'ambiguous');
  assert.equal(evaluatePlanoFeederAssignment(west,null).status,'source-unavailable');
- const app=readText('home-lookup-v2.js');
+ const app=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
  assert.ok(app.includes("if(found.district==='PISD'&&found.status==='finder-current')"));
  assert.ok(app.includes("status:'feeder-review',feeder"));
  assert.ok(app.includes("if(result.status==='feeder-review')"));
@@ -395,17 +395,17 @@ test('Prosper official current boundaries are full, valid and source ID-linked',
   assert.deepEqual([parts,rings,vertices],[33,35,1706]);
 });
 test('cross-validated Prosper 2026-27 source is live in campus map and home assignment',()=>{
-  const inline=inlineScripts.join('\n'),home=readText('home-lookup-v2.js');
+  const inline=inlineScripts.join('\n'),home=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
   assert.ok(readText('scripts/fetch-prosper-2026-zones.mjs').includes('GetRedistricts'));
   assert.ok(readText('scripts/check-prosper-official-locator.mjs').includes('officialSearchUrl'));
   assert.ok(officialChecks.metadata.officialSearchUrl.endsWith('/SearchLocation'));
   assert.ok(inline.includes("district:'PROSPER',url:'./prosper-attendance-2026.geojson'"));
   assert.ok(!inline.includes("{district:'PROSPER_REF'"));
   assert.ok(!inline.includes("url:'./prosper-celina-reference-2026.geojson'"));
-  assert.ok(inline.includes("s.district==='PROSPER'?state.zoneData.PROSPER"));
+  assert.ok(inline.includes("state.zoneData[districtZoneKey(s.district)]")&&readText('district-registry.js').includes("PROSPER:{en:'Prosper',ko:'프로스퍼',zoneKey:'PROSPER'"),'Prosper zones via registry');
   assert.ok(inline.includes("s.district==='FISD'||s.district==='PROSPER'"));
   assert.ok(inline.includes('new Set(j.features.map(f=>f.properties?.campusId)).size!==31'));
-  assert.ok(home.includes("prosper:homeZoneMatches(item.ll,'PROSPER')"));
+  assert.ok(home.includes("homeZoneMatches(item.ll,d.zoneKey)")&&home.includes('districtPolygonStatus(code,state.liveFinder)'),'Prosper and every polygon district come from the registry');
   assert.ok(home.includes("최신 경계상 후보 · 프로스퍼 2026–27"));
   const sample=prosperCurrent.features[0];
   assert.equal(resolveAssignment({prosper:[sample]}).status,'current');
@@ -458,7 +458,7 @@ test('Prosper/Celina government GIS is validated as partial, never current',()=>
   assert.ok(vertices>1100);
 });
 test('Prosper archival Celina reference stays disabled',()=>{
-  const inline=inlineScripts.join('\n'),home=readText('home-lookup-v2.js');
+  const inline=inlineScripts.join('\n'),home=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
   assert.ok(!inline.includes("district:'PROSPER_REF'"));
   assert.ok(!inline.includes("state.zoneData.PROSPER_REF"));
   assert.ok(!home.includes("homeZoneMatches(item.ll,'PROSPER_REF')"));
@@ -599,7 +599,7 @@ test('school assignment candidates require precise residential geocoder results'
  assert.equal(assessResidentialGeocode(q,null).usableForSchoolCandidate,false);
  const bad={address:'Bad geocode',ll:[33,-96],geocodeQuality:assessResidentialGeocode(q,make(80,'Locality'))};
  assert.equal(addCandidate([],bad)[0].geocodeQuality.usableForSchoolCandidate,false);
- const src=readText('home-lookup-v2.js');
+ const src=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
  assert.ok(src.includes("status:'needs-address-verification'"));
  assert.ok(src.includes('if(!item?.geocodeQuality?.usableForSchoolCandidate)'));
  assert.ok(src.includes('candidate.savedGeocodeQuality||assessResidentialGeocode'));
@@ -633,7 +633,7 @@ test('P0 zone-edge warning uses closest official polygon ring',()=>{
  assert.ok(distancePointToSegmentMeters(p,p,p)<0.001);
  const hole=zoneBoundaryProximity(p,[{geometry:{type:'Polygon',coordinates:[ring(5*d),ring(.5*d)]}}]);
  assert.ok(hole.review);
- const h=readText('home-lookup-v2.js');
+ const h=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
  assert.ok(h.includes("'boundary-review':'finder-boundary-review'"));
  assert.ok(h.includes('zoneBoundaryProximity([item.ll[1],item.ll[0]],found.features,undefined,found.features.map('));
  assert.ok(html.includes('./school-zone-risk.js?v=2'));
@@ -651,7 +651,7 @@ test('P0 Collin CAD on-demand parcel crosscheck is address-only, fail closed',()
  assert.equal(assessCollinParcelResult(a,{features:[]}).status,'not-found');
  assert.equal(assessCollinParcelResult(a,{features:[{attributes:{}},{attributes:{}}]}).status,'ambiguous');
  assert.equal(assessCollinParcelResult(a,{error:{code:400}}).status,'error');
- const h=readText('home-lookup-v2.js'),cmp=readText('candidate-compare.js');
+ const h=(readText('home-lookup-v2.js')+' '+readText('district-registry.js')),cmp=readText('candidate-compare.js');
  assert.ok(h.includes('parcelButton.onclick=checkHomeParcel'));
  assert.ok(h.includes('homeParcelRequest?.abort()'));
  assert.ok(h.includes('savedGeocodeQuality'));
@@ -696,7 +696,7 @@ test('official manual result only checks user transcription, never upgrades old 
  const a={district:'AISD',status:'unverified-year',allen:['Peak St','2050','Evans','Ereckson','Lowery','Allen High School']};
  assert.deepEqual(officialReviewCandidates(a,'freshman'),['Lowery']);
  assert.equal(PLANO_2026_27_EXPERIENCE,'https://experience.arcgis.com/experience/73a3f873d9c040348d6e723ed4b48af4');
- const h=readText('home-lookup-v2.js');
+ const h=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
  assert.ok(h.includes('officialReviewPanelHtml(home)'));
  assert.ok(h.includes('wireOfficialReviewPanel(home)'));
  assert.ok(h.includes('homeOfficialRequest?.abort()'));
@@ -726,7 +726,7 @@ test('P0 home geocoding rejects uncertain TX and does not silently choose a tied
  const weak=rankTexasHomeCandidates('3400 Legacy Dr',[plano,make('Legacy Dr, Plano, TX 75024',93,'TX','75024',-96.81,33.12,'StreetName')]);
  assert.equal(weak.requiresSelection,false);
  assert.equal(rankTexasHomeCandidates('123 Main',[outOfState,noRegion]).candidates.length,0);
- const ui=readText('home-lookup-v2.js');
+ const ui=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
  assert.ok(ui.includes('rankTexasHomeCandidates(address,result)'));
  assert.ok(ui.includes('showHomeCandidateChoices(candidates)'));
  assert.ok(ui.includes('if(requiresSelection)'));
@@ -763,7 +763,7 @@ test('home autocomplete ARIA, debounced request, magicKey and direct address sea
  assert.ok(html.includes('aria-controls="homeSuggestions"'));
  assert.ok(html.includes('aria-expanded="false"'));
  assert.ok(html.includes('입력 중 주소 일부가 Esri에 전송됩니다'));
- const mod=readText('texas-address-suggest.js'),src=readText('home-lookup-v2.js');
+ const mod=readText('texas-address-suggest.js'),src=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
  assert.ok(mod.includes('},320)'));
  assert.ok(mod.includes('controller?.abort()'));
  assert.ok(mod.includes("e.key==='Escape'"));
@@ -933,7 +933,7 @@ test('P0 current Plano official Finder zoning GIS is live, all levels complete, 
  });
 });
 test('P0 current Finder and prior unlinked GIS are visually distinct without falsely promoting year',()=>{
- const web=readText('index.html'),home=readText('home-lookup-v2.js');
+ const web=readText('index.html'),home=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
  assert.ok(web.includes('id="referenceBoundaryOverlay"'));
  assert.ok(web.includes('loadPlanoLiveFinder()'));
  assert.ok(web.includes('state.liveFinder.PISD_LOOKUP=true'));
@@ -943,7 +943,7 @@ test('P0 current Finder and prior unlinked GIS are visually distinct without fal
  assert.ok(web.includes('현재 학군 Finder 연결 배정선은 Plano·Lewisville까지 4곳'));
  assert.ok(web.includes('CFB 승인 배정선 3종'));
  assert.ok(home.includes("'finder-boundary-review'"));
- assert.ok(home.includes('planoFinderLive:!!state.liveFinder.PISD_LOOKUP'));
+ assert.ok(home.includes('districtPolygonStatus(code,state.liveFinder)'),'Plano finder-live status via registry');
  assert.equal(audit.districts.find(x=>x.code==='PISD').liveFinderVerification.levels.elementary.distinct,42);
  assert.equal(audit.districts.find(x=>x.code==='PISD').status,'official-finder-connected');
  assert.equal(audit.districts.find(x=>x.code==='LISD').status,'official-finder-connected');
@@ -1225,7 +1225,7 @@ test('Allen address-table result highlights exactly its four campuses (270 S Wat
  const hit=schools.filter(s=>allenRowMatchesSchool(s,row,schools,canonical)).map(s=>s.name);
  assert.deepEqual(hit,['Frances E Norton Elementary School','Ereckson Middle School','Lowery Freshman Center','Allen High School']);
  assert.equal(allenRowMatchesSchool({name:'Norton',type:'elementary',district:'PISD'},row,schools,canonical),false);
- assert.ok(readText('home-lookup-v2.js').includes("result.status==='unverified-year')return allenRowMatchesSchool("));
+ assert.ok((readText('home-lookup-v2.js')+' '+readText('district-registry.js')).includes("result.status==='unverified-year')return allenRowMatchesSchool("));
 });
 test('Address results: piece-internal edges are not boundaries; near-boundary and McKinney results highlight',()=>{
  const sq=(x0,y0,x1,y1,school)=>({type:'Feature',properties:{school,gradeLevel:'elementary'},geometry:{type:'Polygon',coordinates:[[[x0,y0],[x1,y0],[x1,y1],[x0,y1],[x0,y0]]]}});
@@ -1242,9 +1242,34 @@ test('Address results: piece-internal edges are not boundaries; near-boundary an
  const mk=[{properties:{school:'FINCH',gradeLevel:'elementary'}}];
  assert.equal(resolveAssignment({mckinney:mk,mckinneyFinderLive:true}).district,'043907');
  assert.equal(resolveAssignment({mckinney:mk,mckinneyFinderLive:false}).status,'unavailable','McKinney only from the verified live 2026-27 finder');
- const home=readText('home-lookup-v2.js');
+ const home=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
  assert.ok(home.includes("['current','finder-current','boundary-review','finder-boundary-review'].includes(result.status)"),'near-boundary candidates highlighted like the panel lists them');
- assert.ok(home.includes("'2026–27 공식 Finder 경계 · 매키니'"),'McKinney must not fall through to the Lewisville label');
+ assert.ok(readText('district-registry.js').includes("'finder-current':'2026–27 공식 Finder 경계 · 매키니'")&&home.includes('districtInfo(result.district)?.label?.[result.status]'),'McKinney label from registry, never the Lewisville fallback');
+});
+test('District registry is the single source of per-district capabilities',()=>{
+ const require=createRequire(import.meta.url);
+ const R=require('../district-registry.js');
+ const web=readText('index.html'),home=readText('home-lookup-v2.js'),match=readText('school-boundary-match.js');
+ for(const [code,d] of Object.entries(R.DISTRICT_REGISTRY)){
+  assert.ok(d.en&&d.ko,'names for '+code);
+  assert.ok(/^https:\/\//.test(d.official),'official finder link for '+code);
+  if(d.zoneKey)assert.ok(web.includes("{district:'"+d.zoneKey+"',"),'zone data loader for '+code);
+  if(['polygon','frisco'].includes(d.address))assert.ok(['always','live','finder'].includes(d.currency),'address lookup needs a currency rule: '+code);
+ }
+ // Old hard-coded capability lists must not come back.
+ for(const [name,src] of [['index.html',web],['home-lookup-v2.js',home],['school-boundary-match.js',match]])
+  for(const bad of ["['LISD','PROSPER'","{FISD:'","'AISD','PISD','FISD','LISD','PROSPER'","const officialYear=s.district===","const current=s.district==='FISD'"])
+   assert.ok(!src.includes(bad),name+' still hard-codes a district list: '+bad);
+ assert.equal(R.districtPolygonStatus('FISD',{}),'current');
+ assert.equal(R.districtPolygonStatus('PISD',{}),'reference');
+ assert.equal(R.districtPolygonStatus('PISD',{PISD_LOOKUP:true}),'finder-current');
+ assert.equal(R.districtPolygonStatus('043907',{}),null,'McKinney never from a stale copy');
+ assert.equal(R.districtPolygonStatus('043907',{'043907':true}),'finder-current');
+ assert.equal(R.districtPolygonStatus('AISD',{}),null,'Allen uses its address table, not polygons');
+ assert.equal(R.districtZoneDisplay('043907',{'043907':true}),'official','McKinney 2026-27 zones are not "past GIS"');
+ assert.equal(R.districtZoneDisplay('LISD',{LISD:true}),'finder');
+ assert.equal(R.districtZoneDisplay('AISD',{}),'historical');
+ assert.ok(web.includes('<script src="./district-registry.js?v=1"></script>'));
 });
 await Promise.all(asyncChecks);
 console.log('Main website QA: ' + total + ' tests passed.');

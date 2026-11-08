@@ -1,4 +1,5 @@
 'use strict';
+const Districts=typeof module!=='undefined'&&typeof window==='undefined'?require('./district-registry.js'):window;
 // School marker -> published attendance polygon matching. This is *display*
 // matching, not a property-specific student enrollment determination.
 function boundarySchoolKey(value){
@@ -13,7 +14,7 @@ function boundaryGradeLevels(type){
  return type==='high'?['high','senior']:type==='middle'?['middle']:type==='elementary'?['elementary']:[];
 }
 function boundarySchoolSource(district){
- return district==='PISD'?'PISD_LOOKUP':district;
+ return Districts.districtZoneKey(district);
 }
 function knownBoundaryException(s){
  const district=s?.district,key=boundarySchoolKey(s?.name);
@@ -65,7 +66,7 @@ function findSchoolBoundary(s,geo,ratings){
   if(boundarySchoolKey(p.school)===key)return true;
   if(!selected?.id||typeof ratings!=='function')return false;
   const rated=ratings(p.school,s.district);
-  return rated?.id===selected.id||(['LISD','PROSPER','043907'].includes(s.district)&&p.campusId===selected.id);
+  return rated?.id===selected.id||(Districts.districtUsesCampusId(s.district)&&p.campusId===selected.id);
  });
  // Allen's historical polygons sometimes use only the surname, while
  // the school directory includes a honoree's complete name. Unique only.
@@ -81,7 +82,7 @@ function findSchoolBoundary(s,geo,ratings){
 }
 function boundaryMissingExplanation(s, result, sourceVintage, sourceLoadError){
  const district=s?.district||'';
- const finder=({FISD:'Frisco',PISD:'Plano',AISD:'Allen',LISD:'Lewisville',PROSPER:'Prosper',CFB:'CFB','043907':'McKinney'})[district]||district||'해당 학군';
+ const finder=Districts.districtName(district)||district||'해당 학군';
  const special=knownBoundaryException(s);
  if(special&&result?.status!=='matched')return special;
  if(sourceLoadError)return {reason:finder+' 학군 배정구역 데이터가 이번 접속에서 로딩되지 않았습니다.',
