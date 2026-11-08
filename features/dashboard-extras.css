@@ -221,3 +221,25 @@
  .maphead .hazard-chip.healthcare,
  .maphead .hazard-chip.winter{min-width:118px}
 }
+
+.winter-map-type-picker{
+  display:inline-flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin:8px 0 3px;
+  font-size:11px;
+  font-weight:750;
+  color:#375879;
+}
+.winter-map-type-picker select{
+  min-height:34px;
+  padding:5px 9px;
+  border:1px solid #bdd0ef;
+  border-radius:9px;
+  background:#f1f6ff;
+  color:#224c87;
+  font-weight:700;
+  max-width:100%;
+}
+.winter-map-type-picker select:focus-visible{outline:3px solid #315fba;outline-offset:2px}
