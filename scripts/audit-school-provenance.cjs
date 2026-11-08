@@ -10,16 +10,18 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const KNOWN_UNTRACKED = Object.freeze(['043907']); // McKinney, to be documented separately.
+const KNOWN_UNTRACKED = Object.freeze([]); // All registered districts now need provenance entries.
 const ALLOWED_STATUSES = new Set([
   'current-source',
   'official-finder-connected',
+  'live-finder-year-gated',
   'historical-reference',
   'lookup-only',
 ]);
 const STATUS_TO_CURRENCY = {
   'current-source': 'always',
   'official-finder-connected': 'finder',
+  'live-finder-year-gated': 'live',
   'historical-reference': 'historical',
   'lookup-only': null,
 };
@@ -72,6 +74,22 @@ function auditSchoolProvenance(provenance, registry, { readLocal = null } = {}) 
       }
     } else if (d.status === 'official-finder-connected') {
       warnings.push(d.code + ': official Finder linkage is not independent proof of current-year geometry');
+    } else if (d.status === 'live-finder-year-gated') {
+      const g = d.runtimeGate || {};
+      if (!d.geometryYear?.includes(activeYear)
+          || !validHttps(d.mapSource)
+          || !validHttps(d.officialDistrictEvidence?.announcement)
+          || g.statusOnlyWhenLive !== true
+          || g.noValidatedFallback !== true
+          || g.elementaryYearField !== 'SCHL_YEAR'
+          || g.requiredElementaryValue !== '2026-27'
+          || !Number.isSafeInteger(g.distinctMinimumElementary)
+          || g.distinctMinimumElementary < 15
+          || g.distinctMiddle !== 5
+          || g.distinctHigh !== 3) {
+        errors.push(d.code + ': live-finder-year-gated evidence or fail-closed guard missing');
+      }
+      warnings.push(d.code + ': live year gate is not independent middle/high geometry or residential assignment verification');
     } else if (d.status === 'historical-reference') {
       warnings.push(d.code + ': historical attendance geometry must remain reference-only');
     } else if (d.status === 'lookup-only') {
