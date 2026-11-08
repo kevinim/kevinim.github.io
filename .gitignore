@@ -1,0 +1,11 @@
+# Local and CI-generated files — never commit to the public source tree
+artifacts/
+dist/
+public-dist/
+node_modules/
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
