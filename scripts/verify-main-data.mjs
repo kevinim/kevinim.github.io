@@ -1271,5 +1271,35 @@ test('District registry is the single source of per-district capabilities',()=>{
  assert.equal(R.districtZoneDisplay('AISD',{}),'historical');
  assert.ok(web.includes('<script src="./district-registry.js?v=1"></script>'));
 });
+test('City crime map: FBI NIBRS city rates on city limits, complete years only, never ZIP-smeared',()=>{
+ const require=createRequire(import.meta.url);
+ const {crimeRateClass,crimeCityRate,validateCrimeGeojson,CRIME_CATEGORIES}=require('../crime-city-map.js');
+ const crime=readJson('data/dfw-crime-city-2023-2025.geojson');
+ assert.ok(validateCrimeGeojson(crime));
+ assert.ok(crime.features.length>=150,'city coverage');
+ assert.deepEqual(crime.metadata.years,[2023,2024,2025]);
+ for(const y of crime.metadata.years)for(const c of ['violent','property'])assert.ok(Number.isFinite(crime.metadata.reference[y][c].texas),'Texas reference '+y+' '+c);
+ for(const f of crime.features){
+  const p=f.properties;
+  assert.ok(/^TX/.test(p.ori)&&/^48\d{5}$/.test(p.placeGeoid),'agency ORI and Texas place GEOID: '+p.city);
+  assert.ok(['Polygon','MultiPolygon'].includes(f.geometry.type));
+  for(const [y,v] of Object.entries(p.years))for(const c of ['violent','property']){
+   const rate=v[c+'Rate'];
+   if(v[c+'Months']===12&&v.population>0)assert.equal(rate,Math.round(v[c]/v.population*1e5),p.city+' '+y+' '+c+' rate');
+   else assert.equal(rate,null,p.city+' '+y+' '+c+' must not show a rate without 12 reported months');
+  }
+ }
+ for(const city of ['Plano','Frisco','Allen','McKinney','Richardson','Dallas','Carrollton','Lewisville','Prosper','Garland','Wylie'])
+  assert.ok(Number.isFinite(crime.features.find(f=>f.properties.city===city)?.properties.years[2025].violentRate),'2025 rate for '+city);
+ assert.equal(crimeRateClass(null,'violent'),-1,'missing data is never class 0');
+ assert.equal(crimeRateClass(99,'violent'),0);assert.equal(crimeRateClass(100,'violent'),1);assert.equal(crimeRateClass(5000,'property'),4);
+ assert.equal(CRIME_CATEGORIES.violent.breaks.length,4);
+ const plano=crime.features.find(f=>f.properties.city==='Plano');
+ assert.equal(crimeCityRate(plano,'violent',2025).rate,plano.properties.years[2025].violentRate);
+ const web=readText('index.html');
+ assert.ok(web.includes('id="crimeMapToggle"')&&web.includes('id="crimeLegend"')&&web.includes('<details id="crimePanel"'));
+ assert.ok(web.includes('<script src="./crime-city-map.js?v=1"></script>')&&web.includes('window.createCrimeCityMap?.(map,document)'));
+ assert.ok(web.includes('ZIP·동네·주소별 위험이 아닙니다'),'caveat: not ZIP/address risk');
+});
 await Promise.all(asyncChecks);
 console.log('Main website QA: ' + total + ' tests passed.');
