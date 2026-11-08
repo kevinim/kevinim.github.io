@@ -1271,5 +1271,12 @@ test('District registry is the single source of per-district capabilities',()=>{
  assert.equal(R.districtZoneDisplay('AISD',{}),'historical');
  assert.ok(web.includes('<script src="./district-registry.js?v=1"></script>'));
 });
+test('Layout: ZIP subgroup details live in the wide card under the map, not the right column',()=>{
+ const web=readText('index.html');
+ assert.ok(web.includes('<div class="mapcol"><div class="mapbox">')&&web.includes('id="zipInsights"'),'map and insights card share one column');
+ assert.ok(web.includes('function drawZipInsights(d)')&&web.includes('function drawDetail(){const d=getZip();drawZipInsights(d);'),'insights refresh with every detail redraw');
+ assert.ok(!web.includes("+menaHtml(d.z);el('detailContent').innerHTML=html;"),'subgroups no longer appended to the narrow right column');
+ assert.ok(web.includes('.main>.section{grid-column:1 / -1'),'school finder + comparison use the full width');
+});
 await Promise.all(asyncChecks);
 console.log('Main website QA: ' + total + ' tests passed.');
