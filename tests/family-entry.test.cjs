@@ -36,7 +36,7 @@ test('cutover fails closed unless all owner and Access attestations exist',()=>{
   for(const n of names)delete process.env[n];
   assert.throws(()=>gateway.build('cutover',base),/not confirmed/);
   for(const n of names.slice(0,4))process.env[n]='confirmed';
-  assert.throws(()=>gateway.build('cutover',base),/UAT host/);
+  assert.throws(()=>gateway.build('cutover',base),/UAT (?:host|login URL)/);
  }finally{for(const n of names)prev[n]===undefined?delete process.env[n]:process.env[n]=prev[n];}
 });
 test('preview writes only index.html and robots.txt to isolated dist directory',()=>{
