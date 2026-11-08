@@ -91,6 +91,10 @@ function homeSchoolMatches(s){
  const schoolId=scoreRecord(s.name,s.district)?.id;
  return (result.features||[]).some(f=>schoolLevelMatchesAssignment(s,f.properties.gradeLevel)&&((schoolId&&f.properties.campusId===schoolId)||zoneNameKey(canonical(f.properties.school)).replace(/\bk\s*4\b/g,'').trim()===key));
 }
+function syncHomeClearVisibility(){
+  const input=el('homeAddress'),button=el('homeClear');
+  if(input&&button)button.hidden=!input.value.trim();
+}
 function clearHome(){
   homeVersion++;homeRequest?.abort();homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;home=null;homeCandidates=[];
   if(map&&homeMarker)map.removeLayer(homeMarker);homeMarker=null;
@@ -220,7 +224,7 @@ function useHomeCandidate(candidate){
   homeMarker=L.marker(home.ll,{zIndexOffset:4000,icon:L.divIcon({className:'',html:'<svg class="house-pin" width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"><path d="M4 19L21 4l17 15h-4v17H8V19z" fill="white" stroke="#a72e2e" stroke-width="2"/><path d="M3 19L21 3l18 16-3 3L21 9 6 22z" fill="#d63737" stroke="white" stroke-width="1.5"/><path d="M18 36V24h7v12" fill="#d63737"/></svg>',iconSize:[42,42],iconAnchor:[21,37]}),title:'HOME'}).addTo(map).bindPopup('<b>HOME</b><br>'+escape(home.address));
   const matches=homeZipMatches(home.ll);
   if(matches.length===1)selectZip(matches[0].z,false);
-  map.setView(home.ll,13);renderHome();drawSchools();drawList();el('homeStatus').textContent='검색 결과 위치를 지도에 표시했습니다. 주소와 핀을 확인하세요.';return true;
+  map.setView(home.ll,13);renderHome();drawSchools();drawList();el('homeStatus').textContent='검색 결과 위치를 지도에 표시했습니다. 주소와 핀을 확인하세요.';syncHomeClearVisibility();return true;
 }
 // Similar addresses are shown rather than silently selecting an arbitrary school-zone pin.
 function showHomeCandidateChoices(candidates){
@@ -292,6 +296,7 @@ async function calculateHomeCommute(){
 document.addEventListener('DOMContentLoaded',()=>{
   homeAutocomplete=attachTexasAddressSuggestions(el('homeAddress'),el('homeSuggestions'),item=>searchHome({preventDefault(){}},item));
   el('homeForm').addEventListener('submit',searchHome);
-  el('homeClear').addEventListener('click',()=>{homeAutocomplete?.dismiss();el('homeAddress').value='';clearHome();el('homeAddress').focus()});
-  el('homeAddress').addEventListener('input',()=>{if(home||homeCandidates.length||homeRequest)clearHome()});
+  el('homeClear').addEventListener('click',()=>{homeAutocomplete?.dismiss();el('homeAddress').value='';clearHome();syncHomeClearVisibility();el('homeAddress').focus()});
+  el('homeAddress').addEventListener('input',()=>{if(home||homeCandidates.length||homeRequest)clearHome();syncHomeClearVisibility()});
+  syncHomeClearVisibility();
 });
