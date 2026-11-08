@@ -1,6 +1,6 @@
 # TX Dashboard — public release security review
 
-Status: **AUDIT ONLY — no approval to market or publish a public-edition build.**
+Status: **SECURITY AUDIT + LOCAL PUBLIC PREVIEW ONLY — not approved for external launch.**
 
 ## Critical distinction
 
@@ -11,6 +11,8 @@ Sharing a website URL does not make repository source private. This project curr
 - `scripts/public-release-gate.cjs audit`: reads tracked text and reports credential patterns, personalized commute indicators, external hostnames, and HTML sinks. Checks *new* sensitive indicators against the pull request base; existing personalized defaults are marked as launch blockers but do not interrupt ongoing feature development.
 - `tests/public-release-gate.test.cjs`: automated checks for rules and redacted findings.
 - `.github/workflows/public-release-security.yml`: CI for pull requests, weekly monitoring and manual review, including a full-history Gitleaks job. Read-only permissions. **No deploy job**.
+- `scripts/build-public-preview.cjs` produces an isolated, sanitized `dist/public-preview` bundle without changing the family dashboard; `scripts/verify-public-preview.cjs` tests the files and intentionally expects a BLOCKED release status.
+- `PUBLIC_PROVIDER_READINESS.md` summarizes third-party rate limits and source/deployment architecture choices.
 - `node scripts/public-release-gate.cjs release <dist-dir>`: strict dry-run on a future, separately built distribution. Fails for credentials, personalized commute markers, any file outside the approved static-file allowlist (including development docs, old HTML, Git metadata and source maps), missing entry HTML or missing private-source separation confirmation. Does not deploy. The release pipeline may set `PUBLIC_SOURCE_SEPARATED=confirmed` only after verifying source separation and the final Pages settings.
 
 - `.gitignore`: excludes audit reports, local build products and common credential files from accidental new Git staging; **does not remove any file that is already tracked**.
@@ -23,7 +25,7 @@ Sharing a website URL does not make repository source private. This project curr
 4. Add clear address-search privacy disclosure. Address or coordinate inputs can reach external Esri, routing, map and other service providers; a static site cannot promise third-party logs are absent.
 5. Review external terms, rate limits, attribution and caching for geocoding, routing, basemap tiles, institutional school datasets and third-party ratings.
 6. Audit each untrusted data path reaching `innerHTML`, third-party links, and URL inputs; manually test mobile, school boundaries, map markers, address suggestions, and hazard layers.
-7. Re-test the exact built distribution and run the strict release check. Establish branch protection and a deploy workflow with approvals. The owner then separately decides GO/NO-GO.
+7. Re-test the exact built distribution and run the strict release check. Establish branch protection and a deploy workflow with approvals. The owner then separately decides GO/NO-GO. The release checker requires explicit manual attestations for private-source separation, provider terms, data licenses, browser QA and owner approval. Environment flags alone do not enforce true repository authorization; GitHub Environment approvals and protected branches must be configured before any release pipeline.
 
 ## Operational safeguards
 
