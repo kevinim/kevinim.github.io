@@ -26,3 +26,14 @@ test('legacy commute personalization is identified only in runtime candidates',(
 test('HTML sinks are counted for manual security review',()=>{
  assert.equal(gate.countMatches('a.innerHTML=x;b.innerHTML=y;',/\.innerHTML\s*=/g),2);
 });
+
+test('strict public-bundle allowlist rejects development content',()=>{
+ assert.equal(gate.isPublishable('index.html'),true);
+ assert.equal(gate.isPublishable('data/crime/source-manifest.json'),true);
+ assert.equal(gate.isPublishable('assets/logo.svg'),true);
+ assert.equal(gate.isPublishable('reviewed.html'),false);
+ assert.equal(gate.isPublishable('PUBLIC_RELEASE_SECURITY.md'),false);
+ assert.equal(gate.isPublishable('scripts/public-release-gate.cjs'),false);
+ assert.equal(gate.isPublishable('.git/config'),false);
+ assert.equal(gate.isPublishable('index.js.map'),false);
+});
