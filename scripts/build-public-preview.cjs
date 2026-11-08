@@ -36,6 +36,15 @@ function sanitizeIndex(source){
    throw Error('Unexpected personalized commute loader contents; human inspection required');
  s=s.slice(0,start)+s.slice(end);
  s=replaceExact(s,"fetch('./jpm-outside-dfw.json'","fetch('./dfw-outside-public.json'",'neutral neighborhood dataset');
+ const geocodeStart=s.indexOf("const q=new URLSearchParams({q:/");
+ const geocodeFinal="state.dest={ll:p,address:j[0].display_name};";
+ const geocodeEnd=s.indexOf(geocodeFinal,geocodeStart);
+ if(geocodeStart<0||geocodeEnd<geocodeStart||geocodeEnd-geocodeStart>1200)
+   throw Error('Public destination geocoder changed: explicit review is required');
+ s=s.slice(0,geocodeStart)+
+   "const hits=await geocodeAddress(addr);if(!hits.length)throw Error('주소를 찾을 수 없습니다. 더 구체적인 텍사스 주소를 입력하세요');const candidate=hits[0];const p=[candidate.location.y,candidate.location.x];state.dest={ll:p,address:candidate.address||addr};"+
+   s.slice(geocodeEnd+geocodeFinal.length);
+ if(/nominatim\.openstreetmap\.org/i.test(s))throw Error('Public Nominatim dependency unexpectedly remains');
  s=s.replaceAll('jpmMinutes','genericCommuteMinutes'); // no precomputed commute time is distributed
  // Public output contains no organization-specific or personalized commute references.
  s=s.replaceAll('JPM 도착','기존 직장 목적지');
