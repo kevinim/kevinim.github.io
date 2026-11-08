@@ -22,7 +22,8 @@
     "unit": "published offense rows by reported-year and original police offense code/description",
     "aggregation": "count(OBJECTID) grouped by Offense,Offense_Desc with Reported_Date year filter",
     "limitations": "This public feed removes juvenile-related cases and generalizes sensitive addresses. Offense rows need not represent unique incidents. Do not compute cross-city safety scores from raw row totals.",
-    "publicDisplay": false
+    "publicDisplay": false,
+    "aggregationNote": "One duplicated 2021 source display key (23H / GC 085-07 Theft under $100) combined from 258 and 1046 into 1304 offense rows; yearly count unchanged."
   },
   "records": [
     {
@@ -857,13 +858,7 @@
       "year": 2021,
       "offenseCode": "23H",
       "offenseLabel": "GC 085-07 Theft under $100",
-      "offenseRows": 258
-    },
-    {
-      "year": 2021,
-      "offenseCode": "23H",
-      "offenseLabel": "GC 085-07 Theft under $100",
-      "offenseRows": 1046
+      "offenseRows": 1304
     },
     {
       "year": 2021,
