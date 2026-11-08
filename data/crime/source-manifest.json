@@ -73,7 +73,7 @@
       "crossCityComparable": false
     }
   ],
-  "totalStoredAggregateRows": 5466,
+  "totalStoredAggregateRows": 5465,
   "notes": [
     "Records are offense group rows, not incidents.",
     "Small-area public visualization and safety scores not approved.",
