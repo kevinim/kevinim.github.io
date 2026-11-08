@@ -42,8 +42,8 @@ test('current repository source claims have structurally consistent registry', (
   });
   assert.deepEqual(r.errors, []);
   assert.equal(r.summary.independentlyCurrentClaimed, 2);
-  assert.equal(r.summary.knownSourceGaps, 1);
-  assert.ok(r.warnings.some(w => w.includes('043907')));
+  assert.equal(r.summary.knownSourceGaps, 0);
+  assert.ok(r.warnings.some(w => w.includes('043907') && w.includes('independent')));
 });
 
 test('current-year promotion without supporting vintage is blocked', () => {
@@ -58,15 +58,13 @@ test('lookup-only district cannot silently gain polygon auto assignment', () => 
   assert.ok(auditSchoolProvenance(data, registry).errors.some(e => e.includes('auto-polygon')));
 });
 
-test('new registration without a provenance record fails while legacy McKinney gap is visible', () => {
+test('new registration without a provenance record fails', () => {
   const { data, registry } = sample();
   registry.NEW = { currency: 'live', address: 'polygon', zoneKey: 'NEW' };
   assert.ok(auditSchoolProvenance(data, registry).errors.some(e => e.includes('NEW')));
   delete registry.NEW;
-  registry['043907'] = { currency: 'live', address: 'polygon', zoneKey: '043907' };
   const result = auditSchoolProvenance(data, registry);
   assert.deepEqual(result.errors, []);
-  assert.ok(result.warnings.some(w => w.includes('043907')));
 });
 
 test('file paths and official URLs reject unsafe schemes and traversal', () => {
@@ -86,4 +84,30 @@ test('local evidence count changes are caught', () => {
     readLocal: () => ({ type: 'FeatureCollection', features: [{}] }),
   });
   assert.ok(res.errors.some(e => e.includes('feature count disagrees')));
+});
+
+
+test('McKinney live-finder geometry must have explicit 2026-27 gated evidence', () => {
+  const { data, registry } = sample();
+  data.districts.push({
+    code: '043907', status: 'live-finder-year-gated',
+    geometryYear: '2026–27 elementary only',
+    officialLookup: 'https://example.com/locator',
+    mapSource: 'https://example.com/map',
+    officialDistrictEvidence: { announcement: 'https://example.com/approval' },
+    runtimeGate: {
+      statusOnlyWhenLive: true, noValidatedFallback: true,
+      elementaryYearField: 'SCHL_YEAR',
+      requiredElementaryValue: '2026-27',
+      distinctMinimumElementary: 15, distinctMiddle: 5, distinctHigh: 3,
+    },
+  });
+  registry['043907'] = { currency: 'live', address: 'polygon', zoneKey: '043907' };
+  const valid = auditSchoolProvenance(data, registry);
+  assert.deepEqual(valid.errors, []);
+  assert.ok(valid.warnings.some(w => w.includes('independent middle/high')));
+
+  data.districts[2].runtimeGate.statusOnlyWhenLive = false;
+  const invalid = auditSchoolProvenance(data, registry);
+  assert.ok(invalid.errors.some(e => e.includes('fail-closed guard')));
 });
