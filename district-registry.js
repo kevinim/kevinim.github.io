@@ -131,6 +131,23 @@ const DISTRICT_REGISTRY={
   lookupKind:"official-inquiry",official:"https://www.aubreyisd.net/page/getting-started-at-aubrey-isd",officialNote:"공식 Getting Started 안내와 2026–27 전학 정보로 이동하세요. 공개 중학교 경계 자료는 2025–26 승인본이며 현행 학년·주소별 구역 확인 또는 자동 Finder 검증은 별도 필요합니다.",label:{}},
  '057911':{en:"Highland Park (Dallas)",ko:"하이랜드파크(댈러스)",zoneKey:null,currency:null,address:null,campusIdMatch:false,
   lookupKind:"finder-guidance",official:"https://www.hpisd.org/about/enrollment",officialNote:"Dallas의 Highland Park ISD 공식 Enrollment 페이지에서 School Site Locator와 HPISD Boundary Map으로 주소를 확인하세요. Amarillo의 동명 Highland Park ISD와 혼동하지 마세요. 전학·증빙·학년별 배정은 학교에서 확인하세요.",label:{}},
+ // Batch 4: official parent entry only; NOT certified campus GIS or residential assignment.
+ '184902':{en:"Springtown",ko:"스프링타운",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"official-inquiry",official:"https://www.springtownisd.net/page/enrollment",officialNote:"2026–27 공식 학생 등록 안내입니다. 주소별 지정학교 검색기는 이 페이지에서 확인되지 않았습니다. 배정 학교와 학년별 예외는 교육청 등록 담당자에게 확인하세요. 2027–28 신설 초등학교 계획을 2026–27 배정으로 간주하지 마세요.",label:{}},
+ '220920':{en:"White Settlement",ko:"화이트세틀먼트",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"finder-guidance",official:"https://www.wsisd.com/students-families/enrollment",officialNote:"2026–27 공식 Enrollment의 Which School Will My Child Attend 및 School Site Locator로 주소를 조회하세요. Fine Arts·STEAM 선택, 전학·학군 외 Open Enrollment는 일반 배정과 다르며 최종 배정은 학교가 확인합니다.",label:{}},
+ '220917':{en:"Castleberry",ko:"캐슬베리",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"finder-guidance",official:"https://www.castleberryisd.net/enrollnow/enrollnow",officialNote:"학군 Register Now의 SchoolSearch에서 주소별 학교 배정구역을 검색하세요. Find on Map으로 경계를 볼 수도 있으나 현재 학년도와 학년·전학 예외는 등록 담당자에게 다시 확인하세요. 지도 도형은 대시보드에 수집·검증되지 않았습니다.",label:{}},
+ '129903':{en:"Kaufman",ko:"카우프먼",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"finder-guidance",official:"https://www.kaufmanisd.net/page/kisd-school-zone-finder/",officialNote:"학군 공식 KISD School Zone Finder에 주소를 입력해 학교 구역을 확인하세요. 학교별 학년 범위, 2026–27 현재 적용 여부, 예외·전학은 학군에 재확인하세요. Finder 경계는 대시보드 지도에 검증·탑재되지 않았습니다.",label:{}},
+ '116901':{en:"Caddo Mills",ko:"캐도밀스",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"finder-guidance",official:"https://www.caddomillsisd.org/page/26-27-student-enrollment-information",officialNote:"2026–27 학군 공식 등록 안내의 Elementary School Zoning 검색으로 주소별 초등학교를 확인하세요. 중·고등학교 구역, 학년별 변경, 전학·특수교육 배정은 이 초등 검색만으로 확정할 수 없으며 학군에 별도 문의하세요.",label:{}},
+ '249905':{en:"Decatur",ko:"디케이터",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"finder-guidance",official:"https://www.decaturisd.us/page/enrollment",officialNote:"2026–27 공식 Enrollment에서 City of Decatur의 DISD Elementary School Attendance Zones 지도를 열고 주소를 검색하세요. 세 개 초등 경계만 해당하며 STEM Academy는 별도 지원, 중·고는 학교에 확인해야 합니다. 외부 GIS를 대시보드 경계로 복제하지 않았습니다.",label:{}},
+ '070905':{en:"Ferris",ko:"페리스",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"official-inquiry",official:"https://www.ferrisisd.org/departments/student-support-services/enrollment-registration",officialNote:"2026–27 공식 Enrollment/Registration 안내입니다. 학군 내 거주증명과 학년별 등록을 확인하되, 이 등록 페이지가 주소별 학교 검색기는 아닙니다. 일반 지정학교와 학군 밖 전학은 별도 절차이므로 등록 담당자에게 확인하세요.",label:{}},
+ '043919':{en:"Lovejoy",ko:"러브조이",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"official-inquiry",official:"https://www.lovejoyisd.net/page/enrollment-for-new-students",officialNote:"2026–27 공식 신규 등록 안내입니다. 일반 거주지 학군 배정과 별도 지원 방식 Lovejoy Scholars 프로그램은 다르며, 주소별 캠퍼스 검색기 또는 현행 학교별 경계는 확인되지 않았습니다. 등록처에서 학년·주소를 확인하세요.",label:{}},
  CFB:{en:'CFB',ko:'캐럴턴–파머스브랜치',zoneKey:null,currency:null,address:null,campusIdMatch:false,
   official:'https://www.cfbisd.edu/students/school-maps-locator-system',label:{}}
 };
