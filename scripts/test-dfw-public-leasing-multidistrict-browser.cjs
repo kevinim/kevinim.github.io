@@ -55,6 +55,8 @@ async function inspect(page){
   }
   const status=document.getElementById('homeMapAssignmentStatus');
   return {selectedAddress:typeof home!=='undefined'&&home?.address||null,
+   selectedHomePoint:typeof home!=='undefined'&&home?.ll?
+    {lat:home.ll[0],lng:home.ll[1]}:null,
    hasHome:typeof home!=='undefined'&&!!home,
    geocodeQuality:typeof home!=='undefined'&&home?.geocodeQuality?.reason||null,
    preciseEnough:typeof home!=='undefined'&&!!home?.geocodeQuality?.usableForSchoolCandidate,
