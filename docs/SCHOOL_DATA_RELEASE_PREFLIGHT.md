@@ -37,6 +37,10 @@ Outputs `artifacts/school-data/school-data-preflight.json` with status, file-pat
 6. Commit the dataset and manifest together in one PR. The gate then verifies the new baseline and uploads the address-free report.
 7. Only a separately approved promotion into UAT/Production can use that audited snapshot; this tool cannot deploy.
 
+## Observed baseline warning (2026-11-08)
+
+- `plano-locator-reference.geojson`: `geometry_metadata_missing` — the cached GIS snapshot has no root-level metadata object. Existing provenance separately identifies the 2025–26 layer and does **not** certify it as the current 2026–27 residential boundary. This warning remains non-blocking for unrelated work; the snapshot hash is pinned and a future provenance refresh must not silently change its year classification.
+
 ## What is still NOT audited by this gate
 
 - Full campus-to-polygon linking and per-district school percentages: this needs a complete districtwide school universe and boundary reference mapping, not merely GeoJSON feature counts. Report unverified instead of inferring a percentage.
