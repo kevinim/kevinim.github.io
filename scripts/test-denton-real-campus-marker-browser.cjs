@@ -58,7 +58,7 @@ async function main(){
      state.showSchools=true;state.level='all';state.ratingFilter='all';
      map.stop();map.setView(s.ll,14,{animate:false});map.invalidateSize();
      drawSchools();
-     return {name:s.name,grade:s.type,id,review:s.campusPointReview,point:s.ll};
+     return {name:s.name,grade:s.type,id,review:s.campusPointReview,point:s.ll,immediateCenter:[map.getCenter().lat,map.getCenter().lng],immediateZoom:map.getZoom(),immediateWithin:map.getBounds().contains(s.ll),immediateMarkers:schoolGroup.getLayers().filter(x=>x.options?.title===s.name).length};
     },id);
     const selector='.leaflet-marker-icon[title='+JSON.stringify(campus.name)+']';
     const diag=await page.evaluate(name=>{
@@ -73,7 +73,7 @@ async function main(){
       domMarkers:document.querySelectorAll('.leaflet-marker-icon').length,
       visible:getComputedStyle(map.getContainer()).display};
     },campus.name);
-    console.log('DENTON_REAL_MARKER_DIAGNOSTIC',width,id,JSON.stringify(diag));
+    console.log('DENTON_REAL_MARKER_DIAGNOSTIC',width,id,JSON.stringify({campus,diag}));
     const marker=page.locator(selector).first();
     await marker.waitFor({state:'attached',timeout:12000});
     await marker.click({force:true,timeout:12000});
