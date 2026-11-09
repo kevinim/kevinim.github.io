@@ -26,11 +26,11 @@ test('full 11-county source proxy, separate public ISDs and other TEA LEAs',()=>
  assert.equal(s.teaDistrictCodes,152);
  assert.equal(s.publicISDs,108);
  assert.equal(s.otherLEAs,44);
- assert.equal(s.publicISDsWithRegisteredParentRoute,49);
- assert.equal(s.publicISDsMissingRegisteredParentRoute,59);
- assert.equal(s.registeredParentRouteRatePublicISDPercent,45.4);
- assert.equal(s.publicISDCampusRowsWithUnverifiedParentRoute,292);
- assert.equal(s.publicISDCampusRowsWithRegisteredParentRoute,1649);
+ assert.equal(s.publicISDsWithRegisteredParentRoute,57);
+ assert.equal(s.publicISDsMissingRegisteredParentRoute,51);
+ assert.equal(s.registeredParentRouteRatePublicISDPercent,52.8);
+ assert.equal(s.publicISDCampusRowsWithUnverifiedParentRoute,211);
+ assert.equal(s.publicISDCampusRowsWithRegisteredParentRoute,1730);
  assert.equal(s.otherLEACampusRows,241);
  assert.equal(s.publicISDCampusRows+s.otherLEACampusRows,s.sourceCampusRows);
  assert.equal(committed.districts.length,152);
@@ -43,7 +43,7 @@ test('full 11-county source proxy, separate public ISDs and other TEA LEAs',()=>
 
 test('PRIORITY P0 targets verified missing parent lookup route across whole DFW',()=>{
  assert.deepEqual(committed.priorityQueue.slice(0,7),
-  ['199902','070903','220904','116905','126905','129906','061907']);
+  ['184902','220920','220917','129903','116901','249905','070905']);
  for(const code of committed.priorityQueue.slice(0,7)){
   const x=byCode(code);
   assert.equal(x.priority,'P0');
@@ -83,8 +83,8 @@ test('eight verified official parent entry sources are registered without invent
   campuses+=record.teaCampusRecords;
  }
  assert.equal(campuses,399);
- assert.deepEqual(committed.priorityQueue.slice(0,3),['199902','070903','220904']);
- assert.equal(committed.summary.registeredParentRouteRatePublicISDPercent,45.4);
+ assert.deepEqual(committed.priorityQueue.slice(0,3),['184902','220920','220917']);
+ assert.equal(committed.summary.registeredParentRouteRatePublicISDPercent,52.8);
  assert.equal(official('https://untrusted.example.invalid/locator'),null);
 });
 

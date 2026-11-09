@@ -12,12 +12,29 @@ The initial automated census uses the **11-county Dallas–Fort Worth–Arlingto
 | District/LEA identifiers | 152 |
 | Named ISDs | 108 |
 | Other LEAs (charter/alternative/special types require classification) | 44 |
-| ISDs with a registered, allowlisted official school-confirmation entry | 49 |
-| ISDs with no *registered* parent entry path in this dashboard | **59** |
-| Registered parent guidance rate among 108 observed ISDs | **45.4%** |
-| TEA school records within the 59 unregistered ISDs | **292** |
+| ISDs with a registered, allowlisted official school-confirmation entry | 57 |
+| ISDs with no *registered* parent entry path in this dashboard | **51** |
+| Registered parent guidance rate among 108 observed ISDs | **52.8%** |
+| TEA school records within the 51 unregistered ISDs | **211** |
 
 These are **source administrative county-of-record proxies**, not boundaries of every district serving residential parcels. TEA districtCounty does not determine a particular campus's position or a student's enrollment eligibility. Cross-county districts and schools not in the supplied source may be missed. NCTCOG's broader 12-county area adds **Hood County**, which this TEA source omits; **unknown is not zero**. These 152 observed LEAs do not prove exhaustive real-estate parcel service coverage.
+
+## Third batch: direct school locators versus district-only registration inquiries
+
+**Stacked Draft PR after #144 (not released).** Eight additional district-operated entry points examined on 2026-11-09. We label **2 address/attendance locator pages** separately from **6 official enrollment or inquiry pages with unverified address-to-campus results**. The latter must NEVER be described in the UI as a confirmed address finder. Both are parent-route guidance only and no household-specific assignment was verified.
+
+| TEA code | District | Route quality | Official landing page | Limitation |
+| --- | --- | --- | --- | --- |
+| 199902 | Royse City | District enrollment / inquiry only | https://www.rcisd.org/page/enroll | 공식 신규 등록 안내입니다. 2025–26 초등 경계 지도와 2026 중학교 신설·재조정 자료가 있어 구버전 배정선을 현행으로 사용하지 마세요. 최신 학년도·주소별 학교는 학군에 직접 확인하세요. |
+| 070903 | Ennis | District enrollment / inquiry only | https://www.ennis.k12.tx.us/o/eisd/page/new-to-ennis-isd | 공식 New to Ennis ISD 등록 안내입니다. 주소별 School Finder 작동 및 2026–27 배정 경계는 확인되지 않았으므로 등록 담당자에게 주소와 학년을 문의하세요. |
+| 220904 | Everman | District enrollment / inquiry only | https://www.eisd.org/page/registration-for-new-returning-students | 교육청의 신규·재학생 등록 경로입니다. 일반 지정학교와 Open Enrollment·전학은 다르며, 주소별 School Finder가 확인되지 않아 교육청 등록 담당자에게 직접 확인하세요. |
+| 116905 | Greenville | District enrollment / inquiry only | https://www.greenvilleisd.com/page/student-services/ | 학군 Student Services의 New Student Online Enrollment Registration에서 등록을 시작하세요. 등록 페이지는 주소별 출석구역 조회기가 아니며 초·중·고 최종 배정은 교육청에 별도로 문의하세요. |
+| 126905 | Joshua | Official locator entry | https://www.joshuaisd.org/our-district/attendance-zones | 공식 Attendance Zones의 Interactive School Zone Finder에서 주소별 학교를 찾으세요. 게시 지도와 실제 현행 학년·특별프로그램 배정은 학군에 재확인하세요. |
+| 129906 | Terrell | District enrollment / inquiry only | https://www.terrellisd.org/page/enrollment-and-registration | 공식 Enrollment and Registration 안내입니다. 주소별 배정 확인용 별도 Finder는 검증되지 않았으므로 등록 담당자에게 학년·주소와 학교 지정 여부를 문의하세요. |
+| 061907 | Aubrey | District enrollment / inquiry only | https://www.aubreyisd.net/page/getting-started-at-aubrey-isd | 공식 Getting Started 안내와 2026–27 전학 정보로 이동하세요. 공개 중학교 경계 자료는 2025–26 승인본이며 현행 학년·주소별 구역 확인 또는 자동 Finder 검증은 별도 필요합니다. |
+| 057911 | Highland Park (Dallas) | Official locator entry | https://www.hpisd.org/about/enrollment | Dallas의 Highland Park ISD 공식 Enrollment 페이지에서 School Site Locator와 HPISD Boundary Map으로 주소를 확인하세요. Amarillo의 동명 Highland Park ISD와 혼동하지 마세요. 전학·증빙·학년별 배정은 학교에서 확인하세요. |
+
+The eight entries add **81 TEA campus records** and move the registered-parent-route metric from 49/108 (45.4%) to **57/108 (52.8%)**; school-row coverage 1,649→1,730 of 1,941, leaving **51 districts** and **211 school records** with no dashboard-linked official parent route. This metric counts a *safe registered official entry point*, including district inquiry-only pages; it is NOT a 52.8% success rate for address and grade lookup. An independent direct-locator-only measure for this batch is 2/8. DFW-wide school polygon and verified resident assignment coverage stay **unknown**. School choice, transfer, past map vintages and the two different Highland Park ISDs are explicitly distinguished.
 
 ## Follow-up official parent guidance: 12 additional ISDs (stacked on PR #141)
 
@@ -59,26 +76,26 @@ This is a **verified official entry URL** and appropriate instructions/limitatio
 
 ## Highest remaining school confirmation backlog
 
-P0 means the dashboard has not registered a verified district-owned parent entry page; it does not mean the district lacks a Finder.
+P0 means an official source has not been linked to the dashboard, NOT that the district has no finder or attendance boundary.
 
-| Priority | ISD | Campus records |
+| Priority | ISD | TEA school records |
 | ---: | --- | ---: |
-| 1 | ROYSE CITY | 13 |
-| 2 | ENNIS | 12 |
-| 3 | EVERMAN | 11 |
-| 4 | GREENVILLE | 10 |
-| 5 | JOSHUA | 10 |
-| 6 | TERRELL | 9 |
-| 7 | AUBREY | 8 |
-| 8 | HIGHLAND PARK | 8 |
-| 9 | SPRINGTOWN | 8 |
-| 10 | WHITE SETTLEMENT | 8 |
+| 1 | SPRINGTOWN | 8 |
+| 2 | WHITE SETTLEMENT | 8 |
+| 3 | CASTLEBERRY | 7 |
+| 4 | KAUFMAN | 7 |
+| 5 | CADDO MILLS | 6 |
+| 6 | DECATUR | 6 |
+| 7 | FERRIS | 6 |
+| 8 | KEMP | 6 |
+| 9 | LOVEJOY | 6 |
+| 10 | MABANK | 6 |
 
 Other TEA LEAs (44) are tracked separately. A charter or choice program cannot be treated as an ordinary address-assigned ISD.
 
 ## Three independent levels of evidence
 
-**1 — Parent-facing official route:** 49/108 currently registered, with exact HTTPS allowlisted links. Landing pages/zone maps/choice procedures are not necessarily a verified address-and-grade lookup.
+**1 — Parent-facing official route:** 57/108 currently registered, with exact HTTPS allowlisted links. Landing pages/zone maps/choice procedures are not necessarily a verified address-and-grade lookup.
 
 **2 — School-by-school map polygon linkage:** not yet measurable as a DFW-wide current-year rate. Previous browser *reference minima* exist only for seven districts: Frisco 73/73, Plano 62/63, Allen 21/22 (historical), Lewisville 53/54 (mixed year), Prosper 31/31, CFB 0/30 (official Finder, no exported GIS), McKinney 25/30 (live source and exceptions). These are per-session loaded school matches, **not** current-year legal enrollment results. The other 145 districts do not receive fabricated 0% scores.
 
@@ -98,4 +115,4 @@ The JSON reports missing *reason* states, including no known official parent rou
 
 ## Next work
 
-Continue official parent-source verification with Royse City, Ennis, Everman, Greenville, Joshua and **all 59 remaining unregistered ISDs**, not just favorite suburbs. For each, store TEA code, authority URL, last verification date, active year, grade, search/map/choice/inquiry type, GIS availability and licensing, missing reason and next action. Expand source boundaries to Hood and any cross-county overlap before labeling the DFW geographic denominator exhaustive. Confirm school-specific missing reasons with a browser source audit, including school-choice exceptions and transient failures.
+Continue detailed, current-year school assignment routing checks for the six official-inquiry districts in the third batch, then source the **51 remaining unregistered ISDs**, not just favorite suburbs. For each, store TEA code, authority URL, last verification date, active year, grade, search/map/choice/inquiry type, GIS availability and licensing, missing reason and next action. Expand source boundaries to Hood and any cross-county overlap before labeling the DFW geographic denominator exhaustive. Confirm school-specific missing reasons with a browser source audit, including school-choice exceptions and transient failures.
