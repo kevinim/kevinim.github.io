@@ -1,14 +1,18 @@
 'use strict';
-// Three PUBLIC school building addresses only, NEVER real residences or units.
+// Five PUBLIC school / civic facility addresses only, NEVER residences or units.
 // Uses the ArcGIS public geocoder followed by the exact elementary, middle
 // and high sources in the currently district-linked Irving School Locator.
 // This is NOT independent student-level 2026-27 enrollment certification.
 const fs=require('node:fs'),path=require('node:path');
 const {SOURCES,MAP_ID}=require('./agent01-verify-irving-live-finder.cjs');
 const CASES=Object.freeze([
- {id:'campus-barton',address:'2931 Conflans Rd, Irving, TX 75061',elementary:'Barton ES'},
- {id:'campus-brown',address:'2501 W 10th St, Irving, TX 75060',elementary:'Brown ES'},
- {id:'campus-farine',address:'615 Metker Rd, Irving, TX 75062',elementary:'Farine ES'}
+ {id:'campus-barton',kind:'school-campus',address:'2931 Conflans Rd, Irving, TX 75061',elementary:'Barton ES',middle:'Crockett MS',high:'Irving HS'},
+ {id:'campus-brown',kind:'school-campus',address:'2501 W 10th St, Irving, TX 75060',elementary:'Brown ES',middle:'Lamar MS',high:'Nimitz HS'},
+ {id:'campus-farine',kind:'school-campus',address:'615 Metker Rd, Irving, TX 75062',elementary:'Farine ES',middle:'Travis MS',high:'Macarthur HS'},
+ // Civic facilities exercise independent non-school street-address point joins
+ // without collecting anyone's residential or apartment-level details.
+ {id:'civic-city-hall',kind:'public-civic-facility',address:'825 W Irving Blvd, Irving, TX 75060',elementary:'John Haley ES',middle:'Bowie MS',high:'Nimitz HS'},
+ {id:'civic-isd-admin',kind:'public-civic-facility',address:'2621 W Airport Fwy, Irving, TX 75062',elementary:'Johnston ES',middle:'Johnson MS',high:'Macarthur HS'}
 ]);
 function requireOK(c,msg){if(!c)throw Error(msg);}
 async function getJson(url){
@@ -63,15 +67,16 @@ async function run(){
   ]);
   const hs=high.filter(z=>pointInEsriPolygon(hm,z.geometry)).map(z=>z.attributes?.NAME);
   requireOK(el===c.elementary,'public facility + elementary polygon disagree: '+c.id);
-  requireOK(hs.length===1,'not exactly one high source polygon: '+c.id);
-  outcomes.push({id:c.id,geocoderScore:candidate.score,elementary:el,middle:ms,high:hs[0],numberOfMatchingSchoolLevels:3,
+  requireOK(ms===c.middle,'public facility + middle polygon disagree: '+c.id);
+  requireOK(hs.length===1&&hs[0]===c.high,'public facility + high polygon disagree or ambiguous: '+c.id);
+  outcomes.push({id:c.id,kind:c.kind,geocoderScore:candidate.score,elementary:el,middle:ms,high:hs[0],numberOfMatchingSchoolLevels:3,
    source:'district-linked ArcGIS public locator layers',studentEnrollmentCertified:false});
  }
  const dest=path.join('artifacts','agent01-irving-live-finder');fs.mkdirSync(dest,{recursive:true});
- fs.writeFileSync(path.join(dest,'public-campus-holdouts.json'),JSON.stringify({date:new Date().toISOString(),type:'PUBLIC_CAMPUS_ADDRESS_TECHNICAL_QA_ONLY',
+ fs.writeFileSync(path.join(dest,'public-facility-holdouts.json'),JSON.stringify({date:new Date().toISOString(),type:'PUBLIC_SCHOOL_AND_CIVIC_FACILITY_SPATIAL_QA_ONLY',
   count:CASES.length,results:outcomes,privateAddressCount:0,officialBrowserTextMatchVerified:false,
   currentYearLegalAssignmentVerified:false,productionGISApproved:false},null,2)+'\n');
- console.log('Public-campus→official-Finder-source polygon QC PASS (not student assignment):',outcomes.map(x=>x.id+':'+x.elementary+'/'+x.middle+'/'+x.high).join(', '));
+ console.log('Five public campus/civic facility→official-Finder-source polygon QC PASS (not residential enrollment):',outcomes.map(x=>x.id+':'+x.elementary+'/'+x.middle+'/'+x.high).join(', '));
 }
 if(require.main===module)run().catch(e=>{console.error('PUBLIC CAMPUS LOOKUP QA NO_GO',e.message);process.exitCode=1});
 module.exports={CASES,pointInRing,pointInEsriPolygon,toMercator};
