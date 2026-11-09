@@ -1,0 +1,60 @@
+name: Home address school auto-overlay QA
+on:
+  push:
+    branches: [feature/address-selected-auto-school-map-20261109]
+  pull_request:
+    branches: [main]
+    paths:
+      - 'home-assignment-map.js'
+      - 'home-lookup-v2.js'
+      - 'dashboard-main.js'
+      - 'index.html'
+      - 'tests/home-assignment-map.test.cjs'
+      - 'scripts/test-home-assignment-map-browser.cjs'
+      - '.github/workflows/home-address-assigned-school-map-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-policy:
+    name: Privacy and fail-closed source age policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # pinned
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # pinned
+        with:
+          node-version: '24'
+      - name: Syntax for all modified app scripts
+        run: |
+          node --check dashboard-main.js
+          node --check home-lookup-v2.js
+          node --check home-assignment-map.js
+          node --check scripts/test-home-assignment-map-browser.cjs
+      - name: Run school map privacy and regression unit tests
+        run: |
+          node --test tests/home-assignment-map.test.cjs tests/school-zone-ui.test.cjs tests/school-polygon-linkage-audit.test.cjs tests/school-data-release-preflight.test.cjs
+  browser:
+    name: Mobile/desktop address to school map
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # pinned
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # pinned
+        with:
+          node-version: '24'
+      - name: Install isolated browser dependencies
+        run: |
+          mkdir -p home-map-qa-tmp
+          cd home-map-qa-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Synthetic polygon and marker UI test (never user addresses)
+        env:
+          NODE_PATH: ${{ github.workspace }}/home-map-qa-tmp/node_modules
+        run: node scripts/test-home-assignment-map-browser.cjs
