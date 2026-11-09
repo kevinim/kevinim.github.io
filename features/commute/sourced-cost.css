@@ -1,0 +1,45 @@
+/* Official-source commute comparison — short summary at rest, accessible on mobile. */
+.smart-commute-panel{padding:13px 14px;display:grid;gap:11px;min-width:0}
+.smart-cost-lead,.smart-cost-policy{font-size:11px;line-height:1.65;color:#526a86;margin:0;overflow-wrap:anywhere}
+.smart-cost-source{font-size:11px;color:#305985;min-height:15px;line-height:1.5;margin:0}
+.smart-cost-controls{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);align-items:start;gap:10px}
+.smart-cost-vehicle,.smart-cost-gas{border:1px solid #d8e4f2;background:#f8fbff;padding:11px 12px;border-radius:10px;min-width:0}
+.smart-cost-vehicle legend{font-weight:750;color:#254970;padding:0 4px;font-size:12px}
+.smart-cost-vehicle-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.smart-cost-select-wrap{display:grid;gap:4px;font-size:11px;color:#355473;font-weight:650}
+.smart-cost-select{min-height:36px;width:100%;border:1px solid #bed0e5;border-radius:7px;padding:7px 9px;background:#fff;color:#152b48;max-width:100%}
+.smart-cost-select:disabled{opacity:.65}
+.smart-cost-vehicle .extra-disclosure,.smart-cost-gas .extra-disclosure{margin:8px 0 0}
+.smart-cost-official-links{display:flex;gap:7px 15px;flex-wrap:wrap;margin:3px 0;color:#315ca8;font-size:11px;line-height:1.5}
+.smart-cost-official-links a{color:#2857ad;text-decoration:underline}
+.smart-cost-route-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.smart-cost-route{border:1px solid #cbddef;background:#f6faff;border-radius:9px;padding:11px 12px;min-width:0}
+.smart-cost-route h4{font-size:12px;margin:0 0 9px;color:#193d68}
+.smart-route-result{font-size:11px;color:#455a71;line-height:1.6;min-height:46px;margin-bottom:9px}
+.smart-cost-route-link{font-size:11px;font-weight:800;color:#265aa9}
+.smart-cost-route-link[aria-disabled="true"]{color:#8193aa;cursor:not-allowed;pointer-events:none;text-decoration:none}
+.smart-cost-advanced{margin:0 13px 12px;border:1px solid #d6e3f3;border-radius:9px;overflow:hidden}
+.smart-cost-advanced>summary{font-size:11px;color:#3f608b;padding:10px 12px;cursor:pointer;background:#eef5ff;font-weight:750}
+.smart-cost-advanced>.extra-body{padding:11px}
+.smart-cost-advanced[open]>summary{border-bottom:1px solid #d6e3f3}
+.smart-commute-panel a:focus-visible,.smart-commute-panel select:focus-visible,.smart-cost-advanced summary:focus-visible{outline:3px solid #5285d1;outline-offset:2px}
+html[data-theme="dark"] .smart-cost-lead,
+html[data-theme="dark"] .smart-cost-policy,
+html[data-theme="dark"] .smart-route-result{color:#c0cfe2}
+html[data-theme="dark"] .smart-cost-source,
+html[data-theme="dark"] .smart-cost-vehicle legend{color:#c2d7f4}
+html[data-theme="dark"] .smart-cost-vehicle,
+html[data-theme="dark"] .smart-cost-gas,
+html[data-theme="dark"] .smart-cost-route{background:#23374e;border-color:#435e7f;color:#e4eefa}
+html[data-theme="dark"] .smart-cost-select-wrap{color:#cbd9eb}
+html[data-theme="dark"] .smart-cost-route h4{color:#e0edff}
+html[data-theme="dark"] .smart-cost-official-links a,
+html[data-theme="dark"] .smart-cost-route-link{color:#a9caff}
+html[data-theme="dark"] .smart-cost-advanced{border-color:#52647d}
+html[data-theme="dark"] .smart-cost-advanced>summary{color:#ddeaff;background:#2c4361}
+@media(max-width:900px){.smart-cost-controls{grid-template-columns:1fr}}
+@media(max-width:620px){
+ .smart-commute-panel{padding:10px}
+ .smart-cost-vehicle-grid,.smart-cost-route-grid{grid-template-columns:1fr}
+ .smart-cost-advanced{margin:0 9px 10px}
+}

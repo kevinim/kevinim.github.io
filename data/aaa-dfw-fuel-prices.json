@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "source": "AAA Gas Prices",
+    "sourceUrl": "https://gasprices.aaa.com/?state=TX",
+    "priceDate": "2026-11-08",
+    "retrievedDate": "2026-11-09",
+    "geography": "AAA metropolitan area averages; not nearest station price",
+    "units": "USD per US gallon",
+    "fuelGrades": [
+      "regular",
+      "midgrade",
+      "premium",
+      "diesel"
+    ],
+    "updatePolicy": "Dated snapshot; never label live. When older than 30 days, require refresh; do not silently use old price.",
+    "metroSelection": "Dallas proxy for Dallas/Collin/Denton; Fort Worth-Arlington proxy for Tarrant/Parker/Johnson. Other counties not auto assigned."
+  },
+  "metro": {
+    "Dallas": {
+      "regular": 3.3431,
+      "midgrade": 3.7786,
+      "premium": 4.1342,
+      "diesel": 5.5665
+    },
+    "Fort Worth-Arlington": {
+      "regular": 3.3749,
+      "midgrade": 3.8073,
+      "premium": 4.1639,
+      "diesel": 5.5727
+    }
+  },
+  "state": {
+    "regular": 3.4888,
+    "midgrade": 3.9965,
+    "premium": 4.3746,
+    "diesel": 5.6043
+  }
+}
