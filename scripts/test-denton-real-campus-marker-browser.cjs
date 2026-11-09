@@ -56,9 +56,21 @@ async function main(){
     const campus=await page.evaluate(id=>{
      const s=state.schools.find(x=>x.district==='061901'&&scoreRecord(x.name,x.district)?.id===id);
      state.showSchools=true;state.level='all';state.ratingFilter='all';
-     map.stop();map.setView(s.ll,14,{animate:false,zoom:{animate:false},pan:{animate:false}});map.invalidateSize();
+     const before=[map.getCenter().lat,map.getCenter().lng,map.getZoom()];
+     const loaded=!!map._loaded,animating=!!map._animatingZoom;
+     map.stop();
+     const afterStop=[map.getCenter().lat,map.getCenter().lng,map.getZoom()];
+     map.setView(s.ll,14,{animate:false,zoom:{animate:false},pan:{animate:false}});
+     const afterSet=[map.getCenter().lat,map.getCenter().lng,map.getZoom()];
+     map.invalidateSize();
+     const afterResize=[map.getCenter().lat,map.getCenter().lng,map.getZoom()];
      drawSchools();
-     return {name:s.name,grade:s.type,id,review:s.campusPointReview,point:s.ll,immediateCenter:[map.getCenter().lat,map.getCenter().lng],immediateZoom:map.getZoom(),immediateWithin:map.getBounds().contains(s.ll),immediateMarkers:schoolGroup.getLayers().filter(x=>x.options?.title===s.name).length};
+     const afterDraw=[map.getCenter().lat,map.getCenter().lng,map.getZoom()];
+     return {name:s.name,grade:s.type,id,review:s.campusPointReview,point:s.ll,
+      before,afterStop,afterSet,afterResize,afterDraw,loaded,animating,
+      immediateCenter:[map.getCenter().lat,map.getCenter().lng],
+      immediateZoom:map.getZoom(),immediateWithin:map.getBounds().contains(s.ll),
+      immediateMarkers:schoolGroup.getLayers().filter(x=>x.options?.title===s.name).length};
     },id);
     console.log('DENTON_SET_VIEW_IMMEDIATE',width,id,JSON.stringify(campus));
     // Leaflet can animate the zoom despite a top-level animate flag.
