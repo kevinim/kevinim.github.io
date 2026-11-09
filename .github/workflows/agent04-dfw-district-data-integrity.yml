@@ -14,6 +14,7 @@ on:
       - 'data/dfw-107-parent-route-qa-candidate-2026.json'
       - 'data/dfw-pr173-reviewed-hostnames-2026.json'
       - 'data/dfw-public-isd-missing-point-evidence-2026.json'
+      - 'data/dfw-chico-official-inquiry-only-2026.json'
       - 'tea-ratings-2026.json'
       - 'nces-locations-2024.json'
       - 'schools.json'
