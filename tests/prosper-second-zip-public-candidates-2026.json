@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "academicYear": "2026-27",
+  "district": "PROSPER",
+  "observedOn": "2026-11-09",
+  "role": "SECOND_ZIP_PUBLIC_LISTING_CANDIDATES_NOT_ENROLLMENT_CERTIFICATION",
+  "publicAddressesOnly": true,
+  "notPrivateHouseholdData": true,
+  "independentOfficialFinderUiVerified": false,
+  "studentEligibilityCertified": false,
+  "productionApproved": false,
+  "candidates": [
+    {
+      "id": "prosper-frisco-fernando",
+      "address": "13683 Fernando Rd, Frisco, TX 75035",
+      "zip": "75035",
+      "publicListingUrl": "https://www.compass.com/homedetails/13683-Fernando-Rd-Frisco-TX-75035/19Y124_pid/",
+      "listingClaimsDistrict": "Prosper Independent School District",
+      "listingThirdPartySchoolsAreNotAuthoritative": true
+    },
+    {
+      "id": "prosper-frisco-orchard",
+      "address": "15053 Orchard St, Frisco, TX 75035",
+      "zip": "75035",
+      "publicListingUrl": "https://www.compass.com/homedetails/15053-Orchard-St-Frisco-TX-75035/27AW6J_pid/",
+      "listingClaimsDistrict": "Prosper Independent School District",
+      "listingThirdPartySchoolsAreNotAuthoritative": true
+    }
+  ],
+  "requirements": [
+    "Precisely geocoded official point source and district boundary must uniquely match; still only correlated source, not independent enrollment.",
+    "Do not print street addresses in CI logs/artifacts; do not add user residence or pupil information.",
+    "If official point GIS differs from third-party listing, trust official result and quarantine discrepancy.",
+    "An independent official UI reviewer and 2026-27 grade exception check are still required for level 2."
+  ]
+}
