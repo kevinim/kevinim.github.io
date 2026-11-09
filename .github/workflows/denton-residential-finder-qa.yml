@@ -29,6 +29,20 @@ jobs:
         run: |
           node --check scripts/denton-independent-grade-finder-qa.cjs
           node scripts/denton-independent-grade-finder-qa.cjs
+      - name: Real dashboard marker + 2026 district PDF bridge regression at 390 and 1366 pixels
+        env:
+          NODE_PATH: ${{ github.workspace }}/denton-residential-qa-tmp/node_modules
+        run: |
+          node --check scripts/test-denton-finder-map-bridge-browser.cjs
+          node scripts/test-denton-finder-map-bridge-browser.cjs
+      - name: Save 7 Finder campuses to existing marker and district PDF screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: denton-finder-map-bridge-390-1366
+          path: artifacts/denton-finder-map-bridge/
+          retention-days: 7
+          if-no-files-found: warn
       - name: Upload short-retention screenshots and no-go evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
