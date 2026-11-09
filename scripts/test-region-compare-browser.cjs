@@ -54,9 +54,9 @@ const report={viewports:[]};
      assert.ok(markerCount>0,'Allen marker set must not be emptied by comparison navigation');
    }
    // Reuse current map selection in candidate C, no address lookup.
-   await page.selectOption('#zipSelect','75007');
+   await page.selectOption('#zipSelect','75024');
    await page.locator('#regionCompareAddCurrent').click();
-   await page.waitForFunction(()=>document.querySelector('.region-compare-select[data-slot="2"]')?.value==='75007',null,{timeout:15000});
+   await page.waitForFunction(()=>document.querySelector('.region-compare-select[data-slot="2"]')?.value==='75024',null,{timeout:15000});
    assert.ok(!errors.length,'Browser JS errors: '+errors.join(' | '));
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
    assert.ok(overflow<=2,'Page horizontal overflow '+overflow+'px at '+width);
