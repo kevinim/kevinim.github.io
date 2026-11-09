@@ -37,3 +37,15 @@ test('strict public-bundle allowlist rejects development content',()=>{
  assert.equal(gate.isPublishable('.git/config'),false);
  assert.equal(gate.isPublishable('index.js.map'),false);
 });
+
+test('byte-identical migration of old inline bootstrap does not fake new personal source exposure',()=>{
+ const cp=require('node:child_process');
+ const fs=require('node:fs');
+ const base='4f741596a5a594897791d3b931ef39b374bf304e';
+ const old=cp.execFileSync('git',['show',base+':index.html'],{encoding:'utf8'});
+ const js=fs.readFileSync('dashboard-main.js','utf8');
+ const moved=gate.existingBootstrapMovedVerbatim(base,'dashboard-main.js',js);
+ assert.equal(moved,js,'relocation must match exact original code');
+ assert.equal(gate.existingBootstrapMovedVerbatim(base,'dashboard-main.js',js+'\nconst JPM_ADDRESS="new";'),null);
+ assert.equal(gate.existingBootstrapMovedVerbatim(base,'unreviewed.js',js),null);
+});

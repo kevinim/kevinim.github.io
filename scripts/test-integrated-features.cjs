@@ -4,7 +4,7 @@ const assert=require('node:assert/strict');
 const {readFileSync}=require('node:fs');
 const {join}=require('node:path');
 const root=join(__dirname,'..'),read=p=>readFileSync(join(root,p),'utf8');
-const index=read('index.html'),home=read('home-lookup-v2.js');
+const index=read('index.html')+'\n'+read('dashboard-main.js'),home=read('home-lookup-v2.js');
 const css=read('features/dashboard-extras.css'),extras=read('features/dashboard-extras.js');
 const {workDestinationIcon}=require('../features/commute/workplace-marker.js');
 const {calculateMonthlyCommute}=require('../features/commute/cost-model.js');

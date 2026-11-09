@@ -110,6 +110,60 @@ function sanitizeIndex(source){
    throw Error('A non-empty default commute destination remains');
  return s;
 }
+function verifyExternalCspIntegrity(html){
+ const match=/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"\s*\/?>/i.exec(html);
+ if(!match)throw Error('External bootstrap requires CSP meta');
+ const policy=match[1];
+ const script=policy.split(';').map(x=>x.trim()).find(x=>x.startsWith('script-src '));
+ if(!script||/'unsafe-inline'|'unsafe-eval'|'sha256-/i.test(script))throw Error('External bootstrap script-src CSP must not allow inline scripts');
+ if(!/script-src\s+'self'/.test(policy)||!/(?:^|;)\s*script-src-attr\s+'none'\s*(?:;|$)/.test(policy)||
+    !/object-src\s+'none'/.test(policy)||!/base-uri\s+'self'/.test(policy)||!/form-action\s+'self'/.test(policy))
+  throw Error('External bootstrap CSP protections missing');
+ const inline=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
+  .filter(x=>!/\bsrc\s*=/.test(x[1])&&x[2].trim());
+ if(inline.length)throw Error('External build must have zero executable inline scripts');
+ const tag='<script src="./dashboard-main.js?v=3"></script>';
+ if(html.split(tag).length!==2)throw Error('External bootstrap tag missing or duplicated');
+ return {policy,inlineHashes:0};
+}
+function sanitizeExtractedAssets(sourceHtml,sourceJs){
+ if(typeof sourceJs!=='string'||!sourceJs.startsWith("\r\n'use strict';")||
+    !sourceJs.includes('const DATA=[')||!sourceJs.includes("function savedCommuteFor("))
+  throw Error('External bootstrap source structure changed; explicit privacy review required');
+ verifyExternalCspIntegrity(sourceHtml);
+ const tag='<script src="./dashboard-main.js?v=3"></script>';
+ // Preserve all already-approved regional, school, risk and safety UI assets.
+ const neutral=sourceHtml;
+ const meta=/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"\s*\/?>/i.exec(neutral);
+ const policy=meta[1],hash=crypto.createHash('sha256')
+  .update(sourceJs.replace(/\r\n?/g,'\n'),'utf8').digest('base64');
+ const hashToken="'sha256-"+hash+"'";
+ const scriptToken="script-src 'self' https://unpkg.com";
+ if(policy.split(scriptToken).length!==2)throw Error('Unexpected script-src source policy');
+ const virtualMeta=meta[0].replace(policy,policy.replace(scriptToken,scriptToken+' '+hashToken));
+ let virtual=replaceExact(neutral,meta[0],virtualMeta,'temporary locked CSP');
+ virtual=replaceExact(virtual,tag,'<script>'+sourceJs+'</script>','temporary in-memory inline bootstrap');
+ verifyCspIntegrity(virtual);
+ const sanitized=sanitizeIndex(virtual);
+ const extracted=[...sanitized.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
+  .filter(x=>!/\bsrc\s*=/.test(x[1])&&x[2].trim());
+ if(extracted.length!==1)throw Error('Sanitized bootstrap count is not one');
+ const publicJs=extracted[0][2];
+ let publicHtml=replaceExact(sanitized,extracted[0][0],tag,'public separate JS asset');
+ const newMeta=/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"\s*\/?>/i.exec(publicHtml);
+ const tokens=[...newMeta[1].matchAll(/'sha256-[A-Za-z0-9+/]+=*'/g)].map(x=>x[0]);
+ if(tokens.length!==1)throw Error('Expected exactly one temporary sanitized hash');
+ publicHtml=replaceExact(publicHtml,' '+tokens[0],'','remove temporary inline CSP hash');
+ verifyExternalCspIntegrity(publicHtml);
+ for(const [label,content] of [['HTML',publicHtml],['JS',publicJs]]){
+  if(/\bJPM\b|JPMorgan|JPM_ADDRESS|jpm-|8181 Communications|\bjpmMinutes\b/i.test(content))
+   throw Error('Unredacted private office reference in sanitized public '+label);
+  if(/nominatim\.openstreetmap\.org/i.test(content))
+   throw Error('Unreviewed external geocoder remains in public '+label);
+ }
+ return {html:publicHtml,js:publicJs};
+}
+
 function safeFiles(){
  const tracked=cp.execFileSync('git',['ls-files','-z'],{encoding:'utf8'}).split('\0').filter(Boolean);
  return tracked.filter(f=>gate.isPublishable(f))
@@ -131,8 +185,9 @@ function build(outdir=OUTPUT){
   const st=fs.lstatSync(source);if(!st.isFile()||st.isSymbolicLink())throw Error('Unsupported source asset: '+f);
   const target=path.join(out,f);fs.mkdirSync(path.dirname(target),{recursive:true});fs.copyFileSync(source,target);
  }
- const index=sanitizeIndex(fs.readFileSync('index.html','utf8'));
- fs.writeFileSync(path.join(out,'index.html'),index);
+ const sanitized=sanitizeExtractedAssets(fs.readFileSync('index.html','utf8'),fs.readFileSync('dashboard-main.js','utf8'));
+ fs.writeFileSync(path.join(out,'index.html'),sanitized.html);
+ fs.writeFileSync(path.join(out,'dashboard-main.js'),sanitized.js);
  const outside=JSON.parse(fs.readFileSync('jpm-outside-dfw.json','utf8'));
  if(!Array.isArray(outside.data)||!outside.shapes?.features||!outside.race||!outside.minutes)
    throw Error('Neighborhood dataset schema changed');
@@ -152,10 +207,10 @@ function build(outdir=OUTPUT){
  if(!previewFiles.includes('index.html')||!previewFiles.includes('dfw-outside-public.json'))
    throw Error('Missing expected public preview files');
  for(const f of safeFiles())if(!fs.existsSync(path.join(out,f)))throw Error('Missing preview asset '+f);
- return {files:safeFiles().length+2,location:out,releaseApproved:false};
+ return {files:safeFiles().length+3,location:out,releaseApproved:false};
 }
 if(require.main===module)try{
  const built=build(process.argv[2]||OUTPUT);
  process.stdout.write('Public preview built locally for security review only; '+built.files+' curated files; NOT DEPLOYED.\n');
 }catch(e){process.stderr.write('Public preview blocked: '+e.message+'\n');process.exitCode=1;}
-module.exports={sanitizeIndex,safeFiles,build,cspSourceSnapshot,verifyCspIntegrity,relockSanitizedCsp};
+module.exports={sanitizeIndex,sanitizeExtractedAssets,verifyExternalCspIntegrity,safeFiles,build,cspSourceSnapshot,verifyCspIntegrity,relockSanitizedCsp};

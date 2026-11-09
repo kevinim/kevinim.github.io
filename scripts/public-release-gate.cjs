@@ -50,6 +50,17 @@ function readText(file){
  if(!fs.existsSync(file)||!fs.statSync(file).isFile()||fs.statSync(file).size>3_000_000)return null;
  const s=fs.readFileSync(file,'utf8');return s.includes('\0')?null:s;
 }
+function existingBootstrapMovedVerbatim(baseSha,file,content) {
+ // Recognize a physical source-file move only when the new runtime JS is
+ // byte-for-byte identical to the sole old inline bootstrap in the trusted
+ // Git baseline. Any extra/mutated private marker remains a new finding.
+ if(file!=='dashboard-main.js'||!baseSha)return null;
+ const oldIndex=baselineContent(baseSha,'index.html');
+ if(!oldIndex)return null;
+ const matches=[...oldIndex.matchAll(/<script>(\r?\n'use strict';[\s\S]*?)<\/script>/g)];
+ if(matches.length!==1||matches[0][1]!==content)return null;
+ return matches[0][1];
+}
 function listDist(dir){
  const out=[];
  const walk=(folder,prefix='')=>{
@@ -68,7 +79,10 @@ function analyze(files,opts={}){
  const personalization=records.flatMap(x=>scanPersonalization(x.file,x.content));
  const newSensitive=[];
  if(opts.baseSha)for(const {file,content} of records){
-  const previous=baselineContent(opts.baseSha,file);if(previous===null)continue;
+  let previous=baselineContent(opts.baseSha,file);if(previous===null)continue;
+  if(file==='dashboard-main.js'&&previous===''){
+   previous=existingBootstrapMovedVerbatim(opts.baseSha,file,content)||'';
+  }
   const current=[...scanSecrets(file,content),...scanPersonalization(file,content)];
   const before=[...scanSecrets(file,previous),...scanPersonalization(file,previous)];
   for(const now of current){
@@ -129,4 +143,4 @@ function main(){
  if(blockers.length){process.stderr.write('Blocked categories: '+[...new Set(blockers.map(x=>x.kind))].join(', ')+'\n');process.exitCode=1;}
 }
 if(require.main===module)try{main();}catch(e){process.stderr.write('Security check failed: '+e.message+'\n');process.exitCode=2;}
-module.exports={isRuntimeAsset,isPublishable,countMatches,scanSecrets,scanPersonalization,analyze};
+module.exports={isRuntimeAsset,isPublishable,countMatches,scanSecrets,scanPersonalization,analyze,existingBootstrapMovedVerbatim};

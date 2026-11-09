@@ -2,7 +2,7 @@
 'use strict';
 /**
  * Read-only CSP source integrity and launch-readiness inventory.
- * Current main uses an exact HTML-parser-normalized inline-script SHA-256 hash.
+ * Current main externalizes its same-origin classic bootstrap and requires zero executable inline scripts; the legacy page can also be reviewed.
  * This is NOT an XSS certification or a header CSP check.
  */
 const fs=require('node:fs');
@@ -77,7 +77,7 @@ function main(){
   row.errors.forEach(x=>console.error('FAIL: '+x));
  }
  if(rows.some(x=>x.errors.length))process.exitCode=1;
- else console.log('PASS: strict hash-locked CSP baseline verified; deployment headers and all XSS paths NOT CERTIFIED.');
+ else console.log('PASS: strict CSP external-script baseline verified; deployment headers and all XSS paths NOT CERTIFIED.');
 }
 if(require.main===module)main();
 module.exports={extractCspMeta,parseDirectives,analyzeCspPage,checkCurrentRepo};

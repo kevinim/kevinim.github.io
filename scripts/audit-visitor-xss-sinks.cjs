@@ -11,7 +11,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const SINK_LIMITS = Object.freeze({
-  'index.html': 13,
+  'index.html': 0,
+  'dashboard-main.js': 13,
   'reviewed.html': 0,
   'features/reviewed-bootstrap.js': 10,
   'features/geojson-upload-guard.js': 0,
