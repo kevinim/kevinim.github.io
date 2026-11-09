@@ -84,8 +84,8 @@ function renderCheck(check){
  return {district:check.district,school:check.school,status:check.status,
   actualLayers:check.actualLayers??null,reason:check.reason||null};
 }
-function auditLinkage({rows=[],sources=[],renderChecks=[],browserLoaded=true,runMode='isolated-pr'}={}){
- if(!Array.isArray(rows)||!Array.isArray(sources)||!Array.isArray(renderChecks)||
+function auditLinkage({rows=[],sources=[],renderChecks=[],markerChecks=[],browserLoaded=true,runMode='isolated-pr'}={}){
+ if(!Array.isArray(rows)||!Array.isArray(sources)||!Array.isArray(renderChecks)||!Array.isArray(markerChecks)||
     typeof browserLoaded!=='boolean')throw Error('invalid_audit_payload');
  const sourceByDistrict=new Map(sources.map(s=>{
   const normalized=sourceState(s);
@@ -119,15 +119,29 @@ function auditLinkage({rows=[],sources=[],renderChecks=[],browserLoaded=true,run
  const ambiguous=classified.filter(r=>r.severity==='possible-match-pipeline-defect').length;
  const tests=renderChecks.map(renderCheck);
  const failures=tests.filter(c=>c.status==='failed');
+ const markerSamples=markerChecks.map(c=>{
+  if(!c||typeof c.district!=='string'||
+     !['passed','failed','not-tested'].includes(c.status)||
+     !count(c.eligibleSchoolLocations)||!count(c.expectedVisible)||
+     !count(c.matchedMarkers)||!Array.isArray(c.missingNames)||
+     c.missingNames.some(n=>typeof n!=='string'))
+    throw Error('invalid_school_marker_check');
+  return {district:c.district,status:c.status,
+   eligibleSchoolLocations:c.eligibleSchoolLocations,
+   expectedVisible:c.expectedVisible,matchedMarkers:c.matchedMarkers,
+   missingNames:c.missingNames};
+ });
+ const markerFailures=markerSamples.filter(c=>c.status==='failed');
  const matchedWithoutSource=classified.filter(r=>r.category==='matched'&&r.polygonCount===0);
- const hasOfflineBlockers=failures.length>0||matchedWithoutSource.length>0;
+ const hasOfflineBlockers=failures.length>0||markerFailures.length>0||matchedWithoutSource.length>0;
  const sourceErrors=Object.values(byDistrict).filter(d=>d.source?.sourceLoadError).length;
  const coverage={
   totalLoadedDirectory:total,matched,unmatched:total-matched,
   matchRateLoadedPercent:total?Math.round(matched/total*1000)/10:null,
   unverified:unknown,
   possibleMatchPipelineDefects:ambiguous,
-  sampledRenderChecks:tests.length,sampledRenderFailures:failures.length
+  sampledRenderChecks:tests.length,sampledRenderFailures:failures.length,
+  sampledMarkerChecks:markerSamples.length,sampledMarkerFailures:markerFailures.length
  };
  const status=hasOfflineBlockers?'REVIEW_REQUIRED':
    sourceErrors>0||!browserLoaded?'INCONCLUSIVE_SOURCE_AVAILABILITY':'PASS_WITH_SOURCE_LIMITATIONS';
@@ -145,7 +159,7 @@ function auditLinkage({rows=[],sources=[],renderChecks=[],browserLoaded=true,run
   denominator:'loaded elementary/middle/high directory, not all official active schools',
   coverage,topSix,byDistrict,
   reasons:Object.fromEntries(CATEGORIES.map(k=>[k,classified.filter(r=>r.category===k).length]).filter(([,n])=>n)),
-  schools:classified,renderChecks:tests,
+  schools:classified,renderChecks:tests,markerChecks:markerSamples,
   blocked:hasOfflineBlockers,
   warnings:[
    ...(sourceErrors?['Source load failures affect '+sourceErrors+' district(s); unavailable source cannot be called missing polygons.']:[]),
