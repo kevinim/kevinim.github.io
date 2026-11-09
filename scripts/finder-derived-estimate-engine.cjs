@@ -37,9 +37,23 @@ function validateInput(input){
  check(input.source&&/^https:\/\//.test(input.source.finderUrl||''),'official_finder_url_missing');
  check(input.source.verifiedAt&&/^\d{4}-\d\d-\d\d$/.test(input.source.verifiedAt),'source_verification_date_missing');
  const demo=input.demoOnly===true;
- if(!demo)check(input.source.permission?.status==='approved'&&
-   /^https:\/\//.test(input.source.permission?.evidenceUrl||''),
-   'data_reuse_permission_not_verified');
+ if(!demo){
+  check(input.source.permission?.status==='approved'&&
+    /^https:\/\//.test(input.source.permission?.evidenceUrl||''),
+    'data_reuse_permission_not_verified');
+  // Self-attested flags in a fixture cannot grant collection or republication rights.
+  // A separately reviewed repository policy manifest must explicitly allow both.
+  const rights=require('../data/finder-derived-source-rights-2026.json');
+  const approved=rights.districts?.[input.districtCode];
+  check(approved?.status==='approved'&&
+    approved.approvedUses?.derivativeGeometry===true&&
+    approved.approvedUses?.publicRedistribution===true&&
+    /^https:\/\//.test(approved.consentEvidenceUrl||''),
+    'district_source_not_cleared');
+  check(approved.finderUrl===input.source.finderUrl&&
+    approved.consentEvidenceUrl===input.source.permission.evidenceUrl,
+    'approved_source_evidence_mismatch');
+ }
  check(Array.isArray(input.campuses)&&input.campuses.length>=3,'campus_registry_missing');
  const campuses=new Map();
  for(const c of input.campuses){
