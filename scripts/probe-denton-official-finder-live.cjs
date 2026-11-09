@@ -42,7 +42,7 @@ async function main(){
   await page.screenshot({path:path.join(dir,'initial-finder-ui.png'),fullPage:true,animations:'disabled',timeout:15000});
   // Never claim a result unless a person has independently compared the
   // *specific* Finder-reported school and an authorized current-year polygon.
-  const input=page.locator('input[placeholder*="address" i],input[aria-label*="address" i],input[placeholder*="street" i],input[aria-label*="street" i]').first();
+  const input=page.locator('input[placeholder*="location" i],input[placeholder*="address" i],input[aria-label*="address" i],input[placeholder*="street" i],input[aria-label*="street" i]').first();
   if(await input.count()===0||!await input.isVisible()){
    report.finderUiState='NO_UNAMBIGUOUS_PUBLIC_ADDRESS_FIELD';
   }else{
@@ -51,12 +51,31 @@ async function main(){
     const entry={id:s.id,address:s.address,source:s.addressSource,officialSchools:[],status:'NO_GO_UNREVIEWED'};
     try{
      await input.fill(s.address,{timeout:8000});
-     await page.waitForTimeout(1800);
-     entry.suggestedText=(await page.locator('body').innerText()).slice(0,1300);
+     await page.waitForTimeout(2200);
+     entry.suggestedText=(await page.locator('body').innerText()).slice(0,1500);
+     entry.suggestedCandidates=await page.evaluate(()=>{
+       const match='[role="option"],.pac-item,[class*="suggestion" i],[class*="autocomplete" i]';
+       return [...document.querySelectorAll(match)].filter(x=>{
+         const r=x.getBoundingClientRect();return r.width>0&&r.height>0;
+       }).map(x=>({text:(x.innerText||x.textContent||'').trim().slice(0,140),tag:x.tagName,role:x.getAttribute('role')})).slice(0,10);
+     });
      await page.screenshot({path:path.join(dir,s.id+'-typed-address.png'),animations:'disabled',timeout:12000});
-     // No speculative click/submit when the vendor UI controls cannot be
-     // independently identified. This is a UI reconnaissance only.
-     entry.status='PUBLIC_ADDRESS_TYPED_NO_OFFICIAL_ASSIGNMENT_CERTIFIED';
+     console.log('FINDER_PUBLIC_ADDRESS_ENTRY',JSON.stringify({id:s.id,suggestions:entry.suggestedCandidates,screenText:entry.suggestedText.slice(0,500)}));
+     const street=s.address.split(',')[0].toLowerCase().replace(/\\./g,'');
+     const matches=entry.suggestedCandidates.filter(x=>x.text.toLowerCase().replace(/\\./g,'').includes(street));
+     if(matches.length===1){
+       const candidate=page.locator('[role="option"],.pac-item,[class*="suggestion" i],[class*="autocomplete" i]').filter({hasText:matches[0].text}).first();
+       if(await candidate.count()){
+         await candidate.click({timeout:5000});
+         await page.getByRole('button',{name:'Go',exact:true}).click({timeout:5000});
+         await page.waitForTimeout(2800);
+         entry.afterGoText=(await page.locator('body').innerText()).slice(0,2500);
+         await page.screenshot({path:path.join(dir,s.id+'-after-go.png'),animations:'disabled',timeout:12000});
+         entry.status='FINDER_RESULT_UI_CAPTURED_NEEDS_INDEPENDENT_GRADE_AND_POLYGON_REVIEW';
+         console.log('FINDER_PUBLIC_ADDRESS_SEARCH',JSON.stringify({id:s.id,afterGoText:entry.afterGoText.slice(0,1500)}));
+       }
+     }
+     if(entry.status==='NO_GO_UNREVIEWED')entry.status='PUBLIC_ADDRESS_TYPED_NO_SAFE_UNIQUE_SUGGESTION';
     }catch(e){entry.status='PUBLIC_ADDRESS_UI_FAILED';entry.error=String(e).slice(0,180);}
     report.results.push(entry);
    }
