@@ -26,11 +26,11 @@ test('full 11-county source proxy, separate public ISDs and other TEA LEAs',()=>
  assert.equal(s.teaDistrictCodes,152);
  assert.equal(s.publicISDs,108);
  assert.equal(s.otherLEAs,44);
- assert.equal(s.publicISDsWithRegisteredParentRoute,73);
- assert.equal(s.publicISDsMissingRegisteredParentRoute,35);
- assert.equal(s.registeredParentRouteRatePublicISDPercent,67.6);
- assert.equal(s.publicISDCampusRowsWithUnverifiedParentRoute,114);
- assert.equal(s.publicISDCampusRowsWithRegisteredParentRoute,1827);
+ assert.equal(s.publicISDsWithRegisteredParentRoute,85);
+ assert.equal(s.publicISDsMissingRegisteredParentRoute,23);
+ assert.equal(s.registeredParentRouteRatePublicISDPercent,78.7);
+ assert.equal(s.publicISDCampusRowsWithUnverifiedParentRoute,61);
+ assert.equal(s.publicISDCampusRowsWithRegisteredParentRoute,1880);
  assert.equal(s.otherLEACampusRows,241);
  assert.equal(s.publicISDCampusRows+s.otherLEACampusRows,s.sourceCampusRows);
  assert.equal(committed.districts.length,152);
@@ -42,7 +42,7 @@ test('full 11-county source proxy, separate public ISDs and other TEA LEAs',()=>
 });
 
 test('PRIORITY P0 targets verified missing parent lookup route across whole DFW',()=>{
- assert.deepEqual(committed.priorityQueue.slice(0,7),["249902","184909","220910","184908","061903","249903","116903"]);
+ assert.deepEqual(committed.priorityQueue.slice(0,7),["249906","126908","249901","116915","043917","116916","116902"]);
  for(const code of committed.priorityQueue.slice(0,7)){
   const x=byCode(code);
   assert.equal(x.priority,'P0');
@@ -82,8 +82,8 @@ test('eight verified official parent entry sources are registered without invent
   campuses+=record.teaCampusRecords;
  }
  assert.equal(campuses,399);
- assert.deepEqual(committed.priorityQueue.slice(0,3),["249902","184909","220910"]);
- assert.equal(committed.summary.registeredParentRouteRatePublicISDPercent,67.6);
+ assert.deepEqual(committed.priorityQueue.slice(0,3),["249906","126908","249901"]);
+ assert.equal(committed.summary.registeredParentRouteRatePublicISDPercent,78.7);
  assert.equal(official('https://untrusted.example.invalid/locator'),null);
 });
 
