@@ -60,8 +60,9 @@ async function runDistrict(browser,d){
      try{await next.waitForLoadState('domcontentloaded',{timeout:15000})}catch{}
     }
     row.locator=await inventory(next);
-    row.locatorOpened=true;
     row.locatorIsDifferent=next.url()!==d.url;
+    row.locatorOpened=row.locatorIsDifferent || next.frames().length>1;
+    if(!row.locatorOpened)row.errors.push('clicked_entrypoint_but_no_new_locator_or_embedded_frame');
     if(await screenshot(next,'official-'+d.district+'-locator.png'))row.screenshots.push('locator');
     if(d.district==='LISD'){
      // Lewisville's PUBLISHED INSTRUCTIONS use "Find an Apartment" and
@@ -79,7 +80,7 @@ async function runDistrict(browser,d){
      row.publicComplexes=fixture.cases.filter(x=>x.districtHint==='LISD')
       .map(x=>({id:x.id,complexName:x.complexName,selected:false,independentlyVerified:false}));
     }
-    row.status='OFFICIAL_LOCATOR_UI_OPENED_NOT_ADDRESS_VERIFIED';
+    row.status=row.locatorOpened?'OFFICIAL_LOCATOR_UI_OPENED_NOT_ADDRESS_VERIFIED':'CTA_CLICKED_BUT_LOCATOR_NOT_CONFIRMED';
    }catch(e){row.errors.push('locator_click:'+short(e));row.status='LOCATOR_UI_NOT_REACHED';}
   }else{
    row.status='OFFICIAL_LOCATOR_CONTROL_NOT_DETECTED';
