@@ -59,3 +59,16 @@
 - Denton remains **NO_GO** and cannot be counted as an 8th source-connected GIS ISD.
 
 No runtime map behavior, existing production content, release workflow, or source data was mutated in this PR.
+
+## 2026–27 primary-source ZIP discrepancy (new independent audit)
+
+The [current Denton ISD campus directory](https://www.dentonisd.org/our-district/our-schools) and its **own 2026–27 official zone PDF legends** disagree about the postal ZIP code for two of the eight held campus locations, despite matching street addresses:
+
+| School / ID | Current live district directory | Official 2026–27 zone-PDF legend | Classification |
+|---|---|---|---|
+| Hill Elementary `061901130` | 501 Ryan Spiritas Parkway, Little Elm **75068** | Same street, Little Elm **76227** ([PDF](https://resources.finalsite.net/images/v1777569439/dentonisdorg/lqtay6k6ym56kuyqgiwo/HillES-ZoneMap_26-27.pdf)) | Unresolved official ZIP disagreement; no current location point approval |
+| Martinez Elementary `061901131` | 2855 Eppright Dr, Little Elm **76227** | Same street, Little Elm **75068** ([PDF](https://resources.finalsite.net/images/v1777569439/dentonisdorg/duy4xl0ijgbdjkequhea/MartinezES-ZoneMap_26-27.pdf)) | Unresolved official ZIP disagreement; no current location point approval |
+
+The audit retains the live directory addresses as *directory-published addresses*, not guaranteed postal or map-point truth. No coordinate, map geometry, or school assignment status is upgraded. Obtain site footprint/entrance corroboration and publisher clarification before certifying a precise location; ZIP-only geocoding is particularly unsafe.
+
+**Future-year contamination guard:** The district also publishes a [proposed 2028–29 high/middle-school modification](https://www.dentonisd.org/families/attendance-zones/attendance-boundary-modification), including potential changes to Calhoun, Rodriguez and the high-school zones. The district explicitly states it does **not** change 2026–27/2027–28 assignments. Proposed 2028–29 maps cannot fill 2026–27 GIS gaps and must not be counted as official current-year polygons. The source disposition file and regression tests enforce this classification.
