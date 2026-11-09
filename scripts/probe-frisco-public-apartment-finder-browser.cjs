@@ -39,31 +39,56 @@ async function run(){
   if(chosen)break;
  }
  if(chosen){
+  report.addressFormMarkup=await chosen.input.evaluate(x=>x.parentElement?.parentElement?.outerHTML.slice(0,3200)).catch(()=>null);
   await chosen.input.fill(address,{timeout:12000});
   report.addressEntered=true;
   await page.waitForTimeout(2500);
-  const suggestions=chosen.frame.locator('[role="option"],.pac-item,.suggestion,.search-result,[class*="autocomplete"] li');
-  const candidate=suggestions.filter({hasText:/9425.*rolater/i}).first();
-  if(await candidate.count()>0 && await candidate.isVisible()){
-   await candidate.click({timeout:12000});
+  const initial=chosen.frame.locator('[role="option"],.pac-item,.suggestion,.search-result,[class*="autocomplete"] li');
+  const pre=initial.filter({hasText:/9425.*rolater/i}).first();
+  if(await pre.count()>0&&await pre.isVisible()){
+   await pre.click({timeout:12000});
    report.candidateSelected=true;
   }else{
-   const btn=chosen.frame.getByRole('button',{name:/find (my |your )?(zone|school)|search|submit/i}).first();
-   if(await btn.count() && await btn.isVisible())await btn.click({timeout:12000});
+   // Click the ZONE SEARCH field's adjacent button. A generic getByRole('Search')
+   // accidentally opened the sitewide search modal, a serious false-positive risk.
+   const btn=chosen.input.locator('xpath=following::button[1]');
+   report.zoneButtonText=(await btn.innerText().catch(()=>'')).slice(0,100);
+   if(await btn.count()&&await btn.isVisible())await btn.click({timeout:12000});
    else await chosen.input.press('Enter').catch(()=>{});
   }
-  await page.waitForTimeout(5000);
-  const body=await chosen.frame.locator('body').innerText().catch(()=>null);
-  const excerpt=String(body||'').slice(-8000);
-  // Only explicit per-level result fields count as official evidence.
-  const levels=[['elementary',/elementary\s*(school)?\s*[:\-]\s*([^\n]+)/i],
-   ['middle',/middle\s*(school)?\s*[:\-]\s*([^\n]+)/i],
-   ['high',/high\s*(school)?\s*[:\-]\s*([^\n]+)/i]];
-  for(const [grade,pattern] of levels){
-   const match=excerpt.match(pattern);
-   if(match)report.explicitZonedSchools[grade]=match[2].trim().slice(0,120);
+  await page.waitForTimeout(3600);
+  report.afterSubmitText=(await chosen.frame.locator('body').innerText()).slice(-5000);
+  if(!report.candidateSelected){
+   const candidates=chosen.frame.locator('[role="option"],button,li,[class*="result"],[class*="address"]');
+   const match=candidates.filter({hasText:/9425.*rolater/i}).last();
+   report.afterSubmitCandidateCount=await candidates.filter({hasText:/9425.*rolater/i}).count().catch(()=>0);
+   if(await match.count()>0&&await match.isVisible().catch(()=>false)){
+    const label=(await match.innerText()).trim();
+    if(label.length<250&&/9425.*rolater/i.test(label)){
+     await match.click({timeout:12000});
+     report.candidateSelected=true;
+     report.selectedCandidateLabel=label.slice(0,160);
+    }
+   }
   }
-  report.bodyMatchHighlights=excerpt.split('\n').filter(x=>/school|zone|rolater|9425|assigned/i.test(x)).slice(-35).map(x=>x.slice(0,180));
+  await page.waitForTimeout(4500);
+  const body=await chosen.frame.locator('body').innerText().catch(()=>null);
+  const excerpt=String(body||'').slice(-9000);
+  report.bodyMatchHighlights=excerpt.split('\n').filter(x=>/school|zone|rolater|9425|assigned|search/i.test(x)).slice(-45).map(x=>x.slice(0,180));
+  if(report.candidateSelected){
+   // Parse ONLY dynamically selected-address result data; don't parse static
+   // boilerplate about Nelson enrollment or site navigation as school assignments.
+   const resultArea=excerpt.slice(Math.max(0,excerpt.toLowerCase().indexOf('based on your search')));
+   const patterns=[
+    ['elementary',/elementary\\s*(?:school)?\\s*[:\\-]\\s*([^\\n]+)/i],
+    ['middle',/middle\\s*(?:school)?\\s*[:\\-]\\s*([^\\n]+)/i],
+    ['high',/high\\s*(?:school)?\\s*[:\\-]\\s*([^\\n]+)/i]];
+   for(const [grade,pattern] of patterns){
+    const match=resultArea.match(pattern);
+    if(match&&/school|elementary|middle|high/i.test(match[1]))
+     report.explicitZonedSchools[grade]=match[1].trim().slice(0,120);
+   }
+  }
   report.officialFinderIndependentlyVerified=report.candidateSelected&&
    Object.keys(report.explicitZonedSchools).length===3;
   report.status=report.officialFinderIndependentlyVerified?'EXPLICIT_3_LEVEL_FINDER_RESULT':'INCONCLUSIVE_FINDER_SEARCH';
