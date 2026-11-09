@@ -111,6 +111,47 @@ const brightness=raw=>{
    for(const sample of contrast)
      assert.ok(sample.ratio>=4.5,'Unreadable dark button '+sample.label+': '+JSON.stringify(sample));
    assert.ok(brightness(dark.bg)<40,'User requested visibly deeper dark body');
+
+   // Screen regression: test *real* labels on grouped filter cards, not just button fixtures.
+   const groupAudit=await page.evaluate(()=>{
+     const rgb=raw=>(raw.match(/[0-9.]+/g)||[]).slice(0,3).map(Number);
+     const lum=a=>{
+       const c=a.map(v=>v/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);
+       return c[0]*.2126+c[1]*.7152+c[2]*.0722;
+     };
+     const bg=el=>{
+       for(let e=el;e;e=e.parentElement){
+         const v=(getComputedStyle(e).backgroundColor.match(/[0-9.]+/g)||[]).map(Number);
+         if(v.length>=3&&(v.length===3||v[3]>=.999))return v.slice(0,3);
+       }
+       return [255,255,255];
+     };
+     const samples=[
+       ['지역 선택','.area-settings .field label'],
+       ['ZIP 안내','.area-settings .source'],
+       ['지역 제목','.area-settings .settings-group-title'],
+       ['학교 제목','.school-settings .settings-group-title'],
+       ['학교 안내','.school-settings .settings-group-note'],
+       ['학교 점수','.school-settings .field label'],
+       ['학교 토글','.school-visibility-options .check'],
+       ['통근 제목','.commute-settings .settings-group-title'],
+       ['통근 안내','.commute-settings .source']
+     ];
+     return {cards:[...document.querySelectorAll('.filter-panel > .filter-settings-group')]
+       .map(e=>({name:e.className,bg:bg(e)})),
+       samples:samples.map(([name,sel])=>{
+         const e=document.querySelector('.filter-panel '+sel);
+         if(!e)return {name,missing:true};
+         const fg=rgb(getComputedStyle(e).color),back=bg(e),a=lum(fg),b=lum(back);
+         return {name,fg,back,ratio:Math.round((Math.max(a,b)+.05)/(Math.min(a,b)+.05)*100)/100};
+       })}
+   });
+   assert.equal(groupAudit.cards.length,3,'Area, school and commute cards present');
+   for(const card of groupAudit.cards)
+     assert.ok(card.bg.reduce((a,b)=>a+b,0)/3<95,'Grouped filter card stayed light '+JSON.stringify(card));
+   for(const item of groupAudit.samples)
+     assert.ok(!item.missing&&item.ratio>=4.5,'Unreadable dark filter text '+JSON.stringify(item));
+
    // Native summary supports keyboard activation, and table is only rendered when opened.
    await page.locator('#regionCompare > summary').focus();
    await page.keyboard.press('Enter');
