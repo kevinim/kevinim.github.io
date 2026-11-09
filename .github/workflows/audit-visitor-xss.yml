@@ -1,0 +1,51 @@
+name: Visitor browser XSS negative tests (audit-only)
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '40 15 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  static-xss-guard:
+    name: visitor-xss-static
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unit test tracked source boundaries
+        run: node --test tests/audit-visitor-xss.test.cjs
+      - name: Offline browser-surface inventory
+        run: node scripts/audit-visitor-xss-sinks.cjs
+
+  isolated-browser-probes:
+    name: visitor-xss-chromium
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned isolated Chromium test runner
+        run: |
+          mkdir -p visitor-browser-tmp
+          cd visitor-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Run simulated malicious-string browser checks (no network)
+        run: NODE_PATH="$PWD/visitor-browser-tmp/node_modules" node scripts/test-visitor-xss-browser.cjs
