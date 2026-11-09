@@ -7,16 +7,13 @@ const path=require('node:path');
 const ROOT=path.resolve(__dirname,'..');
 const read=p=>JSON.parse(fs.readFileSync(path.join(ROOT,p),'utf8'));
 const MANIFEST='data/dfw-107-parent-route-qa-candidate-2026.json';
+const {official}=require('../trusted-link-policy.js');
 function safeCandidateUrl(value){
- try{
-  if(typeof value!=='string'||value.length>2048) return false;
-  const u=new URL(value);
-  return u.protocol==='https:'&&u.username===''&&u.password===''&&
-   (u.port===''||u.port==='443')&&u.hostname.indexOf('.')>0&&
-   !/^(localhost|127\\.|10\\.|192\\.168\\.|172\\.(1[6-9]|2[0-9]|3[01])\\.)/i.test(u.hostname)&&
-   !/^[0-9.]+$/.test(u.hostname)&&!u.hostname.includes('[');
- }catch{return false;}
+ // Only the same exact HTTPS hosts already trusted by the public dashboard.
+ // Prevent a malicious candidate manifest from triggering requests to arbitrary hosts.
+ return typeof value==='string'&&official(value)===value;
 }
+
 function validate(manifest,main){
  const errors=[];
  const check=(ok,id)=>{if(!ok)errors.push(id)};
@@ -53,10 +50,14 @@ async function inspect(url,fetchImpl=fetch){
  let response;
  try {
   response=await fetchImpl(url,{method:'HEAD',redirect:'manual',signal:AbortSignal.timeout(10000)});
-  if([405,501].includes(response.status))
+  const headHttpStatus=response.status;
+  const getConfirmed=[404,405,410,500,501,502,503,504].includes(headHttpStatus);
+  // A non-browser HEAD 404/5xx is not proof the parent-facing GET is broken.
+  if(getConfirmed)
    response=await fetchImpl(url,{method:'GET',redirect:'manual',signal:AbortSignal.timeout(10000)});
   const status=response.status;
-  return {httpStatus:status,status:status>=200&&status<300?'HTTP_RESPONDED_FINDER_NOT_TESTED':
+  return {...(getConfirmed?{headHttpStatus,confirmationMethod:'GET'}:{}),
+   httpStatus:status,status:status>=200&&status<300?'HTTP_RESPONDED_FINDER_NOT_TESTED':
    status>=300&&status<400?'REDIRECT_REQUIRES_REVIEW':
    [401,403,429].includes(status)?'BLOCKED_OR_RATE_LIMITED_INCONCLUSIVE':
    [404,410].includes(status)?'HTTP_NOT_FOUND_REVIEW':'HTTP_ERROR_INCONCLUSIVE'};
@@ -84,7 +85,7 @@ async function run({manifest=read(MANIFEST),main=read('data/dfw-school-coverage-
   candidateGuidanceRoutes:107,unregisteredTexasChico:['249904'],
   liveHttpProbeExecuted:live,verifiedFinderOperations:0,verifiedResidentialAssignments:0,
   exactAddressAssignmentRate:null,currentYearGISRate:null,release:'NO_GO',
-  method:'HEAD then GET only on 405/501, no redirects, no addresses, four concurrent requests',
+  method:'HEAD then same-URL GET for 404/405/410/5xx, no redirects, no addresses, four concurrent requests',
   resultCounts,records:rows};
 }
 if(require.main===module)run({live:process.argv.includes('--live')})
