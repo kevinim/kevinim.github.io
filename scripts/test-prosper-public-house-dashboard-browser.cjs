@@ -75,10 +75,15 @@ async function main(){
       const features=(home.assignment?.features||[]).map(f=>({
        school:f.properties?.school,code:String(f.properties?.schoolCode||'').padStart(3,'0'),
        grade:f.properties?.gradeLevel,year:f.properties?.schoolYear}));
-      const layers=typeof homeZoneGroup!=='undefined'&&homeZoneGroup?
-       homeZoneGroup.getLayers().length:0;
+      // The app intentionally wraps all three grade-zone polygons in ONE
+      // L.geoJSON layer group. Count actual child polygons, not wrapper layers.
+      const groups=typeof homeZoneGroup!=='undefined'&&homeZoneGroup?
+       homeZoneGroup.getLayers():[];
+      const layers=groups.length;
+      const shapes=groups.reduce((n,g)=>n+(typeof g.getLayers==='function'?
+       g.getLayers().length:1),0);
       return {quality:home.geocodeQuality,status:home.assignment.status,district:home.assignment.district,
-       features,panels:layers,homeMarker:!!homeMarker&&map.hasLayer(homeMarker),
+       features,panels:layers,polygonFeatures:shapes,homeMarker:!!homeMarker&&map.hasLayer(homeMarker),
        UIStatus:document.getElementById('homeMapAssignmentStatus')?.textContent?.slice(0,480)||'',
        UIVIsible:document.getElementById('homeMapAssignmentStatus')?.dataset?.visible||null,
        mapSource:districtZoneDisplay('PROSPER',state.liveFinder),
@@ -89,11 +94,11 @@ async function main(){
      });
      check.geocodeUsable=info.quality?.usableForSchoolCandidate;
      check.district=info.district;check.assignmentStatus=info.status;
-     check.homePolygonCount=info.panels;check.homeMapVisible=info.UIVIsible;
+     check.homeLayerGroups=info.panels;check.homePolygonCount=info.polygonFeatures;check.homeMapVisible=info.UIVIsible;
      if(!info.quality?.usableForSchoolCandidate)throw Error('browser_esri_geocode_not_building_accurate');
      if(info.district!=='PROSPER'||!['current','boundary-review'].includes(info.status))
       throw Error('browser_not_in_prosper_current_source:'+info.district+':'+info.status);
-     if(!info.homeMarker||info.panels<3||info.UIVIsible!=='true')
+     if(!info.homeMarker||info.polygonFeatures<3||info.UIVIsible!=='true')
       throw Error('home_marker_or_three_grade_polygon_display_missing');
      if(!info.officialLink||info.mapSource!=='official')
       throw Error('official_prosper_source_link_or_label_missing');
