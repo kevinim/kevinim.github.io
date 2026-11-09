@@ -112,24 +112,24 @@ This is a **verified official entry URL** and appropriate instructions/limitatio
 
 ## Highest remaining school confirmation backlog
 
-P0 means the dashboard has not registered a verified official source, **not** that the district lacks an official tool. This queue updates dynamically with source registration; priority is based on TEA campus rows.
+P0 means the dashboard has no registered official parent route, not proof that the district lacks a Finder. Ranking uses TEA school rows.
 
 | Priority | ISD | TEA school records |
 | ---: | --- | ---: |
-| 1 | KEMP ISD | 6 |
-| 2 | MABANK ISD | 6 |
-| 3 | SANGER ISD | 6 |
-| 4 | ALVARADO ISD | 5 |
-| 5 | BOYD ISD | 5 |
-| 6 | BROCK ISD | 5 |
-| 7 | GODLEY ISD | 5 |
-| 8 | KENNEDALE ISD | 5 |
-| 9 | KRUM ISD | 5 |
-| 10 | LAKE DALLAS ISD | 5 |
+| 1 | BOYD ISD | 5 |
+| 2 | BROCK ISD | 5 |
+| 3 | LAKE WORTH ISD | 5 |
+| 4 | PEASTER ISD | 5 |
+| 5 | PILOT POINT ISD | 5 |
+| 6 | BRIDGEPORT ISD | 4 |
+| 7 | COMMERCE ISD | 4 |
+| 8 | FARMERSVILLE ISD | 4 |
+| 9 | KEENE ISD | 4 |
+| 10 | PARADISE ISD | 4 |
 
 ## Three independent levels of evidence
 
-**1 — Parent-facing official route:** 57/108 currently registered, with exact HTTPS allowlisted links. Landing pages/zone maps/choice procedures are not necessarily a verified address-and-grade lookup.
+**1 — Parent-facing official route:** 73/108 registered after all stacked PRs, with exact HTTPS allowlisted links. Landing pages/zone maps/choice procedures are not necessarily a verified address-and-grade lookup.
 
 **2 — School-by-school map polygon linkage:** not yet measurable as a DFW-wide current-year rate. Previous browser *reference minima* exist only for seven districts: Frisco 73/73, Plano 62/63, Allen 21/22 (historical), Lewisville 53/54 (mixed year), Prosper 31/31, CFB 0/30 (official Finder, no exported GIS), McKinney 25/30 (live source and exceptions). These are per-session loaded school matches, **not** current-year legal enrollment results. The other 145 districts do not receive fabricated 0% scores.
 

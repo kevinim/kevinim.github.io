@@ -82,7 +82,7 @@ test('eight verified official parent entry sources are registered without invent
   campuses+=record.teaCampusRecords;
  }
  assert.equal(campuses,399);
- assert.deepEqual(committed.priorityQueue.slice(0,3),["129904","129905","061908"]);
+ assert.deepEqual(committed.priorityQueue.slice(0,3),["249902","184909","220910"]);
  assert.equal(committed.summary.registeredParentRouteRatePublicISDPercent,67.6);
  assert.equal(official('https://untrusted.example.invalid/locator'),null);
 });
