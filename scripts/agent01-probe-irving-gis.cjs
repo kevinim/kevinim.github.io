@@ -2,6 +2,7 @@
 // Agent01: official-publisher GIS staging only. NEVER a dashboard runtime zone loader.
 // All staged polygons remain unapproved until school-year, campus-ID, terms, and Finder gates pass.
 const fs=require('node:fs'),path=require('node:path');
+const {extractEmbeddedHigh}=require('./agent01-irving-embedded-high.cjs');
 const MAPS=Object.freeze([
  {level:'elementary',id:'a9ea586919d64c7e9aaa7193572f46d3',match:/^New_EL_Zones_24_25$|^Elementary.*Boundar/i},
  {level:'middle',id:'64c8ba47e77346de9d6812736693debc',match:/middle|rebound_ms_zones|midaa|mid.*boundar/i},
@@ -58,6 +59,9 @@ async function probe(spec){
  const item=await json(root+'?f=json');
  requireOK(item.type==='Web Map'&&MAPS.some(row=>row.id===spec.id)&&typeof item.owner==='string'&&item.owner.length>0,'not a public Web Map linked from the district page');
  const map=await json(root+'/data?f=json');
+ // Official district high-school WebMap stores polygon shapes directly as
+ // embedded WebMercator FeatureCollection, NOT a remote FeatureServer.
+ if(spec.level==='high')return extractEmbeddedHigh(map,item);
  const source=selectLayer(map,spec),meta=await json(source+'?f=json');
  requireOK(meta.type==='Feature Layer'&&meta.geometryType==='esriGeometryPolygon'&&meta.capabilities?.includes('Query'),'not a queryable school polygon');
  const q=new URL(source+'/query');
@@ -73,7 +77,7 @@ async function probe(spec){
 }
 async function main(){
  const dir=path.join('artifacts','agent01-irving-gis-stage');fs.mkdirSync(dir,{recursive:true});
- const audit={dateUTC:new Date().toISOString(),reviewState:'NO_GO',sourceYearConfirmed:false,results:[],errors:[]},all=[];
+ const audit={dateUTC:new Date().toISOString(),reviewState:'NO_GO',sourceYearConfirmed:false,results:[],errors:[],currentAssignmentApproved:false},all=[];
  for(const spec of MAPS)try{
   const result=await probe(spec);audit.results.push(result.audit);all.push(...result.features);
  }catch(e){audit.errors.push({grade:spec.level,reason:String(e.message).slice(0,650)});}
