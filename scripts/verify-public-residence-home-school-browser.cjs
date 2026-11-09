@@ -131,7 +131,13 @@ const server=http.createServer((req,res)=>{
   result.dashboardRenderedWithoutErrors=result.mobileDesktopResults.every(x=>x.issues.length===0&&x.consoleErrors.length===0);
   result.localUIFlowVerified=result.mobileDesktopResults.every(x=>x.checkedRealEsri&&x.homeMarkerCount===1&&x.homePolygonCount>0&&x.clickedSchoolZonePolygons>0);
   if(!result.localUIFlowVerified)result.warnings.push('Real residence-base address → current school marker → visible polygon is not proven for BOTH responsive viewports');
-  result.warnings.push('This is a publicly listed apartment COMPLEX base address, NOT a consented unit/address-specific district Finder assignment; official enrolled-campus match remains unverified.');
+  result.thirdPartyListingHighSchool='Centennial High School';
+  const reportedHighs=result.mobileDesktopResults.map(x=>x.assignedCandidateSchools.find(f=>f.grade==='high')?.name||null);
+  result.thirdPartyAndDashboardHighSchoolDisagree=reportedHighs.some(x=>x&&!/centennial/i.test(x));
+  if(result.thirdPartyAndDashboardHighSchoolDisagree)result.warnings.push('Third-party real-estate listing says Centennial High; dashboard current-year GIS returns '+reportedHighs.join(' / ')+'. The listing may be stale; official district Finder comparison remains required.');
+  result.warnings.push(SAMPLE.kind==='public-apartment-leasing-base'
+    ?'This is a publicly listed apartment COMPLEX base address, NOT a consented unit/address-specific district Finder assignment; official enrolled-campus match remains unverified.'
+    :'This is a publicly listed single-family rental address, not an independently confirmed official district enrollment; official Finder per-grade verification remains missing.');
  }catch(e){result.issues.push('fatal:'+safeJson(e))}
  finally{
   await browser?.close().catch(()=>{});
