@@ -1,4 +1,4 @@
-name: Regional assessment and comparison browser QA
+name: Regional UI, collapsible comparison and color-theme QA
 on:
   pull_request:
     branches: [main]
@@ -6,14 +6,17 @@ on:
       - 'index.html'
       - 'features/area-assessment*'
       - 'features/region-compare*'
+      - 'features/theme-toggle*'
       - 'data/area-noaa-counts-2024-2025.json'
       - 'data/noaa-storm-events-dfw-2024-2025.json'
       - 'tests/area-assessment.test.cjs'
       - 'tests/area-regional-coverage.test.cjs'
       - 'tests/region-compare.test.cjs'
+      - 'tests/theme-collapse.test.cjs'
       - 'tests/area-noaa-summary.test.cjs'
       - 'scripts/test-area-assessment-browser.cjs'
       - 'scripts/test-region-compare-browser.cjs'
+      - 'scripts/test-theme-collapse-browser.cjs'
       - '.github/workflows/verify-area-assessment.yml'
   workflow_dispatch:
 permissions:
@@ -28,7 +31,7 @@ jobs:
         with:
           node-version: '22'
       - name: Unit rules and source freshness
-        run: node --test tests/area-assessment.test.cjs tests/area-noaa-summary.test.cjs tests/area-regional-coverage.test.cjs tests/region-compare.test.cjs
+        run: node --test tests/area-assessment.test.cjs tests/area-noaa-summary.test.cjs tests/area-regional-coverage.test.cjs tests/region-compare.test.cjs tests/theme-collapse.test.cjs
       - name: Existing main-map verification
         run: node scripts/verify-main-data.mjs
       - name: Install isolated Chromium
@@ -48,6 +51,7 @@ jobs:
         run: |
           node scripts/test-area-assessment-browser.cjs
           node scripts/test-region-compare-browser.cjs
+          node scripts/test-theme-collapse-browser.cjs
       - name: Save screenshots and report
         if: always()
         uses: actions/upload-artifact@v4
@@ -56,4 +60,5 @@ jobs:
           path: |
             artifacts/area-assessment/
             artifacts/region-compare/
+            artifacts/theme-ui/
           if-no-files-found: warn
