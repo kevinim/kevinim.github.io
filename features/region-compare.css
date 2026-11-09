@@ -9,6 +9,7 @@
 .region-compare button:focus-visible,.region-compare select:focus-visible{outline:3px solid #3568b7;outline-offset:2px}
 .region-compare-pickers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:9px;align-items:end;margin:14px 0}
 .region-compare-picker{display:grid;gap:5px;min-width:0;font-size:12px;font-weight:700;color:#284562}
+.region-compare-picker[hidden]{display:none}
 .region-compare-select{font:inherit;width:100%;min-width:0;max-width:100%;padding:8px 9px;border:1px solid #bfd0e6;border-radius:8px;background:#fff;color:#193e65}
 .region-compare-third{white-space:nowrap}
 .region-compare-table-scroll{overflow-x:auto;max-width:100%;border:1px solid #e0e9f3;border-radius:10px}
