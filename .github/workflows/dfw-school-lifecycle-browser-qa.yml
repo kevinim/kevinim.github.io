@@ -8,6 +8,13 @@ on:
       - 'school-lifecycle.js'
       - 'tea-ratings-2026.json'
       - '.github/workflows/dfw-school-lifecycle-browser-qa.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/test-school-lifecycle-browser-2026.cjs'
+      - 'school-lifecycle.js'
+      - 'tea-ratings-2026.json'
+      - '.github/workflows/dfw-school-lifecycle-browser-qa.yml'
   workflow_dispatch:
 permissions:
   contents: read
