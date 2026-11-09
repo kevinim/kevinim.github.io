@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-11-09",
+  "areaDefinition": "11-county TEA district-of-record proxy, not a verified parcel coverage denominator",
+  "scope": "non-CFB districts without current certified campus-specific GIS",
+  "principle": "Official parent locator, ISD outer district polygon, and dated school attendance polygons are different source classes.",
+  "exclusions": [
+    "CFB work assigned to parallel #149/#154/#155/#163; no duplicative candidate engine",
+    "Dallas GIS pilot in #164; do not duplicate",
+    "PR #148 release gate remains NO_GO"
+  ],
+  "historicalGisCandidates": [
+    {
+      "teaDistrict": "061911",
+      "name": "Northwest ISD",
+      "isCurrentAttendanceSource": false,
+      "registerAsLiveZone": false,
+      "publishToMap": false,
+      "officialCurrentFinder": "https://www.nisdtx.org/schoolfinder",
+      "officialYearEvidence": "https://www.nisdtx.org/departments/facilities/attendance-boundaries/proposed-2026-2027-boundaries",
+      "approvedSchoolYear": "2026-27",
+      "notes": "Official 2026–27 zoning approved Jan 12, 2026; includes Romer ES and Barksdale MS and boundary shifts. ArcGIS 2022 hosted layers must not be promoted to current-year polygons.",
+      "oldArcgis": [
+        {
+          "url": "https://services3.arcgis.com/qnlpi19w6R1Ta48m/ArcGIS/rest/services/NWISD_Elementary_School_Attendance_Zones/FeatureServer/0",
+          "lastEdit": "2022-02-17",
+          "level": "elementary",
+          "nameField": "School_Boundary"
+        },
+        {
+          "url": "https://services3.arcgis.com/qnlpi19w6R1Ta48m/ArcGIS/rest/services/NISD_New_Attendance_Zones/FeatureServer/2",
+          "lastEdit": "2022-11-17",
+          "level": "middle",
+          "nameField": "MID_NAME"
+        },
+        {
+          "url": "https://services3.arcgis.com/qnlpi19w6R1Ta48m/ArcGIS/rest/services/NISD_New_Attendance_Zones/FeatureServer/1",
+          "lastEdit": "2022-11-17",
+          "level": "high",
+          "nameField": "HIGH_NAME"
+        },
+        {
+          "url": "https://services3.arcgis.com/qnlpi19w6R1Ta48m/ArcGIS/rest/services/22_23_NISD_Attendance_Zones/FeatureServer/13",
+          "lastEdit": "2022-2023 school year (title)",
+          "level": "elementary",
+          "nameField": null
+        }
+      ],
+      "yearIndependentlyChecked": false,
+      "campusIdCrosswalkChecked": false,
+      "currentOfficialPolygonSourceFound": false
+    }
+  ],
+  "officialNonGisSourceGaps": [
+    {
+      "district": "Fort Worth ISD",
+      "source": "https://www.fwisd.org/about/betterspaces/boundary-maps",
+      "status": "2026–27 campus closures and revised service areas, school-specific downloadable GIS not verified"
+    },
+    {
+      "district": "Arlington ISD (Texas)",
+      "source": "https://www.aisd.net/district/about/school-directory/",
+      "status": "2026–27 zoned-home address search, GIS export and rights not verified"
+    },
+    {
+      "district": "Mansfield ISD",
+      "source": "https://www.mansfieldisd.org/student-central/attendance-zones",
+      "status": "School-level maps on district site, no independently verified 2026–27 GIS"
+    },
+    {
+      "district": "Rockwall ISD",
+      "source": "https://www.rockwallisd.com/new-student/new-student/school-attendance-areas",
+      "status": "2026–27 PDF map and attendance zone inquiry; bus finder explicitly not proof of assignment"
+    },
+    {
+      "district": "Grapevine-Colleyville ISD",
+      "source": "https://vista.gcisd.net/o/gcisd/page/attendance-area-maps",
+      "status": "Printable elementary/middle/high maps, academic-year and licensed GIS not independently verified"
+    }
+  ],
+  "rejectedFalsePositives": [
+    {
+      "source": "https://services.arcgis.com/Ywxx29kRZEPq7K5N/ArcGIS/rest/services/FW_Chamber_of_Commerce_Tarrant_Co_WFL1/FeatureServer",
+      "reason": "ISD outer boundary, not campus attendance polygons"
+    },
+    {
+      "source": "https://services.arcgis.com/obpUicnfIYG1DOsR/ArcGIS/rest/services/AISD_Current_Boundaries/FeatureServer",
+      "reason": "Service extent and acronym indicate Austin-area AISD; not Arlington TX"
+    },
+    {
+      "source": "https://services6.arcgis.com/v7auOQplZtfB4Cxz/ArcGIS/rest/services/2025_2026_GCS_Locator_Map_UPDATE_WFL1/FeatureServer/14",
+      "reason": "Apparent 2026-27 elementary/middle/high zones are GCS outside DFW (WebMercator longitude around -80), not GCISD or any Texas district; never auto-promote by title alone."
+    }
+  ],
+  "certifiedAdditionalDistricts": 0,
+  "releaseReady": false,
+  "requires": [
+    "Current-year licensed per-school layers",
+    "TEA campus-ID/name/year crosswalk",
+    "Official Finder public-facility independent holdouts",
+    "Exact residential address privacy-safe verified evidence under #148",
+    "390/1366px real browser map QA"
+  ]
+}

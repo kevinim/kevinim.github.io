@@ -149,7 +149,7 @@ test('HTML loads optional coverage UI without modifying inline CSP bootstrap',()
  assert.ok(html.includes('id="dfwSchoolCoverageContent"'));
  assert.ok(html.includes('./features/dfw-school-coverage-panel.js?v=1'));
  assert.ok(html.includes('./features/dfw-school-coverage-panel.css?v=1'));
- assert.ok(html.includes('src="./school-zone-ui.js?v=1"'));
+ assert.match(html,/src="\.\/school-zone-ui\.js\?v=\d+"/);
  const ui=fs.readFileSync(path.join(root,'features/dfw-school-coverage-panel.js'),'utf8');
  assert.ok(ui.includes('document.createElement'));
  assert.ok(!ui.includes('.innerHTML'));

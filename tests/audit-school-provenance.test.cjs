@@ -122,14 +122,21 @@ test('west DFW supplemental provenance records all four lookup-only ISDs without
   assert.ok(rows.every(r=>validHttps(r.officialLookup)));
 });
 
-test('DFW supplemental provenance accounts for 96 strictly non-GIS official lookup/map/choice entries',()=>{
+test('DFW supplemental source has 95 lookup-only districts plus provisional Dallas GIS',()=>{
  const rows=readNeighborDfwSupplement(root);
  assert.equal(rows.length,96);
  assert.equal(new Set(rows.map(x=>x.code)).size,96);
- assert.ok(rows.every(x=>x.status==='lookup-only'&&x.geometryYear==='no-certified-GIS'));
+ assert.equal(rows.filter(x=>x.status==='lookup-only'&&x.geometryYear==='no-certified-GIS').length,95);
+ const dallas=rows.find(x=>x.code==='057905');
+ assert.equal(dallas.status,'publisher-provisional');
+ assert.equal(dallas.geometryYear,'unverified');
  const {data,registry,supplementary}=actual();
  const report=auditSchoolProvenance(data,registry,{supplementary});
  assert.equal(report.summary.registryDistricts,107);
  assert.equal(report.summary.provenanceDistricts,107);
  assert.equal(report.summary.knownSourceGaps,0);
+ assert.ok(report.warnings.some(x=>x.includes('057905')&&x.includes('not verified')));
+ const altered=structuredClone(registry);
+ altered['057905'].currency='always';
+ assert.ok(auditSchoolProvenance(data,altered,{supplementary}).errors.some(x=>x.includes('057905')));
 });

@@ -6,6 +6,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { DISTRICT_REGISTRY } = require('../district-registry.js');
 const { knownBoundaryException } = require('../school-boundary-match.js');
+const {assertVersionedMainBootstrap}=require('./dashboard-bootstrap-contract.cjs');
 
 const TRUSTED_OFFICIAL_HOSTS = Object.freeze([
   'www.friscoisd.org', 'www.prosper-isd.net', 'www.allenisd.org',
@@ -52,7 +53,9 @@ function auditSchoolBoundaryTrust(files, registry = DISTRICT_REGISTRY) {
   const legacyScript = files?.['features/reviewed-bootstrap.js'] || '';
   const uploadGuard = files?.['features/geojson-upload-guard.js'] || '';
   const match = files?.['school-boundary-match.js'] || '';
-  if (!page || !main || !page.includes('<script src="./dashboard-main.js?v=3"></script>') || !legacy || !legacyScript || !uploadGuard || !match) {
+  let validBootstrap=false;
+  try { assertVersionedMainBootstrap(page); validBootstrap=true; } catch {}
+  if (!page || !main || !validBootstrap || !legacy || !legacyScript || !uploadGuard || !match) {
     errors.push('Missing required school boundary source files');
     return {errors, warnings, inventory: null};
   }

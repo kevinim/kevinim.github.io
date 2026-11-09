@@ -7,6 +7,7 @@ const {extractCspMeta,parseDirectives}=require('../scripts/audit-csp-readiness.c
 const root=path.join(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const mainConnect=[
+ 'https://services.arcgis.com',
  'https://geocode.arcgis.com',
  'https://nominatim.openstreetmap.org',
  'https://router.project-osrm.org',

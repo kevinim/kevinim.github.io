@@ -43,12 +43,23 @@ test('official district URLs use exact approved HTTPS hosts and contain no addre
  assert.equal(links.official('https://www.dallasisd.org:443/'),null);
  assert.equal(links.official('javascript:window.xss=1'),null);
 });
-test('all neighbor codes are external navigation only, not fabricated GIS or auto-enrollment',()=>{
+test('17 neighbor entries are navigation only; Dallas publisher GIS remains provisional',()=>{
  for(const d of manifest.districts){
   const x=registry[d.code];
-  assert.equal(x.zoneKey,null);
-  assert.equal(x.currency,null);
-  assert.equal(x.address,null);
+  if(d.code==='057905'){
+   // Dallas's publisher GIS is connected but NOT an approved current-year school assignment.
+   const row=file('data/dfw-school-coverage-matrix-2026.json').districts.find(r=>r.code===d.code);
+   assert.equal(x.zoneKey,d.code);
+   assert.equal(x.currency,'published');
+   assert.equal(x.address,'polygon');
+   assert.equal(x.campusIdMatch,true);
+   assert.equal(row.geometry.confirmedCurrentYear,false);
+   assert.equal(row.missingReason,'campus-polygon-evidence-unreviewed');
+  }else{
+   assert.equal(x.zoneKey,null);
+   assert.equal(x.currency,null);
+   assert.equal(x.address,null);
+  }
   const expected=d.kind==='choice-process'?'choice-only':d.kind==='official-map'?'map-only':
    d.kind==='official-inquiry'?'inquiry-only':'finder-only';
   assert.equal(ui.classify({matchStatus:'no-district-polygon-source',sourceReady:true,schoolType:'elementary',

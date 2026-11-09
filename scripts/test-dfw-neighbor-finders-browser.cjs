@@ -59,8 +59,14 @@ const expectedKind=kind=>kind==='choice-process'?'choice-only':kind==='official-
     assert.deepEqual(report.errors,[]);
     assert.ok(report.selected.length>=36,'at least two real school records from all 18 surrounding districts');
     for(const row of report.selected){
-     assert.equal(row.kind,expectedKind(row.expectedKind),JSON.stringify(row));
-     assert.equal(row.layerCount,0,'never create invented per-campus polygon '+row.school);
+     if(row.code==='057905'){
+      assert.equal(row.kind,'provisional','Dallas GIS must remain unverified provisional '+JSON.stringify(row));
+      assert.ok(row.layerCount>0,'only real publisher polygon may be drawn as provisional '+row.school);
+      assert.ok(row.badge?.includes('학년도 검증 중'),'Dallas must not carry a current-year badge');
+     }else{
+      assert.equal(row.kind,expectedKind(row.expectedKind),JSON.stringify(row));
+      assert.equal(row.layerCount,0,'never create invented per-campus polygon '+row.school);
+     }
      assert.equal(row.hintVisible,true,'missing-geometry banner must be visible '+row.school);
      assert.ok(row.detailOfficial,'district official landing page missing from school detail: '+row.school);
      assert.equal(row.mapLink,row.officialUrl,'map-side link must go to approved district URL: '+row.school);

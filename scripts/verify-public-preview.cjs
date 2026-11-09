@@ -6,6 +6,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const assert=require('node:assert/strict');
 const {verifyExternalCspIntegrity}=require('./build-public-preview.cjs');
+const {assertVersionedMainBootstrap}=require('./dashboard-bootstrap-contract.cjs');
 const base=path.resolve('dist/public-preview');
 const build=cp.spawnSync(process.execPath,['scripts/build-public-preview.cjs',base],{encoding:'utf8'});
 if(build.status!==0){process.stderr.write('Preview build failed: '+build.stderr.slice(0,650)+'\n');process.exit(1);}
@@ -29,7 +30,7 @@ assert.equal(report.nonPublishable.length,0);
 assert.equal(report.newSensitive.length,0);
 const previewHtml=fs.readFileSync(path.join(base,'index.html'),'utf8');
 const previewCsp=verifyExternalCspIntegrity(previewHtml);
-assert.ok(previewHtml.includes('<script src="./dashboard-main.js?v=3"></script>'));
+assert.equal(assertVersionedMainBootstrap(previewHtml).version,5,'preview must retain exactly one canonical v5 external bootstrap');
 assert.equal(/<script(?![^>]*src=)[^>]*>[\s\S]*?<\/script>/i.test(previewHtml),false,'No inline bootstrap may ship');
 assert.equal(previewCsp.policy.includes("script-src-attr 'none'"),true);
 const previewScriptCsp=previewCsp.policy.split(';').map(x=>x.trim()).find(x=>x.startsWith('script-src '));

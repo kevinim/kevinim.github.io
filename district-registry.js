@@ -71,8 +71,8 @@ const DISTRICT_REGISTRY={
   lookupKind:"finder-guidance",official:"https://www.irvingisd.net/departments-services/registration/new-student-registration",officialNote:"등록 안내 페이지의 School Locator에서 주소별 배정학교를 확인하세요.",label:{}},
  '129902':{en:"Forney",ko:"포니",zoneKey:null,currency:null,address:null,campusIdMatch:true,
   lookupKind:"official-map",official:"https://www.forneyisd.net/about-us/attendance-zones",officialNote:"2026–27 승인 배정지도입니다. 2027–28 변경안은 아직 확정된 현행 배정이 아닙니다.",label:{}},
- '057905':{en:"Dallas",ko:"댈러스",zoneKey:null,currency:null,address:null,campusIdMatch:true,
-  lookupKind:"finder-guidance",official:"https://www.dallasisd.org/departments/demographic-studies/find-your-school/schoolsite-locator-interactive-map",officialNote:"공식 SchoolSite Locator로 주소·학년별 학교를 확인하세요. 최종 배정은 PowerSchool 주소대장과 학교 등록담당자에게 확인하세요. 선택형 학교는 별도 신청입니다.",label:{}},
+ '057905':{en:"Dallas",ko:"댈러스",zoneKey:"057905",currency:"published",address:"polygon",campusIdMatch:true,
+  lookupKind:"finder-guidance",official:"https://www.dallasisd.org/departments/demographic-studies/find-your-school/schoolsite-locator-interactive-map",officialNote:"교육청이 공개한 초·중·고 GIS 도형은 2026년 7월에 갱신되었으나 2026–27 개별 배정 학년도와 Finder의 독립 대조는 완료되지 않았습니다. 지도는 후보 참고용이며 최종 지정학교는 SchoolSite Locator 및 PowerSchool 주소대장·등록 담당자에게 확인해야 합니다. 선택형·Magnet은 별도 신청입니다.",label:{}},
  '043918':{en:"Community",ko:"커뮤니티",zoneKey:null,currency:null,address:null,campusIdMatch:true,
   lookupKind:"finder-guidance",official:"https://www.communityisd.org/parents",officialNote:"공식 학부모 페이지에서 Find Your Campus(es)로 연결됩니다. 2024–25 과거 지도는 현재 배정으로 취급하지 마세요.",label:{}},
  '220905':{en:"Fort Worth",ko:"포트워스",zoneKey:null,currency:null,address:null,campusIdMatch:false,
@@ -249,6 +249,7 @@ function districtPolygonStatus(code,liveFinder){
  if(d.currency==='always')return 'current';
  if(d.currency==='live')return live?'finder-current':null;
  if(d.currency==='finder')return live?'finder-current':'reference';
+ if(d.currency==='published')return live?'publisher-provisional':null;
  return null;
 }
 // Map display class for a school's zone: 'official' (2026-27 verified),
@@ -258,6 +259,7 @@ function districtZoneDisplay(code,liveFinder){
  const live=!!liveFinder?.[d.zoneKey];
  if(d.currency==='always'||(d.currency==='live'&&live))return 'official';
  if(d.currency==='finder'&&live)return 'finder';
+ if(d.currency==='published'&&live)return 'published';
  return 'historical';
 }
 const DISTRICT_API={DISTRICT_REGISTRY,districtInfo,districtZoneKey,districtName,districtUsesCampusId,districtPolygonStatus,districtZoneDisplay};

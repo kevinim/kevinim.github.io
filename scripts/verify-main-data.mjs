@@ -25,6 +25,7 @@ const prosper = readJson('prosper-celina-reference-2026.geojson');
 const prosperCurrent = readJson('prosper-attendance-2026.geojson');
 const officialChecks = readJson('tests/prosper-official-location-checks-2026.json');
 const require=createRequire(import.meta.url);
+const {assertVersionedMainBootstrap}=require('./dashboard-bootstrap-contract.cjs');
 const {resolveAssignment,schoolLevelMatchesAssignment}=require('../school-assignment.js');
 const {inRing,inGeometry,inFriscoBorder,schoolKey,interiorPoints}=require('../scripts/attendance-geo-audit.cjs');
 const publicAddressAudit=readJson('tests/public-address-finder-crosscheck-2026.json');
@@ -57,17 +58,24 @@ const femaHazards=readJson('data/phase2a-fema-nri-dfw-2025.geojson');
 const noaaStorms=readJson('data/noaa-storm-events-dfw-2024-2025.json');
 const school = readJson('schools.json');
 let total = 0;
-const asyncChecks=[];
-const test = (name, fn) => {
+const asyncChecks=[],failures=[];
+const recordFailure=(name,e)=>{
+ failures.push({name,message:String(e?.message||e).slice(0,800)});
+ console.error('FAIL '+name+': '+String(e?.message||e).slice(0,800));
+};
+const test=(name,fn)=>{
+ try {
   const result=fn();
-  if(result&&typeof result.then==='function') {
-    asyncChecks.push(result.then(()=>{total++;console.log('PASS '+name)}));
-  } else {total++;console.log('PASS '+name)}
+  if(result&&typeof result.then==='function')
+   asyncChecks.push(result.then(()=>{total++;console.log('PASS '+name)})
+    .catch(e=>recordFailure(name,e)));
+  else {total++;console.log('PASS '+name);}
+ } catch(e){recordFailure(name,e);}
 };
 
 const inlineScripts = [mainBootstrap];
 test('external main application bootstrap compiles with no inline HTML execution',()=>{
- assert.ok(pageHtml.includes('<script src="./dashboard-main.js?v=3"></script>'));
+ assertVersionedMainBootstrap(pageHtml);
  assert.equal([...pageHtml.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].filter(x=>!/\bsrc\s*=/.test(x[1])&&x[2].trim()).length,0);
  new Script(mainBootstrap,{filename:'dashboard-main.js'});
 });
@@ -278,7 +286,7 @@ test('P0 Plano senior-high home marker and map source legend are accurate',()=>{
  assert.ok(home.includes('schoolLevelMatchesAssignment(s,f.properties.gradeLevel)'));
  assert.ok(home.includes("result.district!==s.district)return false"));
  assert.ok(html.includes('./school-assignment.js?v=6'));
- assert.ok(html.includes('./home-lookup-v2.js?v=15'));
+ assert.match(pageHtml,/<script src="\.\/home-lookup-v2\.js\?v=[1-9]\d*"><\/script>/);
  assert.ok(html.includes('현행 공식 Finder가 사용하는 플레이노·루이스빌 경계는 파란색'));
  assert.ok(html.includes('플레이노 저장본과 앨런 과거 GIS는 주황색 점선 참고'));
 });
@@ -315,7 +323,7 @@ test('P0 Plano four-level feeder guard detects Jackson Coit split and blocks mis
  assert.ok(app.includes("if(found.district==='PISD'&&found.status==='finder-current')"));
  assert.ok(app.includes("status:'feeder-review',feeder"));
  assert.ok(app.includes("if(result.status==='feeder-review')"));
- assert.ok(app.includes("'finder-boundary-review','feeder-review'"));
+ assert.match(app,/\[[^\]\r\n]*'finder-boundary-review'[^\]\r\n]*'feeder-review'[^\]\r\n]*\]\.includes\(home\.assignment\.status\)/);
  assert.ok(html.includes('./plano-feeder-guard.js?v=1'));
  assert.ok(html.includes("state.planoFeederReference=null"));
  assert.ok(html.includes("await feederPromise"));
@@ -644,7 +652,7 @@ test('P0 zone-edge warning uses closest official polygon ring',()=>{
  const hole=zoneBoundaryProximity(p,[{geometry:{type:'Polygon',coordinates:[ring(5*d),ring(.5*d)]}}]);
  assert.ok(hole.review);
  const h=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
- assert.ok(h.includes("'boundary-review':'finder-boundary-review'"));
+ assert.ok(h.includes("found.status==='current'?'boundary-review':found.status==='publisher-provisional'?'publisher-boundary-review':'finder-boundary-review'"));
  assert.ok(h.includes('zoneBoundaryProximity([item.ll[1],item.ll[0]],found.features,undefined,found.features.map('));
  assert.ok(html.includes('./school-zone-risk.js?v=2'));
 });
@@ -1253,7 +1261,7 @@ test('Address results: piece-internal edges are not boundaries; near-boundary an
  assert.equal(resolveAssignment({mckinney:mk,mckinneyFinderLive:true}).district,'043907');
  assert.equal(resolveAssignment({mckinney:mk,mckinneyFinderLive:false}).status,'unavailable','McKinney only from the verified live 2026-27 finder');
  const home=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
- assert.ok(home.includes("['current','finder-current','boundary-review','finder-boundary-review'].includes(result.status)"),'near-boundary candidates highlighted like the panel lists them');
+ assert.ok(home.includes("['current','finder-current','boundary-review','finder-boundary-review','publisher-provisional','publisher-boundary-review'].includes(result.status)"),'near-boundary and unconfirmed-publisher candidates highlighted exactly like the panel lists them');
  assert.ok(readText('district-registry.js').includes("'finder-current':'2026–27 공식 Finder 경계 · 매키니'")&&home.includes('districtInfo(result.district)?.label?.[result.status]'),'McKinney label from registry, never the Lewisville fallback');
 });
 test('District registry is the single source of per-district capabilities',()=>{
@@ -1264,7 +1272,8 @@ test('District registry is the single source of per-district capabilities',()=>{
   assert.ok(d.en&&d.ko,'names for '+code);
   assert.ok(/^https:\/\//.test(d.official),'official finder link for '+code);
   if(d.zoneKey)assert.ok(web.includes("{district:'"+d.zoneKey+"',"),'zone data loader for '+code);
-  if(['polygon','frisco'].includes(d.address))assert.ok(['always','live','finder'].includes(d.currency),'address lookup needs a currency rule: '+code);
+  if(['polygon','frisco'].includes(d.address))assert.ok(['always','live','finder','published'].includes(d.currency),'address lookup needs a currency rule: '+code);
+   if(d.currency==='published'){assert.equal(code,'057905','only audited Dallas has provisional publisher GIS');assert.equal(R.districtPolygonStatus(code,{[code]:true}),'publisher-provisional');}
  }
  // Old hard-coded capability lists must not come back.
  for(const [name,src] of [['index.html',web],['home-lookup-v2.js',home],['school-boundary-match.js',match]])
@@ -1354,4 +1363,8 @@ test('Security baseline (#77/#74): CSP on both entry pages, Esri input limit, de
  assert.ok(web.includes('aria-describedby="homeSuggestHint homePrivacy" maxlength="200"'),'home address limited to Esri 200-char SingleLine');
 });
 await Promise.all(asyncChecks);
+if(failures.length){
+ console.error('MAIN_WEBSITE_QA_FAIL_CLOSED '+failures.length+' failed; '+total+' passed.');
+ process.exitCode=1;
+}
 console.log('Main website QA: ' + total + ' tests passed.');
