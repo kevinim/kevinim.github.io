@@ -6,7 +6,7 @@ const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const current=(process.env.DASHBOARD_BASE_URL||'http://127.0.0.1:8765/').replace(/\\/?$/,'/');
+const current=(process.env.DASHBOARD_BASE_URL||'http://127.0.0.1:8765/').replace(/\/?$/,'/');
 const baseline=process.env.AGENT05_BASELINE_URL||'';
 const output=path.join('artifacts','agent05-map-ui');
 fs.mkdirSync(output,{recursive:true});
@@ -17,7 +17,7 @@ function rectangle(el){
  const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};
 }
 function parseColor(s){
- const m=String(s||'').match(/rgba?\\(([^)]+)\\)/);
+ const m=String(s||'').match(/rgba?\(([^)]+)\)/);
  if(!m)throw Error('Unsupported computed CSS color: '+s);
  const n=m[1].split(',').map(x=>Number.parseFloat(x));
  if(n[3]!==undefined&&n[3]<0.99)throw Error('Translucent contrast target: '+s);
@@ -125,7 +125,17 @@ async function audit(browser,width){
    return selectors.map(selector=>{
     const element=document.querySelector(selector);if(!element)throw Error('Missing contrast target '+selector);
     const style=getComputedStyle(element);
-    return {selector,color:style.color,background:style.backgroundColor};
+    let back=element,background='rgba(0, 0, 0, 0)';
+    while(back){
+      const s=getComputedStyle(back).backgroundColor;
+      if(s&&s!=='transparent'&&!/^rgba?\\(0, 0, 0, 0\\)$/.test(s)){
+        const a=s.match(/rgba?\\(([^)]+)\\)/);
+        if(a&&a[1].split(',').length<=3){background=s;break;}
+        if(a&&Number(a[1].split(',')[3])>=0.99){background=s;break;}
+      }
+      back=back.parentElement;
+    }
+    return {selector,color:style.color,background};
    });
   });
   for(const item of contrast){
@@ -136,6 +146,11 @@ async function audit(browser,width){
   entry.checks.contrast=contrast;
   if(width<=720){
    const layout=await page.evaluate(()=>{
+    const rectangle=el=>{
+     if(!el)return null;
+     const r=el.getBoundingClientRect();
+     return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};
+    };
     const filter=rectangle(document.querySelector('.filter-panel'));
     const mapbox=rectangle(document.querySelector('.mapbox'));
     const detail=rectangle(document.querySelector('.main>.detail'));
@@ -166,6 +181,6 @@ async function audit(browser,width){
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  try{
   for(const width of widths){await captureBaseline(browser,width);await audit(browser,width);}
- }finally{await browser.close();fs.writeFileSync(path.join(output,'report.json'),JSON.stringify(report,null,2)+'\\n');}
+ }finally{await browser.close();fs.writeFileSync(path.join(output,'report.json'),JSON.stringify(report,null,2)+'\n');}
  assert.equal(report.issues.length,0,'Agent 05 E2E failures: '+JSON.stringify(report.issues));
 })().catch(e=>{console.error(e.stack||e);process.exitCode=1});
