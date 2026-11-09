@@ -1,4 +1,5 @@
 name: TX 16-PR integrated compatibility preflight (no deploy)
+# QA-only: isolated local dry merges; no Git push, branch changes, or deployment.
 on:
   pull_request:
     branches: [data/dfw-school-grade-year-quality-noncfb-20261109, main]
