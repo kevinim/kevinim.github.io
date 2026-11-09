@@ -1,0 +1,73 @@
+name: DFW 108 causes and public listed home official lookup QA (no deploy)
+on:
+  push:
+    branches:
+      - qa/dfw-108-causes-and-cfb-public-house-finder-20261109
+  pull_request:
+    branches:
+      - feature/dfw-parent-guidance-remaining22-20261109
+      - main
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  all-districts-and-allen-listed-homes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Full 108-ISD reason census and six public Allen listings
+        run: |
+          node --check scripts/audit-dfw-108-school-zone-root-causes.cjs
+          node --check scripts/audit-allen-listed-residence-street-ranges.cjs
+          node --test tests/audit-dfw-108-school-zone-root-causes.test.cjs tests/audit-allen-listed-residence-street-ranges.test.cjs
+          node scripts/audit-dfw-108-school-zone-root-causes.cjs
+          node scripts/audit-allen-listed-residence-street-ranges.cjs
+      - name: Archive non-personal 108-ISD reasons and cached official row matches
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dfw-all-108-root-causes-and-allen-public-listings
+          path: |
+            artifacts/dfw-cause-audit/
+            artifacts/dfw-listed-residence/
+          retention-days: 5
+          if-no-files-found: warn
+  cfb-listed-houses-live-finder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Check CFB single-family public listing browser script
+        run: node --check scripts/probe-cfb-listed-house-finder-browser.cjs
+      - name: Install isolated free Chromium runner
+        run: |
+          mkdir -p cfb-single-house-browser
+          cd cfb-single-house-browser
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Use the official Finder native suggestion on two advertised single-family addresses
+        env:
+          NODE_PATH: ${{ github.workspace }}/cfb-single-house-browser/node_modules
+        run: node scripts/probe-cfb-listed-house-finder-browser.cjs
+      - name: Archive public property only screenshot and explicit NO-GO flags
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: cfb-listed-single-family-official-finder
+          path: artifacts/cfb-listed-house-finder/
+          retention-days: 5
+          if-no-files-found: warn
