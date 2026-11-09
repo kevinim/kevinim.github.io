@@ -112,6 +112,87 @@ const brightness=raw=>{
      assert.ok(sample.ratio>=4.5,'Unreadable dark button '+sample.label+': '+JSON.stringify(sample));
    assert.ok(brightness(dark.bg)<40,'User requested visibly deeper dark body');
 
+   // Audit the REAL map toolbar, its selected/unselected chips and legends.
+   // Earlier fixture-only checks missed ui-action-buttons.css white overrides.
+   const mapTheme=await page.evaluate(()=>{
+     const rgb=s=>(s.match(/[0-9.]+/g)||[]).slice(0,3).map(Number);
+     const lum=a=>{
+       const c=a.map(v=>v/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);
+       return c[0]*.2126+c[1]*.7152+c[2]*.0722;
+     };
+     const contrast=(fg,bg)=>{
+       const a=lum(fg),b=lum(bg);
+       return Math.round((Math.max(a,b)+.05)/(Math.min(a,b)+.05)*100)/100;
+     };
+     const bg=el=>{
+       for(let e=el;e;e=e.parentElement){
+         const value=(getComputedStyle(e).backgroundColor.match(/[0-9.]+/g)||[]).map(Number);
+         if(value.length>=3&&(value.length===3||value[3]>=.999))return value.slice(0,3);
+       }
+       return [255,255,255];
+     };
+     const css=sel=>{
+       const el=document.querySelector(sel);
+       if(!el)return {selector:sel,missing:true};
+       const fg=rgb(getComputedStyle(el).color),back=bg(el);
+       return {selector:sel,foreground:fg,background:back,ratio:contrast(fg,back)};
+     };
+     const nodes=[
+       '.maphead .hazard-chips-label',
+       '.maphead .basemap-control',
+       '.maphead .legend',
+       '.mapbox .map-foot summary',
+       '.mapbox .heat-legend',
+       '.maphead .hazard-chip.ifld',
+       '.maphead .hazard-chip.wfir',
+       '.maphead .hazard-chip.hrcn',
+       '.maphead .hazard-chip.crime',
+       '.maphead .hazard-chip.healthcare',
+       '.maphead .hazard-chip.winter'
+     ];
+     const samples=nodes.map(css);
+     const chips=[...document.querySelectorAll('.maphead .hazard-chip')];
+     const selected=chips.map(el=>{
+       const prior=el.getAttribute('aria-pressed');
+       el.setAttribute('aria-pressed','true');
+       const foreground=rgb(getComputedStyle(el).color),background=bg(el);
+       const result={name:el.className,ratio:contrast(foreground,background),foreground,background};
+       el.setAttribute('aria-pressed',prior||'false');
+       return result;
+     });
+     return {
+       header:bg(document.querySelector('.maphead')),
+       groups:[...document.querySelectorAll('.maphead .hazard-chips')].map(bg),
+       samples,selected,
+       zoom:css('#map .leaflet-control-zoom a'),
+       tileFilter:getComputedStyle(document.querySelector('#map')).filter,
+       mapBackdrop:bg(document.querySelector('#map')),
+       hoverBackground:getComputedStyle(chips[0]).backgroundColor
+     };
+   });
+   assert.ok(brightness('rgb('+mapTheme.header.join(',')+')')<95,'Map header is not dark');
+   assert.equal(mapTheme.groups.length,4,'Map should have 4 hazard/medical/winter groups');
+   for(const group of mapTheme.groups)
+     assert.ok(group.reduce((a,b)=>a+b,0)/3<100,'White group backdrop in dark toolbar: '+group);
+   for(const node of mapTheme.samples)
+     assert.ok(!node.missing&&node.ratio>=4.5,'Unreadable map control '+JSON.stringify(node));
+   assert.equal(mapTheme.selected.length,6,'All six thematic map chips must be covered');
+   for(const node of mapTheme.selected)
+     assert.ok(node.ratio>=4.5,'Unreadable active map button '+JSON.stringify(node));
+   if(!mapTheme.zoom.missing)
+     assert.ok(mapTheme.zoom.ratio>=4.5&&mapTheme.zoom.background.reduce((a,b)=>a+b,0)/3<110,
+       'Bright map zoom control '+JSON.stringify(mapTheme.zoom));
+   assert.equal(mapTheme.tileFilter,'none','Map tiles and risk colors must remain unfiltered');
+   await page.locator('.maphead .hazard-chip.ifld').hover();
+   const hoveredMapChip=await page.locator('.maphead .hazard-chip.ifld').evaluate(el=>({
+     background:getComputedStyle(el).backgroundColor,
+     color:getComputedStyle(el).color
+   }));
+   assert.ok(brightness(hoveredMapChip.background)<120,'Hover state reverted to white map button');
+   mkdirSync('artifacts/theme-ui',{recursive:true});
+   await page.locator('.maphead').screenshot({path:'artifacts/theme-ui/map-toolbar-'+width+'.png'});
+
+
    // Screen regression: test *real* labels on grouped filter cards, not just button fixtures.
    const groupAudit=await page.evaluate(()=>{
      const rgb=raw=>(raw.match(/[0-9.]+/g)||[]).slice(0,3).map(Number);

@@ -274,3 +274,100 @@ html[data-theme="dark"] .filter-panel .commute-settings .settings-icon{backgroun
 html[data-theme="dark"] .filter-panel .school-visibility-options{background:#1e3048;border-color:#54708f}
 html[data-theme="dark"] .filter-panel .school-visibility-options .check{background:#253b56;border-color:#496787;color:#f0f6ff}
 html[data-theme="dark"] .filter-panel .filter-settings-group > .check{color:#f0f6ff}
+
+
+/* Map UI theme: the map/tile data and risk overlays are NOT recolored.
+   ui-action-buttons.css defines bright, per-feature custom properties; override
+   both the variables AND computed surfaces for dark-mode controls. */
+html[data-theme="dark"] .mapbox .maphead{
+ background:#16263b;color:#edf5ff;border-bottom:1px solid #3d5570;
+}
+html[data-theme="dark"] .maphead .hazard-chips{
+ background:#1c3048;border-color:#4a6685;
+}
+html[data-theme="dark"] .maphead .hazard-chips-label{
+ color:#d6e4f7;
+}
+html[data-theme="dark"] .maphead .hazard-chip{
+ --feature-pale:#263e59;
+ --feature-border:#6684a5;
+ --feature-text:#f0f6ff;
+ --feature-icon:#d1e3ff;
+ --feature-strong:#28539b;
+ background:var(--feature-pale);
+ border-color:var(--feature-border);
+ color:var(--feature-text);
+ box-shadow:0 1px 4px #050d1999;
+}
+html[data-theme="dark"] .maphead .hazard-chip.ifld{
+ --feature-icon:#a8ceff;--feature-strong:#1e4eb5;
+}
+html[data-theme="dark"] .maphead .hazard-chip.wfir{
+ --feature-icon:#ffc6a9;--feature-strong:#a6330b;
+}
+html[data-theme="dark"] .maphead .hazard-chip.hrcn{
+ --feature-icon:#d5deee;--feature-strong:#3d4c5f;
+}
+html[data-theme="dark"] .maphead .hazard-chip.crime{
+ --feature-icon:#d0c2ff;--feature-strong:#49338f;
+}
+html[data-theme="dark"] .maphead .hazard-chip.healthcare{
+ --feature-icon:#a5e7d1;--feature-strong:#16604b;
+}
+html[data-theme="dark"] .maphead .hazard-chip.winter{
+ --feature-icon:#bed9ff;--feature-strong:#27538f;
+}
+html[data-theme="dark"] .maphead .hazard-chip svg{
+ background:#344e6d;color:var(--feature-icon);
+ box-shadow:0 0 0 1px #5f7c9e;
+}
+html[data-theme="dark"] .maphead .hazard-chip:hover:not(:disabled){
+ background:#35516f;border-color:#98b7d9;
+ box-shadow:0 3px 12px #030a17a8;
+}
+html[data-theme="dark"] .maphead .hazard-chip[aria-pressed="true"],
+html[data-theme="dark"] .maphead .hazard-chip[aria-pressed="true"]:hover:not(:disabled){
+ background:var(--feature-strong);border-color:#aec7ed;color:#fff;
+}
+html[data-theme="dark"] .maphead .hazard-chip[aria-pressed="true"] svg{
+ color:#fff;background:#ffffff29;box-shadow:none;
+}
+html[data-theme="dark"] .maphead .hazard-chip:focus-visible,
+html[data-theme="dark"] .maphead select:focus-visible{
+ outline:3px solid #bed5ff;outline-offset:3px;
+}
+html[data-theme="dark"] .maphead .basemap-control,
+html[data-theme="dark"] .maphead .legend{color:#d0def2}
+html[data-theme="dark"] .maphead .basemap-control select{
+ border-color:#6c89ac;
+}
+html[data-theme="dark"] .mapbox .heat-legend{
+ background:#152337;color:#cedef2;border-top-color:#3e5670;
+}
+html[data-theme="dark"] .mapbox .map-foot{
+ background:#16253a;color:#d0dff4;border-top-color:#3e536d;
+}
+html[data-theme="dark"] .mapbox .map-foot summary{color:#e0ebfb}
+html[data-theme="dark"] .mapbox .healthcare-map-status{
+ border-bottom-color:#3b536c;color:#c6e4d5;
+}
+html[data-theme="dark"] .mapbox .fema-legend-note,
+html[data-theme="dark"] .mapbox .fema-legend-absent,
+html[data-theme="dark"] .mapbox .fema-nfhl-warning{color:#c8d8ea}
+html[data-theme="dark"] .mapbox .area-label:not(.selected) span{
+ background:#1e334b;color:#edf5ff;border-color:#8caac9;
+}
+/* Darken only Leaflet control chrome, never the basemap tiles or data overlay. */
+html[data-theme="dark"] #map .leaflet-control-zoom a{
+ background:#20354f;color:#edf5ff;border-bottom-color:#57718f;
+}
+html[data-theme="dark"] #map .leaflet-control-zoom a:hover{
+ background:#345575;color:#fff;
+}
+html[data-theme="dark"] #map .leaflet-control-zoom a:focus-visible{
+ outline:3px solid #b9d4ff;outline-offset:2px;
+}
+html[data-theme="dark"] #map .leaflet-control-attribution{
+ background:#0d1b2ce6;color:#d3e2f7;
+}
+html[data-theme="dark"] #map .leaflet-control-attribution a{color:#afd1ff}

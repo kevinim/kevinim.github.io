@@ -83,3 +83,24 @@ test('dark filter cards have background and foreground rules for real labels and
  ])assert.ok(css.includes('html[data-theme="dark"] '+selector),'Missing filter theme rule '+selector);
  assert.doesNotMatch(css,/filter:\s*invert/);
 });
+
+
+test('dark map control overrides actual themed variables and white UI containers',()=>{
+ const required=[
+  '.mapbox .maphead','.maphead .hazard-chips',
+  '.maphead .hazard-chips-label','.maphead .hazard-chip',
+  '.maphead .hazard-chip.ifld','.maphead .hazard-chip.wfir',
+  '.maphead .hazard-chip.hrcn','.maphead .hazard-chip.crime',
+  '.maphead .hazard-chip.healthcare','.maphead .hazard-chip.winter',
+  '.maphead .hazard-chip svg','.maphead .hazard-chip:hover:not(:disabled)',
+  '.maphead .hazard-chip[aria-pressed="true"]',
+  '.maphead .basemap-control','.mapbox .heat-legend',
+  '.mapbox .map-foot','#map .leaflet-control-zoom a'
+ ];
+ for(const rule of required)
+  assert.ok(css.includes('html[data-theme="dark"] '+rule),
+   'Missing map dark-mode override '+rule);
+ assert.doesNotMatch(css,/filter:\s*invert/,'Do not invert risk or school maps');
+ assert.match(css,/--feature-pale:#263e59/);
+ assert.match(css,/--feature-text:#f0f6ff/);
+});
