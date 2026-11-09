@@ -208,7 +208,7 @@ function schoolZoneInfo(s){
  const shapes=state.zoneData[source]||[],failed=!!state.zoneLoadErrors[source];
  const mode=districtZoneDisplay(s.district,state.liveFinder);
  const districtRecord=districtInfo(s.district),officialUrl=window.TrustedLinkPolicy?.official(OFFICIAL[s.district])||null;
- const officialKind=districtRecord?.lookupKind||'finder-guidance',officialNote=districtRecord?.officialNote||null;
+ const officialKind=districtRecord?.lookupKind||'address-search',officialNote=districtRecord?.officialNote||null;
  const prev=schoolZoneCache.get(s);
  if(prev?.shapes===shapes&&prev.ready===state.zoneReady&&prev.failed===failed&&prev.mode===mode&&prev.officialUrl===officialUrl)return prev.value;
  const match=window.SchoolBoundaryMatch.findSchoolBoundary(s,shapes,(name,district)=>scoreRecord(name,district));
@@ -218,7 +218,7 @@ function schoolZoneInfo(s){
  return value;
 }
 function schoolZoneLinkLabel(kind){
- return kind==='choice-process'?'학군 학교 선택·신청 안내':kind==='official-map'?'학군 공식 배정 지도':kind==='official-inquiry'?'학군 공식 배정 지도·문의':'학군 공식 주소 검색기';
+ return kind==='choice-process'?'학군 학교 선택·신청 안내':kind==='official-map'?'학군 공식 배정 지도':kind==='official-inquiry'?'학군 공식 배정 지도·문의':kind==='finder-guidance'?'학군 공식 배정 조회 안내':'학군 공식 주소 검색기';
 }
 function renderSchoolZoneMapHint(s,zone){
  const banner=el('schoolZoneMapHint');if(!banner)return;
