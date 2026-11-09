@@ -1,0 +1,75 @@
+name: TX west DFW GIS provenance and vintage gate (no deploy)
+on:
+  pull_request:
+    branches: [feature/west-dfw-districts-20261108]
+    paths:
+      - 'features/west-dfw/**'
+      - 'data/west-dfw-districts-2026.json'
+      - 'data/west-dfw-zone-source-audit-2026.json'
+      - 'district-registry.js'
+      - 'scripts/audit-west-dfw-zone-sources.cjs'
+      - 'scripts/probe-west-dfw-keller-year.cjs'
+      - 'scripts/test-west-dfw-browser.cjs'
+      - 'tests/audit-west-dfw-zone-sources.test.cjs'
+      - 'tests/probe-west-dfw-keller-year.test.cjs'
+      - '.github/workflows/west-dfw-gis-source-audit.yml'
+  push:
+    branches: [qa/west-dfw-gis-source-vintage-20261108]
+  workflow_dispatch:
+    inputs:
+      check_public_keller_year:
+        description: 'Opt in to metadata-only Keller ArcGIS live query, no geometry'
+        type: boolean
+        required: false
+        default: false
+permissions:
+  contents: read
+jobs:
+  zone-provenance:
+    name: Four official ISD source guards and historical Keller block
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Syntax check source guards and metadata-only GIS probe
+        run: |
+          node --check scripts/audit-west-dfw-zone-sources.cjs
+          node --check scripts/probe-west-dfw-keller-year.cjs
+      - name: Run deterministic security and source-year tests
+        run: |
+          node --test tests/audit-west-dfw-zone-sources.test.cjs tests/probe-west-dfw-keller-year.test.cjs tests/west-dfw-panel.test.cjs
+      - name: Validate west source links and pinned Keller historical-only status
+        run: node scripts/audit-west-dfw-zone-sources.cjs
+      - name: Validate existing school data snapshots
+        run: node scripts/school-data-release-preflight.cjs
+      - name: Install isolated Chromium for west campus cards only
+        run: |
+          mkdir -p west-gis-browser-tmp
+          cd west-gis-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Check Keller stale warning and west region selection at 1280 and 390
+        env:
+          NODE_PATH: ${{ github.workspace }}/west-gis-browser-tmp/node_modules
+        run: node scripts/test-west-dfw-browser.cjs
+      - name: Optional explicit public Keller school-year metadata probe (never geometry)
+        if: github.event_name == 'workflow_dispatch' && inputs.check_public_keller_year == true
+        run: node scripts/probe-west-dfw-keller-year.cjs --live
+      - name: Preserve source-only audit evidence (no addresses)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: west-dfw-source-vintage-audit
+          path: |
+            artifacts/west-dfw/west-dfw-zone-provenance-report.json
+            artifacts/west-dfw/west-dfw-browser.json
+            artifacts/west-dfw/keller-gis-year-probe.json
+          if-no-files-found: warn
