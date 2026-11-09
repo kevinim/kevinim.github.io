@@ -62,3 +62,20 @@ The 2025–26 narrative and current Finder cannot be assumed to agree in 2026–
 
 ### Verified stage
 The public CI test proves that the generator rejects fake rights, samples with private street addresses, sample mismatches and unreviewed outputs. It **does not** prove any CFB campus geometry has been regenerated. The map-release gate in #148 remains separate and NO-GO pending independent residential checks.
+
+## 2026-11-09 records-acquisition step: verified official channel
+
+Source research establishes CFBISD contracted [Dunaway's CFBISD GIS mapping](https://dunaway.com/project/carrollton-farmers-branch-isd-gis-mapping/), which explicitly includes attendance zone overlays. This **supports that GIS zone data was used by the district**, but does *not* independently establish current 2026–27 campus polygons, downloadable service rights, or that the contractor may release it.
+
+CFBISD [official public information requests page](https://www.cfbisd.edu/departments/public-information-requests) designates **publicinformation@cfbisd.edu** as the exclusive email for Texas Public Information Act requests; email subject must contain "Public Information Request". A draft request for existing school-specific electronic zone boundaries, campus identifiers, years, exceptions, attribution/reuse requirements, and current GIS custodian has been prepared in the owner's Gmail **but not sent**. The draft explicitly prohibits fees without a prior itemized estimate and approval. An official response, availability and license are not yet obtained. Do not claim a request was submitted before there is a receipt.
+
+\`data/cfb-geometry-source-triage-2026.json\` and \`scripts/verify-cfb-geometry-source-triage.cjs\` independently classify six candidate sources. A nearby search result titled **CFISD** is **Cypress-Fairbanks ISD in Houston**, *not* CFBISD. The generic ArcGIS \`Schools_with_Attendance_Boundary\` service layer investigated is **esriGeometryPoint**, not a polygon, and CFBISD provenance is unverified. TEA district outline data is not school-specific attendance geometry. These must never enter the boundary loader as CFBISD polygons.
+
+Only a current district-authorized campus-level polygon source with separately documented school year, campus IDs/grades and reuse terms should move to the map QA stage. A text description or a general GIS contractor portfolio is not enough. CI exports \`cfb-source-suitability.json\` and remains in \`NO_VERIFIED_CAMPUS_GIS\` until actual evidence arrives.
+
+The free-only approach prioritizes existing electronic GIS records, public source links and original official boundaries; it does not automatically incur paid GIS services. A statutory public information request **could** involve permissible fees; explicit consent is necessary before any charge.
+
+### Operational decision
+- **Present:** request DRAFT, six sources triaged, current-year approved CFB campus GIS 0, release gate NO-GO.
+- **After district reply:** verify delivered file/service source/year/license; assess school-specific geometry and coverage; cross-check real residential sample assignments and boundary exceptions; then separate PR for reviewed geometry with provenance footnote.
+- **If records unavailable or rights denied:** remain official Finder-only. Synthetic estimation engine may still be used for technical demonstrations; do not harvest or republish GuideK12 data without approval.
