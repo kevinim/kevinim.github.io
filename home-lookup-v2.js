@@ -1,6 +1,6 @@
 'use strict';
 // Addresses and coordinates are held in memory only. Geocoding is triggered by submit.
-let irvingReferenceLayer=null;
+let irvingReferenceLayer=null,dallasReferenceLayer=null;
 let home=null,homeMarker=null,homeCandidates=[],homeRequest=null,homeRouteRequest=null,homeParcelRequest=null,homeOfficialRequest=null,homeVersion=0,homeRouteLayer=null,homeAutocomplete=null;
 
 function ringContains(point,ring){
@@ -101,8 +101,9 @@ function clearIrvingReference(){
  if(irvingReferenceLayer&&map)map.removeLayer(irvingReferenceLayer);
  irvingReferenceLayer=null;
 }
+function clearDallasReference(){if(dallasReferenceLayer&&map)map.removeLayer(dallasReferenceLayer);dallasReferenceLayer=null;}
 function clearHome(){
-  clearIrvingReference();
+  clearIrvingReference();clearDallasReference();
   homeVersion++;homeRequest?.abort();homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;home=null;homeCandidates=[];
   if(map&&homeMarker)map.removeLayer(homeMarker);homeMarker=null;
   el('homeCandidates').replaceChildren();el('homeResult').replaceChildren();el('homeSchoolInfo').replaceChildren();el('homeStatus').textContent='';if(homeRouteLayer)homeRouteLayer.clearLayers();
@@ -164,19 +165,19 @@ async function checkHomeParcel(){
 
 function officialReviewPanelHtml(item){
  const a=item.assignment||{},prior=item.officialDraft||{},v=k=>escape(String(prior[k]||''));
- const district=prior.district||a.district||(item.irvingSpatial?.status==='ready'?'057912':'');
- const districts=[...OFFICIAL_REVIEW_DISTRICTS,'057912'].map(x=>'<option value="'+x+'"'+(x===district?' selected':'')+'>'+escape(districtName(x)||x)+'</option>').join('');
+ const district=prior.district||a.district||(item.dallasSpatial?.status==='ready'?'057905':item.irvingSpatial?.status==='ready'?'057912':'');
+ const districts=[...new Set([...OFFICIAL_REVIEW_DISTRICTS,'057912','057905'])].map(x=>'<option value="'+x+'"'+(x===district?' selected':'')+'>'+escape(x==='057905'?'Dallas ISD':districtName(x)||x)+'</option>').join('');
  const level=prior.gradeLevel||'';
  const grades=OFFICIAL_REVIEW_LEVELS.map(x=>'<option value="'+x+'"'+(x===level?' selected':'')+'>'+escape(({elementary:'초등',middle:'중등',freshman:'9학년',high:'고등',senior:'Senior High'})[x])+'</option>').join('');
  const year=prior.schoolYear||'';
  const labels={'missing-input':'학군·학년·학교 이름을 입력하세요.','year-not-confirmed':'2026–27 학년도임을 확인하지 못해 비교 결과를 최신 배정 검증으로 취급하지 않습니다.','no-candidate':'대시보드에서 비교할 배정 후보가 없습니다. 공식 결과를 우선 확인하세요.','district-disagrees':'입력한 학군과 지도상 후보 학군이 다릅니다. 정밀 주소와 ISD 경계를 확인하세요.','no-unique-candidate':'해당 학년의 학교 후보가 없거나 여러 개라 1:1 대조가 불가능합니다.','name-unrecognized':'학교 이름을 정규화하지 못했습니다. 정확한 학교명을 다시 확인하세요.','manually-reported-match':'입력하신 공식 검색 결과의 학교명과 대시보드 후보가 일치합니다. 사용자 입력 기반 대조일 뿐 독립적인 공식 조회 확인은 아닙니다.','manually-reported-mismatch':'입력하신 공식 검색 결과와 대시보드 후보가 다릅니다. 대시보드 배정 후보를 신뢰하지 말고 공식 학군에 확인하세요.'};
  const result=item.officialReview;
- let msg=result?(['prosper','irving'].includes(result.kind)?result.message:labels[result.status]||'대조 결과 확인 필요'):'대조를 아직 실행하지 않았습니다. 공식 결과를 확인하고 직접 입력하세요.';
- const label=result?.kind==='prosper'?'Prosper 공개 API 조회 결과':result?.kind==='irving'?'Irving GIS 참고 경계와 사용자 입력 비교':'사용자가 입력한 공식 결과 대조';
+ let msg=result?(['prosper','irving','dallas'].includes(result.kind)?result.message:labels[result.status]||'대조 결과 확인 필요'):'대조를 아직 실행하지 않았습니다. 공식 결과를 확인하고 직접 입력하세요.';
+ const label=result?.kind==='prosper'?'Prosper 공개 API 조회 결과':result?.kind==='irving'?'Irving GIS 참고 경계와 사용자 입력 비교':result?.kind==='dallas'?'Dallas GIS 참고 경계와 사용자 입력 비교':'사용자가 입력한 공식 결과 대조';
  const officialUrl=district==='PISD'?PLANO_2026_27_EXPERIENCE:OFFICIAL[district]||null;
  const currentYearLink=['PISD','PROSPER','LISD'].includes(district);
  const safeOfficialUrl=window.TrustedLinkPolicy?.official(officialUrl); const officialLink=safeOfficialUrl?'<a class="cardlink" href="'+escape(safeOfficialUrl)+'" target="_blank" rel="noopener noreferrer">'+(currentYearLink?'2026–27 학군 검색기 열기':'학군 공식 주소 검색기 열기')+'</a>':'';
- const note=district==='057912'?'Irving 초등·중등·고등 참고 GIS 경계와 공식 School Locator 학교명을 비교할 수 있습니다. 공식 검색 결과는 사용자가 직접 입력하며 독립 검증은 아닙니다.':district==='LISD'?'Lewisville 아파트는 주소 대신 별도의 Find an Apartment 검색을 이용하세요.':district==='AISD'?'Allen 아파트 건물·호수 예외가 있으므로 학교 등록 담당자 확인이 필요합니다.':district==='PISD'?'Plano Jackson Elementary는 Coit Rd 동·서쪽에 따라 상급 학교가 달라집니다.':'검색기에 주소·학년을 입력한 뒤 나온 학교명을 복사하세요.';
+ const note=district==='057905'?'Dallas ISD 참고 경계와 공식 SchoolSite Locator의 학교명을 별도로 비교하세요. 최종 등록은 PowerSchool 주소별 배정에 따릅니다.':district==='057912'?'Irving 초등·중등·고등 참고 GIS 경계와 공식 School Locator 학교명을 비교할 수 있습니다. 공식 검색 결과는 사용자가 직접 입력하며 독립 검증은 아닙니다.':district==='LISD'?'Lewisville 아파트는 주소 대신 별도의 Find an Apartment 검색을 이용하세요.':district==='AISD'?'Allen 아파트 건물·호수 예외가 있으므로 학교 등록 담당자 확인이 필요합니다.':district==='PISD'?'Plano Jackson Elementary는 Coit Rd 동·서쪽에 따라 상급 학교가 달라집니다.':'검색기에 주소·학년을 입력한 뒤 나온 학교명을 복사하세요.';
  const showProsper=district==='PROSPER'&&['current','boundary-review'].includes(a.status);
  const showIrving=district==='057912'||/\bIrving\s*,?\s*(?:TX|Texas)/i.test(item.address||'');
  const irvingHref=showIrving?window.TrustedLinkPolicy?.official('https://iisd1.maps.arcgis.com/apps/instant/lookup/index.html?appid=f27bba7ee02141c58c8c9375431effa2'):null;
@@ -275,7 +276,7 @@ function wireOfficialReviewPanel(item){
 function refreshHomeOffice(){if(!home)return;homeVersion++;homeRouteRequest?.abort();if(homeRouteLayer)homeRouteLayer.clearLayers();renderHome()}
 function refreshHomeSchools(){if(home){homeVersion++;homeRouteRequest?.abort();renderHome()}}
 function useHomeCandidate(candidate){
-  clearIrvingReference();
+  clearIrvingReference();clearDallasReference();
   if(!map){el('homeStatus').textContent='지도가 아직 준비되지 않았습니다. 잠시 후 주소 검색을 다시 눌러 주세요.';return false}
   homeVersion++;homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;
   home={address:candidate.address,typedAddress:candidate.savedTypedAddress||el('homeAddress').value.trim(),ll:[candidate.location.y,candidate.location.x],geocodeQuality:candidate.savedGeocodeQuality||assessResidentialGeocode(el('homeAddress').value.trim(),candidate),parcel:candidate.savedParcel||{status:'idle'},officialReview:candidate.savedOfficialReview||null,officialDraft:candidate.savedOfficialDraft||null};
