@@ -13,7 +13,11 @@ const TEST_CASES={
   apartment:{id:'st-martin-frisco-base',address:'9425 Rolater Rd, Frisco, TX 75035',kind:'public-apartment-leasing-base',
    source:'https://www.har.com/st-martin-frisco-tx/apartment_9535A?print=1',district:'FISD'},
   listedHouse:{id:'lockshire-frisco-public-lease',address:'11379 Lockshire Dr, Frisco, TX 75035',kind:'publicly-listed-single-family-for-lease',
-   source:'https://exitrealty.com/listing/nltpoLnSFv6oQIYsNTltb/11379-lockshire-drive-frisco-tx-75035',district:'FISD'}
+   source:'https://www.har.com/homedetail/11379-lockshire-dr-frisco-tx-75035/1072809',district:'FISD'},
+  canalHouse:{id:'canal-frisco-public-lease',address:'8357 Canal St, Frisco, TX 75034',kind:'publicly-listed-single-family-for-lease',
+   source:'https://www.compass.com/homedetails/8357-Canal-St-Frisco-TX-75034/2202536257184480953_lid/',district:'FISD'},
+  monarchHouse:{id:'monarch-frisco-public-lease',address:'11178 Monarch Dr, Frisco, TX 75033',kind:'publicly-listed-single-family-for-lease',
+   source:'https://www.leapdfw.com/rentals/',district:'FISD'}
 };
 const SAMPLE=TEST_CASES[process.env.PUBLIC_RESIDENTIAL_CASE||'apartment'];
 if(!SAMPLE)throw Error('Invalid public address QA case');
@@ -43,7 +47,7 @@ const server=http.createServer((req,res)=>{
   browser=await chromium.launch({headless:true,args:['--no-sandbox']});
   for(const width of [1366,390]){
    const entry={width,kind:SAMPLE.kind,checkedRealEsri:false,geocodeQuality:null,
-    assignmentStatus:null,assignedCandidateSchools:[],homePolygonCount:0,
+    assignmentStatus:null,assignedCandidateSchools:[],homePolygonCount:0,homeFeatureShapeCount:0,
     homeMarkerCount:0,schoolMatchMarkerCount:0,schoolClicked:null,
     clickedSchoolZonePolygons:0,UIRendered:false,consoleErrors:[],networkErrors:[],issues:[]};
    const page=await browser.newPage({viewport:{width,height:900},deviceScaleFactor:1});
@@ -79,7 +83,10 @@ const server=http.createServer((req,res)=>{
        status:home.assignment.status,
        district:home.assignment.district,
        features:home.assignment.features?.map(f=>({name:f.properties?.school,grade:f.properties?.gradeLevel,year:f.properties?.schoolYear||null}))||[],
-       homePolygons:groups.currentHome,allMarkers:groups.school,
+       homePolygons:groups.currentHome,
+       homeFeatureShapes:typeof homeZoneGroup!=='undefined'&&homeZoneGroup?
+         homeZoneGroup.getLayers().reduce((count,l)=>count+(typeof l.getLayers==='function'?l.getLayers().length:1),0):0,
+       allMarkers:groups.school,
        homeMarker:!!homeMarker&&map.hasLayer(homeMarker),
        markerMatches:[...document.querySelectorAll('.home-match')].length,
        visible:evidence?.dataset.visible||null,
@@ -91,7 +98,7 @@ const server=http.createServer((req,res)=>{
     entry.assignmentStatus=state.status;
     entry.district=state.district||null;
     entry.assignedCandidateSchools=state.features;
-    entry.homePolygonCount=state.homePolygons;entry.homeMarkerCount=state.homeMarker?1:0;
+    entry.homePolygonCount=state.homePolygons;entry.homeFeatureShapeCount=state.homeFeatureShapes;entry.homeMarkerCount=state.homeMarker?1:0;
     entry.schoolMatchMarkerCount=state.markerMatches;entry.UIRendered=state.visible==='true';
     entry.homeStatus=state.notice;entry.userSummary=state.userSummary;
     assert.equal(entry.homeMarkerCount,1,'Real geocoded property must create home map pin');
@@ -100,6 +107,7 @@ const server=http.createServer((req,res)=>{
     // click REAL rendered school marker using Playwright, not a manually injected school.
     if(entry.geocodeQuality.usableForSchoolCandidate&&['current','boundary-review'].includes(entry.assignmentStatus)){
       assert.ok(entry.homePolygonCount>0,'Precise real residential building should paint map candidates');
+      assert.ok(entry.homeFeatureShapeCount>=3,'Real school boundary polygons for all three grade bands must be actually drawn');
       assert.equal(entry.UIRendered,true);
       assert.ok(entry.assignedCandidateSchools.length>=2,'At least two level-specific candidates should exist');
       assert.ok(entry.schoolMatchMarkerCount>0,'At least one matched school campus marker should be displayed');
@@ -150,10 +158,12 @@ const server=http.createServer((req,res)=>{
   result.dashboardRenderedWithoutErrors=result.mobileDesktopResults.every(x=>x.issues.length===0&&x.consoleErrors.length===0);
   result.localUIFlowVerified=result.mobileDesktopResults.every(x=>x.checkedRealEsri&&x.homeMarkerCount===1&&x.homePolygonCount>0&&x.clickedSchoolZonePolygons>0);
   if(!result.localUIFlowVerified)result.warnings.push('Real residence-base address → current school marker → visible polygon is not proven for BOTH responsive viewports');
-  result.thirdPartyListingHighSchool='Centennial High School';
-  const reportedHighs=result.mobileDesktopResults.map(x=>x.assignedCandidateSchools.find(f=>f.grade==='high')?.name||null);
-  result.thirdPartyAndDashboardHighSchoolDisagree=reportedHighs.some(x=>x&&!/centennial/i.test(x));
-  if(result.thirdPartyAndDashboardHighSchoolDisagree)result.warnings.push('Third-party real-estate listing says Centennial High; dashboard current-year GIS returns '+reportedHighs.join(' / ')+'. The listing may be stale; official district Finder comparison remains required.');
+  if(SAMPLE.id==='st-martin-frisco-base'){
+    result.thirdPartyListingHighSchool='Centennial High School';
+    const reportedHighs=result.mobileDesktopResults.map(x=>x.assignedCandidateSchools.find(f=>f.grade==='high')?.name||null);
+    result.thirdPartyAndDashboardHighSchoolDisagree=reportedHighs.some(x=>x&&!/centennial/i.test(x));
+    if(result.thirdPartyAndDashboardHighSchoolDisagree)result.warnings.push('Third-party listing claims Centennial; dashboard zone GIS shows '+reportedHighs.join(' / ')+'. Official Frisco 2026-27 Finder is independently checked in the companion human-browser test, and overrides the listing for zoning guidance.');
+  }
   result.warnings.push(SAMPLE.kind==='public-apartment-leasing-base'
     ?'This is a publicly listed apartment COMPLEX base address, NOT a consented unit/address-specific district Finder assignment; official enrolled-campus match remains unverified.'
     :'This is a publicly listed single-family rental address, not an independently confirmed official district enrollment; official Finder per-grade verification remains missing.');
