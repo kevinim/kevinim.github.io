@@ -168,6 +168,14 @@ async function loadRatings(){
   if(j.year!==2026||!Array.isArray(j.data))throw Error('rating schema');
   state.ratings=j.data.filter(r=>/^\d{9}$/.test(r.id)&&['A','B','C','D','F','Not Rated'].includes(r.rating));
   let locationById=new Map();try{const lr=await fetch('./nces-locations-2024.json',{cache:'no-store'});if(!lr.ok)throw Error('HTTP '+lr.status);const lj=await lr.json();if(!Array.isArray(lj.data))throw Error('location schema');locationById=new Map(lj.data.map(x=>[x.id,x]))}catch(e){console.error('NCES location data:',e);toast('학교 위치 자료 일부를 불러오지 못했습니다.')}
+  // Only provenance for existing campus point coordinates: never residence zoning.
+  state.dentonCampusPointEvidence=new Map();
+  try{
+   const pointResponse=await fetch('./data/denton-campus-public-points-2026.json',{cache:'no-store'});
+   if(!pointResponse.ok)throw Error('Denton point audit HTTP '+pointResponse.status);
+   state.dentonCampusPointEvidence=window.DentonCampusPointQuality.validate(
+    await pointResponse.json(),locationById,window.DentonZonePdfReference.ROWS);
+  }catch(e){console.warn('Historical Denton school marker crosscheck unavailable:',e)}
   state.ratingIndex=new Map();
   for(const r of state.ratings){for(const key of new Set([canonical(r.name),canonical(r.officialName)])){const k=r.district+'|'+key;const values=state.ratingIndex.get(k)||[];values.push(r);state.ratingIndex.set(k,values)}}
   addVerifiedAliases(state.ratingIndex,state.schools,state.ratings,(name,district)=>district+'|'+canonical(name));
@@ -175,10 +183,30 @@ async function loadRatings(){
   const existingByKey=new Map();for(const x of state.schools){const k=x.district+'|'+canonical(x.name);existingByKey.set(k,existingByKey.has(k)?null:x)}
   for(const r of state.ratings){
    if(isRetiredCampus(r))continue;
-   const type=schoolType(r.name)||'other',location=locationById.get(r.id),key=r.district+'|'+canonical(r.name);
+   // The current district PDF list establishes the *type*, NOT a current site or zoned assignment.
+   const officialDentonType=r.district==='061901'?
+    window.DentonZonePdfReference?.ROWS.find(row=>row.id===r.id)?.level:null;
+   const type=officialDentonType||schoolType(r.name)||'other',
+    location=locationById.get(r.id),key=r.district+'|'+canonical(r.name);
+   const reviewedDentonPoint=!!(officialDentonType&&state.dentonCampusPointEvidence?.has(r.id));
    const existing=(existingById.get(r.id)?.district===r.district?existingById.get(r.id):null)||(state.ratingIndex.get(key)?.length===1?existingByKey.get(key):null);
-   if(existing){existing.address=existing.address||r.address||location?.address;existing.ll=existing.ll||location?.ll;existing.districtName=r.districtName}
-   else state.schools.push({name:r.name,type,district:r.district,districtName:r.districtName,address:r.address||location?.address,ll:location?.ll,source:location?'NCES 2024–25 / TEA 2026 예비':'2026 TEA 예비 평가'});
+   if(existing){
+    existing.address=existing.address||r.address||location?.address;
+    existing.ll=existing.ll||location?.ll;existing.districtName=r.districtName;
+    if(officialDentonType){
+     existing.type=officialDentonType;existing.id=r.id;
+     existing.campusPointVintage='2024-25';
+     existing.campusPointReview=reviewedDentonPoint?'two-source-historical':'single-source-historical';
+    }
+   }
+   else state.schools.push({
+    name:r.name,type,district:r.district,districtName:r.districtName,
+    id:officialDentonType?r.id:undefined,
+    address:r.address||location?.address,ll:location?.ll,
+    source:location?'NCES 2024–25 / TEA 2026 예비':'2026 TEA 예비 평가',
+    campusPointVintage:officialDentonType?'2024-25':undefined,
+    campusPointReview:officialDentonType?(reviewedDentonPoint?'two-source-historical':'single-source-historical'):undefined
+   });
   }
   state.schools.sort((a,b)=>a.name.localeCompare(b.name));
   drawSchools();drawList();
@@ -705,6 +733,16 @@ function drawBoundary(){
   // The exact TEA campus ID selects a school-specific source without guessing.
   window.DentonZonePdfReference?.append(
     note,s,scoreRecord(s.name,s.district)?.id,document);
+  if(s.district==='061901'&&Array.isArray(s.ll)){
+   const sourceNote=document.createElement('small');
+   sourceNote.className='source boundary-footnote';
+   const id=scoreRecord(s.name,s.district)?.id;
+   const reviewed=state.dentonCampusPointEvidence?.has(id);
+   sourceNote.textContent=reviewed?
+    '학교 위치점: TEA AskTED와 NCES 2024–25 공개 좌표가 250m 이내로 일치합니다. 위치 참고이며 2026–27 배정경계·정확한 출입구를 확인한 것은 아닙니다.':
+    '학교 위치점: NCES 2024–25 참고 좌표입니다. 다른 공식 위치 자료와의 일치 또는 2026–27 현행 위치 검증은 미완료입니다. 배정 경계가 아닙니다.';
+   note.appendChild(sourceNote);
+  }
  }
 }
 
