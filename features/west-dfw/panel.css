@@ -1,0 +1,20 @@
+/* West DFW explorer: scoped to the school-discovery panel, no global layout overrides. */
+#westDfwPanel{margin:12px 0 16px;border:1px solid #d1dceb;border-radius:12px;background:#f9fbff;padding:12px 14px;color:#193047}
+#westDfwPanel summary{cursor:pointer;font-weight:750;font-size:13px;line-height:1.5}
+#westDfwPanel summary:focus-visible{outline:3px solid #2d58b8;outline-offset:4px}
+#westDfwPanel[open] summary{margin-bottom:10px}
+#westDfwPanel .west-dfw-note{font-size:12px;color:#475a74;line-height:1.55;margin:8px 0}
+#westDfwPanel .west-dfw-subhead{font-size:12px;margin:13px 0 8px;color:#233a58}
+#westDfwPanel .west-dfw-zips{display:flex;gap:7px;flex-wrap:wrap}
+#westDfwPanel .west-dfw-zip{font-size:12px;line-height:1.35;padding:8px 10px;border:1px solid #adc2e5;border-radius:9px;background:#fff;color:#214774;cursor:pointer;white-space:normal;min-height:38px}
+#westDfwPanel .west-dfw-zip:hover{background:#edf3ff}
+#westDfwPanel .west-dfw-zip:focus-visible{outline:3px solid #275fc1;outline-offset:2px}
+#westDfwPanel .west-dfw-zip:disabled{opacity:.45;cursor:not-allowed}
+#westDfwPanel .west-dfw-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#westDfwPanel .west-dfw-district{border:1px solid #d6e0ee;border-radius:10px;background:#fff;padding:10px;display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0;overflow-wrap:anywhere}
+#westDfwPanel .west-dfw-district b{font-size:12px}
+#westDfwPanel .west-dfw-district small,#westDfwPanel .west-dfw-count{font-size:11px;color:#556783;line-height:1.4}
+#westDfwPanel .west-dfw-official{display:inline-block;font-size:12px;font-weight:700;color:#2356ac;text-decoration:underline;text-underline-offset:2px}
+#westDfwPanel .west-dfw-official:focus-visible{outline:2px solid #275fc1;outline-offset:2px}
+#westDfwPanel #westDfwStatus{font-size:12px;color:#425a77}
+@media(max-width:720px){#westDfwPanel .west-dfw-grid{grid-template-columns:1fr}#westDfwPanel{padding:11px}#westDfwPanel .west-dfw-zip{flex:1 1 calc(50% - 7px);min-width:0}}
