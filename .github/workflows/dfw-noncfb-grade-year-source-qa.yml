@@ -8,6 +8,7 @@ on:
       - 'district-registry.js'
       - 'data/dfw-school-coverage-matrix-2026.json'
       - 'data/dfw-noncfb-grade-year-source-evidence-2026.json'
+      - 'data/dfw-noncfb-campus-transition-evidence-2026.json'
       - 'tests/dfw-noncfb-grade-year-source-quality.test.cjs'
       - '.github/workflows/dfw-noncfb-grade-year-source-qa.yml'
   workflow_dispatch:
