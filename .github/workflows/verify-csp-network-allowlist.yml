@@ -1,0 +1,56 @@
+name: CSP external network and map image allowlist QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'reviewed.html'
+      - 'tests/csp-network-allowlist.test.cjs'
+      - 'scripts/test-csp-network-browser.cjs'
+      - '.github/workflows/verify-csp-network-allowlist.yml'
+  push:
+    branches: [security/csp-connect-image-allowlist-20261108]
+
+permissions:
+  contents: read
+
+jobs:
+  policy-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: CSP syntax, hash and allowed network origin inventory
+        run: |
+          node --check scripts/test-csp-network-browser.cjs
+          node --test tests/csp-network-allowlist.test.cjs tests/audit-csp-readiness.test.cjs tests/strict-script-csp.test.cjs
+
+  browser-network:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated Chromium
+        run: |
+          mkdir -p csp-network-browser-tmp
+          cd csp-network-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Verify browser network enforcement on both dashboard entrypoints
+        env:
+          NODE_PATH: ${{ github.workspace }}/csp-network-browser-tmp/node_modules
+        run: node scripts/test-csp-network-browser.cjs
