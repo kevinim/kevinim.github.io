@@ -13,7 +13,8 @@ const files=()=>Object.fromEntries(['index.html','reviewed.html','features/revie
 test('all district and special-campus links have explicitly trusted HTTPS hosts',()=>{
  const r=auditSchoolBoundaryTrust(files());
  assert.deepEqual(r.errors,[]);
- assert.equal(r.inventory.districts,7);
+ assert.equal(r.inventory.districts,Object.keys(DISTRICT_REGISTRY).length);
+ assert.equal(r.inventory.districts,11);
  assert.equal(r.inventory.exceptionLinks,7);
  for(const school of SPECIAL_CAMPUSES){
   assert.ok(checkOfficialUrl(knownBoundaryException(school)?.sourceUrl));
