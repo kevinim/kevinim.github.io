@@ -23,13 +23,14 @@ function load(root = ROOT) {
   polygonBaseline: read(root, 'data/school-polygon-linkage-baseline.json'),
   identityBaseline: read(root, 'data/dfw-campus-identity-baseline-2026.json'),
   pointExceptionEvidence: read(root, 'data/dfw-public-isd-missing-point-evidence-2026.json'),
+  chicoInquiryEvidence: read(root, 'data/dfw-chico-official-inquiry-only-2026.json'),
   provenance: read(root, 'school-data-provenance.json'),
   registry: DISTRICT_REGISTRY,
   retired: RETIRED_CAMPUSES_2026
  };
 }
 function audit(input) {
- const {tea, nces, local, matrix, polygonBaseline, identityBaseline, pointExceptionEvidence, provenance, registry, retired} = input;
+ const {tea, nces, local, matrix, polygonBaseline, identityBaseline, pointExceptionEvidence, chicoInquiryEvidence, provenance, registry, retired} = input;
  const errors = [], notes = [];
  const check = (ok, code) => { if (!ok) errors.push(code); };
  const counties = new Set(COUNTIES);
@@ -89,6 +90,17 @@ function audit(input) {
  for (const id of byDistrict.keys()) check(registryRows.has(id), 'UNREGISTERED_TEA_DISTRICT_' + id);
  const publicISDs = matrix.districts.filter(r => r.category === 'public-isd');
  check(publicISDs.length === 108, 'ISD_ROW_COUNT_CHANGED');
+ const chicoSchoolIds=new Set((byDistrict.get('249904')||[]).map(c=>c.id));
+ const chicoSourceIds=new Set((chicoInquiryEvidence?.schools||[]).map(c=>c.teaId));
+ check(chicoInquiryEvidence?.districtCode==='249904'&&
+  chicoInquiryEvidence?.sourceClass==='OFFICIAL_DISTRICT_WEBSITE_AND_PUBLIC_PHONE_ONLY'&&
+  chicoInquiryEvidence?.officialFinderVerified===false&&
+  chicoInquiryEvidence?.siteIsAddressLookup===false&&
+  chicoInquiryEvidence?.individualResidenceAssignmentVerified===false&&
+  chicoInquiryEvidence?.doNotPromoteToRegisteredFinder===true&&
+  chicoSourceIds.size===3&&chicoSchoolIds.size===3&&
+  [...chicoSchoolIds].every(id=>chicoSourceIds.has(id)),
+  'CHICO_INQUIRY_MUST_NOT_BECOME_UNVERIFIED_FINDER');
  const campusResults = [], districts = [];
  const provenanceByKey = new Map(provenance.districts.map(d => [d.code, d]));
  const mismatchNames = [];
@@ -181,7 +193,14 @@ function audit(input) {
    code:d.code, name:d.name, campusCount:schoolRows.length,
    officialFinderAvailability:{status:hasRoute?'REGISTERED_URL_NOT_LIVE_TESTED':'NO_VERIFIED_URL',
     url:officialUrl, kind:d.parentGuidance.lookupType || null, liveHttpStatus:null,
-    liveAddressSearchVerified:false},
+    liveAddressSearchVerified:false,
+    inquiryOnlyEvidence:d.code==='249904'?{
+     officialDistrictWebsite:chicoInquiryEvidence.officialDistrictWebsite,
+     educationServiceRegion11:chicoInquiryEvidence.educationServiceRegion11,
+     publicDistrictPhone:chicoInquiryEvidence.publicDistrictPhone,
+     inquiryOnly:true,attendanceFinderVerified:false,
+     sourceYear:chicoInquiryEvidence.ncestype
+    }:null},
    gisAvailability:{status:gisConfigured?'CONFIGURED_IN_DASHBOARD':'NOT_CONFIGURED_IN_DASHBOARD',
     districtReferenceMeasured:refSource, referenceMode:baselineSource?.mode || null,
     geometryYear:src?.geometryYear || null, yearCaution:d.parentGuidance.yearCaution || null},
@@ -225,6 +244,7 @@ function audit(input) {
   otherLEAHistoricalPointMatches:otherMatched,otherLEAHistoricalPointsMissing:otherMissing,
   allDFWMatchedHistoricalPoints:matched+otherMatched,allDFWMissingHistoricalPoints:absent+invalid+otherMissing,
   auditedPublicPointExceptionRecords:exceptions.size,
+  officialDistrictWebsiteButNoVerifiedFinder:1,
   publicISDCampusRecords:campusResults.length,
   registeredOfficialGuidance:registered,unregisteredOfficialGuidance:missing.length,
   configuredGISDistricts:districts.filter(d=>d.gisAvailability.status==='CONFIGURED_IN_DASHBOARD').length,
@@ -242,7 +262,8 @@ function audit(input) {
   'tea-ratings-2026.json','nces-locations-2024.json','schools.json',
   'data/dfw-school-coverage-matrix-2026.json','data/school-polygon-linkage-baseline.json',
   'school-data-provenance.json','school-lifecycle.js',
-  'data/dfw-public-isd-missing-point-evidence-2026.json'],
+  'data/dfw-public-isd-missing-point-evidence-2026.json',
+  'data/dfw-chico-official-inquiry-only-2026.json'],
   technicalAudit:errors.length?'FAIL':'PASS_WITH_UNVERIFIED_SOURCES',
   errors,notes,summary,duplicateNameCandidates:mismatchNames,
   districts:districts.sort((a,b)=>a.code.localeCompare(b.code)),
