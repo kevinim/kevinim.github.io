@@ -16,6 +16,7 @@ on:
       - 'tests/school-polygon-linkage-audit.test.cjs'
       - 'tests/verify-school-linkage-baseline.test.cjs'
       - 'data/school-polygon-linkage-baseline.json'
+      - 'docs/SCHOOL_POLYGON_LINKAGE_CENSUS.md'
       - '.github/workflows/school-polygon-linkage-census.yml'
   push:
     branches: [main]
