@@ -29,7 +29,7 @@ test('old or unknown source polygon remains unapproved even if names match',()=>
  const display={id:'LISD-test',map:{district:'LISD',selectedHomePoint:{lat:33.059,lng:-96.916},
   grades:{elementary:[{school:'MEMORIAL',year:'학년도 미확인'}],middle:[{school:'GRIFFIN',year:'학년도 미확인'}],
   high:[{school:'THE COLONY',year:'2025–26'}]},renderedPolygonFeatures:3,matchedMarkers:3}};
- const official={id:'LISD-test',district:'LISD',officialAddressSelected:true,mapClickedAtExactGeocoderCenter:true,
+ const official={id:'LISD-test',district:'LISD',officialAddressSelected:true,mapProbeWithin30pxOfSelectedCenter:true,zoneProbeStable:true,
   mapAfterChoice:{geoCenter:{lat:33.059,lng:-96.916}},visiblePopupText:[li]};
  official.mapProbeWithin30pxOfSelectedCenter=false;
  assert.equal(compareIndependentOfficialUI(display,official).status,'OFFICIAL_NEAR_ADDRESS_ZONE_POPUP_UNSTABLE');
