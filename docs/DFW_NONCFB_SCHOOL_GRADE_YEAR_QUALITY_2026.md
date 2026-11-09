@@ -24,6 +24,22 @@
 | Melissa | Official map page specifically describes **2025–26** | Its current 2026–27 edition must be verified; cannot silently promote its map to current source |
 | Little Elm | District publishes elementary and middle school zones via official Finder | High school and source GIS academic year require independent confirmation |
 
+## Campus-level transition evidence (separate from TEA historical ratings)
+
+Machine-readable campus status file: `data/dfw-noncfb-campus-transition-evidence-2026.json` (7 evidence rows). Five records carry the exact historical nine-digit TEA campus ID; the two newly opened Northwest campuses use **null**, not an invented ID, and preserve unrated status until their real official identities become available in an updated TEA extract.
+
+| District | TEA ID | Campus | Effective year | Correct interpretation |
+| --- | --- | --- | --- | --- |
+| Denton | `061901120` | Paloma Creek Elementary | 2026–27 | Repurposed; no general intake in this year; address-specific student reassignment needed |
+| GCISD | `220906103` | Dove Elementary | 2026–27 | Consolidated; former TEA record not a currently zoned school |
+| GCISD | `220906108` | Bransford Elementary | 2026–27 | Consolidated; former TEA record not a currently zoned school |
+| Carroll | `220919106` | Durham Intermediate | **2027–28** | Future closure; **do not** mark closed in 2026–27 |
+| Carroll | `220919102` | Carroll Elementary | 2026–27 | Still active, feeder route changed; not a closed campus |
+| Northwest | `null` | Romer Elementary | 2026–27 | New school opened in Aug 2026, absent from supplied preliminary TEA 2026 rating snapshot |
+| Northwest | `null` | Barksdale Middle | 2026–27 | New school opened in Aug 2026, absent from supplied preliminary TEA 2026 rating snapshot |
+
+The campus-level tests reconcile all five identifiers and names to `tea-ratings-2026.json`, confirm the two Northwest schools are absent there and preserve the distinction between a future plan and an already-effective reassignment. These records **do not update the historical TEA snapshot**, do not claim any household assignment, and do not themselves render school markers or polygons. They are an explicit supplemental source for future safe school-detail UI treatment.
+
 ## Data and fail-closed QA
 
 - Machine-readable per-district sources, grade coverage, year issues and special-campus exceptions: `data/dfw-noncfb-grade-year-source-evidence-2026.json`.
