@@ -37,7 +37,14 @@ test('strict script CSP remains enforceable after removing the only inline hash'
 test('externalized page matches previous page except approved source tag and CSP hash',()=>{
  const expected=old.replace("<script>"+original+"</script>",external)
    .replace(/(script-src 'self' https:\/\/unpkg\.com) 'sha256-[A-Za-z0-9+/]+=*'/,'$1');
- assert.equal(html.replace(/\r\n/g,'\n'),expected.replace(/\r\n/g,'\n'));
+ const actualText=html.replace(/\r\n/g,'\n'),expectedText=expected.replace(/\r\n/g,'\n');
+ if(actualText!==expectedText){
+  let i=0;while(i<actualText.length&&i<expectedText.length&&actualText[i]===expectedText[i])i++;
+  assert.fail('Only tag/hash allowed; first mismatch offset='+i+
+   ', actualLen='+actualText.length+', expectedLen='+expectedText.length+
+   ', actual='+JSON.stringify(actualText.slice(Math.max(0,i-35),i+75))+
+   ', expected='+JSON.stringify(expectedText.slice(Math.max(0,i-35),i+75)));
+ }
  assert.equal(html.split(external).length,2);
  const scriptIndex=html.indexOf(external);
  assert.ok(html.indexOf('./plano-finder-live.js')<scriptIndex);
