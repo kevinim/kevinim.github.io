@@ -52,7 +52,8 @@ async function inspect(page){
     campusId:f.properties?.campusId||null,year:f.properties?.schoolYear||f.properties?.sourceVintage||null});
   }
   const status=document.getElementById('homeMapAssignmentStatus');
-  return {hasHome:typeof home!=='undefined'&&!!home,
+  return {selectedAddress:typeof home!=='undefined'&&home?.address||null,
+   hasHome:typeof home!=='undefined'&&!!home,
    geocodeQuality:typeof home!=='undefined'&&home?.geocodeQuality?.reason||null,
    preciseEnough:typeof home!=='undefined'&&!!home?.geocodeQuality?.usableForSchoolCandidate,
    district:a?.district||null,assignmentStatus:a?.status||'none',grades,
@@ -107,6 +108,19 @@ async function selectPublicAddress(page,entry,width,sequence){
   await page.waitForFunction(()=>typeof home!=='undefined'&&!!home?.assignment,null,{timeout:30000});
   row.map=await inspect(page);
   assert.equal(row.map.hasHome,true,'no selected address');
+  // Do not call an approximate or wrong-ZIP Esri result a valid address test.
+  const streetKey=value=>String(value||'').split(',')[0].toLowerCase()
+   .replace(/\bwest\b/g,'w').replace(/\beast\b/g,'e')
+   .replace(/\bnorth\b/g,'n').replace(/\bsouth\b/g,'s')
+   .replace(/\bparkway\b/g,'pkwy').replace(/\bboulevard\b/g,'blvd')
+   .replace(/\blane\b/g,'ln').replace(/\broad\b/g,'rd')
+   .replace(/\bstreet\b/g,'st').replace(/[^a-z0-9]+/g,'');
+  assert.equal(streetKey(row.map.selectedAddress),streetKey(entry.address),
+   'ESRI_GEOCODER_PUBLIC_STREET_NOT_EQUAL');
+  const expectedZip=(entry.address.match(/\b\d{5}$/)||[])[0];
+  const actualZip=(String(row.map.selectedAddress).match(/\b\d{5}(?:-\d{4})?\b/)||[])[0]?.slice(0,5);
+  assert.equal(actualZip,expectedZip,'ESRI_GEOCODER_POSTAL_MISMATCH');
+  row.geocoderMatchesPublicStreetAndZip=true;
   assert.equal(row.map.homeMarker,true,'selected home point must appear');
   const safe=['current','finder-current','boundary-review','finder-boundary-review'];
   const canDisplay=safe.includes(row.map.assignmentStatus)&&['official','finder'].includes(row.map.sourceMode);
