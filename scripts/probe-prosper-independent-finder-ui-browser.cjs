@@ -7,7 +7,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const {chromium}=require('playwright');
 const ROOT=path.resolve(__dirname,'..');
-const URL='https://www.infofinderi.com/ifi/?cid=PI5FFG7RYZ1';
+const FINDER_URL='https://www.infofinderi.com/ifi/?cid=PI5FFG7RYZ1';
 const ALLOWED='www.infofinderi.com';
 const OUTPUT=path.join(ROOT,'artifacts/prosper-real-home/finder-ui-browser-observation.json');
 const PUBLIC=JSON.parse(fs.readFileSync(path.join(ROOT,'tests/prosper-public-listed-single-family-2026.json'),'utf8'));
@@ -36,13 +36,13 @@ async function discover(frame){
 }
 async function run({sampleMode=process.argv.includes('--samples')}={}){
  const report={schemaVersion:1,source:'OFFICIAL_PROSPER_LINKED_INFOFINDER_BROWSER',
-  officialUrl:URL,year:'2026-27',schoolAssignmentIndependentlyCertified:false,
+  officialUrl:FINDER_URL,year:'2026-27',schoolAssignmentIndependentlyCertified:false,
   signedReviewerCount:0,productionAuthorized:false,mode:sampleMode?'public-house-ui-probe':'no-address-discovery',
   cases:[],frames:[],status:'INCONCLUSIVE'};
  // Independent source transport diagnostic; never mistake status=200 for enrollment evidence.
  report.httpDiagnostic={status:null,errorType:null,headOnly:false};
  try{
-  const response=await fetch(URL,{method:'GET',redirect:'manual',signal:AbortSignal.timeout(15000)});
+  const response=await fetch(FINDER_URL,{method:'GET',redirect:'manual',signal:AbortSignal.timeout(15000)});
   report.httpDiagnostic.status=response.status;
  }catch(e){report.httpDiagnostic.errorType=String(e.name||'Error').slice(0,50);}
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
@@ -51,7 +51,7 @@ async function run({sampleMode=process.argv.includes('--samples')}={}){
   const blockers=[];
   page.on('pageerror',e=>blockers.push(String(e.name||'PageError').slice(0,40)));
   try{
-   await page.goto(URL,{waitUntil:'commit',timeout:25000});
+   await page.goto(FINDER_URL,{waitUntil:'commit',timeout:25000});
    await page.waitForLoadState('domcontentloaded',{timeout:12000}).catch(()=>{});
    await page.waitForTimeout(6500);
    const frames=page.frames();
