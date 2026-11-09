@@ -24,7 +24,7 @@
       "officialFinder": "https://www.irvingisd.net/departments-services/registration/find-my-assigned-school",
       "sourceClass": "district-embedded-arcgis-webmaps",
       "currentYearCertified": false,
-      "geometryStage": "partial-seven-middle-polygons-live-extracted-elementary-pending-high-no-campus-geometry",
+      "geometryStage": "25-polygon-CI-only-quarantine-18-elementary-7-middle-no-high",
       "webmaps": [
         {
           "grade": "elementary",
@@ -32,7 +32,9 @@
           "arcgisWebmapId": "a9ea586919d64c7e9aaa7193572f46d3",
           "academicYear": "2024-25 (from layer title, unverified year validity)",
           "legacyLayerName": "New_EL_Zones_24_25",
-          "historicFeatureCountThirdPartyUnconfirmed": null
+          "historicFeatureCountThirdPartyUnconfirmed": null,
+          "liveValidatedFeatureCount": 18,
+          "liveValidatedOn": "2026-11-09"
         },
         {
           "grade": "middle",
@@ -69,7 +71,10 @@
         "public terms for derived data",
         "390/1366px live school-click map QA"
       ],
-      "rejectionReason": "Middle 7 source polygons extracted, but GIS year and TEA IDs unconfirmed. Elementary WebMap has New_EL_Zones_24_25 (2024-25 historical), conversion under validation. High WebMap contains school location layer and district outline but no independently confirmed high-school-specific polygon. No production activation."
+      "rejectionReason": "18 elementary 2024–25 source-title polygons and 7 middle polygons (unknown year) extracted into CI-only WGS84 GeoJSON quarantine. High WebMap has no confirmed school-specific polygon. ArcGIS ownership, reuse terms, TEA campus IDs, official Finder holdouts unverified; no dashboard connection.",
+      "liveValidatedFeatureCountTotal": 25,
+      "liveValidatedSourceLayers": 2,
+      "liveValidatedSchoolYearCurrent": false
     },
     {
       "districtCode": "220905",
@@ -126,5 +131,7 @@
   "newDistrictsReleasedToDashboard": 0,
   "licenseApproved": false,
   "schoolClickE2ECertified": false,
-  "productionAllowed": false
+  "productionAllowed": false,
+  "newStagedUnreleasedSchoolZonePolygonFeatures": 25,
+  "newStagedUnreleasedDistricts": 1
 }
