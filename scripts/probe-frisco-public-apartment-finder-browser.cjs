@@ -1,105 +1,121 @@
 #!/usr/bin/env node
 'use strict';
-// One human-style public apartment building BASE address on district's public
-// 2026-27 Finder UI. No hidden APIs, bulk collection, student records or auth.
+// One public apartment complex building address and one public for-lease house.
+// Official Frisco ISD 2026-27 UI only. No hidden API or batch scraping.
+// Never claim confirmed zoned attendance from autocomplete or a generic FAQ.
 const {chromium}=require('playwright'),fs=require('node:fs'),path=require('node:path');
-const OUT='artifacts/public-residential-e2e',OFFICIAL_PAGE='https://schools.friscoisd.org/page/2026-2027-zones';
-const address='9425 Rolater Rd, Frisco, TX 75035';
+const OUT='artifacts/public-residential-e2e';
+const OFFICIAL_PAGE='https://schools.friscoisd.org/page/2026-2027-zones';
+const SAMPLES=[
+ {id:'st-martin-frisco-base',address:'9425 Rolater Rd, Frisco, TX 75035',queries:['9425 Rolater','9425 Rola','9425']},
+ {id:'lockshire-frisco-public-lease',address:'11379 Lockshire Dr, Frisco, TX 75035',queries:['11379 Lockshire','11379 Lock','11379']}
+];
 fs.mkdirSync(OUT,{recursive:true});
-const report={checkedAt:new Date().toISOString(),officialPage:OFFICIAL_PAGE,publicApartmentBuilding:true,
- officialFinderIndependentlyVerified:false,sourceYearUrl:'2026-27',addressEntered:false,
- candidateSelected:false,explicitZonedSchools:{},frames:[],inputs:[],diagnostics:[],status:'UNVERIFIED'};
-const safeUrl=s=>{try{const u=new URL(s);return u.origin+u.pathname}catch{return '[invalid]'}};
-async function run(){
+const report={checkedAt:new Date().toISOString(),officialPage:OFFICIAL_PAGE,status:'NO_OFFICIAL_ASSIGNMENT_CERTIFICATION',
+ cases:[],pageErrors:[],officialDataSource:'user-facing Frisco ISD public 2026-27 School Zone Search'};
+const clean=s=>String(s||'').replace(/\s+/g,' ').trim();
+const safe=(v,max=300)=>clean(v).slice(0,max);
+function isValidAddressCandidate(label,num,road){
+ const l=clean(label).toLowerCase();
+ return l.includes(num)&&l.includes(road)&&
+ !/no results found|sorry|not found|not available|error|not zoned|could not find|search all/i.test(l)&&l.length<200;
+}
+(async()=>{
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  try{
- const page=await browser.newPage({viewport:{width:1366,height:900}});
- page.on('pageerror',e=>report.diagnostics.push(String(e.message||e).slice(0,160)));
- const response=await page.goto(OFFICIAL_PAGE,{waitUntil:'domcontentloaded',timeout:75000});
- report.http=response?.status()||null;
- await page.waitForTimeout(5000);
- for(const frame of page.frames()){
-  const inputs=await frame.locator('input').evaluateAll(els=>els.slice(0,24).map(x=>({placeholder:x.placeholder||'',aria:x.getAttribute('aria-label')||'',type:x.type||'',id:x.id||''}))).catch(()=>[]);
-  report.frames.push({url:safeUrl(frame.url()),inputCount:inputs.length});
-  report.inputs.push(...inputs.map(x=>({...x,frame:safeUrl(frame.url())})));
- }
- let chosen=null;
- for(const frame of page.frames()){
-  const inputs=frame.locator('input');
-  const count=await inputs.count().catch(()=>0);
-  for(let i=0;i<count;i++){
-   const input=inputs.nth(i);
-   const [placeholder,aria,type]=await Promise.all([
-    input.getAttribute('placeholder'),input.getAttribute('aria-label'),input.getAttribute('type')]);
-   const x=((placeholder||'')+' '+(aria||'')).toLowerCase();
-   if((!type||['text','search'].includes(type))&&/enter (your )?address|street address|find your zone|search by address|search address|type your address|address search/.test(x)){
-    chosen={frame,input};break;
-   }
-  }
-  if(chosen)break;
- }
- if(chosen){
-  report.addressFormMarkup=await chosen.input.evaluate(x=>x.parentElement?.parentElement?.outerHTML.slice(0,3200)).catch(()=>null);
-  await chosen.input.fill(address,{timeout:12000});
-  report.addressEntered=true;
-  await page.waitForTimeout(2500);
-  const initial=chosen.frame.locator('[role="option"],.pac-item,.suggestion,.search-result,[class*="autocomplete"] li');
-  const pre=initial.filter({hasText:/9425.*rolater/i}).first();
-  if(await pre.count()>0&&await pre.isVisible()){
-   await pre.click({timeout:12000});
-   report.candidateSelected=true;
-  }else{
-   // Click the ZONE SEARCH field's adjacent button. A generic getByRole('Search')
-   // accidentally opened the sitewide search modal, a serious false-positive risk.
-   const btn=chosen.input.locator('xpath=following::button[1]');
-   report.zoneButtonText=(await btn.innerText().catch(()=>'')).slice(0,100);
-   if(await btn.count()&&await btn.isVisible())await btn.click({timeout:12000});
-   else await chosen.input.press('Enter').catch(()=>{});
-  }
-  await page.waitForTimeout(3600);
-  report.afterSubmitText=(await chosen.frame.locator('body').innerText()).slice(-5000);
-  if(!report.candidateSelected){
-   const candidates=chosen.frame.locator('[role="option"],button,li,[class*="result"],[class*="address"]');
-   const match=candidates.filter({hasText:/9425.*rolater/i}).last();
-   report.afterSubmitCandidateCount=await candidates.filter({hasText:/9425.*rolater/i}).count().catch(()=>0);
-   if(await match.count()>0&&await match.isVisible().catch(()=>false)){
-    const label=(await match.innerText()).trim();
-    if(label.length<250&&/9425.*rolater/i.test(label)){
-     await match.click({timeout:12000});
-     report.candidateSelected=true;
-     report.selectedCandidateLabel=label.slice(0,160);
+ const page=await browser.newPage({viewport:{width:1366,height:900},locale:'en-US',timezoneId:'America/Chicago'});
+ page.on('pageerror',e=>report.pageErrors.push(safe(e.message,180)));
+ const nav=await page.goto(OFFICIAL_PAGE,{waitUntil:'domcontentloaded',timeout:75000});
+ report.http=nav?.status()||null;
+ const field=page.locator('#dom-address-input'),button=page.locator('#check-address');
+ await field.waitFor({timeout:35000});await button.waitFor({timeout:15000});
+ report.inputMarkup=await field.evaluate(e=>e.parentElement?.parentElement?.outerHTML.slice(0,2500));
+ for(const sample of SAMPLES){
+  const item={id:sample.id,address:sample.address,queries:[],addressCandidateSelected:false,
+   verifiedGrades:{},gradeMatches:0,officialFinderVerified:false,status:'INCONCLUSIVE'};
+  const num=sample.address.match(/^\d+/)?.[0],road=sample.address.split(/\s+/)[1].toLowerCase();
+  try{
+   for(const q of sample.queries){
+    await field.fill('');await page.waitForTimeout(300);
+    await field.pressSequentially(q,{delay:30});
+    await page.waitForTimeout(1600);
+    const visible=await page.locator('#dom-autocomplete li').evaluateAll(els=>els.slice(0,12).map(e=>({text:(e.textContent||'').trim().slice(0,160),
+       visible:e.getClientRects().length>0,className:e.className,html:e.outerHTML.slice(0,450)})));
+    const dom=await page.evaluate(()=>{
+     const el=document.querySelector('#dom-autocomplete');
+     return {listDisplay:el?getComputedStyle(el).display:null,className:el?.className||null,
+       html:el?.outerHTML.slice(0,2000)||null,
+       text:(document.querySelector('.attendance-zones-input-area')?.innerText||'').slice(0,850)};
+    });
+    const attempt={query:q,visibleSuggestions:visible,dom};
+    item.queries.push(attempt);
+    let loc=page.locator('#dom-autocomplete li').filter({hasText:new RegExp(num+'.*'+road,'i')}).first();
+    if(await loc.count()&&await loc.isVisible().catch(()=>false)){
+      const label=clean(await loc.innerText());
+      if(isValidAddressCandidate(label,num,road)){
+       await loc.click({timeout:10000});
+       item.addressCandidateSelected=true;item.selectedAddressLabel=label;item.selectionStage='native-autocomplete';
+       break;
+      }
+    }
+    // The district's explicit zone-search button may produce a native results
+    // list only after submitted partial input. Click this exact control only.
+    await button.click({timeout:12000});await page.waitForTimeout(2100);
+    const results=await page.evaluate(()=>{
+     const body=document.body?.innerText||'';
+     const list=[...document.querySelectorAll('#dom-autocomplete li,[class*="attendance-zones"] li,[class*="dom-address"] li,[class*="result"] li')];
+     return {possibleAddressLabels:list.slice(0,25).map(e=>({text:(e.innerText||'').trim().slice(0,160),visible:e.getClientRects().length>0,
+       html:e.outerHTML.slice(0,320)})),excerpt:body.slice(body.indexOf('School Zone Search'),body.indexOf('Notes on Middle School Zones:')).slice(0,3500)};
+    });
+    attempt.afterSubmit=results;
+    // Select only a unique rendered native candidate, never an error message or
+    // a static text block with address substring.
+    const matches=results.possibleAddressLabels.filter(x=>x.visible&&isValidAddressCandidate(x.text,num,road));
+    if(matches.length===1){
+      const candidate=page.locator('#dom-autocomplete li,[class*="attendance-zones"] li,[class*="dom-address"] li,[class*="result"] li')
+       .filter({hasText:new RegExp(num+'.*'+road,'i')}).first();
+      if(await candidate.count()&&await candidate.isVisible().catch(()=>false)){
+       await candidate.click({timeout:10000});
+       item.addressCandidateSelected=true;item.selectedAddressLabel=matches[0].text;item.selectionStage='submitted-result-list';
+       break;
+      }
     }
    }
-  }
-  await page.waitForTimeout(4500);
-  const body=await chosen.frame.locator('body').innerText().catch(()=>null);
-  const excerpt=String(body||'').slice(-9000);
-  report.bodyMatchHighlights=excerpt.split('\n').filter(x=>/school|zone|rolater|9425|assigned|search/i.test(x)).slice(-45).map(x=>x.slice(0,180));
-  if(report.candidateSelected){
-   // Parse ONLY dynamically selected-address result data; don't parse static
-   // boilerplate about Nelson enrollment or site navigation as school assignments.
-   const resultArea=excerpt.slice(Math.max(0,excerpt.toLowerCase().indexOf('based on your search')));
-   const patterns=[
-    ['elementary',/elementary\\s*(?:school)?\\s*[:\\-]\\s*([^\\n]+)/i],
-    ['middle',/middle\\s*(?:school)?\\s*[:\\-]\\s*([^\\n]+)/i],
-    ['high',/high\\s*(?:school)?\\s*[:\\-]\\s*([^\\n]+)/i]];
-   for(const [grade,pattern] of patterns){
-    const match=resultArea.match(pattern);
-    if(match&&/school|elementary|middle|high/i.test(match[1]))
-     report.explicitZonedSchools[grade]=match[1].trim().slice(0,120);
+   await page.waitForTimeout(2000);
+   const snapshot=await page.evaluate(()=>{
+    const body=document.body?.innerText||'',idx=body.indexOf('School Zone Search'),end=body.indexOf('Notes on Middle School Zones:');
+    const section=idx>=0?body.slice(idx,end>idx?end:idx+6500):body.slice(0,6500);
+    const domResults=[...document.querySelectorAll('#dom-autocomplete,[class*="address-result"],[class*="attendance-zones-result"],[id*="school-result"],[id*="zone-result"]')].slice(0,25);
+    return {section:section.slice(0,5500),resultHtml:domResults.map(x=>({id:x.id,cls:String(x.className).slice(0,100),text:(x.innerText||'').slice(0,400),html:x.outerHTML.slice(0,1000)}))};
+   });
+   item.snapshot=snapshot;
+   // Do not parse generic school mentions or static Nelson policy notices.
+   // The native selection and explicit grade-tagged results must both be present.
+   if(item.addressCandidateSelected&&!/no results found|we could not find/i.test(snapshot.section)){
+     const perLevel={
+      elementary:/\bElementary\s+School\s*:\s*([^\r\n]+)/i,
+      middle:/\bMiddle\s+School\s*:\s*([^\r\n]+)/i,
+      high:/\bHigh\s+School\s*:\s*([^\r\n]+)/i
+     };
+     for(const [grade,re] of Object.entries(perLevel)){
+      const m=snapshot.section.match(re);
+      if(m&&/^[A-Z][A-Za-z .'-]{3,100}$/.test(m[1].trim()))item.verifiedGrades[grade]=m[1].trim();
+     }
    }
-  }
-  report.officialFinderIndependentlyVerified=report.candidateSelected&&
-   Object.keys(report.explicitZonedSchools).length===3;
-  report.status=report.officialFinderIndependentlyVerified?'EXPLICIT_3_LEVEL_FINDER_RESULT':'INCONCLUSIVE_FINDER_SEARCH';
- }else{
-  report.status='FINDER_ADDRESS_INPUT_NOT_VISIBLE';
-  report.diagnostics.push('No explicit official zone-search address input found in visible page frames; no invented assigned-school comparison.');
+   item.gradeMatches=Object.keys(item.verifiedGrades).length;
+   item.officialFinderVerified=item.addressCandidateSelected&&item.gradeMatches===3;
+   item.status=item.officialFinderVerified?'THREE_EXPLICIT_FINDER_GRADE_RESULTS':
+    item.addressCandidateSelected?'ADDRESS_SELECTED_SCHOOL_RESULTS_NOT_PARSED':'NO_DISTRICT_ADDRESS_CANDIDATE';
+   await page.screenshot({path:path.join(OUT,'official-frisco-'+sample.id+'.png'),fullPage:true,timeout:30000}).catch(()=>{});
+  }catch(e){item.status='OFFICIAL_FINDER_UI_ERROR';item.error=safe(e.message,450)}
+  report.cases.push(item);
  }
- await page.screenshot({path:path.join(OUT,'official-frisco-2026-27-public-apartment.png'),fullPage:true,timeout:30000}).catch(()=>{});
- }catch(e){report.status='FINDER_BROWSER_ERROR';report.diagnostics.push(String(e?.message||e).slice(0,500))}
+ }catch(e){report.fatal=safe(e.message,600)}
  finally{await browser.close();fs.writeFileSync(path.join(OUT,'frisco-official-finder.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('OFFICIAL_FRISCO_PUBLIC_APARTMENT '+JSON.stringify({status:report.status,officialFinderVerified:report.officialFinderIndependentlyVerified,addressEntered:report.addressEntered,candidateSelected:report.candidateSelected,schools:report.explicitZonedSchools,frames:report.frames,inputs:report.inputs,diagnostics:report.diagnostics}).slice(0,9000));
+  console.log('FRISCO_OFFICIAL_FINDER_HUMAN_UI '+JSON.stringify({http:report.http,cases:report.cases.map(x=>({
+   id:x.id,status:x.status,selected:x.addressCandidateSelected,address:x.selectedAddressLabel,grades:x.verifiedGrades,
+   summary:x.snapshot?.section.slice(0,220),attempts:x.queries.map(q=>({query:q.query,suggestions:q.visibleSuggestions?.map(s=>s.text),
+    after:q.afterSubmit?.excerpt?.slice(0,350)})),error:x.error
+  })),errors:report.pageErrors,fatal:report.fatal}).slice(0,12500));
  }
-}
-run().catch(e=>{console.error(e);process.exitCode=1});
+})().catch(e=>{console.error(e);process.exitCode=1});
