@@ -2,6 +2,8 @@ name: Plano Lewisville McKinney real residence and official Finder UAT (no deplo
 on:
   push:
     branches: [qa/plano-lewisville-mckinney-real-finder-20261109]
+  pull_request:
+    branches: [qa/public-residential-e2e-school-map-20261109]
   workflow_dispatch:
 permissions:
   contents: read
