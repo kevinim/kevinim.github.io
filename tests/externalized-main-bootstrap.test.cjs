@@ -7,10 +7,10 @@ const path=require('node:path');
 const crypto=require('node:crypto');
 const root=path.resolve(__dirname,'..');
 const show=(sha,file)=>cp.execFileSync('git',['show',sha+':'+file],{cwd:root,encoding:'utf8'});
-const parentLine=cp.execFileSync('git',['rev-list','--parents','-n','1','HEAD'],{cwd:root,encoding:'utf8'}).trim().split(/\s+/);
-// PR CI checks out a two-parent synthetic merge. For direct branch checks,
-// use the known merged #129 bootstrap baseline rather than an unrelated parent.
-const baseline=parentLine.length>=3?parentLine[1]:'d94374e74c87d9d58355bdb0755ec6ade88c2818';
+// Pin the independently reviewed, already-externalized pre-commute baseline.
+// A moving synthetic PR merge parent would accidentally lose byte-for-byte
+// checks when unrelated features are merged into main.
+const baseline='d94374e74c87d9d58355bdb0755ec6ade88c2818';
 const old=show(baseline,'index.html');
 const oldJs=show(baseline,'dashboard-main.js');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
@@ -47,7 +47,7 @@ test('strict script CSP unchanged; only two named EPA fetch origins added',()=>{
  assert.doesNotMatch(script,/unsafe-inline|unsafe-eval|sha256-/);
  assert.doesNotMatch(newCsp,/'sha256-/);
 });
-test('all other current main HTML remains unchanged except approved commute assets and fetch origins',()=>{
+test('main HTML unchanged except explicitly approved commute and DFW coverage assets',()=>{
  const style='<link rel="stylesheet" href="./features/commute/sourced-cost.css?v=1">';
  const assetCore='<script src="./features/commute/sourced-cost-core.js?v=1"></script>';
  const assetUI='<script src="./features/commute/sourced-cost-ui.js?v=1"></script>';
@@ -56,8 +56,21 @@ test('all other current main HTML remains unchanged except approved commute asse
     style+'<script src="./features/theme-toggle.js?v=2"></script>');
  expected=exactReplacement(expected,'<script src="./features/area-assessment-core.js?v=3"></script>',
     assetCore+assetUI+'<script src="./features/area-assessment-core.js?v=3"></script>');
+ // The following three exact DFW coverage tags are permitted; no changes to
+ // extracted map logic, old script integrity, CSP or other markup are accepted.
+ const leaflet='<link rel="stylesheet" href="./vendor/leaflet-1.9.4.css">';
+ expected=exactReplacement(expected,leaflet,
+  leaflet+'\r\n<link rel="stylesheet" href="./features/dfw-school-coverage-panel.css?v=1">');
+ const west='<details id="westDfwPanel" aria-label="DFW 서부 학군 및 지역 탐색">';
+ expected=exactReplacement(expected,west,`<details id="dfwSchoolCoveragePanel" aria-label="DFW 전체 학군별 학교 배정 안내 연결 현황">
+<summary>DFW 전체 학군 연결 현황 · 미연결 사유와 우선순위 보기</summary>
+<div id="dfwSchoolCoverageContent" role="region" aria-label="DFW 학군 연결 현황" aria-live="polite">현황표를 불러올 준비가 되었습니다.</div>
+</details>
+`+west);
+ expected=exactReplacement(expected,'</body></html>',
+  '<script src="./features/dfw-school-coverage-panel.js?v=1" defer></script></body></html>');
  const actualText=html.replace(/\r\n/g,'\n'),expectedText=expected.replace(/\r\n/g,'\n');
- assert.equal(actualText,expectedText,'Only reviewed EPA CSP and optional commute assets may differ from main');
+ assert.equal(actualText,expectedText,'Only reviewed EPA/commute and exact DFW school coverage additions may differ from approved baseline');
  assert.equal(html.split(external).length,2);
  const scriptIndex=html.indexOf(external);
  assert.ok(html.indexOf('./plano-finder-live.js')<scriptIndex);

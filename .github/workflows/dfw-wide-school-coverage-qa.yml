@@ -1,0 +1,74 @@
+name: DFW-wide school assignment guidance coverage matrix QA
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tea-ratings-2026.json'
+      - 'district-registry.js'
+      - 'data/school-polygon-linkage-baseline.json'
+      - 'data/dfw-school-coverage-matrix-2026.json'
+      - 'scripts/build-dfw-school-coverage-matrix.cjs'
+      - 'tests/dfw-school-coverage-matrix.test.cjs'
+      - 'scripts/test-dfw-school-coverage-browser.cjs'
+      - 'features/dfw-school-coverage-panel.js'
+      - 'features/dfw-school-coverage-panel.css'
+      - 'index.html'
+      - '.github/workflows/dfw-wide-school-coverage-qa.yml'
+  push:
+    branches: [data/dfw-wide-school-coverage-matrix-20261109]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reproducible-matrix:
+    name: Full DFW denominator, source integrity and prioritization
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check generator, GUI and school security tests
+        run: |
+          node --check scripts/build-dfw-school-coverage-matrix.cjs
+          node --check features/dfw-school-coverage-panel.js
+          node --check scripts/test-dfw-school-coverage-browser.cjs
+          node scripts/build-dfw-school-coverage-matrix.cjs --check
+          node --test tests/dfw-school-coverage-matrix.test.cjs tests/strict-script-csp.test.cjs tests/school-zone-ui.test.cjs
+
+  dashboard-browser:
+    name: Collapsed DFW coverage panel on mobile and desktop
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install browser in isolated folder
+        run: |
+          mkdir -p dfw-coverage-browser-tmp
+          cd dfw-coverage-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve exact PR snapshot
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/dfw-coverage-qa.log 2>&1 &
+          sleep 2
+      - name: Check geographic scope, P0/P1 and safe school source links
+        env:
+          NODE_PATH: ${{ github.workspace }}/dfw-coverage-browser-tmp/node_modules
+        run: node scripts/test-dfw-school-coverage-browser.cjs
+      - name: Preserve desktop/mobile coverage screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dfw-wide-school-coverage-ui
+          path: artifacts/dfw-school-coverage-ui/
+          if-no-files-found: warn

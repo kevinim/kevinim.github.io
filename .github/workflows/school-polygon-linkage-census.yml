@@ -17,6 +17,9 @@ on:
       - 'tests/verify-school-linkage-baseline.test.cjs'
       - 'data/school-polygon-linkage-baseline.json'
       - 'docs/SCHOOL_POLYGON_LINKAGE_CENSUS.md'
+      - 'data/dfw-school-coverage-matrix-2026.json'
+      - 'scripts/merge-dfw-school-coverage-runtime.cjs'
+      - 'tests/dfw-school-coverage-runtime.test.cjs'
       - '.github/workflows/school-polygon-linkage-census.yml'
   push:
     branches: [main]
@@ -63,10 +66,22 @@ jobs:
         run: node scripts/school-polygon-linkage-browser.cjs
       - name: Compare matched school and Allen marker counts to verified baseline
         run: node scripts/verify-school-linkage-baseline.cjs
+      - name: Join school-level missing reason classifications into full DFW district inventory
+        run: |
+          node --test tests/dfw-school-coverage-runtime.test.cjs
+          node scripts/merge-dfw-school-coverage-runtime.cjs
       - name: Upload school-only, non-personal coverage findings
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: school-polygon-linkage-census
           path: artifacts/school-linkage/school-polygon-linkage-census.json
+          if-no-files-found: warn
+
+      - name: Archive full DFW per-district and per-campus reason report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dfw-wide-school-missing-reasons
+          path: artifacts/dfw-school-coverage/runtime-district-linkage.json
           if-no-files-found: warn
