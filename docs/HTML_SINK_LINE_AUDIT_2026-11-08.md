@@ -1,3 +1,5 @@
+> **Post-PR #89 review:** Existing HTML-sink counts remain a source inventory, not vulnerabilities. Current `index.html` and `reviewed.html` enforce strict hash-locked CSP without `'unsafe-inline'` and block inline event attributes. Source locations shown below refer to the earlier main commit and may shift.
+
 # HTML insertion path inventory — 2026-11-08
 
 **Read-only review, main at `d5c799b23c4c91c0ec63a61c2573ded6825b5065`.** File line numbers reference this commit and may shift. Exactly **30** assignment occurrences in the five monitored files. This is *not* a list of 30 exploitable weaknesses.
