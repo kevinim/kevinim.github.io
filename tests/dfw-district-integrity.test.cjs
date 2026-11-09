@@ -164,3 +164,28 @@ test('future-dated school transitions cannot become premature 2026–27 campus c
  const carroll=r.districts.find(d=>d.code==='220919');
  assert.ok(carroll.lifecycle.futureChangesNotEffective >= 1);
 });
+
+test('Chico Texas has verified district inquiry-only evidence without a fake attendance Finder',()=>{
+ const r=audit(fresh());
+ assert.equal(r.technicalAudit,'PASS_WITH_UNVERIFIED_SOURCES',r.errors.join('|'));
+ const chico=r.districts.find(x=>x.code==='249904');
+ assert.ok(chico);
+ assert.equal(chico.officialFinderAvailability.url,null);
+ assert.equal(chico.officialFinderAvailability.status,'NO_VERIFIED_URL');
+ assert.equal(chico.officialFinderAvailability.inquiryOnlyEvidence.inquiryOnly,true);
+ assert.equal(chico.officialFinderAvailability.inquiryOnlyEvidence.attendanceFinderVerified,false);
+ assert.ok(chico.officialFinderAvailability.inquiryOnlyEvidence.officialDistrictWebsite.startsWith('https://'));
+ assert.equal(chico.assignmentVerification.certifiedRealResidentialSamples,0);
+ assert.equal(chico.goNoGo,undefined);
+ assert.equal(chico.disposition,'NO_GO');
+ assert.equal(r.summary.registeredOfficialGuidance,29);
+ assert.equal(r.summary.officialDistrictWebsiteButNoVerifiedFinder,1);
+});
+test('Chico source cannot invent a fourth school or a verified parent Finder',()=>{
+ const d=fresh();
+ d.chicoInquiryEvidence.officialFinderVerified=true;
+ assert.match(audit(d).errors.join('|'),/CHICO_INQUIRY_MUST_NOT_BECOME_UNVERIFIED_FINDER/);
+ const e=fresh();
+ e.chicoInquiryEvidence.schools.push({teaId:'249904999',name:'FAKE SCHOOL'});
+ assert.match(audit(e).errors.join('|'),/CHICO_INQUIRY_MUST_NOT_BECOME_UNVERIFIED_FINDER/);
+});
