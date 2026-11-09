@@ -1,0 +1,29 @@
+name: Strict script CSP and delegated action guard
+
+on:
+  pull_request:
+    paths:
+      - index.html
+      - reviewed.html
+      - tests/strict-script-csp.test.cjs
+      - scripts/test-untrusted-data-browser.cjs
+  push:
+    branches:
+      - security/strict-hash-csp-20261108
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify CSP hashes, script host and event listener safety
+        run: node --test tests/strict-script-csp.test.cjs
