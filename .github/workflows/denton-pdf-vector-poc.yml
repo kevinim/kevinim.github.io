@@ -32,6 +32,10 @@ jobs:
         run: |
           python -m py_compile scripts/denton_pdf_geopdf_probe.py
           python scripts/denton_pdf_geopdf_probe.py
+      - name: Inspect 13 original PDF zone fill rings for self-intersections and holes
+        run: |
+          python -m py_compile scripts/denton_pdf_polygon_topology_debug.py
+          python scripts/denton_pdf_polygon_topology_debug.py
       - name: Derive spatially registered staging high and middle school zones from original GeoPDF
         run: |
           python -m py_compile scripts/denton_geopdf_to_geojson.py
@@ -45,5 +49,6 @@ jobs:
             artifacts/denton-pdf-vector-poc/
             artifacts/denton-pdf-geo-probe/
             artifacts/denton-geopdf-derived/
+            artifacts/denton-geopdf-topology-diagnostic/
           retention-days: 7
           if-no-files-found: warn
