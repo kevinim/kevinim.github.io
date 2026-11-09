@@ -16,7 +16,11 @@ test('both current HTML entrypoints enforce strict CSP with no inline handler at
   assert.equal(r.summary.inlineHashes,expected,r.name);
   assert.equal(r.summary.allowsUnsafeInline,false,r.name);
   assert.equal(r.summary.inlineEventAttributes,0,r.name);
-  assert.ok(r.warnings.some(x=>x.includes('connect-src absent')));
+  assert.equal(r.summary.missingDefaultSrc,false,r.name);
+  assert.equal(r.summary.missingConnectSrc,false,r.name);
+  assert.ok(!r.warnings.some(x=>x.includes('img-src absent')),r.name);
+  assert.match(r.summary.policy,/img-src 'self'/);
+  assert.match(r.summary.policy,/connect-src 'self'/);
  }
 });
 test('main source is hash-locked, and reviewed.html is now external-script-only',()=>{
