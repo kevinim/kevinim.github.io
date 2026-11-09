@@ -93,17 +93,32 @@ async function actualApp(browser){
       res.matchedSchoolMarkers=data.matches;res.banner=data.statusText;
       if(data.geometry>0&&data.matches>0){
        const match=page.locator('.leaflet-marker-icon').filter({has:page.locator('.mapmark.home-match')}).first();
-       try{await match.click({force:true,timeout:4500});}catch{
-        const list=page.locator('#schoolList button.school.home-match').first();
-        if(await list.count())await list.click({timeout:8000});
+       try{
+        await page.waitForTimeout(200);
+        await match.click({timeout:5000});
+        res.clickMethod='actual-leaflet-marker';
+       }catch(e){
+        res.markerClickError=clean(e.message,180);
        }
        res.clickedSchoolZoneFeatures=await page.evaluate(()=>typeof zoneGroup!=='undefined'&&zoneGroup?
          zoneGroup.getLayers().reduce((n,x)=>n+(typeof x.getLayers==='function'?x.getLayers().length:1),0):0);
+       if(!res.clickedSchoolZoneFeatures){
+        const list=page.locator('#schoolList button.school.home-match').first();
+        if(await list.count()){
+          await list.click({timeout:9000});
+          res.clickMethod='actual-school-list-button';
+          res.clickedSchoolZoneFeatures=await page.evaluate(()=>typeof zoneGroup!=='undefined'&&zoneGroup?
+            zoneGroup.getLayers().reduce((n,x)=>n+(typeof x.getLayers==='function'?x.getLayers().length:1),0):0);
+        }
+       }
+       res.clickedSchoolName=await page.evaluate(()=>state.selectedSchool?.name||null);
+       res.missingZoneReason=await page.locator('#zoneNotice').innerText().catch(()=>null);
+       if(!res.clickedSchoolZoneFeatures)res.warnings.push('School click did not draw polygon despite 3 valid home polygons');
       }
       if(data.district!==test.district)res.warnings.push('District mismatch or address crosses city/ISD border; do not force to stated district');
       if(!data.geometry)res.warnings.push('No automatic polygon drawn; may be fail-closed on vintage/ambiguous/feeder');
       if(res.schoolCandidates.length===0)res.warnings.push('No confirmed campus polygons; do not infer campus from nearest marker');
-      if(test.id.endsWith('baldwin')||test.id.endsWith('hamilton')||test.id.endsWith('sunflower'))
+      if(test.id.endsWith('baldwin')||test.id.endsWith('hamilton')||test.id.endsWith('barrington')||test.id.endsWith('sunflower'))
        await page.screenshot({path:path.join(OUT,test.id+'-'+width+'.png'),fullPage:true,timeout:30000});
     }catch(e){res.errors.push(clean(e.message,450))}
     report.samples.push(res);
