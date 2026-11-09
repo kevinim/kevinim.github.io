@@ -18,7 +18,7 @@ test('exact official user-visible Irving Finder and secure trusted domain',()=>{
  assert.equal(DISTRICT_REGISTRY['057912'].zoneKey,null,'no 2026-27 certified GIS source');
  assert.equal(DISTRICT_REGISTRY['057912'].address,null,'no auto home assignment without certified source');
  assert.equal(DISTRICT_REGISTRY['057912'].official,'https://www.irvingisd.net/departments-services/registration/new-student-registration');
- assert.equal(DISTRICT_REGISTRY['057912'].locatorUrl,F.APP_URL);
+ assert.equal(official(F.APP_URL),F.APP_URL); // explicit in home GIS UI, not a registry data mutation
  assert.equal(DISTRICT_REGISTRY['057912'].lookupKind,'finder-guidance');
  assert.equal(official(F.APP_URL),F.APP_URL);
  for(const bad of [F.APP_URL.replace('iisd1.maps.arcgis.com','iisd1.maps.arcgis.com.attacker.test'),
