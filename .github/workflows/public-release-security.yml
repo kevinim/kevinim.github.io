@@ -42,6 +42,8 @@ jobs:
         run: node scripts/public-release-gate.cjs audit
       - name: Build and verify isolated public preview (no deploy)
         run: node scripts/verify-public-preview.cjs
+      - name: Block known personalized commute artifacts in public preview
+        run: node scripts/check-public-personalization.cjs dist/public-preview
       - name: Re-run source audit for final artifact metadata
         run: node scripts/public-release-gate.cjs audit
       - name: Upload redacted audit report
