@@ -88,8 +88,8 @@ test('legacy reviewed.html uses narrower but sufficient service origins',()=>{
 });
 test('map tile URLs remain allowed while data APIs are not blanket image hosts',()=>{
  const tiles=[
-  ['index.html','https://tile.openstreetmap.org'],
-  ['index.html','https://server.arcgisonline.com'],
+  ['dashboard-main.js','https://tile.openstreetmap.org'],
+  ['dashboard-main.js','https://server.arcgisonline.com'],
   ['txwrap-wildfire-potential.js','https://gis.texaswildfirerisk.com'],
   ['features/reviewed-bootstrap.js','https://{s}.tile.openstreetmap.org']
  ];
