@@ -97,6 +97,10 @@ async function actualApp(browser){
       }
       if(test.district==='PISD'&&data.geometry>0&&res.schoolCandidates.length!==4)
        report.errors.push({id:test.id,width,reason:'Plano 4-stage feeder / senior high not preserved'});
+      if(test.district==='PISD'&&data.geometry>0){
+        res.planoYearDisclosure=await page.locator('#homeSchoolInfo [data-plano-year-mismatch="true"]').count()>0;
+        if(!res.planoYearDisclosure)report.errors.push({id:test.id,width,reason:'Plano legacy 2024-25 Finder vs 2025-26 GIS year warning absent'});
+      }
 
       if(data.geometry>0&&data.matches>0){
        const match=page.locator('.leaflet-marker-icon').filter({has:page.locator('.mapmark.home-match')}).first();
