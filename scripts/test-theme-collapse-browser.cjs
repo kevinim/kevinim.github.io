@@ -44,7 +44,7 @@ const brightness=raw=>{
      mapFilter:getComputedStyle(document.querySelector('#map')).filter
    }));
    assert.equal(dark.theme,'dark');
-   assert.equal(dark.aria,'true');assert.equal(dark.saved,'dark');
+   assert.equal(dark.aria,'true');assert.equal(dark.saved,null,'default dark does not require writing storage');
    assert.equal(dark.label,'일반 모드');
    assert.ok(brightness(dark.bg)<90,'dark body not applied');
    assert.ok(brightness(dark.panelBg)<95,'dashboard cards still white');
