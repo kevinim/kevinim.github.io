@@ -9,9 +9,9 @@ const ui=require('../school-zone-ui.js');
 const file=name=>JSON.parse(fs.readFileSync(path.resolve(__dirname,'..',name),'utf8'));
 const manifest=file('data/dfw-neighbor-official-school-links-2026.json');
 const tea=file('tea-ratings-2026.json');
-test('18 new districts are real TEA 2026 LEA identifiers, not a city or guessed ZIP',()=>{
- assert.equal(manifest.districts.length,18);
- assert.equal(new Set(manifest.districts.map(x=>x.code)).size,18);
+test('26 sourced districts are real TEA 2026 LEA identifiers, not a city or guessed ZIP',()=>{
+ assert.equal(manifest.districts.length,26);
+ assert.equal(new Set(manifest.districts.map(x=>x.code)).size,26);
  const codes=new Set(tea.data.map(x=>x.district));
  for(const d of manifest.districts){
   assert.ok(/^\d{6}$/.test(d.code),'numeric TEA code '+d.code);
