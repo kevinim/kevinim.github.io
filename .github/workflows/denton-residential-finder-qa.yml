@@ -33,6 +33,7 @@ jobs:
           node --check scripts/denton-independent-grade-finder-qa.cjs
           node scripts/denton-independent-grade-finder-qa.cjs
       - name: Real dashboard marker + 2026 district PDF bridge regression at 390 and 1366 pixels
+        if: ${{ !cancelled() }}
         env:
           NODE_PATH: ${{ github.workspace }}/denton-residential-qa-tmp/node_modules
         run: |
