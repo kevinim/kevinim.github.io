@@ -38,6 +38,11 @@ jobs:
           node --check features/west-dfw/panel.js
           node --check scripts/test-west-dfw-browser.cjs
           node --test tests/west-dfw-panel.test.cjs
+      - name: Verify inherited school-source, backend, and security regression
+        run: |
+          node --test tests/public-release-gate.test.cjs tests/public-preview-build.test.cjs tests/family-entry.test.cjs tests/environment-plan.test.cjs tests/backend-api.test.mjs tests/school-data-release-preflight.test.cjs tests/school-polygon-linkage-audit.test.cjs tests/verify-school-linkage-baseline.test.cjs
+          node scripts/school-data-release-preflight.cjs
+          node scripts/verify-public-preview.cjs
       - name: Install isolated Chromium
         run: |
           mkdir -p west-browser-tmp
@@ -49,6 +54,10 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/west-browser-tmp/node_modules
         run: node scripts/test-west-dfw-browser.cjs
+      - name: Validate privacy-sanitized public preview in browser
+        env:
+          NODE_PATH: ${{ github.workspace }}/west-browser-tmp/node_modules
+        run: node scripts/test-public-preview-browser.cjs
       - name: Upload browser results (no home address)
         if: always()
         uses: actions/upload-artifact@v4
