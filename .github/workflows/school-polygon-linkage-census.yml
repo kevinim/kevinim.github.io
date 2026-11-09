@@ -40,10 +40,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: '24'
           package-manager-cache: false
@@ -72,7 +72,7 @@ jobs:
           node scripts/merge-dfw-school-coverage-runtime.cjs
       - name: Upload school-only, non-personal coverage findings
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: school-polygon-linkage-census
           path: artifacts/school-linkage/school-polygon-linkage-census.json
@@ -80,7 +80,7 @@ jobs:
 
       - name: Archive full DFW per-district and per-campus reason report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: dfw-wide-school-missing-reasons
           path: artifacts/dfw-school-coverage/runtime-district-linkage.json
