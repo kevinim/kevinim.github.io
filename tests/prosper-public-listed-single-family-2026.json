@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-11-09",
+  "district": "PROSPER",
+  "propertyType": "publicly-advertised-single-family-only",
+  "publicListingSource": "https://www.har.com/prosper/realestate/for_sale",
+  "sourceYear": "2026-2027",
+  "schoolsAreDerivedFromOfficialResponseNotPreseeded": true,
+  "notStudentEnrollmentCertification": true,
+  "cases": [
+    {
+      "id": "prosper-kirkwood",
+      "address": "1441 Kirkwood Ln, Prosper, TX 75078",
+      "listing": "https://www.har.com/prosper/realestate/for_sale"
+    },
+    {
+      "id": "prosper-salada",
+      "address": "771 Salada Dr, Prosper, TX 75078",
+      "listing": "https://www.har.com/prosper/realestate/for_sale"
+    },
+    {
+      "id": "prosper-corley",
+      "address": "560 Corley Dr, Prosper, TX 75078",
+      "listing": "https://www.har.com/prosper/realestate/for_sale"
+    },
+    {
+      "id": "prosper-vermillion",
+      "address": "1524 Vermillion Dr, Prosper, TX 75078",
+      "listing": "https://www.har.com/prosper/realestate/for_sale"
+    },
+    {
+      "id": "prosper-sunfish",
+      "address": "2970 Sunfish St, Prosper, TX 75078",
+      "listing": "https://www.har.com/homedetail/2970-sunfish-st-prosper-tx-75078/16360593"
+    }
+  ]
+}
