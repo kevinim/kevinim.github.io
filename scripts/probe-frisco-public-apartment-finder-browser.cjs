@@ -10,7 +10,8 @@ const SAMPLES=[
  {id:'st-martin-frisco-base',address:'9425 Rolater Rd, Frisco, TX 75035',queries:['9425 Rolater','9425 Rola','9425']},
  {id:'lockshire-frisco-public-lease',address:'11379 Lockshire Dr, Frisco, TX 75035',queries:['11379 Lockshire','11379 Lock','11379']},
  {id:'canal-frisco-public-lease',address:'8357 Canal St, Frisco, TX 75034',queries:['8357 Canal','8357 Cana','8357']},
- {id:'monarch-frisco-public-lease',address:'11178 Monarch Dr, Frisco, TX 75033',queries:['11178 Monarch','11178 Mona','11178']}
+ {id:'monarch-frisco-public-lease',address:'11178 Monarch Dr, Frisco, TX 75033',queries:['11178 Monarch','11178 Mona','11178']},
+ {id:'lathrop-frisco-MLS-residence',address:'7043 Lathrop Ln, Frisco, TX 75033',queries:['7043 Lathrop','7043 Lath','7043']}
 ];
 fs.mkdirSync(OUT,{recursive:true});
 const report={checkedAt:new Date().toISOString(),officialPage:OFFICIAL_PAGE,status:'NO_OFFICIAL_ASSIGNMENT_CERTIFICATION',
