@@ -27,13 +27,13 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/denton-residential-qa-tmp/node_modules
         run: |
-          node --check scripts/denton-residential-official-finder-qa.cjs
-          node scripts/denton-residential-official-finder-qa.cjs
+          node --check scripts/denton-independent-grade-finder-qa.cjs
+          node scripts/denton-independent-grade-finder-qa.cjs
       - name: Upload short-retention screenshots and no-go evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: denton-real-residential-finder-read-only
-          path: artifacts/denton-residential-finder/
+          path: artifacts/denton-independent-grade-finder/
           retention-days: 7
           if-no-files-found: warn
