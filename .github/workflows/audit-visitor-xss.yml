@@ -26,6 +26,10 @@ jobs:
         run: node --test tests/audit-visitor-xss.test.cjs
       - name: Offline browser-surface inventory
         run: node scripts/audit-visitor-xss-sinks.cjs
+      - name: Test source-level CSP baseline and hardening blockers
+        run: |
+          node --test tests/audit-csp-readiness.test.cjs
+          node scripts/audit-csp-readiness.cjs
 
   isolated-browser-probes:
     name: visitor-xss-chromium
@@ -49,3 +53,5 @@ jobs:
           ./node_modules/.bin/playwright install --with-deps chromium
       - name: Run simulated malicious-string browser checks (no network)
         run: NODE_PATH="$PWD/visitor-browser-tmp/node_modules" node scripts/test-visitor-xss-browser.cjs
+      - name: Demonstrate effective baseline CSP and strict-mode incompatibility (no network)
+        run: NODE_PATH="$PWD/visitor-browser-tmp/node_modules" node scripts/test-csp-isolation-browser.cjs
