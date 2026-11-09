@@ -3,7 +3,7 @@ on:
   push:
     branches: [feature/dfw-parent-guidance-remaining22-20261109]
   pull_request:
-    branches: [main]
+    branches: [data/dfw-school-grade-year-quality-noncfb-20261109, main]
     paths:
       - 'district-registry.js'
       - 'data/dfw-parent-source-evidence-batch7-2026.json'
@@ -38,7 +38,7 @@ jobs:
           fi
       - name: Run all accumulated guidance and security tests
         run: |
-          node --test tests/dfw-parent-guidance-batch7.test.cjs tests/dfw-parent-guidance-batch6.test.cjs tests/dfw-parent-guidance-batch5.test.cjs tests/dfw-parent-guidance-batch4.test.cjs tests/dfw-parent-guidance-batch3.test.cjs tests/dfw-parent-guidance-next12.test.cjs tests/dfw-school-coverage-matrix.test.cjs tests/audit-school-provenance.test.cjs tests/audit-gis-upload-links.test.cjs tests/dfw-neighbor-finders.test.cjs tests/school-zone-ui.test.cjs
+          node --test tests/dfw-comprehensive-source-audit.test.cjs tests/dfw-noncfb-grade-year-source-quality.test.cjs tests/dfw-parent-guidance-batch7.test.cjs tests/dfw-parent-guidance-batch6.test.cjs tests/dfw-parent-guidance-batch5.test.cjs tests/dfw-parent-guidance-batch4.test.cjs tests/dfw-parent-guidance-batch3.test.cjs tests/dfw-parent-guidance-next12.test.cjs tests/dfw-school-coverage-matrix.test.cjs tests/audit-school-provenance.test.cjs tests/audit-gis-upload-links.test.cjs tests/dfw-neighbor-finders.test.cjs tests/school-zone-ui.test.cjs
   browser:
     name: Desktop/mobile P0 Chico and official link regression
     runs-on: ubuntu-latest
