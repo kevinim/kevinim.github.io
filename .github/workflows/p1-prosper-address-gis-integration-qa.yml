@@ -1,0 +1,74 @@
+name: P1 address to official GIS evidence bridge (release NO-GO)
+on:
+  push:
+    branches:
+      - qa/p1-prosper-address-gis-evidence-bridge-20261109
+  pull_request:
+    branches:
+      - qa/prosper-public-residential-gis-e2e-20261109
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-policy-and-compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+      - name: Source bridge, map UI, and year/provenance syntax checks
+        run: |
+          node --check scripts/audit-p1-prosper-address-gis-evidence.cjs
+          node --check scripts/run-prosper-listed-home-live-source-crosscheck.cjs
+          node --check scripts/test-prosper-public-house-dashboard-browser.cjs
+          node --check scripts/test-home-assignment-map-browser.cjs
+          node --check home-assignment-map.js
+          node --check home-lookup-v2.js
+          node --check dashboard-main.js
+      - name: Re-run existing address-to-map and GIS coverage regression with P1 negative tests
+        run: |
+          node --test tests/home-assignment-map.test.cjs tests/dfw-home-automation-readiness.test.cjs tests/prosper-public-home-crosscheck-core.test.cjs tests/p1-prosper-address-gis-evidence.test.cjs
+          node scripts/audit-dfw-home-automation-readiness.cjs > /tmp/p1-dfw-coverage-audit.json
+  live-evidence-and-real-map-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+      - name: Re-gather live public home geocodes and official GIS/Finder source codes
+        run: node scripts/run-prosper-listed-home-live-source-crosscheck.cjs
+      - name: Install isolated open-source Chromium
+        run: |
+          mkdir -p p1-browser-qa-tmp
+          cd p1-browser-qa-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Existing #162 synthetic address to school GIS browser compatibility
+        env:
+          NODE_PATH: ${{ github.workspace }}/p1-browser-qa-tmp/node_modules
+        run: node scripts/test-home-assignment-map-browser.cjs
+      - name: Real #172 public homes, live map and school-click mobile desktop browser
+        env:
+          NODE_PATH: ${{ github.workspace }}/p1-browser-qa-tmp/node_modules
+        run: node scripts/test-prosper-public-house-dashboard-browser.cjs
+      - name: Integrate source plus browser evidence and enforce NO-GO production label
+        run: |
+          node scripts/audit-p1-prosper-address-gis-evidence.cjs
+          node -e "const r=require('./artifacts/prosper-real-home/p1-integrated-address-gis-evidence.json'); if(r.technicalStatus!=='PASS_TECHNICAL_QA_ONLY'||r.releaseGate.status!=='NO_GO'||r.releaseGate.reviewerApproved!==false) process.exit(1)"
+      - name: Upload P1 corroboration and blocked-release evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: p1-prosper-address-gis-no-go-integration
+          path: artifacts/prosper-real-home/
+          retention-days: 5
+          if-no-files-found: warn
