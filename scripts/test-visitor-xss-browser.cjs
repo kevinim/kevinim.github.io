@@ -26,7 +26,7 @@ async function fresh(browser, width) {
 function mainEscapeExpression() {
   // Execute the actual HTML escape helper used by index.html, not a duplicate
   // function invented by this test. Require a distinct, line-local declaration.
-  const lines = read('index.html').split(/\r?\n/).filter(x => x.includes('escape=s=>String(s??'));
+  const lines = read('dashboard-main.js').split(/\r?\n/).filter(x => x.includes('escape=s=>String(s??'));
   assert.equal(lines.length, 1, 'cannot isolate the current production escape function');
   const src = lines[0];
   const expression = src.slice(src.indexOf('escape=') + 'escape='.length).trim().replace(/;\s*$/, '');

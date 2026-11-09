@@ -11,7 +11,7 @@ test('both current HTML entrypoints enforce strict CSP with no inline handler at
  assert.deepEqual(rows.map(r=>r.name),['index.html','reviewed.html']);
  assert.ok(rows.every(r=>!r.errors.length),JSON.stringify(rows));
  for(const r of rows){
-  const expected=r.name==='index.html'?1:0;
+  const expected=0; // Both entrypoints use external classic scripts.
   assert.equal(r.summary.inlineScriptBlocks,expected,r.name);
   assert.equal(r.summary.inlineHashes,expected,r.name);
   assert.equal(r.summary.allowsUnsafeInline,false,r.name);
@@ -23,14 +23,16 @@ test('both current HTML entrypoints enforce strict CSP with no inline handler at
   assert.match(r.summary.policy,/connect-src 'self'/);
  }
 });
-test('main source is hash-locked, and reviewed.html is now external-script-only',()=>{
+test('both entrypoints use external scripts, with no inline executable hash policy',()=>{
  for(const r of checkCurrentRepo()){
-  if(r.name==='index.html')assert.ok(r.summary.inlineScriptBytes>10000,r.name);
-  else assert.equal(r.summary.inlineScriptBytes,0,r.name);
+  assert.equal(r.summary.inlineScriptBytes,0,r.name);
   assert.match(r.summary.policy,/script-src-attr 'none'/);
   assert.ok(!parseDirectives(r.summary.policy).get('script-src').includes("'unsafe-inline'"));
  }
  const reviewed=fs.readFileSync(path.resolve(__dirname,'../reviewed.html'),'utf8');
+ const index=fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8');
+ assert.ok(index.includes('<script src="./dashboard-main.js?v=3"></script>'));
+ assert.equal(checkCurrentRepo().find(x=>x.name==='index.html').summary.inlineHashes,0);
  assert.ok(reviewed.includes('src="./features/reviewed-bootstrap.js?v=1"'));
  assert.ok(reviewed.includes('src="./features/geojson-upload-guard.js?v=1"'));
 });
@@ -48,11 +50,11 @@ test('permissive script sources or missing handler prohibition fail closed',()=>
  assert.ok(r.errors.some(e=>e.includes("'unsafe-inline'")));
  assert.ok(r.errors.some(e=>e.includes('script-src-attr')));
 });
-test('script hash mismatch is detected after an inline bootstrap edit',()=>{
+test('unexpected inline script in an external-only document is rejected',()=>{
  const html=fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8');
- const altered=html.replace("const DATA=[","const DATA=[/*test-inert-mismatch*/");
+ const altered=html.replace('</body>','<script>window.__testUnexpected=1</script></body>');
  assert.notEqual(altered,html);
- assert.ok(analyzeCspPage(altered,'index.html').errors.some(x=>x.includes('changed without updating')));
+ assert.ok(analyzeCspPage(altered,'index.html').errors.some(x=>x.includes('each inline bootstrap must have a dedicated sha256 hash')));
 });
 test('unsafe inline event attribute in HTML is detected',()=>{
  const html=fs.readFileSync(path.resolve(__dirname,'../reviewed.html'),'utf8');

@@ -13,7 +13,7 @@ function actual() {
 test('current known provider links, user disclosure and safe Esri/parcel parameters remain intact', () => {
   const a = auditProviderContract(actual());
   assert.deepEqual(a.errors, []);
-  assert.equal(a.coverage.reviewedFiles, 6);
+  assert.equal(a.coverage.reviewedFiles, 7);
   assert.equal(a.coverage.monitoredProviderMarkers, 8);
   assert.ok(a.warnings.some(w => w.includes('cross-user quotas')));
 });

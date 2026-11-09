@@ -7,7 +7,7 @@ const points=read('data/healthcare/cms-dfw-census-points-2026.json');
 const trauma=read('data/healthcare/dshs-trauma-facilities-2026.json');
 const matched=read('data/healthcare/dshs-cms-exact-matches-2026.json');
 const winter=read('data/resilience/fema-nri-dfw-winter-2025.json');
-const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8')+'\n'+fs.readFileSync(path.join(__dirname,'../dashboard-main.js'),'utf8');
 const extra=fs.readFileSync(path.join(__dirname,'../features/dashboard-extras.js'),'utf8');
 test('Census hospital coordinates have strict provenance and no fabricated unmatched pins',()=>{
  assert.equal(points.metadata.recordCount,104);

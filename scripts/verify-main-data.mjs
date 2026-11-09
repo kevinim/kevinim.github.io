@@ -5,7 +5,11 @@ import {createRequire} from 'node:module';
 
 const readText = name => readFileSync(new URL('../' + name, import.meta.url), 'utf8');
 const readJson = name => JSON.parse(readText(name));
-const html = readText('index.html');
+const pageHtml = readText('index.html');
+const mainBootstrap = readText('dashboard-main.js');
+// Assert against actual HTML while retaining existing source-level assertions
+// for formerly inline application logic in the separate exact-byte JS module.
+const html = pageHtml + '\n' + mainBootstrap;
 const audit = readJson('school-data-provenance.json');
 const plano = readJson('plano-locator-reference.geojson');
 const allen = readJson('allen-attendance-historical.geojson');
@@ -61,13 +65,13 @@ const test = (name, fn) => {
   } else {total++;console.log('PASS '+name)}
 };
 
-const inlineScripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)]
- .map(x => x[1]).filter(Boolean);
-
-test('main page inline JavaScript compiles', () => {
-  assert.ok(inlineScripts.length >= 1);
-  inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
+const inlineScripts = [mainBootstrap];
+test('external main application bootstrap compiles with no inline HTML execution',()=>{
+ assert.ok(pageHtml.includes('<script src="./dashboard-main.js?v=3"></script>'));
+ assert.equal([...pageHtml.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].filter(x=>!/\bsrc\s*=/.test(x[1])&&x[2].trim()).length,0);
+ new Script(mainBootstrap,{filename:'dashboard-main.js'});
 });
+
 test('all main application JS modules compile', () => {
   for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','school-boundary-match.js','phase2a-fema-hazards.js','phase2a-nfhl-flood.js','txwrap-wildfire-potential.js','noaa-storm-history.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
     new Script(readText(name), {filename:name});
@@ -933,7 +937,7 @@ test('P0 current Plano official Finder zoning GIS is live, all levels complete, 
  });
 });
 test('P0 current Finder and prior unlinked GIS are visually distinct without falsely promoting year',()=>{
- const web=readText('index.html'),home=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
+ const web=html,home=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
  assert.ok(web.includes('id="referenceBoundaryOverlay"'));
  assert.ok(web.includes('loadPlanoLiveFinder(zoneFetch)'));
  assert.ok(web.includes('state.liveFinder.PISD_LOOKUP=true'));
@@ -1249,7 +1253,7 @@ test('Address results: piece-internal edges are not boundaries; near-boundary an
 test('District registry is the single source of per-district capabilities',()=>{
  const require=createRequire(import.meta.url);
  const R=require('../district-registry.js');
- const web=readText('index.html'),home=readText('home-lookup-v2.js'),match=readText('school-boundary-match.js');
+ const web=html,home=readText('home-lookup-v2.js'),match=readText('school-boundary-match.js');
  for(const [code,d] of Object.entries(R.DISTRICT_REGISTRY)){
   assert.ok(d.en&&d.ko,'names for '+code);
   assert.ok(/^https:\/\//.test(d.official),'official finder link for '+code);
@@ -1296,7 +1300,7 @@ test('City crime map: FBI NIBRS city rates on city limits, complete years only, 
  assert.equal(CRIME_CATEGORIES.violent.breaks.length,4);
  const plano=crime.features.find(f=>f.properties.city==='Plano');
  assert.equal(crimeCityRate(plano,'violent',2025).rate,plano.properties.years[2025].violentRate);
- const web=readText('index.html');
+ const web=html;
  assert.ok(web.includes('id="crimeMapToggle"')&&web.includes('id="crimeLegend"')&&web.includes('<details id="crimePanel"'));
  assert.ok(web.includes('<script src="./crime-city-map.js?v=3"></script>')&&web.includes('window.createCrimeCityMap?.(map,document)'));
  assert.ok(web.includes('ZIP·동네·주소별 위험이 아닙니다'),'caveat: not ZIP/address risk');
@@ -1326,7 +1330,7 @@ test('Crime trends per ZIP: city-level 3-year counts and direction, never ZIP-al
  assert.ok(!readText('index.html').includes('id="crimeYear"'),'heatmap uses the latest year; no year selector');
 });
 test('Layout: ZIP subgroup details live in the wide card under the map, not the right column',()=>{
- const web=readText('index.html');
+ const web=html;
  assert.ok(web.includes('<div class="mapcol"><div class="mapbox">')&&web.includes('id="zipInsights"'),'map and insights card share one column');
  assert.ok(web.includes('function drawZipInsights(d)')&&web.includes('function drawDetail(){const d=getZip();drawZipInsights(d);'),'insights refresh with every detail redraw');
  assert.ok(!web.includes("+menaHtml(d.z);el('detailContent').innerHTML=html;"),'subgroups no longer appended to the narrow right column');
@@ -1334,7 +1338,7 @@ test('Layout: ZIP subgroup details live in the wide card under the map, not the 
  assert.ok(web.includes('repeat(auto-fit,minmax(200px,1fr))'),'3 insight cards fit one row even with a classic 15px desktop scrollbar (724px card)');
 });
 test('Security baseline (#77/#74): CSP on both entry pages, Esri input limit, destination disclosure',()=>{
- const web=readText('index.html'),rev=readText('reviewed.html');
+ const web=html,rev=readText('reviewed.html');
  for(const [name,src] of [['index.html',web],['reviewed.html',rev]]){
   const csp=(src.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)">/)||[])[1]||'';
   assert.ok(csp,'CSP meta present in '+name);
