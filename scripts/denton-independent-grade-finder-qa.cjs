@@ -25,13 +25,28 @@ async function suggestions(page){
 async function pickAngular(page,selector,optionValue){
  const control=page.locator(selector).first();
  if(!await control.isVisible())throw Error('UI control missing '+selector);
- await control.click({timeout:7000});
- await page.locator('mat-option[role="option"]').first().waitFor({state:'visible',timeout:7000});
- const choices=(await page.locator('mat-option[role="option"]').allTextContents()).map(x=>x.trim());
- const choice=page.locator('mat-option[role="option"]').filter({hasText:new RegExp('^'+optionValue+'$','i')}).first();
- if(!await choice.count()){await page.keyboard.press('Escape');throw Error('Requested option '+optionValue+' unavailable: '+choices.join(','));}
- await choice.click({timeout:7000});
- return (await control.innerText()).trim();
+ let lastError;
+ for(let attempt=1;attempt<=2;attempt++){
+  try{
+   await control.click({timeout:7000});
+   // Google/Angular school locator renders "All grades" before its async
+   // 01..12 options. Wait for the EXACT desired grade, not first option.
+   await page.waitForFunction(target=>[...document.querySelectorAll('mat-option[role="option"]')].some(el=>
+     (el.textContent||'').trim().toLowerCase()===target.toLowerCase()
+   ),optionValue,{timeout:8000});
+   const options=page.locator('mat-option[role="option"]');
+   const choice=options.filter({hasText:new RegExp('^'+optionValue+'$','i')}).first();
+   await choice.click({timeout:7000});
+   return (await control.innerText()).trim();
+  }catch(e){
+   lastError=e;
+   // Re-open once if the vendor's options are asynchronously incomplete;
+   // never fall back to "All grades" or a different grade/program.
+   try{await page.keyboard.press('Escape')}catch{}
+   if(attempt<2)await page.waitForTimeout(800);
+  }
+ }
+ throw Error('Requested official option '+optionValue+' was not safely selectable after bounded retries: '+String(lastError).slice(0,170));
 }
 async function one(browser,s,grade){
  const page=await browser.newPage({viewport:{width:1366,height:850},locale:'en-US'});
@@ -89,5 +104,6 @@ async function main(){
  }finally{await b.close();fs.writeFileSync(path.join(outDir,'results.json'),JSON.stringify(r,null,2)+'\n');}
  const passed=r.results.filter(x=>x.status==='OFFICIAL_FINDER_GRADE_RESULT_OBSERVED_CURRENT_GIS_MISSING').length;
  console.log('DENTON_OFFICIAL_FINDER_SUMMARY',JSON.stringify({observed:passed,expected:9,remaining:9-passed,production:'NO_GO',currentPolygonsCertified:0}));
+ if(passed!==9)process.exitCode=1; // fail closed: green CI requires all nine current live results
 }
 main().catch(e=>{console.error('DENTON_OFFICIAL_FINDER_FATAL',String(e));process.exitCode=1;});
