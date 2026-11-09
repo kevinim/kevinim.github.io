@@ -36,6 +36,14 @@ function expectedPublicHtml(source){
   '<input type="checkbox" id="oneHourOverlay" hidden disabled aria-hidden="true"><div class="source">사전 계산된 특정 회사 기준 통근 지도는 제공되지 않습니다. 위 목적지에 주소를 직접 입력하여 경로를 확인하세요.</div>');
  s=replaceOnce(s,'JPM 시간은 ZIP 대표점 기준이고 교통량은 반영하지 않습니다.',
   '통근 시간은 사용자가 선택한 목적지와 ZIP 대표점을 기준으로 계산하며 실시간 교통량은 반영하지 않습니다.');
+ // Reviewer-approved Agent01 addition: a single exact Irving ArcGIS tenant
+ // origin for OPT-IN coordinate-only lookups. No broader HTTPS permissions.
+ s=replaceOnce(s,'https://geocode.arcgis.com https://nominatim.openstreetmap.org',
+  'https://geocode.arcgis.com https://iisd1.maps.arcgis.com https://nominatim.openstreetmap.org');
+ s=replaceOnce(s,'주소 검색: © Esri.',
+  'Irving 공식 GIS 좌표 조회 버튼을 누르면 집 핀 좌표가 Irving ISD가 연결한 ArcGIS 레이어에 전송되며 결과 경계는 현재 브라우저에서만 표시합니다. 정확한 등록학교는 학군 공식 Finder로 확인하세요. 주소 검색: © Esri.');
+ s=replaceOnce(s,'<script src="./home-lookup-v2.js?v=15"></script>',
+  '<script src="./irving-official-spatial.js?v=1"></script><script src="./home-lookup-v2.js?v=15"></script>');
  return s;
 }
 function expectedPublicJs(source){
@@ -83,7 +91,9 @@ test('index changes limited to approved blank destination, hidden precomputed ma
  assert.ok(html.indexOf('./features/commute/workplace-marker.js')>scriptIndex);
 });
 test('strict script CSP preserved exactly and personal office artifacts absent',()=>{
- assert.equal(newCsp,oldCsp,'Privacy removal must not weaken CSP or expand external origins');
+ const explicitlyReviewed=oldCsp.replace('https://geocode.arcgis.com https://nominatim.openstreetmap.org',
+  'https://geocode.arcgis.com https://iisd1.maps.arcgis.com https://nominatim.openstreetmap.org');
+ assert.equal(newCsp,explicitlyReviewed,'Only exact district-linked Irving ArcGIS origin is allowed; reject all other CSP changes');
  for(const part of ["script-src-attr 'none'","object-src 'none'","base-uri 'self'","form-action 'self'"])
   assert.ok(newCsp.includes(part));
  assert.ok(newCsp.includes("script-src 'self' https://unpkg.com;"));
@@ -104,7 +114,7 @@ test('HTML has external executable scripts only and no inline handlers',()=>{
 test('all school, region and risk modules preserved exactly once',()=>{
  for(const name of ['features/west-dfw/attach.js','features/area-assessment.js',
  'features/resilience/winter-map.js','school-boundary-match.js','home-lookup-v2.js',
- 'features/dfw-school-coverage-panel.js']){
+ 'features/dfw-school-coverage-panel.js','irving-official-spatial.js']){
   assert.equal(html.split(name).length,2,name);
  }
 });
