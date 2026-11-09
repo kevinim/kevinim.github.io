@@ -42,6 +42,9 @@ function expectedPublicHtml(source){
  // fail-closed policy script. All other HTML remains hash-pinned to baseline.
  s=replaceOnce(s,'<script src="./school-zone-ui.js?v=1"></script>',
   '<script src="./school-zone-ui.js?v=1"></script>\r\n<script src="./features/conditional-school-release.js?v=1"></script>');
+ // One separately reviewed Agent05 CSS link; no other HTML baseline differences are allowed.
+ s=replaceOnce(s,'<link rel="stylesheet" href="./features/theme-toggle.css?v=1">',
+  '<link rel="stylesheet" href="./features/theme-toggle.css?v=1"><link rel="stylesheet" href="./features/map-control-contrast.css?v=1">');
  return s;
 }
 function expectedPublicJs(source){
@@ -60,6 +63,8 @@ function expectedPublicJs(source){
  s=replaceOnce(s,"['JPM 도로망 (교통 미반영)',Number.isFinite(d.jpmMinutes)?d.jpmMinutes+'분':'미확인'],",'');
  s=replaceOnce(s,"state.withinHour?(Number.isFinite(d.jpmMinutes)?(d.jpmMinutes<=60?'#2878ba':'#eef2f5'):'#aab5c0')",
   "state.withinHour?'#aab5c0'");
+ s=replaceOnce(s,"L.map(\'map\',{zoomControl:true,preferCanvas:true}).setView",
+  "L.map(\'map\',{zoomControl:true,preferCanvas:true,zoomAnimation:false}).setView");
  s=replaceOnce(s,"JPM 도로망: ${Number.isFinite(d.jpmMinutes)?d.jpmMinutes+'분':'미확인'}",
   '통근 시간: 목적지 검색 후 확인');
  s=s.replaceAll('JPM Plano 도착 · 도로망 추정','통근 지도 · 직접 경로 확인')
