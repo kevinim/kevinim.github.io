@@ -5,14 +5,15 @@ const fs=require('node:fs'),path=require('node:path');
 const ROOT=path.resolve(__dirname,'..');
 const read=f=>JSON.parse(fs.readFileSync(path.join(ROOT,f),'utf8'));
 function campusRow(row){
- if(!Array.isArray(row.officialCodes)||row.officialCodes.length!==3)return false;
+ const official=Array.isArray(row.officialCodes)?row.officialCodes:row.officialSchoolCodes;
+ if(!Array.isArray(official)||official.length!==3)return false;
  const grades=['elementary','middle','high'];
  const gis=grades.map(g=>row.GIS?.[g]??row.GISSchoolCodesByGrade?.[g]);
  if(gis.some(v=>!Array.isArray(v)||v.length!==1))return false;
  const cross=gis.map(x=>x[0]);
  if(cross.some(x=>!/^043912\d{3}$/.test(String(x.campusId||''))||
   String(x.code||'')!==String(x.campusId).slice(-3)))return false;
- const expected=[...row.officialCodes].sort().join(',');
+ const expected=[...official].sort().join(',');
  const fromGIS=cross.map(x=>x.code).sort().join(',');
  return expected===fromGIS;
 }
