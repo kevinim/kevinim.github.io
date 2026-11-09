@@ -90,9 +90,34 @@ async function runDistrict(browser,d){
       .map(x=>({id:x.id,complexName:x.complexName,selected:false,independentlyVerified:false}));
     }
     row.status=row.locatorOpened?'OFFICIAL_LOCATOR_UI_OPENED_NOT_ADDRESS_VERIFIED':'CTA_CLICKED_BUT_LOCATOR_NOT_CONFIRMED';
-   }catch(e){row.errors.push('locator_click:'+short(e));row.status='LOCATOR_UI_NOT_REACHED';}
+   }catch(e){
+    row.errors.push('locator_click:'+short(e));
+    row.status='LOCATOR_UI_NOT_REACHED';
+    if(d.directLocator){
+     try{
+      await page.goto(d.directLocator,{waitUntil:'domcontentloaded',timeout:33000});
+      await page.waitForTimeout(4500);
+      row.locator=await inventory(page);
+      row.locatorOpened=true;
+      row.officialPublishedDirectLocatorFallback=true;
+      row.status='PUBLISHED_LOCATOR_OPENED_NOT_ADDRESS_VERIFIED';
+      if(await screenshot(page,'official-'+d.district+'-direct-locator.png'))row.screenshots.push('directLocator');
+     }catch(err){row.errors.push('direct_fallback:'+short(err));}
+    }
+   }
   }else{
    row.status='OFFICIAL_LOCATOR_CONTROL_NOT_DETECTED';
+   if(d.directLocator){
+    try{
+     await page.goto(d.directLocator,{waitUntil:'domcontentloaded',timeout:33000});
+     await page.waitForTimeout(4500);
+     row.locator=await inventory(page);
+     row.locatorOpened=true;
+     row.officialPublishedDirectLocatorFallback=true;
+     row.status='PUBLISHED_LOCATOR_OPENED_NOT_ADDRESS_VERIFIED';
+     if(await screenshot(page,'official-'+d.district+'-direct-locator.png'))row.screenshots.push('directLocator');
+    }catch(err){row.errors.push('direct_fallback:'+short(err));}
+   }
   }
  }catch(e){row.errors.push('open:'+short(e));row.status='OFFICIAL_PAGE_UNAVAILABLE';}
  finally{
