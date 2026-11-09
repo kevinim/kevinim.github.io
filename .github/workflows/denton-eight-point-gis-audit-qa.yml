@@ -7,6 +7,9 @@ on:
     branches:
       - feature/denton-public-campus-points-20261109
   workflow_dispatch:
+concurrency:
+  group: denton-agent02-${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
