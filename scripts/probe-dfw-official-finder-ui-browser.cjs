@@ -11,7 +11,7 @@ const OUT=path.join(ROOT,'artifacts/dfw-official-finder-ui-probe');
 fs.mkdirSync(OUT,{recursive:true});
 const officialPages=[
  {district:'043907',url:'https://www.mckinneyisd.net/page/attendance-zones-maps/',label:'26-27 School Locator',directLocator:'https://portal.metrostudygis.com/arcgis/apps/webappviewer/index.html?id=ed198c434d47474b88709e98d1f0a125'},
- {district:'PISD',url:'https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder',label:'Find My School'},
+ {district:'PISD',url:'https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder',label:'Find My School',directLocator:'https://experience.arcgis.com/experience/73a3f873d9c040348d6e723ed4b48af4'},
  {district:'LISD',url:'https://www.lisd.net/resources/families/school-locator',label:'VIEW 2026-2027 SCHOOL LOCATOR',directLocator:'https://portal.metrostudygis.com/arcgis/apps/webappviewer/index.html?id=8b1628e7345e4a98a4dcf6c852581656'}
 ];
 const report={asOf:'2026-11-09',schemaVersion:1,publicBasesOnly:true,
