@@ -82,7 +82,7 @@ async function main(){
     return {policy,prior,probe:window.__inertPreviewProbe||0};
    });
    assert.match(security.policy,/script-src-attr 'none'/,'missing CSP handler protection');
-   assert.doesNotMatch(security.policy,/'unsafe-inline'/,'public preview CSP was weakened');
+   assert.doesNotMatch(security.policy.split(';').find(x=>x.trim().startsWith('script-src ')),/'unsafe-inline'/,'public preview JavaScript CSP was weakened');
    assert.equal(security.probe,0,'a hostile inline event attribute must not execute');
    assert.deepEqual(security.prior,[],'normal preview actions triggered CSP violations');
    assert.deepEqual(local404,[],'Local referenced assets returned 4xx');

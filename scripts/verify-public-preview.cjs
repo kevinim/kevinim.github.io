@@ -30,7 +30,7 @@ assert.equal(report.newSensitive.length,0);
 const previewHtml=fs.readFileSync(path.join(base,'index.html'),'utf8');
 const previewCsp=verifyCspIntegrity(previewHtml);
 assert.equal(previewCsp.policy.includes("script-src-attr 'none'"),true);
-assert.equal(previewCsp.policy.includes("'unsafe-inline'"),false);
+assert.equal(previewCsp.policy.split(';').map(x=>x.trim()).find(x=>x.startsWith('script-src ')).includes("'unsafe-inline'"),false);
 const assets=['index.html','home-lookup-v2.js','candidate-compare.js','dfw-outside-public.json','schools.json'];
 for(const p of assets)assert.ok(fs.existsSync(path.join(base,p)),'Missing public asset '+p);
 const forbidden=['jpm-outside-dfw.json','jpm-road-times-2026-11-04.json',

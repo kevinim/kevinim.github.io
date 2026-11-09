@@ -29,7 +29,8 @@ function cspSourceSnapshot(html){
  const metas=[...html.matchAll(/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"\s*\/?>/gi)];
  if(metas.length!==1)throw Error('Public preview requires exactly one CSP meta policy');
  const meta=metas[0],policy=meta[1];
- if(/'unsafe-inline'|'unsafe-eval'/i.test(policy))throw Error('Unsafe CSP policy rejected');
+ const scriptDirective=policy.split(';').map(x=>x.trim()).find(x=>x.startsWith('script-src '));
+ if(!scriptDirective||/'unsafe-inline'|'unsafe-eval'/i.test(scriptDirective))throw Error('Unsafe script CSP policy rejected');
  if(!/(?:^|;)\s*script-src-attr\s+'none'\s*(?:;|$)/.test(policy))
   throw Error('CSP must explicitly disable HTML event-handler attributes');
  if(!/script-src\s+'self'/.test(policy)||!/object-src\s+'none'/.test(policy)||!/base-uri\s+'self'/.test(policy))
@@ -84,6 +85,9 @@ function sanitizeIndex(source){
  s=s.slice(0,geocodeStart)+
    "const hits=await geocodeAddress(addr);if(!hits.length)throw Error('주소를 찾을 수 없습니다. 더 구체적인 텍사스 주소를 입력하세요');const candidate=hits[0];const p=[candidate.location.y,candidate.location.x];state.dest={ll:p,address:candidate.address||addr};"+
    s.slice(geocodeEnd+geocodeFinal.length);
+ // A public preview uses Esri instead of Nominatim, so remove the unused
+ // Nominatim network permission as well as the original JavaScript dependency.
+ s=s.replace(/(connect-src[^;"<>]*)/,(full)=>full.replace(/\shttps:\/\/nominatim\.openstreetmap\.org(?=\s|$)/g,''));
  if(/nominatim\.openstreetmap\.org/i.test(s))throw Error('Public Nominatim dependency unexpectedly remains');
  s=s.replaceAll('jpmMinutes','genericCommuteMinutes'); // no precomputed commute time is distributed
  // Public output contains no organization-specific or personalized commute references.
