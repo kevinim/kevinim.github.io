@@ -82,6 +82,18 @@ const keep=(k,x)=>KEEP.has(k)||typeof x!=='string';
   assert.ok(seen.has('esri')&&seen.size>=4,'probe must reach the external-data paths: '+[...seen]);
   assert.ok(r.shownAsText>0,'poisoned text must be rendered (as inert text) to prove the paths were exercised: '+JSON.stringify(r));
   console.log('PASS untrusted service responses and typed input never execute as HTML');
+  // Exercise the real keyboard/click-compatible delegated school back action.
+  const delegatedBack=await page.evaluate(()=>{
+   const school=state.schools.find(x=>x.ll);
+   if(!school)return {button:false,cleared:false};
+   state.selectedSchool=school;drawDetail();
+   const button=document.querySelector('#detailContent button[data-clear-school]');
+   if(!button)return {button:false,cleared:false};
+   button.click();
+   return {button:true,cleared:state.selectedSchool===null};
+  });
+  assert.deepEqual(delegatedBack,{button:true,cleared:true},'school detail back action must work without onclick');
+  console.log('PASS delegated school back button retains functionality under strict CSP');
   // CSP: the page's own features cause no violations, and the policy is active.
   for(const id of ['crimeMapToggle']){await page.locator('#'+id).click().catch(()=>{});await page.waitForTimeout(1500)}
   for(const id of ['femaHazardEnabled','winterMapEnabled','txwrapWHPEnabled']){await page.evaluate(id=>{const e=document.getElementById(id);if(e){e.checked=true;e.dispatchEvent(new Event('change',{bubbles:true}))}},id);await page.waitForTimeout(2500)}
@@ -89,6 +101,15 @@ const keep=(k,x)=>KEEP.has(k)||typeof x!=='string';
   await page.waitForTimeout(2000);
   const ownViolations=await page.evaluate(()=>window.__csp.slice());
   assert.deepEqual(ownViolations,[],'page features must not trigger CSP violations: '+JSON.stringify(ownViolations));
+  const hostileInline=await page.evaluate(()=>{
+   const before=window.__xss||0;
+   const button=document.createElement('button');
+   button.setAttribute('onclick','window.__xss=(window.__xss||0)+1');
+   document.body.appendChild(button);button.click();button.remove();
+   return {before,after:window.__xss||0};
+  });
+  assert.equal(hostileInline.after,hostileInline.before,'CSP must block dynamically injected inline event handlers');
+  console.log('PASS strict CSP rejects an injected inline event handler');
   const blocked=await page.evaluate(()=>new Promise(res=>{document.addEventListener('securitypolicyviolation',e=>res(e.violatedDirective),{once:true});const s=document.createElement('script');s.src='https://example.invalid/injected.js';document.head.appendChild(s);setTimeout(()=>res(null),3000)}));
   assert.ok(blocked&&blocked.startsWith('script-src'),'CSP must block scripts from unlisted hosts: '+blocked);
   console.log('PASS CSP active (foreign script blocked) with no violations from site features');
