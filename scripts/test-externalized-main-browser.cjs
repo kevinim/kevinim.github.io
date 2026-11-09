@@ -50,7 +50,8 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
     assert.ok(b.mapReady&&b.mapContainer&&b.onMap&&b.onHome,'map/home globals must be initialized');
     assert.ok(b.schools>0&&b.zipOptions>3,'school directory and ZIP filter must populate');
     assert.ok((b.policy||'').includes("script-src 'self' https://unpkg.com;"),'strict external policy');
-    assert.ok((b.policy||'').includes("script-src-attr 'none'")&&!(b.policy||'').includes('unsafe-inline'));
+    const scriptPolicy=(b.policy||'').split(';').map(x=>x.trim()).find(x=>x.startsWith('script-src '));
+   assert.ok((b.policy||'').includes("script-src-attr 'none'")&&scriptPolicy&&!scriptPolicy.includes('unsafe-inline'));
         assert.ok(b.markers>=0,'school layer object exists');
 
     const selections=await page.locator('#zipSelect option').evaluateAll(
