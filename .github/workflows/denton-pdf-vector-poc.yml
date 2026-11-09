@@ -28,11 +28,17 @@ jobs:
         run: |
           python -m py_compile scripts/denton_pdf_vector_poc.py
           python scripts/denton_pdf_vector_poc.py --out artifacts/denton-pdf-vector-poc
+      - name: Inspect page-level GeoPDF Measure / Viewport metadata and district palette
+        run: |
+          python -m py_compile scripts/denton_pdf_geopdf_probe.py
+          python scripts/denton_pdf_geopdf_probe.py
       - name: Save PDF-local drawings, map previews and raw inspection reports
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: denton-official-2026-27-pdf-vector-forensic-staging
-          path: artifacts/denton-pdf-vector-poc/
+          path: |
+            artifacts/denton-pdf-vector-poc/
+            artifacts/denton-pdf-geo-probe/
           retention-days: 7
           if-no-files-found: warn
