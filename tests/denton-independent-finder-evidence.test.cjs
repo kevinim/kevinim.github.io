@@ -81,3 +81,13 @@ test('mutating a grade school ID, program or enrollment certification would be d
  const falseEnrollment=data.rows.some(r=>r.residentialAssignmentReleaseCertified===true);
  assert.equal(falseEnrollment,false);
 });
+
+test('live official Finder runner must fail CI on any missing or mismatched grade result',()=>{
+ const fs=require('node:fs'),path=require('node:path');
+ const source=fs.readFileSync(path.resolve(__dirname,'../scripts/denton-independent-grade-finder-qa.cjs'),'utf8');
+ assert.match(source,/if\(passed!==9\)process\.exitCode=1/);
+ assert.match(source,/for\(const grade of \[2,7,10\]\)/);
+ assert.match(source,/waitForFunction\(target=>/,'wait for asynchronously loaded exact grade option');
+ assert.match(source,/if\(active!=='DFLT'\)/);
+ assert.match(source,/NO_GO_NO_SINGLE_OFFICIAL_SCHOOL_RESULT/);
+});
