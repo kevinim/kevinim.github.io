@@ -156,13 +156,13 @@
       "districts": 2,
       "teaCampusRecords": 126
     },
-    "choice-not-address-zoning": {
-      "districts": 1,
-      "teaCampusRecords": 66
-    },
     "campus-polygon-evidence-unreviewed": {
       "districts": 1,
       "teaCampusRecords": 237
+    },
+    "choice-not-address-zoning": {
+      "districts": 1,
+      "teaCampusRecords": 66
     }
   },
   "priorityQueue": [
