@@ -1,0 +1,98 @@
+#!/usr/bin/env node
+'use strict';
+// Read-only source and link-trust audit for school district links and GIS text.
+// Does not modify the dashboard or certify every DOM source-to-sink flow.
+const fs = require('node:fs');
+const path = require('node:path');
+const { DISTRICT_REGISTRY } = require('../district-registry.js');
+const { knownBoundaryException } = require('../school-boundary-match.js');
+
+const TRUSTED_OFFICIAL_HOSTS = Object.freeze([
+  'www.friscoisd.org', 'www.prosper-isd.net', 'www.allenisd.org',
+  'www.lisd.net', 'www.pisd.edu', 'www.cfbisd.edu',
+  'earlycollege.cfbisd.edu', 'www.mckinneyisd.net',
+  'portal.metrostudygis.com', 'txschools.gov',
+]);
+
+const SPECIAL_CAMPUSES = Object.freeze([
+  { district: 'PISD', name: 'Academy High School' },
+  { district: 'AISD', name: 'Lowery Freshman Center' },
+  { district: 'LISD', name: 'Mill Street Elementary' },
+  { district: '043907', name: 'McNeil Elementary School' },
+  { district: '043907', name: 'Serenity High School' },
+  { district: '043907', name: 'Caldwell Elementary School' },
+  { district: 'CFB', name: 'Early College High School' },
+]);
+
+function checkOfficialUrl(value, hosts = TRUSTED_OFFICIAL_HOSTS) {
+  if (typeof value !== 'string' || value.length > 2048 ||
+      !value.startsWith('https://') || /[\u0000-\u001f\u007f]/.test(value)) return false;
+  try {
+    const u = new URL(value);
+    return u.protocol === 'https:' && u.username === '' && u.password === '' &&
+      u.port === '' && hosts.includes(u.hostname) &&
+      !/\\/.test(value.slice('https://'.length).split('/')[0]);
+  } catch { return false; }
+}
+
+function auditSchoolBoundaryTrust(files, registry = DISTRICT_REGISTRY) {
+  const errors = [], warnings = [];
+  const source = files?.['index.html'] || '';
+  const legacy = files?.['reviewed.html'] || '';
+  const match = files?.['school-boundary-match.js'] || '';
+  if (!source || !legacy || !match) {
+    errors.push('Missing required school boundary source files');
+    return {errors, warnings, inventory: null};
+  }
+  const checked = [];
+  for (const [code, district] of Object.entries(registry)) {
+    checked.push(code);
+    if (!checkOfficialUrl(district?.official)) errors.push(code + ': invalid official district URL/protocol/host');
+  }
+  for (const sample of SPECIAL_CAMPUSES) {
+    const exception = knownBoundaryException(sample);
+    if (!exception || !checkOfficialUrl(exception.sourceUrl)) {
+      errors.push(sample.district + '/' + sample.name + ': missing or unsafe official exception URL');
+    }
+  }
+  // Present production behavior must not start treating untrusted missing-boundary
+  // explanations as HTML. The textContent calls are monitored verbatim.
+  for (const marker of [
+    'heading.textContent=failure.reason',
+    "footnote.textContent='경계 미표시 각주 · '+failure.footnote",
+    'sourceLink.textContent=failure.sourceLinkLabel',
+  ]) {
+    if (!source.includes(marker)) errors.push('main school GIS warning is no longer text-only: ' + marker);
+  }
+  if (!source.includes('sourceLink.href=failure.sourceUrl'))
+    warnings.push('main official evidence-link implementation changed; manually review allowed URL protocols');
+  if (!legacy.includes('function loadBoundaryFile(') ||
+      !legacy.includes("j.type!=='FeatureCollection'") ||
+      !legacy.includes('Array.isArray(j.features)')) {
+    errors.push('legacy uploaded-GeoJSON entrypoint changed; do not silently drop upload audit');
+  }
+  if (!legacy.includes('j.features.map(f=>escape(f.properties.YearUpdated')) {
+    errors.push('legacy Allen historical date is no longer explicitly escaped before HTML insertion');
+  }
+  if (!source.includes("results.map(escape).join('<br>')")) {
+    warnings.push('main remote school-loader status output changed; review untrusted error messages');
+  }
+  warnings.push('Legacy reviewed.html uploader only checks FeatureCollection/features array. No file byte, feature count, geometry coordinate bounds, polygon ring limit or nesting-depth enforcement observed.');
+  warnings.push('Source URL allowlist is audit-only; current main sourceLink.href assignment does not itself enforce it at runtime.');
+  warnings.push('Remote school GIS polygon labels and Leaflet data paths require browser verification; no exploit or integrity guarantee established.');
+  return {errors, warnings, inventory: {districts: checked.length, exceptionLinks: SPECIAL_CAMPUSES.length, filesReviewed: 3}};
+}
+
+function run() {
+  const root = path.resolve(__dirname, '..');
+  const files = Object.fromEntries(['index.html','reviewed.html','school-boundary-match.js']
+    .map(p => [p, fs.readFileSync(path.join(root,p),'utf8')]));
+  const r = auditSchoolBoundaryTrust(files);
+  if (r.inventory) console.log('GIS official links: ' + r.inventory.districts + ' districts; ' + r.inventory.exceptionLinks + ' special-campus source links');
+  for (const w of r.warnings) console.log('FOLLOW-UP: ' + w);
+  for (const e of r.errors) console.error('FAIL: ' + e);
+  if (r.errors.length) process.exitCode=1;
+  else console.log('PASS: tracked GIS text sinks and official link source contract are unchanged; no full XSS certification');
+}
+if (require.main === module) run();
+module.exports={checkOfficialUrl,auditSchoolBoundaryTrust,SPECIAL_CAMPUSES,TRUSTED_OFFICIAL_HOSTS};

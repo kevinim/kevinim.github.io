@@ -1,0 +1,27 @@
+name: External API policy contract (read-only)
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '10 15 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  audit-external-api-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify provider contract tests
+        run: node --test tests/audit-external-api-contract.test.cjs
+      - name: Audit deployed-source provider markers and disclaimers
+        run: node scripts/audit-external-api-contract.cjs
