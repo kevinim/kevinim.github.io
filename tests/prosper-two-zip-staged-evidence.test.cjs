@@ -49,3 +49,12 @@ test('single ZIP, wrong campus ID, changed school year or source false claim rem
   assert.equal(assess(f.a,f.b,f.ui).technicalStatus,'INCOMPLETE_OR_INVALID_SOURCE');
  }
 });
+
+test('new 75035 probe officialSchoolCodes field is accepted only with matching 9-digit campus IDs',()=>{
+ const x=mk('public_other_zip');
+ x.officialSchoolCodes=x.officialCodes;
+ delete x.officialCodes;
+ assert.equal(campusRow(x),true);
+ x.officialSchoolCodes=['101','041','999'];
+ assert.equal(campusRow(x),false);
+});
