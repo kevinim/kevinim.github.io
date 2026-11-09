@@ -77,14 +77,24 @@ async function runDistrict(browser,d){
      // Lewisville's PUBLISHED INSTRUCTIONS use "Find an Apartment" and
      // a complex-name drop-down. We record proof of that UI if found;
      // absence is inconclusive (often embedded map iframe or blocked origin).
-     const picker=next.getByText('Find an Apartment',{exact:false}).first();
-     row.apartmentPickerAvailable=(await picker.count())>0;
-     if(row.apartmentPickerAvailable){
-      try{await picker.click({timeout:6000});await next.waitForTimeout(1200);
-       row.apartmentUi=await inventory(next);
-       if(await screenshot(next,'official-LISD-apartment-picker.png'))row.screenshots.push('apartmentPicker');
-      }catch(e){row.errors.push('apartment_picker:'+short(e));}
-     }
+     row.apartmentInstructionsVisible=(await next.getByText('Find an Apartment',{exact:false}).count())>0;
+     // Instructions alone do not establish a working interactive complex finder.
+     try{
+      const button=next.locator('[title*="Apartment"],[aria-label*="Apartment"],button:has-text("Find an Apartment")').first();
+      if(await button.count())await button.click({timeout:5000});
+      else{
+       // Fixed 1366px QA viewport; official map toolbar icon near x482 y110.
+       await next.mouse.click(482,110);
+       row.apartmentToolbarIconClicked=true;
+      }
+      await next.waitForTimeout(1800);
+      row.apartmentUi=await inventory(next);
+      row.apartmentPickerAvailable=!!(row.apartmentUi.fields||[]).find(f=>
+       (f.tag==='SELECT'&&f.options?.length>0) ||
+       (f.tag==='INPUT'&&f.id!=='esri_dijit_Search_0_input')) ||
+       !!(row.apartmentUi.controls||[]).find(c=>/^apply$/i.test(c.label||''));
+      if(await screenshot(next,'official-LISD-apartment-picker.png'))row.screenshots.push('apartmentPicker');
+     }catch(e){row.errors.push('apartment_picker:'+short(e));}
      // Do not assume any dropdown listing equals an approved house assignment.
      row.publicComplexes=fixture.cases.filter(x=>x.districtHint==='LISD')
       .map(x=>({id:x.id,complexName:x.complexName,selected:false,independentlyVerified:false}));
