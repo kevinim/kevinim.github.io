@@ -30,8 +30,19 @@ async function lookupOfficialBrowser(page,sample){
  const requests=[];
  const onResponse=(resp)=>{
   try{const u=new URL(resp.url());if(u.hostname.endsWith('infofinderi.com')){
-   requests.push({host:u.hostname,pathname:u.pathname.slice(0,120),httpStatus:resp.status()});}
-  }catch{}
+   const hit={host:u.hostname,pathname:u.pathname.slice(0,120),httpStatus:resp.status()};
+   requests.push(hit);
+   if(/SearchAddress/i.test(u.pathname)){
+    resp.json().then(json=>{
+     const root=json?.d??json;
+     hit.responseSchema={topKeys:json&&typeof json==='object'?Object.keys(json).slice(0,16):[],
+      resultType:Array.isArray(root)?'array':typeof root,
+      resultCount:Array.isArray(root)?root.length:null,
+      resultKeys:root&&typeof root==='object'&&!Array.isArray(root)?Object.keys(root).slice(0,20):[],
+      sampleRowKeys:Array.isArray(root)&&root[0]&&typeof root[0]==='object'?Object.keys(root[0]).slice(0,20):[]};
+    }).catch(()=>{});
+   }
+  }}catch{}
  };
  page.on('response',onResponse);
  try{
@@ -40,6 +51,24 @@ async function lookupOfficialBrowser(page,sample){
   await page.getByRole('button',{name:'Search',exact:true}).click({timeout:15000});
   ui.searchSubmitted=true;
   await page.waitForTimeout(6500);
+  // The official app may require choosing a returned address after SearchAddress.
+  // Expose only field/key structure and counts; never raw street text or coordinates.
+  ui.addressCandidateUI=await page.evaluate(({street,zip})=>{
+   const simple=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+   const want=simple(street);
+   const nodes=[...document.querySelectorAll('li,button,a,[role=option],div[role=listitem]')];
+   const matches=nodes.filter(el=>{
+    const r=el.getBoundingClientRect(),text=simple(el.textContent);
+    return r.width>0&&r.height>0&&want&&text.includes(want);
+   });
+   return {visibleMatchingAddressCandidates:matches.length,
+    options:matches.slice(0,8).map(el=>({
+     tag:el.tagName.toLowerCase(),role:el.getAttribute('role')||'',
+     classes:String(el.className||'').slice(0,90),
+     hasCorrectZip:String(el.textContent||'').includes(zip),
+     isButtonOrLink:['BUTTON','A'].includes(el.tagName)||el.getAttribute('role')==='option'
+    }))};
+  },{street,zip});
   const after=await page.locator('body').innerText().catch(()=>''),features=GEO.features;
   ui.baselineSchoolNames=observedSchoolNames(before,features);
   ui.foundUiSchoolNames=observedSchoolNames(after,features);
