@@ -47,18 +47,18 @@ async function main(){
   const a=f.attributes||{},id=cleanId(a.USER_SCHOO),ll=point(f);
   if(!id||!pdfIds.has(id))continue;
   if(!valid2026.has(id)){missingIds.push(id);continue}
-  if(!ll){badPoint.push({id,name:a.USER_SCH_1});continue}
+  if(!ll){badPoint.push({id,name:a.USER_SCH_1,geo:f.geometry||null,sourceAddress:a.USER_SCH_6||null,sourceCity:a.USER_SCH_7||null,ncesId:String(a.USER_NCE_1||'').replace(/[^0-9]/g,'')});continue}
   if(schoolMap.has(id)){duplicates.push(id);continue}
   const name=a.USER_SCH_1||a.USER_SCH_6||a.LONGLABEL||'',current=valid2026.get(id);
   const loose=normalized(name),teaName=normalized(current.officialName||current.name);
   const same=loose===teaName||loose.includes(teaName)||teaName.includes(loose);
   if(!same)yearNames.push({id,sourceName:name,teaName:current.officialName||current.name});
-  schoolMap.set(id,{id,name,lat:ll[0],lon:ll[1],ncesId:String(a.USER_NCE_1||'').trim(),
+  schoolMap.set(id,{id,name,lat:ll[0],lon:ll[1],ncesId:String(a.USER_NCE_1||'').replace(/[^0-9]/g,''),
    matchType:a.MATCH_TYPE,matchScore:a.SCORE,schoolYear:'2024-25',sourceStatus:a.USER_SCH16||null,
    currentName:current.officialName||current.name,has2026Pdf:pdfIds.has(id),nameLooseMatch:same,
    publicCampusOnly:true});
  }
- const ncesIds=[...new Set([...schoolMap.values()].map(x=>x.ncesId).filter(x=>/^\d{10,13}$/.test(x)))];
+ const ncesIds=[...new Set([...schoolMap.values()].map(x=>x.ncesId).concat(badPoint.map(x=>x.ncesId)).filter(x=>/^\d{10,13}$/.test(x)))];
  let nces=[];
  if(ncesIds.length){
   const where='NCESSCH IN ('+ncesIds.map(id=>"'"+id+"'").join(',')+')';
@@ -82,6 +82,13 @@ async function main(){
   sourceYear:'2024-25',currentYearCampusPointCertified:false,currentAttendanceZoneCertified:false,
   duplicates,missingIds,badPoint,yearNames};
  console.log('DENTON_PUBLIC_CAMPUS_POINT_AUDIT',JSON.stringify(count));
+ for(const miss of badPoint){
+  const matched=ncesBy.get(miss.ncesId);
+  console.log('MISSING_TEAPOINT_NCES_FALLBACK='+JSON.stringify({id:miss.id,name:miss.name,
+   ncesId:miss.ncesId,ncesName:matched?.attributes?.NAME||null,ncesYear:matched?.attributes?.SCHOOLYEAR||null,
+   ncesPoint:matched?point(matched):null,sourceAddress:miss.sourceAddress,sourceCity:miss.sourceCity,
+   teaGeometry:miss.geo}));
+ }
  // Public school identities, approximate campus coords only. Not residential observations.
  for(const x of audits)console.log('CAMPUS_POINT_ROW='+JSON.stringify(x));
 }
