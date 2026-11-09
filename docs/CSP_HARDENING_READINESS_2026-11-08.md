@@ -1,3 +1,5 @@
+> **Current-state update (after merged PR #89, 2026-11-08 ET):** Both live entry pages now use exact SHA-256 inline-script CSP hashes and `script-src-attr 'none'`; `'unsafe-inline'` was removed. Earlier CSP descriptions below are HISTORICAL snapshots and must not be treated as current. The CSP readiness tool and Chromium probe in this PR were updated to verify the strict hash-based behavior. `connect-src`, `img-src`, `default-src`, header-level `frame-ancestors` and full source-to-sink review remain open. PR #88's externalization is now incompatible with the current source-hash test and the pre-release preview builder; do not merge it unchanged.
+
 # CSP hardening and HTML sink review — 2026-11-08
 
 Status: **Source/isolated browser review only; no live CSP change, public deployment, or security certification.**  
