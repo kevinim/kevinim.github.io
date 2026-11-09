@@ -7,7 +7,9 @@ const points=read('data/healthcare/cms-dfw-census-points-2026.json');
 const trauma=read('data/healthcare/dshs-trauma-facilities-2026.json');
 const matched=read('data/healthcare/dshs-cms-exact-matches-2026.json');
 const winter=read('data/resilience/fema-nri-dfw-winter-2025.json');
-const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+const htmlPage=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+// Inspect the HTML shell and its unchanged externalized classic bootstrap together.
+const html=htmlPage+'\n'+fs.readFileSync(path.join(__dirname,'../dashboard-main.js'),'utf8');
 const extra=fs.readFileSync(path.join(__dirname,'../features/dashboard-extras.js'),'utf8');
 test('Census hospital coordinates have strict provenance and no fabricated unmatched pins',()=>{
  assert.equal(points.metadata.recordCount,104);
@@ -41,6 +43,7 @@ test('NRI 2025 DFW winter cold, ice and weather data are unique and state-scoped
  }
 });
 test('Map controls lazy-load independent layers and do not change old school selectors',()=>{
+ assert.ok(htmlPage.includes('./dashboard-main.js?v=1'));
  for(const id of ['healthcareMapQuickToggle','winterMapQuickToggle','winterMapLegend','healthcareMapStatus','schoolOverlay','historicOverlay','referenceBoundaryOverlay']){
   assert.equal(html.split('id="'+id+'"').length-1,1,id);
  }
