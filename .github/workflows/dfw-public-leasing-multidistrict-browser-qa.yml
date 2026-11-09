@@ -23,8 +23,9 @@ jobs:
           node --check scripts/probe-dfw-official-finder-ui-browser.cjs
           node --check scripts/probe-dfw-official-address-search-browser.cjs
           node --check scripts/dfw-official-finder-evidence-policy.cjs
+          node --check scripts/dfw-finder-observation.cjs
           node --check tests/dfw-public-leasing-address-e2e-policy.test.cjs
-          node --test tests/dfw-public-leasing-address-e2e-policy.test.cjs tests/dfw-official-finder-evidence-policy.test.cjs tests/home-assignment-map.test.cjs tests/dfw-home-automation-readiness.test.cjs
+          node --test tests/dfw-public-leasing-address-e2e-policy.test.cjs tests/dfw-official-finder-evidence-policy.test.cjs tests/dfw-finder-observation.test.cjs tests/home-assignment-map.test.cjs tests/dfw-home-automation-readiness.test.cjs
   real-mobile-desktop-browser:
     name: Real street-address to school map lifecycle, 3 ISDs x 2 addresses
     runs-on: ubuntu-latest
