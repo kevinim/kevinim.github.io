@@ -66,4 +66,6 @@ jobs:
       - name: Build curated public preview and test browser isolation without publishing
         env:
           NODE_PATH: ${{ github.workspace }}/bootstrap-browser-tmp/node_modules
-        run: node scripts/test-public-preview-browser.cjs
+        run: |
+          node scripts/build-public-preview.cjs
+          node scripts/test-public-preview-browser.cjs
