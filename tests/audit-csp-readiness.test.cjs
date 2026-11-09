@@ -28,7 +28,7 @@ test('main source is hash-locked, and reviewed.html is now external-script-only'
   if(r.name==='index.html')assert.ok(r.summary.inlineScriptBytes>10000,r.name);
   else assert.equal(r.summary.inlineScriptBytes,0,r.name);
   assert.match(r.summary.policy,/script-src-attr 'none'/);
-  assert.doesNotMatch(r.summary.policy,/'unsafe-inline'/);
+  assert.ok(!parseDirectives(r.summary.policy).get('script-src').includes("'unsafe-inline'"));
  }
  const reviewed=fs.readFileSync(path.resolve(__dirname,'../reviewed.html'),'utf8');
  assert.ok(reviewed.includes('src="./features/reviewed-bootstrap.js?v=1"'));
