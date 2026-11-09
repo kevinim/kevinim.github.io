@@ -104,5 +104,7 @@ jobs:
             artifacts/agent01-irving-browser/staging-browser-qa.json
             artifacts/agent01-irving-browser/irving-staging-390.png
             artifacts/agent01-irving-browser/irving-staging-1366.png
+            artifacts/agent01-irving-browser/irving-live-reference-map-390.png
+            artifacts/agent01-irving-browser/irving-live-reference-map-1366.png
           if-no-files-found: warn
           retention-days: 7
