@@ -8,13 +8,13 @@ const { knownBoundaryException, boundaryMissingExplanation } = require('../schoo
 const {checkOfficialUrl,auditSchoolBoundaryTrust,SPECIAL_CAMPUSES} = require('../scripts/audit-gis-upload-links.cjs');
 const root=path.resolve(__dirname,'..');
 const source = p=>fs.readFileSync(path.join(root,p),'utf8');
-const files=()=>Object.fromEntries(['index.html','reviewed.html','features/reviewed-bootstrap.js','features/geojson-upload-guard.js','school-boundary-match.js'].map(p=>[p,source(p)]));
+const files=()=>Object.fromEntries(['index.html','dashboard-main.js','reviewed.html','features/reviewed-bootstrap.js','features/geojson-upload-guard.js','school-boundary-match.js'].map(p=>[p,source(p)]));
 
 test('all district and special-campus links have explicitly trusted HTTPS hosts',()=>{
  const r=auditSchoolBoundaryTrust(files());
  assert.deepEqual(r.errors,[]);
  assert.equal(r.inventory.districts,Object.keys(DISTRICT_REGISTRY).length);
- assert.equal(r.inventory.districts,11);
+ assert.equal(r.inventory.districts,29); // 11 established + 18 adjacent DFW district lookup references.
  assert.equal(r.inventory.exceptionLinks,7);
  for(const school of SPECIAL_CAMPUSES){
   assert.ok(checkOfficialUrl(knownBoundaryException(school)?.sourceUrl));
@@ -44,11 +44,11 @@ test('school boundary missing explanation remains raw data, not executable marku
  assert.ok(result.reason.includes(name));
  assert.equal(result.sourceUrl,undefined);
  // The actual DOM target remains textContent and is checked by auditSchoolBoundaryTrust.
- assert.ok(source('index.html').includes('heading.textContent=failure.reason'));
+ assert.ok(source('dashboard-main.js').includes('heading.textContent=failure.reason'));
 });
 test('dangerous HTML sink regression in main GIS warning is detected',()=>{
  const modified=files();
- modified['index.html']=modified['index.html'].replace('heading.textContent=failure.reason','heading.innerHTML=failure.reason');
+ modified['dashboard-main.js']=modified['dashboard-main.js'].replace('heading.textContent=failure.reason','heading.innerHTML=failure.reason');
  assert.ok(auditSchoolBoundaryTrust(modified).errors.some(e=>e.includes('no longer text-only')));
 });
 test('legacy uploaded polygon file entrypoint stays under security review',()=>{
@@ -70,7 +70,7 @@ test('missing guard or lowered validation is rejected',()=>{
 
 test('missing-boundary evidence link host guard cannot silently be removed',()=>{
  const changed=files();
- changed['index.html']=changed['index.html'].replace(
+ changed['dashboard-main.js']=changed['dashboard-main.js'].replace(
    'failure.sourceUrl&&window.TrustedLinkPolicy?.official(failure.sourceUrl)',
    'failure.sourceUrl');
  assert.ok(auditSchoolBoundaryTrust(changed).errors.some(x=>x.includes('exact-host HTTPS policy')));

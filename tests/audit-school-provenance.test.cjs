@@ -3,13 +3,13 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { auditSchoolProvenance, validHttps, safeLocalFile, readWestDfwSupplement } = require('../scripts/audit-school-provenance.cjs');
+const { auditSchoolProvenance, validHttps, safeLocalFile, readWestDfwSupplement, readNeighborDfwSupplement } = require('../scripts/audit-school-provenance.cjs');
 const root = path.join(__dirname, '..');
 
 function actual() {
   const data = JSON.parse(fs.readFileSync(path.join(root, 'school-data-provenance.json'), 'utf8'));
   const { DISTRICT_REGISTRY } = require('../district-registry.js');
-  const supplementary = [JSON.parse(fs.readFileSync(path.join(root, 'data/mckinney-2026-27-provenance.json'), 'utf8')), ...readWestDfwSupplement(root)];
+  const supplementary = [JSON.parse(fs.readFileSync(path.join(root, 'data/mckinney-2026-27-provenance.json'), 'utf8')), ...readWestDfwSupplement(root), ...readNeighborDfwSupplement(root)];
   return { data, registry: DISTRICT_REGISTRY, supplementary };
 }
 
@@ -120,4 +120,16 @@ test('west DFW supplemental provenance records all four lookup-only ISDs without
   assert.deepEqual(new Set(rows.map(r=>r.code)),new Set(['220919','220907','061911','220906']));
   assert.ok(rows.every(r=>r.status==='lookup-only'));
   assert.ok(rows.every(r=>validHttps(r.officialLookup)));
+});
+
+test('neighbor DFW supplemental provenance accounts for 18 strictly non-GIS official lookup/map/choice entries',()=>{
+ const rows=readNeighborDfwSupplement(root);
+ assert.equal(rows.length,18);
+ assert.equal(new Set(rows.map(x=>x.code)).size,18);
+ assert.ok(rows.every(x=>x.status==='lookup-only'&&x.geometryYear==='no-certified-GIS'));
+ const {data,registry,supplementary}=actual();
+ const report=auditSchoolProvenance(data,registry,{supplementary});
+ assert.equal(report.summary.registryDistricts,29);
+ assert.equal(report.summary.provenanceDistricts,29);
+ assert.equal(report.summary.knownSourceGaps,0);
 });

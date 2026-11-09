@@ -168,3 +168,91 @@ html[data-theme="dark"] #map{background:#192a3b}
  .dashboard-theme-toggle{margin-left:auto;padding:8px 11px}
 }
 @media(prefers-reduced-motion:reduce){.dashboard-theme-toggle{transition:none}}
+
+
+/* 2026-11-09 contrast pass: no light button with white-on-white text.
+ * Dark mode is intentionally deeper; thematic hazard categories remain distinct. */
+html[data-theme="dark"]{
+ --bg:#0c121d;--dark:#050c16;--ink:#f0f5fe;--sub:#bfcee2;--line:#2e415b;
+ --sky:#1e334b;
+}
+html[data-theme="dark"] body{background:#0b111b;color:#eef4fd}
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .kpi,
+html[data-theme="dark"] .mapbox,
+html[data-theme="dark"] .candidate-panel,
+html[data-theme="dark"] .region-compare,
+html[data-theme="dark"] .area-qa,
+html[data-theme="dark"] .extra-feature{background:#142033;border-color:#30445f;color:#edf5ff}
+html[data-theme="dark"] .filter-panel{background:linear-gradient(180deg,#1a2a40,#121e30 85%)!important}
+html[data-theme="dark"] .region-compare-table tbody .region-compare-metric{background:#142033}
+html[data-theme="dark"] .extra-body{background:#142033}
+html[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea{background:#0e1a2a!important;color:#f0f5ff!important;border-color:#516c90!important}
+html[data-theme="dark"] .check{color:#e6f0ff}
+/* Buttons and stateful filters get explicit background AND text in all states. */
+html[data-theme="dark"] .btn:not(.danger){
+ background:#365abe;color:#fff;border:1px solid #759ad8;
+}
+html[data-theme="dark"] .btn.secondary,
+html[data-theme="dark"] .btn.secondary:not(.danger){
+ background:#263e5d;color:#f0f5ff;border:1px solid #6d8eb7;
+}
+html[data-theme="dark"] .btn.secondary:hover{background:#345477;color:#fff}
+html[data-theme="dark"] .btn:not(.danger):hover{filter:brightness(1.10)}
+html[data-theme="dark"] .crime-seg button{
+ background:#22364f;color:#f0f6ff;border:1px solid #6b88ad;
+}
+html[data-theme="dark"] .crime-seg button:hover{background:#315071}
+html[data-theme="dark"] .crime-seg button[aria-pressed="true"]{
+ background:#4a378d;color:#fff;border-color:#9a8ddd;
+}
+html[data-theme="dark"] .mapquickbtn{
+ background:#263f5e;color:#edf5ff;border:1px solid #718fb7;
+}
+html[data-theme="dark"] .mapquickbtn:hover{background:#335577}
+html[data-theme="dark"] .mapquickbtn[aria-pressed="true"]{
+ background:#21533e;color:#e5fff3;border-color:#5ca688;
+}
+html[data-theme="dark"] .hazard-chip{
+ background:#243851;color:#eef6ff;border:1px solid #728fad;
+}
+html[data-theme="dark"] .hazard-chip:hover{background:#355170}
+html[data-theme="dark"] .hazard-chip.ifld svg{color:#9bbcff}
+html[data-theme="dark"] .hazard-chip.wfir svg{color:#ffb08c}
+html[data-theme="dark"] .hazard-chip.hrcn svg{color:#dae1ec}
+html[data-theme="dark"] .hazard-chip.crime svg{color:#c5b9ff}
+html[data-theme="dark"] .hazard-chip[aria-pressed="true"] svg{color:#fff}
+html[data-theme="dark"] .hazard-chip.ifld[aria-pressed="true"]{
+ background:#1e4eb5;color:#fff;border-color:#84aef4;
+}
+html[data-theme="dark"] .hazard-chip.wfir[aria-pressed="true"]{
+ background:#a6330b;color:#fff;border-color:#ed9368;
+}
+html[data-theme="dark"] .hazard-chip.hrcn[aria-pressed="true"]{
+ background:#3d4c5f;color:#fff;border-color:#9cabbc;
+}
+html[data-theme="dark"] .hazard-chip.crime[aria-pressed="true"]{
+ background:#49338f;color:#fff;border-color:#a48de2;
+}
+html[data-theme="dark"] .hazard-chips-label{color:#c7d8ef}
+html[data-theme="dark"] .extra-action{background:#874e0a;color:#fff;border-color:#d49c52}
+html[data-theme="dark"] .extra-action:hover{background:#a35f0c;color:#fff}
+html[data-theme="dark"] .seg button:not(.active){background:#253b58;color:#dfebfb}
+html[data-theme="dark"] .seg button:not(.active):hover{background:#314f71;color:#fff}
+html[data-theme="dark"] .seg button.active{background:#3c5d89;color:#fff}
+html[data-theme="dark"] .mini-btn{background:#274363;color:#edf6ff;border-color:#6d8fb8}
+html[data-theme="dark"] .mini-btn:hover{background:#36577c;color:#fff}
+html[data-theme="dark"] button:disabled,
+html[data-theme="dark"] button[aria-disabled="true"]{
+ color:#bccde2;opacity:.7;cursor:not-allowed;
+}
+html[data-theme="dark"] .btn:focus-visible,
+html[data-theme="dark"] .crime-seg button:focus-visible,
+html[data-theme="dark"] .hazard-chip:focus-visible,
+html[data-theme="dark"] .mapquickbtn:focus-visible,
+html[data-theme="dark"] .seg button:focus-visible,
+html[data-theme="dark"] .extra-action:focus-visible{
+ outline:3px solid #b6d0ff;outline-offset:2px;
+}

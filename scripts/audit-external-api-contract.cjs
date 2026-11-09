@@ -13,6 +13,7 @@ const path = require('node:path');
 
 const REQUIRED_FILES = Object.freeze([
   'index.html',
+  'dashboard-main.js',
   'reviewed.html',
   'features/reviewed-bootstrap.js',
   'texas-address-suggest.js',
@@ -29,7 +30,8 @@ function auditProviderContract(files) {
   }
   if (errors.length) return { errors, warnings, coverage: null };
 
-  const main = get('index.html');
+  const main = get('index.html')+'\n'+get('dashboard-main.js');
+  if(!get('index.html').includes('<script src="./dashboard-main.js?v=3"></script>'))errors.push('main external bootstrap tag missing');
   const archivedHtml = get('reviewed.html');
   const archivedBootstrap = get('features/reviewed-bootstrap.js');
   const archived = archivedHtml+'\n'+archivedBootstrap;

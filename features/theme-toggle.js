@@ -4,9 +4,9 @@
 (function(){
  const KEY='tx-dashboard-theme-v1';
  const root=document.documentElement;
- const valid=value=>value==='dark'?'dark':'light';
+ const valid=value=>value==='light'?'light':'dark';
  function saved(){
-  try{return valid(window.localStorage.getItem(KEY))}catch{return 'light'}
+  try{return valid(window.localStorage.getItem(KEY))}catch{return 'dark'}
  }
  function apply(mode){
   const next=valid(mode);

@@ -61,7 +61,7 @@ async function inspect(browser,policy,width){
   browser=await chromium.launch({headless:true,args:['--no-sandbox']});
   for(const p of pages){
    assert.equal(p.summary.allowsUnsafeInline,false,'Current CSP must remain strict');
-   assert.equal(p.summary.inlineHashes,p.name==='index.html'?1:0,'Current CSP inline hash count must match the actual script blocks');
+   assert.equal(p.summary.inlineHashes,0,'Both entrypoints use external classic scripts and must have no inline script hashes');
    const older=weakenForCounterfactual(p.summary.policy);
    for(const width of [390,1280]){
     const secure=await inspect(browser,p.summary.policy,width);

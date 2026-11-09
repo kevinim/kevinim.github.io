@@ -9,17 +9,19 @@ test('theme stylesheet and early classic script load from same-origin with uncha
  assert.match(meta,/script-src-attr 'none'/);
  assert.doesNotMatch(meta.match(/script-src ([^;]+)/)?.[1]||'',/'unsafe-inline'/);
  assert.match(html,/theme-toggle\.css\?v=1/);
- assert.match(html,/theme-toggle\.js\?v=1/);
- const headEnd=html.indexOf('</head>'),scriptAt=html.indexOf('theme-toggle.js?v=1');
+ assert.match(html,/theme-toggle\.js\?v=2/);
+ const headEnd=html.indexOf('</head>'),scriptAt=html.indexOf('theme-toggle.js?v=2');
  assert.ok(scriptAt>0&&scriptAt<headEnd,'Theme must initialize before body paints');
- assert.equal((html.match(/theme-toggle\.js\?v=1/g)||[]).length,1);
+ assert.equal((html.match(/theme-toggle\.js\?v=2/g)||[]).length,1);
  assert.match(theme,/addEventListener\('click'/);
  assert.doesNotMatch(theme,/innerHTML|eval\(|new Function\(|XMLHttpRequest|fetch\(/);
 });
-test('light is default, dark theme persists only an innocuous preference and handles unavailable storage',()=>{
+test('dark is default; explicit light preference persists without private data storage',()=>{
  assert.match(css,/:root\{color-scheme:light\}/);
  assert.match(css,/:root\[data-theme="dark"\]/);
  assert.match(theme,/const KEY='tx-dashboard-theme-v1'/);
+ assert.match(theme,/const valid=value=>value==='light'\?'light':'dark'/);
+ assert.match(theme,/catch\{return 'dark'\}/);
  assert.match(theme,/localStorage\.getItem\(KEY\)/);
  assert.match(theme,/localStorage\.setItem\(KEY,next\)/);
  assert.match(theme,/catch\{/);
@@ -54,4 +56,16 @@ test('main dark panel, body and primary text have readable WCAG AA contrast',()=
  const buttonBack=luminance('#37517b'),buttonInk=luminance('#ffffff');
  const buttonRatio=(Math.max(buttonBack,buttonInk)+0.05)/(Math.min(buttonBack,buttonInk)+0.05);
  assert.ok(buttonRatio>=4.5,'Theme button text contrast must be AA');
+});
+
+test('dark palette has deeper backgrounds and explicit backgrounds for previously invisible buttons',()=>{
+ for(const selector of ['.btn.secondary','.crime-seg button','.mapquickbtn','.hazard-chip',
+  '.extra-action','.seg button:not(.active)']){
+   assert.ok(css.includes('html[data-theme="dark"] '+selector),
+     'Missing explicit dark button style for '+selector);
+ }
+ assert.match(css,/html\[data-theme="dark"\] body\{background:#0b111b/);
+ assert.match(css,/html\[data-theme="dark"\] \.hazard-chip\.ifld\[aria-pressed="true"\]/);
+ assert.match(css,/html\[data-theme="dark"\] \.hazard-chip\.wfir\[aria-pressed="true"\]/);
+ assert.doesNotMatch(css,/filter:\s*invert/);
 });
