@@ -91,6 +91,7 @@ async function limitedJson(request){
 }
 function checkSuggest(body){
   if(Object.keys(body).length!==1||typeof body.query!=='string')return null;
+  if(/[\u0000-\u001f\u007f]/u.test(body.query))return null;
   const q=body.query.trim().normalize('NFC');
   if(q.length<3||q.length>MAX_ADDRESS||
      /[\u0000-\u001f\u007f]/u.test(q)||
