@@ -1,0 +1,54 @@
+name: Combined PR141 + PR163 public-facility browser E2E (no deploy)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/test-school-address-browser-merged.cjs'
+      - 'home-lookup-v2.js'
+      - 'school-zone-ui.js'
+      - 'district-registry.js'
+      - 'data/dfw-school-coverage-matrix-2026.json'
+      - 'tests/public-address-finder-crosscheck-2026.json'
+      - '.github/workflows/merged-school-address-browser-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-facility-home-to-polygon-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Syntax and archived public-facility QA preflight
+        run: |
+          node --check scripts/test-school-address-browser-merged.cjs
+          node --test tests/audit-dfw-school-qa-readiness.test.cjs tests/school-qa-integration.test.cjs
+      - name: Install open-source Chromium in isolated folder
+        run: |
+          mkdir -p merged-school-browser-tmp
+          cd merged-school-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve exact combined PR snapshot (no external deployment)
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/merged-school-browser.log 2>&1 &
+          sleep 2
+      - name: Desktop and mobile public-facility address-to-school-to-GIS E2E
+        env:
+          NODE_PATH: ${{ github.workspace }}/merged-school-browser-tmp/node_modules
+        run: node scripts/test-school-address-browser-merged.cjs
+      - name: Upload non-residential screenshots and summary
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: merged-school-public-facility-browser-evidence
+          path: artifacts/school-merged-address-browser/
+          if-no-files-found: warn
+          retention-days: 5
