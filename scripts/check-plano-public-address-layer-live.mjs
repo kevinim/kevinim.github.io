@@ -4,6 +4,7 @@
 // certify 2026–27 polygon vintage or a student's enrollment eligibility.
 import {mkdirSync,readFileSync,writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
+import {isTransientOfficialSourceFailure as transient} from './official-source-network-errors.mjs';
 const require=createRequire(import.meta.url);
 const {PLANO_LAYERS,PLANO_SERVICE}=require('../plano-finder-live.js');
 const {inGeometry,schoolKey}=require('./attendance-geo-audit.cjs');
@@ -18,9 +19,18 @@ const sample={
 };
 const report={checkedAt:new Date().toISOString(),sourceType:'current-Plano-ISD-Finder-linked-ArcGIS-FeatureServer',academicYearOfPublishedLayers:'2025–26',districtFinderOperatesIn2026_27:true,addressKind:'public-commercial',address:sample.address,independentFinderUiCampusResultVerified:false,homeEnrollmentVerified:false,campusResults:{},status:'not-checked'};
 async function json(url){
- const r=await fetch(url,{signal:AbortSignal.timeout(25000),cache:'no-store'});
- if(!r.ok)throw Error('HTTP '+r.status+' '+url);
- const j=await r.json();if(j?.error)throw Error('Source response error: '+JSON.stringify(j.error));return j;
+ for(let attempt=0;attempt<3;attempt++){
+  try{
+   const r=await fetch(url,{signal:AbortSignal.timeout(12000),cache:'no-store'});
+   if(!r.ok)throw Error('HTTP '+r.status);
+   const j=await r.json();
+   if(j?.error)throw Error('Source response error: '+JSON.stringify(j.error));
+   return j;
+  }catch(e){
+   if(!transient(e)||attempt===2)throw e;
+   await new Promise(resolve=>setTimeout(resolve,(attempt+1)*1200));
+  }
+ }
 }
 try{
  const g=new URL('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates');
@@ -64,7 +74,19 @@ try{
  for(const level of PLANO_LAYERS)console.log('  '+level.level+': '+report.campusResults[level.level]);
  console.log('PLANO GIS ↔ source-layer point query ↔ official feeder consistency: 4/4; this is NOT independent UI or 2026–27 vintage certification.');
 }catch(error){
- report.status='unverified';report.error=String(error?.stack||error).slice(0,1500);console.error('PLANO public point NOT verified: '+report.error);process.exitCode=1;
+ if(transient(error)){
+  report.status='SOURCE_UNAVAILABLE';
+  report.error='Official GIS/geocoder transport unavailable after retries';
+  report.campusResults={};
+  report.independentFinderUiCampusResultVerified=false;
+  report.homeEnrollmentVerified=false;
+  console.warn('PLANO_PUBLIC_POINT_SOURCE_UNAVAILABLE: no live point match established; check remains unverified and release NO_GO.');
+ }else{
+  report.status='DATA_OR_SOURCE_CONTRACT_FAILURE';
+  report.error=String(error?.stack||error).slice(0,1500);
+  console.error('PLANO public point NOT verified: '+report.error);
+  process.exitCode=1;
+ }
 }
 mkdirSync('artifacts',{recursive:true});
 writeFileSync('artifacts/plano-public-address-arcgis-check.json',JSON.stringify(report,null,2)+'\n');
