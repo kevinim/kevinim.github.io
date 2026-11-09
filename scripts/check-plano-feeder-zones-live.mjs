@@ -36,7 +36,8 @@ async function readLevel(n){
   }
  }
 }
-try{\nconst [senior,high,middle,elementary]=await Promise.all([0,1,2,3].map(readLevel));
+try{
+const [senior,high,middle,elementary]=await Promise.all([0,1,2,3].map(readLevel));
 if([senior.length,high.length,middle.length,elementary.length].join(',')!=='3,6,11,44')throw Error('Plano official Finder zone shape counts changed; inspect before continuing');
 const expected=new Map();
 for(const row of feeders.feeders){
