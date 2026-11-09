@@ -5,7 +5,8 @@ import {createRequire} from 'node:module';
 
 const readText = name => readFileSync(new URL('../' + name, import.meta.url), 'utf8');
 const readJson = name => JSON.parse(readText(name));
-const html = readText('index.html');
+const pageHtml = readText('index.html');
+const html = pageHtml + '\n' + readText('dashboard-main.js');
 const audit = readJson('school-data-provenance.json');
 const plano = readJson('plano-locator-reference.geojson');
 const allen = readJson('allen-attendance-historical.geojson');
@@ -61,10 +62,9 @@ const test = (name, fn) => {
   } else {total++;console.log('PASS '+name)}
 };
 
-const inlineScripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)]
- .map(x => x[1]).filter(Boolean);
+const inlineScripts = [readText('dashboard-main.js')];
 
-test('main page inline JavaScript compiles', () => {
+test('main page externalized classic JavaScript compiles', () => {
   assert.ok(inlineScripts.length >= 1);
   inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
 });

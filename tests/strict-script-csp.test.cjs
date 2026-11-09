@@ -16,15 +16,13 @@ const csp=html=>{
 const inlineScripts=html=>[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
  .filter(m=>!/\bsrc\s*=/.test(m[1]));
 
-test('index.html retains exact SHA-256 hash-locked inline script',()=>{
+test('index.html uses zero-hash external same-origin main bootstrap',()=>{
  const html=read('index.html'),policy=csp(html),scripts=inlineScripts(html);
- assert.equal(scripts.length,1);
- const browserScript=scripts[0][2].replace(/\r\n?/g,'\n');
- const hash=crypto.createHash('sha256').update(browserScript,'utf8').digest('base64');
- assert.ok(policy.includes("'sha256-"+hash+"'"));
- assert.equal((policy.match(/'sha256-/g)||[]).length,1);
- assert.notEqual(crypto.createHash('sha256').update(browserScript+'\n','utf8').digest('base64'),hash);
- assert.ok(browserScript.includes('button[data-clear-school]'));
+ assert.equal(scripts.length,0,'Main must have no inline executable scripts');
+ assert.ok(html.includes('<script src="./dashboard-main.js?v=2"></script>'));
+ assert.doesNotMatch(policy,/'sha256-/);
+ assert.ok(policy.includes("script-src 'self' https://unpkg.com;"));
+ assert.ok(read('dashboard-main.js').includes('button[data-clear-school]'));
 });
 
 test('reviewed.html is external-script-only with no inline handlers',()=>{

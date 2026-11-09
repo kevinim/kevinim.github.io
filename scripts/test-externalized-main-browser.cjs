@@ -25,7 +25,7 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
     return route.abort();
    });
    let asset=0;
-   page.on('response',r=>{if(r.url().includes('/dashboard-main.js?v=1')&&r.status()===200)asset++});
+   page.on('response',r=>{if(r.url().includes('/dashboard-main.js?v=2')&&r.status()===200)asset++});
    try{
     await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});
     await page.waitForFunction(()=>typeof map!=='undefined'&&map&&typeof state!=='undefined'&&
@@ -49,9 +49,9 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
     assert.equal(asset,1,'same-origin extracted dashboard-main.js must load exactly once');
     assert.ok(b.mapReady&&b.mapContainer&&b.onMap&&b.onHome,'map/home globals must be initialized');
     assert.ok(b.schools>0&&b.zipOptions>3,'school directory and ZIP filter must populate');
-    assert.match(b.policy||'',/script-src 'self' https:\/\/unpkg\.com 'unsafe-inline'/,
-      'CSP remains unchanged pending event-handler refactor');
-    assert.ok(b.markers>=0,'school layer object exists');
+    assert.ok((b.policy||'').includes("script-src 'self' https://unpkg.com;"),'strict external policy');
+    assert.ok((b.policy||'').includes("script-src-attr 'none'")&&!(b.policy||'').includes('unsafe-inline'));
+        assert.ok(b.markers>=0,'school layer object exists');
 
     const selections=await page.locator('#zipSelect option').evaluateAll(
       elements=>elements.map(x=>x.value).filter(Boolean));
