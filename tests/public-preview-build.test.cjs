@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
 const test=require('node:test');
-const {sanitizeIndex}=require('../scripts/build-public-preview.cjs');
+const {sanitizeIndex,verifyCspIntegrity,safeFiles}=require('../scripts/build-public-preview.cjs');
 const original=fs.readFileSync('index.html','utf8');
 const preview=sanitizeIndex(original);
 test('public preview removes personal default office and fixed commute sources',()=>{
@@ -33,4 +33,36 @@ test('public preview explains third-party disclosure without promising no logs',
 });
 test('fails closed on unrecognized personalized template',()=>{
  assert.throws(()=>sanitizeIndex(original.replace('id="oneHourOverlay"','id="changedOverlay"')),/template|personal|anchor/i);
+});
+
+
+test('sanitized preview retains strict hash-based CSP and locks modified script bytes',()=>{
+ const originalPolicy=verifyCspIntegrity(original);
+ const sanitizedPolicy=verifyCspIntegrity(preview);
+ assert.notEqual(sanitizedPolicy.token,originalPolicy.token,'sanitizer must refresh the SHA-256 digest');
+ assert.ok(sanitizedPolicy.policy.includes("script-src-attr 'none'"));
+ assert.ok(!sanitizedPolicy.policy.includes("'unsafe-inline'"));
+ assert.ok(!sanitizedPolicy.policy.includes("'unsafe-eval'"));
+ assert.ok(sanitizedPolicy.policy.includes("object-src 'none'"));
+});
+test('future post-sanitize bootstrap modification is detected, not silently released',()=>{
+ const modified=preview.replace('const DATA=[','const DATA=[/*hostile-drift-probe*/');
+ assert.notEqual(modified,preview);
+ assert.throws(()=>verifyCspIntegrity(modified),/does not match/);
+});
+test('fail closed on mismatched source CSP or relaxed event-handler policy',()=>{
+ assert.throws(
+  ()=>sanitizeIndex(original.replace(/'sha256-[A-Za-z0-9+/]+=*'/,"'sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA='")),
+  /does not match/
+ );
+ assert.throws(
+  ()=>sanitizeIndex(original.replace("script-src-attr 'none'","script-src-attr 'unsafe-inline'")),
+  /disable HTML event-handler/
+ );
+});
+test('legacy uploaded-GeoJSON modules never ship in the curated public preview',()=>{
+ const selected=safeFiles();
+ for(const file of ['features/reviewed-bootstrap.js','features/geojson-upload-guard.js','dashboard-main.js']){
+  assert.ok(!selected.includes(file),'privacy/release isolation required for '+file);
+ }
 });
