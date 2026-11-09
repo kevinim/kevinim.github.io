@@ -125,13 +125,13 @@ async function audit(browser,width){
    return selectors.map(selector=>{
     const element=document.querySelector(selector);if(!element)throw Error('Missing contrast target '+selector);
     const style=getComputedStyle(element);
-    let back=element,background='rgba(0, 0, 0, 0)';
+    let back=element,background='rgb(17, 25, 37)';
     while(back){
-      const s=getComputedStyle(back).backgroundColor;
-      if(s&&s!=='transparent'&&!/^rgba?\\(0, 0, 0, 0\\)$/.test(s)){
-        const a=s.match(/rgba?\\(([^)]+)\\)/);
-        if(a&&a[1].split(',').length<=3){background=s;break;}
-        if(a&&Number(a[1].split(',')[3])>=0.99){background=s;break;}
+      const value=getComputedStyle(back).backgroundColor;
+      const open=value.indexOf('('),close=value.lastIndexOf(')');
+      const parts=open>=0&&close>open?value.slice(open+1,close).split(',').map(Number):[];
+      if(parts.length===3||(parts.length===4&&parts[3]>=0.99)){
+        background=value;break;
       }
       back=back.parentElement;
     }
