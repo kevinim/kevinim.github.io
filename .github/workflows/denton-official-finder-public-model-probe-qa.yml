@@ -1,7 +1,5 @@
 name: Denton public model-address official Finder UI reconnaissance (NO DEPLOY)
 on:
-  push:
-    branches: [qa/denton-eight-points-and-2026-gis-source-audit-20261109]
   workflow_dispatch:
 permissions:
   contents: read
