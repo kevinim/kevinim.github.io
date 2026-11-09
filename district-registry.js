@@ -25,7 +25,7 @@ const DISTRICT_REGISTRY={
  LISD:{en:'Lewisville',ko:'루이스빌',zoneKey:'LISD',currency:'finder',address:'polygon',campusIdMatch:true,
   official:'https://www.lisd.net/resources/families/school-locator',label:{'finder-current':'현행 공식 Finder 경계 · 루이스빌',reference:'과거 GIS 참고 · 루이스빌'}},
  PISD:{en:'Plano',ko:'플레이노',zoneKey:'PISD_LOOKUP',currency:'finder',address:'polygon',campusIdMatch:false,
-  official:'https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder',label:{'finder-current':'현행 공식 Finder 경계 · 플레이노',reference:'2025–26 저장본 참고 · 플레이노'}},
+  official:'https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder',label:{'finder-current':'학년도 미인증 Finder 연동 경계 · 플레이노',reference:'2025–26 저장본 참고 · 플레이노'}},
  '043907':{en:'McKinney',ko:'매키니',zoneKey:'043907',currency:'live',address:'polygon',campusIdMatch:true,
   official:'https://portal.metrostudygis.com/arcgis/apps/webappviewer/index.html?id=ed198c434d47474b88709e98d1f0a125',label:{'finder-current':'2026–27 공식 Finder 경계 · 매키니'}},
  // West DFW: district IDs verified against TEA. Official external locator only;
