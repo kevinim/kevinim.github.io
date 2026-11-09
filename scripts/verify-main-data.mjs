@@ -316,7 +316,7 @@ test('P0 Plano four-level feeder guard detects Jackson Coit split and blocks mis
  assert.ok(app.includes("if(found.district==='PISD'&&found.status==='finder-current')"));
  assert.ok(app.includes("status:'feeder-review',feeder"));
  assert.ok(app.includes("if(result.status==='feeder-review')"));
- assert.ok(app.includes("'finder-boundary-review','feeder-review'"));
+ assert.match(app,/\[[^\]\r\n]*'finder-boundary-review'[^\]\r\n]*'feeder-review'[^\]\r\n]*\]\.includes\(home\.assignment\.status\)/);
  assert.ok(html.includes('./plano-feeder-guard.js?v=1'));
  assert.ok(html.includes("state.planoFeederReference=null"));
  assert.ok(html.includes("await feederPromise"));
