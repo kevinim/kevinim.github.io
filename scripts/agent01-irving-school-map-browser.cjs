@@ -50,6 +50,7 @@ async function main(){
      const match=window.SchoolBoundaryMatch.findSchoolBoundary(temp,features,()=>null);
      results.push({grade,school:temp.name,match:match.status,leafletLayers:zoneGroup.getLayers().length,
        historicalNotice:document.getElementById('zoneNotice')?.innerText||'',
+       officialFinderHref:document.querySelector('#detailContent a.cardlink[href*="f27bba7ee02141c58c8c9375431effa2"]')?.href||null,
        yearVerified:feature.properties.sourceYearVerified,
        currentGISSourceActivated:!!window.DISTRICT_REGISTRY?.['057912']?.zoneKey});
     }
@@ -62,6 +63,7 @@ async function main(){
     assert.equal(c.yearVerified,false);
     assert.equal(c.currentGISSourceActivated,false);
     assert.match(c.historicalNotice,/과거 GIS 경계/);
+    assert.match(c.officialFinderHref||'',/^https:\/\/iisd1\.maps\.arcgis\.com\/apps\/instant\/lookup\/index\.html\?appid=f27bba7ee02141c58c8c9375431effa2$/);
    }
    // Browser screenshots are only general public dashboard / temporary QA
    // school sources; there are no personal, residential or student addresses.
