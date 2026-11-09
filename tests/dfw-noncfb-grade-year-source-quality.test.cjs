@@ -133,4 +133,23 @@ test('operating-year status is not contaminated by future school closure plans',
  assert.equal(by['220919106'].regularAssignmentCampus2026_27,true);
  assert.equal(by['220919102'].status,'current-year-feeder-change');
  assert.equal(by['220919102'].regularAssignmentCampus2026_27,true);
+ assert.match(by['220919102'].destinationNote,/4학년 이하/);
+ assert.match(by['220919102'].destinationNote,/5·6·7학년/);
+ assert.match(by['220919106'].destinationNote,/2027–28/);
+});
+
+test('Carroll 2026-27 new feeder affects only lower grades; Durham 2027-28 is separate',()=>{
+ const grade=JSON.parse(fs.readFileSync('data/dfw-noncfb-grade-year-source-evidence-2026.json','utf8'));
+ const row=grade.districts.find(x=>x.code==='220919');
+ const campus=JSON.parse(fs.readFileSync('data/dfw-noncfb-campus-transition-evidence-2026.json','utf8')).entries;
+ const elementary=campus.find(x=>x.campusId==='220919102');
+ const durham=campus.find(x=>x.campusId==='220919106');
+ assert.match(row.sourceFootnote,/2026–27.*4학년 이하/);
+ assert.match(row.sourceFootnote,/5·6·7학년/);
+ assert.match(row.sourceFootnote,/2027–28/);
+ assert.ok(row.exceptionIds.includes('current-grades-5-7-grandfathered-2026-27'));
+ assert.equal(elementary.effectiveAcademicYear,'2026-27');
+ assert.equal(durham.effectiveAcademicYear,'2027-28');
+ assert.match(elementary.source,/southlakecarroll\.edu\/district-information/);
+ assert.match(durham.source,/southlakecarroll\.edu\/consolidation/);
 });

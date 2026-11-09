@@ -54,7 +54,7 @@
       "presentInTea2026Snapshot": true,
       "regularAssignmentCampus2026_27": true,
       "source": "https://www.southlakecarroll.edu/consolidation",
-      "destinationNote": "Durham Intermediate 폐쇄는 2027–28 적용; 2026–27 현재 재학생의 학년별 구역과 Carroll ES의 Eubanks/Dawson 변경은 별도 확인하세요.",
+      "destinationNote": "Durham Intermediate 폐쇄·5학년 초등 잔류 및 6–8학년 통합 중학교 개편은 2027–28 시행 계획입니다. 2026–27에는 Durham이 운영 중이며 Carroll Elementary의 신규 feeder 변경에는 당시 4학년 이하만 해당합니다.",
       "footnote": "Durham Intermediate는 2027–28 폐쇄·중학교 재편 계획 대상이며 2026–27 폐교로 취급하지 마세요."
     },
     {
@@ -66,8 +66,8 @@
       "presentInTea2026Snapshot": true,
       "regularAssignmentCampus2026_27": true,
       "source": "https://www.southlakecarroll.edu/district-information/district-departments/student-services/online-enrollment-portal",
-      "destinationNote": "Carroll Elementary 학생들은 2026–27부터 Eubanks Intermediate, Dawson Middle로 진학한다는 학군 공지를 별도로 확인하세요.",
-      "footnote": "Carroll Elementary의 2026–27 Eubanks·Dawson 진학 변경이 반영됩니다. 이것은 초등학교 폐교나 집주소 자체의 배정을 확정하는 정보가 아닙니다."
+      "destinationNote": "2026–27 공식 Enrollment에 따르면 Carroll Elementary Eubanks Intermediate·Dawson Middle 신규 진학 패턴은 당시 4학년 이하에 적용됩니다. 5·6·7학년 기존 재학생의 진학 패턴은 유지되므로 자동 소급 적용하면 안 됩니다.",
+      "footnote": "Carroll Elementary의 2026–27 진학 패턴 조정은 당시 4학년 이하 대상이며, 기존 5·6·7학년 재학생은 종전 패턴을 유지합니다. 집주소별 배정이나 GIS 경계의 독립 검증은 아닙니다."
     },
     {
       "districtCode": "061911",
