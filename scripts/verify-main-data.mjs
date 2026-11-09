@@ -1254,7 +1254,7 @@ test('Address results: piece-internal edges are not boundaries; near-boundary an
 test('District registry is the single source of per-district capabilities',()=>{
  const require=createRequire(import.meta.url);
  const R=require('../district-registry.js');
- const web=readText('index.html'),home=readText('home-lookup-v2.js'),match=readText('school-boundary-match.js');
+ const web=html,home=readText('home-lookup-v2.js'),match=readText('school-boundary-match.js');
  for(const [code,d] of Object.entries(R.DISTRICT_REGISTRY)){
   assert.ok(d.en&&d.ko,'names for '+code);
   assert.ok(/^https:\/\//.test(d.official),'official finder link for '+code);
@@ -1301,7 +1301,7 @@ test('City crime map: FBI NIBRS city rates on city limits, complete years only, 
  assert.equal(CRIME_CATEGORIES.violent.breaks.length,4);
  const plano=crime.features.find(f=>f.properties.city==='Plano');
  assert.equal(crimeCityRate(plano,'violent',2025).rate,plano.properties.years[2025].violentRate);
- const web=readText('index.html');
+ const web=html;
  assert.ok(web.includes('id="crimeMapToggle"')&&web.includes('id="crimeLegend"')&&web.includes('<details id="crimePanel"'));
  assert.ok(web.includes('<script src="./crime-city-map.js?v=3"></script>')&&web.includes('window.createCrimeCityMap?.(map,document)'));
  assert.ok(web.includes('ZIP·동네·주소별 위험이 아닙니다'),'caveat: not ZIP/address risk');
@@ -1331,7 +1331,7 @@ test('Crime trends per ZIP: city-level 3-year counts and direction, never ZIP-al
  assert.ok(!readText('index.html').includes('id="crimeYear"'),'heatmap uses the latest year; no year selector');
 });
 test('Layout: ZIP subgroup details live in the wide card under the map, not the right column',()=>{
- const web=readText('index.html');
+ const web=html;
  assert.ok(web.includes('<div class="mapcol"><div class="mapbox">')&&web.includes('id="zipInsights"'),'map and insights card share one column');
  assert.ok(web.includes('function drawZipInsights(d)')&&web.includes('function drawDetail(){const d=getZip();drawZipInsights(d);'),'insights refresh with every detail redraw');
  assert.ok(!web.includes("+menaHtml(d.z);el('detailContent').innerHTML=html;"),'subgroups no longer appended to the narrow right column');
