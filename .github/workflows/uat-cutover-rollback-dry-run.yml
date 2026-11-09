@@ -1,0 +1,46 @@
+name: TX family UAT cutover/rollback DRY RUN (no deployment)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/uat-cutover-rollback-dry-run.yml'
+      - 'scripts/uat-cutover-rollback-dry-run.cjs'
+      - 'tests/uat-cutover-rollback-dry-run.test.cjs'
+      - 'docs/UAT_CUTOVER_ROLLBACK_DRY_RUN.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-cutover-rehearsal:
+    name: Isolated synthetic cutover, private recovery and safe holding rollback
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Test rollback safety and fail-closed fixtures (NO CLOUD ACCESS)
+        run: |
+          node --check scripts/uat-cutover-rollback-dry-run.cjs
+          node --test tests/uat-cutover-rollback-dry-run.test.cjs tests/family-entry.test.cjs tests/environment-plan.test.cjs tests/check-uat-anonymous-access.test.cjs
+      - name: Verify current site bytes survive synthetic failure and recovery
+        run: node scripts/uat-cutover-rollback-dry-run.cjs --dry-run
+      - name: Confirm no hosting, Access or public Production is provisioned
+        run: |
+          node scripts/validate-environment-plan.cjs deploy/environment-plan.json planning
+          node scripts/check-uat-anonymous-access.cjs --plan
+      - name: Verify public build is sanitized and release stays BLOCKED
+        run: node scripts/verify-public-preview.cjs
+      - name: Ensure no versioned app/data/source files changed
+        run: git diff --exit-code
+      - name: Upload ONLY redacted counts and No-Go result, never actual source backups
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uat-cutover-rollback-dry-run
+          path: artifacts/uat-cutover-dry-run/report.json
+          if-no-files-found: warn
