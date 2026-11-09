@@ -5,6 +5,9 @@ on:
       - 'scripts/probe-prosper-independent-finder-ui-browser.cjs'
       - 'scripts/prosper-finder-ui-independent-policy.cjs'
       - 'tests/prosper-finder-ui-independent-policy.test.cjs'
+      - 'scripts/probe-prosper-second-zip-public-homes.cjs'
+      - 'tests/prosper-second-zip-source-policy.test.cjs'
+      - 'tests/prosper-second-zip-public-candidates-2026.json'
       - '.github/workflows/prosper-independent-official-finder-browser.yml'
   workflow_dispatch:
 permissions:
@@ -25,7 +28,10 @@ jobs:
         run: |
           node --check scripts/probe-prosper-independent-finder-ui-browser.cjs
           node --check scripts/prosper-finder-ui-independent-policy.cjs
-          node --test tests/prosper-finder-ui-independent-policy.test.cjs
+          node --check scripts/probe-prosper-second-zip-public-homes.cjs
+          node --test tests/prosper-finder-ui-independent-policy.test.cjs tests/prosper-second-zip-source-policy.test.cjs
+      - name: Live source-only review of two publicly advertised 75035 candidates
+        run: node scripts/probe-prosper-second-zip-public-homes.cjs
       - name: Install isolated open-source Chromium via npm (no paid services)
         run: |
           mkdir -p prosper-independent-browser-tmp
@@ -53,6 +59,8 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # pinned v4
         with:
           name: prosper-official-finder-independent-ui-controls
-          path: artifacts/prosper-real-home/finder-ui-browser-observation.json
+          path: |
+            artifacts/prosper-real-home/finder-ui-browser-observation.json
+            artifacts/prosper-real-home/second-zip-source-crosscheck.json
           if-no-files-found: warn
           retention-days: 5
