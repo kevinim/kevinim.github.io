@@ -41,6 +41,7 @@ jobs:
           name: official-school-source-health
           path: |
             artifacts/official-school-source-health.json
+            artifacts/public-address-source-crosscheck.json
             artifacts/plano-public-address-arcgis-check.json
             artifacts/cfb-farmers-branch-source-drift.json
             artifacts/lisd-5289-budget-suites-source-drift.json
