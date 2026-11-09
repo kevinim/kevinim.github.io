@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "district": "061901",
+  "schoolYear": "2026-27",
+  "reviewedOn": "2026-11-09",
+  "purpose": "Two publicly advertised builder model/sales homes for limited read-only Denton ISD official Finder reconnaissance. Marketing assertions are community-wide and never prove assignment of the precise model-home address.",
+  "officialFinder": "https://webquery-2-denton-tx.etstack.io/",
+  "districtPublishedInstructions": "https://www.dentonisd.org/our-district/departments-services/student-support-services/student-transfers",
+  "samples": [
+    {
+      "id": "SAND_DWH",
+      "kind": "public-builder-model-or-sales-center",
+      "address": "1909 Calumet Dr, Aubrey, TX 76227",
+      "addressSource": "https://www.davidweekleyhomes.com/new-homes/tx/dallas-ft-worth/aubrey/sandbrock-ranch",
+      "communityMarketingSchools": [
+        "Union Park Elementary",
+        "Rodriguez Middle",
+        "Braswell High"
+      ],
+      "marketingScope": "general community notice, NOT address-specific",
+      "officialFinderResult": null,
+      "currentZonePolygonMatched": false,
+      "certified": false
+    },
+    {
+      "id": "SAND_HIGHLAND",
+      "kind": "public-builder-model-or-sales-center",
+      "address": "1905 Calumet Dr, Aubrey, TX 76227",
+      "addressSource": "https://www.highlandhomes.com/dfw/aubrey/sandbrock-ranch/866-DENT-A",
+      "communityMarketingSchools": [
+        "Sandbrock Ranch Elementary",
+        "Cheek Middle",
+        "Braswell High"
+      ],
+      "schoolMarketingSource": "https://sandbrockranch.com/education/",
+      "marketingScope": "separate general community guide, NOT certified assignment for this exact model-home address",
+      "officialFinderResult": null,
+      "currentZonePolygonMatched": false,
+      "certified": false
+    }
+  ],
+  "reviewPolicy": "Do not infer address-specific schools from marketing, proximity, or community names. Enter each public model-home address in live district Finder; obtain unambiguous grade-specific result and independent current school-level polygon. Source access failures or missing polygon = NO_GO.",
+  "status": "NO_GO_INDEPENDENT_OFFICIAL_FINDER_RESULTS_NOT_OBTAINED"
+}
