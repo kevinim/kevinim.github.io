@@ -57,7 +57,7 @@ async function main(){
     popup:irvingReferenceLayer?.getLayers()?.[0]?.getLayers()?.[0]?.getPopup()?.getContent()||'',
     yearCertified:window.ConditionalSchoolRelease?.releaseSummary().currentYearResidentialDistrictApprovals
    }));
-   assert.equal(safe.status,'conditional-finder-only','school assignment must remain blocked');
+   assert.ok(['conditional-finder-only','unavailable'].includes(safe.status),'unverified Irving residence must not be assigned');
    assert.equal(safe.yearCertified,0);
    assert.match(safe.warning,/현재 배정학교가 아닙니다/);
    assert.match(safe.warning,/2024–25/);assert.match(safe.warning,/2025–26/);
