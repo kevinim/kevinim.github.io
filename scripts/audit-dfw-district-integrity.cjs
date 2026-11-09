@@ -116,7 +116,7 @@ function audit(input) {
     d.geometry.matchedLoadedPercent === null &&
     d.geometry.confirmedCurrentYear === false,
     'INVENTED_CAMPUS_GIS_COVERAGE_' + d.code);
-  let pointRecords = 0, missingPoints = 0, invalidPoints = 0, knownRetired = 0;
+  let pointRecords = 0, missingPoints = 0, invalidPoints = 0, knownRetired = 0, futureChanges=0;
   let directoryTypeHints = 0;
   const missingID = [], pointAnomaly = [], campusNoPolygon = [];
   const schoolNames = new Set();
@@ -134,7 +134,10 @@ function audit(input) {
    else pointRecords++;
    const lifecycle = retired.find(x => (x.district === key || x.district === d.code) &&
      ((x.id && x.id === c.id) || (!x.id && lifecycleNameKey(x.name) === lifecycleNameKey(c.name)))) || null;
-   if (lifecycle) knownRetired++;
+   const lifecycleStart=lifecycle ? Number(String(lifecycle.retiredFrom).slice(0,4)) : null;
+   const futureLifecycle=!!lifecycle && Number.isFinite(lifecycleStart) && lifecycleStart>2026;
+   if (lifecycle && !futureLifecycle) knownRetired++;
+   if (futureLifecycle) futureChanges++;
    const hints = localSchools.get(key + '|' + n) || [];
    if (hints.length) directoryTypeHints++;
    const missingReason = lifecycle ? 'CAMPUS_LIFECYCLE_EXCEPTION_REVIEW' :
@@ -144,7 +147,9 @@ function audit(input) {
    if (missingReason !== 'SCHOOL_ID_TO_POLYGON_NOT_INDEPENDENTLY_CERTIFIED') campusNoPolygon.push(c.id);
    campusResults.push({
     id:c.id, school:c.name, districtCode:d.code, districtName:d.name,
-    lifecycle:lifecycle ? {status:'HISTORICAL_RECORD_RETIRED_OR_CHANGED',source:lifecycle.source,effective:lifecycle.retiredFrom} : {status:'NOT_REVIEWED'},
+    lifecycle:lifecycle ? {status:futureLifecycle?'FUTURE_CHANGE_NOT_EFFECTIVE_IN_2026_27':
+      'HISTORICAL_RECORD_RETIRED_OR_CHANGED',source:lifecycle.source,effective:lifecycle.retiredFrom}
+      : {status:'NOT_REVIEWED'},
     gradeRange:{min:null,max:null,source:'TEA ratings snapshot has no grade-range columns; local type hint is not a verified grade range',
       directoryTypeHint:hints.length===1 ? hints[0].type : null},
     coordinate:{status:pointState,exceptionEvidence:exceptions.has(c.id) ?
@@ -191,7 +196,8 @@ function audit(input) {
    assignmentVerification:{certifiedRealResidentialSamples:0,status:'NO_INDEPENDENT_FINDER_GRADE_YEAR_HOLDOUT'},
    dataYear:{tea:tea.year,teaStatus:tea.status,nces:nces.schoolYear,geometry:src?.geometryYear || null},
    gradeRangeVerification:{verifiedCampusCount:0,unknownCampusCount:schoolRows.length,localTypeHints:directoryTypeHints},
-   lifecycle:{historicalRetiredOrChanged:knownRetired,notIndependentlyReconciled:schoolRows.length-knownRetired},
+   lifecycle:{historicalRetiredOrChanged:knownRetired,futureChangesNotEffective:futureChanges,
+    notIndependentlyReconciled:schoolRows.length-knownRetired-futureChanges},
    missingReason:reason,priority,disposition:'NO_GO',
    exceptionIds:{missingHistoricalPoints:missingID,invalidHistoricalPoints:pointAnomaly,
     perCampusPolygonEvidenceAbsent:campusNoPolygon}
