@@ -18,6 +18,16 @@ function boundarySchoolSource(district){
 }
 function knownBoundaryException(s){
  const district=s?.district,key=boundarySchoolKey(s?.name);
+ // Irving ISD explicitly converted de Zavala to a School of Opportunity
+ // starting in 2025-26. An eighth normal middle-school polygon would be false.
+ // 2026-27 6th graders APPLY; continuing 7th/8th graders are grandfathered.
+ if((district==='057912'||district==='IRVING')&&
+   (/(?:^|\\s)de\\s*zavala(?:\\s|$)/.test(key)||String(s?.id||'')==='057912048'))return {
+  reason:'de Zavala Middle School STEM Academy는 일반 주소별 자동 배정 학교가 아닙니다.',
+  footnote:'Irving ISD 공식 2026–27 School Choice 정책에 따라 신입 6학년은 STEM Academy에 지원·추첨 절차로 입학합니다. 재학 중인 7·8학년은 계속 다닐 수 있습니다. 일반 중학교 7개 경계와 별개로 de Zavala의 제8 배정 폴리곤을 임의 생성하지 않습니다.',
+  sourceUrl:'https://www.irvingisd.net/families/school-choice/faq',
+  sourceLinkLabel:'Irving ISD 공식 School Choice FAQ'
+ };
  if(district==='PISD'&&key==='academy')return {
   reason:'Academy High School은 일반 주소별 진학구역이 아닌 지원·선발형 학교입니다.',
   footnote:'Plano ISD Academy Programs는 별도 지원 절차로 입학합니다. 일반 High School 출석구역 도형을 Academy에 대응시키면 잘못된 배정 안내가 되므로 표시하지 않습니다.',
