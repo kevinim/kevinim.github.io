@@ -60,3 +60,23 @@ test('geometry and exact high campuses cannot be guessed from nearby polygons',(
  assert.throws(()=>M.decodeHighLayer(high,[lon,lat]),/count changed/);
  assert.throws(()=>M.wmPoint([-75,40]),/outside validated Irving/);
 });
+
+test('Irving user-entered Finder school-name comparison never promotes the historical GIS to approved 2026-27',()=>{
+ const reference={status:'ready',names:{elementary:'Barton ES',middle:'Crockett MS',high:'Macarthur HS'}};
+ const base={gradeLevel:'middle',schoolName:'Crockett Middle School',schoolYear:'2026–27'};
+ const match=M.compareReportedSchool(reference,base);
+ assert.equal(match.status,'manual-match');
+ assert.equal(match.yearCertified,false);
+ assert.equal(match.independentlyVerified,false);
+ assert.equal(match.productionAssignmentApproved,false);
+ assert.match(match.message,/사용자가 입력한/);
+ const mismatch=M.compareReportedSchool(reference,{...base,schoolName:'Bowie Middle School'});
+ assert.equal(mismatch.status,'manual-mismatch');
+ assert.equal(mismatch.productionAssignmentApproved,false);
+ assert.match(mismatch.message,/다릅니다/);
+ assert.equal(M.compareReportedSchool(reference,{...base,schoolYear:'older'}).status,'year-unconfirmed');
+ assert.equal(M.compareReportedSchool(reference,{...base,gradeLevel:'freshman'}).status,'missing-input');
+ assert.equal(M.compareReportedSchool({status:'error',names:{}},base).status,'no-source');
+ assert.equal(M.schoolKey('MacArthur High School'),M.schoolKey('Macarthur HS'));
+ assert.notEqual(M.schoolKey('John Haley Elementary School'),M.schoolKey('Thomas Haley ES'));
+});
