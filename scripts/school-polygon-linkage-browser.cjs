@@ -123,8 +123,8 @@ async function browserCapture(page){
       map.setView(center,zoom,{animate:false});
       drawSchools();
     }
-  }else markerChecks.push({district:'AISD',status:'not-tested',
-    eligibleSchoolLocations:allen.length,expectedVisible:0,matchedMarkers:0,missingNames:[]});
+  }else markerChecks.push({district:'AISD',status:'failed',
+    eligibleSchoolLocations:allen.length,expectedVisible:0,matchedMarkers:0,missingNames:['allen-marker-audit-not-runnable']});
   return {rows,sources,renderChecks,markerChecks,browserLoaded:state.zoneReady,runMode:'isolated-pr'};
  });
 }
