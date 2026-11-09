@@ -64,6 +64,10 @@ const base=(process.env.DASHBOARD_BASE_URL||'http://127.0.0.1:8765/').replace(/\
    assert.ok(epaCalls.length>=5,'EPA vehicle chained calls failed');
    await page.locator('#smartLegacyAdvanced > summary').click();
    assert.equal(await page.locator('#tollOut').isVisible(),true,'manual fallback must remain available');
+   await page.locator('#tollFuel').fill('3.10');
+   await page.locator('#smartFuelGrade').selectOption('premium');
+   assert.equal(await page.locator('#tollFuel').inputValue(),'3.10',
+     'Manual fuel quote must survive later AAA grade/source updates');
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
    assert.ok(overflow<=2,'Unexpected horizontal scroll overflow at '+width+': '+overflow);
    assert.equal(errors.length,0,'JS errors: '+errors.join(' | '));
