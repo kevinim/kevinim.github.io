@@ -205,8 +205,7 @@
   advanced.id='smartLegacyAdvanced';
   const advTitle=n('summary','','기존 수동 견적 계산 · 고급 설정');
   advanced.append(advTitle,body);
-  toll.insertBefore(content,advanced);
-  toll.append(advanced);
+  toll.append(content,advanced);
   // Do not enable expensive cross-origin requests for users who never open costs.
   toll.addEventListener('toggle',()=>{
    if(!toll.open||initialized)return;
