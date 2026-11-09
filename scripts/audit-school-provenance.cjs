@@ -16,6 +16,7 @@ const ALLOWED_STATUSES = new Set([
   'official-finder-connected',
   'live-finder-year-gated',
   'historical-reference',
+  'publisher-provisional',
   'lookup-only',
 ]);
 const STATUS_TO_CURRENCY = {
@@ -23,6 +24,7 @@ const STATUS_TO_CURRENCY = {
   'official-finder-connected': 'finder',
   'live-finder-year-gated': 'live',
   'historical-reference': 'historical',
+  'publisher-provisional': 'published',
   'lookup-only': null,
 };
 
@@ -93,6 +95,15 @@ function auditSchoolProvenance(provenance, registry, { readLocal = null, supplem
       warnings.push(d.code + ': live year gate is not independent middle/high geometry or residential assignment verification');
     } else if (d.status === 'historical-reference') {
       warnings.push(d.code + ': historical attendance geometry must remain reference-only');
+    } else if (d.status === 'publisher-provisional') {
+      // Public publisher polygons are not evidence of current-year enrollment.
+      // A new district needs an independently reviewed evidence contract before admission.
+      if (d.code !== '057905' || d.geometryYear !== 'unverified' ||
+          registration?.zoneKey !== d.code || registration?.address !== 'polygon' ||
+          registration?.campusIdMatch !== true || registration?.lookupKind !== 'finder-guidance') {
+        errors.push(d.code + ': publisher-provisional source requires explicit unverified-year evidence and campus-ID gate');
+      }
+      warnings.push(d.code + ': published GIS is provisional; official 2026–27 Finder/address/grade assignment not verified');
     } else if (d.status === 'lookup-only') {
       warnings.push(d.code + ': no certified per-campus geometry; use official address Finder');
       if (registration?.address !== null || registration?.zoneKey !== null) {
@@ -173,16 +184,27 @@ function readNeighborDfwSupplement(root) {
  if(manifest.schemaVersion!==1||!Array.isArray(manifest.districts)||manifest.districts.length!==18)
   throw Error('invalid_neighbor_school_provenance_manifest');
  const seen=new Set();
+ const coverage=JSON.parse(fs.readFileSync(path.join(root,'data/dfw-school-coverage-matrix-2026.json'),'utf8'));
+ const dallas=coverage.districts.find(x=>x.code==='057905');
+ const publishedDallasReviewedAsProvisional=!!(
+   dallas?.geometry?.confirmedCurrentYear===false &&
+   dallas?.geometry?.status==='configured-but-no-reviewed-reference' &&
+   dallas?.missingReason==='campus-polygon-evidence-unreviewed'
+ );
  return manifest.districts.map(d=>{
   const record=DISTRICT_REGISTRY[d.code];
-  if(!/^\d{6}$/.test(d.code)||seen.has(d.code)||!allowed.has(d.kind)||
-    !record||record.lookupKind!==d.kind||record.zoneKey!==null||
-    record.address!==null||record.currency!==null||
+  const provisional=d.code==='057905'&&publishedDallasReviewedAsProvisional&&
+    record?.zoneKey===d.code&&record.currency==='published'&&
+    record.address==='polygon'&&record.campusIdMatch===true&&
+    record.lookupKind==='finder-guidance';
+  if(!/^\\d{6}$/.test(d.code)||seen.has(d.code)||!allowed.has(d.kind)||
+    !record||record.lookupKind!==d.kind||
+    (!provisional&&(record.zoneKey!==null||record.address!==null||record.currency!==null))||
     record.official!==d.url||official(d.url)!==d.url||
     typeof d.sourceYear!=='string'||d.sourceYear.length<12)
    throw Error('unsafe_neighbor_school_district_source '+d.code);
   seen.add(d.code);
-  return {code:d.code,status:'lookup-only',geometryYear:'no-certified-GIS',officialLookup:d.url};
+  return {code:d.code,status:provisional?'publisher-provisional':'lookup-only',geometryYear:provisional?'unverified':'no-certified-GIS',officialLookup:d.url};
  });
 }
 

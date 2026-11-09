@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {assertVersionedMainBootstrap}=require('./dashboard-bootstrap-contract.cjs');
 
 /**
  * Read-only contract checks for user-entered address / route information.
@@ -31,7 +32,7 @@ function auditProviderContract(files) {
   if (errors.length) return { errors, warnings, coverage: null };
 
   const main = get('index.html')+'\n'+get('dashboard-main.js');
-  if(!get('index.html').includes('<script src="./dashboard-main.js?v=3"></script>'))errors.push('main external bootstrap tag missing');
+  try{assertVersionedMainBootstrap(get('index.html'));}catch{errors.push('main external bootstrap tag missing or invalid');}
   const archivedHtml = get('reviewed.html');
   const archivedBootstrap = get('features/reviewed-bootstrap.js');
   const archived = archivedHtml+'\n'+archivedBootstrap;
