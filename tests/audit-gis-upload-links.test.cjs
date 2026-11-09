@@ -14,7 +14,7 @@ test('all district and special-campus links have explicitly trusted HTTPS hosts'
  const r=auditSchoolBoundaryTrust(files());
  assert.deepEqual(r.errors,[]);
  assert.equal(r.inventory.districts,Object.keys(DISTRICT_REGISTRY).length);
- assert.equal(r.inventory.districts,37); // 11 established + 26 provenance-backed DFW parent lookup entries.
+ assert.equal(r.inventory.districts,57); // 11 established + 46 provenance-backed DFW parent lookup entries.
  assert.equal(r.inventory.exceptionLinks,7);
  for(const school of SPECIAL_CAMPUSES){
   assert.ok(checkOfficialUrl(knownBoundaryException(school)?.sourceUrl));
