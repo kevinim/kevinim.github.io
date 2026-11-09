@@ -32,11 +32,17 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/official-finder-browser/node_modules
         run: node scripts/probe-next3-official-native-finders.cjs
+      - name: Inspect actual modern 2026-27 Plano Find My School Experience, not legacy ASP.NET
+        env:
+          NODE_PATH: ${{ github.workspace }}/official-finder-browser/node_modules
+        run: node scripts/probe-plano-modern-2026-official-experience.cjs
       - name: Preserve official UI evidence for independent audit
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # pinned v4
         with:
           name: next3-official-finder-public-residence-native-chromium
-          path: artifacts/next3-native-finders/
+          path: |
+            artifacts/next3-native-finders/
+            artifacts/plano-current-2026/
           if-no-files-found: warn
           retention-days: 7
