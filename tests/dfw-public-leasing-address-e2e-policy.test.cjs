@@ -5,7 +5,7 @@ const ROOT=path.resolve(__dirname,'..');
 const f=JSON.parse(fs.readFileSync(path.join(ROOT,'tests/dfw-public-leasing-address-e2e-2026.json'),'utf8'));
 const e2e=fs.readFileSync(path.join(ROOT,'scripts/test-dfw-public-leasing-multidistrict-browser.cjs'),'utf8');
 test('six publicly sourced leasing-office addresses cover three new ISDs twice',()=>{
- assert.equal(f.schemaVersion,1);
+ assert.equal(f.schemaVersion,2);
  assert.equal(f.cases.length,6);
  const counts={};
  const ids=new Set(),addresses=new Set();
@@ -28,8 +28,10 @@ test('source lineage and 2026-27 Finder review is not falsely certified',()=>{
  assert.equal(f.releaseGate,'NO_GO');
  assert.equal(f.independentDistrictFinderUiVerified,false);
  assert.equal(f.officialGradeAssignmentsVerified,0);
- assert.match(f.scope,/NOT a validated apartment unit/);
+ assert.match(f.scope,/unit only for documented district-published split exceptions/);
+ assert.equal(f.apartmentPolicy.unitRequiredByDefault,false);
  assert.match(e2e,/independentDistrictFinderUiVerified:false/);
+ assert.match(e2e,/unitNumberRequiredByDefault:false/);
  assert.match(e2e,/officialGradeMatchCount:0/);
  assert.match(e2e,/releaseGate:\{status:'NO_GO'/);
  assert.match(e2e,/geocoderMocked:false/);
