@@ -40,6 +40,7 @@ async function measure(page,width,base){
    availableZips:zips.filter(b=>!b.disabled).map(b=>b.dataset.zip),
    linkHosts:links.map(a=>new URL(a.href).hostname),
    relSafe:links.every(a=>a.target==='_blank'&&/noopener/.test(a.rel)&&/noreferrer/.test(a.rel)),
+   hasKellerHistoricalWarning:box.querySelector('[data-district="220907"] .west-dfw-vintage-warning')?.textContent.includes('2018–19')===true,
    hasDisclosure:box.textContent.includes('학군 배정 경계가 아닙니다')&&
      box.textContent.includes('76262 ZIP만으로 우선 자격이 생기지는 않습니다'),
    schoolCounts:districts.map(x=>({
@@ -54,6 +55,7 @@ async function measure(page,width,base){
  assert.equal(result.linkHosts.length,5,'4 ISD links + 1 Westlake Academy charter');
  assert.equal(result.relSafe,true);
  assert.equal(result.hasDisclosure,true);
+ assert.equal(result.hasKellerHistoricalWarning,true,'Keller stale GIS needs visible 2018-19 disclosure');
  assert.ok(result.schoolCounts.every(x=>x.count>=(x.district==='220919'?5:10)),
    'West district school-directory counts insufficient: '+JSON.stringify(result.schoolCounts));
  assert.ok(result.docWidth<=width+1,'mobile horizontal overflow '+width);
