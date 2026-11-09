@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-11-09",
+  "agent": "Agent 01 — DFW GIS Acquisition",
+  "baseline": {
+    "sourceConfiguredDistrictsInDraft164": 7,
+    "totalDFWPublicISDs": 108,
+    "unconfiguredInDraft164": 101,
+    "live2026_27SourceConfirmedDistrictsInDraft164": 2,
+    "sourceBranch": "feature/dallas-isd-official-2026-zone-pilot-20261109",
+    "mainNotEquivalentToDraft": true
+  },
+  "exclusions": {
+    "denton": "parallel PR #169/#174/#176",
+    "cfb": "parallel PR #149/#154/#155/#163/#170",
+    "dallas": "PR #164 has 187 publisher polygons; no double counting",
+    "northwest": "historical layer quarantined in PR #167; not replicated"
+  },
+  "candidates": [
+    {
+      "districtCode": "057912",
+      "district": "Irving ISD",
+      "officialDistrictPage": "https://www.irvingisd.net/departments-services/performance-outcomes-data/planning/current-campus-level-maps",
+      "officialFinder": "https://www.irvingisd.net/departments-services/registration/find-my-assigned-school",
+      "sourceClass": "district-embedded-arcgis-webmaps",
+      "currentYearCertified": false,
+      "geometryStage": "live-probe-quarantined",
+      "webmaps": [
+        {
+          "grade": "elementary",
+          "sourceURL": "https://www.irvingisd.net/departments-services/performance-outcomes-data/planning/current-campus-level-maps/elementary-school-boundary-map",
+          "arcgisWebmapId": "a9ea586919d64c7e9aaa7193572f46d3",
+          "academicYear": null,
+          "legacyLayerName": "Final_EL_Zones_23_24",
+          "historicFeatureCountThirdPartyUnconfirmed": 18
+        },
+        {
+          "grade": "middle",
+          "sourceURL": "https://www.irvingisd.net/departments-services/performance-outcomes-data/planning/current-campus-level-maps/middle-school-boundary-map",
+          "arcgisWebmapId": "64c8ba47e77346de9d6812736693debc",
+          "academicYear": null,
+          "legacyLayerName": "ReBound_MS_Zones_v5",
+          "historicFeatureCountThirdPartyUnconfirmed": 7
+        },
+        {
+          "grade": "high",
+          "sourceURL": "https://www.irvingisd.net/departments-services/performance-outcomes-data/planning/current-campus-level-maps/high-school-boundary-map",
+          "arcgisWebmapId": "94e441e70e5049daa74c0cc2bb5a7cad",
+          "academicYear": null,
+          "legacyLayerName": "High School Boundaries",
+          "historicFeatureCountThirdPartyUnconfirmed": 3
+        }
+      ],
+      "requiredForActivation": [
+        "three campus-specific layer URLs checked against district publisher",
+        "2026-27 academic-year verified for each layer",
+        "map-year drift and 2024-25/2025-26 school rezone exceptions reconciled",
+        "TEA campus IDs and school names joined",
+        "independent official Finder public-address holdouts",
+        "public terms for derived data",
+        "390/1366px live school-click map QA"
+      ],
+      "rejectionReason": "Irving boundary changes effective 2024-25 and 2025-26; archived layers may not match current year. No GIS or school allocation is enabled."
+    },
+    {
+      "districtCode": "220905",
+      "district": "Fort Worth ISD",
+      "sourceClass": "official-boundary-map-landing",
+      "sourceURL": "https://www.fwisd.org/about/betterspaces/boundary-maps",
+      "academicYear": "2026-27 school consolidation shown",
+      "currentYearCertified": false,
+      "geometryStage": "not-available",
+      "rejectionReason": "School closure/service area maps; no independently verified campus GIS layers and identifier crosswalk."
+    },
+    {
+      "districtCode": "220908",
+      "district": "Mansfield ISD",
+      "sourceClass": "official-pdf-and-finder",
+      "sourceURL": "https://www.mansfieldisd.org/student-central/attendance-zones",
+      "academicYear": "2025-26 maps listed; 2026-27 GIS not independently established",
+      "currentYearCertified": false,
+      "geometryStage": "not-available",
+      "rejectionReason": "District maps and address lookup, but no verified downloadable polygon layers."
+    },
+    {
+      "districtCode": "199901",
+      "district": "Rockwall ISD",
+      "sourceClass": "official-2026-27-map-not-gis",
+      "sourceURL": "https://www.rockwallisd.com/new-student/new-student/school-attendance-areas",
+      "academicYear": "2026-27 map",
+      "currentYearCertified": false,
+      "geometryStage": "not-available",
+      "rejectionReason": "Published PDF/inquiry; separate Rockwall County ArcGIS district outline is not a campus attendance layer."
+    },
+    {
+      "districtCode": "220917",
+      "district": "Castleberry ISD",
+      "sourceClass": "official-finder-plus-district-outline",
+      "sourceURL": "https://www.castleberryisd.net/enrollnow/enrollnow",
+      "academicYear": null,
+      "currentYearCertified": false,
+      "geometryStage": "not-available",
+      "rejectionReason": "Official SchoolSearch supports assignments. CISD_Boundaries_2026 is only a school-district outer boundary."
+    },
+    {
+      "districtCode": "043912",
+      "district": "Wylie ISD",
+      "sourceClass": "official-rezoning-map",
+      "sourceURL": "https://www.wylieisd.net/our-district/rezoning-2025-26",
+      "academicYear": "2025-26 with changes for 2026-27 secondary schools",
+      "currentYearCertified": false,
+      "geometryStage": "not-available",
+      "rejectionReason": "Grade and campus reorganization; no trustworthy current-year export verified."
+    }
+  ],
+  "newCurrentYearAttendancePolygonSourcesVerified": 0,
+  "newDistrictsReleasedToDashboard": 0,
+  "licenseApproved": false,
+  "schoolClickE2ECertified": false,
+  "productionAllowed": false
+}
