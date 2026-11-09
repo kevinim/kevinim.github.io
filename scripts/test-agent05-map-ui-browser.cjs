@@ -120,8 +120,8 @@ async function audit(browser,width){
   entry.checks.clear='PASS input X clears address and home overlays';
   assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),'dark','Dark is default');
   const contrast=await page.evaluate(()=>{
-   const selectors=['.maphead .hazard-chip.ifld','.maphead .hazard-chips-label',
-    '#map .leaflet-control-zoom-in','.filter-panel .school-visibility-options .check'];
+   const selectors=['.maphead .hazard-chip.ifld','.maphead .hazard-chip.wfir',
+    '#map .leaflet-control-zoom-in','.filter-panel .school-settings .seg button.active'];
    return selectors.map(selector=>{
     const element=document.querySelector(selector);if(!element)throw Error('Missing contrast target '+selector);
     const style=getComputedStyle(element);
@@ -138,6 +138,7 @@ async function audit(browser,width){
     return {selector,color:style.color,background};
    });
   });
+  console.log('Computed map-control contrast',width,JSON.stringify(contrast));
   for(const item of contrast){
    const value=ratio(item.color,item.background);
    assert.ok(value>=4.5, 'WCAG normal-text contrast <4.5: '+item.selector+' '+value.toFixed(2));
