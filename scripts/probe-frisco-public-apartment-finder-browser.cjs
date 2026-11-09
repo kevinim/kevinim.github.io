@@ -136,7 +136,7 @@ function isValidAddressCandidate(label,num,road){
  finally{
   await browser.close();
   const zipCodes=[...new Set(SAMPLES.filter(x=>report.cases.some(y=>y.id===x.id&&y.allViewsMatchOfficial))
-    .map(x=>x.address.match(/\\b\\d{5}\\b/)?.[0]).filter(Boolean))];
+    .map(x=>x.address.match(/\b\d{5}\b/)?.[0]).filter(Boolean))];
   report.summary={
     testedPublicResidentialAddresses:report.cases.length,
     officialFinderAndDashboardExactGradeAgreement:report.cases.filter(x=>x.allViewsMatchOfficial).length,
