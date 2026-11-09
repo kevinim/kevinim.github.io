@@ -86,7 +86,46 @@ async function browserCapture(page){
   }
   state.selectedSchool=original;state.showHistoric=oldHistoric;state.showOldZones=oldOldZones;
   if(map)drawBoundary();
-  return {rows,sources,renderChecks,browserLoaded:state.zoneReady,runMode:'isolated-pr'};
+  // P0 regression guard: verify Allen school location MARKERS independently of
+  // polygon availability and school rating filters, at a viewport containing
+  // the current Allen directory points. This does not change the app source.
+  const markerChecks=[];
+  const allen=schools.filter(s=>s.district==='AISD'&&Array.isArray(s.ll)&&
+    s.ll.length===2&&s.ll.every(Number.isFinite));
+  if(map&&allen.length>=5){
+    const center=map.getCenter(),zoom=map.getZoom();
+    const originalFlags={showSchools:state.showSchools,level:state.level,
+      ratingFilter:state.ratingFilter};
+    try{
+      state.showSchools=true;state.level='all';state.ratingFilter='all';
+      map.invalidateSize();
+      map.fitBounds(L.latLngBounds(allen.map(s=>s.ll)),{padding:[30,30],maxZoom:12,animate:false});
+      drawSchools();
+      const bounds=map.getBounds();
+      const visible=allen.filter(s=>bounds.contains(s.ll));
+      const mapLayers=schoolGroup.getLayers();
+      const missing=visible.filter(s=>!mapLayers.some(layer=>{
+        const ll=layer.getLatLng?.();
+        return ll&&layer.options?.title===s.name&&
+          Math.abs(ll.lat-s.ll[0])<1e-6&&Math.abs(ll.lng-s.ll[1])<1e-6;
+      })).map(s=>s.name);
+      markerChecks.push({district:'AISD',
+        status:visible.length>=5&&missing.length===0?'passed':'failed',
+        eligibleSchoolLocations:allen.length,expectedVisible:visible.length,
+        matchedMarkers:visible.length-missing.length,missingNames:missing});
+    }catch{
+      markerChecks.push({district:'AISD',status:'failed',
+        eligibleSchoolLocations:allen.length,expectedVisible:0,matchedMarkers:0,
+        missingNames:['map-marker-check-exception']});
+    }finally{
+      state.showSchools=originalFlags.showSchools;
+      state.level=originalFlags.level;state.ratingFilter=originalFlags.ratingFilter;
+      map.setView(center,zoom,{animate:false});
+      drawSchools();
+    }
+  }else markerChecks.push({district:'AISD',status:'not-tested',
+    eligibleSchoolLocations:allen.length,expectedVisible:0,matchedMarkers:0,missingNames:[]});
+  return {rows,sources,renderChecks,markerChecks,browserLoaded:state.zoneReady,runMode:'isolated-pr'};
  });
 }
 async function main(){
@@ -126,6 +165,7 @@ async function main(){
     })+'\n');
   }
   process.stdout.write('SCHOOL_LINKAGE_RENDER '+JSON.stringify(report.renderChecks)+'\n');
+  process.stdout.write('SCHOOL_LINKAGE_ALLEN_MARKERS '+JSON.stringify(report.markerChecks)+'\n');
   if(report.blocked)throw Error('Actual polygon rendering defect detected; inspect report');
  }finally{
   if(browser)await browser.close();
