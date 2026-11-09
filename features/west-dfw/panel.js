@@ -36,7 +36,7 @@
       d.localSchoolPolygonCount!==0||
       !['external-official-finder-only','external-official-maps-only'].includes(d.boundaryStatus)||
       typeof d.sourceYear!=='string'||typeof d.notes!=='string'||
-      (d.code==='220907'&&(!d.dataNote||!d.dataNote.includes('2018–19')))
+      (d.code==='220907'&&(!d.dataNote||!d.dataNote.includes('2018–19'))))
     throw Error('west_official_reference_invalid');
   }
   if(new Set(config.areas.map(a=>a?.zip)).size!==7||
