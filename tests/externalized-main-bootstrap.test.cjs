@@ -6,11 +6,10 @@ const cp=require('node:child_process');
 const path=require('node:path');
 const crypto=require('node:crypto');
 const root=path.resolve(__dirname,'..');
-// In pull_request CI, checkout uses a synthetic merge commit. Its first
-// parent is the current main baseline, including unrelated approved UI work.
-// For direct branch checks, retain the pinned original review baseline.
-const parentLine=cp.execFileSync('git',['rev-list','--parents','-n','1','HEAD'],{cwd:root,encoding:'utf8'}).trim().split(/\s+/);
-const baseline=parentLine.length>=3?parentLine[1]:'4f741596a5a594897791d3b931ef39b374bf304e';
+// The approved original review baseline is the LAST inline-bootstrap commit.
+// Future main commits are already external-script-only, so comparing to HEAD's
+// PR merge parent would silently abandon the original byte-for-byte contract.
+const baseline='4f741596a5a594897791d3b931ef39b374bf304e';
 const old=cp.execFileSync('git',['show',baseline+':index.html'],{cwd:root,encoding:'utf8'});
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const js=fs.readFileSync(path.join(root,'dashboard-main.js'),'utf8');
@@ -39,13 +38,25 @@ test('strict script CSP remains enforceable after removing the only inline hash'
  assert.equal((oldCsp.match(/'sha256-[A-Za-z0-9+/]+=*'/g)||[]).length,1);
  assert.equal(newCsp,oldCsp.replace(/ 'sha256-[A-Za-z0-9+/]+=*'/,''));
 });
-test('externalized page matches previous page except approved source tag and CSP hash',()=>{
- const expected=old.replace("<script>"+original+"</script>",external)
+test('externalized page preserves original HTML except reviewed static DFW coverage panel additions',()=>{
+ let expected=old.replace("<script>"+original+"</script>",external)
    .replace(/(script-src 'self' https:\/\/unpkg\.com) 'sha256-[A-Za-z0-9+/]+=*'/,'$1');
+ // Only these exact extra DOM/CSS/script tags are permitted by this test.
+ // The actual extracted app bootstrap is still checked byte-for-byte above.
+ const leafletTag='<link rel="stylesheet" href="./vendor/leaflet-1.9.4.css">';
+ expected=expected.replace(leafletTag,leafletTag+'\r\n<link rel="stylesheet" href="./features/dfw-school-coverage-panel.css?v=1">');
+ const oldWest='<details id="westDfwPanel" aria-label="DFW 서부 학군 및 지역 탐색">';
+ expected=expected.replace(oldWest,`<details id="dfwSchoolCoveragePanel" aria-label="DFW 전체 학군별 학교 배정 안내 연결 현황">
+<summary>DFW 전체 학군 연결 현황 · 미연결 사유와 우선순위 보기</summary>
+<div id="dfwSchoolCoverageContent" role="region" aria-label="DFW 학군 연결 현황" aria-live="polite">현황표를 불러올 준비가 되었습니다.</div>
+</details>
+`+oldWest);
+ expected=expected.replace('</body></html>',
+  '<script src="./features/dfw-school-coverage-panel.js?v=1" defer></script></body></html>');
  const actualText=html.replace(/\r\n/g,'\n'),expectedText=expected.replace(/\r\n/g,'\n');
  if(actualText!==expectedText){
   let i=0;while(i<actualText.length&&i<expectedText.length&&actualText[i]===expectedText[i])i++;
-  assert.fail('Only tag/hash allowed; first mismatch offset='+i+
+  assert.fail('Only approved bootstrap + declared DFW panel tags allowed; first mismatch offset='+i+
    ', actualLen='+actualText.length+', expectedLen='+expectedText.length+
    ', actual='+JSON.stringify(actualText.slice(Math.max(0,i-35),i+75))+
    ', expected='+JSON.stringify(expectedText.slice(Math.max(0,i-35),i+75)));
