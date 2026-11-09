@@ -64,6 +64,13 @@
       "status": "school-district-only",
       "details": "TEA geographic district data is not school attendance zone evidence",
       "usableAsCurrentCampusPolygon": false
+    },
+    {
+      "kind": "future-2028-29-proposed-attendance-rezoning",
+      "url": "https://www.dentonisd.org/families/attendance-zones/attendance-boundary-modification",
+      "status": "proposal-for-2028-29-not-current",
+      "details": "Denton ISD explicitly says the high/middle attendance plan is proposed for 2028–29 only, with no 2026–27 or 2027–28 changes; never treat its map or school forecasts as current 2026–27 assignment polygons",
+      "usableAsCurrentCampusPolygon": false
     }
   ],
   "releaseGate": {
@@ -71,5 +78,11 @@
     "status": "NO_GO",
     "policy": "Official PDFs, historic points and district-wide polygons cannot auto-promote Denton to school-level GIS coverage; do not derive geometries from non-exportable Finder without permission.",
     "productionMergeApproved": false
+  },
+  "temporalProvenanceGuard": {
+    "currentYear": "2026-27",
+    "futureProposalYear": "2028-29",
+    "futureProposalMayCertifyCurrentYear": false,
+    "yearUnmatchedSourcesMustRemainQuarantined": true
   }
 }
