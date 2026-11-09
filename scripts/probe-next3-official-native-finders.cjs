@@ -61,22 +61,30 @@ async function inspect(page){
     entry.partialText=await page.locator('body').innerText().then(t=>t.slice(0,4600)).catch(()=>'');
     await page.screenshot({path:path.join(OUT,spec.prefix+'-after-partial.png'),fullPage:true,timeout:25000});
     const pieces=spec.query.split(' '),num=pieces[0],road=pieces[1];
-    // Only native short address suggestions, never a surrounding form or FAQ.
-    const selector=spec.district==='PISD'?
-      'table tr, li, a, option, [role="option"]':
-      '.searchMenu li, .esriSearchResults li, .esriSearchResult, [role="option"], .esri-menu li';
-    const opts=page.locator(selector).filter({hasText:new RegExp(num+'.*'+road,'i')});
-    const options=await opts.count();
-    entry.suggestionCount=options;
-    for(let i=0;i<Math.min(options,12);i++){
-      const opt=opts.nth(i);
-      if(!await opt.isVisible().catch(()=>false))continue;
-      const label=clean(await opt.innerText(),170);
-      if(label.length<5||label.length>170||/no results|not found|error/i.test(label))continue;
-      try{
-       await opt.click({timeout:9000});
-       entry.nativeAddressSelected=true;entry.selectedLabel=label;break;
-      }catch(e){entry.selectionError=clean(e.message,130)}
+    // Plano uses a real ASP.NET SELECT listbox; never click its surrounding
+    // table row (that yields a false successful "selection" of the whole form).
+    if(spec.district==='PISD'){
+      const select=page.locator('select').filter({has:page.locator('option')}).first();
+      const options=await select.locator('option').evaluateAll(items=>items.map(x=>({text:x.textContent?.trim()||'',value:x.value}))).catch(()=>[]);
+      entry.planoNativeOptions=options.slice(0,12);
+      const valid=options.filter(x=>new RegExp('^'+num+'\\s+'+road,'i').test(x.text)&&x.text.length<140&&!/no results|not found/i.test(x.text));
+      entry.suggestionCount=valid.length;
+      if(valid.length===1){
+       await select.selectOption({value:valid[0].value},{timeout:9500});
+       entry.nativeAddressSelected=true;entry.selectedLabel=valid[0].text;
+      }
+    }else{
+      const opts=page.locator('.searchMenu li, .esriSearchResults li, .esriSearchResult, [role="menuitem"],[role="option"], .esri-menu li')
+       .filter({hasText:new RegExp(num+'.*'+road,'i')});
+      entry.suggestionCount=await opts.count();
+      for(let i=0;i<Math.min(entry.suggestionCount,12);i++){
+       const opt=opts.nth(i);
+       if(!await opt.isVisible().catch(()=>false))continue;
+       const label=clean(await opt.innerText(),170);
+       if(label.length<5||label.length>170||/no results|not found|error/i.test(label))continue;
+       try{await opt.click({timeout:9000});entry.nativeAddressSelected=true;entry.selectedLabel=label;break}
+       catch(e){entry.selectionError=clean(e.message,130)}
+      }
     }
     if(!entry.nativeAddressSelected){
      // For Plano ASP.NET the suggestion can be a postback with a clickable
@@ -87,19 +95,46 @@ async function inspect(page){
      const body=await page.locator('body').innerText().catch(()=>'');
      entry.postSelectionText=body.slice(0,7000);
      entry.result='OFFICIAL_ADDRESS_SELECTED_RESULT_REQUIRES_GRADE_PARSE';
-     if(spec.district==='LISD'){
-       // District instructions explicitly require clicking the selected
-       // property's location on the map to display zone information.
-       // Use map center only if a search result visibly centered the map.
+     if(spec.district==='PISD'){
+       // The selected address must produce independent four-stage feeder table.
+       entry.planoPostback=await page.locator('select').count();
+       entry.sourceFeederRows=await page.locator('tr').evaluateAll(rows=>rows.slice(-80).map(r=>
+         [...r.querySelectorAll('td,th')].map(x=>(x.innerText||'').trim()).filter(Boolean)).filter(x=>x.length)).catch(()=>[]);
+       entry.gradeResultUiObserved=entry.sourceFeederRows.length>0;
+     }
+     if(spec.district==='LISD'||spec.district==='043907'){
+       // After a TRUE autocomplete result, district's own instructions say
+       // click map at searched location. Map normally centers at house point.
        const map=page.locator('#map_root,.esriMapContainer,.mapContainer').first();
        entry.mapControlFound=await map.count()>0;
        if(entry.mapControlFound){
-        await map.click({position:{x:Math.min(480,(await map.boundingBox())?.width/2||180),
-         y:Math.min(240,(await map.boundingBox())?.height/2||180)},timeout:9000}).catch(e=>entry.mapClickError=clean(e.message,200));
-        await page.waitForTimeout(2700);
-        entry.popupText=await page.locator('.esriPopup,.esriPopupWrapper,.esriPopup .contentPane').allTextContents().then(x=>x.map(t=>clean(t,950))).catch(()=>[]);
+        const box=await map.boundingBox();
+        if(box&&box.width>300&&box.height>300){
+          // Click the exact viewport center after the geocoder panned there.
+          // Close search-result popup first so it cannot intercept map identify.
+          await page.locator('.esriPopup .titleButton.close').first().click({timeout:4000}).catch(()=>{});
+          await map.click({position:{x:Math.floor(box.width/2),y:Math.floor(box.height/2)},timeout:9000})
+           .catch(e=>entry.mapClickError=clean(e.message,200));
+          entry.clickedMapCenteredGeocode=true;
+          await page.waitForTimeout(3200);
+        }
+        entry.popupText=await page.locator('.esriPopup,.esriPopupWrapper,.esriPopup .contentPane')
+         .allTextContents().then(x=>x.map(t=>clean(t,950))).catch(()=>[]);
+        entry.popupRows=await page.locator('.esriPopup .contentPane tr').evaluateAll(rows=>rows.map(r=>
+         [...r.querySelectorAll('td,th')].map(x=>(x.innerText||'').trim()).filter(Boolean))).catch(()=>[]);
+        entry.popupRaw=await page.locator('.esriPopup .contentPane').first().innerText().catch(()=>'');
+        const levels=spec.district==='LISD'?
+          {'elementary':/Elementary/i,'middle':/^Middle$/i,'freshman':/9th Grade/i,'high':/HIGH_NAME|High School/i}:
+          {'elementary':/Elementary/i,'middle':/^Middle$/i,'high':/High/i};
+        for(const [grade,re] of Object.entries(levels)){
+         const row=(entry.popupRows||[]).find(x=>x[0]&&re.test(x[0])&&x[1]);
+         if(row)entry.officialGradeResults[grade]=row[1];
+        }
+        entry.zonedCampusResultsFound=Object.keys(entry.officialGradeResults).length===(spec.district==='LISD'?4:3);
        }
      }
+     if(entry.zonedCampusResultsFound||spec.district==='PISD'&&entry.gradeResultUiObserved)
+       entry.result='OFFICIAL_BROWSER_CAMPUS_RESULTS_OBSERVED_YEAR_AND_ENROLLMENT_SEPARATE';
     }
     await page.screenshot({path:path.join(OUT,spec.prefix+'-after-choice.png'),fullPage:true,timeout:25000});
    }else{
@@ -110,7 +145,7 @@ async function inspect(page){
   report.cases.push(entry);
   console.log('NEXT3_NATIVE_FINDER '+JSON.stringify({district:entry.district,result:entry.result,inputFound:entry.addressInputFound,
    autoSuggestions:entry.suggestionCount,selected:entry.nativeAddressSelected,selectedLabel:entry.selectedLabel,
-   popup:entry.popupText,error:entry.error,htmlChoices:entry.partialMatchingUi?.map(x=>({text:x.text,tag:x.html.slice(0,180)})),pageErrors:entry.pageErrors}).slice(0,9000));
+   popup:entry.popupText,sourceRows:entry.sourceFeederRows,grades:entry.officialGradeResults,error:entry.error,htmlChoices:entry.partialMatchingUi?.map(x=>({text:x.text,tag:x.html.slice(0,180)})),pageErrors:entry.pageErrors}).slice(0,9000));
   await ctx.close();
  }
  }finally{
