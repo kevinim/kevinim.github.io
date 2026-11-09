@@ -94,8 +94,11 @@ function audit(d){
   requireCheck(batch.evidence.length===[8,8,8,12][idx],'supplemental_batch_length_'+(idx+3));
   for(const r of batch.evidence){
    requireCheck(r.verifiedCurrentYearAttendanceGIS===false&&
-    r.verifiedIndividualAddressAssignment===false&&r.personalAddressSubmitted===false,
+    r.verifiedIndividualAddressAssignment===false&&
+    (idx===0?r.personalAddressSubmitted!==true:r.personalAddressSubmitted===false),
     'supplemental_false_certification_'+r.teaCode);
+   if(idx===0&&r.personalAddressSubmitted===undefined)
+    warnings.push('Batch 3 '+r.teaCode+' has no explicit private-address submission field; address proof NOT claimed');
    for(const field of ['address','street','unit','resident','email','phone','rawFinderResponse'])
     requireCheck(!Object.hasOwn(r,field),'private_field_in_evidence_'+r.teaCode+'_'+field);
    sources.push({code:r.teaCode,url:r.officialLandingUrl,kind:r.routeKind});
