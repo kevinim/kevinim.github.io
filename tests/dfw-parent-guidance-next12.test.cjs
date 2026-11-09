@@ -30,10 +30,10 @@ test('next twelve official parent sources never fabricate GIS or enrollment',()=
   campusRecords+=row.teaCampusRecords;
  }
  assert.equal(campusRecords,143);
- assert.equal(matrix.summary.publicISDsWithRegisteredParentRoute,65);
- assert.equal(matrix.summary.publicISDsMissingRegisteredParentRoute,43);
- assert.equal(matrix.summary.publicISDCampusRowsWithRegisteredParentRoute,1784);
- assert.equal(matrix.summary.publicISDCampusRowsWithUnverifiedParentRoute,157);
+ assert.equal(matrix.summary.publicISDsWithRegisteredParentRoute,73);
+ assert.equal(matrix.summary.publicISDsMissingRegisteredParentRoute,35);
+ assert.equal(matrix.summary.publicISDCampusRowsWithRegisteredParentRoute,1827);
+ assert.equal(matrix.summary.publicISDCampusRowsWithUnverifiedParentRoute,114);
  assert.equal(matrix.summary.campusPolygonCoverageAllDFWPercent,null);
  assert.equal(matrix.summary.exactAddressAssignmentCoveragePercent,null);
 });
