@@ -29,6 +29,16 @@ async function main(){
   report.httpStatus=result?.status()??null;
   report.locatorUi=detail;
   report.browserErrors=problems;
+  report.frameInventory=page.frames().map(frame=>({name:frame.name(),url:frame.url().slice(0,200)}));
+  console.log('FINDER_UI_DIAGNOSTIC',JSON.stringify({
+    httpStatus:report.httpStatus,
+    title:detail.title,
+    visibleBody:detail.bodyText.slice(0,1300),
+    inputs:detail.inputs,
+    buttons:detail.buttons,
+    frames:report.frameInventory,
+    pageErrors:problems
+  }));
   await page.screenshot({path:path.join(dir,'initial-finder-ui.png'),fullPage:true,animations:'disabled',timeout:15000});
   // Never claim a result unless a person has independently compared the
   // *specific* Finder-reported school and an authorized current-year polygon.
