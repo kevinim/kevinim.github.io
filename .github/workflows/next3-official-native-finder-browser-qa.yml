@@ -1,0 +1,42 @@
+name: District official finder native residential browser probe (no deploy)
+on:
+  push:
+    branches: [qa/plano-lewisville-mckinney-real-finder-20261109]
+  pull_request:
+    branches: [qa/public-residential-e2e-school-map-20261109]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  human-finder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 21
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # pinned v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # pinned v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Validate official UI script
+        run: node --check scripts/probe-next3-official-native-finders.cjs
+      - name: Install open-source Chromium
+        run: |
+          mkdir -p official-finder-browser
+          cd official-finder-browser
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Public address native official school Finder and map clicks
+        env:
+          NODE_PATH: ${{ github.workspace }}/official-finder-browser/node_modules
+        run: node scripts/probe-next3-official-native-finders.cjs
+      - name: Preserve official UI evidence for independent audit
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # pinned v4
+        with:
+          name: next3-official-finder-public-residence-native-chromium
+          path: artifacts/next3-native-finders/
+          if-no-files-found: warn
+          retention-days: 7
