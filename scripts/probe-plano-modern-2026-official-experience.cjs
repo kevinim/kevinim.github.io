@@ -78,8 +78,7 @@ const simpleUrl=s=>{try{const u=new URL(s);return u.origin+u.pathname}catch{retu
  }else report.status='MODERN_APP_ADDRESS_INPUT_NOT_FOUND';
  await page.screenshot({path:path.join(OUT,'modern-plano-2026-27.png'),fullPage:true,timeout:40000});
  }catch(e){report.status='MODERN_APP_BROWSER_ERROR';report.errors.push(safe(e.message,450))}
- finally{await browser.close()}
- }finally{
+ finally{await browser.close();
   fs.writeFileSync(path.join(OUT,'report.json'),JSON.stringify(report,null,2)+'\n');
   console.log('PLANO_MODERN_2026_APP '+JSON.stringify({siteOpened:report.siteOpened,status:report.status,
    inputs:report.searchInputs,frames:report.frames,selected:report.officialAddressSelected,
