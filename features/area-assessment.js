@@ -96,7 +96,7 @@
     try{
       const [c,n]=await Promise.all([
         fetch('./county-scopes.json',{cache:'force-cache'}),
-        fetch('./data/noaa-storm-events-dfw-2024-2025.json',{cache:'force-cache'})
+        fetch('./data/area-noaa-counts-2024-2025.json',{cache:'force-cache'})
       ]);
       if(!c.ok||!n.ok)throw Error('HTTP');
       const [ci,events]=await Promise.all([c.json(),n.json()]);
