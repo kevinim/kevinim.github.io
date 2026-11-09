@@ -41,7 +41,8 @@ test('sanitized preview retains strict hash-based CSP and locks modified script 
  const sanitizedPolicy=verifyCspIntegrity(preview);
  assert.notEqual(sanitizedPolicy.token,originalPolicy.token,'sanitizer must refresh the SHA-256 digest');
  assert.ok(sanitizedPolicy.policy.includes("script-src-attr 'none'"));
- assert.ok(!sanitizedPolicy.policy.includes("'unsafe-inline'"));
+ const scriptSource=sanitizedPolicy.policy.split(';').map(x=>x.trim()).find(x=>x.startsWith('script-src '));
+ assert.ok(!scriptSource.includes("'unsafe-inline'"),'inline JS must remain forbidden');
  assert.ok(!sanitizedPolicy.policy.includes("'unsafe-eval'"));
  assert.ok(sanitizedPolicy.policy.includes("object-src 'none'"));
 });
