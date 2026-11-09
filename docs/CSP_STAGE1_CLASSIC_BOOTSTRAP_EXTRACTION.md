@@ -58,4 +58,8 @@ This PR changes `index.html` and adds:
 - `.github/workflows/verify-main-bootstrap-extraction.yml`;
 - this documentation.
 
+Three existing **test-only** scripts were updated to follow the unchanged application code in its new location while preserving the prior functional assertions: `scripts/verify-main-data.mjs`, `scripts/test-integrated-features.cjs`, and `scripts/test-healthcare-winter-map.cjs`.
+
+**Critical release integration dependency:** Claude's draft #72 `scripts/build-public-preview.cjs` sanitizes the **inline `index.html` source** and currently expects to find the office/commute constants there. After Stage 1 extraction, the personalized constants remain in the publicly downloadable `dashboard-main.js` instead. **The curated public preview/release must be updated to sanitize or replace this separate JS asset and then run a strict output scan; never ship the copied JS file unsanitized.** The current #72 builder should fail closed rather than silently treat missing inline tokens as clean; confirm by cross-branch integration test before any public release. Extracting JavaScript to a separate public file is **not** a confidentiality measure.
+
 No `reviewed.html`, school registry/source JSON, map algorithms, other runtime JavaScript, Pages configuration or GitHub security settings changed. **Do not merge or deploy without full QA and owner review**.
