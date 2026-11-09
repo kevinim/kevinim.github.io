@@ -13,7 +13,7 @@ function fixtureMap(){
    featureSet:{features:['Irving HS','Macarthur HS','Nimitz HS'].map((NAME,i)=>({
     attributes:{NAME},geometry:{rings:[i===0?esriRing:[
      M.wmPoint([-97.06,32.86]),M.wmPoint([-97.05,32.86]),M.wmPoint([-97.05,32.87]),M.wmPoint([-97.06,32.87]),M.wmPoint([-97.06,32.86])
-    ]:esriRing]}}))}
+    ]]}}))}
   }]}}
  ]};
 }
