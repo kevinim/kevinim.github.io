@@ -170,7 +170,7 @@ function readNeighborDfwSupplement(root) {
  const {DISTRICT_REGISTRY}=require('../district-registry.js');
  const {official}=require('../trusted-link-policy.js');
  const allowed=new Set(['finder-guidance','official-map','official-inquiry','choice-process']);
- if(manifest.schemaVersion!==1||!Array.isArray(manifest.districts)||manifest.districts.length!==26)
+ if(manifest.schemaVersion!==1||!Array.isArray(manifest.districts)||manifest.districts.length!==38)
   throw Error('invalid_neighbor_school_provenance_manifest');
  const seen=new Set();
  return manifest.districts.map(d=>{
