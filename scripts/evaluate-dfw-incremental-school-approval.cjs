@@ -19,7 +19,7 @@ const LEVELS=Object.freeze({
  HOLD:'LEVEL_4_UNVERIFIED_HOLD'
 });
 const GRADE_KEYS=Object.freeze(['elementary','middle','high']);
-function isDay(s){return typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s)&&!Number.isNaN(Date.parse(s+'T00:00:00Z'));}
+function isDay(s){if(typeof s!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(s))return false;const n=Date.parse(s+'T00:00:00Z');return !Number.isNaN(n)&&new Date(n).toISOString().slice(0,10)===s;}
 function freshDay(s,today,maxDays=90){
  if(!isDay(s)||!isDay(today))return false;
  const n=(Date.parse(today+'T00:00:00Z')-Date.parse(s+'T00:00:00Z'))/86400000;
@@ -34,7 +34,7 @@ function safeUrl(value){
 function containsPrivateKeys(v){
  if(!v||typeof v!=='object')return false;
  if(Array.isArray(v))return v.some(containsPrivateKeys);
- return Object.keys(v).some(k=>/(^|_)(streetaddress|fulladdress|homeaddress|apartmentunit|unitnumber|latitude|longitude|coordinates|residentname|residentemail|geocode)(_|$)/i.test(k)||
+ return Object.keys(v).some(k=>/(^|[_-])(address|streetaddress|fulladdress|homeaddress|apartmentunit|unitnumber|unit|latitude|lat|longitude|lon|lng|coordinates|geopoint|residentname|residentemail|geocode|housenumber|street|suite)([_-]|$)/i.test(k)||
   containsPrivateKeys(v[k]));
 }
 function countsForYear(c,academicYear){
