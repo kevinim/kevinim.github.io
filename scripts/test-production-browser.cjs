@@ -54,6 +54,17 @@ mkdirSync(dir,{recursive:true});
      null,{timeout:45000});
    const markerCount=await p.evaluate(()=>schoolGroup.getLayers().length);
    assert.ok(markerCount>0,width+': Allen school markers disappeared');
+   // Distinguish actual Allen ISD campus pins from unrelated neighboring ISDs:
+   // a nonzero global layer count is not evidence that Allen itself is visible.
+   const allenMarkers=await p.evaluate(()=>{
+    const visibleAllen=state.schools.filter(s=>s.district==='AISD'&&s.ll&&
+      ['elementary','middle','high'].includes(s.type)&&map.getBounds().contains(s.ll));
+    const shownNames=new Set(schoolGroup.getLayers().map(marker=>marker.options.title));
+    return {expected:visibleAllen.length,drawn:visibleAllen.filter(s=>shownNames.has(s.name)).length};
+   });
+   assert.ok(allenMarkers.expected>0,width+': Allen ZIP view contains no AISD campus; inspect selected-area bounds');
+   assert.equal(allenMarkers.drawn,allenMarkers.expected,
+    width+': AISD school markers missing despite campus coordinates inside map viewport');
 
    const viewport=await p.evaluate(()=>({
     viewportWidth:innerWidth,scrollWidth:document.documentElement.scrollWidth
@@ -62,7 +73,7 @@ mkdirSync(dir,{recursive:true});
     width+': mobile horizontal overflow '+JSON.stringify(viewport));
    await p.screenshot({path:dir+'/deployed-responsive-'+width+'.png',
     fullPage:false,timeout:30000});
-   return {width,defaultDark:true,themeToggle:true,allenMarkerCount:markerCount,
+   return {width,defaultDark:true,themeToggle:true,allenMarkerCount:markerCount,aisdMarkers:allenMarkers,
     manualCostFolded:true,unknownTollNotPriced:true,...viewport};
   }
   result.liveUi=[await checkCurrentLiveUI(page,1380)];
