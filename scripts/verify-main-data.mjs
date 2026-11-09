@@ -25,6 +25,7 @@ const prosper = readJson('prosper-celina-reference-2026.geojson');
 const prosperCurrent = readJson('prosper-attendance-2026.geojson');
 const officialChecks = readJson('tests/prosper-official-location-checks-2026.json');
 const require=createRequire(import.meta.url);
+const {assertVersionedMainBootstrap}=require('./dashboard-bootstrap-contract.cjs');
 const {resolveAssignment,schoolLevelMatchesAssignment}=require('../school-assignment.js');
 const {inRing,inGeometry,inFriscoBorder,schoolKey,interiorPoints}=require('../scripts/attendance-geo-audit.cjs');
 const publicAddressAudit=readJson('tests/public-address-finder-crosscheck-2026.json');
@@ -67,7 +68,7 @@ const test = (name, fn) => {
 
 const inlineScripts = [mainBootstrap];
 test('external main application bootstrap compiles with no inline HTML execution',()=>{
- assert.ok(pageHtml.includes('<script src="./dashboard-main.js?v=3"></script>'));
+ assertVersionedMainBootstrap(pageHtml);
  assert.equal([...pageHtml.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].filter(x=>!/\bsrc\s*=/.test(x[1])&&x[2].trim()).length,0);
  new Script(mainBootstrap,{filename:'dashboard-main.js'});
 });
