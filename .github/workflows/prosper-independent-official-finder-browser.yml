@@ -39,10 +39,10 @@ jobs:
           npm init -y > /dev/null
           npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
           ./node_modules/.bin/playwright install --with-deps chromium
-      - name: Inspect actual Prosper official Infofinder DOM and user inputs (no address submission)
+      - name: Enter two publicly advertised address cases into official Infofinder UI (redacted outputs)
         env:
           NODE_PATH: ${{ github.workspace }}/prosper-independent-browser-tmp/node_modules
-        run: node scripts/probe-prosper-independent-finder-ui-browser.cjs
+        run: node scripts/probe-prosper-independent-finder-ui-browser.cjs --samples
       - name: Verify no private addresses and no fabricated school certification
         run: |
           node - <<'NODE'
