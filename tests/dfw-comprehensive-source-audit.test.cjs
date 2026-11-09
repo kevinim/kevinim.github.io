@@ -41,3 +41,13 @@ test('supplemental source cannot retroactively claim certified GIS/address',()=>
  const d=fresh();d.batches[3].evidence[0].verifiedCurrentYearAttendanceGIS=true;
  assert.match(audit(d).errors.join('|'),/supplemental_false_certification/);
 });
+
+test('legacy batch 3 missing explicit address metadata is warning, never address proof',()=>{
+ const d=fresh();const r=audit(d);
+ assert.equal(r.status,'PASS',r.errors.join('|'));
+ assert.ok(r.warnings.some(x=>x.includes('Batch 3')));
+});
+test('any legacy evidence declaring personal address submission cannot pass',()=>{
+ const d=fresh();d.batches[0].evidence[0].personalAddressSubmitted=true;
+ assert.match(audit(d).errors.join('|'),/supplemental_false_certification/);
+});
