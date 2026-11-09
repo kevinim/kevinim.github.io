@@ -20,7 +20,7 @@ const samples=[
 ];
 const sources=[
  {district:'PISD',url:'https://webservice.pisd.edu/SchoolFinderForSchoolWires/',name:'Plano direct public feeder Finder'},
- {district:'LISD',url:'https://www.lisd.net/resources/families/school-locator',name:'Lewisville official 2026-27 locator page'},
+ {district:'LISD',url:'https://portal.metrostudygis.com/arcgis/apps/webappviewer/index.html?id=8b1628e7345e4a98a4dcf6c852581656',name:'Lewisville 2026-27 live locator linked from official district page'},
  {district:'043907',url:'https://portal.metrostudygis.com/arcgis/apps/webappviewer/index.html?id=ed198c434d47474b88709e98d1f0a125',name:'McKinney 2026-27 GIS locator'}
 ];
 const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.geojson':'application/geo+json; charset=utf-8','.css':'text/css'};
@@ -139,7 +139,8 @@ async function officialPages(browser){
      if(!item.visible||!['text','search',''].includes(item.type))continue;
      const hint=(item.id+' '+item.placeholder+' '+item.aria).toLowerCase();
      if(!/address|street|find.*school|search.*home/.test(hint))continue;
-     candidates.push({frame,input:frame.locator('#'+item.id).first(),item});
+     const loc=item.id?frame.locator('[id="'+item.id+'"]'):frame.locator('input').filter({visible:true}).first();
+     candidates.push({frame,input:loc.first(),item});
     }
    }
    entry.probeInputs=candidates.map(x=>({frame:safeUrl(x.frame.url()),id:x.item.id,placeholder:x.item.placeholder}));
