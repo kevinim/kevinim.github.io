@@ -129,9 +129,9 @@ function audit(input) {
     validPoint(p) ? 'HISTORICAL_NCES_POINT_NOT_CURRENT_CERTIFIED' : 'INVALID_HISTORICAL_POINT';
    if (!p) { missingPoints++; missingID.push(c.id);
     check(exceptions.has(c.id),'UNEXPLAINED_MISSING_PUBLIC_POINT_'+c.id);
-   } else check(!exceptions.has(c.id),'STALE_MISSING_POINT_EVIDENCE_'+c.id);
-   else if (!validPoint(p)) { invalidPoints++; pointAnomaly.push(c.id); }
+   } else if (!validPoint(p)) { invalidPoints++; pointAnomaly.push(c.id); }
    else pointRecords++;
+   if (p) check(!exceptions.has(c.id),'STALE_MISSING_POINT_EVIDENCE_'+c.id);
    const lifecycle = retired.find(x => (x.district === key || x.district === d.code) &&
      ((x.id && x.id === c.id) || (!x.id && lifecycleNameKey(x.name) === lifecycleNameKey(c.name)))) || null;
    const lifecycleStart=lifecycle ? Number(String(lifecycle.retiredFrom).slice(0,4)) : null;
