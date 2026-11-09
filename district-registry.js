@@ -147,7 +147,7 @@ const DISTRICT_REGISTRY={
  '070905':{en:"Ferris",ko:"페리스",zoneKey:null,currency:null,address:null,campusIdMatch:false,
   lookupKind:"official-inquiry",official:"https://www.ferrisisd.org/departments/student-support-services/enrollment-registration",officialNote:"2026–27 공식 Enrollment/Registration 안내입니다. 학군 내 거주증명과 학년별 등록을 확인하되, 이 등록 페이지가 주소별 학교 검색기는 아닙니다. 일반 지정학교와 학군 밖 전학은 별도 절차이므로 등록 담당자에게 확인하세요.",label:{}},
  '043919':{en:"Lovejoy",ko:"러브조이",zoneKey:null,currency:null,address:null,campusIdMatch:false,
-  lookupKind:"official-inquiry",official:"https://www.lovejoyisd.net/page/enrollment-for-new-students",officialNote:"2026–27 공식 신규 등록 안내입니다. 일반 거주지 학군 배정과 별도 지원 방식 Lovejoy Scholars 프로그램은 다르며, 주소별 캠퍼스 검색기 또는 현행 학교별 경계는 확인되지 않았습니다. 등록처에서 학년·주소를 확인하세요.",label:{}},
+  lookupKind:"official-inquiry",official:"https://www.lovejoyisd.net/page/quick-links",officialNote:"Lovejoy ISD의 공식 Quick Links로 이동하세요. 2026–27 신규 등록 안내에서 연결한 Enrollment for New Students 직접 주소는 점검 시 404였으므로, 주소·학년별 배정과 등록 경로는 학군에 직접 문의해야 합니다. Lovejoy Scholars 별도 선발과 일반 거주지 배정을 혼동하지 마세요. 현행 학교별 경계와 자동 주소검색은 검증되지 않았습니다.",label:{}},
  CFB:{en:'CFB',ko:'캐럴턴–파머스브랜치',zoneKey:null,currency:null,address:null,campusIdMatch:false,
   official:'https://www.cfbisd.edu/students/school-maps-locator-system',label:{}}
 };
