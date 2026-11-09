@@ -1,0 +1,5336 @@
+{
+  "schemaVersion": 1,
+  "generatedOn": "2026-11-09",
+  "dataYear": "2026 preliminary TEA snapshot",
+  "sourceFiles": [
+    "tea-ratings-2026.json",
+    "district-registry.js",
+    "data/school-polygon-linkage-baseline.json"
+  ],
+  "geographicDefinition": {
+    "name": "Dallas–Fort Worth–Arlington metropolitan statistical area",
+    "sourceUrl": "https://www.bls.gov/regions/southwest/news-release/areaemployment_dallasfortworth.htm",
+    "counties": [
+      "COLLIN",
+      "DALLAS",
+      "DENTON",
+      "ELLIS",
+      "HUNT",
+      "JOHNSON",
+      "KAUFMAN",
+      "PARKER",
+      "ROCKWALL",
+      "TARRANT",
+      "WISE"
+    ],
+    "method": "TEA districtCounty is administrative district county-of-record proxy, not parcel or campus coordinate.",
+    "caveat": "This is a full census of district IDs present in the current TEA snapshot for the 11 named counties, NOT a certified list of every school district serving parcels across county lines. Unobserved ISDs, cross-county attendance and omitted campuses require source reconciliation.",
+    "extendedRegion": "NCTCOG 12-county region additionally includes Hood. Hood is absent from the present TEA snapshot and cannot be counted as zero districts."
+  },
+  "definitions": {
+    "parentGuidanceRate": "ISDs with already recorded, allowlisted official parent entry page; not a tested live address-grade lookup success rate.",
+    "campusPolygonCoverage": "Unknown DFW-wide: reference minima exist only for seven previously audited district mappings. Do not use 0% for unreviewed districts.",
+    "specificCampusMissingReason": "A district-level data gap is not proof a particular campus lacks a zone; per-campus root causes require browser/source audit.",
+    "otherLEAs": "Non-ISD names may be charter, alternative, multi-campus LEA or special authority; classify enrollment rules independently."
+  },
+  "summary": {
+    "sourceCampusRows": 2182,
+    "teaDistrictCodes": 152,
+    "publicISDs": 108,
+    "otherLEAs": 44,
+    "publicISDsWithRegisteredParentRoute": 29,
+    "publicISDsMissingRegisteredParentRoute": 79,
+    "registeredParentRouteRatePublicISDPercent": 26.9,
+    "publicISDCampusRows": 1941,
+    "publicISDCampusRowsWithRegisteredParentRoute": 1107,
+    "publicISDCampusRowsWithUnverifiedParentRoute": 834,
+    "otherLEACampusRows": 241,
+    "campusPolygonCoverageAllDFWPercent": null,
+    "exactAddressAssignmentCoveragePercent": null
+  },
+  "countySummaries": [
+    {
+      "county": "COLLIN",
+      "teaCampusRecords": 322,
+      "districtCodesWithSchoolRecords": 16,
+      "publicISDs": 14,
+      "publicISDsWithRegisteredParentRoute": 11
+    },
+    {
+      "county": "DALLAS",
+      "teaCampusRecords": 757,
+      "districtCodesWithSchoolRecords": 42,
+      "publicISDs": 14,
+      "publicISDsWithRegisteredParentRoute": 7
+    },
+    {
+      "county": "DENTON",
+      "teaCampusRecords": 241,
+      "districtCodesWithSchoolRecords": 15,
+      "publicISDs": 11,
+      "publicISDsWithRegisteredParentRoute": 5
+    },
+    {
+      "county": "ELLIS",
+      "teaCampusRecords": 70,
+      "districtCodesWithSchoolRecords": 11,
+      "publicISDs": 10,
+      "publicISDsWithRegisteredParentRoute": 0
+    },
+    {
+      "county": "HUNT",
+      "teaCampusRecords": 41,
+      "districtCodesWithSchoolRecords": 10,
+      "publicISDs": 10,
+      "publicISDsWithRegisteredParentRoute": 0
+    },
+    {
+      "county": "JOHNSON",
+      "teaCampusRecords": 66,
+      "districtCodesWithSchoolRecords": 9,
+      "publicISDs": 9,
+      "publicISDsWithRegisteredParentRoute": 0
+    },
+    {
+      "county": "KAUFMAN",
+      "teaCampusRecords": 64,
+      "districtCodesWithSchoolRecords": 7,
+      "publicISDs": 7,
+      "publicISDsWithRegisteredParentRoute": 1
+    },
+    {
+      "county": "PARKER",
+      "teaCampusRecords": 50,
+      "districtCodesWithSchoolRecords": 9,
+      "publicISDs": 8,
+      "publicISDsWithRegisteredParentRoute": 0
+    },
+    {
+      "county": "ROCKWALL",
+      "teaCampusRecords": 36,
+      "districtCodesWithSchoolRecords": 2,
+      "publicISDs": 2,
+      "publicISDsWithRegisteredParentRoute": 1
+    },
+    {
+      "county": "TARRANT",
+      "teaCampusRecords": 509,
+      "districtCodesWithSchoolRecords": 24,
+      "publicISDs": 16,
+      "publicISDsWithRegisteredParentRoute": 4
+    },
+    {
+      "county": "WISE",
+      "teaCampusRecords": 26,
+      "districtCodesWithSchoolRecords": 7,
+      "publicISDs": 7,
+      "publicISDsWithRegisteredParentRoute": 0
+    }
+  ],
+  "missingReasonTotals": {
+    "other-lea-admissions-model-needs-classification": {
+      "districts": 44,
+      "teaCampusRecords": 241
+    },
+    "historical-campus-polygons-not-current-assignment": {
+      "districts": 1,
+      "teaCampusRecords": 23
+    },
+    "official-parent-route-linked-but-campus-gis-not-ingested": {
+      "districts": 22,
+      "teaCampusRecords": 751
+    },
+    "official-parent-lookup-not-yet-verified": {
+      "districts": 79,
+      "teaCampusRecords": 834
+    },
+    "current-year-source-reference-still-needs-live-recheck": {
+      "districts": 2,
+      "teaCampusRecords": 108
+    },
+    "live-finder-source-can-change-since-reference-run": {
+      "districts": 1,
+      "teaCampusRecords": 33
+    },
+    "finder-linked-polygons-year-not-confirmed": {
+      "districts": 2,
+      "teaCampusRecords": 126
+    },
+    "choice-not-address-zoning": {
+      "districts": 1,
+      "teaCampusRecords": 66
+    }
+  },
+  "priorityQueue": [
+    "220905",
+    "220901",
+    "220908",
+    "057910",
+    "220918",
+    "220902",
+    "220912",
+    "126902",
+    "070912",
+    "057907",
+    "070908",
+    "199902",
+    "184907",
+    "220915",
+    "126903",
+    "070903",
+    "184903",
+    "057904",
+    "057906",
+    "220904",
+    "116905",
+    "126905",
+    "057913",
+    "129901",
+    "070911",
+    "129906",
+    "061907",
+    "057911",
+    "184902",
+    "220920",
+    "220917",
+    "129903",
+    "116901",
+    "249905",
+    "070905",
+    "129904",
+    "043919",
+    "129905",
+    "061908",
+    "126901",
+    "249902",
+    "184909",
+    "126911",
+    "220914",
+    "061905",
+    "061912",
+    "220910",
+    "184908",
+    "061903",
+    "249903",
+    "116903",
+    "043904",
+    "126906",
+    "249906",
+    "061906",
+    "116908",
+    "057919",
+    "126908",
+    "249901",
+    "116915",
+    "043917",
+    "116916",
+    "116902",
+    "249904",
+    "126904",
+    "116906",
+    "070915",
+    "184904",
+    "070910",
+    "184901",
+    "126907",
+    "129910",
+    "116909",
+    "116910",
+    "070907",
+    "070901",
+    "184911",
+    "070909",
+    "249908",
+    "057905",
+    "043910",
+    "057909",
+    "061902",
+    "057914",
+    "057916",
+    "061901",
+    "057803",
+    "057848",
+    "061806",
+    "220907",
+    "061911",
+    "057903",
+    "057912",
+    "043907",
+    "220916",
+    "129902",
+    "043901",
+    "199901",
+    "043914",
+    "220906",
+    "057922",
+    "043911",
+    "061914",
+    "220919",
+    "043902",
+    "043918",
+    "043908",
+    "043903",
+    "061910",
+    "043905",
+    "043912",
+    "057804",
+    "057813",
+    "057807",
+    "057850",
+    "057828",
+    "057835",
+    "220817",
+    "057814",
+    "057845",
+    "220802",
+    "057834",
+    "061804",
+    "057844",
+    "061802",
+    "057808",
+    "057829",
+    "057841",
+    "057833",
+    "070801",
+    "220809",
+    "057831",
+    "057830",
+    "057839",
+    "220822",
+    "057836",
+    "061805",
+    "057806",
+    "057851",
+    "184801",
+    "220811",
+    "043801",
+    "043802",
+    "057819",
+    "057846",
+    "057809",
+    "057827",
+    "057802",
+    "220814",
+    "220801",
+    "057847",
+    "220810"
+  ],
+  "districts": [
+    {
+      "code": "043901",
+      "name": "ALLEN ISD",
+      "countyOfRecord": "COLLIN",
+      "sourceCountyRecords": {
+        "COLLIN": 23
+      },
+      "teaCampusRecords": 23,
+      "sourceDistrictAliases": [
+        "AISD"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "registered-official-link",
+        "officialUrl": "https://www.allenisd.org/page/findaschool",
+        "yearCaution": null,
+        "registryKey": "AISD"
+      },
+      "geometry": {
+        "status": "reference-browser-minimum-only",
+        "referenceLoadedMinimum": 22,
+        "referenceMatchedMinimum": 21,
+        "matchedLoadedPercent": 95.5,
+        "vintageMode": "historical-2019-2023-reference",
+        "confirmedCurrentYear": false,
+        "referenceRun": 42548036191
+      },
+      "missingReason": "historical-campus-polygons-not-current-assignment",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": true,
+      "limitation": "Reference browser minimum from selected dataset; individual school current assignment is unverified."
+    },
+    {
+      "code": "043902",
+      "name": "ANNA ISD",
+      "countyOfRecord": "COLLIN",
+      "sourceCountyRecords": {
+        "COLLIN": 10
+      },
+      "teaCampusRecords": 10,
+      "sourceDistrictAliases": [
+        "043902"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.annaisd.org/parents-students/attendance-zones",
+        "yearCaution": "26–27 Interactive Map에서 주소를 입력하세요. 아파트는 별도 검색을 지원합니다.",
+        "registryKey": "043902"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "043917",
+      "name": "BLUE RIDGE ISD",
+      "countyOfRecord": "COLLIN",
+      "sourceCountyRecords": {
+        "COLLIN": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "043917"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "043903",
+      "name": "CELINA ISD",
+      "countyOfRecord": "COLLIN",
+      "sourceCountyRecords": {
+        "COLLIN": 8
+      },
+      "teaCampusRecords": 8,
+      "sourceDistrictAliases": [
+        "043903"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.celinaisd.com/who-we-are/attendance-zones",
+        "yearCaution": "현행 배정 안내와 2027–28 예정 변경안이 같은 페이지에 있습니다. 현행 학년도만 확인하세요.",
+        "registryKey": "043903"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "043918",
+      "name": "COMMUNITY ISD",
+      "countyOfRecord": "COLLIN",
+      "sourceCountyRecords": {
+        "COLLIN": 9
+      },
+      "teaCampusRecords": 9,
+      "sourceDistrictAliases": [
+        "043918"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.communityisd.org/parents",
+        "yearCaution": "공식 학부모 페이지에서 Find Your Campus(es)로 연결됩니다. 2024–25 과거 지도는 현재 배정으로 취급하지 마세요.",
+        "registryKey": "043918"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "043904",
+      "name": "FARMERSVILLE ISD",
+      "countyOfRecord": "COLLIN",
+      "sourceCountyRecords": {
+        "COLLIN": 4
+      },
+      "teaCampusRecords": 4,
+      "sourceDistrictAliases": [
+        "043904"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "043905",
+      "name": "FRISCO ISD",
+      "countyOfRecord": "COLLIN",
+      "sourceCountyRecords": {
+        "COLLIN": 76
+      },
+      "teaCampusRecords": 76,
+      "sourceDistrictAliases": [
+        "FISD"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "registered-official-link",
+        "officialUrl": "https://www.friscoisd.org/page/2026-2027-zones/",
+        "yearCaution": null,
+        "registryKey": "FISD"
+      },
+      "geometry": {
+        "status": "reference-browser-minimum-only",
+        "referenceLoadedMinimum": 73,
+        "referenceMatchedMinimum": 73,
+        "matchedLoadedPercent": 100,
+        "vintageMode": "official-2026-27-live-feed",
+        "confirmedCurrentYear": true,
+        "referenceRun": 42548036191
+      },
+      "missingReason": "current-year-source-reference-still-needs-live-recheck",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": true,
+      "limitation": "Reference browser minimum from selected dataset; individual school current assignment is unverified."
+    },
+    {
+      "code": "043801",
+      "name": "IMAGINE INTERNATIONAL ACADEMY OF NORTH TEXAS",
+      "countyOfRecord": "COLLIN",
+      "sourceCountyRecords": {
+        "COLLIN": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "043801"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "043802",
+      "name": "IMAGINE LONE STAR INTERNATIONAL ACADEMY",
+      "countyOfRecord": "COLLIN",
+      "sourceCountyRecords": {
+        "COLLIN": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "043802"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "043919",
+      "name": "LOVEJOY ISD",
+      "countyOfRecord": "COLLIN",
+      "sourceCountyRecords": {
+        "COLLIN": 6
+      },
+      "teaCampusRecords": 6,
+      "sourceDistrictAliases": [
+        "043919"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "043907",
+      "name": "MCKINNEY ISD",
+      "countyOfRecord": "COLLIN",
+      "sourceCountyRecords": {
+        "COLLIN": 33
+      },
+      "teaCampusRecords": 33,
+      "sourceDistrictAliases": [
+        "043907"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "registered-official-link",
+        "officialUrl": "https://portal.metrostudygis.com/arcgis/apps/webappviewer/index.html?id=ed198c434d47474b88709e98d1f0a125",
+        "yearCaution": null,
+        "registryKey": "043907"
+      },
+      "geometry": {
+        "status": "reference-browser-minimum-only",
+        "referenceLoadedMinimum": 30,
+        "referenceMatchedMinimum": 25,
+        "matchedLoadedPercent": 83.3,
+        "vintageMode": "live-official-finder-only",
+        "confirmedCurrentYear": false,
+        "referenceRun": 42548036191
+      },
+      "missingReason": "live-finder-source-can-change-since-reference-run",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": true,
+      "limitation": "Reference browser minimum from selected dataset; individual school current assignment is unverified."
+    },
+    {
+      "code": "043908",
+      "name": "MELISSA ISD",
+      "countyOfRecord": "COLLIN",
+      "sourceCountyRecords": {
+        "COLLIN": 9
+      },
+      "teaCampusRecords": 9,
+      "sourceDistrictAliases": [
+        "043908"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.melissaisd.org/page/interactive-zoning-map",
+        "yearCaution": "공식 지도 안내에 2025–26 학년도 문구가 남아 있습니다. 조회 화면에서 적용 학년도를 확인하거나 교육청에 문의하세요.",
+        "registryKey": "043908"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "043910",
+      "name": "PLANO ISD",
+      "countyOfRecord": "COLLIN",
+      "sourceCountyRecords": {
+        "COLLIN": 69
+      },
+      "teaCampusRecords": 69,
+      "sourceDistrictAliases": [
+        "PISD"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "registered-official-link",
+        "officialUrl": "https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder",
+        "yearCaution": null,
+        "registryKey": "PISD"
+      },
+      "geometry": {
+        "status": "reference-browser-minimum-only",
+        "referenceLoadedMinimum": 63,
+        "referenceMatchedMinimum": 62,
+        "matchedLoadedPercent": 98.4,
+        "vintageMode": "official-finder-linked-layer-year-not-confirmed",
+        "confirmedCurrentYear": false,
+        "referenceRun": 42548036191
+      },
+      "missingReason": "finder-linked-polygons-year-not-confirmed",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": true,
+      "limitation": "Reference browser minimum from selected dataset; individual school current assignment is unverified."
+    },
+    {
+      "code": "043911",
+      "name": "PRINCETON ISD",
+      "countyOfRecord": "COLLIN",
+      "sourceCountyRecords": {
+        "COLLIN": 16
+      },
+      "teaCampusRecords": 16,
+      "sourceDistrictAliases": [
+        "043911"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.princetonisd.net/departments/enrollment/attendance-zones",
+        "yearCaution": "2026–27 현행 구역과 2027–28 차기 구역이 모두 게시돼 있습니다. 2026–27만 사용하세요.",
+        "registryKey": "043911"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "043912",
+      "name": "PROSPER ISD",
+      "countyOfRecord": "COLLIN",
+      "sourceCountyRecords": {
+        "COLLIN": 32
+      },
+      "teaCampusRecords": 32,
+      "sourceDistrictAliases": [
+        "PROSPER"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "registered-official-link",
+        "officialUrl": "https://www.prosper-isd.net/page/attendance-boundaries/",
+        "yearCaution": null,
+        "registryKey": "PROSPER"
+      },
+      "geometry": {
+        "status": "reference-browser-minimum-only",
+        "referenceLoadedMinimum": 31,
+        "referenceMatchedMinimum": 31,
+        "matchedLoadedPercent": 100,
+        "vintageMode": "official-2026-27-pinned-local",
+        "confirmedCurrentYear": true,
+        "referenceRun": 42548036191
+      },
+      "missingReason": "current-year-source-reference-still-needs-live-recheck",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": true,
+      "limitation": "Reference browser minimum from selected dataset; individual school current assignment is unverified."
+    },
+    {
+      "code": "043914",
+      "name": "WYLIE ISD",
+      "countyOfRecord": "COLLIN",
+      "sourceCountyRecords": {
+        "COLLIN": 22
+      },
+      "teaCampusRecords": 22,
+      "sourceDistrictAliases": [
+        "043914"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.wylieisd.net/our-families/back-to-school/frequently-asked-questions",
+        "yearCaution": "학군 공식 FAQ에서 주소별 학교·버스 검색기로 이동하세요. 경계 지도만으로 배정을 확정하지 마세요.",
+        "registryKey": "043914"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057829",
+      "name": "A+ ACADEMY",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 2
+      },
+      "teaCampusRecords": 2,
+      "sourceDistrictAliases": [
+        "057829"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057814",
+      "name": "ACADEMY FOR ACADEMIC EXCELLENCE",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 4
+      },
+      "teaCampusRecords": 4,
+      "sourceDistrictAliases": [
+        "057814"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057806",
+      "name": "ADVANTAGE ACADEMY",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "057806"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057851",
+      "name": "BRIDGEWAY PREPARATORY ACADEMY",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "057851"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057903",
+      "name": "CARROLLTON-FARMERS BRANCH ISD",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 35
+      },
+      "teaCampusRecords": 35,
+      "sourceDistrictAliases": [
+        "CFB"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "registered-official-link",
+        "officialUrl": "https://www.cfbisd.edu/students/school-maps-locator-system",
+        "yearCaution": null,
+        "registryKey": "CFB"
+      },
+      "geometry": {
+        "status": "reference-browser-minimum-only",
+        "referenceLoadedMinimum": 30,
+        "referenceMatchedMinimum": 0,
+        "matchedLoadedPercent": 0,
+        "vintageMode": "resident-finder-only-no-dashboard-polygons",
+        "confirmedCurrentYear": false,
+        "referenceRun": 42548036191
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": true,
+      "limitation": "Reference browser minimum from selected dataset; individual school current assignment is unverified."
+    },
+    {
+      "code": "057904",
+      "name": "CEDAR HILL ISD",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 11
+      },
+      "teaCampusRecords": 11,
+      "sourceDistrictAliases": [
+        "057904"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057841",
+      "name": "CITYSCAPE SCHOOLS",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 2
+      },
+      "teaCampusRecords": 2,
+      "sourceDistrictAliases": [
+        "057841"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057922",
+      "name": "COPPELL ISD",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 16
+      },
+      "teaCampusRecords": 16,
+      "sourceDistrictAliases": [
+        "057922"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.coppellisd.com/page/enrollment",
+        "yearCaution": "교육청의 Find Your School 단계에서 거주 주소를 입력해 배정학교를 확인하세요.",
+        "registryKey": "057922"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057905",
+      "name": "DALLAS ISD",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 237
+      },
+      "teaCampusRecords": 237,
+      "sourceDistrictAliases": [
+        "057905"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.dallasisd.org/departments/demographic-studies/find-your-school/schoolsite-locator-interactive-map",
+        "yearCaution": "공식 SchoolSite Locator로 주소·학년별 학교를 확인하세요. 최종 배정은 PowerSchool 주소대장과 학교 등록담당자에게 확인하세요. 선택형 학교는 별도 신청입니다.",
+        "registryKey": "057905"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057906",
+      "name": "DESOTO ISD",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 11
+      },
+      "teaCampusRecords": 11,
+      "sourceDistrictAliases": [
+        "057906"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057907",
+      "name": "DUNCANVILLE ISD",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 14
+      },
+      "teaCampusRecords": 14,
+      "sourceDistrictAliases": [
+        "057907"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057833",
+      "name": "EDUCATION CENTER INTERNATIONAL ACADEMY",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 2
+      },
+      "teaCampusRecords": 2,
+      "sourceDistrictAliases": [
+        "057833"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057834",
+      "name": "EVOLUTION ACADEMY CHARTER SCHOOL",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "057834"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057909",
+      "name": "GARLAND ISD",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 66
+      },
+      "teaCampusRecords": 66,
+      "sourceDistrictAliases": [
+        "057909"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "choice-process",
+        "officialUrl": "https://www.garlandisd.net/choose-your-school/tips-help-you-choose",
+        "yearCaution": "Garland ISD는 일반적인 자동 주소 배정이 아니라 Choice of School입니다. 희망 학교 신청과 배정 통지로 최종 확인하세요.",
+        "registryKey": "057909"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "choice-not-address-zoning",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057831",
+      "name": "GATEWAY CHARTER ACADEMY",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 2
+      },
+      "teaCampusRecords": 2,
+      "sourceDistrictAliases": [
+        "057831"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057835",
+      "name": "GOLDEN RULE CHARTER SCHOOL",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 5
+      },
+      "teaCampusRecords": 5,
+      "sourceDistrictAliases": [
+        "057835"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057910",
+      "name": "GRAND PRAIRIE ISD",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 37
+      },
+      "teaCampusRecords": 37,
+      "sourceDistrictAliases": [
+        "057910"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057911",
+      "name": "HIGHLAND PARK ISD",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 8
+      },
+      "teaCampusRecords": 8,
+      "sourceDistrictAliases": [
+        "057911"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057830",
+      "name": "INSPIRED VISION ACADEMY",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 2
+      },
+      "teaCampusRecords": 2,
+      "sourceDistrictAliases": [
+        "057830"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057848",
+      "name": "INTERNATIONAL LEADERSHIP OF TEXAS (ILTEXAS)",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 44
+      },
+      "teaCampusRecords": 44,
+      "sourceDistrictAliases": [
+        "057848"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057912",
+      "name": "IRVING ISD",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 35
+      },
+      "teaCampusRecords": 35,
+      "sourceDistrictAliases": [
+        "057912"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.irvingisd.net/departments-services/registration/new-student-registration",
+        "yearCaution": "등록 안내 페이지의 School Locator에서 주소별 배정학교를 확인하세요.",
+        "registryKey": "057912"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057819",
+      "name": "JEAN MASSIEU ACADEMY",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "057819"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057839",
+      "name": "LA ACADEMIA DE ESTRELLAS",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 2
+      },
+      "teaCampusRecords": 2,
+      "sourceDistrictAliases": [
+        "057839"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057913",
+      "name": "LANCASTER ISD",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 10
+      },
+      "teaCampusRecords": 10,
+      "sourceDistrictAliases": [
+        "057913"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057846",
+      "name": "LEGACY PREPARATORY",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "057846"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057807",
+      "name": "LIFE SCHOOL",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 7
+      },
+      "teaCampusRecords": 7,
+      "sourceDistrictAliases": [
+        "057807"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057844",
+      "name": "MANARA ACADEMY",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "057844"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057914",
+      "name": "MESQUITE ISD",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 51
+      },
+      "teaCampusRecords": 51,
+      "sourceDistrictAliases": [
+        "057914"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://mesquiteisd.org/attendance-zones",
+        "yearCaution": "School Locator에서 주소를 검색하세요. 캠퍼스 지도와 진학 경로는 별도 자료입니다.",
+        "registryKey": "057914"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057809",
+      "name": "NOVA ACADEMY",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "057809"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057827",
+      "name": "NOVA ACADEMY SOUTHEAST",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "057827"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057802",
+      "name": "PEGASUS SCHOOL OF LIBERAL ARTS AND SCIENCES",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "057802"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057850",
+      "name": "PIONEER TECHNOLOGY & ARTS ACADEMY",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 6
+      },
+      "teaCampusRecords": 6,
+      "sourceDistrictAliases": [
+        "057850"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057916",
+      "name": "RICHARDSON ISD",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 51
+      },
+      "teaCampusRecords": 51,
+      "sourceDistrictAliases": [
+        "057916"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://web.risd.org/home/schools/",
+        "yearCaution": "교육청 Schools 페이지의 School Finder에서 주소를 입력하세요. Magnet 및 전학은 별도입니다.",
+        "registryKey": "057916"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057836",
+      "name": "ST ANTHONY SCHOOL",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 2
+      },
+      "teaCampusRecords": 2,
+      "sourceDistrictAliases": [
+        "057836"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057919",
+      "name": "SUNNYVALE ISD",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 4
+      },
+      "teaCampusRecords": 4,
+      "sourceDistrictAliases": [
+        "057919"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057804",
+      "name": "TEXANS CAN ACADEMIES",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 11
+      },
+      "teaCampusRecords": 11,
+      "sourceDistrictAliases": [
+        "057804"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057813",
+      "name": "TRINITY BASIN PREPARATORY",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 8
+      },
+      "teaCampusRecords": 8,
+      "sourceDistrictAliases": [
+        "057813"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057845",
+      "name": "UME PREPARATORY ACADEMY",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 4
+      },
+      "teaCampusRecords": 4,
+      "sourceDistrictAliases": [
+        "057845"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057808",
+      "name": "UNIVERSAL ACADEMY",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "057808"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057803",
+      "name": "UPLIFT EDUCATION",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 45
+      },
+      "teaCampusRecords": 45,
+      "sourceDistrictAliases": [
+        "057803"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057847",
+      "name": "VILLAGE TECH SCHOOLS",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "057847"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "057828",
+      "name": "WINFREE ACADEMY CHARTER SCHOOLS",
+      "countyOfRecord": "DALLAS",
+      "sourceCountyRecords": {
+        "DALLAS": 6
+      },
+      "teaCampusRecords": 6,
+      "sourceDistrictAliases": [
+        "057828"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "061910",
+      "name": "ARGYLE ISD",
+      "countyOfRecord": "DENTON",
+      "sourceCountyRecords": {
+        "DENTON": 7
+      },
+      "teaCampusRecords": 7,
+      "sourceDistrictAliases": [
+        "061910"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "official-map",
+        "officialUrl": "https://www.argyleisd.com/about/soaring-together/district-boundaries-zones",
+        "yearCaution": "학군 공식 초·중·고 배정 지도입니다. 개별 주소·학년도는 교육청에서 추가 확인하세요.",
+        "registryKey": "061910"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "061907",
+      "name": "AUBREY ISD",
+      "countyOfRecord": "DENTON",
+      "sourceCountyRecords": {
+        "DENTON": 8
+      },
+      "teaCampusRecords": 8,
+      "sourceDistrictAliases": [
+        "061907"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "061901",
+      "name": "DENTON ISD",
+      "countyOfRecord": "DENTON",
+      "sourceCountyRecords": {
+        "DENTON": 46
+      },
+      "teaCampusRecords": 46,
+      "sourceDistrictAliases": [
+        "061901"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "official-map",
+        "officialUrl": "https://www.dentonisd.org/families/attendance-zones",
+        "yearCaution": "2026–27 학년별 공식 구역 지도입니다. 주소·학년 최종 확인은 교육청 School Locator에서 하세요.",
+        "registryKey": "061901"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "061905",
+      "name": "KRUM ISD",
+      "countyOfRecord": "DENTON",
+      "sourceCountyRecords": {
+        "DENTON": 5
+      },
+      "teaCampusRecords": 5,
+      "sourceDistrictAliases": [
+        "061905"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "061912",
+      "name": "LAKE DALLAS ISD",
+      "countyOfRecord": "DENTON",
+      "sourceCountyRecords": {
+        "DENTON": 5
+      },
+      "teaCampusRecords": 5,
+      "sourceDistrictAliases": [
+        "061912"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "061804",
+      "name": "LEADERSHIP PREP SCHOOL",
+      "countyOfRecord": "DENTON",
+      "sourceCountyRecords": {
+        "DENTON": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "061804"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "061902",
+      "name": "LEWISVILLE ISD",
+      "countyOfRecord": "DENTON",
+      "sourceCountyRecords": {
+        "DENTON": 57
+      },
+      "teaCampusRecords": 57,
+      "sourceDistrictAliases": [
+        "LISD"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "registered-official-link",
+        "officialUrl": "https://www.lisd.net/resources/families/school-locator",
+        "yearCaution": null,
+        "registryKey": "LISD"
+      },
+      "geometry": {
+        "status": "reference-browser-minimum-only",
+        "referenceLoadedMinimum": 54,
+        "referenceMatchedMinimum": 53,
+        "matchedLoadedPercent": 98.1,
+        "vintageMode": "official-finder-linked-mixed-vintages",
+        "confirmedCurrentYear": false,
+        "referenceRun": 42548036191
+      },
+      "missingReason": "finder-linked-polygons-year-not-confirmed",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": true,
+      "limitation": "Reference browser minimum from selected dataset; individual school current assignment is unverified."
+    },
+    {
+      "code": "061914",
+      "name": "LITTLE ELM ISD",
+      "countyOfRecord": "DENTON",
+      "sourceCountyRecords": {
+        "DENTON": 12
+      },
+      "teaCampusRecords": 12,
+      "sourceDistrictAliases": [
+        "061914"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.littleelmisd.net/for-parents/enrollment-registration/attendance-zones",
+        "yearCaution": "학군 공식 Interactive School Zone Finder에 주소를 입력하세요. 프로그램·학년별 예외를 확인하세요.",
+        "registryKey": "061914"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "061802",
+      "name": "NORTH TEXAS COLLEGIATE ACADEMY",
+      "countyOfRecord": "DENTON",
+      "sourceCountyRecords": {
+        "DENTON": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "061802"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "061911",
+      "name": "NORTHWEST ISD",
+      "countyOfRecord": "DENTON",
+      "sourceCountyRecords": {
+        "DENTON": 37
+      },
+      "teaCampusRecords": 37,
+      "sourceDistrictAliases": [
+        "061911"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.nisdtx.org/departments/facilities/attendance-boundaries",
+        "yearCaution": null,
+        "registryKey": "061911"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "061903",
+      "name": "PILOT POINT ISD",
+      "countyOfRecord": "DENTON",
+      "sourceCountyRecords": {
+        "DENTON": 5
+      },
+      "teaCampusRecords": 5,
+      "sourceDistrictAliases": [
+        "061903"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "061906",
+      "name": "PONDER ISD",
+      "countyOfRecord": "DENTON",
+      "sourceCountyRecords": {
+        "DENTON": 4
+      },
+      "teaCampusRecords": 4,
+      "sourceDistrictAliases": [
+        "061906"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "061908",
+      "name": "SANGER ISD",
+      "countyOfRecord": "DENTON",
+      "sourceCountyRecords": {
+        "DENTON": 6
+      },
+      "teaCampusRecords": 6,
+      "sourceDistrictAliases": [
+        "061908"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "061806",
+      "name": "TEXAS WORKS",
+      "countyOfRecord": "DENTON",
+      "sourceCountyRecords": {
+        "DENTON": 41
+      },
+      "teaCampusRecords": 41,
+      "sourceDistrictAliases": [
+        "061806"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "061805",
+      "name": "TRIVIUM ACADEMY",
+      "countyOfRecord": "DENTON",
+      "sourceCountyRecords": {
+        "DENTON": 2
+      },
+      "teaCampusRecords": 2,
+      "sourceDistrictAliases": [
+        "061805"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "070901",
+      "name": "AVALON ISD",
+      "countyOfRecord": "ELLIS",
+      "sourceCountyRecords": {
+        "ELLIS": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "070901"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "070903",
+      "name": "ENNIS ISD",
+      "countyOfRecord": "ELLIS",
+      "sourceCountyRecords": {
+        "ELLIS": 12
+      },
+      "teaCampusRecords": 12,
+      "sourceDistrictAliases": [
+        "070903"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "070801",
+      "name": "FAITH FAMILY ACADEMY",
+      "countyOfRecord": "ELLIS",
+      "sourceCountyRecords": {
+        "ELLIS": 2
+      },
+      "teaCampusRecords": 2,
+      "sourceDistrictAliases": [
+        "070801"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "070905",
+      "name": "FERRIS ISD",
+      "countyOfRecord": "ELLIS",
+      "sourceCountyRecords": {
+        "ELLIS": 6
+      },
+      "teaCampusRecords": 6,
+      "sourceDistrictAliases": [
+        "070905"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "070907",
+      "name": "ITALY ISD",
+      "countyOfRecord": "ELLIS",
+      "sourceCountyRecords": {
+        "ELLIS": 2
+      },
+      "teaCampusRecords": 2,
+      "sourceDistrictAliases": [
+        "070907"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "070915",
+      "name": "MAYPEARL ISD",
+      "countyOfRecord": "ELLIS",
+      "sourceCountyRecords": {
+        "ELLIS": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "070915"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "070908",
+      "name": "MIDLOTHIAN ISD",
+      "countyOfRecord": "ELLIS",
+      "sourceCountyRecords": {
+        "ELLIS": 13
+      },
+      "teaCampusRecords": 13,
+      "sourceDistrictAliases": [
+        "070908"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "070909",
+      "name": "MILFORD ISD",
+      "countyOfRecord": "ELLIS",
+      "sourceCountyRecords": {
+        "ELLIS": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "070909"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "070910",
+      "name": "PALMER ISD",
+      "countyOfRecord": "ELLIS",
+      "sourceCountyRecords": {
+        "ELLIS": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "070910"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "070911",
+      "name": "RED OAK ISD",
+      "countyOfRecord": "ELLIS",
+      "sourceCountyRecords": {
+        "ELLIS": 9
+      },
+      "teaCampusRecords": 9,
+      "sourceDistrictAliases": [
+        "070911"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "070912",
+      "name": "WAXAHACHIE ISD",
+      "countyOfRecord": "ELLIS",
+      "sourceCountyRecords": {
+        "ELLIS": 18
+      },
+      "teaCampusRecords": 18,
+      "sourceDistrictAliases": [
+        "070912"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "116915",
+      "name": "BLAND ISD",
+      "countyOfRecord": "HUNT",
+      "sourceCountyRecords": {
+        "HUNT": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "116915"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "116916",
+      "name": "BOLES ISD",
+      "countyOfRecord": "HUNT",
+      "sourceCountyRecords": {
+        "HUNT": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "116916"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "116901",
+      "name": "CADDO MILLS ISD",
+      "countyOfRecord": "HUNT",
+      "sourceCountyRecords": {
+        "HUNT": 6
+      },
+      "teaCampusRecords": 6,
+      "sourceDistrictAliases": [
+        "116901"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "116910",
+      "name": "CAMPBELL ISD",
+      "countyOfRecord": "HUNT",
+      "sourceCountyRecords": {
+        "HUNT": 2
+      },
+      "teaCampusRecords": 2,
+      "sourceDistrictAliases": [
+        "116910"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "116902",
+      "name": "CELESTE ISD",
+      "countyOfRecord": "HUNT",
+      "sourceCountyRecords": {
+        "HUNT": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "116902"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "116903",
+      "name": "COMMERCE ISD",
+      "countyOfRecord": "HUNT",
+      "sourceCountyRecords": {
+        "HUNT": 4
+      },
+      "teaCampusRecords": 4,
+      "sourceDistrictAliases": [
+        "116903"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "116905",
+      "name": "GREENVILLE ISD",
+      "countyOfRecord": "HUNT",
+      "sourceCountyRecords": {
+        "HUNT": 10
+      },
+      "teaCampusRecords": 10,
+      "sourceDistrictAliases": [
+        "116905"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "116906",
+      "name": "LONE OAK ISD",
+      "countyOfRecord": "HUNT",
+      "sourceCountyRecords": {
+        "HUNT": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "116906"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "116908",
+      "name": "QUINLAN ISD",
+      "countyOfRecord": "HUNT",
+      "sourceCountyRecords": {
+        "HUNT": 4
+      },
+      "teaCampusRecords": 4,
+      "sourceDistrictAliases": [
+        "116908"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "116909",
+      "name": "WOLFE CITY ISD",
+      "countyOfRecord": "HUNT",
+      "sourceCountyRecords": {
+        "HUNT": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "116909"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "126901",
+      "name": "ALVARADO ISD",
+      "countyOfRecord": "JOHNSON",
+      "sourceCountyRecords": {
+        "JOHNSON": 5
+      },
+      "teaCampusRecords": 5,
+      "sourceDistrictAliases": [
+        "126901"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "126902",
+      "name": "BURLESON ISD",
+      "countyOfRecord": "JOHNSON",
+      "sourceCountyRecords": {
+        "JOHNSON": 20
+      },
+      "teaCampusRecords": 20,
+      "sourceDistrictAliases": [
+        "126902"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "126903",
+      "name": "CLEBURNE ISD",
+      "countyOfRecord": "JOHNSON",
+      "sourceCountyRecords": {
+        "JOHNSON": 12
+      },
+      "teaCampusRecords": 12,
+      "sourceDistrictAliases": [
+        "126903"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "126911",
+      "name": "GODLEY ISD",
+      "countyOfRecord": "JOHNSON",
+      "sourceCountyRecords": {
+        "JOHNSON": 5
+      },
+      "teaCampusRecords": 5,
+      "sourceDistrictAliases": [
+        "126911"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "126904",
+      "name": "GRANDVIEW ISD",
+      "countyOfRecord": "JOHNSON",
+      "sourceCountyRecords": {
+        "JOHNSON": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "126904"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "126905",
+      "name": "JOSHUA ISD",
+      "countyOfRecord": "JOHNSON",
+      "sourceCountyRecords": {
+        "JOHNSON": 10
+      },
+      "teaCampusRecords": 10,
+      "sourceDistrictAliases": [
+        "126905"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "126906",
+      "name": "KEENE ISD",
+      "countyOfRecord": "JOHNSON",
+      "sourceCountyRecords": {
+        "JOHNSON": 4
+      },
+      "teaCampusRecords": 4,
+      "sourceDistrictAliases": [
+        "126906"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "126907",
+      "name": "RIO VISTA ISD",
+      "countyOfRecord": "JOHNSON",
+      "sourceCountyRecords": {
+        "JOHNSON": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "126907"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "126908",
+      "name": "VENUS ISD",
+      "countyOfRecord": "JOHNSON",
+      "sourceCountyRecords": {
+        "JOHNSON": 4
+      },
+      "teaCampusRecords": 4,
+      "sourceDistrictAliases": [
+        "126908"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "129901",
+      "name": "CRANDALL ISD",
+      "countyOfRecord": "KAUFMAN",
+      "sourceCountyRecords": {
+        "KAUFMAN": 9
+      },
+      "teaCampusRecords": 9,
+      "sourceDistrictAliases": [
+        "129901"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "129902",
+      "name": "FORNEY ISD",
+      "countyOfRecord": "KAUFMAN",
+      "sourceCountyRecords": {
+        "KAUFMAN": 24
+      },
+      "teaCampusRecords": 24,
+      "sourceDistrictAliases": [
+        "129902"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "official-map",
+        "officialUrl": "https://www.forneyisd.net/about-us/attendance-zones",
+        "yearCaution": "2026–27 승인 배정지도입니다. 2027–28 변경안은 아직 확정된 현행 배정이 아닙니다.",
+        "registryKey": "129902"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "129903",
+      "name": "KAUFMAN ISD",
+      "countyOfRecord": "KAUFMAN",
+      "sourceCountyRecords": {
+        "KAUFMAN": 7
+      },
+      "teaCampusRecords": 7,
+      "sourceDistrictAliases": [
+        "129903"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "129904",
+      "name": "KEMP ISD",
+      "countyOfRecord": "KAUFMAN",
+      "sourceCountyRecords": {
+        "KAUFMAN": 6
+      },
+      "teaCampusRecords": 6,
+      "sourceDistrictAliases": [
+        "129904"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "129905",
+      "name": "MABANK ISD",
+      "countyOfRecord": "KAUFMAN",
+      "sourceCountyRecords": {
+        "KAUFMAN": 6
+      },
+      "teaCampusRecords": 6,
+      "sourceDistrictAliases": [
+        "129905"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "129910",
+      "name": "SCURRY-ROSSER ISD",
+      "countyOfRecord": "KAUFMAN",
+      "sourceCountyRecords": {
+        "KAUFMAN": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "129910"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "129906",
+      "name": "TERRELL ISD",
+      "countyOfRecord": "KAUFMAN",
+      "sourceCountyRecords": {
+        "KAUFMAN": 9
+      },
+      "teaCampusRecords": 9,
+      "sourceDistrictAliases": [
+        "129906"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "184907",
+      "name": "ALEDO ISD",
+      "countyOfRecord": "PARKER",
+      "sourceCountyRecords": {
+        "PARKER": 12
+      },
+      "teaCampusRecords": 12,
+      "sourceDistrictAliases": [
+        "184907"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "184909",
+      "name": "BROCK ISD",
+      "countyOfRecord": "PARKER",
+      "sourceCountyRecords": {
+        "PARKER": 5
+      },
+      "teaCampusRecords": 5,
+      "sourceDistrictAliases": [
+        "184909"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "184801",
+      "name": "CROSSTIMBERS ACADEMY",
+      "countyOfRecord": "PARKER",
+      "sourceCountyRecords": {
+        "PARKER": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "184801"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "184911",
+      "name": "GARNER ISD",
+      "countyOfRecord": "PARKER",
+      "sourceCountyRecords": {
+        "PARKER": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "184911"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "184904",
+      "name": "MILLSAP ISD",
+      "countyOfRecord": "PARKER",
+      "sourceCountyRecords": {
+        "PARKER": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "184904"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "184908",
+      "name": "PEASTER ISD",
+      "countyOfRecord": "PARKER",
+      "sourceCountyRecords": {
+        "PARKER": 5
+      },
+      "teaCampusRecords": 5,
+      "sourceDistrictAliases": [
+        "184908"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "184901",
+      "name": "POOLVILLE ISD",
+      "countyOfRecord": "PARKER",
+      "sourceCountyRecords": {
+        "PARKER": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "184901"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "184902",
+      "name": "SPRINGTOWN ISD",
+      "countyOfRecord": "PARKER",
+      "sourceCountyRecords": {
+        "PARKER": 8
+      },
+      "teaCampusRecords": 8,
+      "sourceDistrictAliases": [
+        "184902"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "184903",
+      "name": "WEATHERFORD ISD",
+      "countyOfRecord": "PARKER",
+      "sourceCountyRecords": {
+        "PARKER": 12
+      },
+      "teaCampusRecords": 12,
+      "sourceDistrictAliases": [
+        "184903"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "199901",
+      "name": "ROCKWALL ISD",
+      "countyOfRecord": "ROCKWALL",
+      "sourceCountyRecords": {
+        "ROCKWALL": 23
+      },
+      "teaCampusRecords": 23,
+      "sourceDistrictAliases": [
+        "199901"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.rockwallisd.com/new-student/new-student/school-attendance-areas",
+        "yearCaution": "2026–27 학군 배정 지도와 Attendance Zone Inquiry를 제공합니다. 버스 노선 검색은 배정 증명이 아닙니다.",
+        "registryKey": "199901"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "199902",
+      "name": "ROYSE CITY ISD",
+      "countyOfRecord": "ROCKWALL",
+      "sourceCountyRecords": {
+        "ROCKWALL": 13
+      },
+      "teaCampusRecords": 13,
+      "sourceDistrictAliases": [
+        "199902"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220802",
+      "name": "ARLINGTON CLASSICS ACADEMY",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "220802"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220901",
+      "name": "ARLINGTON ISD",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 74
+      },
+      "teaCampusRecords": 74,
+      "sourceDistrictAliases": [
+        "220901"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220915",
+      "name": "AZLE ISD",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 12
+      },
+      "teaCampusRecords": 12,
+      "sourceDistrictAliases": [
+        "220915"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220902",
+      "name": "BIRDVILLE ISD",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 31
+      },
+      "teaCampusRecords": 31,
+      "sourceDistrictAliases": [
+        "220902"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220919",
+      "name": "CARROLL ISD",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 11
+      },
+      "teaCampusRecords": 11,
+      "sourceDistrictAliases": [
+        "220919"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.southlakecarroll.edu/district-information/district-departments/student-services/online-enrollment-portal",
+        "yearCaution": null,
+        "registryKey": "220919"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220917",
+      "name": "CASTLEBERRY ISD",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 7
+      },
+      "teaCampusRecords": 7,
+      "sourceDistrictAliases": [
+        "220917"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220912",
+      "name": "CROWLEY ISD",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 23
+      },
+      "teaCampusRecords": 23,
+      "sourceDistrictAliases": [
+        "220912"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220918",
+      "name": "EAGLE MT-SAGINAW ISD",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 32
+      },
+      "teaCampusRecords": 32,
+      "sourceDistrictAliases": [
+        "220918"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220811",
+      "name": "EAST FORT WORTH MONTESSORI ACADEMY",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "220811"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220904",
+      "name": "EVERMAN ISD",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 11
+      },
+      "teaCampusRecords": 11,
+      "sourceDistrictAliases": [
+        "220904"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220809",
+      "name": "FORT WORTH ACADEMY OF FINE ARTS",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 2
+      },
+      "teaCampusRecords": 2,
+      "sourceDistrictAliases": [
+        "220809"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220905",
+      "name": "FORT WORTH ISD",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 134
+      },
+      "teaCampusRecords": 134,
+      "sourceDistrictAliases": [
+        "220905"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220906",
+      "name": "GRAPEVINE-COLLEYVILLE ISD",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 20
+      },
+      "teaCampusRecords": 20,
+      "sourceDistrictAliases": [
+        "220906"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "official-map",
+        "officialUrl": "https://www.gcisd.net/page/attendance-area-maps/",
+        "yearCaution": null,
+        "registryKey": "220906"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220916",
+      "name": "HURST-EULESS-BEDFORD ISD",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 32
+      },
+      "teaCampusRecords": 32,
+      "sourceDistrictAliases": [
+        "220916"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "official-map",
+        "officialUrl": "https://www.hebisd.edu/parents-students/map-attendance-zones/map-attendance-zones",
+        "yearCaution": "학교 주소 검색기는 2026년 7월부터 전산 전환으로 일시 중단 안내가 있습니다. 공식 온라인 지도 또는 교육청에 확인하세요.",
+        "registryKey": "220916"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220907",
+      "name": "KELLER ISD",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 40
+      },
+      "teaCampusRecords": 40,
+      "sourceDistrictAliases": [
+        "220907"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.kellerisd.net/about-kisd/maps",
+        "yearCaution": null,
+        "registryKey": "220907"
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220914",
+      "name": "KENNEDALE ISD",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 5
+      },
+      "teaCampusRecords": 5,
+      "sourceDistrictAliases": [
+        "220914"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220910",
+      "name": "LAKE WORTH ISD",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 5
+      },
+      "teaCampusRecords": 5,
+      "sourceDistrictAliases": [
+        "220910"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220908",
+      "name": "MANSFIELD ISD",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 48
+      },
+      "teaCampusRecords": 48,
+      "sourceDistrictAliases": [
+        "220908"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220822",
+      "name": "NEW HEIGHTS",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 2
+      },
+      "teaCampusRecords": 2,
+      "sourceDistrictAliases": [
+        "220822"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220817",
+      "name": "NEWMAN INTERNATIONAL ACADEMY OF ARLINGTON",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 5
+      },
+      "teaCampusRecords": 5,
+      "sourceDistrictAliases": [
+        "220817"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220814",
+      "name": "TEXAS SCHOOL OF THE ARTS",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "220814"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220801",
+      "name": "TREETOPS SCHOOL INTERNATIONAL",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "220801"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220810",
+      "name": "WESTLAKE ACADEMY CHARTER SCHOOL",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "220810"
+      ],
+      "category": "other-tea-lea-structure-unverified",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "other-lea-admissions-model-needs-classification",
+      "priority": "P2",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "220920",
+      "name": "WHITE SETTLEMENT ISD",
+      "countyOfRecord": "TARRANT",
+      "sourceCountyRecords": {
+        "TARRANT": 8
+      },
+      "teaCampusRecords": 8,
+      "sourceDistrictAliases": [
+        "220920"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "249901",
+      "name": "ALVORD ISD",
+      "countyOfRecord": "WISE",
+      "sourceCountyRecords": {
+        "WISE": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "249901"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "249902",
+      "name": "BOYD ISD",
+      "countyOfRecord": "WISE",
+      "sourceCountyRecords": {
+        "WISE": 5
+      },
+      "teaCampusRecords": 5,
+      "sourceDistrictAliases": [
+        "249902"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "249903",
+      "name": "BRIDGEPORT ISD",
+      "countyOfRecord": "WISE",
+      "sourceCountyRecords": {
+        "WISE": 4
+      },
+      "teaCampusRecords": 4,
+      "sourceDistrictAliases": [
+        "249903"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "249904",
+      "name": "CHICO ISD",
+      "countyOfRecord": "WISE",
+      "sourceCountyRecords": {
+        "WISE": 3
+      },
+      "teaCampusRecords": 3,
+      "sourceDistrictAliases": [
+        "249904"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "249905",
+      "name": "DECATUR ISD",
+      "countyOfRecord": "WISE",
+      "sourceCountyRecords": {
+        "WISE": 6
+      },
+      "teaCampusRecords": 6,
+      "sourceDistrictAliases": [
+        "249905"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "249906",
+      "name": "PARADISE ISD",
+      "countyOfRecord": "WISE",
+      "sourceCountyRecords": {
+        "WISE": 4
+      },
+      "teaCampusRecords": 4,
+      "sourceDistrictAliases": [
+        "249906"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    },
+    {
+      "code": "249908",
+      "name": "SLIDELL ISD",
+      "countyOfRecord": "WISE",
+      "sourceCountyRecords": {
+        "WISE": 1
+      },
+      "teaCampusRecords": 1,
+      "sourceDistrictAliases": [
+        "249908"
+      ],
+      "category": "public-isd",
+      "parentGuidance": {
+        "status": "not-verified",
+        "lookupType": null,
+        "officialUrl": null,
+        "yearCaution": null,
+        "registryKey": null
+      },
+      "geometry": {
+        "status": "no-dashboard-school-polygons-configured",
+        "referenceLoadedMinimum": null,
+        "referenceMatchedMinimum": null,
+        "matchedLoadedPercent": null,
+        "vintageMode": null,
+        "confirmedCurrentYear": false,
+        "referenceRun": null
+      },
+      "missingReason": "official-parent-lookup-not-yet-verified",
+      "priority": "P0",
+      "specificCampusZoneReasonsAudited": false,
+      "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
+    }
+  ]
+}
