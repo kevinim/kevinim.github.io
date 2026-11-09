@@ -38,7 +38,7 @@ const result={scenarios:[],screenshots:[]};
      assert.ok(visible>0,'Allen visible school marker regression');
    }
    await page.selectOption('#officeSelect','schwab');
-   assert.match(await page.locator('.area-qa-row[data-target="commute"] .area-qa-value').innerText(),/별도 계산/);
+   await page.waitForFunction(()=>document.querySelector('.area-qa-row[data-target="commute"] .area-qa-value')?.textContent?.includes('별도 계산'),null,{timeout:10000});
    await page.locator('button[data-target="hazards"].area-qa-row').click();
    assert.equal(await page.locator('#femaHazardEnabled').isChecked(),true,'hazard button must enable existing layer');
    assert.ok(!errors.length,'Browser errors: '+errors.join(' ; '));
