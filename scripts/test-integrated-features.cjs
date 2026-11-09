@@ -4,7 +4,9 @@ const assert=require('node:assert/strict');
 const {readFileSync}=require('node:fs');
 const {join}=require('node:path');
 const root=join(__dirname,'..'),read=p=>readFileSync(join(root,p),'utf8');
-const index=read('index.html'),home=read('home-lookup-v2.js');
+const indexHtml=read('index.html'),mainJs=read('dashboard-main.js');
+// Preserve all original behavior assertions across the HTML shell + classic JS.
+const index=indexHtml+'\n'+mainJs,home=read('home-lookup-v2.js');
 const css=read('features/dashboard-extras.css'),extras=read('features/dashboard-extras.js');
 const {workDestinationIcon}=require('../features/commute/workplace-marker.js');
 const {calculateMonthlyCommute}=require('../features/commute/cost-model.js');
@@ -22,6 +24,7 @@ test('workplace briefcase marker shared by home and ZIP route',()=>{
 });
 
 test('functional scripts and source files are loaded without an extra map library',()=>{
+ assert.ok(indexHtml.includes('./dashboard-main.js?v=1'),'externalized main bootstrap is loaded');
  for(const file of ['features/dashboard-extras.css?v=3','features/commute/workplace-marker.js?v=1',
  'features/commute/cost-model.js?v=1','features/dashboard-extras.js?v=1']){
   assert.ok(index.includes(file),file+' not loaded');
