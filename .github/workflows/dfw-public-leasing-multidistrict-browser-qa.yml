@@ -21,6 +21,7 @@ jobs:
         run: |
           node --check scripts/test-dfw-public-leasing-multidistrict-browser.cjs
           node --check scripts/probe-dfw-official-finder-ui-browser.cjs
+          node --check scripts/probe-dfw-official-address-search-browser.cjs
           node --check scripts/dfw-official-finder-evidence-policy.cjs
           node --check tests/dfw-public-leasing-address-e2e-policy.test.cjs
           node --test tests/dfw-public-leasing-address-e2e-policy.test.cjs tests/dfw-official-finder-evidence-policy.test.cjs tests/home-assignment-map.test.cjs tests/dfw-home-automation-readiness.test.cjs
@@ -44,6 +45,9 @@ jobs:
       - name: Probe live official Finder UI and Lewisville complex-name lookup (not enrollment certification)
         if: always()
         run: node scripts/probe-dfw-official-finder-ui-browser.cjs
+      - name: Attempt six complex-level public addresses in live district locators (NO-GO until selected schools confirmed)
+        if: always()
+        run: node scripts/probe-dfw-official-address-search-browser.cjs
       - name: Keep screenshots and machine-readable NO-GO matrix for reviewer
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # pinned v4
