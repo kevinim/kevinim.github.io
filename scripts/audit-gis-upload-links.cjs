@@ -39,12 +39,14 @@ function checkOfficialUrl(value, hosts = TRUSTED_OFFICIAL_HOSTS) {
 
 function auditSchoolBoundaryTrust(files, registry = DISTRICT_REGISTRY) {
   const errors = [], warnings = [];
-  const source = files?.['index.html'] || '';
+  const page = files?.['index.html'] || '';
+  const main = files?.['dashboard-main.js'] || '';
+  const source = page+'\n'+main;
   const legacy = files?.['reviewed.html'] || '';
   const legacyScript = files?.['features/reviewed-bootstrap.js'] || '';
   const uploadGuard = files?.['features/geojson-upload-guard.js'] || '';
   const match = files?.['school-boundary-match.js'] || '';
-  if (!source || !legacy || !legacyScript || !uploadGuard || !match) {
+  if (!page || !main || !page.includes('<script src="./dashboard-main.js?v=3"></script>') || !legacy || !legacyScript || !uploadGuard || !match) {
     errors.push('Missing required school boundary source files');
     return {errors, warnings, inventory: null};
   }
@@ -97,7 +99,7 @@ function auditSchoolBoundaryTrust(files, registry = DISTRICT_REGISTRY) {
 
 function run() {
   const root = path.resolve(__dirname, '..');
-  const files = Object.fromEntries(['index.html','reviewed.html','features/reviewed-bootstrap.js','features/geojson-upload-guard.js','school-boundary-match.js']
+  const files = Object.fromEntries(['index.html','dashboard-main.js','reviewed.html','features/reviewed-bootstrap.js','features/geojson-upload-guard.js','school-boundary-match.js']
     .map(p => [p, fs.readFileSync(path.join(root,p),'utf8')]));
   const r = auditSchoolBoundaryTrust(files);
   if (r.inventory) console.log('GIS official links: ' + r.inventory.districts + ' districts; ' + r.inventory.exceptionLinks + ' special-campus source links');
