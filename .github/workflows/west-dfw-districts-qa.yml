@@ -1,7 +1,7 @@
 name: TX West DFW district explorer QA (no deploy)
 on:
   pull_request:
-    branches: [main]
+    branches: [main, qa/school-polygon-linkage-census-20261108]
     paths:
       - 'index.html'
       - 'district-registry.js'
@@ -11,7 +11,7 @@ on:
       - 'tests/west-dfw-panel.test.cjs'
       - '.github/workflows/west-dfw-districts-qa.yml'
   push:
-    branches: [main]
+    branches: [main, feature/west-dfw-districts-20261108]
     paths:
       - 'index.html'
       - 'district-registry.js'
