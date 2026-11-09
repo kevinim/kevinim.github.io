@@ -1,0 +1,59 @@
+name: TX integrated West DFW strict-CSP and school UAT (no deploy)
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  west-dfw-integration:
+    name: Official school Finder, strict CSP, preview privacy, real browser
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Syntax check independent West DFW adapter and Finder
+        run: |
+          node --check features/west-dfw/attach.js
+          node --check features/west-dfw/panel.js
+          node --check features/west-dfw/official-finder.js
+          node --check scripts/test-west-dfw-browser.cjs
+      - name: Verify western district registry, URLs, source vintage and strict inline script CSP
+        run: |
+          node --test tests/west-dfw-panel.test.cjs tests/west-dfw-official-finder.test.cjs tests/audit-west-dfw-zone-sources.test.cjs tests/probe-west-dfw-keller-year.test.cjs tests/strict-script-csp.test.cjs
+          node scripts/audit-west-dfw-zone-sources.cjs
+          node scripts/school-data-release-preflight.cjs
+      - name: Build and audit privacy-minimized public PREVIEW (not deployed)
+        run: node scripts/verify-public-preview.cjs
+      - name: Install isolated Chromium for desktop/mobile
+        run: |
+          mkdir -p west-integration-browser-tmp
+          cd west-integration-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Verify official school click links and Southlake school markers
+        env:
+          NODE_PATH: ${{ github.workspace }}/west-integration-browser-tmp/node_modules
+        run: node scripts/test-west-dfw-browser.cjs
+      - name: Public preview browser privacy regression at mobile and desktop
+        env:
+          NODE_PATH: ${{ github.workspace }}/west-integration-browser-tmp/node_modules
+        run: node scripts/test-public-preview-browser.cjs
+      - name: Upload non-personal evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: west-dfw-csp-compatible-evidence
+          path: |
+            artifacts/west-dfw/west-dfw-browser.json
+            artifacts/west-dfw/west-dfw-zone-provenance-report.json
+            artifacts/security/public-release-audit.json
+          if-no-files-found: warn
