@@ -33,6 +33,10 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/public-residence-browser-tmp/node_modules
         run: node scripts/verify-public-residence-home-school-browser.cjs
+      - name: One public district Finder UI query, never hidden API or bulk scraping
+        env:
+          NODE_PATH: ${{ github.workspace }}/public-residence-browser-tmp/node_modules
+        run: node scripts/probe-frisco-public-apartment-finder-browser.cjs
       - name: Preserve real-screen evidence and no-go classification
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # pinned v4
