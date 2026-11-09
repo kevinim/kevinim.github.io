@@ -190,10 +190,16 @@ function officialReviewPanelHtml(item){
   const safe=window.TrustedLinkPolicy?.official(url);
   return safe?'<a class="cardlink" href="'+escape(safe)+'" target="_blank" rel="noopener noreferrer">'+escape(name)+'</a>':'';
  }).join(' '):'';
+ const showDallas=district==='057905'||/\bDallas\s*,?\s*(?:TX|Texas)/i.test(item.address||'');
+ const dallasUrl=window.TrustedLinkPolicy?.official('https://www.dallasisd.org/departments/demographic-studies/find-your-school/schoolsite-locator-interactive-map');
+ const dallasMaps=window.TrustedLinkPolicy?.official('https://www.dallasisd.org/departments/demographic-studies/district-maps');
+ const dallas=item.dallasSpatial;
+ const dallasText=dallas?.status==='ready'?'Dallas ISD ArcGIS 참고 경계: 초등 '+dallas.names.elementary+' · 중등 '+dallas.names.middle+' · 고등 '+dallas.names.high+' (2026–27 배정 미인증).':dallas?.status==='error'?'Dallas GIS 확인 실패: '+dallas.reason+' · 공식 SchoolSite Locator에서 직접 확인하세요.':item.dallasChecking?'Dallas 공식 ArcGIS에서 참고 경계 확인 중…':'버튼을 누르면 선택한 좌표의 Dallas 초·중·고 참고 경계 3개를 일시적으로 표시합니다.';
  const irving=item.irvingSpatial;
  const irvingText=irving?.status==='ready'?'공식 Locator GIS 경계(학년도 확인 필요): 초등 '+irving.names.elementary+' · 중등 '+irving.names.middle+' · 고등 '+irving.names.high+' · 지도에 주황색 점선 참고 경계 표시.':irving?.status==='error'?'공식 원본 확인 실패: '+irving.reason+' · 공식 Locator에서 직접 확인하세요.':item.irvingChecking?'교육구 ArcGIS 원본 좌표 조회 중…':'클릭 시 집 핀 좌표를 Irving GIS 원본에 전송하고 이 화면에 초·중·고 참고 경계를 일시 표시합니다.';
+ const dallasWarning=showDallas?'<div class="reference-gis-warning" role="note"><strong>주의 · Dallas 참고 GIS이며 현재 배정학교가 아닙니다</strong><div>공식 ArcGIS의 187개 경계(초등 135·중등 30·고등 22)는 2026년 7월에 편집됐지만 현행 적용 학년도는 인증되지 않았습니다. 주황색 점선과 학교명은 참고용입니다. 2026–27 배정·등록은 Dallas ISD SchoolSite Locator와 PowerSchool 주소별 기록으로 확인하세요.</div></div>':'';
  const referenceWarning=showIrving?'<div class="reference-gis-warning" role="note"><strong>주의 · 참고 GIS이며 현재 배정학교가 아닙니다</strong><div>Irving 초등 GIS 원본 2024–25, 중등 2025–26, 고등 현행 학년도 미인증. 지도에 표시되는 학교명과 주황색 점선은 참고용입니다. 2026–27 학교 배정·등록 자격은 공식 School Locator에서 주소와 학년별로 직접 확인하세요.</div></div>':'';
- return '<div class="small-note" id="officialReviewPanel" style="margin-top:10px"><b>공식 학군 주소 조회 결과 교차검증</b>'+referenceWarning+
+ return '<div class="small-note" id="officialReviewPanel" style="margin-top:10px"><b>공식 학군 주소 조회 결과 교차검증</b>'+referenceWarning+dallasWarning+
  '<div class="source">'+escape(note)+' 자료는 현재 화면에서만 유지되며 서버에 저장하지 않습니다.</div>'+officialLink+
  '<div class="field"><label for="officialReviewDistrict">학군</label><select id="officialReviewDistrict"><option value="">학군 선택</option>'+districts+'</select></div>'+
  '<div class="field"><label for="officialReviewLevel">학년 구분</label><select id="officialReviewLevel"><option value="">학년 선택</option>'+grades+'</select></div>'+
