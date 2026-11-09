@@ -1,5 +1,20 @@
 # TX Relocation Dashboard — Agent Handoff / Future Roadmap
 
+## Standing product decision — 2026-11-09: DFW-wide school assignment coverage
+
+**Approved by the owner:** The school-data roadmap must **no longer prioritize only the original six ISDs**. School availability, official enrollment/assignment paths, boundary geometry and unresolved source gaps are to be tracked across **every public school district in the dashboard's entire DFW geographic/school search scope**, including adjacent and not-yet-registered ISDs. Charter/school-choice networks require separate classifications. This instruction takes precedence over older "Allen → CFB" or six-district-only prioritization unless a later owner decision explicitly supersedes it.
+
+**Source of truth / work item:** [Issue #125 — DFW-wide school assignment completeness and missing-reason dashboard](https://github.com/kevinim/kevinim.github.io/issues/125). Refer to [DFW parent school lookup coverage](docs/DFW_PARENT_SCHOOL_LOOKUP_COVERAGE_2026-11-09.md) for the latest link-only milestone; this is not a campus polygon completeness report.
+
+Each school-data iteration must report **four separate coverage dimensions**, not one misleading percentage: (1) in-scope ISDs inventoried / total in-scope ISDs, explicitly identifying districts not yet registered; (2) schools/districts with verified **official address+grade lookup, map, inquiry or choice route**; (3) schools with a matched, current-year-verified/renderable **campus attendance polygon** versus eligible school records, by ISD; and (4) actual **residential-address + school-year + grade** crosschecks with the official source. The denominator must include all in-scope DFW districts, not just the original six or the currently registered 29.
+
+Record **why** a zone or parent route is missing: no approved source; map/locator only without ingestible GIS; license/CORS; obsolete/future-year data; unmatched campus IDs; special/choice-only schools; temporary network failure; school-year/grade/address exceptions. Distinguish *missing GIS polygons* from *no way to confirm school assignment*. An expired source or runtime error cannot silently count as a permanently missing boundary.
+
+**Priority order:** P0 fix displayed DFW schools lacking credible official parent assignment guidance or misleading map/assignment states; P1 obtain and validate official school-specific GIS across all nearby districts, ranked by unlinked campus count, source age and geographic relevance; P2 broaden and refine overlays and automation. Include 3–5 sampled campuses per district (especially missing examples), school marker nonzero tests, and mobile/CSP/XSS/deployment QA. **Do not invent boundaries or infer assignment from ZIP, campus markers, city, district outlines or TEA ratings.**
+
+The 2026-11-09 addition of 18 adjacent ISD links to 11 existing registry entries (29 total) covers *parent navigation*, not 29 complete attendance-zone GIS datasets. The initial six-district polygon coverage of 240/273 is a narrow subset, never a DFW-wide coverage rate. Future handoff and status reports must reflect this distinction.
+
+
 **Project:** North Dallas Neighborhood Explorer  
 **Production:** https://kevinim.github.io/  
 **Repository:** `kevinim/kevinim.github.io` (`main`)  
