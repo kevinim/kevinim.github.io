@@ -1,0 +1,47 @@
+name: DFW independent TEA/source census and safety contract (no deploy)
+on:
+  pull_request:
+    branches:
+      - main
+      - feature/dfw-parent-guidance-batch6-20261109
+    paths:
+      - 'district-registry.js'
+      - 'tea-ratings-2026.json'
+      - 'data/dfw-school-coverage-matrix-2026.json'
+      - 'data/dfw-parent-source-evidence-batch*.json'
+      - 'data/dfw-noncfb-grade-year-source-evidence-2026.json'
+      - 'school-data-provenance.json'
+      - 'scripts/audit-dfw-comprehensive.cjs'
+      - 'tests/dfw-comprehensive-source-audit.test.cjs'
+      - '.github/workflows/dfw-comprehensive-source-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  independent-tea-district-and-parent-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Source code syntax
+        run: |
+          node --check scripts/audit-dfw-comprehensive.cjs
+          node --check tests/dfw-comprehensive-source-audit.test.cjs
+      - name: Structural TEA cross-source and negative tests
+        run: node --test tests/dfw-comprehensive-source-audit.test.cjs
+      - name: Emit audit report and fail on any inconsistency
+        run: node scripts/audit-dfw-comprehensive.cjs
+      - name: Upload reference-only report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dfw-integrated-school-sources-no-residential-data
+          path: artifacts/dfw-integrated-source-audit.json
+          if-no-files-found: warn
+          retention-days: 7
