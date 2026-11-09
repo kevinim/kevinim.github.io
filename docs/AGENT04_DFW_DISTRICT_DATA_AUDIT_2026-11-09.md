@@ -174,3 +174,37 @@ Outstanding independent responsibilities are kept explicit:
 The merge gate still requires a correctly sourced 2026–27 residence, grade,
 campus and visible polygon check, including exceptions and independent
 review under #148. The user has not authorized merge or deployment.
+
+## Independent live HTTP census of 107 **staged** source routes (PR #173)
+
+Since `main` still has only 29 approved links, relying on the current registry
+alone would miss 78 pending sources. We therefore also pinned the exact
+**unmerged** QA candidate (PR #173, SHA
+`e5bcae64b154abf4d2ff36bb2599780f5a82b38b`) as the *separate,
+read-only* audit inventory
+`data/dfw-107-parent-route-qa-candidate-2026.json`.
+It cannot change the dashboard registry or Production.
+
+`node scripts/probe-dfw-107-candidate-routes.cjs --live`
+checks actual HTTP reachability for all **107** candidate URLs with four
+concurrent HEAD requests (GET only for 405/501), 10-second per-request
+timeout, no redirect following, zero student addresses. The CI job runs it
+automatically and emits
+`artifacts/agent04-pr173-107-official-http.json`.
+`tests/dfw-107-candidate-route-probe.test.cjs` rejects unapproved
+HTTP/private hosts, lost district codes, duplicate URLs, fabricated Chico
+source, and drift in the 29 links already present in `main`.
+
+- A `2xx` status means an HTTP response only; **not a functioning native
+  address-to-school lookup**.
+- A redirect means that the next location needs manual review, not failure
+  of the school district itself. 403/429, 404, TLS and timeouts retain
+  separate statuses, with inconclusive categories preserved.
+- The one 108th district, Texas Chico ISD `249904`, remains missing a
+  verified official parent-source path.
+- Actual independently reconciled school assignment is still **NO_GO**,
+  under Agent 03/#148. These 107 URLs do not replace that verification.
+
+Whenever PR #173 changes its registered URLs, its candidate manifest must
+be regenerated from that exact new PR head before calling the 107-record
+list current. The pinned source SHA makes such review auditable.
