@@ -12,12 +12,29 @@ The initial automated census uses the **11-county Dallas–Fort Worth–Arlingto
 | District/LEA identifiers | 152 |
 | Named ISDs | 108 |
 | Other LEAs (charter/alternative/special types require classification) | 44 |
-| ISDs with a registered, allowlisted official school-confirmation entry | 65 |
+| ISDs with a registered, allowlisted official school-confirmation entry | 73 |
 | ISDs with no *registered* parent entry path in this dashboard | **43** |
-| Registered parent guidance rate among 108 observed ISDs | **60.2%** |
-| TEA school records within the 43 unregistered ISDs | **157** |
+| Registered parent guidance rate among 108 observed ISDs | **67.6%** |
+| TEA school records within the 35 unregistered ISDs | **114** |
 
 These are **source administrative county-of-record proxies**, not boundaries of every district serving residential parcels. TEA districtCounty does not determine a particular campus's position or a student's enrollment eligibility. Cross-county districts and schools not in the supplied source may be missed. NCTCOG's broader 12-county area adds **Hood County**, which this TEA source omits; **unknown is not zero**. These 152 observed LEAs do not prove exhaustive real-estate parcel service coverage.
+
+## Fifth batch: 8 official parent guidance entries (stacked on PR #150; not deployed)
+
+**Reviewed 2026-11-09.** Eight additional district-owned parent pages extend registered official routes from 65 to **73/108 (67.6%)**, covering **1,827/1,941** TEA campus rows and leaving **35 ISDs / 114 rows** unregistered. These are safe links, not independent address-by-grade determinations or current-year campus GIS.
+
+| TEA code | ISD | Official route | Type | Limitation |
+| --- | --- | --- | --- | --- |
+| 061908 | Sanger | https://www.sangerisd.net/studentsparents/enrollment/new-student-registration | official-inquiry | 2026–27 공식 신규 등록 경로입니다. 학군에 공개 주소별 지정학교 자동 검색기가 확인된 것은 아닙니다. 초등·중등·고등학교와 학년별 배정은 학군 등록 담당자에게 확인하세요. |
+| 129904 | Kemp | https://www.kempisd.org/132520_3 | official-inquiry | 신규학생 공식 ASCENDER 등록 절차입니다. 거주지 제출 기능은 공개 학교 배정 Finder가 아닙니다. 학년별 캠퍼스와 실거주지 배정은 학군 등록 담당자에게 문의하세요. |
+| 129905 | Mabank | https://www.mabankisd.net/page/parentstudent.home | official-inquiry | 2026–27 공식 Enrollment 안내입니다. 등록 페이지는 공개 주소별 학교 검색기가 아닙니다. 캠퍼스별 학년 및 거주지 배정은 학군 Registrar에 직접 확인하세요. |
+| 061912 | Lake Dallas | https://www.ldisd.net/about-us/about-the-district/attendance-zones | official-map | 공식 Attendance Zones는 초등학교 세 곳의 구역 지도와 중·고등학교 학년별 단일 캠퍼스 정보를 제공합니다. 도면 적용 학년도와 개별 주소 배정은 학군에서 확인하세요. 이는 인증된 최신 GIS 폴리곤이 아닙니다. |
+| 126901 | Alvarado | https://www.alvaradoisd.net/about/registration | official-inquiry | 2026–27 공식 Skyward 등록 안내입니다. 등록은 공개 주소별 배정 검색이 아닙니다. 캠퍼스별 출석구역 및 전학 예외는 구분되므로 학년과 주소별 학교는 학군 Registrar에 확인하세요. |
+| 126911 | Godley | https://www.godleyisd.net/resources/attendance-zones | official-map | 공식 Attendance Zones에서 PK–5 초등학교는 세 구역이며 6학년·7–8학년·9–12학년은 각각 지정 캠퍼스로 안내됩니다. 초등 지도에는 2022–23 시작 기준이 표시되므로 2026–27 최신 경계와 주소 배정을 별도 확인하세요. |
+| 061905 | Krum | https://www.krumisd.net/students-families/registration/enrollment | official-inquiry | 공식 Enrollment 페이지에서 2026–27 학군 내/외 전학과 신규 등록을 안내합니다. 공개 주소검색기 및 현행 학교별 경계는 검증되지 않았으며, 주소·학년에 따른 학교는 해당 Registrar에 확인하세요. |
+| 220914 | Kennedale | https://www.kennedaleisd.net/registration/2026-2027/new-student-registration | official-inquiry | 2026–27 공식 신규 등록 절차입니다. 학교가 신청 및 거주지를 검토하는 등록 절차는 공개 주소검색기가 아닙니다. 주소별 지정학교나 전학 예외는 해당 학교에 직접 확인하세요. |
+
+Six routes are **enrollment/registrar inquiry only**; Lake Dallas and Godley are **official maps only**. Every new district has `zoneKey:null`, zero certified current-year campus polygons and no tested residential assignment. None of the 8 sites received a private address, and no GIS redistribution rights were assumed. Evidence and source limitations: `data/dfw-parent-source-evidence-batch5-2026.json`. Before map activation, follow independent address-to-school and geometry gates from Draft PR #148.
 
 ## Fourth batch: 8 more official parent routes (Draft, not deployed)
 
@@ -132,4 +149,4 @@ The JSON reports missing *reason* states, including no known official parent rou
 
 ## Next work
 
-Continue detailed, current-year school assignment routing checks for the six official-inquiry districts in the third batch, then source the **43 remaining unregistered ISDs**, not just favorite suburbs. For each, store TEA code, authority URL, last verification date, active year, grade, search/map/choice/inquiry type, GIS availability and licensing, missing reason and next action. Expand source boundaries to Hood and any cross-county overlap before labeling the DFW geographic denominator exhaustive. Confirm school-specific missing reasons with a browser source audit, including school-choice exceptions and transient failures.
+Continue detailed, current-year school assignment routing checks for the six official-inquiry districts in the third batch, then source the **35 remaining unregistered ISDs**, not just favorite suburbs. For each, store TEA code, authority URL, last verification date, active year, grade, search/map/choice/inquiry type, GIS availability and licensing, missing reason and next action. Expand source boundaries to Hood and any cross-county overlap before labeling the DFW geographic denominator exhaustive. Confirm school-specific missing reasons with a browser source audit, including school-choice exceptions and transient failures.

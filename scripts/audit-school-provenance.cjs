@@ -222,7 +222,27 @@ function readNeighborDfwSupplement(root) {
   seen.add(e.teaCode);
   additions4.push({code:e.teaCode,status:'lookup-only',geometryYear:'no-certified-GIS',officialLookup:e.officialLandingUrl});
  }
- return [...neighbors,...additions,...additions4];
+
+ const batch5=JSON.parse(fs.readFileSync(path.join(root,'data/dfw-parent-source-evidence-batch5-2026.json'),'utf8'));
+ if(batch5.schemaVersion!==1||!Array.isArray(batch5.evidence)||batch5.evidence.length!==8)
+  throw Error('invalid_batch5_parent_source_manifest');
+ const additions5=[];
+ for(const e of batch5.evidence){
+  const r=DISTRICT_REGISTRY[e.teaCode];
+  if(!/^\d{6}$/.test(e.teaCode)||seen.has(e.teaCode)||
+   !['official-map','official-inquiry'].includes(e.routeKind)||!r||r.lookupKind!==e.routeKind||
+   r.zoneKey!==null||r.currency!==null||r.address!==null||r.campusIdMatch!==false||
+   r.official!==e.officialLandingUrl||official(e.officialLandingUrl)!==e.officialLandingUrl||
+   /^https:\/\/([^/?#]+)/.exec(e.officialLandingUrl)?.[1]!==e.host||
+   e.verifiedCurrentYearAttendanceGIS!==false||
+   e.verifiedIndividualAddressAssignment!==false||e.personalAddressSubmitted!==false||
+   typeof e.limitations!=='string'||e.limitations.length<45||
+   typeof e.sourceObservation!=='string'||e.sourceObservation.length<30)
+    throw Error('unsafe_batch5_parent_source '+e.teaCode);
+  seen.add(e.teaCode);
+  additions5.push({code:e.teaCode,status:'lookup-only',geometryYear:'no-certified-GIS',officialLookup:e.officialLandingUrl});
+ }
+ return [...neighbors,...additions,...additions4,...additions5];
 
 }
 

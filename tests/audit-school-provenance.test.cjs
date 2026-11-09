@@ -122,14 +122,14 @@ test('west DFW supplemental provenance records all four lookup-only ISDs without
   assert.ok(rows.every(r=>validHttps(r.officialLookup)));
 });
 
-test('DFW supplemental provenance accounts for 54 strictly non-GIS official lookup/map/choice entries',()=>{
+test('DFW supplemental provenance accounts for 62 strictly non-GIS official lookup/map/choice entries',()=>{
  const rows=readNeighborDfwSupplement(root);
- assert.equal(rows.length,54);
- assert.equal(new Set(rows.map(x=>x.code)).size,54);
+ assert.equal(rows.length,62);
+ assert.equal(new Set(rows.map(x=>x.code)).size,62);
  assert.ok(rows.every(x=>x.status==='lookup-only'&&x.geometryYear==='no-certified-GIS'));
  const {data,registry,supplementary}=actual();
  const report=auditSchoolProvenance(data,registry,{supplementary});
- assert.equal(report.summary.registryDistricts,65);
- assert.equal(report.summary.provenanceDistricts,65);
+ assert.equal(report.summary.registryDistricts,73);
+ assert.equal(report.summary.provenanceDistricts,73);
  assert.equal(report.summary.knownSourceGaps,0);
 });
