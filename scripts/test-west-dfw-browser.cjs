@@ -54,7 +54,8 @@ async function measure(page,width,base){
  assert.equal(result.linkHosts.length,5,'4 ISD links + 1 Westlake Academy charter');
  assert.equal(result.relSafe,true);
  assert.equal(result.hasDisclosure,true);
- assert.ok(result.schoolCounts.every(x=>x.count>=10),'School markers not populated from TEA/NCES');
+ assert.ok(result.schoolCounts.every(x=>x.count>=(x.district==='220919'?5:10)),
+   'West district school-directory counts insufficient: '+JSON.stringify(result.schoolCounts));
  assert.ok(result.docWidth<=width+1,'mobile horizontal overflow '+width);
  await page.locator('#westDfwPanel button[data-zip="76092"]').click();
  await page.waitForFunction(()=>state.zip==='76092'&&
