@@ -37,6 +37,17 @@
       "officialFinderResult": null,
       "currentZonePolygonMatched": false,
       "certified": false
+    },
+    {
+      "id": "SAND_COVENTRY",
+      "kind": "public-builder-model-or-sales-center",
+      "address": "1713 Sandbrock Ranch Dr, Aubrey, TX 76227",
+      "addressSource": "https://sandbrockranch.com/faq/",
+      "communityMarketingSchools": [],
+      "marketingScope": "builder-published model-home address only; no school assignment asserted",
+      "officialFinderResult": null,
+      "currentZonePolygonMatched": false,
+      "certified": false
     }
   ],
   "reviewPolicy": "Do not infer address-specific schools from marketing, proximity, or community names. Enter each public model-home address in live district Finder; obtain unambiguous grade-specific result and independent current school-level polygon. Source access failures or missing polygon = NO_GO.",
