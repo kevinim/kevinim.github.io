@@ -36,11 +36,13 @@ test('2021 ERCOT history cannot be assigned to an address',()=>{
  assert.equal(event.events[0].neighborhoodOutageMinutes,null);
  assert.equal(event.events[0].affectedDFWNeighborhoods,null);
 });
-test('pending cold and utility indicators are explicitly not acquired',()=>{
+test('FEMA winter tract hazards acquired while utility outage metrics remain unavailable',()=>{
  assert.equal(sources.noNeighborhoodScore,true);
  assert.equal(sources.noUnverifiedMap,true);
  assert.equal(sources.noUnverifiedAddressUtility,true);
- assert.ok(sources.dimensions.filter(x=>x.state==='NOT_ACQUIRED').length>=3);
+ assert.equal(sources.dimensions.filter(x=>['cold_wave','ice_storm','winter_weather'].includes(x.key)&&x.state==='ACQUIRED_FEMA_TRACT_RISK_LAYER').length,3);
+ assert.ok(sources.dimensions.filter(x=>['cold_wave','ice_storm','winter_weather'].includes(x.key)).every(x=>x.dataValue==='data/resilience/fema-nri-dfw-winter-2025.json'));
+ assert.equal(sources.noUnverifiedAddressUtility,true);
  assert.ok(sources.dimensions.some(x=>x.key==='utility_reliability'&&x.dataValue===null));
 });
 test('incorrect geography and invalid metrics fail closed',()=>{

@@ -1,0 +1,23 @@
+name: P1 data integrity QA (PR only)
+on:
+  push:
+    branches:
+      - audit/p1-data-integrity-20261108
+  pull_request:
+    paths:
+      - 'tests/p1-data-integrity.test.cjs'
+      - 'data/resilience/source-status-2026.json'
+      - 'data/healthcare/**'
+      - 'data/dfw-crime-city-2023-2025.geojson'
+      - 'data/resilience/fema-nri-dfw-winter-2025.json'
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/p1-data-integrity.test.cjs tests/p42-resilience-scope.test.cjs tests/p41-healthcare-inventory.test.cjs
