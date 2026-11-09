@@ -1,0 +1,58 @@
+name: TX West DFW district explorer QA (no deploy)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'district-registry.js'
+      - 'features/west-dfw/**'
+      - 'data/west-dfw-districts-2026.json'
+      - 'scripts/test-west-dfw-browser.cjs'
+      - 'tests/west-dfw-panel.test.cjs'
+      - '.github/workflows/west-dfw-districts-qa.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'district-registry.js'
+      - 'features/west-dfw/**'
+      - 'data/west-dfw-districts-2026.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  western-district-qa:
+    name: Official source config + west ZIP school marker browser
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Verify western district registry and source links (no network)
+        run: |
+          node --check features/west-dfw/panel.js
+          node --check scripts/test-west-dfw-browser.cjs
+          node --test tests/west-dfw-panel.test.cjs
+      - name: Install isolated Chromium
+        run: |
+          mkdir -p west-browser-tmp
+          cd west-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Test Southlake and Westlake UI navigation and western school markers
+        env:
+          NODE_PATH: ${{ github.workspace }}/west-browser-tmp/node_modules
+        run: node scripts/test-west-dfw-browser.cjs
+      - name: Upload browser results (no home address)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: west-dfw-school-explorer-evidence
+          path: artifacts/west-dfw/west-dfw-browser.json
+          if-no-files-found: warn
