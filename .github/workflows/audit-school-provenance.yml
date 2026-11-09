@@ -1,0 +1,29 @@
+name: Audit TX school provenance (read-only)
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '40 13 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  audit-school-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out code without persistent write credentials
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test provenance guards
+        run: node --test tests/audit-school-provenance.test.cjs
+      - name: Audit provenance, local geometry metadata, and registry
+        run: node scripts/audit-school-provenance.cjs
