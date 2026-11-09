@@ -5,6 +5,7 @@
 // from a generic geocoder selection or a list of unrelated school names.
 const fs=require('node:fs'),path=require('node:path'),{chromium}=require('playwright');
 const fixture=require('../tests/dfw-public-leasing-address-e2e-2026.json');
+const {parseOfficialZonePopup}=require('./dfw-finder-observation.cjs');
 const OUT=path.join(__dirname,'../artifacts/dfw-official-finder-ui-probe');
 fs.mkdirSync(OUT,{recursive:true});
 const TARGETS={
@@ -61,11 +62,24 @@ async function check(browser,district,entry){
  try{
   page=await context.newPage();
   await page.goto(TARGETS[district],{waitUntil:'domcontentloaded',timeout:40000});
-  // Plano ArcGIS Experience opens a welcome overlay blocking its actual search.
+  // ArcGIS Experience may still be on its loading screen after DOM ready.
+  // Never click at hardcoded coordinates before the welcome dialog exists.
   if(district==='PISD'){
+   await page.getByText('Welcome to the',{exact:false}).first()
+    .waitFor({state:'visible',timeout:65000}).catch(()=>{});
+   out.welcomeBefore=await inspectPlanoWelcome(page);
    const welcome=page.getByText('OK',{exact:true}).last();
-   if(await welcome.count())try{await welcome.click({force:true,timeout:4500});out.dismissedWelcome=true;}catch{}
-   if(!out.dismissedWelcome)try{await page.mouse.click(978,642);out.dismissedWelcome=true;}catch{}
+   if(await welcome.count()){
+    try{await welcome.click({timeout:8000});
+     await page.waitForTimeout(1500);
+     out.dismissedWelcome=!(await page.getByText('Welcome to the',{exact:false}).first().isVisible().catch(()=>false));
+    }catch(e){out.welcomeDismissIssue=String(e.message||e).slice(0,180);}
+   }
+   if(!out.dismissedWelcome){
+    const okNode=page.getByRole('button',{name:'OK',exact:true}).last();
+    if(await okNode.count())try{await okNode.click({timeout:7000});out.dismissedWelcome=true;}catch{}
+   }
+   out.welcomeAfter=await inspectPlanoWelcome(page);
   }
   if(district==='PISD')out.welcomeDiagnostic=await inspectPlanoWelcome(page);
   const search=page.locator('input[placeholder="Find address or place"]').first();
@@ -99,10 +113,19 @@ async function check(browser,district,entry){
      // after selecting geocoder suggestion to identify campus zones.
      const close=page.locator('.esriPopup .titleButton.close').first();
      if(await close.count())try{await close.click({timeout:2500});}catch{}
-     await page.mouse.click(840,480);
-     await page.waitForTimeout(1800);
-     out.mapPointIdentificationAttempted=true;
-     out.identifyClickIsApproximateMapOffset=true;
+     const m=out.mapAfterChoice;
+     if(m?.status==='MAP_AVAILABLE'&&m?.geoCenter&&m?.mapRect){
+      const cx=m.mapRect.x+m.mapRect.width/2,cy=m.mapRect.y+m.mapRect.height/2;
+      await page.mouse.click(cx,cy);
+      await page.waitForTimeout(1800);
+      out.mapPointIdentificationAttempted=true;
+      out.mapClickedAtExactGeocoderCenter=true;
+      out.mapClickPixel={x:cx,y:cy};
+     }else{
+      out.mapPointIdentificationAttempted=false;
+      out.mapClickedAtExactGeocoderCenter=false;
+      out.mapIdentificationBlocked='MAP_CENTER_NOT_ACCESSIBLE';
+     }
     }
    }catch(e){out.clickIssue=String(e.message||e).slice(0,180);}
   }else{
@@ -114,6 +137,7 @@ async function check(browser,district,entry){
    return s.filter(e=>e.getClientRects().length>0).map(e=>e.textContent?.replace(/\s+/g,' ').trim().slice(0,600))
     .filter(Boolean).slice(0,5);
   });
+  out.gradePopup=parseOfficialZonePopup((out.visiblePopupText||[]).find(t=>t.includes('Attendance Zones')),district);
   out.screenCaptured=await safeScreen(page,entry.id);
   out.status=out.officialAddressSelected?'OFFICIAL_GEOCODER_ADDRESS_SELECTED_NOT_SCHOOL_VERIFIED':
    'OFFICIAL_FINDER_QUERY_ATTEMPT_UNVERIFIED';
