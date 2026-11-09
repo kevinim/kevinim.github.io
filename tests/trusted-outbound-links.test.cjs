@@ -71,7 +71,9 @@ test('all sensitive outbound browser sink paths consult validator before writing
  assert.ok(html.includes('failure.sourceUrl&&window.TrustedLinkPolicy?.official(failure.sourceUrl)'));
  assert.ok(html.includes('sourceLink.href=window.TrustedLinkPolicy.official(failure.sourceUrl)'));
  assert.ok(html.includes('window.TrustedLinkPolicy?.withFallback(scoreSource('));
- assert.ok(html.includes('window.TrustedLinkPolicy?.withFallback(OFFICIAL[s.district]'));
+ assert.ok(html.includes('window.TrustedLinkPolicy?.official(OFFICIAL[s.district])'));
+ assert.ok(html.includes('이 학교의 공식 주소별 학군 Finder 링크는 아직 검증되지 않았습니다.'));
+ assert.ok(!html.includes("OFFICIAL[s.district]?'학군 공식 배정 확인':'학군 배정 링크 미확인 · TEA 검색'"));
  assert.ok(home.includes('window.TrustedLinkPolicy?.official(url)'));
  assert.ok(home.includes('window.TrustedLinkPolicy?.official(officialUrl)'));
 });
