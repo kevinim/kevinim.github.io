@@ -1,6 +1,6 @@
 {
   "asOf": "2026-11-08",
-  "status": "SOURCE_RESEARCH_INCOMPLETE_NOT_A_MAP",
+  "status": "FEMA_WINTER_TRACT_RISK_MAPPED_UTILITY_OUTAGE_RESEARCH_INCOMPLETE",
   "dimensions": [
     {
       "key": "cold_wave",
@@ -8,9 +8,9 @@
       "sourceUrl": "https://hazards.fema.gov/nri/",
       "timeframe": "2025 model",
       "geography": "census tract candidate, separate hazard",
-      "state": "NOT_ACQUIRED",
-      "dataValue": null,
-      "notes": "Cold Wave hazard, not distribution outages. Verify field coding and 2025 NRI vintage before ingestion."
+      "state": "ACQUIRED_FEMA_TRACT_RISK_LAYER",
+      "dataValue": "data/resilience/fema-nri-dfw-winter-2025.json",
+      "notes": "2025 FEMA NRI v1.20.0 relative risk, 1734 census tracts; mapped by features/resilience/winter-map.js. Not a utility outage or address-level prediction."
     },
     {
       "key": "ice_storm",
@@ -18,9 +18,9 @@
       "sourceUrl": "https://hazards.fema.gov/nri/",
       "timeframe": "2025 model",
       "geography": "census tract candidate",
-      "state": "NOT_ACQUIRED",
-      "dataValue": null,
-      "notes": "Do not equate storm risk with a historical power outage."
+      "state": "ACQUIRED_FEMA_TRACT_RISK_LAYER",
+      "dataValue": "data/resilience/fema-nri-dfw-winter-2025.json",
+      "notes": "2025 FEMA NRI v1.20.0 relative risk, 1734 census tracts; mapped by features/resilience/winter-map.js. Not a utility outage or address-level prediction."
     },
     {
       "key": "winter_weather",
@@ -28,9 +28,9 @@
       "sourceUrl": "https://hazards.fema.gov/nri/",
       "timeframe": "2025 model",
       "geography": "census tract candidate",
-      "state": "NOT_ACQUIRED",
-      "dataValue": null,
-      "notes": "FEMA winter weather hazard is not a home-specific outage predictor."
+      "state": "ACQUIRED_FEMA_TRACT_RISK_LAYER",
+      "dataValue": "data/resilience/fema-nri-dfw-winter-2025.json",
+      "notes": "2025 FEMA NRI v1.20.0 relative risk, 1734 census tracts; mapped by features/resilience/winter-map.js. Not a utility outage or address-level prediction."
     },
     {
       "key": "utility_reliability",
