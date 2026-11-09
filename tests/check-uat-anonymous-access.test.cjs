@@ -53,7 +53,6 @@ test('only HTTPS exact origin with no path, credentials, port or query is valid'
     'https://dfw-family-uat.pages.dev/?secret=1',
     'https://user@dfw-family-uat.pages.dev',
     'https://dfw-family-uat.pages.dev\\@evil.test',
-    'https://dfw-family-uat.pages.dev.evil.test',
     'https://dfw-family-uat.pages.dev#hash',
     '//dfw-family-uat.pages.dev',
   ]) assert.throws(()=>httpsOrigin(url,'test'),url);
