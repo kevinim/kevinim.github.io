@@ -71,7 +71,17 @@ function sanitizeResult(r){
   try{
    const j=await request(geocodeUrl(sample.address),'esri_geocoder');
    const candidates=(j.candidates||[]).filter(x=>precise(sample.address,x)).sort((a,b)=>b.score-a.score);
-   if(!candidates.length){row.reason='NO_EXACT_LIVE_POINT_ADDRESS';report.results.push(row);continue;}
+   if(!candidates.length){
+    row.reason='NO_EXACT_LIVE_POINT_ADDRESS';
+    row.geocoderDiagnostics=(j.candidates||[]).slice(0,3).map(x=>({
+     address:String(x.address||'').slice(0,130),score:x.score,
+     addrType:x.attributes?.Addr_type,region:x.attributes?.Region,
+     zip:x.attributes?.Postal,hasPoint:Number.isFinite(x.location?.x)&&Number.isFinite(x.location?.y)
+    }));
+    report.results.push(row);
+    console.log('PROSPER_PUBLIC_RESIDENTIAL_ADDRESS_QA '+JSON.stringify({id:row.id,status:row.status,reason:row.reason,topGeocodes:row.geocoderDiagnostics}));
+    continue;
+   }
    if(candidates.length>=2&&Math.hypot(candidates[0].location.x-candidates[1].location.x,
        candidates[0].location.y-candidates[1].location.y)>0.0002&&
       candidates[1].score>=candidates[0].score-2){
