@@ -10,17 +10,28 @@ const checks = [
   {name:'precomputed personal commute field', re:/\bjpmMinutes\b/i},
   {name:'personal office address', re:/8181\s+Communications\s+(?:Pkwy|Parkway)/i}
 ];
-const inspect = ['index.html','dashboard-main.js','reviewed.html'];
 const findings = [];
-for (const name of inspect) {
-  const file = path.join(root,name);
-  if (!fs.existsSync(file)) continue;
-  const text = fs.readFileSync(file,'utf8');
-  for (const check of checks) if (check.re.test(text)) findings.push({file:name,category:check.name});
+const excluded = new Set(['.git','node_modules','.cache','coverage']);
+function walk(dir, rel = '') {
+  for (const entry of fs.readdirSync(dir,{withFileTypes:true})) {
+    if (entry.isSymbolicLink()) throw Error('Public artifact contains a symlink: '+entry.name);
+    const name = rel ? rel+'/'+entry.name : entry.name;
+    if (entry.isDirectory()) {
+      if (!excluded.has(entry.name)) walk(path.join(dir,entry.name),name);
+      continue;
+    }
+    if (!entry.isFile()) continue;
+    if (/^jpm-(?:60min-isochrone|road-times|outside-dfw)/i.test(entry.name)) {
+      findings.push({file:name,category:'personalized commute dataset'});
+    }
+    if (!/\\.(?:html|js|json|geojson|css)$/i.test(entry.name)) continue;
+    const file = path.join(dir,entry.name);
+    if (fs.statSync(file).size > 8*1024*1024) continue;
+    const content = fs.readFileSync(file,'utf8');
+    for (const check of checks) if (check.re.test(content)) findings.push({file:name,category:check.name});
+  }
 }
-for (const name of ['jpm-60min-isochrone-2026-11-04.geojson','jpm-road-times-2026-11-04.json','jpm-outside-dfw.json']) {
-  if (fs.existsSync(path.join(root,name))) findings.push({file:name,category:'personalized commute dataset'});
-}
+walk(root);
 if (findings.length) {
   process.stderr.write('PUBLIC PRIVACY GATE: BLOCKED ('+findings.length+' findings)\n');
   for (const f of findings) process.stderr.write('- '+f.file+': '+f.category+'\n');
