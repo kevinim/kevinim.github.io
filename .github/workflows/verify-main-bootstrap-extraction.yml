@@ -10,6 +10,7 @@ on:
       - 'tests/externalized-main-bootstrap.test.cjs'
       - 'tests/strict-script-csp.test.cjs'
       - 'tests/public-preview-build.test.cjs'
+      - 'tests/public-privacy-disclosure.test.cjs'
       - '.github/workflows/verify-main-bootstrap-extraction.yml'
   workflow_dispatch:
 permissions:
@@ -31,7 +32,7 @@ jobs:
         run: |
           node --check dashboard-main.js
           node --check scripts/build-public-preview.cjs
-          node --test tests/externalized-main-bootstrap.test.cjs tests/strict-script-csp.test.cjs tests/public-preview-build.test.cjs
+          node --test tests/externalized-main-bootstrap.test.cjs tests/strict-script-csp.test.cjs tests/public-preview-build.test.cjs tests/public-privacy-disclosure.test.cjs
       - name: Existing code and privacy-sanitized public preview regression
         run: |
           node scripts/verify-main-data.mjs
