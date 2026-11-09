@@ -32,6 +32,9 @@ test('fail closed on school ID, grade, accuracy, source year, duplicated or new 
  assert.throws(mutate(j=>j.points[0].isZoneBoundary=true),/not corroborated/);
 });
 test('module checks no user home addresses and no novel 2026 school geographic claims',()=>{
+ const dashboard=fs.readFileSync('dashboard-main.js','utf8');
+ assert.ok(dashboard.includes("L.map('map',{zoomControl:true,preferCanvas:true,zoomAnimation:false})"),
+ 'Headless/mobile map navigation must not get stuck waiting for a CSS zoom transition');
  const js=fs.readFileSync('denton-campus-point-quality.js','utf8');
  assert.ok(!/homeAddress|customerAddress|residentAddress|sessionStorage|localStorage/.test(js));
  assert.equal(json.readyForProduction,false);
