@@ -159,22 +159,32 @@ async function checkHomeParcel(){
 
 function officialReviewPanelHtml(item){
  const a=item.assignment||{},prior=item.officialDraft||{},v=k=>escape(String(prior[k]||''));
- const district=prior.district||a.district||'';
- const districts=OFFICIAL_REVIEW_DISTRICTS.map(x=>'<option value="'+x+'"'+(x===district?' selected':'')+'>'+escape(districtName(x)||x)+'</option>').join('');
+ const district=prior.district||a.district||(item.irvingSpatial?.status==='ready'?'057912':'');
+ const districts=[...OFFICIAL_REVIEW_DISTRICTS,'057912'].map(x=>'<option value="'+x+'"'+(x===district?' selected':'')+'>'+escape(districtName(x)||x)+'</option>').join('');
  const level=prior.gradeLevel||'';
  const grades=OFFICIAL_REVIEW_LEVELS.map(x=>'<option value="'+x+'"'+(x===level?' selected':'')+'>'+escape(({elementary:'초등',middle:'중등',freshman:'9학년',high:'고등',senior:'Senior High'})[x])+'</option>').join('');
  const year=prior.schoolYear||'';
  const labels={'missing-input':'학군·학년·학교 이름을 입력하세요.','year-not-confirmed':'2026–27 학년도임을 확인하지 못해 비교 결과를 최신 배정 검증으로 취급하지 않습니다.','no-candidate':'대시보드에서 비교할 배정 후보가 없습니다. 공식 결과를 우선 확인하세요.','district-disagrees':'입력한 학군과 지도상 후보 학군이 다릅니다. 정밀 주소와 ISD 경계를 확인하세요.','no-unique-candidate':'해당 학년의 학교 후보가 없거나 여러 개라 1:1 대조가 불가능합니다.','name-unrecognized':'학교 이름을 정규화하지 못했습니다. 정확한 학교명을 다시 확인하세요.','manually-reported-match':'입력하신 공식 검색 결과의 학교명과 대시보드 후보가 일치합니다. 사용자 입력 기반 대조일 뿐 독립적인 공식 조회 확인은 아닙니다.','manually-reported-mismatch':'입력하신 공식 검색 결과와 대시보드 후보가 다릅니다. 대시보드 배정 후보를 신뢰하지 말고 공식 학군에 확인하세요.'};
  const result=item.officialReview;
- let msg=result?(result.kind==='prosper'?result.message:labels[result.status]||'대조 결과 확인 필요'):'대조를 아직 실행하지 않았습니다. 공식 결과를 확인하고 직접 입력하세요.';
- const label=result?.kind==='prosper'?'Prosper 공개 API 조회 결과':'사용자가 입력한 공식 결과 대조';
+ let msg=result?(['prosper','irving'].includes(result.kind)?result.message:labels[result.status]||'대조 결과 확인 필요'):'대조를 아직 실행하지 않았습니다. 공식 결과를 확인하고 직접 입력하세요.';
+ const label=result?.kind==='prosper'?'Prosper 공개 API 조회 결과':result?.kind==='irving'?'Irving GIS 참고 경계와 사용자 입력 비교':'사용자가 입력한 공식 결과 대조';
  const officialUrl=district==='PISD'?PLANO_2026_27_EXPERIENCE:OFFICIAL[district]||null;
  const currentYearLink=['PISD','PROSPER','LISD'].includes(district);
  const safeOfficialUrl=window.TrustedLinkPolicy?.official(officialUrl); const officialLink=safeOfficialUrl?'<a class="cardlink" href="'+escape(safeOfficialUrl)+'" target="_blank" rel="noopener noreferrer">'+(currentYearLink?'2026–27 학군 검색기 열기':'학군 공식 주소 검색기 열기')+'</a>':'';
- const note=district==='LISD'?'Lewisville 아파트는 주소 대신 별도의 Find an Apartment 검색을 이용하세요.':district==='AISD'?'Allen 아파트 건물·호수 예외가 있으므로 학교 등록 담당자 확인이 필요합니다.':district==='PISD'?'Plano Jackson Elementary는 Coit Rd 동·서쪽에 따라 상급 학교가 달라집니다.':'검색기에 주소·학년을 입력한 뒤 나온 학교명을 복사하세요.';
+ const note=district==='057912'?'Irving 초등·중등·고등 참고 GIS 경계와 공식 School Locator 학교명을 비교할 수 있습니다. 공식 검색 결과는 사용자가 직접 입력하며 독립 검증은 아닙니다.':district==='LISD'?'Lewisville 아파트는 주소 대신 별도의 Find an Apartment 검색을 이용하세요.':district==='AISD'?'Allen 아파트 건물·호수 예외가 있으므로 학교 등록 담당자 확인이 필요합니다.':district==='PISD'?'Plano Jackson Elementary는 Coit Rd 동·서쪽에 따라 상급 학교가 달라집니다.':'검색기에 주소·학년을 입력한 뒤 나온 학교명을 복사하세요.';
  const showProsper=district==='PROSPER'&&['current','boundary-review'].includes(a.status);
  const showIrving=district==='057912'||/\bIrving\s*,?\s*(?:TX|Texas)/i.test(item.address||'');
  const irvingHref=showIrving?window.TrustedLinkPolicy?.official('https://iisd1.maps.arcgis.com/apps/instant/lookup/index.html?appid=f27bba7ee02141c58c8c9375431effa2'):null;
+ const irving=item.irvingSpatial;
+ const officialCampusMaps=[
+  ['초등 공식 학교별 지도','https://www.irvingisd.net/departments-services/performance-outcomes-data/planning/current-campus-level-maps/elementary-school-boundary-map'],
+  ['중등 공식 학교별 지도','https://www.irvingisd.net/departments-services/performance-outcomes-data/planning/current-campus-level-maps/middle-school-boundary-map'],
+  ['고등 공식 학교별 지도','https://www.irvingisd.net/departments-services/performance-outcomes-data/planning/current-campus-level-maps/high-school-boundary-map']
+ ];
+ const campusMapLinks=showIrving?officialCampusMaps.map(([name,url])=>{
+  const safe=window.TrustedLinkPolicy?.official(url);
+  return safe?'<a class="cardlink" href="'+escape(safe)+'" target="_blank" rel="noopener noreferrer">'+escape(name)+'</a>':'';
+ }).join(' '):'';
  const irving=item.irvingSpatial;
  const irvingText=irving?.status==='ready'?'공식 Locator GIS 경계(학년도 확인 필요): 초등 '+irving.names.elementary+' · 중등 '+irving.names.middle+' · 고등 '+irving.names.high+' · 지도에 주황색 점선 참고 경계 표시.':irving?.status==='error'?'공식 원본 확인 실패: '+irving.reason+' · 공식 Locator에서 직접 확인하세요.':item.irvingChecking?'교육구 ArcGIS 원본 좌표 조회 중…':'클릭 시 집 핀 좌표를 Irving GIS 원본에 전송하고 이 화면에 초·중·고 참고 경계를 일시 표시합니다.';
  return '<div class="small-note" id="officialReviewPanel" style="margin-top:10px"><b>공식 학군 주소 조회 결과 교차검증</b>'+
@@ -186,8 +196,9 @@ function officialReviewPanelHtml(item){
  '<button type="button" class="mini-btn" id="officialManualCompare">입력한 결과와 비교</button>'+
  (showProsper?' <button type="button" class="mini-btn" id="officialProsperCheck"'+(item.officialChecking?' disabled':'')+'>Prosper 공식 좌표 조회</button>':'')+
  (irvingHref?'<a class="cardlink" href="'+escape(irvingHref)+'" target="_blank" rel="noopener noreferrer">Irving 공식 School Locator 직접 열기 ↗</a>':'')+
+ (showIrving?'<div class="source">Irving ISD 공식 지도 원본: '+campusMapLinks+'</div>':'')+
  (showIrving?' <button type="button" class="mini-btn" id="officialIrvingCheck"'+(item.irvingChecking?' disabled':'')+'>Irving 공식 GIS 좌표 조회</button><div class="source" id="irvingSpatialStatus" role="status">'+escape(irvingText)+'</div><div class="source">Irving 교육구 공식 Locator에서 현재 사용 중인 GIS를 조회하지만, 초등 2024–25·중등 2025–26 명칭의 원본이므로 2026–27 등록 배정 확정이 아닙니다. 외부 브라우저의 공식 School Locator에서 최종 확인하세요.</div>':'')+
- '<div class="source">Prosper 버튼을 누르면 집 핀 좌표가 학군이 연결한 Infofinder에 전송됩니다. 결과는 좌표의 학교 코드 비교이며 실제 주소·호수·등록 자격 확인은 아닙니다.</div>'+
+ (showProsper?'<div class="source">Prosper 버튼을 누르면 집 핀 좌표가 학군이 연결한 Infofinder에 전송됩니다. 결과는 좌표의 학교 코드 비교이며 실제 주소·호수·등록 자격 확인은 아닙니다.</div>':'')+
  '<div class="source" id="officialReviewResult" role="status"><b>'+escape(label)+'</b> · '+escape(msg)+'</div></div>';
 }
 function wireOfficialReviewPanel(item){
@@ -204,7 +215,9 @@ function wireOfficialReviewPanel(item){
  get('officialReviewName')?.addEventListener('input',update);
  get('officialManualCompare')?.addEventListener('click',()=>{
   update();if(home!==item)return;
-  item.officialReview={kind:'manual',...compareManualSchoolResult(item.assignment,item.officialDraft)};
+  item.officialReview=item.irvingSpatial?.status==='ready'&&item.officialDraft.district==='057912'&&window.IrvingOfficialSpatial
+   ?window.IrvingOfficialSpatial.compareReportedSchool(item.irvingSpatial,item.officialDraft)
+   :{kind:'manual',...compareManualSchoolResult(item.assignment,item.officialDraft)};
   renderHome();
  });
  get('officialIrvingCheck')?.addEventListener('click',async()=>{
