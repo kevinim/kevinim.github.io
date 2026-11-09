@@ -12,7 +12,7 @@ test('agent01 never inflates current-school polygon coverage or certifies new as
 test('candidate district codes match TEA matrix; do not duplicate parallel agent districts',()=>{
  const byCode=new Map(census.districts.map(v=>[v.code,v.name]));
  for(const c of x.candidates){
-  assert.match(byCode.get(c.districtCode)||'',new RegExp(c.district.replace(/ ISD$/i,'').replace(/[.*+?^$()|[\]{}]/g,'\\$&'),'i'));
+  assert.ok((byCode.get(c.districtCode)||'').includes(c.district.toUpperCase()),c.districtCode+' district mismatch');
   assert.equal(c.currentYearCertified,false);
   assert.notEqual(c.geometryStage,'production');
   assert.match(c.sourceURL||c.officialDistrictPage,/^https:\/\//);
