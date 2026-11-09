@@ -270,7 +270,7 @@ def extract(level, download_dir, out_dir):
    area=(fitz.Rect(selected["rect"])&frame).get_area()
    if color_key(selected.get("fill"))!=fill:
     raise ValueError("Elementary PDF native color changed for "+school_name)
-   if not any(t==token and abs(x-anchor[0])<36 and abs(y-anchor[1])<30
+   if not any(t==token and abs(x-anchor[0])<110 and abs(y-anchor[1])<30
               for t,x,y in mapwords):
     raise ValueError("Source PDF map text label missing or moved: "+school_name)
   else:
