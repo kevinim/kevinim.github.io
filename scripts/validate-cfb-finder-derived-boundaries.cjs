@@ -4,7 +4,7 @@ const path=require('node:path');
 const file=process.argv[2]||'data/cfb-finder-derived-boundaries.json';
 const errors=[];
 let data;
-try{data=JSON.parse(fs.readFileSync(path.resolve(file),'utf8')))}
+try{data=JSON.parse(fs.readFileSync(path.resolve(file),'utf8'))}
 catch{console.log('CFB_ESTIMATE_GATE '+JSON.stringify({status:'NO_GO',errors:['reviewed_dataset_missing']}));process.exit(1)}
 if(data.schemaVersion!==1||data.district!=='CFB')errors.push('invalid_dataset');
 if(data.sourceType!=='official-finder-derived-estimate')errors.push('provenance_missing');
