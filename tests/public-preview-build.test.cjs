@@ -3,9 +3,11 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
 const test=require('node:test');
-const {sanitizeIndex,verifyCspIntegrity,safeFiles}=require('../scripts/build-public-preview.cjs');
+const {sanitizeExtractedAssets,verifyExternalCspIntegrity,safeFiles}=require('../scripts/build-public-preview.cjs');
 const original=fs.readFileSync('index.html','utf8');
-const preview=sanitizeIndex(original);
+const originalJs=fs.readFileSync('dashboard-main.js','utf8');
+const safe=sanitizeExtractedAssets(original,originalJs);
+const preview=safe.html+'\n'+safe.js;
 test('public preview removes personal default office and fixed commute sources',()=>{
  assert.equal(/\bJPM\b|JPMorgan|JPM_ADDRESS|jpm-|8181 Communications/i.test(preview),false);
  assert.equal(preview.includes("fetch('./dfw-outside-public.json'"),true);
@@ -22,47 +24,49 @@ test('preview retains required map, school and address search hooks',()=>{
  for(const mod of ['home-lookup-v2.js','school-assignment.js','phase2a-nfhl-flood.js','texas-address-suggest.js'])
   assert.equal(preview.includes(mod),true,'Missing '+mod);
 });
-test('public preview inline scripts compile',()=>{
- const inline=[...preview.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)].map(x=>x[1]).filter(Boolean);
- assert.ok(inline.length>0);
- for(const script of inline)new vm.Script(script);
+test('public preview external sanitized script compiles with zero inline execution',()=>{
+ const inline=[...safe.html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
+   .filter(x=>!/\bsrc=/.test(x[1])&&x[2].trim());
+ assert.equal(inline.length,0);
+ assert.ok(safe.html.includes('<script src="./dashboard-main.js?v=2"></script>'));
+ new vm.Script(safe.js);
 });
 test('public preview explains third-party disclosure without promising no logs',()=>{
  assert.equal(preview.includes('외부 제공업체의 로그·보존 기간까지 통제하지 않습니다'),true);
  assert.equal(preview.includes('운영 배포가 승인되지 않았습니다'),true);
 });
 test('fails closed on unrecognized personalized template',()=>{
- assert.throws(()=>sanitizeIndex(original.replace('id="oneHourOverlay"','id="changedOverlay"')),/template|personal|anchor/i);
+ assert.throws(()=>sanitizeExtractedAssets(original.replace('id="oneHourOverlay"','id="changedOverlay"'),originalJs),/template|personal|anchor/i);
 });
 
 
-test('sanitized preview retains strict hash-based CSP and locks modified script bytes',()=>{
- const originalPolicy=verifyCspIntegrity(original);
- const sanitizedPolicy=verifyCspIntegrity(preview);
- assert.notEqual(sanitizedPolicy.token,originalPolicy.token,'sanitizer must refresh the SHA-256 digest');
- assert.ok(sanitizedPolicy.policy.includes("script-src-attr 'none'"));
- assert.ok(!sanitizedPolicy.policy.includes("'unsafe-inline'"));
- assert.ok(!sanitizedPolicy.policy.includes("'unsafe-eval'"));
- assert.ok(sanitizedPolicy.policy.includes("object-src 'none'"));
+test('source and sanitized preview remain external-only with strict CSP',()=>{
+ const before=verifyExternalCspIntegrity(original),after=verifyExternalCspIntegrity(safe.html);
+ assert.equal(before.inlineHashes,0);assert.equal(after.inlineHashes,0);
+ for(const s of [before.policy,after.policy]){
+  assert.ok(s.includes("script-src-attr 'none'"));
+  assert.ok(s.includes("object-src 'none'"));
+  assert.ok(!s.includes('unsafe-inline'));
+  assert.ok(!s.includes('sha256-'));
+ }
 });
-test('future post-sanitize bootstrap modification is detected, not silently released',()=>{
- const modified=preview.replace('const DATA=[','const DATA=[/*hostile-drift-probe*/');
- assert.notEqual(modified,preview);
- assert.throws(()=>verifyCspIntegrity(modified),/does not match/);
+test('sanitized public bootstrap is actually transformed and no private original is copied',()=>{
+ assert.notEqual(safe.js,originalJs);
+ assert.equal(/\\bJPM\\b|JPMorgan|JPM_ADDRESS|jpm-|8181 Communications|jpmMinutes/i.test(safe.js),false);
+ assert.ok(safe.js.includes("fetch('./dfw-outside-public.json'"));
+ assert.ok(!safe.html.includes('./features/area-assessment.js'));
 });
-test('fail closed on mismatched source CSP or relaxed event-handler policy',()=>{
- assert.throws(
-  ()=>sanitizeIndex(original.replace(/'sha256-[A-Za-z0-9+/]+=*'/,"'sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA='")),
-  /does not match/
- );
- assert.throws(
-  ()=>sanitizeIndex(original.replace("script-src-attr 'none'","script-src-attr 'unsafe-inline'")),
-  /disable HTML event-handler|Unsafe CSP policy rejected/
- );
+test('tampering with sensitive template or injecting personal markers fails closed',()=>{
+ assert.throws(()=>sanitizeExtractedAssets(original,originalJs.replace('const JPM_ADDRESS=','const UNKNOWN_JPM_ADDRESS=')),/template|personal|anchor|expected|structure/i);
+ assert.throws(()=>sanitizeExtractedAssets(original,originalJs+'\\n// JPM_ADDRESS'),/private office reference|personal|identifier/i);
+});
+test('fail closed on unsafe or unexpected source policy',()=>{
+ assert.throws(()=>sanitizeExtractedAssets(original.replace("script-src-attr 'none'","script-src-attr 'unsafe-inline'"),originalJs),/CSP|unsafe|protect/i);
+ assert.throws(()=>sanitizeExtractedAssets(original.replace("https://unpkg.com;","https://unpkg.com 'sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=';"),originalJs),/CSP|inline|hash/i);
 });
 test('legacy uploaded-GeoJSON modules never ship in the curated public preview',()=>{
  const selected=safeFiles();
- for(const file of ['features/reviewed-bootstrap.js','features/geojson-upload-guard.js','dashboard-main.js']){
+ for(const file of ['features/reviewed-bootstrap.js','features/geojson-upload-guard.js','dashboard-main.js','features/area-assessment-core.js','features/area-assessment.js','features/area-assessment.css','data/area-noaa-counts-2024-2025.json']){
   assert.ok(!selected.includes(file),'privacy/release isolation required for '+file);
  }
 });
