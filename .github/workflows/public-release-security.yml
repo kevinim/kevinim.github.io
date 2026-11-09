@@ -27,6 +27,8 @@ jobs:
           package-manager-cache: false
       - name: Test security gate rules
         run: node --test tests/public-release-gate.test.cjs tests/public-preview-build.test.cjs tests/family-entry.test.cjs tests/environment-plan.test.cjs
+      - name: Test recursive public privacy gate
+        run: node --test tests/check-public-personalization.test.cjs
       - name: Syntax check account-free backend entrypoints
         run: |
           node --check backend/api.mjs
