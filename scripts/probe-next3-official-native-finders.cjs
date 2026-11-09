@@ -142,6 +142,30 @@ async function inspect(page){
     await page.screenshot({path:path.join(OUT,spec.prefix+'-no-input.png'),fullPage:true,timeout:25000}).catch(()=>{});
    }
   }catch(e){entry.result='OFFICIAL_BROWSER_ERROR';entry.error=clean(e.message,430)}
+  if(spec.district==='PISD'){
+   const landing=await ctx.newPage();
+   try{
+    const officialLanding='https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder';
+    const resp=await landing.goto(officialLanding,{waitUntil:'domcontentloaded',timeout:60000});
+    await landing.waitForTimeout(1800);
+    entry.currentYearLandingStatus=resp?.status()||null;
+    entry.currentYearLanding=await landing.evaluate(()=>{
+      const matches=[...document.querySelectorAll('a,button,div,span,iframe')].filter(e=>{
+       const t=(e.textContent||'').trim();
+       return t.length<150&&/find my school|2026.2027 school finder/i.test(t)
+      }).slice(0,18).map(e=>({tag:e.tagName,html:e.outerHTML.slice(0,1700)}));
+      const embeds=[...document.querySelectorAll('iframe')].map(f=>({title:f.title,src:f.getAttribute('src')}));
+      const schoolLinks=[...document.querySelectorAll('a[href]')].filter(x=>
+        /schoolfinder|find my school|school locator/i.test((x.textContent||'')+' '+x.getAttribute('href')))
+        .slice(0,25).map(x=>({text:(x.textContent||'').trim().slice(0,80),href:x.href}));
+      return {matches,embeds,schoolLinks};
+    });
+    entry.currentYearLandingScreenshot='plano-2026-27-official-landing.png';
+    await landing.screenshot({path:path.join(OUT,entry.currentYearLandingScreenshot),fullPage:true,timeout:25000}).catch(()=>{});
+    console.log('PLANO_CURRENT_2026_27_LANDING '+JSON.stringify(entry.currentYearLanding).slice(0,5800));
+   }catch(e){entry.currentYearLandingError=clean(e.message,350)}
+   finally{await landing.close().catch(()=>{})}
+  }
   report.cases.push(entry);
   console.log('NEXT3_NATIVE_FINDER '+JSON.stringify({district:entry.district,result:entry.result,inputFound:entry.addressInputFound,
    autoSuggestions:entry.suggestionCount,selected:entry.nativeAddressSelected,selectedLabel:entry.selectedLabel,
