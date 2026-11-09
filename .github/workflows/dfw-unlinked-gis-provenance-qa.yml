@@ -27,6 +27,7 @@ jobs:
           node scripts/audit-gis-upload-links.cjs
           node scripts/verify-main-data.mjs
       - name: Live published Dallas GIS -> TEA campus identity evidence (no addresses/polygons persisted)
+        if: always()
         run: node scripts/audit-dallas-campus-ids.cjs
       - name: Attach public school-ID crosswalk report, no geometry or households
         if: always()
