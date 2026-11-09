@@ -6,7 +6,12 @@ const cp=require('node:child_process');
 const path=require('node:path');
 const crypto=require('node:crypto');
 const root=path.resolve(__dirname,'..');
-const old=cp.execFileSync('git',['show','4f741596a5a594897791d3b931ef39b374bf304e:index.html'],{cwd:root,encoding:'utf8'});
+// In pull_request CI, checkout uses a synthetic merge commit. Its first
+// parent is the current main baseline, including unrelated approved UI work.
+// For direct branch checks, retain the pinned original review baseline.
+const parentLine=cp.execFileSync('git',['rev-list','--parents','-n','1','HEAD'],{cwd:root,encoding:'utf8'}).trim().split(/\s+/);
+const baseline=parentLine.length>=3?parentLine[1]:'4f741596a5a594897791d3b931ef39b374bf304e';
+const old=cp.execFileSync('git',['show',baseline+':index.html'],{cwd:root,encoding:'utf8'});
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const js=fs.readFileSync(path.join(root,'dashboard-main.js'),'utf8');
 const oldStart=old.indexOf("<script>\r\n'use strict'"),oldEnd=old.indexOf('</script>',oldStart);
