@@ -1,118 +1,225 @@
 'use strict';
-/* P0 region quick assessment: read existing public local datasets and existing
- * dashboard state. All results are region/ZIP context, NOT home certification. */
+/* P1: Read-only ZIP evidence. City/county observations are not ZIP or parcel risks.
+ * Use existing in-app controls; never change school marker, boundary, or geocoder state. */
 (function(){
   const core=window.AreaAssessmentCore;
   if(!core)return;
   const $=id=>document.getElementById(id);
-  const labels=[
-    {id:'schools',title:'학교 현황',target:'schools',detail:'ZIP 내 학교 위치 기준 · 주소별 배정 아님'},
-    {id:'hazards',title:'자연재해 기록',target:'hazards',detail:'NOAA 카운티 보고 · FEMA 지도에서 상세 확인'},
-    {id:'crime',title:'도시 범죄 신고율',target:'crime',detail:'FBI 도시 전체 자료 · 이 ZIP의 실제 범죄율 아님'},
-    {id:'commute',title:'통근 기준시간',target:'commute',detail:'ZIP 대표점 도로망 · 피크 교통량 미반영'}
+  const items=[
+    {id:'schools',title:'학교 현황',target:'schools'},
+    {id:'hazards',title:'자연재해 기록',target:'hazards'},
+    {id:'crime',title:'도시 범죄 신고율',target:'crime'},
+    {id:'commute',title:'통근 기준시간',target:'commute'}
   ];
   const rows={};
   let countyIndex=null,noaaRows=null,loadError=false,paintScheduled=false;
-  function node(tag,cls,text){
-    const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;
+  let dataDeadline=0,lastZip='',countyObserver=null;
+  function el(tag,cls,text){
+    const n=document.createElement(tag);
+    if(cls)n.className=cls;
+    if(text!==undefined)n.textContent=text;
+    return n;
   }
-  function makePanel(){
-    const parent=document.querySelector('.main');if(!parent||$('areaQuickAssessment'))return;
-    const section=node('section','area-qa');
-    section.id='areaQuickAssessment';section.setAttribute('aria-labelledby','areaQaTitle');
-    const top=node('div','area-qa-top');
-    top.append(node('h3','', '지역 빠른 점검'),node('span','area-qa-zip','ZIP 확인 중'));
-    top.firstChild.id='areaQaTitle';section.append(top);
-    section.append(node('p','area-qa-intro','선택한 ZIP의 기존 자료를 4가지로 요약합니다. 행을 선택하면 지도에서 근거를 확인할 수 있습니다.'));
-    const list=node('div','area-qa-list');
-    for(const item of labels){
-      const btn=node('button','area-qa-row');btn.type='button';btn.dataset.target=item.target;
-      btn.setAttribute('aria-label',item.title+' 관련 지도 또는 상세정보 확인');
-      const mark=node('span','area-qa-mark','›');mark.setAttribute('aria-hidden','true');
-      const body=node('span','area-qa-body');
-      const title=node('span','area-qa-label',item.title);
-      const summary=node('span','area-qa-value','자료 확인 중');
-      const info=node('span','area-qa-note',item.detail);
-      body.append(title,summary,info);btn.append(body,mark);list.append(btn);
-      rows[item.id]=summary;
+  function selectedZip(){
+    return String($('zipSelect')?.value||$('k-zip')?.textContent||'').trim();
+  }
+  function setFact(id,fact,unavailable){
+    const row=rows[id];if(!row)return;
+    const status=fact?.status||'loading';
+    const display=status==='available'?'자료 확인':status==='mixed'?'관할 혼재':
+      status==='empty'?'소재 0곳':status==='unknown'?'확인 필요':'확인 중';
+    row.status.textContent=display;
+    row.status.dataset.state=status;
+    row.summary.textContent=fact?.message||unavailable||'자료 불러오는 중…';
+    row.button.dataset.state=status;
+  }
+  function showAction(message){
+    const note=$('areaQaActionStatus');
+    if(note)note.textContent=message;
+  }
+  function scrollTo(node){
+    node?.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function showNoaaCounty(zip){
+    const select=$('noaaStormCounty');
+    const code=countyIndex?.zipCounty?.[zip];
+    const name=countyIndex?.counties?.[code]?.name?.replace(/ County$/i,'').toUpperCase();
+    if(!select||!name)return;
+    const selectCounty=()=>{
+      if(!Array.from(select.options).some(o=>o.value===name))return false;
+      select.value=name;
+      select.dispatchEvent(new Event('change',{bubbles:true}));
+      return true;
+    };
+    if(countyObserver){countyObserver.disconnect();countyObserver=null}
+    if(selectCounty())return;
+    countyObserver=new MutationObserver(()=>{
+      if(selectCounty()){countyObserver.disconnect();countyObserver=null}
+    });
+    countyObserver.observe(select,{childList:true});
+    window.setTimeout(()=>{countyObserver?.disconnect();countyObserver=null},12000);
+  }
+  function onSummaryClick(target){
+    const map=document.querySelector('.mapbox');
+    if(target==='schools'){
+      const toggle=$('schoolOverlay');
+      if(toggle&&!toggle.checked){toggle.checked=true;toggle.dispatchEvent(new Event('change',{bubbles:true}))}
+      showAction('학교 위치 마커를 표시했습니다. TEA 등급과 위치는 해당 주소의 배정 학교를 확정하지 않습니다.');
+      scrollTo(map);
+    }else if(target==='hazards'){
+      const panel=$('noaaStormHistoryPanel');
+      if(panel)panel.open=true;
+      showNoaaCounty(selectedZip());
+      const button=document.querySelector('#hazardMapQuickToggle button[data-hazard="ifld"]');
+      if(button&&button.getAttribute('aria-pressed')!=='true')button.click();
+      showAction('NOAA는 2024–25 카운티 과거 기록이며, 켜진 지도는 별개인 FEMA 2025 홍수 상대 위험도입니다. NOAA 상세 패널을 열었습니다.');
+      scrollTo(map||panel);
+    }else if(target==='crime'){
+      const panel=$('crimePanel');if(panel)panel.open=true;
+      const button=$('crimeMapToggle');
+      if(button&&button.getAttribute('aria-pressed')!=='true')button.click();
+      showAction('FBI는 도시 전체의 신고율이며 특정 ZIP·주택의 안전 평가가 아닙니다. 도시별 범죄 지도를 켰습니다.');
+      scrollTo(map||panel);
+    }else if(target==='commute'){
+      showAction('통근 상세에서 목적지를 선택하고 직접 계산하십시오. 교통량을 반영하지 않는 ZIP 대표점 기준입니다.');
+      const button=$('calcCommute');
+      scrollTo(button?.closest('.panel')||button);
+      button?.focus({preventScroll:true});
+    }
+  }
+  function mount(){
+    const main=document.querySelector('.main');
+    if(!main||$('areaQuickAssessment'))return;
+    const section=el('section','area-qa');
+    section.id='areaQuickAssessment';
+    section.setAttribute('aria-labelledby','areaQaTitle');
+    const top=el('div','area-qa-top');
+    const heading=el('h3','','지역 빠른 점검');heading.id='areaQaTitle';
+    top.append(heading,el('span','area-qa-zip','지역 확인 중'));
+    section.append(top);
+    section.append(el('p','area-qa-intro',
+      '기존 자료에서 확인되는 항목만 표시합니다. 행을 누르면 지도와 공식 출처 안내를 볼 수 있습니다.'));
+    const list=el('div','area-qa-list');
+    for(const item of items){
+      const button=el('button','area-qa-row');
+      button.type='button';button.dataset.target=item.target;
+      button.setAttribute('aria-label',item.title+' 상세 지도 및 출처 확인');
+      const body=el('span','area-qa-body');
+      const topLine=el('span','area-qa-row-head');
+      const label=el('span','area-qa-label',item.title);
+      const status=el('span','area-qa-state','확인 중');
+      const summary=el('span','area-qa-value','자료 불러오는 중…');
+      const meta=el('span','area-qa-note',core.regionEvidenceMeta(item.id));
+      topLine.append(label,status);body.append(topLine,summary,meta);
+      const arrow=el('span','area-qa-mark','›');arrow.setAttribute('aria-hidden','true');
+      button.append(body,arrow);list.append(button);
+      rows[item.id]={button,status,summary,meta};
     }
     section.append(list);
-    section.append(node('p','area-qa-foot','결과에 해당하는 행을 누르면 아래 지도 또는 기존 상세 패널에서 근거를 확인합니다.'));
-    parent.before(section);
+    const foot=el('p','area-qa-foot',
+      '자료 없음은 위험이 낮다는 의미가 아닙니다. 학교 위치·시/카운티 통계와 개별 주택주소 판정은 다릅니다.');
+    section.append(foot);
+    const notice=el('p','area-qa-action-status','');
+    notice.id='areaQaActionStatus';notice.setAttribute('role','status');notice.setAttribute('aria-live','polite');
+    section.append(notice);
+    main.before(section);
     section.addEventListener('click',event=>{
-      const btn=event.target.closest('button[data-target]');if(!btn)return;
-      const target=btn.dataset.target;
-      if(target==='schools'){
-        const toggle=$('schoolOverlay');
-        if(toggle&&!toggle.checked){toggle.checked=true;toggle.dispatchEvent(new Event('change',{bubbles:true}))}
-        document.querySelector('.mapbox')?.scrollIntoView({behavior:'smooth',block:'start'});
-      }else if(target==='hazards'){
-        const b=document.querySelector('#hazardMapQuickToggle button[data-hazard="ifld"]');
-        if(b&&b.getAttribute('aria-pressed')!=='true')b.click();
-        document.querySelector('.mapbox')?.scrollIntoView({behavior:'smooth',block:'start'});
-      }else if(target==='crime'){
-        const b=$('crimeMapToggle');if(b&&b.getAttribute('aria-pressed')!=='true')b.click();
-        document.querySelector('.mapbox')?.scrollIntoView({behavior:'smooth',block:'start'});
-      }else if(target==='commute'){
-        ($('calcCommute')?.closest('.panel')||$('calcCommute'))?.scrollIntoView({behavior:'smooth',block:'start'});
-        $('calcCommute')?.focus({preventScroll:true});
-      }
+      const button=event.target.closest('button[data-target]');
+      if(button&&section.contains(button))onSummaryClick(button.dataset.target);
     });
   }
   function schoolFact(zip){
     try{
-      if(typeof state==='undefined'||typeof geometryContains!=='function'||typeof scoreRecord!=='function')return null;
-      const shape=state.polys?.[zip];if(!shape||!state.ratingIndex)return null;
-      const geo=shape.toGeoJSON(),geoms=geo?.features||(geo?[geo]:[]);
-      if(!geoms.length)return null;
-      return core.summarizeSchools(state.schools,ll=>geoms.some(f=>f?.geometry&&geometryContains([ll[1],ll[0]],f.geometry)),s=>scoreRecord(s.name,s.district)?.rating);
-    }catch(e){console.warn('Area school summary unavailable:',e);return null}
+      if(typeof state==='undefined'||!state.ratingIndex||!Array.isArray(state.schools))
+        return null;
+      const shape=state.polys?.[zip];
+      if(!shape||typeof shape.toGeoJSON!=='function')
+        return {status:'unknown',message:'선택 ZIP 경계 데이터가 없어 학교 소재 수 미산정'};
+      if(typeof geometryContains!=='function'||typeof scoreRecord!=='function')
+        return {status:'unknown',message:'학교 위치·평가 데이터 연결 확인 필요'};
+      const geo=shape.toGeoJSON();
+      const features=geo?.features||(geo?[geo]:[]);
+      if(!features.length)return {status:'unknown',message:'ZIP 경계 도형이 없어 학교 수 미산정'};
+      return core.summarizeSchools(state.schools,ll=>
+        features.some(f=>f?.geometry&&geometryContains([ll[1],ll[0]],f.geometry)),
+        s=>scoreRecord(s.name,s.district)?.rating);
+    }catch(e){
+      console.warn('Regional school assessment unavailable:',e);
+      return {status:'unknown',message:'학교 데이터 검증 실패 · 학교 지도에서 직접 확인'};
+    }
   }
-  function countyFact(zip){
-    const code=countyIndex?.zipCounty?.[zip],name=countyIndex?.counties?.[code]?.name;
-    if(!name||!noaaRows)return null;
+  function hazardFact(zip){
+    if(!countyIndex||!noaaRows){
+      if(loadError)return {status:'unknown',message:'NOAA·카운티 연결 자료 로드 실패'};
+      return null;
+    }
+    const code=countyIndex.zipCounty?.[zip],name=countyIndex.counties?.[code]?.name;
+    if(!name)return {status:'unknown',message:'해당 ZIP의 대표 카운티 자료 없음'};
     return core.summarizeNoaa(noaaRows,name);
+  }
+  function crimeFact(zip){
+    try{
+      const data=typeof crimeZipData!=='undefined'?crimeZipData:null;
+      if(data)return core.summarizeCrime(data,zip);
+      if(dataDeadline&&Date.now()>dataDeadline)
+        return {status:'unknown',message:'FBI 도시별 자료를 확인하지 못했습니다'};
+      return null;
+    }catch(e){
+      return {status:'unknown',message:'FBI 도시별 자료를 검증할 수 없습니다'};
+    }
   }
   function render(){
     paintScheduled=false;
-    const panel=$('areaQuickAssessment');if(!panel)return;
-    const zip=String($('k-zip')?.textContent||$('zipSelect')?.value||'').trim();
-    panel.querySelector('.area-qa-zip').textContent=zip?zip+' · 지역 단위':'지역 미선택';
-    const schools=schoolFact(zip);
-    rows.schools.textContent=schools?.message||'학교 위치·TEA 자료 확인 중';
-    const hazard=countyFact(zip);
-    rows.hazards.textContent=hazard?.message||(loadError?'카운티 기상 자료 로드 실패 · 지도에서 확인':'카운티 자료 확인 중');
-    const crime=typeof crimeZipData!=='undefined'&&crimeZipData?core.summarizeCrime(crimeZipData,zip):null;
-    rows.crime.textContent=crime?.message||'도시 범죄 자료 확인 중';
+    if(!$('areaQuickAssessment'))return;
+    const zip=selectedZip();
+    if(lastZip!==zip){
+      lastZip=zip;
+      showAction('');
+    }
+    const option=$('zipSelect')?.selectedOptions?.[0];
+    const title=option?.value===zip?String(option.textContent).trim():zip;
+    $('areaQuickAssessment').querySelector('.area-qa-zip').textContent=
+      zip?(title||zip)+' · ZIP 기준':'지역 미선택';
+    setFact('schools',schoolFact(zip),'학교 위치·평가 자료 확인 중');
+    setFact('hazards',hazardFact(zip),'카운티 NOAA 자료 확인 중');
+    setFact('crime',crimeFact(zip),'FBI 도시 자료 확인 중');
     const minutes=typeof state!=='undefined'?state.times?.[zip]:null;
-    const commute=core.summarizeCommute(minutes,Boolean($('destination')?.value?.trim()));
-    rows.commute.textContent=commute.message;
+    setFact('commute',core.summarizeCommute(minutes,Boolean($('destination')?.value?.trim())));
   }
   function schedule(){
     if(paintScheduled)return;
-    paintScheduled=true;window.setTimeout(render,65);
+    paintScheduled=true;window.setTimeout(render,60);
   }
-  async function loadRegionalData(){
+  async function loadRegionSnapshot(){
     try{
-      const [c,n]=await Promise.all([
+      const [countyResponse,noaaResponse]=await Promise.all([
         fetch('./county-scopes.json',{cache:'force-cache'}),
         fetch('./data/area-noaa-counts-2024-2025.json',{cache:'force-cache'})
       ]);
-      if(!c.ok||!n.ok)throw Error('HTTP');
-      const [ci,events]=await Promise.all([c.json(),n.json()]);
-      if(!ci?.zipCounty||!ci?.counties||!Array.isArray(events?.summary))throw Error('invalid format');
-      countyIndex=ci;noaaRows=events.summary;
-    }catch(e){loadError=true;console.warn('Area NOAA summary unavailable:',e)}
+      if(!countyResponse.ok||!noaaResponse.ok)throw Error('HTTP');
+      const [counties,events]=await Promise.all([countyResponse.json(),noaaResponse.json()]);
+      if(!counties?.zipCounty||!counties?.counties||
+         !Array.isArray(events?.summary)||events?.years?.join(',')!=='2024,2025'||
+         events.summary.some(x=>![2024,2025].includes(x.year)||!Number.isInteger(x.count)||x.count<0))
+        throw Error('unverified snapshot');
+      countyIndex=counties;noaaRows=events.summary;
+    }catch(e){
+      loadError=true;console.warn('Regional NOAA source unavailable:',e);
+    }
     schedule();
   }
   function init(){
-    makePanel();if(!$('areaQuickAssessment'))return;
-    for(const id of ['k-zip','schoolList','zipInsights','routeStatus']){
-      const e=$(id);if(e)new MutationObserver(schedule).observe(e,{childList:true,characterData:true,subtree:true});
+    mount();if(!$('areaQuickAssessment'))return;
+    dataDeadline=Date.now()+12000;
+    for(const id of ['k-zip','schoolList','zipInsights','routeStatus','mapLoadStatus','crimeStatus']){
+      const n=$(id);
+      if(n)new MutationObserver(schedule).observe(n,{childList:true,characterData:true,subtree:true});
     }
-    for(const id of ['officeSelect','destination','zipSelect'])$(id)?.addEventListener('change',schedule);
+    for(const id of ['officeSelect','destination','zipSelect'])
+      $(id)?.addEventListener('change',schedule);
     $('destination')?.addEventListener('input',schedule);
-    render();loadRegionalData();
+    render();loadRegionSnapshot();
+    window.setTimeout(schedule,12500);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});
   else init();
