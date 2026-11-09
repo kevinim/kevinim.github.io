@@ -137,8 +137,8 @@
       "teaCampusRecords": 23
     },
     "official-parent-route-linked-but-campus-gis-not-ingested": {
-      "districts": 22,
-      "teaCampusRecords": 751
+      "districts": 21,
+      "teaCampusRecords": 514
     },
     "official-parent-lookup-not-yet-verified": {
       "districts": 79,
@@ -159,6 +159,10 @@
     "choice-not-address-zoning": {
       "districts": 1,
       "teaCampusRecords": 66
+    },
+    "campus-polygon-evidence-unreviewed": {
+      "districts": 1,
+      "teaCampusRecords": 237
     }
   },
   "priorityQueue": [
@@ -1124,11 +1128,11 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.dallasisd.org/departments/demographic-studies/find-your-school/schoolsite-locator-interactive-map",
-        "yearCaution": "공식 SchoolSite Locator로 주소·학년별 학교를 확인하세요. 최종 배정은 PowerSchool 주소대장과 학교 등록담당자에게 확인하세요. 선택형 학교는 별도 신청입니다.",
+        "yearCaution": "교육청이 공개한 초·중·고 GIS 도형은 2026년 7월에 갱신되었으나 2026–27 개별 배정 학년도와 Finder의 독립 대조는 완료되지 않았습니다. 지도는 후보 참고용이며 최종 지정학교는 SchoolSite Locator 및 PowerSchool 주소대장·등록 담당자에게 확인해야 합니다. 선택형·Magnet은 별도 신청입니다.",
         "registryKey": "057905"
       },
       "geometry": {
-        "status": "no-dashboard-school-polygons-configured",
+        "status": "configured-but-no-reviewed-reference",
         "referenceLoadedMinimum": null,
         "referenceMatchedMinimum": null,
         "matchedLoadedPercent": null,
@@ -1136,7 +1140,7 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "missingReason": "campus-polygon-evidence-unreviewed",
       "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
