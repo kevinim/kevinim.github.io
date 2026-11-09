@@ -60,3 +60,17 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/home-map-qa-tmp/node_modules
         run: node scripts/test-home-assignment-map-browser.cjs
+  live-public-source:
+    name: Public-facility official Finder vs GIS spot check (not residential proof)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # pinned
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # pinned
+        with:
+          node-version: '24'
+      - name: Cross-check four published public facility samples against Frisco/Prosper sources
+        run: |
+          node scripts/check-public-address-finders-live.mjs
