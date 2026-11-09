@@ -55,3 +55,15 @@ test('main dark panel, body and primary text have readable WCAG AA contrast',()=
  const buttonRatio=(Math.max(buttonBack,buttonInk)+0.05)/(Math.min(buttonBack,buttonInk)+0.05);
  assert.ok(buttonRatio>=4.5,'Theme button text contrast must be AA');
 });
+
+test('dark palette has deeper backgrounds and explicit backgrounds for previously invisible buttons',()=>{
+ for(const selector of ['.btn.secondary','.crime-seg button','.mapquickbtn','.hazard-chip',
+  '.extra-action','.seg button:not(.active)']){
+   assert.ok(css.includes('html[data-theme="dark"] '+selector),
+     'Missing explicit dark button style for '+selector);
+ }
+ assert.match(css,/html\[data-theme="dark"\] body\{background:#0b111b/);
+ assert.match(css,/html\[data-theme="dark"\] \.hazard-chip\.ifld\[aria-pressed="true"\]/);
+ assert.match(css,/html\[data-theme="dark"\] \.hazard-chip\.wfir\[aria-pressed="true"\]/);
+ assert.doesNotMatch(css,/filter:\s*invert/);
+});
