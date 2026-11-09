@@ -12,6 +12,8 @@ const TRUSTED_OFFICIAL_HOSTS = Object.freeze([
   'www.lisd.net', 'www.pisd.edu', 'www.cfbisd.edu',
   'earlycollege.cfbisd.edu', 'www.mckinneyisd.net',
   'portal.metrostudygis.com', 'txschools.gov',
+  'apps.myplanware.com', 'www.kellerisd.net', 'www.nisdtx.org',
+  'www.gcisd.net', 'www.southlakecarroll.edu', 'www.westlakeacademy.org',
 ]);
 
 const SPECIAL_CAMPUSES = Object.freeze([

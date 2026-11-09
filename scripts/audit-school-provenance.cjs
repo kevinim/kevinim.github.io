@@ -147,6 +147,21 @@ function auditSchoolProvenance(provenance, registry, { readLocal = null, supplem
   };
 }
 
+// A separate source inventory covers West DFW lookup-only districts. Keeping
+// this supplementary avoids rewriting the hash-pinned original provenance file.
+function readWestDfwSupplement(root) {
+  const audit = JSON.parse(fs.readFileSync(path.join(root,'data/west-dfw-zone-source-audit-2026.json'),'utf8'));
+  const ui = JSON.parse(fs.readFileSync(path.join(root,'data/west-dfw-districts-2026.json'),'utf8'));
+  const { validateManifest } = require('./audit-west-dfw-zone-sources.cjs');
+  validateManifest(audit, ui);
+  return audit.districts.map(d=>({
+    code:d.code,
+    status:'lookup-only',
+    geometryYear:d.verifiedPolygonAcademicYear||'unverified',
+    officialLookup:d.officialSource,
+  }));
+}
+
 function run() {
   const root = path.resolve(__dirname, '..');
   const provenance = JSON.parse(fs.readFileSync(path.join(root, 'school-data-provenance.json'), 'utf8'));
@@ -154,7 +169,7 @@ function run() {
   const mckinney = JSON.parse(fs.readFileSync(path.join(root, 'data/mckinney-2026-27-provenance.json'), 'utf8'));
   const report = auditSchoolProvenance(provenance, DISTRICT_REGISTRY, {
     readLocal: local => JSON.parse(fs.readFileSync(path.join(root, local), 'utf8')),
-    supplementary: [mckinney],
+    supplementary: [mckinney,...readWestDfwSupplement(root)],
   });
 
   if (report.summary) {
@@ -174,4 +189,4 @@ function run() {
 }
 
 if (require.main === module) run();
-module.exports = { auditSchoolProvenance, validHttps, safeLocalFile, KNOWN_UNTRACKED };
+module.exports = { auditSchoolProvenance, validHttps, safeLocalFile, KNOWN_UNTRACKED, readWestDfwSupplement };

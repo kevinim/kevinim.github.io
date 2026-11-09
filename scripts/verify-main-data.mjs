@@ -1269,7 +1269,7 @@ test('District registry is the single source of per-district capabilities',()=>{
  assert.equal(R.districtZoneDisplay('043907',{'043907':true}),'official','McKinney 2026-27 zones are not "past GIS"');
  assert.equal(R.districtZoneDisplay('LISD',{LISD:true}),'finder');
  assert.equal(R.districtZoneDisplay('AISD',{}),'historical');
- assert.ok(web.includes('<script src="./district-registry.js?v=1"></script>'));
+ assert.match(web, /<script src="\.\/district-registry\.js\?v=[1-9]\d*"><\/script>/);
 });
 test('City crime map: FBI NIBRS city rates on city limits, complete years only, never ZIP-smeared',()=>{
  const require=createRequire(import.meta.url);
