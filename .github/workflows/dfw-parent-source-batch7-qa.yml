@@ -1,0 +1,74 @@
+name: DFW remaining 22 parent source QA (Chico held)
+on:
+  push:
+    branches: [feature/dfw-parent-guidance-remaining22-20261109]
+  pull_request:
+    branches: [main]
+    paths:
+      - 'district-registry.js'
+      - 'data/dfw-parent-source-evidence-batch7-2026.json'
+      - 'data/dfw-school-coverage-matrix-2026.json'
+      - 'scripts/audit-school-provenance.cjs'
+      - 'tests/dfw-parent-guidance-batch7.test.cjs'
+      - '.github/workflows/dfw-parent-source-batch7-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-qa:
+    name: Source provenance, exact HTTPS, matrix and GIS NO-GO
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # pinned
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # pinned
+        with:
+          node-version: '24'
+      - name: Syntax and deterministic source matrix
+        run: |
+          node --check district-registry.js
+          node --check scripts/audit-school-provenance.cjs
+          node --check tests/dfw-parent-guidance-batch7.test.cjs
+          if ! node scripts/build-dfw-school-coverage-matrix.cjs --check; then
+            node scripts/build-dfw-school-coverage-matrix.cjs
+            git --no-pager diff -- data/dfw-school-coverage-matrix-2026.json | head -n 160
+            exit 1
+          fi
+      - name: Run all accumulated guidance and security tests
+        run: |
+          node --test tests/dfw-parent-guidance-batch7.test.cjs tests/dfw-parent-guidance-batch6.test.cjs tests/dfw-parent-guidance-batch5.test.cjs tests/dfw-parent-guidance-batch4.test.cjs tests/dfw-parent-guidance-batch3.test.cjs tests/dfw-parent-guidance-next12.test.cjs tests/dfw-school-coverage-matrix.test.cjs tests/audit-school-provenance.test.cjs tests/audit-gis-upload-links.test.cjs tests/dfw-neighbor-finders.test.cjs tests/school-zone-ui.test.cjs
+  browser:
+    name: Desktop/mobile P0 Chico and official link regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # pinned
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # pinned
+        with:
+          node-version: '24'
+      - name: Install isolated Chromium
+        run: |
+          mkdir -p dfw-coverage-browser-tmp
+          cd dfw-coverage-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve branch snapshot
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/dfw-batch7.log 2>&1 &
+          sleep 2
+      - name: Run mobile and desktop browser assertions
+        env:
+          NODE_PATH: ${{ github.workspace }}/dfw-coverage-browser-tmp/node_modules
+        run: node scripts/test-dfw-school-coverage-browser.cjs
+      - name: Save browser screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # pinned
+        with:
+          name: dfw-batch7-school-browser
+          path: artifacts/dfw-school-coverage-ui/
+          if-no-files-found: warn
