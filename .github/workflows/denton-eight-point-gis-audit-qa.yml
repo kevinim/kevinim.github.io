@@ -23,4 +23,5 @@ jobs:
           node-version: '24'
       - run: |
           node --check tests/denton-eight-point-and-gis-disposition.test.cjs
-          node --test tests/denton-eight-point-and-gis-disposition.test.cjs tests/denton-campus-point-quality.test.cjs tests/denton-official-zone-references.test.cjs
+          node --check scripts/validate-denton-2026-zone-import.cjs
+          node --test tests/denton-eight-point-and-gis-disposition.test.cjs tests/denton-campus-point-quality.test.cjs tests/denton-official-zone-references.test.cjs tests/denton-zone-import-gate.test.cjs
