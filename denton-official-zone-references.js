@@ -43,7 +43,37 @@
   }
   note.appendChild(group);return true;
  }
- const api=Object.freeze({DISTRICT,YEAR,SOURCE,LOCATOR,REZONE,ALL,ROWS,validPdf,lookup,append});
+ function mount(doc){
+  const d=doc||(typeof document!=='undefined'?document:null);
+  const choice=d?.getElementById('dentonPdfCampusSelect');
+  const link=d?.getElementById('dentonPdfCampusLink');
+  if(!choice||!link||choice.dataset.ready==='true')return false;
+  choice.dataset.ready='true';
+  choice.replaceChildren();
+  const first=d.createElement('option');first.value='';first.textContent='학교를 선택하세요 (초등 26 · 중등 9 · 고등 4)';choice.appendChild(first);
+  for(const [level,label] of [['elementary','초등학교'],['middle','중학교'],['high','고등학교']]){
+   const group=d.createElement('optgroup');group.label=label;
+   for(const r of ROWS.filter(x=>x.level===level)){
+    const option=d.createElement('option');option.value=r.id;option.textContent=r.name;
+    group.appendChild(option);
+   }
+   choice.appendChild(group);
+  }
+  choice.addEventListener('change',()=>{
+   const r=index.get(choice.value);const item=r?lookup({district:DISTRICT,type:r.level},r.id):null;
+   if(!item){link.hidden=true;link.removeAttribute('href');link.textContent='';return}
+   link.href=item.url;link.hidden=false;
+   link.textContent='Denton '+YEAR+' · '+r.name+' 공식 경계 PDF 열기';
+  });
+  link.hidden=true;link.removeAttribute('href');return true;
+ }
+ const api=Object.freeze({DISTRICT,YEAR,SOURCE,LOCATOR,REZONE,ALL,ROWS,validPdf,lookup,append,mount});
  if(typeof module==='object'&&module.exports)module.exports=api;
- if(root)root.DentonZonePdfReference=api;
+ if(root){
+  root.DentonZonePdfReference=api;
+  if(typeof document!=='undefined'){
+   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>mount(document),{once:true});
+   else mount(document);
+  }
+ }
 })(typeof window!=='undefined'?window:null);
