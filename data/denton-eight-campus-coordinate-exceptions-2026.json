@@ -155,7 +155,14 @@
       "priorIndependentTEA2024CoordinateCorroborated": false,
       "currentLocationCoordinateApproved": false,
       "currentAttendanceZoneApproved": false,
-      "notes": "School published under Hill Elementary; school-specific 2026–27 PDF TEA campus ID 061901130. No second independent coordinate available in prior probe"
+      "notes": "School published under Hill Elementary; school-specific 2026–27 PDF TEA campus ID 061901130. No second independent coordinate available in prior probe",
+      "currentYearOfficialPdfAddressDiscrepancy": {
+        "officialZonePdfUrl": "https://resources.finalsite.net/images/v1777569439/dentonisdorg/lqtay6k6ym56kuyqgiwo/HillES-ZoneMap_26-27.pdf",
+        "pdfLegendZip": "76227",
+        "officialLiveDirectoryZip": "75068",
+        "issue": "2026-27 district zone PDF legend and live district campus directory disagree on ZIP for the same street address",
+        "status": "unresolved-no-coordinate-certification"
+      }
     },
     {
       "id": "061901131",
@@ -175,7 +182,15 @@
       "priorIndependentTEA2024CoordinateCorroborated": false,
       "currentLocationCoordinateApproved": false,
       "currentAttendanceZoneApproved": false,
-      "notes": "School published under Martinez Elementary; school-specific 2026–27 PDF TEA campus ID 061901131. No second independent coordinate available in prior probe"
+      "notes": "School published under Martinez Elementary; school-specific 2026–27 PDF TEA campus ID 061901131. No second independent coordinate available in prior probe",
+      "currentYearOfficialPdfAddressDiscrepancy": {
+        "officialZonePdfUrl": "https://resources.finalsite.net/images/v1777569439/dentonisdorg/duy4xl0ijgbdjkequhea/MartinezES-ZoneMap_26-27.pdf",
+        "pdfLegendZip": "75068",
+        "officialLiveDirectoryZip": "76227",
+        "issue": "2026-27 district zone PDF legend and live district campus directory disagree on ZIP for the same street address",
+        "status": "unresolved-no-coordinate-certification"
+      }
     }
-  ]
+  ],
+  "currentYearPdfVsLiveDirectoryZipConflicts": 2
 }
