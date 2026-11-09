@@ -67,22 +67,44 @@
         }
       ],
       "requiredForActivation": [
-        "three campus-specific layer URLs checked against district publisher",
-        "2026-27 academic-year verified for each layer",
-        "map-year drift and 2024-25/2025-26 school rezone exceptions reconciled",
-        "TEA campus IDs and school names joined",
-        "independent official Finder public-address holdouts",
-        "public terms for derived data",
-        "390/1366px live school-click map QA"
+        "official school-year effective notice or equivalent current Finder authoritative layer update confirmation per grade",
+        "independent real-residence grade-level school matches in usable official Finder browser",
+        "explicit data re-use permission for independent hosted polygon redistribution, or link/embed official publisher only",
+        "cross-project integration with Agent07 release gate"
       ],
-      "rejectionReason": "Original district-linked WebMaps expose 18 elementary (2024–25 layer title), 7 middle (year unknown) and 3 historical high school polygons (WebMap modified 2020-08-28) in EPSG:3857 embedded FeatureCollection. All 28 normalized to WGS84 in CI-only quarantine and matched to explicit 2026 preliminary TEA campus-name references. This is NOT 2026–27 legal school assignment. Official Finder independent address holdouts, source reuse, campus year and rights are still open; no dashboard integration or production approval.",
+      "rejectionReason": "Operational 2026 Irving ISD School Locator official link and source map are confirmed: its map uses exactly 18 2024-25-title EL, 7 2025-26-title MS, and 3 high embedded attendance boundaries (exact shapes equal 2020 map). De Zavala 057912048 is an application/lottery STEM Academy, not an eighth automatic attendance zone. 3 public school campus coordinates geocode to their own official Finder-source elementary polygons, but no private residential address or official browser search result independently verified. Direct official Finder link enabled in Draft only; no republished polygon data or automatic 2026-27 district GIS activated.",
       "liveValidatedFeatureCountTotal": 28,
       "liveValidatedSourceLayers": 3,
       "liveValidatedSchoolYearCurrent": false,
       "explicitPreliminaryTeaDirectoryMappings": 28,
-      "missingMiddleRegularAssignmentInLayer": [
-        "Lorenzo de Zavala / 057912048 — special STEM academy / source does not supply ordinary middle polygon"
-      ]
+      "missingMiddleRegularAssignmentInLayer": [],
+      "officialLocator": {
+        "districtPage": "https://www.irvingisd.net/departments-services/registration/find-my-assigned-school",
+        "directArcGISApp": "https://iisd1.maps.arcgis.com/apps/instant/lookup/index.html?appid=f27bba7ee02141c58c8c9375431effa2",
+        "arcgisAppId": "f27bba7ee02141c58c8c9375431effa2",
+        "arcgisAppLastModifiedUTC": "2026-10-06T00:00:00Z",
+        "arcgisLiveWebMapId": "8004c79f6dd144b6996e7240c5182507",
+        "arcgisLiveWebMapLastModifiedUTC": "2026-08-20T20:28:42.000Z",
+        "sameSourceElementary": "New_EL_Zones_24_25/FeatureServer/4",
+        "sameSourceMiddle": "ReBound_MS_Zones_v5/FeatureServer/5",
+        "liveLocatorEmbeddedHighPolygons": 3,
+        "confirmedHighGeometrySameAsLegacyMap": true,
+        "officialBrowserAddressSearchE2EPassed": false,
+        "yearOfEachBoundaryOfficiallyCertified": false,
+        "liveGISRepublishingPermitted": false,
+        "techCheck": "Read-only official item + app configuration + source ID chain, no home information"
+      },
+      "choiceCampuses": [
+        {
+          "teaCampusId": "057912048",
+          "campus": "de Zavala Middle School STEM Academy",
+          "ordinaryAttendanceZoneRequired": false,
+          "applicationRequiredForNewSixthGraders2026_27": true,
+          "grandfatheredSeventhEighthExisting": true,
+          "officialSource": "https://www.irvingisd.net/families/school-choice/faq"
+        }
+      ],
+      "livePublicCampusCoordinateChecksExpected": 3
     },
     {
       "districtCode": "220905",
@@ -142,5 +164,8 @@
   "productionAllowed": false,
   "newStagedUnreleasedSchoolZonePolygonFeatures": 28,
   "newStagedUnreleasedDistricts": 1,
-  "newPreliminaryTeaCampusReferenceMappings": 28
+  "newPreliminaryTeaCampusReferenceMappings": 28,
+  "newOfficialFinderOperationalSourceChainsVerified": 1,
+  "livePublisherReferencedHistoricalPolygonFeatures": 28,
+  "currentYearGISReleaseApproved": false
 }
