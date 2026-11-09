@@ -175,7 +175,7 @@ const DISTRICT_REGISTRY={
  '184908':{en:"Peaster",ko:"피스터",zoneKey:null,currency:null,address:null,campusIdMatch:false,
   lookupKind:"official-inquiry",official:"https://www.peaster.net/parents-students",officialNote:"Peaster ISD 공식 학부모 페이지는 ASCENDER 및 신규 Pre-K·Kindergarten 등록과 전학 안내로 연결됩니다. Pre-K·K 등록 안내를 모든 학년 배정으로 해석하지 말고 1–12학년 주소별 학교는 학군에 확인하세요.",label:{}},
  '061903':{en:"Pilot Point",ko:"파일럿포인트",zoneKey:null,currency:null,address:null,campusIdMatch:false,
-  lookupKind:"official-inquiry",official:"https://www.pilotpointisd.com/",officialNote:"Pilot Point ISD 공식 사이트의 Getting Started → Registration Information에서 등록 절차를 확인하세요. 2026–27 학군 밖 전학은 별도이며 공개 주소별 학교 검색기는 확인되지 않았습니다.",label:{}},
+  lookupKind:"official-inquiry",official:"https://www.pilotpointisd.com/265282_3",officialNote:"Pilot Point ISD 공식 사이트의 Getting Started → Registration Information에서 등록 절차를 확인하세요. 2026–27 학군 밖 전학은 별도이며 공개 주소별 학교 검색기는 확인되지 않았습니다.",label:{}},
  '249903':{en:"Bridgeport",ko:"브리지포트",zoneKey:null,currency:null,address:null,campusIdMatch:false,
   lookupKind:"official-inquiry",official:"https://www.bridgeportisd.net/enrollment",officialNote:"Bridgeport ISD 2026–27 공식 등록 안내입니다. 학군 밖 학생은 별도 전학 신청이 필요합니다. 학군 외곽 지도는 학교별 출석구역 폴리곤이 아니므로 학년별 지정학교는 Registrar에게 확인하세요.",label:{}},
  '116903':{en:"Commerce",ko:"커머스",zoneKey:null,currency:null,address:null,campusIdMatch:false,
