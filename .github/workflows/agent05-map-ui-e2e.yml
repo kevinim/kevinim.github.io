@@ -1,0 +1,92 @@
+name: Agent 05 map UI and browser regression
+on:
+  push:
+    branches: [qa/agent05-map-ui-e2e-regression-20261109]
+  pull_request:
+    branches:
+      - feature/address-selected-auto-school-map-20261109
+    paths:
+      - dashboard-main.js
+      - index.html
+      - features/map-control-contrast.css
+      - scripts/test-agent05-map-ui-browser.cjs
+      - .github/workflows/agent05-map-ui-e2e.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  static-safety:
+    name: Map syntax, CSP and source guardrails
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Syntax and no-GIS-mutation guard
+        run: |
+          node --check dashboard-main.js
+          node --check home-lookup-v2.js
+          node --check scripts/test-agent05-map-ui-browser.cjs
+          node --test tests/home-assignment-map.test.cjs tests/school-zone-ui.test.cjs tests/theme-collapse.test.cjs
+          git diff --name-only 127b6200b6229abc00a431ba05fcc82a694050d5 HEAD | tee /tmp/agent05-changes.txt
+          if grep -E '(^data/|\\.geojson$|schools\\.json$|ratings2026\\.json$|district-registry\\.js$)' /tmp/agent05-changes.txt; then
+            echo 'ERROR: source GIS or school data was modified'; exit 1
+          fi
+      - name: Verify default dark theme and fixed-size map viewport policy
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),assert=require('assert');
+          const js=fs.readFileSync('dashboard-main.js','utf8');
+          const html=fs.readFileSync('index.html','utf8');
+          const theme=fs.readFileSync('features/theme-toggle.js','utf8');
+          assert.match(js,/zoomAnimation:false/);
+          assert.match(js,/function selectZip\\(z,fly=true\\)/);
+          assert.match(js,/syncMapSize\\(\\)/);
+          assert.match(theme,/value==='light'\\?'light':'dark'/);
+          assert.match(html,/features\\/map-control-contrast\\.css\\?v=1/);
+          assert.match(html,/script-src-attr 'none'/);
+          console.log('PASS viewport, dark default, scoped CSS, CSP');
+          NODE
+  browser-e2e:
+    name: Actual Chromium 390px and 1366px + screenshots
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Browser dependencies (temporary, no repo lockfile)
+        run: |
+          mkdir -p agent05-playwright-tmp
+          cd agent05-playwright-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve unchanged PR 162 baseline and Agent 05 commit separately
+        run: |
+          git worktree add --detach /tmp/agent05-before 127b6200b6229abc00a431ba05fcc82a694050d5
+          python3 -m http.server 8766 --bind 127.0.0.1 --directory /tmp/agent05-before >/tmp/agent05-old.log 2>&1 &
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory . >/tmp/agent05-new.log 2>&1 &
+          sleep 2
+      - name: Run real page interactions and computed WCAG contrast
+        env:
+          NODE_PATH: ${{ github.workspace }}/agent05-playwright-tmp/node_modules
+          DASHBOARD_BASE_URL: http://127.0.0.1:8765/
+          AGENT05_BASELINE_URL: http://127.0.0.1:8766/
+        run: node scripts/test-agent05-map-ui-browser.cjs
+      - name: Upload before/after mobile and desktop screenshots plus JSON
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: agent05-map-ui-before-after
+          path: artifacts/agent05-map-ui/
+          if-no-files-found: warn
+          retention-days: 7
