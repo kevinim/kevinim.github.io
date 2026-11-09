@@ -148,6 +148,23 @@ const DISTRICT_REGISTRY={
   lookupKind:"official-inquiry",official:"https://www.ferrisisd.org/departments/student-support-services/enrollment-registration",officialNote:"2026–27 공식 Enrollment/Registration 안내입니다. 학군 내 거주증명과 학년별 등록을 확인하되, 이 등록 페이지가 주소별 학교 검색기는 아닙니다. 일반 지정학교와 학군 밖 전학은 별도 절차이므로 등록 담당자에게 확인하세요.",label:{}},
  '043919':{en:"Lovejoy",ko:"러브조이",zoneKey:null,currency:null,address:null,campusIdMatch:false,
   lookupKind:"official-inquiry",official:"https://www.lovejoyisd.net/page/quick-links",officialNote:"Lovejoy ISD의 공식 Quick Links로 이동하세요. 2026–27 신규 등록 안내에서 연결한 Enrollment for New Students 직접 주소는 점검 시 404였으므로, 주소·학년별 배정과 등록 경로는 학군에 직접 문의해야 합니다. Lovejoy Scholars 별도 선발과 일반 거주지 배정을 혼동하지 마세요. 현행 학교별 경계와 자동 주소검색은 검증되지 않았습니다.",label:{}},
+ // Batch 5: official parent routes only; no address assignment or verified campus polygons.
+ '061908':{en:"Sanger",ko:"생어",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"official-inquiry",official:"https://www.sangerisd.net/studentsparents/enrollment/new-student-registration",officialNote:"2026–27 공식 신규 등록 경로입니다. 학군에 공개 주소별 지정학교 자동 검색기가 확인된 것은 아닙니다. 초등·중등·고등학교와 학년별 배정은 학군 등록 담당자에게 확인하세요.",label:{}},
+ '129904':{en:"Kemp",ko:"켐프",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"official-inquiry",official:"https://www.kempisd.org/132520_3",officialNote:"신규학생 공식 ASCENDER 등록 절차입니다. 거주지 제출 기능은 공개 학교 배정 Finder가 아닙니다. 학년별 캠퍼스와 실거주지 배정은 학군 등록 담당자에게 문의하세요.",label:{}},
+ '129905':{en:"Mabank",ko:"메이뱅크",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"official-inquiry",official:"https://www.mabankisd.net/page/parentstudent.home",officialNote:"2026–27 공식 Enrollment 안내입니다. 등록 페이지는 공개 주소별 학교 검색기가 아닙니다. 캠퍼스별 학년 및 거주지 배정은 학군 Registrar에 직접 확인하세요.",label:{}},
+ '061912':{en:"Lake Dallas",ko:"레이크댈러스",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"official-map",official:"https://www.ldisd.net/about-us/about-the-district/attendance-zones",officialNote:"공식 Attendance Zones는 초등학교 세 곳의 구역 지도와 중·고등학교 학년별 단일 캠퍼스 정보를 제공합니다. 도면 적용 학년도와 개별 주소 배정은 학군에서 확인하세요. 이는 인증된 최신 GIS 폴리곤이 아닙니다.",label:{}},
+ '126901':{en:"Alvarado",ko:"앨버라도",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"official-inquiry",official:"https://www.alvaradoisd.net/about/registration",officialNote:"2026–27 공식 Skyward 등록 안내입니다. 등록은 공개 주소별 배정 검색이 아닙니다. 캠퍼스별 출석구역 및 전학 예외는 구분되므로 학년과 주소별 학교는 학군 Registrar에 확인하세요.",label:{}},
+ '126911':{en:"Godley",ko:"갓리",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"official-map",official:"https://www.godleyisd.net/resources/attendance-zones",officialNote:"공식 Attendance Zones에서 PK–5 초등학교는 세 구역이며 6학년·7–8학년·9–12학년은 각각 지정 캠퍼스로 안내됩니다. 초등 지도에는 2022–23 시작 기준이 표시되므로 2026–27 최신 경계와 주소 배정을 별도 확인하세요.",label:{}},
+ '061905':{en:"Krum",ko:"크럼",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"official-inquiry",official:"https://www.krumisd.net/students-families/registration/enrollment",officialNote:"공식 Enrollment 페이지에서 2026–27 학군 내/외 전학과 신규 등록을 안내합니다. 공개 주소검색기 및 현행 학교별 경계는 검증되지 않았으며, 주소·학년에 따른 학교는 해당 Registrar에 확인하세요.",label:{}},
+ '220914':{en:"Kennedale",ko:"케너데일",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"official-inquiry",official:"https://www.kennedaleisd.net/registration/2026-2027/new-student-registration",officialNote:"2026–27 공식 신규 등록 절차입니다. 학교가 신청 및 거주지를 검토하는 등록 절차는 공개 주소검색기가 아닙니다. 주소별 지정학교나 전학 예외는 해당 학교에 직접 확인하세요.",label:{}},
  CFB:{en:'CFB',ko:'캐럴턴–파머스브랜치',zoneKey:null,currency:null,address:null,campusIdMatch:false,
   official:'https://www.cfbisd.edu/students/school-maps-locator-system',label:{}}
 };

@@ -76,10 +76,10 @@ test('old city GIS, printable maps and current official Finder are not equivalen
 test('district source quality update cannot alter district route totals or endorse missing boundary as 0%',()=>{
  const s=matrix.summary;
  assert.equal(s.publicISDs,108);
- assert.equal(s.publicISDsWithRegisteredParentRoute,65);
- assert.equal(s.publicISDsMissingRegisteredParentRoute,43);
- assert.equal(s.publicISDCampusRowsWithRegisteredParentRoute,1784);
- assert.equal(s.publicISDCampusRowsWithUnverifiedParentRoute,157);
+ assert.equal(s.publicISDsWithRegisteredParentRoute,73);
+ assert.equal(s.publicISDsMissingRegisteredParentRoute,35);
+ assert.equal(s.publicISDCampusRowsWithRegisteredParentRoute,1827);
+ assert.equal(s.publicISDCampusRowsWithUnverifiedParentRoute,114);
  assert.equal(s.campusPolygonCoverageAllDFWPercent,null);
  assert.equal(s.exactAddressAssignmentCoveragePercent,null);
 });
