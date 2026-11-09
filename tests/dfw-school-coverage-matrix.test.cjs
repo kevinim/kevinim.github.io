@@ -26,11 +26,11 @@ test('full 11-county source proxy, separate public ISDs and other TEA LEAs',()=>
  assert.equal(s.teaDistrictCodes,152);
  assert.equal(s.publicISDs,108);
  assert.equal(s.otherLEAs,44);
- assert.equal(s.publicISDsWithRegisteredParentRoute,29);
- assert.equal(s.publicISDsMissingRegisteredParentRoute,79);
- assert.equal(s.registeredParentRouteRatePublicISDPercent,26.9);
- assert.equal(s.publicISDCampusRowsWithUnverifiedParentRoute,834);
- assert.equal(s.publicISDCampusRowsWithRegisteredParentRoute,1107);
+ assert.equal(s.publicISDsWithRegisteredParentRoute,37);
+ assert.equal(s.publicISDsMissingRegisteredParentRoute,71);
+ assert.equal(s.registeredParentRouteRatePublicISDPercent,34.3);
+ assert.equal(s.publicISDCampusRowsWithUnverifiedParentRoute,435);
+ assert.equal(s.publicISDCampusRowsWithRegisteredParentRoute,1506);
  assert.equal(s.otherLEACampusRows,241);
  assert.equal(s.publicISDCampusRows+s.otherLEACampusRows,s.sourceCampusRows);
  assert.equal(committed.districts.length,152);
@@ -43,7 +43,7 @@ test('full 11-county source proxy, separate public ISDs and other TEA LEAs',()=>
 
 test('PRIORITY P0 targets verified missing parent lookup route across whole DFW',()=>{
  assert.deepEqual(committed.priorityQueue.slice(0,7),
-  ['220905','220901','220908','057910','220918','220902','220912']);
+  ['070912','057907','070908','199902','184907','220915','126903']);
  for(const code of committed.priorityQueue.slice(0,7)){
   const x=byCode(code);
   assert.equal(x.priority,'P0');
@@ -54,6 +54,38 @@ test('PRIORITY P0 targets verified missing parent lookup route across whole DFW'
  for(const x of committed.districts.filter(x=>x.category==='public-isd')){
   assert.equal(x.priority==='P0',x.parentGuidance.status==='not-verified',x.name);
  }
+});
+
+
+test('eight verified official parent entry sources are registered without inventing GIS or address assignment',()=>{
+ const codes=['220905','220901','220908','057910','220918','220902','220912','126902'];
+ const {DISTRICT_REGISTRY}=require('../district-registry.js');
+ const {official}=require('../trusted-link-policy.js');
+ let campuses=0;
+ for(const code of codes){
+  const record=byCode(code),entry=DISTRICT_REGISTRY[code];
+  assert.ok(record&&entry,'missing source '+code);
+  assert.equal(record.category,'public-isd');
+  assert.equal(entry.zoneKey,null);
+  assert.equal(entry.address,null);
+  assert.equal(entry.lookupKind,'finder-guidance');
+  assert.match(entry.officialNote,/주소|School|학군/);
+  assert.equal(official(entry.official),entry.official);
+  assert.equal(record.parentGuidance.registryKey,code);
+  assert.equal(record.parentGuidance.officialUrl,entry.official);
+  assert.equal(record.parentGuidance.status,'registered-official-source');
+  assert.equal(record.parentGuidance.lookupType,'finder-guidance');
+  assert.equal(record.parentGuidance.yearCaution,entry.officialNote);
+  assert.equal(record.priority,'P1');
+  assert.equal(record.geometry.status,'no-dashboard-school-polygons-configured');
+  assert.equal(record.missingReason,'official-parent-route-linked-but-campus-gis-not-ingested');
+  assert.equal(record.geometry.matchedLoadedPercent,null);
+  campuses+=record.teaCampusRecords;
+ }
+ assert.equal(campuses,399);
+ assert.deepEqual(committed.priorityQueue.slice(0,3),['070912','057907','070908']);
+ assert.equal(committed.summary.registeredParentRouteRatePublicISDPercent,34.3);
+ assert.equal(official('https://untrusted.example.invalid/locator'),null);
 });
 
 test('canonical nine-digit TEA campus ID reconciles alias ISD codes to actual districts',()=>{
