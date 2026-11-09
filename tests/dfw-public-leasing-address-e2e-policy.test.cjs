@@ -39,7 +39,8 @@ test('real UI test verifies important lifecycle and fail-closed safeguards',()=>
  for(const marker of ['#homeAddress','#homeSuggestions','#homeSearch','#homeClear',
   'getLayers().length','renderedPolygonFeatures','state.selectedSchool',
   'page.screenshot','inFlightCancelSafe','NO_PUBLIC_LEASING_OFFICE_EXACT_CANDIDATE',
-  'unverified provenance must never paint polygons'])
+  'unverified provenance must never paint polygons',
+  'ESRI_GEOCODER_PUBLIC_STREET_NOT_EQUAL','ESRI_GEOCODER_POSTAL_MISMATCH'])
   assert.ok(e2e.includes(marker),'missing QA assertion '+marker);
  assert.ok(!/route\.fulfill\(|page\.route\(/.test(e2e),'network geocode/GIS must be real');
 });
