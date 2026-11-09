@@ -39,7 +39,7 @@ test('external script checksum removal blocks the guard', () => {
 
 test('external script protocol downgrade blocks the guard', () => {
   const files = sources();
-  files['reviewed.html'] = files['reviewed.html'].replace('https://unpkg.com/leaflet@', 'http://unpkg.com/leaflet@');
+  files['reviewed.html'] = files['reviewed.html'].replace('<script src="https://unpkg.com/leaflet@', '<script src="http://unpkg.com/leaflet@');
   assert.ok(auditBrowserSurface(files).errors.some(x => x.includes('insecure external script')));
 });
 
