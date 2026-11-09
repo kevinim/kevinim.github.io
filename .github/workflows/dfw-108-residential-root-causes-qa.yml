@@ -71,3 +71,38 @@ jobs:
           path: artifacts/cfb-listed-house-finder/
           retention-days: 5
           if-no-files-found: warn
+
+  allen-listed-house-real-home-map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Confirm browser script and source contract
+        run: |
+          node --check scripts/test-allen-public-house-home-to-school-browser.cjs
+          node --test tests/audit-allen-listed-residence-street-ranges.test.cjs
+      - name: Prepare isolated open-source Chromium
+        run: |
+          mkdir -p allen-single-home-browser
+          cd allen-single-home-browser
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Real Esri geocode, school list click and historical-vintage warning
+        env:
+          NODE_PATH: ${{ github.workspace }}/allen-single-home-browser/node_modules
+        run: node scripts/test-allen-public-house-home-to-school-browser.cjs
+      - name: Archive no-occupant map QA, unknown-year NO-GO
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: allen-public-single-house-real-browser
+          path: artifacts/allen-public-house-browser/
+          retention-days: 5
+          if-no-files-found: warn
