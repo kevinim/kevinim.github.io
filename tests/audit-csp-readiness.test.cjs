@@ -3,6 +3,7 @@ const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
+const {assertVersionedMainBootstrap}=require('../scripts/dashboard-bootstrap-contract.cjs');
 const {extractCspMeta,parseDirectives,analyzeCspPage,checkCurrentRepo}=
  require('../scripts/audit-csp-readiness.cjs');
 
@@ -31,7 +32,7 @@ test('both entrypoints use external scripts, with no inline executable hash poli
  }
  const reviewed=fs.readFileSync(path.resolve(__dirname,'../reviewed.html'),'utf8');
  const index=fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8');
- assert.ok(index.includes('<script src="./dashboard-main.js?v=3"></script>'));
+ assert.equal(assertVersionedMainBootstrap(index).version,5,'canonical unique same-origin bootstrap v5 is required');
  assert.equal(checkCurrentRepo().find(x=>x.name==='index.html').summary.inlineHashes,0);
  assert.ok(reviewed.includes('src="./features/reviewed-bootstrap.js?v=1"'));
  assert.ok(reviewed.includes('src="./features/geojson-upload-guard.js?v=1"'));
