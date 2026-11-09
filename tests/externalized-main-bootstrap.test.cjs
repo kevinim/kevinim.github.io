@@ -54,6 +54,9 @@ function expectedPublicHtml(source){
   '<script src="./irving-official-spatial.js?v=1"></script><script src="./dallas-attendance-live.js?v=1"></script><script src="./home-lookup-v2.js?v=15"></script>');
  s=replaceOnce(s,'<label class="check"><input type="checkbox" id="referenceBoundaryOverlay"> 과거 GIS 참고 경계선 표시</label></div>',
   '<label class="check"><input type="checkbox" id="referenceBoundaryOverlay"> 과거 GIS 참고 경계선 표시</label></div><p class="reference-gis-global-warning" role="note"><strong>지도 경계는 학교 배정 확정 정보가 아닙니다.</strong> 연도가 오래되거나 현행성이 확인되지 않은 GIS는 참고용입니다. 입학·배정은 반드시 해당 학군의 공식 주소 검색기에서 확인하세요.</p>');
+ s=replaceOnce(s,"<h2>학교 배정구역 (자동 연결)</h2>\r\n","<h2>학교 배정구역 (자동 연결)</h2>\r\n<details id=\"dentonPdfZoneDirectory\" class=\"small-note\">\n <summary><strong>Denton ISD 2026–27 공식 학교별 PDF 경계 지도 39개</strong> · GIS와 배정 미인증</summary>\n <p class=\"source\" role=\"note\"><strong>주의 · 공식 PDF 참고 지도입니다.</strong> 학교별 원본 PDF는 공개돼 있으나 이 대시보드에 현행 학교별 GIS 도형이 연결됐다는 뜻이 아닙니다. 실제 거주지의 배정학교와 2026–27 예외는 공식 School Locator로 확인해야 합니다.</p>\n <label for=\"dentonPdfCampusSelect\">초등 26 · 중등 9 · 고등 4 학교별 공식 지도 선택</label>\n <select id=\"dentonPdfCampusSelect\" aria-label=\"Denton 학교별 공식 2026–27 PDF 지도\"></select>\n <a class=\"cardlink\" id=\"dentonPdfCampusLink\" hidden target=\"_blank\" rel=\"noopener noreferrer\"></a>\n <a class=\"cardlink\" href=\"https://webquery-2-denton-tx.etstack.io/\" target=\"_blank\" rel=\"noopener noreferrer\">Denton 공식 School Locator ↗</a>\n <a class=\"cardlink\" href=\"https://www.dentonisd.org/families/attendance-zones/attendance-boundary-modification-26-27\" target=\"_blank\" rel=\"noopener noreferrer\">2026–27 변경 안내 ↗</a>\n</details>\n");
+ s=replaceOnce(s,'<script src="./school-boundary-match.js?v=3"></script>',
+  '<script src="./school-boundary-match.js?v=3"></script>\n<script src="./denton-official-zone-references.js?v=1"></script>');
  return s;
 }
 function expectedPublicJs(source){
