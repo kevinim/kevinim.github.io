@@ -73,7 +73,40 @@ async function measure(page,width,base){
  assert.equal(markerCount.selectedPolys,true,'Southlake ZIP boundary must be loaded');
  assert.ok(markerCount.visible>=5,'at least five school markers should be visible in selected west ZIP viewport');
  assert.equal(markerCount.localWestPolygonLayers,0,'No unverified west attendance polygons can be displayed');
- return {width,...result,southlake:markerCount};
+ // Confirm real user school selection yields a direct official district search
+ // and the map-footnote explains the unsupported geometry. No home address given.
+ const officialSchoolClicks=await page.evaluate(async()=>{
+  const codes=['220919','220907','061911','220906'];
+  const checks=[];
+  for(const code of codes){
+   const sample=state.schools.find(s=>s.district===code&&
+     Array.isArray(s.ll)&&s.ll.length===2);
+   if(!sample){checks.push({code,found:false});continue;}
+   await schoolClicked(sample);
+   const official=window.WestSchoolOfficialFinder.lookup(code);
+   const mainLink=[...document.querySelectorAll('#detailContent a[href]')]
+      .find(a=>a.href===official.url);
+   const note=document.getElementById('zoneNotice');
+   const noteLink=note.querySelector('.west-dfw-direct-lookup');
+   checks.push({code,found:true,kind:official.kind,
+     mainLinkOk:!!mainLink,context:note.textContent,
+     linkOk:noteLink?.href===official.url,
+     relSafe:!!noteLink&&noteLink.rel.includes('noopener')&&noteLink.rel.includes('noreferrer'),
+     hasPolygon:zoneGroup.getLayers().length>0});
+  }
+  clearSchool();
+  return checks;
+ });
+ for(const x of officialSchoolClicks){
+  assert.equal(x.found,true,'No actual selectable school with location for '+x.code);
+  assert.equal(x.mainLinkOk,true,'School detail did not expose official finder for '+x.code);
+  assert.equal(x.linkOk,true,'Missing-polygon note did not link official finder for '+x.code);
+  assert.equal(x.relSafe,true,'External school search link needs safe new-tab rel '+x.code);
+  assert.equal(x.hasPolygon,false,'No unsupported West DFW polygon may appear for '+x.code);
+  assert.match(x.context,/지도에 연결되지 않았습니다|배정구역|공식/);
+ }
+ return {width,...result,southlake:markerCount,officialSchoolClicks:officialSchoolClicks.map(
+  ({code,kind,mainLinkOk,linkOk,relSafe,hasPolygon})=>({code,kind,mainLinkOk,linkOk,relSafe,hasPolygon}))};
 }
 (async()=>{
  fs.mkdirSync(path.dirname(OUT),{recursive:true});
