@@ -1,0 +1,67 @@
+name: Adjacent DFW district official parent school lookup coverage QA
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'district-registry.js'
+      - 'school-zone-ui.js'
+      - 'trusted-link-policy.js'
+      - 'index.html'
+      - 'data/dfw-neighbor-official-school-links-2026.json'
+      - 'tests/dfw-neighbor-finders.test.cjs'
+      - 'scripts/test-dfw-neighbor-finders-browser.cjs'
+      - '.github/workflows/dfw-neighbor-school-finders-qa.yml'
+  push:
+    branches: [feature/dfw-neighbor-school-finders-20261109]
+permissions:
+  contents: read
+jobs:
+  official-source-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate source provenance, district codes and 2026 school choice semantics
+        run: |
+          node --check district-registry.js
+          node --check school-zone-ui.js
+          node --check trusted-link-policy.js
+          node --check scripts/test-dfw-neighbor-finders-browser.cjs
+          node --test tests/dfw-neighbor-finders.test.cjs tests/school-zone-ui.test.cjs tests/trusted-outbound-links.test.cjs tests/strict-script-csp.test.cjs
+  school-click-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install isolated Chromium
+        run: |
+          mkdir -p dfw-school-finder-browser-tmp
+          cd dfw-school-finder-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve exact PR website snapshot
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/dfw-neighbor-school-finder.log 2>&1 &
+          sleep 2
+      - name: Check 18 nearby ISDs on actual school-detail and map panels at mobile/desktop sizes
+        env:
+          NODE_PATH: ${{ github.workspace }}/dfw-school-finder-browser-tmp/node_modules
+        run: node scripts/test-dfw-neighbor-finders-browser.cjs
+      - name: Archive school-only link coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: neighbor-dfw-official-school-finders
+          path: artifacts/neighbor-school-finders/
+          if-no-files-found: warn
