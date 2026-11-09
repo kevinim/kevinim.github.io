@@ -64,10 +64,11 @@ test('DOM anchor setter removes unapproved href and target',()=>{
  assert.equal(state.has('aria-disabled'),false);
 });
 test('all sensitive outbound browser sink paths consult validator before writing',()=>{
- const html=read('index.html'),home=read('home-lookup-v2.js');
+ const page=read('index.html'),html=page+'\n'+read('dashboard-main.js'),home=read('home-lookup-v2.js');
  const tag='<script src="./trusted-link-policy.js?v=1"></script>';
  assert.ok(html.includes(tag));
- assert.ok(html.indexOf(tag)<html.indexOf('<script>\r\n'));
+ assert.ok(page.indexOf(tag)>=0);
+ assert.ok(page.indexOf(tag)<page.indexOf('<script src="./dashboard-main.js?v=3"></script>'),'link validator must load before the main bootstrap');
  assert.ok(html.includes('failure.sourceUrl&&window.TrustedLinkPolicy?.official(failure.sourceUrl)'));
  assert.ok(html.includes('sourceLink.href=window.TrustedLinkPolicy.official(failure.sourceUrl)'));
  assert.ok(html.includes('window.TrustedLinkPolicy?.withFallback(scoreSource('));
