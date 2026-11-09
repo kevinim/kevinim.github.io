@@ -1,0 +1,68 @@
+name: School boundary UI and official Finder fallback QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - index.html
+      - school-zone-ui.js
+      - tests/school-zone-ui.test.cjs
+      - scripts/test-school-zone-fallback-browser.cjs
+      - .github/workflows/verify-school-zone-ui.yml
+  push:
+    branches: [fix/school-zone-status-and-finder-fallback-20261109]
+
+permissions:
+  contents: read
+
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Test status classification, exact CSP hash and existing GIS source rules
+        run: |
+          node --check school-zone-ui.js
+          node --check scripts/test-school-zone-fallback-browser.cjs
+          node --test tests/school-zone-ui.test.cjs tests/strict-script-csp.test.cjs tests/audit-gis-upload-links.test.cjs
+
+  sampled-school-clicks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Install Chromium for isolated PR browser test
+        run: |
+          mkdir -p school-zone-ui-browser-tmp
+          cd school-zone-ui-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve exact PR files
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/school-zone-ui.log 2>&1 &
+          sleep 2
+      - name: Compare 4 school selections per district across desktop and mobile
+        env:
+          NODE_PATH: ${{ github.workspace }}/school-zone-ui-browser-tmp/node_modules
+        run: node scripts/test-school-zone-fallback-browser.cjs
+      - name: Preserve campus-only QA evidence and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: school-zone-ui-browser-samples
+          path: artifacts/school-zone-fallback/
+          if-no-files-found: warn
