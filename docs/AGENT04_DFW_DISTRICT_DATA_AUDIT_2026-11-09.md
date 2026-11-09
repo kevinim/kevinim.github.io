@@ -261,3 +261,32 @@ all-refs finding has **not** been isolated by Agent 04. A full-history
 security failure is a release blocker and should be routed to the
 independent security workstream; do not suppress it or reinterpret
 the Agent 04 source-audit green status as permission to deploy.
+
+## Unified per-district quality report
+
+The GitHub Actions job now runs
+`scripts/build-dfw-joined-district-audit.cjs` after all HTTP audits.
+The final retained artifact is
+`artifacts/agent04-dfw-joined-108-district-status.json`.
+
+There are exactly **108 district rows**, keyed by the canonical six-digit
+TEA district code. Each row preserves all nine required independent QA
+dimensions: official source availability, GIS configured, GIS per-school
+evidence/unknown, coordinates with historical vs independently verified
+distinction, school-to-boundary match, residential assignment certification,
+data vintage, prioritized missing-reason codes, and **NO_GO**. The
+`officialFinderAvailability` object additionally contains:
+
+- `mainHTTP`: actual current-main URL liveness (29 registered, 79 absent).
+- `unmergedPr173Candidate`: separately pinned candidate URL, HTTP status,
+  source head SHA, and explicit `actualAddressSearchCertified:false`
+  (107 present, Chico Texas absent).
+- `independentQAReasons`: reasons prefixed P0/P1/P2, without inferring that a
+  2xx HTTP response proved residence-level school assignment.
+
+The separate 1,941 public campus rows and the 241 other-LEA denominator
+remain in the raw integrity report and summary; they are not erased or
+duplicated by this join. The CI regression tests reject lost/duplicate
+districts, mistakenly promoted 107 candidate links, and school assignments
+inferred from HTTP 2xx. The joined JSON is a QA artifact, **not** a web
+dashboard data source or production state change.
