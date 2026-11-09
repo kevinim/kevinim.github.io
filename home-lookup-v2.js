@@ -76,6 +76,7 @@ function assignmentHtml(result){
  if(result.status==='conflict')return '<b>확인 필요 · 서로 다른 학군 자료가 겹칩니다.</b><br>경계나 아파트별 예외를 학군 공식 검색기에서 확인하세요.';
  if(result.status==='loading')return '학교 배정 자료를 불러오는 중입니다.';
  if(result.status==='error')return '학교 배정 자료를 불러오지 못했습니다. 새로고침하거나 학군 공식 검색기에서 확인하세요.';
+ if(result.status==='conditional-finder-only')return '<b>학교 자동 배정 미인증 · 공식 Finder 확인 필요</b><br><span class="source">현재 배포 범위에서는 집 주소에 대한 초·중·고 배정학교 또는 현행 경계를 자동 확정하지 않습니다. 지도상의 학교 위치·과거 구역·GIS 후보는 배정 근거가 아닙니다. 아래 공식 학군 검색기를 이용해 해당 주소와 학년을 확인하세요.</span>';
  if(result.status==='unavailable')return '자동 연결 자료가 없습니다. 학교가 없다는 뜻은 아닙니다. 아래 학군 공식 검색기에서 주소를 확인하세요.';
  if(result.district==='AISD')return '<b>확인 필요 · 앨런 공식 주소표 (학년도 미표기)</b><br>'+[[result.allen[2],'elementary','K–6'],[result.allen[3],'middle','7–8'],[result.allen[4],'freshman','9'],[result.allen[5],'high','10–12']].map(([n,type,g])=>escape(n+' · '+g)+' <b>'+escape(allenSchoolRating(n,type))+'</b>').join('<br>')+'<br><span class="source">학군 경계와 실제 배정, 건물·호수별 예외는 학군에 확인하세요.</span>';
  const frisco=result.district==='FISD',current=districtZoneDisplay(result.district,state.liveFinder)==='official',near=['boundary-review','finder-boundary-review'].includes(result.status);
@@ -120,8 +121,13 @@ function renderHome(){
   if(!home)return;
   const matches=homeZipMatches(home.ll),schools=homeFriscoMatches(home.ll);home.matches=schools;
   const zipText=matches.length?matches.map(d=>escape(d.z+' · '+d.name)).join(', '):'지도에 포함된 ZIP 경계를 확인하지 못했습니다.';
-  home.assignment=schoolAssignmentFor(home);const schoolText=assignmentHtml(home.assignment);
-  const official='<details'+(['unavailable','error','conflict','needs-address-verification','boundary-review','finder-boundary-review','feeder-review','apartment-split-review'].includes(home.assignment.status)?' open':'')+'><summary>학군별 공식 배정 확인</summary>'+Object.entries(OFFICIAL).map(([id,url])=>{const safe=window.TrustedLinkPolicy?.official(url);return safe?'<a class="cardlink" href="'+escape(safe)+'" target="_blank" rel="noopener noreferrer">'+escape(districtName(id,'ko')||id)+' ↗</a>':''}).join('')+'</details>';
+  // Conditional GO: never promote a GIS point/zone candidate into a residential
+  // assignment unless an independently reviewed district grant is present.
+  const rawSchoolCandidate=schoolAssignmentFor(home);
+  home.assignment=window.ConditionalSchoolRelease?.apply(rawSchoolCandidate)||
+    {status:'conditional-finder-only',releaseScope:'informational-only'};
+  const schoolText=assignmentHtml(home.assignment);
+  const official='<details'+(['unavailable','error','conflict','needs-address-verification','boundary-review','finder-boundary-review','feeder-review','apartment-split-review','conditional-finder-only'].includes(home.assignment.status)?' open':'')+'><summary>학군별 공식 배정 확인</summary>'+Object.entries(OFFICIAL).map(([id,url])=>{const safe=window.TrustedLinkPolicy?.official(url);return safe?'<a class="cardlink" href="'+escape(safe)+'" target="_blank" rel="noopener noreferrer">'+escape(districtName(id,'ko')||id)+' ↗</a>':''}).join('')+'</details>';
   const office=el('destination').value.trim();
   const parcel=home.parcel||{status:'idle'};
   const message=parcel.status==='idle'?'별도 필지 주소 대조를 실행할 수 있습니다.':parcel.status==='checking'?'Collin CAD 필지 확인 중…':parcel.reason||'필지 확인 불가';
