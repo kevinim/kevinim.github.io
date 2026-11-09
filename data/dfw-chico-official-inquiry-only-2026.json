@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-11-09",
+  "districtCode": "249904",
+  "district": "CHICO ISD",
+  "county": "WISE",
+  "sourceClass": "OFFICIAL_DISTRICT_WEBSITE_AND_PUBLIC_PHONE_ONLY",
+  "officialDistrictWebsite": "https://www.chicoisdtx.net/",
+  "educationServiceRegion11": "https://www.esc11.net/who-we-serve/public-schools",
+  "ncesOfficialDistrictRecord": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?County=Wise&ID2=4813800&State=48",
+  "ncestype": "2025-2026 district school listing",
+  "publicDistrictPhone": "940-644-2228",
+  "officialFinderVerified": false,
+  "siteIsAddressLookup": false,
+  "individualResidenceAssignmentVerified": false,
+  "currentYearSchoolAttendanceGISVerified": false,
+  "districtWebsiteHttpLandingSeen": true,
+  "doNotPromoteToRegisteredFinder": true,
+  "uiTreatment": "OFFICIAL_SITE_INQUIRY_ONLY_NEEDS_DISTRICT_CONTACT",
+  "note": "Verified Texas Chico ISD identity and official HTTPS homepage, but its current-year address/grade Finder or enrollment inquiry page is not independently verifiable from public content; homepage alone is not a certified parent attendance locator.",
+  "schools": [
+    {
+      "teaId": "249904101",
+      "name": "CHICO EL",
+      "publicNcesGradeSpan": "PK-5",
+      "officialSchoolSource": "https://nces.ed.gov/ccd/schooLSearch/school_detail.asp?County=Wise+County&ID=481380000869&Search=1&State=48"
+    },
+    {
+      "teaId": "249904041",
+      "name": "CHICO MIDDLE",
+      "publicNcesGradeSpan": "6-8",
+      "officialSchoolSource": "https://nces.ed.gov/ccd/schoolsearch/school_detail.asp?County=Wise+County&ID=481380005971&State=48"
+    },
+    {
+      "teaId": "249904001",
+      "name": "CHICO H S",
+      "publicNcesGradeSpan": "9-12",
+      "officialSchoolSource": "https://nces.ed.gov/ccd/schooLSearch/school_detail.asp?County=Wise+County&ID=481380000870&Search=1&State=48"
+    }
+  ]
+}
