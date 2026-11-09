@@ -66,3 +66,11 @@ test('missing guard or lowered validation is rejected',()=>{
  filesCopy['features/geojson-upload-guard.js']=filesCopy['features/geojson-upload-guard.js'].replace('fileBytes:4*1024*1024','fileBytes:999*1024*1024');
  assert.ok(auditSchoolBoundaryTrust(filesCopy).errors.some(e=>e.includes('GeoJSON entrypoint')));
 });
+
+test('missing-boundary evidence link host guard cannot silently be removed',()=>{
+ const changed=files();
+ changed['index.html']=changed['index.html'].replace(
+   'failure.sourceUrl&&window.TrustedLinkPolicy?.official(failure.sourceUrl)',
+   'failure.sourceUrl');
+ assert.ok(auditSchoolBoundaryTrust(changed).errors.some(x=>x.includes('exact-host HTTPS policy')));
+});
