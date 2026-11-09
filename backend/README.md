@@ -60,3 +60,7 @@ API input use of POST keeps addresses off app endpoint query strings, but upstre
 ## Isolation
 
 Changes are only in `backend/`, one new `tests/backend-api.test.mjs`, and the audit CI workflow. They do not edit the dashboard UI, school files, commute calculations, production Pages settings, or GitHub repository visibility. This is stacked on Draft PR #78, which itself depends on #72.
+
+## Integration validation: strict CSP and school-link policy
+
+This branch is tested against the latest protected `main`, including strict hash-locked CSP (#89), the sanitized preview correction (#95), UAT/production environment plan (#97), and trusted school/GIS outbound-link validation (#96). The API adapter is not connected to browser input and remains provider-disabled until the owner and provider approvals, real distributed rate limiter and authenticated UAT are implemented. No public hosting is activated by merging this scaffold.
