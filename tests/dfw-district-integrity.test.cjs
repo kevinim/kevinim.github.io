@@ -109,3 +109,44 @@ test('all missing historical public ISD points are explicit named campus excepti
   ['057907114','184908002','184909103','220902014','220905258','249902104'].sort());
  assert.equal(r.districts.reduce((n,d)=>n+d.exceptionIds.missingHistoricalPoints.length,0),6);
 });
+
+test('each missing public ISD point has official context but no fabricated coordinates or attendance zone',()=>{
+ const r=audit(fresh());
+ assert.equal(r.summary.auditedPublicPointExceptionRecords,6);
+ const missing=r.campusRecords.filter(c=>c.coordinate.status==='NO_HISTORICAL_NCES_POINT');
+ assert.equal(missing.length,6);
+ for (const c of missing){
+  assert.ok(c.coordinate.exceptionEvidence?.officialSources?.length);
+  assert.equal(c.coordinate.exceptionEvidence.currentPointOrZoneCertified,false);
+  assert.equal(c.coordinate.lat,null);
+  assert.equal(c.coordinate.lon,null);
+  assert.equal(c.schoolBoundaryLinkage.exactSchoolPolygonMatched,null);
+  assert.equal(c.disposition,'NO_GO');
+ }
+ const lottery=missing.find(c=>c.id==='220902014');
+ assert.match(lottery.coordinate.exceptionEvidence.classification,/LOTTERY/);
+ const multiSite=missing.find(c=>c.id==='220905258');
+ assert.match(multiSite.coordinate.exceptionEvidence.classification,/MULTISITE/);
+});
+
+test('a seventh missing point cannot silently enter the report without a documented reason',()=>{
+ const d=fresh();
+ d.nces.data=d.nces.data.filter(c=>c.id!=='043901001');
+ const r=audit(d);
+ assert.match(r.errors.join('|'),/UNEXPLAINED_MISSING_PUBLIC_POINT_043901001/);
+});
+
+test('cannot promote exception addresses to certified points or school zones',()=>{
+ const d=fresh();
+ d.pointExceptionEvidence.records[0].verifiedCurrentCoordinates=true;
+ assert.match(audit(d).errors.join('|'),/UNSAFE_POINT_EXCEPTION_EVIDENCE/);
+});
+
+test('other TEA LEAs are separately counted and cannot inflate the 108 ISD coverage rate',()=>{
+ const r=audit(fresh());
+ assert.equal(r.summary.otherTEACampusRecords,241);
+ assert.equal(r.summary.otherLEAHistoricalPointMatches,178);
+ assert.equal(r.summary.otherLEAHistoricalPointsMissing,63);
+ assert.equal(r.summary.allDFWMatchedHistoricalPoints,2113);
+ assert.equal(r.summary.allDFWMissingHistoricalPoints,69);
+});
