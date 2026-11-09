@@ -32,7 +32,8 @@
       "officialUrl": "https://www.kellerisd.net/about-kisd/maps",
       "boundaryStatus": "external-official-finder-only",
       "localSchoolPolygonCount": 0,
-      "notes": "Official K-4 and secondary zone maps and address lookup available; live address check required."
+      "notes": "Official K-4 and secondary zone maps and address lookup available; live address check required.",
+      "dataNote": "Keller 시 GIS의 경계 원본은 2018–19학년도 자료입니다. 현행 2026–27 학교 배정에는 사용하지 않습니다."
     },
     {
       "code": "061911",
