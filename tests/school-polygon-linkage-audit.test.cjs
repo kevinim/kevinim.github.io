@@ -99,3 +99,25 @@ test('report category totals and district rows reconcile exactly',()=>{
  assert.equal(Object.values(r.reasons).reduce((a,b)=>a+b,0),r.coverage.totalLoadedDirectory);
  assert.equal(Object.values(r.byDistrict).reduce((a,d)=>a+d.totalLoadedDirectory,0),r.coverage.totalLoadedDirectory);
 });
+
+test('Allen missing markers fail the release guard even when polygons match',()=>{
+ const report=auditLinkage({
+  rows:[row({district:'AISD',matchStatus:'matched'})],
+  sources:[source('AISD')],
+  markerChecks:[{district:'AISD',status:'failed',eligibleSchoolLocations:22,
+    expectedVisible:20,matchedMarkers:0,missingNames:['Sample School']}]
+ });
+ assert.equal(report.status,'REVIEW_REQUIRED');
+ assert.equal(report.coverage.sampledMarkerFailures,1);
+ assert.equal(report.blocked,true);
+});
+test('Allen actual visible markers pass independently from polygon matching',()=>{
+ const report=auditLinkage({
+  rows:[row({district:'AISD',matchStatus:'matched'})],
+  sources:[source('AISD')],
+  markerChecks:[{district:'AISD',status:'passed',eligibleSchoolLocations:22,
+    expectedVisible:22,matchedMarkers:22,missingNames:[]}]
+ });
+ assert.equal(report.coverage.sampledMarkerChecks,1);
+ assert.equal(report.coverage.sampledMarkerFailures,0);
+});
