@@ -1266,7 +1266,8 @@ test('District registry is the single source of per-district capabilities',()=>{
   assert.ok(d.en&&d.ko,'names for '+code);
   assert.ok(/^https:\/\//.test(d.official),'official finder link for '+code);
   if(d.zoneKey)assert.ok(web.includes("{district:'"+d.zoneKey+"',"),'zone data loader for '+code);
-  if(['polygon','frisco'].includes(d.address))assert.ok(['always','live','finder'].includes(d.currency),'address lookup needs a currency rule: '+code);
+  if(['polygon','frisco'].includes(d.address))assert.ok(['always','live','finder','published'].includes(d.currency),'address lookup needs a currency rule: '+code);
+   if(d.currency==='published'){assert.equal(code,'057905','only audited Dallas has provisional publisher GIS');assert.equal(R.districtPolygonStatus(code,{[code]:true}),'publisher-provisional');}
  }
  // Old hard-coded capability lists must not come back.
  for(const [name,src] of [['index.html',web],['home-lookup-v2.js',home],['school-boundary-match.js',match]])

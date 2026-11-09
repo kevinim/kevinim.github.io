@@ -55,3 +55,5 @@ and permissions are verified, campus crosswalk exceptions reviewed, and the user
 explicitly approves any Production deployment. No paid services or addresses stored.
 
 Additional false-positive safeguard: a 2026–27 `GCS` Locator Map ArcGIS layer occurs outside Texas (~80°W); it is **not** Grapevine-Colleyville ISD (GCISD), and must never count toward DFW school-zone coverage.
+
+The campus-name crosswalk removes only elementary/middle/high/school type labels to avoid false mismatches from common grade terminology; **it does not erase campus-specific person names, charter, magnet, academy, or program details**. Any remaining mismatch is a manual review item even when its nine-digit TEA campus ID exists.

@@ -5,6 +5,8 @@ const f=(id,school,level)=>({type:'Feature',properties:{campusId:id,school,grade
 test('public school identity aliases normalize without guessing assignment',()=>{
  assert.equal(normalizeName('BEN MILAM EL'),normalizeName('Ben Milam Elementary'));
  assert.equal(normalizeName('BRYAN ADAMS H S'),normalizeName('Bryan Adams High School'));
+ assert.equal(normalizeName('Arcadia Park Elementary School'),normalizeName('ARCADIA PARK EL'));
+ assert.notEqual(normalizeName('Allen Charter School'),normalizeName('Gabe P Allen New Tech Academy'));
 });
 test('TEA IDs, missing IDs, name disagreements and grade counts are individually audited',()=>{
  const zones=[f('057905184','Ben Milam Elementary','elementary'),f('057905058','A New Name','middle'),f('057905999','Unknown','high')];

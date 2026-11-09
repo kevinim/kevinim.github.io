@@ -15,6 +15,9 @@ function normalizeName(v){
   .replace(/\bMS\b/g,'MIDDLE SCHOOL')
   .replace(/\bMID\b/g,'MIDDLE')
   .replace(/\bSCH\b/g,'SCHOOL')
+  // Strip only common type words, NOT distinct school, program or person names.
+  // Short names and true campus renames remain distinct and require review.
+  .replace(/\b(?:ELEMENTARY|MIDDLE|HIGH|SCHOOL)\b/g,'')
   .replace(/[^A-Z0-9]/g,'').trim();
 }
 function compareCampusIdentities(features,ratings){
