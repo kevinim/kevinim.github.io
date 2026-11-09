@@ -58,12 +58,19 @@ const femaHazards=readJson('data/phase2a-fema-nri-dfw-2025.geojson');
 const noaaStorms=readJson('data/noaa-storm-events-dfw-2024-2025.json');
 const school = readJson('schools.json');
 let total = 0;
-const asyncChecks=[];
-const test = (name, fn) => {
+const asyncChecks=[],failures=[];
+const recordFailure=(name,e)=>{
+ failures.push({name,message:String(e?.message||e).slice(0,800)});
+ console.error('FAIL '+name+': '+String(e?.message||e).slice(0,800));
+};
+const test=(name,fn)=>{
+ try {
   const result=fn();
-  if(result&&typeof result.then==='function') {
-    asyncChecks.push(result.then(()=>{total++;console.log('PASS '+name)}));
-  } else {total++;console.log('PASS '+name)}
+  if(result&&typeof result.then==='function')
+   asyncChecks.push(result.then(()=>{total++;console.log('PASS '+name)})
+    .catch(e=>recordFailure(name,e)));
+  else {total++;console.log('PASS '+name);}
+ } catch(e){recordFailure(name,e);}
 };
 
 const inlineScripts = [mainBootstrap];
@@ -1248,7 +1255,7 @@ test('Address results: piece-internal edges are not boundaries; near-boundary an
  assert.equal(resolveAssignment({mckinney:mk,mckinneyFinderLive:true}).district,'043907');
  assert.equal(resolveAssignment({mckinney:mk,mckinneyFinderLive:false}).status,'unavailable','McKinney only from the verified live 2026-27 finder');
  const home=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
- assert.ok(home.includes("['current','finder-current','boundary-review','finder-boundary-review'].includes(result.status)"),'near-boundary candidates highlighted like the panel lists them');
+ assert.ok(home.includes("['current','finder-current','boundary-review','finder-boundary-review','publisher-provisional','publisher-boundary-review'].includes(result.status)"),'near-boundary and unconfirmed-publisher candidates highlighted exactly like the panel lists them');
  assert.ok(readText('district-registry.js').includes("'finder-current':'2026–27 공식 Finder 경계 · 매키니'")&&home.includes('districtInfo(result.district)?.label?.[result.status]'),'McKinney label from registry, never the Lewisville fallback');
 });
 test('District registry is the single source of per-district capabilities',()=>{
@@ -1349,4 +1356,8 @@ test('Security baseline (#77/#74): CSP on both entry pages, Esri input limit, de
  assert.ok(web.includes('aria-describedby="homeSuggestHint homePrivacy" maxlength="200"'),'home address limited to Esri 200-char SingleLine');
 });
 await Promise.all(asyncChecks);
+if(failures.length){
+ console.error('MAIN_WEBSITE_QA_FAIL_CLOSED '+failures.length+' failed; '+total+' passed.');
+ process.exitCode=1;
+}
 console.log('Main website QA: ' + total + ' tests passed.');
