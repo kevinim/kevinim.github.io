@@ -36,6 +36,12 @@ function expectedPublicHtml(source){
   '<input type="checkbox" id="oneHourOverlay" hidden disabled aria-hidden="true"><div class="source">사전 계산된 특정 회사 기준 통근 지도는 제공되지 않습니다. 위 목적지에 주소를 직접 입력하여 경로를 확인하세요.</div>');
  s=replaceOnce(s,'JPM 시간은 ZIP 대표점 기준이고 교통량은 반영하지 않습니다.',
   '통근 시간은 사용자가 선택한 목적지와 ZIP 대표점을 기준으로 계산하며 실시간 교통량은 반영하지 않습니다.');
+ s=replaceOnce(s,"비교함은 이 화면을 닫거나 새로고침하면 지워집니다. 주소 검색: © Esri.","비교함은 이 화면을 닫거나 새로고침하면 지워집니다. 주소 검색: © Esri. 외부 서비스의 접속 기록 및 보존 기간은 이 사이트에서 통제하지 않습니다. 사적인 정보나 비밀번호를 입력하지 마세요.");
+ s=replaceOnce(s,"<input id=\"destination\" value=\"\" placeholder=\"예: 5000 Legacy Dr, Plano, TX\" autocomplete=\"street-address\">","<input id=\"destination\" value=\"\" placeholder=\"예: 5000 Legacy Dr, Plano, TX\" autocomplete=\"street-address\"><p id=\"destinationPrivacy\" class=\"source\" role=\"note\">목적지 검색을 누르면 입력한 목적지가 OpenStreetMap Nominatim으로, 경로 계산 시 출발지·목적지 좌표가 OSRM으로 전송됩니다. 실제 주거지나 기밀 주소 대신 공개된 사업장·대표 위치를 사용하세요. 이 사이트는 입력값을 자체 서버에 영구 저장하도록 구성되지 않았으나, 외부 서비스의 로그 보존·삭제는 보장할 수 없습니다.</p>");
+ // The Conditional GO integration adds exactly one first-party, non-inline
+ // fail-closed policy script. All other HTML remains hash-pinned to baseline.
+ s=replaceOnce(s,'<script src="./school-zone-ui.js?v=1"></script>',
+  '<script src="./school-zone-ui.js?v=1"></script>\r\n<script src="./features/conditional-school-release.js?v=1"></script>');
  return s;
 }
 function expectedPublicJs(source){
@@ -78,6 +84,10 @@ test('index changes limited to approved blank destination, hidden precomputed ma
  assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expectedPublicHtml(old).replace(/\r\n/g,'\n')),
   'Unexpected application HTML modification outside privacy removal');
  assert.equal(html.split(external).length,2);
+ const conditional='./features/conditional-school-release.js?v=1';
+ assert.equal(html.split(conditional).length,2,'conditional school policy is loaded exactly once');
+ assert.ok(html.indexOf('./school-zone-ui.js?v=1')<html.indexOf(conditional));
+ assert.ok(html.indexOf(conditional)<html.indexOf('./home-lookup-v2.js?v='));
  const scriptIndex=html.indexOf(external);
  assert.ok(html.indexOf('./plano-finder-live.js')<scriptIndex);
  assert.ok(html.indexOf('./features/commute/workplace-marker.js')>scriptIndex);

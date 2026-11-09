@@ -577,8 +577,14 @@ test('CFB official 2026–27 feeder table is accurate and never treated as GIS',
   assert.ok(html.includes('CFB 2026–27 진학표 A') && html.includes('CFB 2026–27 진학표 B'));
   assert.ok(html.includes('2026–27 진학표 20/21행 일치, Farmers Branch Elementary 자료 충돌 별도'));
 });
-test('active 2026-27 campus selection excludes 14 officially retired schools',()=>{
- assert.equal(RETIRED_CAMPUSES_2026.length,14);
+test('active 2026-27 campus selection excludes 17 officially inactive schools',()=>{
+ assert.equal(RETIRED_CAMPUSES_2026.length,17);
+  for(const id of ['061901120','220906103','220906108']){
+   const item=rating.data.find(x=>x.id===id);
+   assert.ok(item,'TEA campus record missing '+id);
+   assert.equal(isRetiredCampus({...item,district:id.slice(0,6)}),true,'repurposed/consolidated campus still appears '+id);
+  }
+  assert.equal(isRetiredCampus({district:'220919',id:'220919106',name:'DON T DURHAM INT'}),false);
  const staley=rating.data.find(x=>x.id==='043905041'&&x.district==='FISD');
  assert.ok(staley);assert.equal(isRetiredCampus(staley),true);
  assert.equal(isRetiredCampus({district:'FISD',name:'Nelson Middle School'}),false);
