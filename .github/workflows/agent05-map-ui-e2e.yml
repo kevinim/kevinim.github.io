@@ -2,15 +2,6 @@ name: Agent 05 map UI and browser regression
 on:
   push:
     branches: [qa/agent05-map-ui-e2e-regression-20261109]
-  pull_request:
-    branches:
-      - feature/address-selected-auto-school-map-20261109
-    paths:
-      - dashboard-main.js
-      - index.html
-      - features/map-control-contrast.css
-      - scripts/test-agent05-map-ui-browser.cjs
-      - .github/workflows/agent05-map-ui-e2e.yml
   workflow_dispatch:
 permissions:
   contents: read
@@ -82,11 +73,22 @@ jobs:
           DASHBOARD_BASE_URL: http://127.0.0.1:8765/
           AGENT05_BASELINE_URL: http://127.0.0.1:8766/
         run: node scripts/test-agent05-map-ui-browser.cjs
+      - name: Verify positive synthetic address to campus-marker to official GIS polygon path
+        env:
+          NODE_PATH: ${{ github.workspace }}/agent05-playwright-tmp/node_modules
+        run: node scripts/test-home-assignment-map-browser.cjs
+      - name: Verify seven mobile/desktop widths and input-X UX
+        env:
+          NODE_PATH: ${{ github.workspace }}/agent05-playwright-tmp/node_modules
+          DASHBOARD_BASE_URL: http://127.0.0.1:8765/
+        run: node scripts/test-responsive-school-ui.cjs
       - name: Upload before/after mobile and desktop screenshots plus JSON
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: agent05-map-ui-before-after
-          path: artifacts/agent05-map-ui/
+          path: |
+            artifacts/agent05-map-ui/
+            artifacts/responsive-ui/
           if-no-files-found: warn
           retention-days: 7
