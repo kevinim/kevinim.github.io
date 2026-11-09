@@ -1,0 +1,32 @@
+/* ZIP regional comparison is independent of home-address candidate comparisons. */
+.region-compare{margin:0 0 17px;padding:18px;border:1px solid #d7e3f0;border-radius:13px;background:#fff;box-shadow:0 4px 18px rgba(27,46,88,.045)}
+.region-compare-heading{display:flex;justify-content:space-between;align-items:start;gap:14px}
+.region-compare-heading h3{margin:0 0 5px;font-size:16px;color:#17345e}
+.region-compare-intro{font-size:12px;color:#536980;line-height:1.5;margin:0}
+.region-compare-add,.region-compare-third,.region-compare-map-link{font:inherit;font-size:12px;line-height:1.4;font-weight:700;background:#f1f6fc;border:1px solid #b9cde5;color:#244c7a;border-radius:8px;padding:8px 11px;cursor:pointer}
+.region-compare-add{white-space:nowrap}
+.region-compare-add:hover,.region-compare-third:hover,.region-compare-map-link:hover{background:#e5f0ff}
+.region-compare button:focus-visible,.region-compare select:focus-visible{outline:3px solid #3568b7;outline-offset:2px}
+.region-compare-pickers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:9px;align-items:end;margin:14px 0}
+.region-compare-picker{display:grid;gap:5px;min-width:0;font-size:12px;font-weight:700;color:#284562}
+.region-compare-select{font:inherit;width:100%;min-width:0;max-width:100%;padding:8px 9px;border:1px solid #bfd0e6;border-radius:8px;background:#fff;color:#193e65}
+.region-compare-third{white-space:nowrap}
+.region-compare-table-scroll{overflow-x:auto;max-width:100%;border:1px solid #e0e9f3;border-radius:10px}
+.region-compare-table{width:100%;min-width:660px;border-collapse:separate;border-spacing:0;font-size:12px}
+.region-compare-table caption{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.region-compare-table th,.region-compare-table td{padding:10px 12px;border-bottom:1px solid #e7edf6;text-align:left;vertical-align:top}
+.region-compare-table thead th{background:#edf4fc;color:#173e69;font-size:13px}
+.region-compare-table .region-compare-metric{width:22%;min-width:135px;color:#284b70;font-weight:750}
+.region-compare-table thead .region-compare-metric{position:sticky;left:0;z-index:2}
+.region-compare-table tbody .region-compare-metric{position:sticky;left:0;z-index:1;background:#fff}
+.region-compare-head strong{display:block;min-width:100px;margin-bottom:7px}
+.region-compare-map-link{padding:4px 8px}
+.region-compare-group th{background:#f7f9fc;color:#43607e;font-size:11px;font-weight:800;letter-spacing:.015em}
+.region-compare-value{display:block;line-height:1.5;color:#192f48;overflow-wrap:anywhere}
+.region-compare-note{display:block;font-size:10px;line-height:1.4;color:#61738c;margin-top:3px;overflow-wrap:anywhere}
+.region-compare-foot{font-size:11px;line-height:1.5;color:#5c7188;margin:11px 0 0}
+.region-compare-status{font-size:11px;line-height:1.5;color:#315d8d;margin:8px 0 0}
+.region-compare-status:empty{display:none}
+@media(max-width:870px){.region-compare-pickers{grid-template-columns:repeat(3,minmax(0,1fr))}.region-compare-third{grid-column:1/-1;justify-self:start}}
+@media(max-width:620px){.region-compare{padding:12px}.region-compare-heading{flex-wrap:wrap}.region-compare-add{white-space:normal}.region-compare-pickers{grid-template-columns:repeat(2,minmax(0,1fr))}.region-compare-picker:nth-child(3){grid-column:1/-1}.region-compare-table{min-width:610px}.region-compare-table th,.region-compare-table td{padding:9px}}
+@media(prefers-reduced-motion:reduce){.region-compare *{scroll-behavior:auto}}
