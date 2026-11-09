@@ -3,12 +3,18 @@ on:
   pull_request:
     paths:
       - 'scripts/agent01-probe-irving-gis.cjs'
+      - 'scripts/agent01-irving-embedded-high.cjs'
+      - 'scripts/agent01-irving-tea-crosswalk.cjs'
+      - 'scripts/agent01-irving-school-map-browser.cjs'
       - 'tests/agent01-*.test.cjs'
       - 'data/dfw-agent01-gis-source-inventory-2026.json'
       - 'data/irving-provisional-tea-crosswalk-2026.json'
       - 'docs/AGENT01_DFW_GIS_ACQUISITION_2026-11-09.md'
       - '.github/workflows/agent01-irving-gis-qa.yml'
   workflow_dispatch:
+concurrency:
+  group: agent01-irving-gis-qa-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
