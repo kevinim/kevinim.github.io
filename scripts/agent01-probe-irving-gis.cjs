@@ -26,7 +26,7 @@ function acceptLayerUrl(s){
 function selectLayer(map,spec){
  const matching=flattenLayers(map).filter(l=>spec.match.test(String(l.title||l.name||l.layerDefinition?.name||'')));
  const urls=[...new Set(matching.map(l=>l.url).filter(Boolean).map(acceptLayerUrl))];
- requireOK(urls.length===1,'unverified or ambiguous '+spec.level+' source: '+urls.length);
+ requireOK(urls.length===1,'unverified or ambiguous '+spec.level+' source: '+urls.length+'; available titles: '+flattenLayers(map).map(l=>String(l.title||l.name||l.layerDefinition?.name||'(untitled)')).slice(0,12).join(' | '));
  return urls[0];
 }
 function validPolygon(g){
@@ -75,7 +75,7 @@ async function main(){
  const audit={dateUTC:new Date().toISOString(),reviewState:'NO_GO',sourceYearConfirmed:false,results:[],errors:[]},all=[];
  for(const spec of MAPS)try{
   const result=await probe(spec);audit.results.push(result.audit);all.push(...result.features);
- }catch(e){audit.errors.push({grade:spec.level,reason:String(e.message).slice(0,250)});}
+ }catch(e){audit.errors.push({grade:spec.level,reason:String(e.message).slice(0,650)});}
  fs.writeFileSync(path.join(dir,'source-audit.json'),JSON.stringify(audit,null,2)+'\n');
  if(audit.errors.length||audit.results.length!==3){console.error('GIS source extraction NO_GO',audit.errors);process.exitCode=1;return;}
  fs.writeFileSync(path.join(dir,'QUARANTINED-source-year-unknown.geojson'),JSON.stringify({type:'FeatureCollection',features:all})+'\n');
