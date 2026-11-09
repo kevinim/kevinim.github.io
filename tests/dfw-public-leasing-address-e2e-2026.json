@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "asOf": "2026-11-09",
-  "scope": "public apartment leasing-office/base street addresses only; NOT a validated apartment unit or enrollment address",
+  "scope": "public apartment-complex base addresses; complex/street is sufficient by default, unit only for documented district-published split exceptions; not student enrollment certification",
   "independentDistrictFinderUiVerified": false,
   "officialGradeAssignmentsVerified": 0,
   "releaseGate": "NO_GO",
@@ -12,7 +12,9 @@
       "address": "2401 McKinney Ranch Pkwy, McKinney, TX 75070",
       "source": "https://www.mckinneypointe.com/contactus",
       "finder": "https://www.mckinneyisd.net/page/attendance-zones-maps/",
-      "note": "2026-27 locator; transfers/grandfathering can alter actual school"
+      "note": "2026-27 locator; transfers/grandfathering can alter actual school",
+      "propertyType": "apartment-complex",
+      "complexName": "McKinney Pointe"
     },
     {
       "id": "mckinney-village",
@@ -20,7 +22,9 @@
       "address": "201 McKinney Village Pkwy, McKinney, TX 75069",
       "source": "https://www.mckinneyvillageapts.com/contact-us/",
       "finder": "https://www.mckinneyisd.net/page/attendance-zones-maps/",
-      "note": "2026-27 locator; do not equate McKinney mailing city with McKinney ISD"
+      "note": "2026-27 locator; do not equate McKinney mailing city with McKinney ISD",
+      "propertyType": "apartment-complex",
+      "complexName": "McKinney Village"
     },
     {
       "id": "plano-bridge",
@@ -28,7 +32,9 @@
       "address": "1550 W Plano Pkwy, Plano, TX 75075",
       "source": "https://www.thebridgeplano.com/contact-us",
       "finder": "https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder",
-      "note": "2026-27 SchoolFinder; four-stage feeder patterns and program exceptions"
+      "note": "2026-27 SchoolFinder; four-stage feeder patterns and program exceptions",
+      "propertyType": "apartment-complex",
+      "complexName": "The Bridge at Heritage Creekside"
     },
     {
       "id": "plano-windhaven",
@@ -36,7 +42,9 @@
       "address": "6201 Windhaven Pkwy, Plano, TX 75093",
       "source": "https://www.windhavenparkapthome.com/Contact.aspx",
       "finder": "https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder",
-      "note": "Confirm elementary, middle, 9-10 high and 11-12 senior separately"
+      "note": "Confirm elementary, middle, 9-10 high and 11-12 senior separately",
+      "propertyType": "apartment-complex",
+      "complexName": "Windhaven Village"
     },
     {
       "id": "lewisville-bella-madera",
@@ -44,7 +52,9 @@
       "address": "650 Leora Ln, Lewisville, TX 75056",
       "source": "https://www.bella-madera.com/contactus",
       "finder": "https://www.lisd.net/resources/families/school-locator",
-      "note": "Apartment must use separate Find an Apartment locator; street location is not unit assignment"
+      "note": "Official Lewisville Find an Apartment uses complex name; no unit required unless district-published split.",
+      "propertyType": "apartment-complex",
+      "complexName": "Bella Madera"
     },
     {
       "id": "lewisville-discovery-realm",
@@ -52,7 +62,15 @@
       "address": "3600 Windhaven Pkwy, Lewisville, TX 75056",
       "source": "https://www.discoveryattherealm.com/scheduletour",
       "finder": "https://www.lisd.net/resources/families/school-locator",
-      "note": "2026-27 locator; nine-grade campuses and apartment selector must be separately confirmed"
+      "note": "Official Lewisville 2026-27 apartment name picker; no default unit requirement.",
+      "propertyType": "apartment-complex",
+      "complexName": "Discovery at the Realm"
     }
-  ]
+  ],
+  "apartmentPolicy": {
+    "unitRequiredByDefault": false,
+    "exceptionOnlyWithOfficialDistrictPublishedSplit": true,
+    "lewisvilleLocator": "Find an Apartment → select complex name → Apply",
+    "personalTransferAndProgramExceptionsOutOfScope": true
+  }
 }
