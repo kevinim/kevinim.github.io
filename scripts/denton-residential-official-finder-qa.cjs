@@ -73,23 +73,33 @@ async function main(){
         const programValue=(await programControl.innerText()).trim();
         item.programBeforeGo=programValue;
         if(!/^DFLT$/i.test(programValue))throw Error('Current-year default program is not DFLT: '+programValue);
-        await gradeControl.click();
-        await page.locator('mat-option[role="option"]').first().waitFor({state:'visible',timeout:5000});
-        const options=(await page.locator('mat-option[role="option"]').allTextContents()).map(x=>x.trim());
-        item.gradeOptions=options;
-        console.log('DENTON_OFFICIAL_GRADE_OPTIONS',JSON.stringify({id:s.id,options}));
-        const grade2=page.locator('mat-option[role="option"]').filter({hasText:/^0?2$/}).first();
-        if(await grade2.count()){
-         await grade2.click({timeout:5000});
-         item.selectedGrade=(await gradeControl.innerText()).trim();
-         if(!/^0?2$/.test(item.selectedGrade))throw Error('Selected grade did not equal 2');
+        const official=require('../denton-official-zone-references.js').ROWS;
+        for(const grade of [2,7,10]){
+         await gradeControl.click();
+         await page.locator('mat-option[role="option"]').first().waitFor({state:'visible',timeout:5000});
+         const options=(await page.locator('mat-option[role="option"]').allTextContents()).map(x=>x.trim());
+         if(grade===2){item.gradeOptions=options;console.log('DENTON_OFFICIAL_GRADE_OPTIONS',JSON.stringify({id:s.id,options}));}
+         const option=page.locator('mat-option[role="option"]').filter({hasText:new RegExp('^0?'+grade+'$')}).first();
+         if(!await option.count()){
+          item.gradeOutcomes.push({grade,status:'GRADE_OPTION_MISSING'});await page.keyboard.press('Escape');continue;
+         }
+         await option.click({timeout:5000});
+         const selected=(await gradeControl.innerText()).trim();
+         if(Number(selected)!==grade)throw Error('Official UI selected a different grade: '+selected+' != '+grade);
+         if(!/^DFLT$/i.test((await programControl.innerText()).trim()))throw Error('Nondefault program before Go');
          await page.getByRole('button',{name:'Go',exact:true}).click({timeout:10000});
          await page.waitForTimeout(3500);
-         const after=(await page.locator('body').innerText()).slice(0,4500);
-         item.gradeOutcomes.push({grade:2,program:'DFLT',status:'OFFICIAL_GRADE_2_RESULT_SCREEN_CAPTURED_NOT_CERTIFIED',visibleText:after});
-         console.log('DENTON_GRADE2_RESULT_SCREEN',JSON.stringify({id:s.id,grade:2,body:after.slice(0,2300)}));
-         await page.screenshot({path:path.join(dir,s.id+'-grade2.png'),animations:'disabled',timeout:15000});
-        } else item.gradeOutcomes.push({grade:2,status:'GRADE_2_OPTION_NOT_AVAILABLE'});
+         const body=(await page.locator('body').innerText()).slice(0,4500);
+         const found=body.match(/School Results\s+Results\s+1\s+([^\n]+)\n(\d{1,3})\n/);
+         const level=grade===2?'elementary':grade===7?'middle':'high';
+         const id=found?'061901'+found[2].padStart(3,'0'):null;
+         const pdf=official.find(row=>row.id===id&&row.level===level);
+         const outcome={grade,level,program:'DFLT',schoolText:found?.[1]||null,schoolId:id,
+          officialPdfRosterMatched:!!pdf,status:pdf?'FINDER_RESULT_MATCHES_OFFICIAL_CAMPUS_ROSTER_POLYGON_UNVERIFIED':'NO_GO_NO_UNAMBIGUOUS_CURRENT_CAMPUS_RESULT'};
+         item.gradeOutcomes.push(outcome);
+         console.log('DENTON_OFFICIAL_GRADE_RESULT',JSON.stringify({id:s.id,...outcome,bodyPreview:body.slice(0,650)}));
+         await page.screenshot({path:path.join(dir,s.id+'-grade'+grade+'.png'),animations:'disabled',timeout:15000});
+        }
        } else item.gradeOutcomes.push({status:'OFFICIAL_GRADE_CONTROL_MISSING'});
        break;
       }
