@@ -150,3 +150,14 @@ test('other TEA LEAs are separately counted and cannot inflate the 108 ISD cover
  assert.equal(r.summary.allDFWMatchedHistoricalPoints,2113);
  assert.equal(r.summary.allDFWMissingHistoricalPoints,69);
 });
+
+test('2027–28 Durham change is future, not a premature 2026–27 campus closure',()=>{
+ const r=audit(fresh());
+ const durham=r.campusRecords.find(c=>c.id==='220919106');
+ assert.ok(durham);
+ assert.equal(durham.lifecycle.status,'FUTURE_CHANGE_NOT_EFFECTIVE_IN_2026_27');
+ assert.equal(durham.lifecycle.effective,'2027-28');
+ assert.equal(durham.actualAddressAssignment.verified,false);
+ const carroll=r.districts.find(d=>d.code==='220919');
+ assert.ok(carroll.lifecycle.futureChangesNotEffective >= 1);
+});
