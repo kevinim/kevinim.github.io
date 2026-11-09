@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "verifiedOn": "2026-11-09",
+  "targetAcademicYear": "2026-27",
+  "snapshotFile": "tea-ratings-2026.json",
+  "scope": "Non-CFB school-specific operating or feeder transitions; records are annotations, NOT authoritative residence enrollment, campus GIS, or new TEA IDs.",
+  "counts": {
+    "existingTEACampusRecordsWithChangedStatus": 5,
+    "newCampusesMissingTEARecords": 2
+  },
+  "entries": [
+    {
+      "districtCode": "061901",
+      "campusId": "061901120",
+      "schoolNameFromTEA": "PALOMA CREEK EL",
+      "status": "repurposed-no-regular-enrollment",
+      "effectiveAcademicYear": "2026-27",
+      "presentInTea2026Snapshot": true,
+      "regularAssignmentCampus2026_27": false,
+      "source": "https://www.dentonisd.org/families/attendance-zones/attendance-boundary-modification-26-27",
+      "destinationNote": "기존 재학생은 정확한 거주 주소에 따라 Bell, Union Park, Sandbrock Ranch, Savannah 등으로 배정됩니다. 단일 후속학교로 일괄 치환하지 마세요.",
+      "footnote": "Paloma Creek Elementary는 2026–27부터 기존 초등 캠퍼스로 학생을 배정하지 않습니다. 기존 TEA 평점 행은 과거 자료로 유지하되 2026–27 현행 지정학교로 자동 추천하지 마세요."
+    },
+    {
+      "districtCode": "220906",
+      "campusId": "220906103",
+      "schoolNameFromTEA": "DOVE EL",
+      "status": "consolidated-no-regular-enrollment",
+      "effectiveAcademicYear": "2026-27",
+      "presentInTea2026Snapshot": true,
+      "regularAssignmentCampus2026_27": false,
+      "source": "https://www.gcisd.net/article/2594779",
+      "destinationNote": "Cannon 또는 Silver Lake 등 해당 주소의 2026–27 공식 배정확인이 필요하며 단일 목적지로 지정하면 안 됩니다.",
+      "footnote": "Dove Elementary는 2026–27 GCISD 통합 대상입니다. TEA 과거 평점은 유지해도 현재 주소별 배정학교로 자동 표시하면 안 됩니다."
+    },
+    {
+      "districtCode": "220906",
+      "campusId": "220906108",
+      "schoolNameFromTEA": "BRANSFORD EL",
+      "status": "consolidated-no-regular-enrollment",
+      "effectiveAcademicYear": "2026-27",
+      "presentInTea2026Snapshot": true,
+      "regularAssignmentCampus2026_27": false,
+      "source": "https://www.gcisd.net/article/2594779",
+      "destinationNote": "Colleyville 또는 O.C. Taylor 및 연쇄 재배정 지역은 공식 지도·교육청 주소 확인이 필요합니다.",
+      "footnote": "Bransford Elementary는 2026–27 GCISD 통합 대상입니다. 이전 학교 기록을 현재 주소별 일반 배정으로 사용하지 마세요."
+    },
+    {
+      "districtCode": "220919",
+      "campusId": "220919106",
+      "schoolNameFromTEA": "DON T DURHAM INT",
+      "status": "future-closure-only",
+      "effectiveAcademicYear": "2027-28",
+      "presentInTea2026Snapshot": true,
+      "regularAssignmentCampus2026_27": true,
+      "source": "https://www.southlakecarroll.edu/consolidation",
+      "destinationNote": "Durham Intermediate 폐쇄는 2027–28 적용; 2026–27 현재 재학생의 학년별 구역과 Carroll ES의 Eubanks/Dawson 변경은 별도 확인하세요.",
+      "footnote": "Durham Intermediate는 2027–28 폐쇄·중학교 재편 계획 대상이며 2026–27 폐교로 취급하지 마세요."
+    },
+    {
+      "districtCode": "220919",
+      "campusId": "220919102",
+      "schoolNameFromTEA": "CARROLL EL",
+      "status": "current-year-feeder-change",
+      "effectiveAcademicYear": "2026-27",
+      "presentInTea2026Snapshot": true,
+      "regularAssignmentCampus2026_27": true,
+      "source": "https://www.southlakecarroll.edu/district-information/district-departments/student-services/online-enrollment-portal",
+      "destinationNote": "Carroll Elementary 학생들은 2026–27부터 Eubanks Intermediate, Dawson Middle로 진학한다는 학군 공지를 별도로 확인하세요.",
+      "footnote": "Carroll Elementary의 2026–27 Eubanks·Dawson 진학 변경이 반영됩니다. 이것은 초등학교 폐교나 집주소 자체의 배정을 확정하는 정보가 아닙니다."
+    },
+    {
+      "districtCode": "061911",
+      "campusId": null,
+      "schoolNameFromTEA": null,
+      "schoolName": "Dr. Leigh Anne Romer Elementary School",
+      "status": "new-campus-absent-from-snapshot",
+      "effectiveAcademicYear": "2026-27",
+      "presentInTea2026Snapshot": false,
+      "regularAssignmentCampus2026_27": true,
+      "source": "https://romer.nisdtx.org/our-school/about-us",
+      "destinationNote": "2026년 8월 개교. 2026–27 Board-approved 공식 Locator로 새 주소 배정 구역을 확인하세요.",
+      "footnote": "Romer Elementary는 2026년 8월 개교했지만 사용 중인 예비 TEA 2026 학교 평점 스냅샷에는 ID·평점이 없습니다. 평점 없음은 저평가나 학교 부재가 아닙니다."
+    },
+    {
+      "districtCode": "061911",
+      "campusId": null,
+      "schoolNameFromTEA": null,
+      "schoolName": "Floyd Barksdale Middle School",
+      "status": "new-campus-absent-from-snapshot",
+      "effectiveAcademicYear": "2026-27",
+      "presentInTea2026Snapshot": false,
+      "regularAssignmentCampus2026_27": true,
+      "source": "https://barksdale.nisdtx.org/our-school/about-us",
+      "destinationNote": "2026년 8월 개교. 2026–27 Board-approved 공식 School Zone Locator로 학년별 배정 확인이 필요합니다.",
+      "footnote": "Barksdale Middle은 2026년 8월 개교했지만 사용 중인 예비 TEA 2026 학교 평점 스냅샷에 ID·평점이 없습니다. 신설 학교에 임의 점수나 경계선을 생성하지 마세요."
+    }
+  ]
+}
