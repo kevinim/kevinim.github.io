@@ -127,42 +127,62 @@ def georegistration(doc, page):
 
 
 def shapely_from_pdf_rings(rings, convert):
- # The single fill path may have multiple disjoint shapes and cut-outs.
- # Preserve polygon holes by containment nesting (PDF-local plane).
+ # ArcGIS-generated native even-odd filled paths occasionally have tiny
+ # self-touching vertices at municipal intersections. Preserve each large
+ # component instead of silently discarding invalid originals.
  candidates=[]
  for ring in rings:
   if len(ring)<4:
    continue
-  geom=Polygon(ring)
-  if not geom.is_valid or geom.area<1:
+  raw=Polygon(ring)
+  if raw.is_empty or raw.area<1:
    continue
-  candidates.append((geom,ring))
+  repaired=raw if raw.is_valid else raw.buffer(0)
+  if repaired.is_empty or not repaired.is_valid:
+   raise ValueError("PDF native ring cannot be topologically repaired")
+  # Never accept a repair which changes material zone area.
+  drift=abs(repaired.area-raw.area)/raw.area
+  if drift>0.005:
+   raise ValueError(f"PDF polygon repair changed {drift:.2%} area: "+explain_validity(raw))
+  components=(list(repaired.geoms) if repaired.geom_type=="MultiPolygon" else [repaired])
+  if any(g.geom_type!="Polygon" or g.is_empty for g in components):
+   raise ValueError("Unexpected geometric type after repair")
+  for component in components:
+   if component.area>1:
+    candidates.append(component)
  if not candidates:
-  raise ValueError("No valid closed filled-zone vectors")
- candidates.sort(key=lambda x:x[0].area,reverse=True)
+  raise ValueError("No valid closed filled-zone vectors after bounded repairs")
+ candidates.sort(key=lambda x:x.area,reverse=True)
+ # PDF path uses EvenOdd fill: strictly contained components are holes,
+ # noncontained components are detached islands / multipolygons.
  mains=[]
- for geom,ring in candidates:
-  containing=[j for j,(existing,holes) in enumerate(mains) if existing.contains(geom.representative_point())]
+ for part in candidates:
+  containing=[j for j,(outer,holes) in enumerate(mains) if outer.contains(part.representative_point())]
   if containing:
-   ix=containing[-1];mains[ix][1].append(ring)
+   mains[containing[-1]][1].append(part)
   else:
-   mains.append([geom,[]])
- parts=[]
- for shell,holes in mains:
-  shell_l=list(shell.exterior.coords)
-  holes_l=[h for h in holes if len(h)>=4]
-  local=Polygon(shell_l,holes_l)
+   mains.append([part,[]])
+ polys=[]
+ for outer,holes in mains:
+  local=Polygon(list(outer.exterior.coords),[list(h.exterior.coords) for h in holes])
   if not local.is_valid:
-   raise ValueError("PDF original zone ring invalid: "+explain_validity(local))
-  outer=[convert(p) for p in shell_l]
-  inner=[[convert(p) for p in r] for r in holes_l]
-  parts.append(Polygon(outer,inner))
- geounion=unary_union(parts)
+   raise ValueError("Native PDF even-odd polygon/hole combination invalid: "+explain_validity(local))
+  shell=[convert(p) for p in outer.exterior.coords]
+  ins=[[convert(p) for p in h.exterior.coords] for h in holes]
+  poly=Polygon(shell,ins)
+  if not poly.is_valid:
+   # Coordinate rounding on submeter native edges may cause tiny self touch.
+   fixed=poly.buffer(0)
+   if fixed.is_empty or not fixed.is_valid or abs(fixed.area-poly.area)/max(1e-14,poly.area)>.005:
+    raise ValueError("WGS84 polygon invalid after georeferencing: "+explain_validity(poly))
+   poly=fixed
+  polys.append(poly)
+ geounion=unary_union(polys)
  if not geounion.is_valid:
   raise ValueError("Invalid WGS84 derived zone polygon: "+explain_validity(geounion))
  if geounion.geom_type not in ("Polygon","MultiPolygon"):
   raise ValueError("PDF vector shape not Polygon/MultiPolygon")
- if geounion.area < 0.000003 or geounion.area > .10:
+ if geounion.area<0.000003 or geounion.area>0.10:
   raise ValueError("Unrealistic school-zone WGS84 degree area")
  return geounion
 
