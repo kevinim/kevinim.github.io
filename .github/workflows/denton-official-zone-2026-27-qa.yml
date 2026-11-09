@@ -27,7 +27,7 @@ jobs:
           node scripts/audit-gis-upload-links.cjs
           node scripts/verify-main-data.mjs
   browser:
-    name: Actual Denton school marker, official school PDF and zero fake polygons (390/1366px)
+    name: Real Denton 39-source PDF selector and zero fake GIS polygons (390/1366px)
     runs-on: ubuntu-latest
     timeout-minutes: 18
     steps:
@@ -44,7 +44,7 @@ jobs:
           npm init -y >/dev/null
           npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
           ./node_modules/.bin/playwright install --with-deps chromium
-      - name: Open real Denton school marker without residential address or GIS estimation
+      - name: Open real Denton school PDF source selector without residence or GIS estimation
         env:
           NODE_PATH: ${{ github.workspace }}/denton-browser-qa-tmp/node_modules
         run: node scripts/test-denton-official-zone-browser.cjs
