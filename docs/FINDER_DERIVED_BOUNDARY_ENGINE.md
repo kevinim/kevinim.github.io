@@ -79,3 +79,17 @@ The free-only approach prioritizes existing electronic GIS records, public sourc
 - **Present:** request DRAFT, six sources triaged, current-year approved CFB campus GIS 0, release gate NO-GO.
 - **After district reply:** verify delivered file/service source/year/license; assess school-specific geometry and coverage; cross-check real residential sample assignments and boundary exceptions; then separate PR for reviewed geometry with provenance footnote.
 - **If records unavailable or rights denied:** remain official Finder-only. Synthetic estimation engine may still be used for technical demonstrations; do not harvest or republish GuideK12 data without approval.
+
+## CFB public-records draft and official GIS intake (2026-11-09)
+
+The owner's Gmail draft at the district's designated TPIA mailbox was revised to specify **personal family relocation research**, possible future noncommercial educational map use, final address assignment through district School Search, and a fee cap requiring express consent. The [district's official request page](https://www.cfbisd.edu/departments/public-information-requests) requires requester's name, mailing address and phone number; the Gmail draft contains placeholders and **has not been sent**. Do not store the requester's personal information in this public repository. Update any response status only with actual documentary evidence (email/receipt).
+
+Once a real district GIS file or public feature service is provided:
+1. Confirm the district/custodian, original source URL, vintage and distribution/license terms. Do not assume a contractor's work implies authority to republish.
+2. Retain original records privately, and normalize a **copy** to GeoJSON using the required fields \`district\`, \`schoolYear\`, \`school\`, \`campusId\`, \`gradeLevel\`. Do not silently assign grade levels from school proximity or guess years.
+3. Maintain a review manifest with \`schemaVersion:1\`, \`districtCode\`, \`schoolYear\`, \`sourceUrl\`, \`permissionEvidenceUrl\`, \`independentReviewerApproved\`, \`reviewEvidenceUrl\`, \`mapPublishable:false\`. The separately reviewed source rights manifest must explicitly allowlist that official GIS endpoint and approved distribution evidence. Self-attestation alone is rejected.
+4. Run \`node scripts/validate-official-school-gis-intake.cjs path/to/manifest.json path/to/normalized.geojson\`. It checks FeatureCollection, **Polygon/MultiPolygon only**, per-feature district/year/grade/campus identity, coordinate validity, closed/nondegenerate rings and the independent rights/reviewer gate.
+5. Passing means \`SCHEMA_REVIEW_ONLY\`, **not** production-ready. Independently verify topology, neighboring zones, school-level counts, 2026–27 year and sampled residential address-to-campus-to-map assignments. Recheck campus lifecycle and source dates before enabling any boundary display.
+6. Add reviewed presentation layer and provenance footnote in a separate PR. No publish/merge on this pilot branch, and #148 remains a separate release NO-GO gate.
+
+No production GIS records, no personal addresses and no automatic official Finder requests are committed with this code. This only provides a safer, repeatable validation route when records arrive.
