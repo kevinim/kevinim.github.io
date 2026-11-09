@@ -24,7 +24,7 @@ function walk(dir, rel = '') {
     if (/^jpm-(?:60min-isochrone|road-times|outside-dfw)/i.test(entry.name)) {
       findings.push({file:name,category:'personalized commute dataset'});
     }
-    if (!/\\.(?:html|js|json|geojson|css)$/i.test(entry.name)) continue;
+    if (!/\.?:html|js|json|geojson|css)$/i.test(entry.name)) continue;
     const file = path.join(dir,entry.name);
     if (fs.statSync(file).size > 8*1024*1024) continue;
     const content = fs.readFileSync(file,'utf8');
