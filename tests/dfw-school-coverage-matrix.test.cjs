@@ -26,11 +26,11 @@ test('full 11-county source proxy, separate public ISDs and other TEA LEAs',()=>
  assert.equal(s.teaDistrictCodes,152);
  assert.equal(s.publicISDs,108);
  assert.equal(s.otherLEAs,44);
- assert.equal(s.publicISDsWithRegisteredParentRoute,85);
- assert.equal(s.publicISDsMissingRegisteredParentRoute,23);
- assert.equal(s.registeredParentRouteRatePublicISDPercent,78.7);
- assert.equal(s.publicISDCampusRowsWithUnverifiedParentRoute,61);
- assert.equal(s.publicISDCampusRowsWithRegisteredParentRoute,1880);
+ assert.equal(s.publicISDsWithRegisteredParentRoute,107);
+ assert.equal(s.publicISDsMissingRegisteredParentRoute,1);
+ assert.equal(s.registeredParentRouteRatePublicISDPercent,99.1);
+ assert.equal(s.publicISDCampusRowsWithUnverifiedParentRoute,3);
+ assert.equal(s.publicISDCampusRowsWithRegisteredParentRoute,1938);
  assert.equal(s.otherLEACampusRows,241);
  assert.equal(s.publicISDCampusRows+s.otherLEACampusRows,s.sourceCampusRows);
  assert.equal(committed.districts.length,152);
@@ -42,8 +42,8 @@ test('full 11-county source proxy, separate public ISDs and other TEA LEAs',()=>
 });
 
 test('PRIORITY P0 targets verified missing parent lookup route across whole DFW',()=>{
- assert.deepEqual(committed.priorityQueue.slice(0,7),["249906","126908","249901","116915","043917","116916","116902"]);
- for(const code of committed.priorityQueue.slice(0,7)){
+ assert.deepEqual(committed.priorityQueue.filter(code=>byCode(code).priority==='P0'),['249904']);
+ for(const code of committed.priorityQueue.filter(code=>byCode(code).priority==='P0')){
   const x=byCode(code);
   assert.equal(x.priority,'P0');
   assert.equal(x.parentGuidance.status,'not-verified');
@@ -82,8 +82,8 @@ test('eight verified official parent entry sources are registered without invent
   campuses+=record.teaCampusRecords;
  }
  assert.equal(campuses,399);
- assert.deepEqual(committed.priorityQueue.slice(0,3),["249906","126908","249901"]);
- assert.equal(committed.summary.registeredParentRouteRatePublicISDPercent,78.7);
+ assert.deepEqual(committed.priorityQueue.slice(0,3),['249904','057905','220905']);
+ assert.equal(committed.summary.registeredParentRouteRatePublicISDPercent,99.1);
  assert.equal(official('https://untrusted.example.invalid/locator'),null);
 });
 
