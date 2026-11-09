@@ -44,9 +44,9 @@ function analyzeCspPage(html,name){
   if(firstScript&&meta.offset>firstScript.index)errors.push(name+': CSP declared after scripts begin');
   const inlineScripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)]
     .filter(x=>x[1].trim()).map(x=>x[1].length);
-  const eventAttributes=[...html.matchAll(/<\w+[^>]*?\bon(?:click|change|input|submit|load|error)\s*=/gi)];
+  const eventAttributes=[...html.matchAll(/\bon(?:click|change|input|submit|load|error)\s*=/gi)];
   if(inlineScripts.length)warnings.push(name+': '+inlineScripts.length+' inline bootstrap script(s) must be externalized or nonce/hash-protected before removing unsafe-inline');
-  if(eventAttributes.length)warnings.push(name+': '+eventAttributes.length+' inline event attribute(s) must use event listeners before strict CSP');
+  if(eventAttributes.length)warnings.push(name+': '+eventAttributes.length+' possible inline event-handler occurrence(s) must be reviewed and replaced by event listeners before strict CSP');
   return {name,errors,warnings,summary:{
     policy:meta.value,
     inlineScriptBlocks:inlineScripts.length,
