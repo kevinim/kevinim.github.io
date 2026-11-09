@@ -1,0 +1,50 @@
+name: Sourced commute fuel, vehicle and toll-route guardrails
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'features/commute/sourced-cost*'
+      - 'data/aaa-dfw-fuel-prices.json'
+      - 'tests/sourced-commute-cost.test.cjs'
+      - 'scripts/test-sourced-commute-browser.cjs'
+      - '.github/workflows/verify-sourced-commute.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  commute-sourced:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Source, fuel price, vehicle and unknown toll contracts
+        run: |
+          node --test tests/sourced-commute-cost.test.cjs
+          node scripts/test-integrated-features.cjs
+          node scripts/verify-main-data.mjs
+      - name: Isolated Chromium dependency
+        run: |
+          mkdir -p commute-sourced-browser-deps
+          cd commute-sourced-browser-deps
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve branch site on localhost
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/commute-sourced-http.log 2>&1 &
+          sleep 2
+      - name: Real mobile and desktop with mocked EPA public API
+        env:
+          NODE_PATH: ${{ github.workspace }}/commute-sourced-browser-deps/node_modules
+        run: node scripts/test-sourced-commute-browser.cjs
+      - name: Save proof screenshots and report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sourced-commute-browser-qa
+          path: artifacts/sourced-commute/
+          if-no-files-found: warn
