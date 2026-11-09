@@ -20,6 +20,9 @@ mkdirSync('artifacts/feature-integration',{recursive:true});
    await page.evaluate(()=>window.noteCommuteRouteDistance(32186.88,'zip'));
    assert.equal(await page.locator('#tollOutMiles').inputValue(),'20');
    assert.equal(await page.locator('#tollBackMiles').inputValue(),'20');
+   // UI-first sourced quote keeps the old manual inputs in an optional drawer.
+   await page.locator('#smartLegacyAdvanced > summary').click();
+   assert.equal(await page.locator('#smartLegacyAdvanced').evaluate(el=>el.open),true);
    await page.locator('#tollDays').fill('20');
    await page.locator('#tollOutMiles').fill('20');
    await page.locator('#tollBackMiles').fill('25');
