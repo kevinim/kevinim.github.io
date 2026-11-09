@@ -87,3 +87,11 @@ test('school provenance classification rejects unknown revisions, duplicate code
  const c=copy();c.evidence=[];
  assert.throws(()=>check(c),/manifest_invalid/);
 });
+
+test('Keller current UI exposes historical reference warning without any boundary toggle',()=>{
+ const d=ui.districts.find(d=>d.code==='220907');
+ assert.match(d.dataNote,/2018–19/);
+ assert.match(d.dataNote,/사용하지 않습니다/);
+ assert.equal(d.localSchoolPolygonCount,0);
+ assert.equal(d.boundaryStatus,'external-official-finder-only');
+});
