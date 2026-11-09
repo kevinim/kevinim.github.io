@@ -30,8 +30,8 @@
 - Reads public ArcGIS Web Map item metadata and the district's three exact Web Map IDs; discovers a uniquely named grade-specific layer.
 - Only accepts HTTPS `services*.arcgis.com` polygon FeatureServer/MapServer layer URLs.
 - Requests ArcGIS GeoJSON with `outSR=4326` and checks rings, bounds, source grade, school names, feature completeness.
-- If all three pass, writes **quarantined, source-year-unknown** `artifacts/agent01-irving-gis-stage/QUARANTINED-source-year-unknown.geojson` locally in the CI job, plus a provenance JSON report. These are not tracked in Git or loaded in the dashboard.
-- If a source layer or any field is missing/ambiguous, exits nonzero and reports the blocker. An ArcGIS map being embedded on an official page is not enough to certify a school-year boundary.
+- For every grade passing source and polygon validation, writes **quarantined, source-year-unknown** `artifacts/agent01-irving-gis-stage/QUARANTINED-source-year-unknown.geojson` locally in the CI job, plus a provenance JSON report. These are not tracked in Git or loaded in the dashboard.
+- If a source layer or any field is missing/ambiguous, retains any independently valid grade-specific geometry in local quarantine, exits nonzero and reports the blocker. An ArcGIS map being embedded on an official page is not enough to certify a school-year boundary.
 - Normalized features explicitly have `schoolYear:null`, `campusId:null`, `sourceYearVerified:false`, `independentFinderVerified:false`, and `status:'QUARANTINED_YEAR_UNKNOWN'`.
 
 ## Verification
@@ -43,3 +43,19 @@
 ## Release decision
 
 **NO-GO.** Only promote Irving to a separately reviewed future integration branch after exact year, campus ID/name/grade mapping, rights, independent official address holdouts and browser screenshot QA pass. PR #148's mandatory release gate remains active. No PR merge or production deployment is authorized.
+
+## Measured live extraction — 2026-11-09
+
+[GitHub Actions read-only source run #42674417115](https://github.com/kevinim/kevinim.github.io/actions/runs/42674417115) demonstrated that the actual three district-embedded ArcGIS WebMaps have different layer configurations:
+
+| Grade | Source layer observed | Polygon features extracted | Release result |
+| --- | --- | ---: | --- |
+| Elementary | `New_EL_Zones_24_25` | **18** | 2024–25 in source title; historical, not 2026–27 |
+| Middle | `ReBound_MS_Zones_v5` and related school-name fields | **7** | Academic year not independently confirmed |
+| High | Only school location and district outline layers seen | **0** | No independently identifiable high school attendance polygons |
+
+**25 features were normalized to GeoJSON with WGS84 coordinates, per-grade school names and their exact ArcGIS layer URL** and retained ONLY in the ephemeral Actions job local directory. No polygon geometry was committed to Git, attached to the CI metadata artifact, or served to map clients. The per-grade audit records ArcGIS original CRS, map item owner, URL, feature counts and explicit year/ID/ownership/assignment unverified flags.
+
+The live-source staging check is **expected to remain red / NO_GO** when a grade lacks a validated layer; this is a meaningful source incompleteness blocker, not evidence that released map functionality is broken. Independently, the unit/regression safety job passed on the source-staging branch. An official district website embedding a map does not independently certify the item owner, last edit, academic year, reuse rights, or correctness for a property.
+
+Do not claim these 25 features represent 25 distinct verified current-year campuses until grade-level `schoolCount`, TEA ID crosswalk and 2026–27 authoritative Finder agreement are reviewed.
