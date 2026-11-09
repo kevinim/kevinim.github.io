@@ -1,0 +1,51 @@
+name: GIS upload, official links and hostile metadata (read-only)
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '20 16 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  gis-trust-source:
+    name: gis-trust-static
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Link protocol and trusted district host tests
+        run: node --test tests/audit-gis-upload-links.test.cjs
+      - name: School text and external URL regression scan
+        run: node scripts/audit-gis-upload-links.cjs
+
+  gis-leaflet-negative:
+    name: gis-leaflet-chromium
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned isolated browser + Leaflet
+        run: |
+          mkdir -p gis-browser-tmp
+          cd gis-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0 leaflet@1.9.4
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Check real GeoJSON upload and remote metadata in Chromium
+        run: NODE_PATH="$PWD/gis-browser-tmp/node_modules" node scripts/test-gis-upload-browser.cjs

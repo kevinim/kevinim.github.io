@@ -1,0 +1,62 @@
+'use strict';
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const { DISTRICT_REGISTRY } = require('../district-registry.js');
+const { knownBoundaryException, boundaryMissingExplanation } = require('../school-boundary-match.js');
+const {checkOfficialUrl,auditSchoolBoundaryTrust,SPECIAL_CAMPUSES} = require('../scripts/audit-gis-upload-links.cjs');
+const root=path.resolve(__dirname,'..');
+const source = p=>fs.readFileSync(path.join(root,p),'utf8');
+const files=()=>Object.fromEntries(['index.html','reviewed.html','school-boundary-match.js'].map(p=>[p,source(p)]));
+
+test('all district and special-campus links have explicitly trusted HTTPS hosts',()=>{
+ const r=auditSchoolBoundaryTrust(files());
+ assert.deepEqual(r.errors,[]);
+ assert.equal(r.inventory.districts,7);
+ assert.equal(r.inventory.exceptionLinks,7);
+ for(const school of SPECIAL_CAMPUSES){
+  assert.ok(checkOfficialUrl(knownBoundaryException(school)?.sourceUrl));
+ }
+});
+test('invalid, deceptive, unexpected and executable official link URLs are rejected',()=>{
+ for(const value of [
+   'javascript:alert(1)', 'data:text/html,example', '//www.pisd.edu/path',
+   'http://www.pisd.edu/locator', 'https://www.pisd.edu.evil.test/locator',
+   'https://www.pisd.edu@evil.test/locator', 'https://www.pisd.edu:444/locator',
+   'https://www.pisd.edu\\@evil.test/path', 'https://evil.test/',
+   'https://www.pisd.edu/\npath',
+ ]){
+  assert.equal(checkOfficialUrl(value),false,value);
+ }
+ assert.equal(checkOfficialUrl('https://www.pisd.edu/district-resources/schools-facilities/'),true);
+});
+test('unsafe district URL causes an audit failure',()=>{
+ const altered=structuredClone(DISTRICT_REGISTRY);
+ altered.AISD.official='javascript:alert(1)';
+ assert.ok(auditSchoolBoundaryTrust(files(),altered).errors.some(e=>e.includes('AISD')));
+});
+test('school boundary missing explanation remains raw data, not executable markup',()=>{
+ const name='<img src="x" onerror="window.__gisQAFlag=1">';
+ const sample={district:'FISD',type:'elementary',name};
+ const result=boundaryMissingExplanation(sample,{status:'school-not-in-polygon-source'},'2026–27',null);
+ assert.ok(result.reason.includes(name));
+ assert.equal(result.sourceUrl,undefined);
+ // The actual DOM target remains textContent and is checked by auditSchoolBoundaryTrust.
+ assert.ok(source('index.html').includes('heading.textContent=failure.reason'));
+});
+test('dangerous HTML sink regression in main GIS warning is detected',()=>{
+ const modified=files();
+ modified['index.html']=modified['index.html'].replace('heading.textContent=failure.reason','heading.innerHTML=failure.reason');
+ assert.ok(auditSchoolBoundaryTrust(modified).errors.some(e=>e.includes('no longer text-only')));
+});
+test('legacy uploaded polygon file entrypoint stays under security review',()=>{
+ const modified=files();
+ modified['reviewed.html']=modified['reviewed.html'].replace('Array.isArray(j.features)','Boolean(j.features)');
+ assert.ok(auditSchoolBoundaryTrust(modified).errors.some(e=>e.includes('GeoJSON entrypoint')));
+});
+test('legacy Allen GIS year label must remain HTML-escaped',()=>{
+ const modified=files();
+ modified['reviewed.html']=modified['reviewed.html'].replace('j.features.map(f=>escape(f.properties.YearUpdated','j.features.map(f=>String(f.properties.YearUpdated');
+ assert.ok(auditSchoolBoundaryTrust(modified).errors.some(e=>e.includes('historical date')));
+});
