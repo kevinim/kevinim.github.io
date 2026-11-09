@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install free pinned PyMuPDF
-        run: python -m pip install --disable-pip-version-check --no-cache-dir pymupdf==1.26.7
+        run: python -m pip install --disable-pip-version-check --no-cache-dir pymupdf==1.26.7 numpy==2.2.6 pyproj==3.7.2 shapely==2.1.2
       - name: Synthetic path extraction and no-GeoJSON safety tests
         run: python -m unittest discover -s tests -p 'test_denton_pdf_vector_poc.py' -v
       - name: Download district-hosted official PDFs and inspect geometry
@@ -32,6 +32,10 @@ jobs:
         run: |
           python -m py_compile scripts/denton_pdf_geopdf_probe.py
           python scripts/denton_pdf_geopdf_probe.py
+      - name: Derive spatially registered staging high and middle school zones from original GeoPDF
+        run: |
+          python -m py_compile scripts/denton_geopdf_to_geojson.py
+          python scripts/denton_geopdf_to_geojson.py --out artifacts/denton-geopdf-derived
       - name: Save PDF-local drawings, map previews and raw inspection reports
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -40,5 +44,6 @@ jobs:
           path: |
             artifacts/denton-pdf-vector-poc/
             artifacts/denton-pdf-geo-probe/
+            artifacts/denton-geopdf-derived/
           retention-days: 7
           if-no-files-found: warn
