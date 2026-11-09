@@ -13,6 +13,8 @@ on:
       - 'scripts/test-map-viewport-sync-browser.cjs'
       - 'features/resilience/winter-map.js'
       - 'scripts/test-zone-timeout-browser.cjs'
+      - 'scripts/test-untrusted-data-browser.cjs'
+      - 'reviewed.html'
       - 'crime-city-map.js'
       - 'data/dfw-crime-city-2023-2025.geojson'
       - 'school-boundary-match.js'
@@ -57,6 +59,10 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/phase2a-browser-tmp/node_modules
         run: node scripts/test-zone-timeout-browser.cjs
+      - name: Untrusted service data and input never execute; CSP active
+        env:
+          NODE_PATH: ${{ github.workspace }}/phase2a-browser-tmp/node_modules
+        run: node scripts/test-untrusted-data-browser.cjs
       - name: Attach phase2a browser screenshot
         if: always()
         uses: actions/upload-artifact@v4

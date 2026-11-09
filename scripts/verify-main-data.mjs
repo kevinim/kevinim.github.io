@@ -1333,5 +1333,15 @@ test('Layout: ZIP subgroup details live in the wide card under the map, not the 
  assert.ok(web.includes('.main>.section{grid-column:1 / -1'),'school finder + comparison use the full width');
  assert.ok(web.includes('repeat(auto-fit,minmax(200px,1fr))'),'3 insight cards fit one row even with a classic 15px desktop scrollbar (724px card)');
 });
+test('Security baseline (#77/#74): CSP on both entry pages, Esri input limit, destination disclosure',()=>{
+ const web=readText('index.html'),rev=readText('reviewed.html');
+ for(const [name,src] of [['index.html',web],['reviewed.html',rev]]){
+  const csp=(src.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)">/)||[])[1]||'';
+  assert.ok(csp,'CSP meta present in '+name);
+  for(const d of ["script-src 'self' https://unpkg.com","object-src 'none'","base-uri 'self'"])assert.ok(csp.includes(d),name+' CSP has '+d);
+  assert.ok(src.includes('OpenStreetMap Nominatim')&&src.includes('OSRM'),'destination search disclosure in '+name);
+ }
+ assert.ok(web.includes('aria-describedby="homeSuggestHint homePrivacy" maxlength="200"'),'home address limited to Esri 200-char SingleLine');
+});
 await Promise.all(asyncChecks);
 console.log('Main website QA: ' + total + ' tests passed.');
