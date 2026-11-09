@@ -12,6 +12,7 @@ on:
       - 'tests/dfw-107-candidate-route-probe.test.cjs'
       - 'data/dfw-campus-identity-baseline-2026.json'
       - 'data/dfw-107-parent-route-qa-candidate-2026.json'
+      - 'data/dfw-pr173-reviewed-hostnames-2026.json'
       - 'data/dfw-public-isd-missing-point-evidence-2026.json'
       - 'tea-ratings-2026.json'
       - 'nces-locations-2024.json'
@@ -25,7 +26,7 @@ on:
   workflow_dispatch:
     inputs:
       live_http_probe:
-        description: 'HEAD-only official link liveness check (not address assignment)'
+        description: 'Read-only HEAD/GET source check (not address assignment)'
         required: false
         type: boolean
         default: false
