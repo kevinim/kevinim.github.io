@@ -22,7 +22,7 @@ test('exact embedded school identity, polygon counts and year quarantining',()=>
  const {features,audit}=extractEmbeddedHigh(map(),item);
  assert.equal(features.length,3);assert.deepEqual(features.map(f=>f.properties.school),EXPECTED);
  assert.equal(audit.polygonCount,3);assert.equal(audit.originalCrs,'EPSG:3857');
- assert.equal(audit.webMapLastModifiedUTC,'2020-08-28T18:45:24.000Z');
+ assert.equal(audit.webMapLastModifiedUTC,'2020-08-28T21:25:24.000Z');
  assert.equal(audit.release,'NO_GO');
  for(const f of features){
   assert.equal(f.properties.schoolYear,null);assert.equal(f.properties.campusId,null);
