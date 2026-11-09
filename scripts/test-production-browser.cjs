@@ -22,6 +22,124 @@ mkdirSync(dir,{recursive:true});
   await page.goto(base+'?production-smoke='+Date.now(),{waitUntil:'domcontentloaded',timeout:90000});
   await page.waitForSelector('.leaflet-container',{timeout:70000});
   await page.waitForFunction(()=>window.schoolBoundaryAuditReady===true,null,{timeout:100000});
+
+  // Live post-deploy checks on both screen sizes. No sensitive addresses,
+  // external mutations, fabricated tolls or local build are used.
+  async function checkCurrentLiveUI(p,width){
+   assert.equal(await p.evaluate(()=>document.documentElement.dataset.theme),'dark',
+    width+': default theme must be dark for a fresh visitor');
+   const themeButton=p.locator('#dashboardThemeToggle');
+   await themeButton.waitFor({state:'visible',timeout:15000});
+   await themeButton.click();
+   assert.equal(await p.evaluate(()=>document.documentElement.dataset.theme),'light',
+    width+': light theme toggle failed');
+   await themeButton.click();
+   assert.equal(await p.evaluate(()=>document.documentElement.dataset.theme),'dark',
+    width+': dark theme restore failed');
+
+   // P0 public privacy on the actual deployed Pages document: never report
+   // addresses or data contents, only pass/fail and safe aggregate counts.
+   assert.equal(await p.locator('#officeSelect').inputValue(),'custom',
+    width+': a private office selection was preselected');
+   assert.equal(await p.locator('#destination').inputValue(),'',
+    width+': destination must be blank on a fresh session');
+   assert.equal(await p.locator('#oneHourOverlay').isHidden(),true,
+    width+': precomputed single-employer 60-minute overlay is still public');
+   assert.equal(await p.locator('#oneHourOverlay').isDisabled(),true,
+    width+': precomputed single-employer map must not activate');
+
+   // Newly merged commute panel must remain optional, and unknown tolls
+   // must not silently become zero or a purported monthly total.
+   await p.locator('#tollCostPanel > summary').click();
+   await p.locator('#smartCommutePanel').waitFor({state:'visible',timeout:20000});
+   assert.equal(await p.locator('#smartLegacyAdvanced').evaluate(el=>el.open),false);
+   const avoid=await p.locator('#smartAvoidResult').innerText();
+   assert.match(avoid,/미연결|산정하지 않습니다|확인되지/);
+   const fast=await p.locator('#smartFastResult').innerText();
+   assert.match(fast,/톨요금 미확인|월 전체비용 미산정/);
+
+   // The repeatedly regressing Allen schools must never vanish on ZIP change.
+   await p.locator('#zipSelect').selectOption('75013');
+   await p.waitForFunction(()=>typeof state!=='undefined' && state.zip==='75013'
+     && typeof schoolGroup!=='undefined' && schoolGroup.getLayers().length>0,
+     null,{timeout:45000});
+   const markerCount=await p.evaluate(()=>schoolGroup.getLayers().length);
+   assert.ok(markerCount>0,width+': Allen school markers disappeared');
+   // Distinguish actual Allen ISD campus pins from unrelated neighboring ISDs:
+   // a nonzero global layer count is not evidence that Allen itself is visible.
+   const allenMarkers=await p.evaluate(()=>{
+    const visibleAllen=state.schools.filter(s=>s.district==='AISD'&&s.ll&&
+      ['elementary','middle','high'].includes(s.type)&&map.getBounds().contains(s.ll));
+    const shownNames=new Set(schoolGroup.getLayers().map(marker=>marker.options.title));
+    return {expected:visibleAllen.length,drawn:visibleAllen.filter(s=>shownNames.has(s.name)).length};
+   });
+   assert.ok(allenMarkers.expected>0,width+': Allen ZIP view contains no AISD campus; inspect selected-area bounds');
+   assert.equal(allenMarkers.drawn,allenMarkers.expected,
+    width+': AISD school markers missing despite campus coordinates inside map viewport');
+
+   const viewport=await p.evaluate(()=>({
+    viewportWidth:innerWidth,scrollWidth:document.documentElement.scrollWidth
+   }));
+   if(width<=390)assert.ok(viewport.scrollWidth<=viewport.viewportWidth+3,
+    width+': mobile horizontal overflow '+JSON.stringify(viewport));
+   await p.screenshot({path:dir+'/deployed-responsive-'+width+'.png',
+    fullPage:false,timeout:30000});
+   return {width,defaultDark:true,themeToggle:true,privateDestinationBlank:true,legacyOverlayDisabled:true,allenMarkerCount:markerCount,aisdMarkers:allenMarkers,
+    manualCostFolded:true,unknownTollNotPriced:true,...viewport};
+  }
+  // HTTP checks are made against the real published Pages origin. A previous
+  // Git commit's sensitive dataset must not survive in current site assets.
+  // Never print file content, address strings, or raw response bodies.
+  const retired=[
+   'jpm-60min-isochrone-2026-11-04.geojson',
+   'jpm-road-times-2026-11-04.json',
+   'jpm-outside-dfw.json'
+  ];
+  result.privacy={currentHtml:true,currentJs:true,legacyAssetsGone:0,neutralDataLoaded:false};
+  const privateMarkers=/\bJPM\b|JPMorgan|JPM_ADDRESS|jpm-(?:60min|road-times|outside-dfw)|\bjpmMinutes\b|8181\s+Communications/i;
+  const indexResponse=await page.request.get(base+'?privacy-audit='+Date.now());
+  assert.equal(indexResponse.status(),200,'Deployed HTML is not available');
+  assert.doesNotMatch(await indexResponse.text(),privateMarkers,
+   'The public HTML still contains a previous personalized commute reference');
+  for(const asset of ['dashboard-main.js','candidate-compare.js']){
+   const response=await page.request.get(base+asset+'?privacy-audit='+Date.now());
+   assert.equal(response.status(),200,'Expected public script unavailable: '+asset);
+   assert.doesNotMatch(await response.text(),privateMarkers,
+    'Known personalized token reappeared in publicly served '+asset);
+  }
+  for(const asset of retired){
+   const response=await page.request.get(base+asset+'?privacy-audit='+Date.now(),
+    {failOnStatusCode:false});
+   assert.equal(response.status(),404,'Retired personalized asset still published: '+asset);
+   result.privacy.legacyAssetsGone++;
+  }
+  const neutralResponse=await page.request.get(base+'dfw-outside-public.json?privacy-audit='+Date.now());
+  assert.equal(neutralResponse.status(),200,'Neutral DFW demographics are not published');
+  const neutral=await neutralResponse.json();
+  assert.ok(Array.isArray(neutral.data)&&neutral.data.length>0,
+   'Neutral DFW demographic table missing');
+  assert.ok(neutral.data.every(row=>!Object.hasOwn(row,'jpmMinutes')),
+   'Neutral demographic data still include individualized travel statistics');
+  assert.equal(Object.keys(neutral.minutes||{}).length,0,
+   'Neutral demographic asset unexpectedly includes precomputed commute times');
+  result.privacy.neutralDataLoaded=true;
+  result.checks.push('LIVE P0 privacy: blank destination on two viewports, old assets 404, sanitized scripts and neutral demographics');
+
+  result.liveUi=[await checkCurrentLiveUI(page,1380)];
+  const mobile=await browser.newPage({viewport:{width:390,height:844},
+    deviceScaleFactor:1,isMobile:true,hasTouch:true});
+  const mobileErrors=[];
+  mobile.on('pageerror',error=>mobileErrors.push(String(error?.message||error)));
+  try{
+   await mobile.goto(base+'?production-mobile-smoke='+Date.now(),
+     {waitUntil:'domcontentloaded',timeout:90000});
+   await mobile.waitForSelector('.leaflet-container',{timeout:70000});
+   await mobile.waitForFunction(()=>window.schoolBoundaryAuditReady===true,null,
+     {timeout:100000});
+   result.liveUi.push(await checkCurrentLiveUI(mobile,390));
+   assert.deepEqual(mobileErrors,[],'Live mobile JavaScript errors');
+  }finally{await mobile.close();}
+  result.checks.push('Live 1380px desktop + 390px mobile: dark theme/toggle, Allen markers nonzero, sourced commute unknown tolls, responsive layout');
   const dashboard=await page.evaluate(()=>{
    const cov=window.getSchoolBoundaryCoverage();
    const code=schoolClicked.toString();
