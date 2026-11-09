@@ -43,6 +43,14 @@ jobs:
       - name: Inspect all 26 elementary PDF legend-color swatches and map source paths
         run: |
           python scripts/denton_elementary_pdf_legend_probe.py
+      - name: Independently validate all 39 school IDs, valid WGS84 geometry and same-grade topology
+        run: |
+          python -m py_compile scripts/verify_denton_geopdf_staging.py
+          python scripts/verify_denton_geopdf_staging.py
+      - name: Compare 3 public Census street coordinates to 9 live official Finder campus results
+        run: |
+          python -m py_compile scripts/denton_geopdf_census_holdout_qa.py
+          python scripts/denton_geopdf_census_holdout_qa.py
       - name: Save PDF-local drawings, map previews and raw inspection reports
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
