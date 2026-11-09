@@ -116,6 +116,9 @@ async function main(){
    assert.match(manualMismatch.message,/다릅니다/);
    const mapReferences=await page.locator('#officialReviewPanel a.cardlink[href*="current-campus-level-maps"]').count();
    assert.equal(mapReferences,3,'district-published elementary/middle/high maps must be accessible');
+   // Capture the ACTUAL 3-grade live publisher GIS overlay before clearing it.
+   // The test uses a public school campus location; no private household appears.
+   await page.locator('#map').screenshot({path:path.join(OUT,'irving-live-reference-map-'+width+'.png')});
    // Privacy/cancellation regression: selected home/overlay clears on X.
    await page.evaluate(()=>clearHome());
    const cleared=await page.evaluate(()=>({homePresent:!!home,overlay:!!irvingReferenceLayer}));
