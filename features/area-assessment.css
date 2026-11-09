@@ -10,9 +10,14 @@
 .area-qa-row:hover{background:#f0f6ff;border-color:#a9c4e5}
 .area-qa-row:focus-visible{outline:3px solid #3568b7;outline-offset:2px}
 .area-qa-body{display:grid;gap:3px;min-width:0;flex:1}
+.area-qa-row-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.area-qa-state{font-size:10px;font-weight:700;line-height:1.5;white-space:nowrap;border:1px solid #dbe4f0;border-radius:10px;padding:1px 7px;color:#55708e;background:#f7f9fc}
+.area-qa-state[data-state="unknown"],.area-qa-state[data-state="mixed"]{border-style:dashed}
+.area-qa-action-status{font-size:11px;line-height:1.5;color:#365b86;margin:7px 0 0}
+.area-qa-action-status:empty{display:none}
 .area-qa-label{font-size:12px;font-weight:800;color:#254b7d}
 .area-qa-value{font-size:12px;font-weight:650;line-height:1.45;overflow-wrap:anywhere}
-.area-qa-note{font-size:10px;line-height:1.4;color:#64748b}
+.area-qa-note{font-size:10px;line-height:1.5;color:#596e85}
 .area-qa-mark{font-weight:800;font-size:22px;line-height:1;color:#7090b5;flex:none}
 .area-qa-foot{font-size:10px;line-height:1.4;color:#657992;margin:9px 0 0}
 @media(max-width:720px){.area-qa{padding:12px;margin-bottom:12px}.area-qa-list{grid-template-columns:minmax(0,1fr)}.area-qa-row{padding:10px}.area-qa-top{flex-wrap:wrap}}
