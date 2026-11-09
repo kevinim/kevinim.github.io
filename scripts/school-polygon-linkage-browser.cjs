@@ -46,7 +46,7 @@ async function browserCapture(page){
     const feats=state.zoneData[sourceKey]||[];
     const m=window.SchoolBoundaryMatch.findSchoolBoundary(s,feats,
       (name,district)=>scoreRecord(name,district));
-    const levels=window.SchoolBoundaryMatch.boundaryGradeLevels(s.type);
+    const levels=s.type==='high'?['high','senior']:s.type==='middle'?['middle']:['elementary'];
     const eligible=feats.filter(f=>levels.includes(f?.properties?.gradeLevel));
     const id=String(s.id||'');
     const idEvidence=!!id&&id.length>=8&&eligible.some(f=>
@@ -69,7 +69,7 @@ async function browserCapture(page){
     oldOldZones=state.showOldZones;
   for(const s of schools){
     const r=rows.find(row=>row.district===s.district&&row.school===s.name&&row.type===s.type);
-    if(!r||r.matchStatus!=='matched'||!Array.isArray(s.ll)||!window.map&&typeof map==='undefined')continue;
+    if(!r||r.matchStatus!=='matched'||!Array.isArray(s.ll)||!map)continue;
     const key=s.district+'|'+s.type;
     if(chosen.has(key))continue;
     chosen.add(key);
