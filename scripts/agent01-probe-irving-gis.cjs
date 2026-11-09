@@ -55,7 +55,7 @@ async function json(url){
 async function probe(spec){
  const root='https://www.arcgis.com/sharing/rest/content/items/'+spec.id;
  const item=await json(root+'?f=json');
- requireOK(item.type==='Web Map'&&/^iisd/i.test(item.owner||''),'not an Irving district publisher map');
+ requireOK(item.type==='Web Map'&&MAPS.some(row=>row.id===spec.id)&&typeof item.owner==='string'&&item.owner.length>0,'not a public Web Map linked from the district page');
  const map=await json(root+'/data?f=json');
  const source=selectLayer(map,spec),meta=await json(source+'?f=json');
  requireOK(meta.type==='Feature Layer'&&meta.geometryType==='esriGeometryPolygon'&&meta.capabilities?.includes('Query'),'not a queryable school polygon');
@@ -65,7 +65,7 @@ async function probe(spec){
  requireOK(geo.type==='FeatureCollection'&&Array.isArray(geo.features)&&geo.features.length>0&&geo.features.length<2000&&!geo.exceededTransferLimit,'missing or truncated GIS features');
  const features=geo.features.map(f=>normalize(f,spec.level,source));
  return {features,audit:{grade:spec.level,webMap:spec.id,sourceLayer:source,originalCrs:meta.extent?.spatialReference||null,
-  normalizedCrs:'EPSG:4326',publisher:item.owner,polygonCount:features.length,
+  normalizedCrs:'EPSG:4326',arcgisItemOwner:item.owner,ownershipIndependentlyVerified:false,polygonCount:features.length,
   schoolCount:new Set(features.map(f=>f.properties.school)).size,
   publisherLastEdit:meta.editingInfo?.lastEditDate?new Date(meta.editingInfo.lastEditDate).toISOString():null,
   confirmedSchoolYear:null,TEAIdCrosswalk:false,finalAddressAssignment:false,release:'NO_GO'}};
