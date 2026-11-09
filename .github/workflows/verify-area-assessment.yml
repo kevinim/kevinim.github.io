@@ -1,0 +1,51 @@
+name: P0 regional quick assessment browser and rules
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'features/area-assessment*'
+      - 'data/area-noaa-counts-2024-2025.json'
+      - 'data/noaa-storm-events-dfw-2024-2025.json'
+      - 'tests/area-assessment.test.cjs'
+      - 'tests/area-noaa-summary.test.cjs'
+      - 'scripts/test-area-assessment-browser.cjs'
+      - '.github/workflows/verify-area-assessment.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  regional-assessment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unit rules and source freshness
+        run: node --test tests/area-assessment.test.cjs tests/area-noaa-summary.test.cjs
+      - name: Existing main-map verification
+        run: node scripts/verify-main-data.mjs
+      - name: Install isolated Chromium
+        run: |
+          mkdir -p area-qa-browser-deps
+          cd area-qa-browser-deps
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve PR website on localhost
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/area-assessment-server.log 2>&1 &
+          sleep 2
+      - name: Real desktop/mobile interaction and Allen marker checks
+        env:
+          NODE_PATH: ${{ github.workspace }}/area-qa-browser-deps/node_modules
+        run: node scripts/test-area-assessment-browser.cjs
+      - name: Save screenshots and report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: area-assessment-browser-qa
+          path: artifacts/area-assessment/
+          if-no-files-found: warn
