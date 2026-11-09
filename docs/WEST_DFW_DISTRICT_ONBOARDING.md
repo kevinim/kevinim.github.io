@@ -25,7 +25,7 @@ IDs checked against Texas Education Agency records. No imaginary district codes 
 
 ## Newly identified GIS research lead (not integrated)
 
-The City of Keller operates an ArcGIS map service at https://arcgis.cityofkeller.com/arcgis/rest/services/Kellermaps/KEL_KISD_AGO/MapServer . Its service index lists Elementary School Boundaries (layer 2), High School Boundaries (3), Intermediate School Boundaries (4), and Middle School Boundaries (5). **This is a candidate source only.** The academic year, source-change date, layer-school IDs, geographic completeness and reuse terms are not verified; no geometry from it is shipped, downloaded or shown in this PR. The official Keller ISD address lookup still controls enrollment confirmation.
+The City of Keller operates an ArcGIS map service at https://arcgis.cityofkeller.com/arcgis/rest/services/Kellermaps/KEL_KISD_AGO/MapServer . Its service index lists Elementary School Boundaries (layer 2), High School Boundaries (3), Intermediate School Boundaries (4), and Middle School Boundaries (5). **Verified follow-up (2026-11-09): each of layers 2, 3, 4 and 5 reports `SCHL_YEAR=2018-19`; 41 total polygon features across levels. This is historical reference data, NOT current 2026–27 boundaries.** The source-change date, official campus identifier reconciliation, geographic completeness and reuse terms remain unverified. No geometry from this service is shipped, downloaded or shown in this PR. See `docs/WEST_DFW_GIS_SOURCE_REVIEW.md` and the fail-closed source audit. The official Keller ISD address lookup still controls enrollment confirmation.
 
 ## Known limitations — intentional
 
