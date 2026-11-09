@@ -40,6 +40,9 @@ jobs:
         run: |
           python -m py_compile scripts/denton_geopdf_to_geojson.py
           python scripts/denton_geopdf_to_geojson.py --out artifacts/denton-geopdf-derived
+      - name: Inspect all 26 elementary PDF legend-color swatches and map source paths
+        run: |
+          python scripts/denton_elementary_pdf_legend_probe.py
       - name: Save PDF-local drawings, map previews and raw inspection reports
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -50,5 +53,6 @@ jobs:
             artifacts/denton-pdf-geo-probe/
             artifacts/denton-geopdf-derived/
             artifacts/denton-geopdf-topology-diagnostic/
+            artifacts/denton-elementary-legend-poc/
           retention-days: 7
           if-no-files-found: warn
