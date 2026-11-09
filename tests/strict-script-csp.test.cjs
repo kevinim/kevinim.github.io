@@ -29,13 +29,30 @@ function verifyPage(name) {
  return {html,inline,browserText,hash};
 }
 
-for(const name of ['index.html','reviewed.html']){
- test(name+' CSP locks its exact inline bootstrap and forbids HTML event handlers',()=>{
-  const {browserText,hash}=verifyPage(name);
-  assert.notEqual(crypto.createHash('sha256').update(browserText+'\n','utf8').digest('base64'),hash,
-   'any inline script edit must invalidate the existing hash');
- });
-}
+test('index.html hash-locks its bootstrap',()=>{
+ const {browserText,hash}=verifyPage('index.html');
+ assert.notEqual(crypto.createHash('sha256').update(browserText+'\\n','utf8').digest('base64'),hash);
+});
+
+test('reviewed.html uses only external same-origin bootstrap with strict CSP',()=>{
+ const html=fs.readFileSync(path.join(__dirname,'..','reviewed.html'),'utf8');
+ const meta=html.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)">/i);
+ assert.ok(meta);
+ const policy=meta[1];
+ assert.match(policy,/script-src 'self' https:\\/\\/unpkg\\.com;/);
+ assert.ok(!/unsafe-inline|unsafe-eval|'sha256-/.test(policy));
+ for(const directive of ["script-src-attr 'none'","object-src 'none'","base-uri 'self'","form-action 'self'"])
+  assert.ok(policy.includes(directive));
+ const inline=[...html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script>/gi)].filter(m=>! /\\bsrc\\s*=/.test(m[1]));
+ assert.equal(inline.length,0,'legacy reviewed page must not contain inline script');
+ assert.ok(html.includes('<script src="./features/geojson-upload-guard.js?v=1"></script>'));
+ assert.ok(html.includes('<script src="./features/reviewed-bootstrap.js?v=1"></script>'));
+ const src=fs.readFileSync(path.join(__dirname,'..','features/reviewed-bootstrap.js'),'utf8');
+ assert.ok(src.includes('SchoolGeoJSONGuard.assertFileSize'));
+ assert.ok(src.includes('SchoolGeoJSONGuard.validate'));
+ assert.ok(src.includes('button[data-clear-school]'));
+ assert.ok(!/\\s(?:onclick|onload|onerror|oninput|onchange|onsubmit)\\s*=\\s*["']/i.test(html));
+});
 
 test('external Leaflet remains pinned to a Subresource Integrity hash',()=>{
  for(const name of ['index.html','reviewed.html']){
