@@ -5,7 +5,11 @@ import {createRequire} from 'node:module';
 
 const readText = name => readFileSync(new URL('../' + name, import.meta.url), 'utf8');
 const readJson = name => JSON.parse(readText(name));
-const html = readText('index.html');
+const pageHtml = readText('index.html');
+const mainBootstrap = readText('dashboard-main.js');
+// Assert against actual HTML while retaining existing source-level assertions
+// for formerly inline application logic in the separate exact-byte JS module.
+const html = pageHtml + '\n' + mainBootstrap;
 const audit = readJson('school-data-provenance.json');
 const plano = readJson('plano-locator-reference.geojson');
 const allen = readJson('allen-attendance-historical.geojson');
@@ -61,13 +65,13 @@ const test = (name, fn) => {
   } else {total++;console.log('PASS '+name)}
 };
 
-const inlineScripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)]
- .map(x => x[1]).filter(Boolean);
-
-test('main page inline JavaScript compiles', () => {
-  assert.ok(inlineScripts.length >= 1);
-  inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
+const inlineScripts = [mainBootstrap];
+test('external main application bootstrap compiles with no inline HTML execution',()=>{
+ assert.ok(pageHtml.includes('<script src="./dashboard-main.js?v=3"></script>'));
+ assert.equal([...pageHtml.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].filter(x=>!/\bsrc\s*=/.test(x[1])&&x[2].trim()).length,0);
+ new Script(mainBootstrap,{filename:'dashboard-main.js'});
 });
+
 test('all main application JS modules compile', () => {
   for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','school-boundary-match.js','phase2a-fema-hazards.js','phase2a-nfhl-flood.js','txwrap-wildfire-potential.js','noaa-storm-history.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
     new Script(readText(name), {filename:name});
