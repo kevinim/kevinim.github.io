@@ -133,7 +133,26 @@ function isValidAddressCandidate(label,num,road){
   report.cases.push(item);
  }
  }catch(e){report.fatal=safe(e.message,600)}
- finally{await browser.close();fs.writeFileSync(path.join(OUT,'frisco-official-finder.json'),JSON.stringify(report,null,2)+'\n');
+ finally{
+  await browser.close();
+  const zipCodes=[...new Set(SAMPLES.filter(x=>report.cases.some(y=>y.id===x.id&&y.allViewsMatchOfficial))
+    .map(x=>x.address.match(/\\b\\d{5}\\b/)?.[0]).filter(Boolean))];
+  report.summary={
+    testedPublicResidentialAddresses:report.cases.length,
+    officialFinderAndDashboardExactGradeAgreement:report.cases.filter(x=>x.allViewsMatchOfficial).length,
+    testedZipCount:zipCodes.length,
+    threeSchoolLevelsPerAddress:true,
+    localAppBrowserWidths:[390,1366],
+    allScreenFlowsAndOfficialLookupPass:report.cases.length===SAMPLES.length&&report.cases.every(x=>x.allViewsMatchOfficial),
+    addressUnitEnrollmentConfirmed:false,
+    wholeDistrictSamplingCoverageCertified:false,
+    allSevenISDsProductionReleaseGate:'NO_GO'
+  };
+  report.summary.friscoPublicAddressSampleGate=report.summary.testedPublicResidentialAddresses>=3&&
+    report.summary.testedZipCount>=2&&report.summary.allScreenFlowsAndOfficialLookupPass?'PASS':'NO_GO';
+  fs.writeFileSync(path.join(OUT,'frisco-official-finder.json'),JSON.stringify(report,null,2)+'\n');
+  console.log('FRISCO_PUBLIC_RESIDENTIAL_SOURCE_AGREEMENT '+JSON.stringify(report.summary));
+  if(report.summary.friscoPublicAddressSampleGate!=='PASS')process.exitCode=1;
   console.log('FRISCO_OFFICIAL_FINDER_HUMAN_UI '+JSON.stringify({http:report.http,cases:report.cases.map(x=>({
    id:x.id,status:x.status,selected:x.addressCandidateSelected,address:x.selectedAddressLabel,grades:x.verifiedGrades,
    summary:x.snapshot?.section.slice(0,500),allViewsMatchOfficial:x.allViewsMatchOfficial,comparison:x.dashboardComparisons,attempts:x.queries.map(q=>({query:q.query,suggestions:q.visibleSuggestions?.map(s=>s.text),
