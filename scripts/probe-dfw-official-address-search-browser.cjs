@@ -40,7 +40,7 @@ async function check(browser,district,entry){
   const number=pieces[0],street=pieces[1];
   // ArcGIS WebAppBuilder suggestions are nested divs, not role=option/list li.
   // Look for a VISIBLE precise street-number+street text node instead.
-  const regex=new RegExp('^\\s*'+number+'\\s+(?:[NSEW]\\\\.?\\s+)?'+street,'i');
+  const regex=new RegExp('^\\s*'+number+'\\s+(?:[NSEW]\\.?\\s+)?'+street,'i');
   const candidates=page.getByText(regex,{exact:false});
   const matched=await candidates.count();
   out.exactTextCandidateCount=matched;
