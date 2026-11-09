@@ -30,6 +30,9 @@ function compareIndependentOfficialUI(dashboard,official,{spatialToleranceMeters
  if(!dashboard?.map||!official||!official.officialAddressSelected){
   result.reason='MISSING_ADDRESS_SELECTION';return result;
  }
+ if(official.mapClickedAtExactGeocoderCenter!==true){
+  result.status='OFFICIAL_POPUP_NOT_TIED_TO_EXACT_SELECTED_POINT';return result;
+ }
  if(dashboard.map.district!==official.district){
   result.status='DISTRICT_MISMATCH';return result;
  }
