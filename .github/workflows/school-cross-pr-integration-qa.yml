@@ -11,6 +11,8 @@ on:
       - 'school-zone-ui.js'
       - 'data/finder-derived-source-rights-2026.json'
       - 'data/cfb-geometry-source-triage-2026.json'
+      - 'scripts/audit-dfw-school-qa-readiness.cjs'
+      - 'tests/audit-dfw-school-qa-readiness.test.cjs'
       - 'tests/school-qa-integration.test.cjs'
       - 'tests/finder-derived-boundary-provenance.test.cjs'
       - 'tests/residential-school-release-gate.test.cjs'
@@ -36,6 +38,7 @@ jobs:
           node --check scripts/verify-residential-school-release.cjs
           node --check scripts/validate-cfb-finder-derived-boundaries.cjs
           node --check scripts/report-school-release-readiness.cjs
+          node --check scripts/audit-dfw-school-qa-readiness.cjs
           node --test \
             tests/residential-school-release-gate.test.cjs \
             tests/finder-derived-boundary-provenance.test.cjs \
@@ -44,6 +47,7 @@ jobs:
             tests/verify-cfb-geometry-source-triage.test.cjs \
             tests/validate-official-school-gis-intake.test.cjs \
             tests/school-qa-integration.test.cjs \
+            tests/audit-dfw-school-qa-readiness.test.cjs \
             tests/school-zone-ui.test.cjs
       - name: Demonstrate missing release evidence remains NO-GO
         run: |
@@ -52,11 +56,14 @@ jobs:
             exit 1
           fi
           node scripts/report-school-release-readiness.cjs
+          node scripts/audit-dfw-school-qa-readiness.cjs
       - name: Archive strictly address-free readiness diagnostics
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: school-qa-cross-pr-readiness-report
-          path: artifacts/school-integration/school-release-readiness.json
+          path: |
+            artifacts/school-integration/school-release-readiness.json
+            artifacts/dfw-school-qa/coverage-gate.json
           if-no-files-found: warn
           retention-days: 5
