@@ -31,7 +31,7 @@ const DISTRICT_REGISTRY={
  // West DFW: district IDs verified against TEA. Official external locator only;
  // no authorized, school-specific current-year GIS has been ingested.
  '220919':{en:'Carroll',ko:'캐럴',zoneKey:null,currency:null,address:null,campusIdMatch:true,
-  lookupKind:'finder-guidance',official:'https://www.southlakecarroll.edu/district-information/district-departments/student-services/online-enrollment-portal',officialNote:"2026–27 공식 등록 안내: Carroll Elementary는 Eubanks Intermediate·Dawson Middle로 이어지는 변경된 진학 경로를 확인하세요. Durham Intermediate 폐쇄 및 6–8학년 재편은 2027–28 시행 예정이므로 2026–27 배정에 적용하면 안 됩니다. 정확한 주소·학년·전학은 공식 조회에서 확인하세요. 현재 학년도 학교별 GIS는 대시보드에 없습니다.",label:{}},
+  lookupKind:'finder-guidance',official:'https://www.southlakecarroll.edu/district-information/district-departments/student-services/online-enrollment-portal',officialNote:"2026–27 공식 Enrollment 안내에 따르면 Carroll Elementary의 Eubanks Intermediate·Dawson Middle 진학 경로 조정은 기존 4학년 이하 학생에게 적용됩니다. 기존 5·6·7학년은 종전 feeder 경로를 유지하며, 해당 학생의 예외·전학 및 실제 주소별 배정은 교육청에 확인하세요. Durham Intermediate 폐쇄와 5학년 초등 잔류·6–8학년 캠퍼스 재편은 별도의 2027–28 계획으로 2026–27 배정에 소급 적용하지 마세요. 현재 학년도 학교별 인증 GIS는 대시보드에 없습니다.",label:{}},
  '220907':{en:'Keller',ko:'켈러',zoneKey:null,currency:null,address:null,campusIdMatch:true,
   lookupKind:'finder-guidance',official:'https://www.kellerisd.net/about-kisd/maps',officialNote:"Keller ISD 공식 Maps의 Find Your Campuses/Feeder Pattern을 이용하세요. City of Keller ArcGIS는 초·중간·중·고 학교별 폴리곤을 제공하지만 SCHL_YEAR는 2018–19로 확인되어 2026–27 공식 배정선으로 표시할 수 없습니다. 초등 K–4와 5–12 경로 및 현행 주소·학년 배정은 학군 공식 조회로 확인하세요.",label:{}},
  '061911':{en:'Northwest',ko:'노스웨스트',zoneKey:null,currency:null,address:null,campusIdMatch:true,

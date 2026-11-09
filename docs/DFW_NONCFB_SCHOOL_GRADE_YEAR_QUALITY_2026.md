@@ -13,7 +13,7 @@
 
 | ISD | Critical 2026–27 finding | Follow-up / non-confirmed item |
 | --- | --- | --- |
-| Carroll | 2026–27 Carroll Elementary feeds Eubanks Intermediate and Dawson Middle | 2027–28 Durham Intermediate closure and grades 6–8 restructuring must not be back-applied; campus GIS absent |
+| Carroll | 2026–27 Carroll Elementary → Eubanks/Dawson feeder adjustment **only for current grade 4 and younger** | Existing grades 5–7 stay on their prior feeder pattern; separate Durham closure/5th-grade retention and 6–8 restructure start 2027–28. No independent address/GIS proof |
 | Keller | Official parent Maps and district locator exist | Separate 2018–19 City of Keller ES/intermediate/MS/HS polygon layers are historical; current licensed GIS not confirmed |
 | Northwest | 2026–27 school boundaries board-approved January 12, with new Romer ES and Barksdale MS | 2027–28 HS proposed areas are **not** current; grade 5/7/8 grandfathering may supersede simple zoning; no licensed GIS downloaded |
 | Grapevine-Colleyville | Dove and Bransford Elementary consolidated for 2026–27 | District printed map vintage, special transfer/lottery, campus-level vector GIS and automated address lookup unverified |
@@ -34,7 +34,7 @@ Machine-readable campus status file: `data/dfw-noncfb-campus-transition-evidence
 | GCISD | `220906103` | Dove Elementary | 2026–27 | Consolidated; former TEA record not a currently zoned school |
 | GCISD | `220906108` | Bransford Elementary | 2026–27 | Consolidated; former TEA record not a currently zoned school |
 | Carroll | `220919106` | Durham Intermediate | **2027–28** | Future closure; **do not** mark closed in 2026–27 |
-| Carroll | `220919102` | Carroll Elementary | 2026–27 | Still active, feeder route changed; not a closed campus |
+| Carroll | `220919102` | Carroll Elementary | 2026–27 | Feeder adjustment only for grade 4 and younger; existing grades 5–7 grandfathered on prior route. Campus remains open |
 | Northwest | `null` | Romer Elementary | 2026–27 | New school opened in Aug 2026, absent from supplied preliminary TEA 2026 rating snapshot |
 | Northwest | `null` | Barksdale Middle | 2026–27 | New school opened in Aug 2026, absent from supplied preliminary TEA 2026 rating snapshot |
 
