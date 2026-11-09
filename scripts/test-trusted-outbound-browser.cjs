@@ -40,6 +40,7 @@ const leaflet=fs.readFileSync(require.resolve('leaflet/dist/leaflet.js'));
       const schoolLink=[...area.querySelectorAll('a')].find(a=>a.textContent.includes('학군'))||null;
       const allLinks=[...area.querySelectorAll('a')].map(a=>a.getAttribute('href'));
       const sanitizedSchoolLink=schoolLink?.getAttribute('href');
+      const officialUnavailable=area.textContent.includes('공식 주소별 학군 Finder 링크는 아직 검증되지 않았습니다.');
       const injected=area.querySelectorAll('[data-sink-probe]').length;
       const textLiteral=area.textContent.includes(payload);
       // The production validator must also prevent unsafe href assignments
@@ -48,7 +49,7 @@ const leaflet=fs.readFileSync(require.resolve('leaflet/dist/leaflet.js'));
       const rejected=window.TrustedLinkPolicy.setOfficialAnchor(link,'javascript:alert(1)');
       const disabled=!link.hasAttribute('href');
       const accepted=window.TrustedLinkPolicy.setOfficialAnchor(link,original);
-      return {sanitizedSchoolLink,allLinks,injected,textLiteral,executed:window.__schoolXss||0,
+      return {sanitizedSchoolLink,officialUnavailable,allLinks,injected,textLiteral,executed:window.__schoolXss||0,
        rejected,disabled,accepted,restoredLink:link.getAttribute('href')};
     }finally{
       OFFICIAL[school.district]=original;
@@ -59,7 +60,8 @@ const leaflet=fs.readFileSync(require.resolve('leaflet/dist/leaflet.js'));
    assert.ok(result.textLiteral,'hostile-looking school name should be displayed as inert text');
    assert.equal(result.injected,0);
    assert.equal(result.executed,0);
-   assert.equal(result.sanitizedSchoolLink,'https://txschools.gov/');
+   assert.equal(result.sanitizedSchoolLink,undefined,'untrusted district URL must not become a TEA attendance Finder link');
+   assert.equal(result.officialUnavailable,true,'school must explain when no approved district Finder exists');
    assert.ok(result.allLinks.every(u=>typeof u==='string'&&u.startsWith('https://')));
    assert.equal(result.rejected,false);
    assert.equal(result.disabled,true);
