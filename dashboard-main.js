@@ -430,12 +430,12 @@ function drawHomeAssignmentMap(){
  if(!plan){if(status)status.textContent='지도 학교 후보 표시 기능을 불러오지 못했습니다.';return;}
  const visible=plan.features.length>0&&state.showHistoric;
  if(visible){
-  const current=plan.kind==='current-gis';
+  const current=plan.kind==='current-gis',unconfirmed=plan.kind==='publisher-unconfirmed';
   L.geoJSON({type:'FeatureCollection',features:plan.features},{
    interactive:false,
-   style:{color:current?'#087f69':'#285ac0',weight:4,
+   style:{color:current?'#087f69':unconfirmed?'#b77327':'#285ac0',weight:4,
     dashArray:plan.review?'5 5':current?null:'9 5',
-    fillColor:current?'#70cbb4':'#8db6f8',fillOpacity:.20}
+    fillColor:current?'#70cbb4':unconfirmed?'#e4b05f':'#8db6f8',fillOpacity:.20}
   }).addTo(homeZoneGroup);
  }
  if(status){
