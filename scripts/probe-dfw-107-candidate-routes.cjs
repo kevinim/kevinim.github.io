@@ -7,7 +7,6 @@ const path=require('node:path');
 const ROOT=path.resolve(__dirname,'..');
 const read=p=>JSON.parse(fs.readFileSync(path.join(ROOT,p),'utf8'));
 const MANIFEST='data/dfw-107-parent-route-qa-candidate-2026.json';
-const {official}=require('../trusted-link-policy.js');
 const reviewedHostManifest=read('data/dfw-pr173-reviewed-hostnames-2026.json');
 const REVIEWED_HOSTS=new Set(reviewedHostManifest.hostnames);
 function safeCandidateUrl(value){
@@ -22,7 +21,7 @@ function safeCandidateUrl(value){
  try{
   const u=new URL(value);
   return u.protocol==='https:'&&!u.username&&!u.password&&!u.port&&
-   REVIEWED_HOSTS.has(u.hostname) && (official(value)===value||REVIEWED_HOSTS.has(u.hostname));
+   REVIEWED_HOSTS.has(u.hostname);
  }catch{return false}
 }
 
