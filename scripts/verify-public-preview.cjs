@@ -32,7 +32,9 @@ const previewCsp=verifyExternalCspIntegrity(previewHtml);
 assert.ok(previewHtml.includes('<script src="./dashboard-main.js?v=3"></script>'));
 assert.equal(/<script(?![^>]*src=)[^>]*>[\s\S]*?<\/script>/i.test(previewHtml),false,'No inline bootstrap may ship');
 assert.equal(previewCsp.policy.includes("script-src-attr 'none'"),true);
-assert.equal(previewCsp.policy.includes("'unsafe-inline'"),false);
+const previewScriptCsp=previewCsp.policy.split(';').map(x=>x.trim()).find(x=>x.startsWith('script-src '));
+assert.ok(previewScriptCsp,'A source-declared script-src policy is required');
+assert.equal(previewScriptCsp.includes("'unsafe-inline'"),false,'Executable inline scripts must stay blocked');
 const assets=['index.html','home-lookup-v2.js','candidate-compare.js','dfw-outside-public.json','schools.json','dashboard-main.js'];
 for(const p of assets)assert.ok(fs.existsSync(path.join(base,p)),'Missing public asset '+p);
 const forbidden=['jpm-outside-dfw.json','jpm-road-times-2026-11-04.json',
