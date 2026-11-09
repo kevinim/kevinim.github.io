@@ -42,3 +42,26 @@ test('offline default reports all districts but never issues an HTTP request',as
  assert.equal(result.liveHttpProbeExecuted,false);
  assert.equal(result.records.filter(x=>x.url).length,source.summary.registeredOfficialGuidance);
 });
+
+test('HEAD-only 404 and 500 must be corroborated using same-URL GET before failure',async()=>{
+ for(const head of [404,500]){
+  const requests=[];
+  const result=await probe(officialUrl,async(url,opt)=>{
+   requests.push({url,method:opt.method,redirect:opt.redirect});
+   return {status:opt.method==='HEAD'?head:200};
+  });
+  assert.deepEqual(requests.map(r=>r.method),['HEAD','GET']);
+  assert.ok(requests.every(x=>x.url===officialUrl&&x.redirect==='manual'));
+  assert.equal(result.status,'HTTP_RESPONDED_FINDER_NOT_TESTED');
+  assert.equal(result.httpStatus,200);
+  assert.equal(result.headHttpStatus,head);
+  assert.equal(result.confirmationMethod,'GET');
+ }
+});
+test('GET-confirmed 404 is still not a proven residential assignment',async()=>{
+ const methods=[];
+ const result=await probe(officialUrl,async(_url,opt)=>{methods.push(opt.method);return {status:404}});
+ assert.deepEqual(methods,['HEAD','GET']);
+ assert.equal(result.status,'HTTP_NOT_FOUND_MANUAL_REVIEW');
+ assert.equal(result.headHttpStatus,404);
+});
