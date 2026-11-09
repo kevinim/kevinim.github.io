@@ -197,7 +197,7 @@ function readNeighborDfwSupplement(root) {
     record?.zoneKey===d.code&&record.currency==='published'&&
     record.address==='polygon'&&record.campusIdMatch===true&&
     record.lookupKind==='finder-guidance';
-  if(!/^\\d{6}$/.test(d.code)||seen.has(d.code)||!allowed.has(d.kind)||
+  if(!/^\d{6}$/.test(d.code)||seen.has(d.code)||!allowed.has(d.kind)||
     !record||record.lookupKind!==d.kind||
     (!provisional&&(record.zoneKey!==null||record.address!==null||record.currency!==null))||
     record.official!==d.url||official(d.url)!==d.url||
