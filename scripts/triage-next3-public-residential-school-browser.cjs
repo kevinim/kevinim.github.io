@@ -91,6 +91,13 @@ async function actualApp(browser){
        sourceYear:f.properties?.schoolYear||null}));
       res.renderedPolygonFeatures=data.geometry;
       res.matchedSchoolMarkers=data.matches;res.banner=data.statusText;
+      if(test.district==='LISD'&&data.geometry>0){
+       res.ninthGradeCaveatDisplayed=await page.locator('#homeSchoolInfo [data-lisd-grade-nine-caveat="true"]').count()>0;
+       if(!res.ninthGradeCaveatDisplayed)report.errors.push({id:test.id,width,reason:'Missing Lewisville 9th-grade school disclaimer: cannot infer campus from 3 map layers'});
+      }
+      if(test.district==='PISD'&&data.geometry>0&&res.schoolCandidates.length!==4)
+       report.errors.push({id:test.id,width,reason:'Plano 4-stage feeder / senior high not preserved'});
+
       if(data.geometry>0&&data.matches>0){
        const match=page.locator('.leaflet-marker-icon').filter({has:page.locator('.mapmark.home-match')}).first();
        try{
