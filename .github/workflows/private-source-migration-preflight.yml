@@ -1,0 +1,47 @@
+name: TX private-source migration inventory and dependency preflight (no migration)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/private-source-migration-preflight.yml'
+      - 'scripts/private-source-migration-preflight.cjs'
+      - 'tests/private-source-migration-preflight.test.cjs'
+      - 'docs/PRIVATE_SOURCE_MIGRATION_READINESS.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inventory-and-dependencies:
+    name: Classify current tracked source and block unsafe import
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Validate audit parser and negative migration-safety tests
+        run: |
+          node --check scripts/private-source-migration-preflight.cjs
+          node --test tests/private-source-migration-preflight.test.cjs
+      - name: Produce source categories and static local dependency report (NO FILE TRANSFER)
+        run: node scripts/private-source-migration-preflight.cjs
+      - name: Validate privacy-minimized public build still has an explicit NO-GO
+        run: node scripts/verify-public-preview.cjs
+      - name: Verify disabled UAT, production, and family access rollout settings
+        run: |
+          node scripts/validate-environment-plan.cjs deploy/environment-plan.json planning
+          node scripts/check-uat-anonymous-access.cjs --plan
+      - name: Prove audit did not mutate any tracked dashboard or source files
+        run: git diff --exit-code
+      - name: Publish category COUNTS only; DO NOT upload detailed source path/SHA manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: private-source-migration-preflight-summary
+          path: artifacts/private-source-migration/summary.json
+          if-no-files-found: warn
