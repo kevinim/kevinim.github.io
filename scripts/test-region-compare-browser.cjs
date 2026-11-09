@@ -14,6 +14,15 @@ const report={viewports:[]};
    await page.route(/tile\.openstreetmap\.org|server\.arcgisonline\.com/,r=>r.fulfill({status:200,body:'',contentType:'image/png'}));
    await page.goto(base+'?region-compare-test='+width,{waitUntil:'domcontentloaded',timeout:90000});
    await page.locator('#regionCompare').waitFor({state:'visible',timeout:30000});
+   assert.equal(await page.locator('#regionCompare').evaluate(el=>el.open),false,
+     'Side-by-side comparison must start collapsed');
+   assert.equal(await page.locator('.region-compare-table-scroll').isVisible(),false,
+     'Comparison table cannot occupy viewport while folded');
+   assert.ok((await page.locator('#regionCompare').boundingBox()).height<125,
+     'Collapsed header must be compact');
+   await page.locator('#regionCompare > summary').click();
+   assert.equal(await page.locator('#regionCompare').evaluate(el=>el.open),true);
+
    await page.waitForFunction(()=>document.querySelector('#regionCompareTable thead')?.querySelectorAll('th').length===4,null,{timeout:30000});
    const defaults=await page.locator('.region-compare-select').evaluateAll(items=>items.map(x=>x.value));
    assert.deepEqual(defaults,['75013','75034','75093']);
