@@ -68,13 +68,16 @@
       "school": "NEIGHBORHOOD PREK",
       "district": "FORT WORTH ISD",
       "classification": "MULTISITE_PREK_PARTNERSHIP_LOCATION_AMBIGUITY",
-      "currentYearEvidence": "Texas School Report Cards 2025-26 profile and FWISD program reporting",
+      "currentYearEvidence": "2025-26 Texas School Report Cards plus local reporting of multiple FWISD partner childcare sites (operating sites not independently verified here)",
       "publishedAddress": "7060 Camp Bowie Blvd, Fort Worth, TX 76116 (TEA administration/contact; do not treat as unique instruction site)",
       "verifiedCurrentCoordinates": false,
       "standardAttendancePolygonVerified": false,
       "reason": "PreK partnership serves multiple childcare sites; administrative contact is not a safe single attendance-point placement. No standard campus polygon.",
       "officialSources": [
         "https://txschools.gov/?view=school&id=220905258&lng=en"
+      ],
+      "secondarySources": [
+        "https://www.star-telegram.com/news/local/education/article311956003.html"
       ]
     },
     {
@@ -86,7 +89,7 @@
       "publishedAddress": "650 Knox Ave, Boyd, TX 76023 (2025-26 roster, not independently current)",
       "verifiedCurrentCoordinates": false,
       "standardAttendancePolygonVerified": false,
-      "reason": "Historical 'Boyd PRI' TEA ID absent from 2024 NCES point source; official 2026 district roster does not independently resolve whether this separate ID remains operational. Do not label closed or plot at nearby Boyd Elementary without confirmation.",
+      "reason": "Boyd PRI remains in 2026 preliminary TEA snapshot and 2025-26 meal roster, while the current district site lists Boyd Elementary, Intermediate/Middle and High; separate 2026-27 primary campus identity or consolidation not independently established. Do not declare closure or use a nearby school point.",
       "officialSources": [
         "https://www.boydisd.net/",
         "https://www.squaremeals.org/Portals/8/FND%20Forms/Program%20Forms/School%20Data%202025%20-%202026.pdf?ver=bmlRwA8uTmq3elyPGw5XtA%3D%3D"
