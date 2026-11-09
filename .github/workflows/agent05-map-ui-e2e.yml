@@ -33,7 +33,7 @@ jobs:
           node --check scripts/test-agent05-map-ui-browser.cjs
           node --test tests/home-assignment-map.test.cjs tests/school-zone-ui.test.cjs tests/theme-collapse.test.cjs
           git diff --name-only 127b6200b6229abc00a431ba05fcc82a694050d5 HEAD | tee /tmp/agent05-changes.txt
-          if grep -E '(^data/|\\.geojson$|schools\\.json$|ratings2026\\.json$|district-registry\\.js$)' /tmp/agent05-changes.txt; then
+          if grep -E '(^data/|\.geojson$|schools\.json$|ratings2026\.json$|district-registry\.js$)' /tmp/agent05-changes.txt; then
             echo 'ERROR: source GIS or school data was modified'; exit 1
           fi
       - name: Verify default dark theme and fixed-size map viewport policy
@@ -44,10 +44,10 @@ jobs:
           const html=fs.readFileSync('index.html','utf8');
           const theme=fs.readFileSync('features/theme-toggle.js','utf8');
           assert.match(js,/zoomAnimation:false/);
-          assert.match(js,/function selectZip\\(z,fly=true\\)/);
-          assert.match(js,/syncMapSize\\(\\)/);
-          assert.match(theme,/value==='light'\\?'light':'dark'/);
-          assert.match(html,/features\\/map-control-contrast\\.css\\?v=1/);
+          assert.match(js,/function selectZip\(z,fly=true\)/);
+          assert.match(js,/syncMapSize\(\)/);
+          assert.match(theme,/value==='light'\?'light':'dark'/);
+          assert.match(html,/features\/map-control-contrast\.css\?v=1/);
           assert.match(html,/script-src-attr 'none'/);
           console.log('PASS viewport, dark default, scoped CSS, CSP');
           NODE
