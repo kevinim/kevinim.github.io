@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "recordedOn": "2026-11-09",
+  "scope": "108 public ISDs among TEA 11-county district-of-record snapshot",
+  "teaSha": "d4176c9d168230a2ef3123e4afb50b7bf2113abd",
+  "ncesSha": "8f61ab10969b074afa34817632cfcf3474fdbfc9",
+  "dfwMinimumMatchedHistoricalPoints": 1935,
+  "allenDistrict": "043901",
+  "allenMinimumMatchedHistoricalPoints": 20,
+  "measuredHistoricalPointsInAllen": 23,
+  "publicISDTEARows": 1941,
+  "pointExceptionCount": 6,
+  "limitation": "Static 2024-25 NCES ID/point presence floor; does not prove an active school marker is visible or exact current location. Rebaseline only with independent school roster + browser QA. Does not include 44 other TEA LEAs."
+}
