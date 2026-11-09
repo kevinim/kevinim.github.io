@@ -174,6 +174,7 @@ function officialReviewPanelHtml(item){
  const note=district==='LISD'?'Lewisville 아파트는 주소 대신 별도의 Find an Apartment 검색을 이용하세요.':district==='AISD'?'Allen 아파트 건물·호수 예외가 있으므로 학교 등록 담당자 확인이 필요합니다.':district==='PISD'?'Plano Jackson Elementary는 Coit Rd 동·서쪽에 따라 상급 학교가 달라집니다.':'검색기에 주소·학년을 입력한 뒤 나온 학교명을 복사하세요.';
  const showProsper=district==='PROSPER'&&['current','boundary-review'].includes(a.status);
  const showIrving=district==='057912'||/\bIrving\s*,?\s*(?:TX|Texas)/i.test(item.address||'');
+ const irvingHref=showIrving?window.TrustedLinkPolicy?.official(DISTRICT_REGISTRY['057912']?.locatorUrl):null;
  const irving=item.irvingSpatial;
  const irvingText=irving?.status==='ready'?'공식 Locator GIS 경계(학년도 확인 필요): 초등 '+irving.names.elementary+' · 중등 '+irving.names.middle+' · 고등 '+irving.names.high+' · 지도에 주황색 점선 참고 경계 표시.':irving?.status==='error'?'공식 원본 확인 실패: '+irving.reason+' · 공식 Locator에서 직접 확인하세요.':item.irvingChecking?'교육구 ArcGIS 원본 좌표 조회 중…':'클릭 시 집 핀 좌표를 Irving GIS 원본에 전송하고 이 화면에 초·중·고 참고 경계를 일시 표시합니다.';
  return '<div class="small-note" id="officialReviewPanel" style="margin-top:10px"><b>공식 학군 주소 조회 결과 교차검증</b>'+
@@ -184,6 +185,7 @@ function officialReviewPanelHtml(item){
  '<div class="field"><label for="officialReviewYear">공식 결과의 적용 학년도</label><select id="officialReviewYear"><option value="">학년도 미확인</option><option value="2026–27"'+(year==='2026–27'?' selected':'')+'>2026–27 확인</option><option value="older"'+(year==='older'?' selected':'')+'>이전 학년도·연도 불명</option></select></div>'+
  '<button type="button" class="mini-btn" id="officialManualCompare">입력한 결과와 비교</button>'+
  (showProsper?' <button type="button" class="mini-btn" id="officialProsperCheck"'+(item.officialChecking?' disabled':'')+'>Prosper 공식 좌표 조회</button>':'')+
+ (irvingHref?'<a class="cardlink" href="'+escape(irvingHref)+'" target="_blank" rel="noopener noreferrer">Irving 공식 School Locator 직접 열기 ↗</a>':'')+
  (showIrving?' <button type="button" class="mini-btn" id="officialIrvingCheck"'+(item.irvingChecking?' disabled':'')+'>Irving 공식 GIS 좌표 조회</button><div class="source" id="irvingSpatialStatus" role="status">'+escape(irvingText)+'</div><div class="source">Irving 교육구 공식 Locator에서 현재 사용 중인 GIS를 조회하지만, 초등 2024–25·중등 2025–26 명칭의 원본이므로 2026–27 등록 배정 확정이 아닙니다. 외부 브라우저의 공식 School Locator에서 최종 확인하세요.</div>':'')+
  '<div class="source">Prosper 버튼을 누르면 집 핀 좌표가 학군이 연결한 Infofinder에 전송됩니다. 결과는 좌표의 학교 코드 비교이며 실제 주소·호수·등록 자격 확인은 아닙니다.</div>'+
  '<div class="source" id="officialReviewResult" role="status"><b>'+escape(label)+'</b> · '+escape(msg)+'</div></div>';
