@@ -66,9 +66,9 @@ whether a Leaflet marker or attendance polygon is drawn.
 ## Live official-link audit, carefully scoped
 
 `node scripts/probe-dfw-official-links.cjs` (default) records **not probed**.
-Use `node scripts/probe-dfw-official-links.cjs --live` only when an operator
-wants the **read-only** HTTP HEAD, followed by GET on 405/501, to each
-allowlisted official URL. Redirects are not followed; blocked/429, redirect,
+The GitHub Actions job runs `node scripts/probe-dfw-official-links.cjs --live`
+on every PR update to check read-only HTTP HEAD, followed by GET on 405/501,
+for each allowlisted official URL. Operators may invoke it manually as well. Redirects are not followed; blocked/429, redirect,
 network failure and 404/410 are separate states, **not school assignments**.
 
 GitHub Actions supports `workflow_dispatch` with `live_http_probe=true`.
@@ -155,10 +155,15 @@ registration remains unverified, not a fabricated official route.
 
 ## CI interpretation and operational follow-through
 
-The pinned GitHub Actions job is an **offline fail-closed static audit**.
-Its green status is structural integrity only. The optional HTTP probe is
-disabled on routine PR runs and must be invoked explicitly; a successful
-HTTP 200 does **not** validate that an actual household search works.
+The pinned GitHub Actions job runs an **offline fail-closed static audit**
+followed by a low-volume, read-only HTTP liveness probe for every currently
+registered source URL. An HTTP 200 is recorded as `HTTP_RESPONDED_FINDER_NOT_TESTED`;
+redirects, blocked providers, 404s, rate limits and network errors remain
+separate evidence statuses, not student enrollment claims. CI only fails on
+structural regression, not on temporary external-provider network issues.
+An opt-in operator can also rerun the probe separately. The default `main`
+registry has 29 routes; the 107-route candidate #173 is not yet part of
+`main`, so 107-live-URL coverage cannot be claimed by this independent PR.
 
 Outstanding independent responsibilities are kept explicit:
 - Agent 01: approved source acquisition and campus polygons for broader DFW
