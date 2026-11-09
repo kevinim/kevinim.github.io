@@ -639,7 +639,7 @@ test('P0 zone-edge warning uses closest official polygon ring',()=>{
  const hole=zoneBoundaryProximity(p,[{geometry:{type:'Polygon',coordinates:[ring(5*d),ring(.5*d)]}}]);
  assert.ok(hole.review);
  const h=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
- assert.ok(h.includes("'boundary-review':'finder-boundary-review'"));
+ assert.ok(h.includes("found.status==='current'?'boundary-review':found.status==='publisher-provisional'?'publisher-boundary-review':'finder-boundary-review'"));
  assert.ok(h.includes('zoneBoundaryProximity([item.ll[1],item.ll[0]],found.features,undefined,found.features.map('));
  assert.ok(html.includes('./school-zone-risk.js?v=2'));
 });
