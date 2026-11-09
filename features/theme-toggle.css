@@ -1,0 +1,170 @@
+/* TX dashboard color themes. This layer does not recolor Leaflet basemap tiles,
+ * FEMA/choreopleth colors, campus markers, or TEA A–F semantic swatches. */
+:root{color-scheme:light}
+.dashboard-theme-toggle{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:1px solid #627d9f;border-radius:10px;background:#203957;color:#f3f7ff;
+  padding:9px 13px;min-height:40px;white-space:nowrap;font-size:12px;font-weight:750;
+  transition:background .16s,border-color .16s;
+}
+.dashboard-theme-toggle:hover{background:#31517a;border-color:#8ba8cc}
+.dashboard-theme-toggle:focus-visible{outline:3px solid #a6c4ff;outline-offset:3px}
+.theme-toggle-icon{font-size:19px;line-height:1}
+:root[data-theme="dark"]{
+ color-scheme:dark;
+ --ink:#eaf0fb;--sub:#b1c2d9;--line:#34455e;--bg:#111925;
+ --blue:#91b4ff;--sky:#273951;--dark:#081421;--mint:#64d8c0;--amber:#ffcd80;
+}
+html[data-theme="dark"] body{background:#111925;color:#eaf0fb}
+html[data-theme="dark"] a{color:#a3c6ff}
+html[data-theme="dark"] .top{background:#090f1b}
+html[data-theme="dark"] .brand small{color:#b2c5db}
+html[data-theme="dark"] .toplinks a{background:#16283e;color:#d8e6fa;border-color:#455e7b}
+html[data-theme="dark"] .dashboard-theme-toggle{background:#37517b;color:#fff;border-color:#91b6e8}
+html[data-theme="dark"] .dashboard-theme-toggle:hover{background:#476894}
+html[data-theme="dark"] .heading h1{color:#f1f5fd}
+html[data-theme="dark"] .eyebrow{color:#a9bfff}
+html[data-theme="dark"] .muted,
+html[data-theme="dark"] .source,
+html[data-theme="dark"] .legend,
+html[data-theme="dark"] .footer,
+html[data-theme="dark"] .field label,
+html[data-theme="dark"] .basemap-control,
+html[data-theme="dark"] .zone-audit-row span{color:#b2c2d7}
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .kpi,
+html[data-theme="dark"] .mapbox,
+html[data-theme="dark"] .candidate-panel,
+html[data-theme="dark"] .region-compare,
+html[data-theme="dark"] .area-qa,
+html[data-theme="dark"] .extra-feature{
+ background:#1a2637;border-color:#34455e;color:#eaf0fb;box-shadow:0 3px 20px rgba(0,0,0,.15);
+}
+html[data-theme="dark"] .panel h2,
+html[data-theme="dark"] .maphead h2,
+html[data-theme="dark"] .area-qa-top h3,
+html[data-theme="dark"] .region-compare-heading h3,
+html[data-theme="dark"] .region-compare-summary-title,
+html[data-theme="dark"] .extra-feature>summary,
+html[data-theme="dark"] .filter-panel h2,
+html[data-theme="dark"] .school-group h3{color:#e7f0ff}
+html[data-theme="dark"] .pill,
+html[data-theme="dark"] .area-qa-zip{background:#294363;color:#d5e5ff}
+html[data-theme="dark"] .filter-panel{background:linear-gradient(180deg,#22334e 0%,#192638 80%)!important;border-color:#3a5374}
+html[data-theme="dark"] .filter-panel .field label,
+html[data-theme="dark"] .extra-input-grid label,
+html[data-theme="dark"] .extra-body>label,
+html[data-theme="dark"] .extra-checks label,
+html[data-theme="dark"] .extra-check{color:#c6d4e9}
+html[data-theme="dark"] .filter-panel .check,
+html[data-theme="dark"] .filter-panel .small-note,
+html[data-theme="dark"] .small-note,
+html[data-theme="dark"] .candidate-card,
+html[data-theme="dark"] .extra-stat,
+html[data-theme="dark"] .extra-body,
+html[data-theme="dark"] .extra-result{
+ background:#23334a;border-color:#415674;color:#d6e2f4;
+}
+html[data-theme="dark"] .small-note a,
+html[data-theme="dark"] .school-info a{color:#a8c9ff}
+html[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea{
+ background:#142235!important;color:#eef5ff!important;border-color:#49627f!important;
+}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder{color:#9dafc5}
+html[data-theme="dark"] input[type="checkbox"],
+html[data-theme="dark"] input[type="radio"]{accent-color:#8db2ff}
+html[data-theme="dark"] .seg,
+html[data-theme="dark"] .filter-panel .seg{background:#2a3e59}
+html[data-theme="dark"] .seg button{color:#bbcde2}
+html[data-theme="dark"] .seg button.active{background:#37547d;color:#fff;box-shadow:0 1px 7px #0004}
+html[data-theme="dark"] .btn:not(.danger),
+html[data-theme="dark"] .extra-action{color:#fff}
+html[data-theme="dark"] .home-suggestion-list,
+html[data-theme="dark"] .lisd-apartment-details{background:#1e2d42;border-color:#46617f;box-shadow:0 8px 28px #0007}
+html[data-theme="dark"] .home-suggestion-item,
+html[data-theme="dark"] .lisd-apartment-choice{background:#1d2e45;color:#eaf1fb;border-color:#48637f}
+html[data-theme="dark"] .home-suggestion-item:hover,
+html[data-theme="dark"] .home-suggestion-item.active,
+html[data-theme="dark"] .lisd-apartment-choice:hover{background:#314e72}
+html[data-theme="dark"] .school{background:#202f44;color:#e5effb;border-color:#3e536e}
+html[data-theme="dark"] .school:hover{background:#2b405d;border-color:#819fd5}
+html[data-theme="dark"] .school small,
+html[data-theme="dark"] .school-info summary,
+html[data-theme="dark"] .candidate-card dt,
+html[data-theme="dark"] .candidate-schools,
+html[data-theme="dark"] .detail .statrow span,
+html[data-theme="dark"] .lisd-campus-grid dt{color:#b2c5dd}
+html[data-theme="dark"] .school-zone-map-hint{background:#3b352a;border-color:#957951;color:#f5dfb9}
+html[data-theme="dark"] .school-zone-map-hint a{color:#acd0ff}
+html[data-theme="dark"] .zone-audit-row,
+html[data-theme="dark"] .statrow,
+html[data-theme="dark"] .candidate-card dl div{border-bottom-color:#3b4d66}
+html[data-theme="dark"] .candidate-heading{color:#aecaff}
+html[data-theme="dark"] .area-qa-row{background:#22334a;border-color:#405778;color:#e8f1ff}
+html[data-theme="dark"] .area-qa-row:hover{background:#2c4260;border-color:#6e91c2}
+html[data-theme="dark"] .area-qa-label{color:#bbd6ff}
+html[data-theme="dark"] .area-qa-value{color:#edf4ff}
+html[data-theme="dark"] .area-qa-note,
+html[data-theme="dark"] .area-qa-intro,
+html[data-theme="dark"] .area-qa-foot,
+html[data-theme="dark"] .region-compare-intro,
+html[data-theme="dark"] .region-compare-note,
+html[data-theme="dark"] .region-compare-foot{color:#b4c4d9}
+html[data-theme="dark"] .area-qa-state{background:#2f4665;border-color:#526e91;color:#d4e6ff}
+html[data-theme="dark"] .area-qa-action-status,
+html[data-theme="dark"] .region-compare-status{color:#b6d5ff}
+html[data-theme="dark"] .region-compare-summary{color:#ecf3ff}
+html[data-theme="dark"] .region-compare-summary-hint{color:#b9cadf}
+html[data-theme="dark"] .region-compare-summary-chevron{background:#29466b;border-color:#5377a8;color:#e0edff}
+html[data-theme="dark"] .region-compare-summary:hover{background:#223550}
+html[data-theme="dark"] .region-compare-add,
+html[data-theme="dark"] .region-compare-third,
+html[data-theme="dark"] .region-compare-map-link,
+html[data-theme="dark"] .mini-btn,
+html[data-theme="dark"] .searchrow button{
+ background:#2b476d;border:1px solid #5577a1;color:#e5f0ff;
+}
+html[data-theme="dark"] .region-compare-add:hover,
+html[data-theme="dark"] .region-compare-third:hover,
+html[data-theme="dark"] .region-compare-map-link:hover,
+html[data-theme="dark"] .mini-btn:hover{background:#375880}
+html[data-theme="dark"] .region-compare-picker{color:#c6d7ed}
+html[data-theme="dark"] .region-compare-table-scroll{border-color:#455876}
+html[data-theme="dark"] .region-compare-table th,
+html[data-theme="dark"] .region-compare-table td{border-bottom-color:#3b4e66}
+html[data-theme="dark"] .region-compare-table thead th{background:#2b4260;color:#e4f0ff}
+html[data-theme="dark"] .region-compare-table .region-compare-metric,
+html[data-theme="dark"] .region-compare-value{color:#e5eefc}
+html[data-theme="dark"] .region-compare-table tbody .region-compare-metric{background:#1a2637}
+html[data-theme="dark"] .region-compare-group th{background:#273950;color:#c2d7f1}
+html[data-theme="dark"] .scroll-table{border-color:#3d4f68}
+html[data-theme="dark"] .data-table th{background:#283c55;color:#d7e7fd}
+html[data-theme="dark"] .data-table td{border-bottom-color:#3e516a}
+html[data-theme="dark"] .data-table th button{color:#e7f1ff}
+html[data-theme="dark"] .data-table tr.sel td{background:#2d4565}
+html[data-theme="dark"] .data-table tr:hover td{background:#273d5a}
+html[data-theme="dark"] .heat-legend{color:#bdcce0;border-top-color:#40526b}
+html[data-theme="dark"] .race-row span{color:#aec1d8}
+html[data-theme="dark"] .extra-feature>summary{background:linear-gradient(90deg,#2b415f,#1b2b40)}
+html[data-theme="dark"] .extra-feature>summary:hover{background:#314b6c}
+html[data-theme="dark"] .extra-commute>summary{background:linear-gradient(90deg,#433b31,#1a293c)}
+html[data-theme="dark"] .extra-health>summary{background:linear-gradient(90deg,#24463d,#1a293c)}
+html[data-theme="dark"] .extra-grid>summary{background:linear-gradient(90deg,#343d63,#1a293c)}
+html[data-theme="dark"] .extra-feature>summary small,
+html[data-theme="dark"] .extra-disclosure{color:#b9cbe3}
+html[data-theme="dark"] .extra-body{background:#1a2637}
+html[data-theme="dark"] .extra-glyph{background:#35527a;color:#e6efff}
+html[data-theme="dark"] .extra-stat{background:#293d58;border-color:#456180}
+html[data-theme="dark"] .extra-stat small{color:#bdcce2}
+html[data-theme="dark"] .fema-legend-absent,
+html[data-theme="dark"] .fema-nfhl-warning{color:#bacbdf}
+html[data-theme="dark"] #map{background:#192a3b}
+/* Keep Leaflet map tiles, FEMA colors, school ratings, route pins and their
+ * source-defined gradients untouched: the same meaning in either theme. */
+@media(max-width:720px){
+ .dashboard-theme-toggle{margin-left:auto;padding:8px 11px}
+}
+@media(prefers-reduced-motion:reduce){.dashboard-theme-toggle{transition:none}}

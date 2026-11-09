@@ -4,10 +4,14 @@
  const model=window.RegionCompareCore,assessment=window.AreaAssessmentCore;
  if(!model||!assessment)return;
  const $=id=>document.getElementById(id);
- let available=[],byZip=new Map(),chosen=[],showThird=true,county=null,noaa=null,crime=null,queued=false,sourceError=false;
+ let available=[],byZip=new Map(),chosen=[],showThird=true,county=null,noaa=null,crime=null,queued=false,sourceError=false,sourceStarted=false;
  const selectors=[];
  function n(tag,cls,value){const e=document.createElement(tag);if(cls)e.className=cls;if(value!==undefined)e.textContent=value;return e}
  function announce(message){if($('regionCompareStatus'))$('regionCompareStatus').textContent=message}
+ function summaryText(){
+   const label=$('regionCompareSummaryMeta');
+   if(label)label.textContent=chosen.slice(0,showThird?3:2).join(' · ')+' · ZIP 비교';
+ }
  function sourceOptions(){
    if(typeof DATA==='undefined'||!Array.isArray(DATA))return;
    const records=DATA.filter(d=>model.validZip(d?.z));
@@ -48,7 +52,7 @@
  }
  function fill(){
    queued=false;
-   const table=$('regionCompareTable');if(!table)return;
+   const table=$('regionCompareTable');if(!table||!$('regionCompare')?.open)return;
    sourceOptions();
    const cols=columns();
    if(cols.length<2||cols.some(c=>!c))return;
@@ -58,6 +62,7 @@
      select.closest('.region-compare-picker').hidden=!showThird&&i===2;
    });
    $('regionCompareThird').textContent=showThird?'세 번째 지역 제외':'세 번째 지역 추가';
+   summaryText();
    table.caption.textContent=cols.length+'개 ZIP의 지역 통계 및 출처 비교 · 개별 주택 판정 아님';
    const thead=table.tHead||table.createTHead();thead.replaceChildren();
    const header=n('tr');
@@ -105,14 +110,22 @@
  function mount(){
    const quick=$('areaQuickAssessment'),main=document.querySelector('.main');
    if(!main||$('regionCompare'))return;
-   const section=n('section','region-compare');section.id='regionCompare';
+   const section=n('details','region-compare');section.id='regionCompare';
+   const summary=n('summary','region-compare-summary');summary.id='regionCompareTitle';
+   const summaryTitle=n('span','region-compare-summary-title','지역 나란히 비교');
+   const summaryMeta=n('span','region-compare-summary-hint','Allen · Frisco · West Plano · 필요할 때 펼치기');
+   summaryMeta.id='regionCompareSummaryMeta';
+   const summaryArrow=n('span','region-compare-summary-chevron','열기');
+   summary.append(summaryTitle,summaryMeta,summaryArrow);
+   section.append(summary);
+   const content=n('div','region-compare-content');
    section.setAttribute('aria-labelledby','regionCompareTitle');
    const top=n('div','region-compare-heading'),intro=n('div');
-   const h=n('h3','','지역 나란히 비교');h.id='regionCompareTitle';intro.append(h);
+   const h=n('h3','','지역 비교 상세');intro.append(h);
    intro.append(n('p','region-compare-intro',
       '선택한 2~3개 지역을 같은 항목으로 비교합니다. 지도·주택 후보 비교 기능과 별개입니다.'));
    const add=n('button','region-compare-add','현재 지도 지역 넣기');add.id='regionCompareAddCurrent';add.type='button';
-   top.append(intro,add);section.append(top);
+   top.append(intro,add);content.append(top);
    const pickers=n('div','region-compare-pickers');
    for(let i=0;i<3;i++){
      const label=n('label','region-compare-picker');
@@ -122,16 +135,17 @@
    }
    const toggle=n('button','region-compare-third','세 번째 지역 제외');
    toggle.type='button';toggle.id='regionCompareThird';pickers.append(toggle);
-   section.append(pickers);
+   content.append(pickers);
    const scroll=n('div','region-compare-table-scroll');scroll.tabIndex=0;scroll.setAttribute('role','region');
    scroll.setAttribute('aria-label','지역별 2~3개 ZIP 비교 표');
    const table=n('table','region-compare-table');table.id='regionCompareTable';
    const caption=n('caption','','지역 통계 비교');caption.id='regionCompareCaption';table.append(caption);
-   scroll.append(table);section.append(scroll);
-   section.append(n('p','region-compare-foot',
+   scroll.append(table);content.append(scroll);
+   content.append(n('p','region-compare-foot',
      'ACS 2024 ZCTA 추정 · TEA 2026 예비 · FBI 2025 도시 전체 신고율 · NOAA 2024–25 카운티 보고 건수. 같은 카운티의 기록은 여러 ZIP에 중복 표시됩니다. ZIP별 위험도·거주지 배정 학교를 뜻하지 않습니다.'));
    const status=n('p','region-compare-status','');status.id='regionCompareStatus';
-   status.setAttribute('role','status');status.setAttribute('aria-live','polite');section.append(status);
+   status.setAttribute('role','status');status.setAttribute('aria-live','polite');content.append(status);
+   section.append(content);
    if(quick)quick.after(section);else main.before(section);
    selectors.forEach((select,i)=>select.addEventListener('change',e=>choose(i,e.target.value)));
    toggle.addEventListener('click',()=>{
@@ -144,6 +158,13 @@
      schedule();
    });
    add.addEventListener('click',fromMap);
+   section.addEventListener('toggle',()=>{
+     summaryArrow.textContent=section.open?'접기':'열기';
+     if(section.open){
+       if(!sourceStarted){sourceStarted=true;load()}
+       schedule();
+     }
+   });
    section.addEventListener('click',e=>{
      const button=e.target.closest('button[data-map-zip]');
      if(!button||!section.contains(button)||!byZip.has(button.dataset.mapZip))return;
@@ -178,7 +199,8 @@
    mount();if(!$('regionCompare'))return;
    sourceOptions();chosen=model.uniqueCandidates(model.DEFAULT_ZIPS,available);
    selectors.forEach((select,i)=>{select.value=chosen[i]||''});
-   schedule();load();
+   summaryText();
+   // Defaults to collapsed. Source fetch and large table layout wait for user expansion.
    for(const id of ['schoolList','zipInsights','routeStatus','mapLoadStatus']){
      const element=$(id);
      if(element)new MutationObserver(schedule).observe(element,{childList:true,characterData:true,subtree:true});
