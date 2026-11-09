@@ -120,3 +120,28 @@ The three manual preliminary elementary source queries matched their respective 
 - Agent 06 must investigate the independent historical Git Gitleaks finding; it is outside Agent 01's remit. No merge, production deployment, or release sign-off is authorized by this PR.
 
 The Draft branch implementation supplies a **one-click official Locator handoff** as a functional fallback now, not a substitute for automatic 2026–27 assignment certification.
+
+
+## Third pass — live publisher GIS reference and school-name cross-check (2026-11-09)
+
+Draft PR #177 queries only the district-linked current operational ArcGIS Locator sources: 18 elementary + 7 middle + 3 embedded high polygons. The opt-in button sends the geocoded point (not full typed address) to allowed Esri hosts, displays low-opacity dashed **reference** boundaries and removes them upon clearing the address. No publisher GIS polygons are added to static production data.
+
+The panel adds direct official elementary, middle and high boundary map hyperlinks. A user can copy an official Locator result into the grade-level comparison panel, now extended narrowly to Irving. Name aliases are normalized, mismatches warned, and all results remain yearCertified=false, independentlyVerified=false, productionAssignmentApproved=false. A user-selected 2026–27 value is not independent year certification.
+
+### Five public-only GIS holdouts
+
+| Public location | Elementary | Middle | High |
+| --- | --- | --- | --- |
+| Barton ES campus | Barton ES | Crockett MS | Irving HS |
+| Brown ES campus | Brown ES | Lamar MS | Nimitz HS |
+| Farine ES campus | Farine ES | Travis MS | Macarthur HS |
+| Irving City Hall | John Haley ES | Bowie MS | Nimitz HS |
+| Irving ISD Administration | Johnston ES | Johnson MS | Macarthur HS |
+
+All five fixtures are public schools or government offices. Public address geocoding and source GIS point intersects run live in Actions; the metadata-only artifact has names, grade, facility ID and result but no full address or geometry. These checks do not certify any real private residence's enrollment.
+
+### Governance
+
+The school district's current Public Information Request webpage confirms recordsrequest@irvingisd.net as the designated email channel. A not-yet-sent Gmail draft asks for existing 2026–27 zoning effective records, permissible GIS reuse and source versions with zero-cost records preferred and prior approval for charges.
+
+The official live Locator includes old-named source layers (elementary 2024–25; middle 2025–26; high historic geometry). These cannot be promoted to certified 2026–27 zones based only on updated app timestamps. No static geometry redistribution; current-year legal/official-residential evidence and the independent Agent06 security signoff remain production NO-GO.
