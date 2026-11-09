@@ -18,3 +18,4 @@ jobs:
         with:
           node-version: '22'
       - run: node scripts/verify-main-data.mjs
+      - run: node --test tests/actions-immutable-permissions.test.cjs
