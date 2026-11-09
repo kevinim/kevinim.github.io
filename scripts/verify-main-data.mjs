@@ -1344,7 +1344,8 @@ test('Security baseline (#77/#74): CSP on both entry pages, Esri input limit, de
   const csp=(src.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)">/)||[])[1]||'';
   assert.ok(csp,'CSP meta present in '+name);
   for(const d of ["script-src 'self' https://unpkg.com","object-src 'none'","base-uri 'self'"])assert.ok(csp.includes(d),name+' CSP has '+d);
-  assert.ok(src.includes('OpenStreetMap Nominatim')&&src.includes('OSRM'),'destination search disclosure in '+name);
+  const visibleSource=name==='index.html'?html:src; // main disclosure is now in the external classic bootstrap
+  assert.ok(visibleSource.includes('OpenStreetMap Nominatim')&&visibleSource.includes('OSRM'),'destination search disclosure in '+name);
  }
  assert.ok(web.includes('aria-describedby="homeSuggestHint homePrivacy" maxlength="200"'),'home address limited to Esri 200-char SingleLine');
 });
