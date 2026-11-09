@@ -24,7 +24,7 @@ function weakenForCounterfactual(baseline){
   .replace(/'sha256-[A-Za-z0-9+/]+=*'/g,"'unsafe-inline'")
   .replace(/;\s*script-src-attr 'none'/g,'')
   .replace(/script-src ([^;]+)(;|$)/,(full,sources,end)=>sources.includes("'unsafe-inline'")?full:"script-src "+sources+" 'unsafe-inline'"+end);
- assert.match(loosened,/'unsafe-inline'/);
+ assert.ok(loosened.split(';').find(x=>x.trim().startsWith('script-src ')).includes("'unsafe-inline'"));
  assert.doesNotMatch(loosened,/script-src-attr/);
  return loosened;
 }
