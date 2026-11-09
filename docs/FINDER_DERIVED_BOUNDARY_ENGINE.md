@@ -43,3 +43,22 @@ Use a district code in \`districtCode\`, one official \`finderUrl\`, a school-ye
 - GIS investigation: tests/cfb-2026-geometry-source-audit.json
 
 **Current CFB outcome:** 0 real triangles verified or published; the engine demonstrates the candidate method using synthetic data only. Data reuse permission and actual parcel samples remain blockers.
+
+## 2026-11-09 CFB official rezoning research targets (non-geospatial)
+
+New inputs:
+- \`data/cfb-rezoning-boundary-review-targets-2026.json\`: **14** verified *2025–26 published rezoning narrative targets* — nine elementary, two middle, three high. These are **not 2026–27 Finder-verified assignments**, not addresses, and not polygon points.
+- \`data/finder-derived-source-rights-2026.json\`: explicitly **not-cleared** CFB GuideK12 data reuse/derivative-geometry grant. The engine refuses non-demo input even if the input falsely claims an approval URL.
+- \`scripts/audit-finder-derived-research-targets.cjs\`: produces \`artifacts/finder-derived/cfb-rezoning-review-plan.json\`, with a rights-pending status and no coordinates.
+
+Specific high-risk boundaries in the district's March 2025 adopted plan include Brookhaven Hills West on either side of Valwood Parkway (different elementary assignments), the former Furneaux zone with a Woodlake/Frankford exception, plus apartment-sensitive neighborhood changes. Morningside's documented elementary/middle/high changes create a useful cross-grade test cluster. All 14 are **sampling priorities for future independent checks**, not a license to infer an enrollment polygon.
+
+Reference: https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning
+
+The 2025–26 narrative and current Finder cannot be assumed to agree in 2026–27 without explicit verification. The Texas Legislative Council's district-outline shapefile (CC BY) is licensed background geography, **not** a school-specific attendance polygon and must never be used as one.
+
+### Permission request status
+**No district/provider written permission obtained; no request has been sent automatically.** A release manager may contact \`enroll@cfbisd.edu\` (listed on district School Search) to ask for a district-issued current-year GIS download/export, approved derived-data conditions, and any permitted bulk/address testing policy. No paid service is required for the synthetic-only pilot. If rights are denied, restrict to link-only official Finder and do not train/publish derived polygons from GuideK12 data.
+
+### Verified stage
+The public CI test proves that the generator rejects fake rights, samples with private street addresses, sample mismatches and unreviewed outputs. It **does not** prove any CFB campus geometry has been regenerated. The map-release gate in #148 remains separate and NO-GO pending independent residential checks.
