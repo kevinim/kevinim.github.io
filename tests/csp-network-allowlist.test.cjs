@@ -16,7 +16,9 @@ const mainConnect=[
  'https://services2.arcgis.com',
  'https://www.infofinderi.com',
  'https://gismaps.cityofallen.org',
- 'https://hazards.fema.gov'
+ 'https://hazards.fema.gov',
+ 'https://www.fueleconomy.gov',
+ 'https://fueleconomy.gov'
 ];
 const reviewedConnect=[
  'https://nominatim.openstreetmap.org',
@@ -69,7 +71,8 @@ test('all live vendor endpoints remain reachable under index connect-src',()=>{
   ['index.html','https://static.friscoisd.org'],
   ['index.html','https://portal.metrostudygis.com'],
   ['index.html','https://nominatim.openstreetmap.org'],
-  ['index.html','https://router.project-osrm.org']
+  ['index.html','https://router.project-osrm.org'],
+  ['features/commute/sourced-cost-core.js','https://www.fueleconomy.gov']
  ];
  const origins=new Set(get('index.html','connect-src'));
  for(const [file,origin] of sourceNames){
