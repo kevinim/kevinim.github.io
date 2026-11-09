@@ -175,7 +175,6 @@ function officialReviewPanelHtml(item){
  const showProsper=district==='PROSPER'&&['current','boundary-review'].includes(a.status);
  const showIrving=district==='057912'||/\bIrving\s*,?\s*(?:TX|Texas)/i.test(item.address||'');
  const irvingHref=showIrving?window.TrustedLinkPolicy?.official('https://iisd1.maps.arcgis.com/apps/instant/lookup/index.html?appid=f27bba7ee02141c58c8c9375431effa2'):null;
- const irving=item.irvingSpatial;
  const officialCampusMaps=[
   ['초등 공식 학교별 지도','https://www.irvingisd.net/departments-services/performance-outcomes-data/planning/current-campus-level-maps/elementary-school-boundary-map'],
   ['중등 공식 학교별 지도','https://www.irvingisd.net/departments-services/performance-outcomes-data/planning/current-campus-level-maps/middle-school-boundary-map'],
