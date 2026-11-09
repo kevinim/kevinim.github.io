@@ -1,79 +1,78 @@
 #!/usr/bin/env node
 'use strict';
 /*
- * Prove what the CURRENT CSP actually permits and why removing unsafe-inline
- * needs a planned JS refactor. Isolated in-memory Chromium document only:
- * NO navigation to the real dashboard and NO outgoing network requests.
+ * Compare the current PR89 strict, hash-locked CSP with a deliberately weakened
+ * counterfactual in isolated browser documents. No live dashboard navigation,
+ * no external requests, no personal inputs, no attack destinations.
  */
 const assert=require('node:assert/strict');
 const {chromium}=require('playwright');
 const {checkCurrentRepo}=require('./audit-csp-readiness.cjs');
 
 function documentFor(policy){
- const escaped=policy.replaceAll('&','&amp;').replaceAll('"','&quot;');
  return '<!doctype html><html><head>'+
-  '<meta http-equiv="Content-Security-Policy" content="'+escaped+'">'+
+  '<meta http-equiv="Content-Security-Policy" content="'+policy.replaceAll('"','&quot;')+'">'+
   '</head><body>'+
   '<script>window.__testInlineBootstrap=(window.__testInlineBootstrap||0)+1</script>'+
   '<img src="data:image/png;base64,YmFk" onerror="window.__testInlineHandler=(window.__testInlineHandler||0)+1">'+
-  '<div id="result">CSP isolated test</div></body></html>';
+  '<div id="result">Isolated CSP probe</div></body></html>';
+}
+function weakenForCounterfactual(baseline){
+ // Remove the exact hash and script-src-attr prohibition. This intentionally
+ // models the OLD policy, never a policy recommendation or a runtime change.
+ const loosened=baseline
+  .replace(/'sha256-[A-Za-z0-9+/]+=*'/g,"'unsafe-inline'")
+  .replace(/;\s*script-src-attr 'none'/g,'');
+ assert.match(loosened,/'unsafe-inline'/);
+ assert.doesNotMatch(loosened,/script-src-attr/);
+ return loosened;
 }
 async function inspect(browser,policy,width){
  const page=await browser.newPage({viewport:{width,height:700}});
- const violations=[];
- page.on('console',()=>{}); // CSP messages can appear without causing test failure.
- await page.route('**/*',route=>route.abort()); // never call untrusted hosts
+ await page.route('**/*',route=>route.abort());
  try{
   await page.setContent(documentFor(policy),{waitUntil:'load'});
   await page.waitForTimeout(160);
-  const first=await page.evaluate(()=>({
-    bootstrap:window.__testInlineBootstrap||0,
-    handler:window.__testInlineHandler||0,
+  const flags=await page.evaluate(()=>({
+   bootstrap:window.__testInlineBootstrap||0,handler:window.__testInlineHandler||0
   }));
-  // A script from an unapproved origin should be rejected by script-src.
-  await page.evaluate(()=>{
-    window.__testCspViolations=[];
-    document.addEventListener('securitypolicyviolation',e=>{
-      window.__testCspViolations.push({directive:e.violatedDirective,blocked:e.blockedURI});
-    });
-    const s=document.createElement('script');
-    s.src='https://unapproved.example.invalid/script.js';
-    document.head.appendChild(s);
-  });
-  await page.waitForFunction(()=>window.__testCspViolations?.length>0,{timeout:3000});
-  const blocked=await page.evaluate(()=>window.__testCspViolations);
-  assert.ok(blocked.some(x=>x.directive.startsWith('script-src')),
-    'the script-src rule must block scripts from an unapproved host');
-  return {first,blockedCount:blocked.length,blockedDirectives:blocked.map(x=>x.directive)};
+  const blocked=await page.evaluate(()=>new Promise(resolve=>{
+   const seen=[];
+   document.addEventListener('securitypolicyviolation',e=>{
+    if(e.violatedDirective.startsWith('script-src'))seen.push(e.violatedDirective);
+    if(seen.length)resolve(seen);
+   },{once:true});
+   const script=document.createElement('script');
+   script.src='https://unapproved.example.invalid/script.js';
+   document.head.appendChild(script);
+   setTimeout(()=>resolve(seen),2500);
+  }));
+  assert.ok(blocked.some(x=>x.startsWith('script-src')),
+   'CSP must block an unapproved remote script');
+  return flags;
  }finally{await page.close();}
 }
-
 (async()=>{
- const reports=checkCurrentRepo();
- assert.ok(reports.every(r=>r.errors.length===0),'cannot test a malformed baseline CSP');
  let browser;
  try{
+  const pages=checkCurrentRepo();
+  assert.ok(pages.every(x=>!x.errors.length));
   browser=await chromium.launch({headless:true,args:['--no-sandbox']});
-  for(const report of reports){
-   const baseline=report.summary.policy;
-   assert.match(baseline,/'unsafe-inline'/,'baseline changed: update security expectations');
-   const strict=baseline.replace(/\s*'unsafe-inline'/g,'');
+  for(const p of pages){
+   assert.equal(p.summary.allowsUnsafeInline,false,'Current CSP must remain strict');
+   assert.equal(p.summary.inlineHashes,1,'Current inline bootstrap must remain hash-locked');
+   const older=weakenForCounterfactual(p.summary.policy);
    for(const width of [390,1280]){
-    const actual=await inspect(browser,baseline,width);
-    assert.equal(actual.first.bootstrap,1,
-      'existing inline application bootstrap should be permitted by current CSP');
-    assert.equal(actual.first.handler,1,
-      'current unsafe-inline policy still permits inline event attribute execution');
-    const tightened=await inspect(browser,strict,width);
-    assert.equal(tightened.first.bootstrap,0,
-      'strict script-src should prevent inline script execution');
-    assert.equal(tightened.first.handler,0,
-      'strict script-src should prevent inline event handler execution');
-    console.log('PASS '+report.name+' width='+width+
-      ' current inline JS/event allowed, unapproved host blocked; stricter CSP blocks both');
+    const secure=await inspect(browser,p.summary.policy,width);
+    assert.deepEqual(secure,{bootstrap:0,handler:0},
+      'Current hash-lock + script-src-attr must reject unrelated inline JS and HTML handlers');
+    const permissive=await inspect(browser,older,width);
+    assert.deepEqual(permissive,{bootstrap:1,handler:1},
+      'Loosening CSP reproduces the old inline execution weakness');
+    console.log('PASS '+p.name+' width='+width+' strict hash CSP rejects injection, older permissive policy executes it');
    }
   }
   console.log('PASS 4 real Chromium CSP comparison scenarios (two pages x two viewports).');
-  console.log('NOT FIXED: current public CSP allows unsafe-inline; harden only after externalizing scripts/handlers and regression testing.');
+  console.log('LIMITATION: in-memory probes do not replace full app source-to-sink analysis or header-level CSP tests.');
  }finally{await browser?.close();}
 })().catch(e=>{console.error('CSP browser QA failed:',e.stack||String(e));process.exitCode=1});
