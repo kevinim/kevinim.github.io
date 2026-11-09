@@ -54,7 +54,14 @@ async function main(){
    const safe=await page.evaluate(()=>({
     status:home?.assignment?.status,
     warning:document.querySelector('.reference-gis-warning')?.innerText||'',
-    popup:irvingReferenceLayer?.getLayers()?.[0]?.getLayers()?.[0]?.getPopup()?.getContent()||'',
+    popup:(()=>{
+     let found='';const walk=(layer,depth)=>{
+      if(!layer||depth>5||found)return;
+      const p=layer.getPopup?.();if(p){found=String(p.getContent()||'');return}
+      if(layer.getLayers)for(const child of layer.getLayers())walk(child,depth+1);
+     };
+     walk(irvingReferenceLayer,0);return found;
+    })(),
     yearCertified:window.ConditionalSchoolRelease?.releaseSummary().currentYearResidentialDistrictApprovals
    }));
    assert.ok(['conditional-finder-only','unavailable'].includes(safe.status),'unverified Irving residence must not be assigned');
