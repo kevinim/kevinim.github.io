@@ -1,0 +1,62 @@
+name: School QA cross-PR integration audit (no deployment)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/finder-derived-estimate-engine.cjs'
+      - 'scripts/verify-residential-school-release.cjs'
+      - 'scripts/validate-cfb-finder-derived-boundaries.cjs'
+      - 'scripts/validate-official-school-gis-intake.cjs'
+      - 'scripts/report-school-release-readiness.cjs'
+      - 'school-zone-ui.js'
+      - 'data/finder-derived-source-rights-2026.json'
+      - 'data/cfb-geometry-source-triage-2026.json'
+      - 'tests/school-qa-integration.test.cjs'
+      - 'tests/finder-derived-boundary-provenance.test.cjs'
+      - 'tests/residential-school-release-gate.test.cjs'
+      - '.github/workflows/school-cross-pr-integration-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  school-cross-pr-contract:
+    name: Combined school QA logic and safety regressions
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Check all integrated code paths
+        run: |
+          node --check scripts/verify-residential-school-release.cjs
+          node --check scripts/validate-cfb-finder-derived-boundaries.cjs
+          node --check scripts/report-school-release-readiness.cjs
+          node --test \
+            tests/residential-school-release-gate.test.cjs \
+            tests/finder-derived-boundary-provenance.test.cjs \
+            tests/finder-derived-estimate-engine.test.cjs \
+            tests/finder-derived-research-targets.test.cjs \
+            tests/verify-cfb-geometry-source-triage.test.cjs \
+            tests/validate-official-school-gis-intake.test.cjs \
+            tests/school-qa-integration.test.cjs \
+            tests/school-zone-ui.test.cjs
+      - name: Demonstrate missing release evidence remains NO-GO
+        run: |
+          if node scripts/verify-residential-school-release.cjs; then
+            echo "ERROR: no-evidence production gate unexpectedly allowed release" >&2
+            exit 1
+          fi
+          node scripts/report-school-release-readiness.cjs
+      - name: Archive strictly address-free readiness diagnostics
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: school-qa-cross-pr-readiness-report
+          path: artifacts/school-integration/school-release-readiness.json
+          if-no-files-found: warn
+          retention-days: 5
