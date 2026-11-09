@@ -7,6 +7,7 @@ on:
       - 'tests/dfw-district-integrity.test.cjs'
       - 'tests/dfw-finder-http.test.cjs'
       - 'data/dfw-campus-identity-baseline-2026.json'
+      - 'data/dfw-public-isd-missing-point-evidence-2026.json'
       - 'tea-ratings-2026.json'
       - 'nces-locations-2024.json'
       - 'schools.json'
