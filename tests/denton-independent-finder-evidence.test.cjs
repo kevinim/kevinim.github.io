@@ -24,7 +24,7 @@ const expected=[
 
 test('source-backed real browser evidence tracks nine explicit grade/address pairs',()=>{
  assert.equal(data.schemaVersion,1);assert.equal(data.district,'061901');
- assert.equal(data.source,input.officialFinder);assert.match(data.githubActionsEvidence,/\/actions\/runs\/42680389571$/);
+ assert.equal(data.source,input.officialLocator);assert.match(data.githubActionsEvidence,/\/actions\/runs\/42680389571$/);
  assert.deepEqual(actual,expected);
  assert.equal(data.observedRowCount,9);
  assert.equal(new Set(data.rows.map(x=>x.addressId)).size,3);
