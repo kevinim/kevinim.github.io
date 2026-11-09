@@ -46,3 +46,15 @@ test('no household, geocoder calls or third-party URLs are constructed by presen
  assert.ok(!JSON.stringify(p).includes('SHOULD_NOT_LEAK'));
  assert.equal(Object.hasOwn(p,'url'),false);
 });
+
+test('Dallas published 2026-updated polygons may be shown as unconfirmed but never current-year verified',()=>{
+ const a={status:'publisher-provisional',district:'057905',features:[shape('Ben Milam','elementary')]};
+ const p=plan(a,'published');
+ assert.equal(p.kind,'publisher-unconfirmed');
+ assert.equal(p.features.length,1);
+ assert.equal(p.markerCandidates,true);
+ assert.match(p.message,/2026년 7월/);
+ assert.match(p.message,/미완료/);
+ assert.equal(plan(a,'historical').features.length,0);
+ assert.equal(plan({status:'publisher-boundary-review',district:'057905',features:a.features},'published').review,true);
+});
