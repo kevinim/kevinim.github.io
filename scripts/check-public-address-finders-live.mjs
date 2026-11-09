@@ -9,11 +9,27 @@ const require=createRequire(import.meta.url);
 const {inFriscoBorder,inGeometry,schoolKey}=require('./attendance-geo-audit.cjs');
 const read=name=>JSON.parse(readFileSync(new URL('../'+name,import.meta.url),'utf8'));
 const samples=read('tests/public-address-finder-crosscheck-2026.json').records;
+// Retry transient transport failures only. Never hide a persistent mismatch or a bad official response.
 async function json(url){
- const res=await fetch(url,{signal:AbortSignal.timeout(27000),cache:'no-store'});
- if(!res.ok)throw Error(url+' HTTP '+res.status);
- const data=await res.json();if(data?.error)throw Error(JSON.stringify(data.error));
- return data;
+ for(let attempt=0;attempt<3;attempt++){
+  try{
+   const res=await fetch(url,{signal:AbortSignal.timeout(27000),cache:'no-store'});
+   if(!res.ok){
+    const error=Error('Source HTTP '+res.status);
+    error.retryable=res.status===429||res.status>=500;
+    throw error;
+   }
+   const data=await res.json();
+   if(data?.error)throw Error('Official source returned an error');
+   return data;
+  }catch(error){
+   const transient=error?.name==='TimeoutError'||error?.name==='AbortError'||error?.retryable===true||
+     error?.cause?.code==='ETIMEDOUT'||error?.cause?.code==='ECONNRESET';
+   if(!transient||attempt===2)throw error;
+   console.warn('Transient public source request failed; retry '+(attempt+1)+'/2');
+   await new Promise(resolve=>setTimeout(resolve,1000*(attempt+1)));
+  }
+ }
 }
 const [frisco,prosper]=await Promise.all([
  json('https://static.friscoisd.org/js/json/school.borders.2627.json'),
