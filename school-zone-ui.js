@@ -9,6 +9,14 @@
    return {kind:'loading',label:'경계 확인 중',explanation:'학교별 지도 경계 데이터를 확인하고 있습니다.'};
   if(sourceFailed)
    return {kind:'error',label:'원본 연결 실패',explanation:'이번 접속에서 학군 경계 데이터를 불러오지 못했습니다. 없는 경계로 확정하지 않습니다.'};
+  // Finder-derived polygons are estimates, never official GIS. Only show after
+  // independently reviewed source evidence and an explicitly approved dataset.
+  if(matchStatus==='matched'&&displayMode==='finder-derived-reviewed')
+   return {kind:'estimated',label:'공식 Finder 결과 기반 추정 경계',
+    explanation:'공식 주소 검색 결과로 재구성한 참고 경계입니다. 학군 공식 GIS가 아니며 경계 근처·예외 주소는 정확하지 않을 수 있습니다. 실제 배정은 공식 Finder에서 주소와 학년으로 확인하세요.'};
+  if(matchStatus==='matched'&&displayMode==='finder-derived-unreviewed')
+   return {kind:'unverified',label:'추정 경계 검증 전 · 표시 보류',
+    explanation:'표본 주소 기반 추정선은 독립 검증을 통과하지 못하여 표시할 수 없습니다. 공식 Finder에서 직접 확인하세요.'};
   if(matchStatus==='matched'){
    if(displayMode==='official')
     return {kind:'current',label:'공식 배정선 표시',explanation:'학교별 도형이 표시됩니다. 주소·학년·예외는 공식 학군에서 최종 확인하세요.'};
