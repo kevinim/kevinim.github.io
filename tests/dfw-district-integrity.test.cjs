@@ -151,8 +151,11 @@ test('other TEA LEAs are separately counted and cannot inflate the 108 ISD cover
  assert.equal(r.summary.allDFWMissingHistoricalPoints,69);
 });
 
-test('2027–28 Durham change is future, not a premature 2026–27 campus closure',()=>{
- const r=audit(fresh());
+test('future-dated school transitions cannot become premature 2026–27 campus closures',()=>{
+ const d=fresh();
+ d.retired.push({district:'220919',id:'220919106',name:'Don T Durham Intermediate',
+  retiredFrom:'2027-28',source:'https://www.southlakecarroll.edu/consolidation'});
+ const r=audit(d);
  const durham=r.campusRecords.find(c=>c.id==='220919106');
  assert.ok(durham);
  assert.equal(durham.lifecycle.status,'FUTURE_CHANGE_NOT_EFFECTIVE_IN_2026_27');
