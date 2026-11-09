@@ -22,10 +22,10 @@ permissions:
   contents: read
 
 jobs:
-  source-and-assets:
-    name: Address non-retention and referenced asset paths
+  audit-and-browser:
+    name: Privacy/asset source tests plus offline synthetic browser
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -33,7 +33,6 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
-          package-manager-cache: false
       - name: Negative cases and current runtime audit
         run: |
           node --test tests/audit-runtime-privacy-assets.test.cjs
@@ -42,31 +41,18 @@ jobs:
         run: |
           node --test tests/audit-external-api-contract.test.cjs tests/audit-visitor-xss.test.cjs tests/strict-script-csp.test.cjs
           node scripts/audit-external-api-contract.cjs
-
-  offline-browser:
-    name: Synthetic address privacy and offline provider continuity
-    runs-on: ubuntu-latest
-    timeout-minutes: 18
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: '22'
-          package-manager-cache: false
-      - name: Build existing sanitized non-deployed preview
+      - name: Build sanitized preview without deployment
         run: node scripts/build-public-preview.cjs
-      - name: Isolated browser install
+      - name: Install isolated Chromium browser
         run: |
           mkdir -p agent06-browser-tmp
           cd agent06-browser-tmp
           npm init -y >/dev/null
           npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
           ./node_modules/.bin/playwright install --with-deps chromium
-      - name: Verify synthetic-only address clearing and no browser persistence under blocked third parties
+      - name: Verify synthetic address clearing, no persistence and map shell while third parties blocked
         run: NODE_PATH="$PWD/agent06-browser-tmp/node_modules" node scripts/test-address-privacy-offline-browser.cjs
-      - name: Attach redacted test flags only
+      - name: Attach non-sensitive boolean/count evidence only
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
