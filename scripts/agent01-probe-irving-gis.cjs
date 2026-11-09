@@ -3,9 +3,9 @@
 // All staged polygons remain unapproved until school-year, campus-ID, terms, and Finder gates pass.
 const fs=require('node:fs'),path=require('node:path');
 const MAPS=Object.freeze([
- {level:'elementary',id:'a9ea586919d64c7e9aaa7193572f46d3',match:/elementary|final_el_zones|rebound_el_zones|elemaa|elem.*boundar/i},
+ {level:'elementary',id:'a9ea586919d64c7e9aaa7193572f46d3',match:/^New_EL_Zones_24_25$|^Elementary.*Boundar/i},
  {level:'middle',id:'64c8ba47e77346de9d6812736693debc',match:/middle|rebound_ms_zones|midaa|mid.*boundar/i},
- {level:'high',id:'94e441e70e5049daa74c0cc2bb5a7cad',match:/high|highaa|secondary.*boundar/i}
+ {level:'high',id:'94e441e70e5049daa74c0cc2bb5a7cad',match:/^HighAA$|^High.*Boundar/i}
 ]);
 function requireOK(x,msg){if(!x)throw Error(msg);}
 function flattenLayers(obj){
@@ -43,6 +43,7 @@ function normalize(f,grade,src){
  const key=Object.keys(p).find(k=>/^(school_?name|school|name|elem_?name|mid_?name|high_?name|campus|elemaa|midaa|highaa)$/i.test(k)&&typeof p[k]==='string'&&p[k].trim());
  requireOK(key,'missing published school-name field');
  return {type:'Feature',geometry:f.geometry,properties:{school:p[key].trim(),gradeLevel:grade,sourceDistrict:'057912',
+  sourceLayerTitleYear:grade==='elementary'?'2024-25':null,
   sourceLayer:src,sourceCrs:'EPSG:4326',schoolYear:null,campusId:null,sourceYearVerified:false,
   campusIdCrosswalkVerified:false,independentFinderVerified:false,status:'QUARANTINED_YEAR_UNKNOWN'}};
 }
