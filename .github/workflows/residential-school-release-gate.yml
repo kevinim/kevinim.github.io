@@ -1,0 +1,25 @@
+name: Mandatory residential school release gate (no deploy)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/verify-residential-school-release.cjs'
+      - 'docs/RESIDENTIAL_SCHOOL_RELEASE_GATE.md'
+      - '.github/workflows/residential-school-release-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  residential-school-release-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - name: Syntax check
+        run: node --check scripts/verify-residential-school-release.cjs
+      - name: Mandatory release gate (fail closed)
+        run: node scripts/verify-residential-school-release.cjs
