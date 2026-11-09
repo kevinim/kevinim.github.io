@@ -28,7 +28,8 @@ async function json(url,stage){
   }catch(err){
    last=err;
    const text=String(err?.message||err);
-   const retryable=err?.retryable===true||/timeout|abort|fetch failed|ETIMEDOUT|ECONNRESET|ENOTFOUND|EAI_AGAIN/i.test(text);
+   const transport=String(err?.name||'')+' '+String(err?.cause?.code||'')+' '+text;
+   const retryable=err?.retryable===true||/TimeoutError|AbortError|timeout|abort|fetch failed|ETIMEDOUT|ECONNRESET|ENOTFOUND|EAI_AGAIN/i.test(transport);
    if(!retryable||attempt===3)break;
    console.warn('TRANSIENT stage='+stage+' attempt='+attempt+'/3 latency_ms='+(Date.now()-started));
    await new Promise(resolve=>setTimeout(resolve,450*attempt));

@@ -20,7 +20,7 @@ const col=(n,k)=>'B04006_'+k+String(n).padStart(3,'0');
 
 const zips=new Set([
  ...JSON.parse(readFileSync('dfw-demographics.json','utf8')).data.map(d=>d.z),
- ...JSON.parse(readFileSync('jpm-outside-dfw.json','utf8')).data.map(d=>d.z)
+ ...JSON.parse(readFileSync('dfw-outside-public.json','utf8')).data.map(d=>d.z)
 ]);
 const res=await fetch(URL_DAT);
 if(!res.ok)throw Error('HTTP '+res.status+' '+URL_DAT);
