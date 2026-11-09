@@ -25,34 +25,45 @@ async function check(browser,district,entry){
  try{
   page=await context.newPage();
   await page.goto(TARGETS[district],{waitUntil:'domcontentloaded',timeout:40000});
+  // Plano ArcGIS Experience opens a welcome overlay blocking its actual search.
+  if(district==='PISD'){
+   const welcome=page.getByRole('button',{name:'OK',exact:true}).first();
+   if(await welcome.count())try{await welcome.click({timeout:4500});out.dismissedWelcome=true;}catch{}
+  }
   const search=page.locator('input[placeholder="Find address or place"]').first();
   await search.waitFor({state:'visible',timeout:25000});
   out.officialInputDetected=true;
   await search.fill(entry.address);
-  await page.waitForTimeout(2600);
-  out.suggestions=await page.evaluate(()=>{
-   const nodes=[...document.querySelectorAll('[role="option"],.esri-search__suggestions li,.esri-search__suggestions-list li')];
-   return nodes.filter(x=>x.getClientRects().length>0).slice(0,12)
-     .map(x=>x.textContent?.replace(/\s+/g,' ').trim().slice(0,130)).filter(Boolean);
-  });
-  const parts=entry.address.split(',')[0].toLowerCase().split(/\s+/)
+  await page.waitForTimeout(2500);
+  const pieces=entry.address.split(',')[0].toLowerCase().split(/\s+/)
    .filter(Boolean).filter(x=>!['n','s','e','w','north','south','east','west'].includes(x));
-  const firstTwo=parts.slice(0,2);
-  const zip=entry.address.match(/\b\d{5}$/)?.[0];
-  const exact=(out.suggestions||[]).find(v=>firstTwo.length===2
-    &&firstTwo.every(w=>v.toLowerCase().includes(w))
-    &&(!/\b\d{5}\b/.test(v)||v.includes(zip)));
-  if(exact){
-   const option=page.getByText(exact,{exact:false}).first();
+  const number=pieces[0],street=pieces[1];
+  // ArcGIS WebAppBuilder suggestions are nested divs, not role=option/list li.
+  // Look for a VISIBLE precise street-number+street text node instead.
+  const regex=new RegExp('^\\s*'+number+'\\s+(?:[NSEW]\\\\.?\\s+)?'+street,'i');
+  const candidates=page.getByText(regex,{exact:false});
+  const matched=await candidates.count();
+  out.exactTextCandidateCount=matched;
+  out.suggestions=[];
+  for(let i=0;i<Math.min(matched,4);i++){
+   const c=candidates.nth(i);
+   if(await c.isVisible())out.suggestions.push((await c.innerText()).trim().slice(0,160));
+  }
+  if(out.suggestions.length){
    try{
-    await option.click({timeout:4000});
+    await candidates.first().click({timeout:5000});
+    await page.waitForTimeout(1900);
     out.officialAddressSelected=true;
-    await page.waitForTimeout(2200);
-   }catch(e){out.clickIssue=String(e.message||e).slice(0,160);}
+    if(['043907','LISD'].includes(district)){
+     // District explicitly instructs the resident to click near their address
+     // after selecting geocoder suggestion to identify campus zones.
+     await page.mouse.click(915,465);
+     await page.waitForTimeout(1600);
+     out.mapPointIdentificationAttempted=true;
+    }
+   }catch(e){out.clickIssue=String(e.message||e).slice(0,180);}
   }else{
-   // Enter only if an exact first number+street suggestion is visible; otherwise
-   // do not guess which street the locator accepted.
-   out.suggestionIssue='NO_EXACT_STREET_NUMBER_SUGGESTION';
+   out.suggestionIssue='NO_VISIBLE_EXACT_STREET_SUGGESTION';
   }
   out.url=page.url();
   out.visiblePopupText=await page.evaluate(()=>{
