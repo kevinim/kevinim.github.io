@@ -701,6 +701,10 @@ function drawBoundary(){
    sourceLink.target='_blank';sourceLink.rel='noopener noreferrer';sourceLink.className='cardlink';
    sourceLink.textContent=failure.sourceLinkLabel||'미표시 원인 공식 근거 확인';note.appendChild(sourceLink);
   }
+  // PDF guidance is only shown when Denton campus GIS polygons are unavailable.
+  // The exact TEA campus ID selects a school-specific source without guessing.
+  window.DentonZonePdfReference?.append(
+    note,s,scoreRecord(s.name,s.district)?.id,document);
  }
 }
 
