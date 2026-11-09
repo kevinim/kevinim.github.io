@@ -5,6 +5,7 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),http=require('node:http'),path=require('node:path');
 const {chromium}=require('playwright');
+const {resolveApartmentPolicy,compareFinderToDashboard}=require('./dfw-official-finder-evidence-policy.cjs');
 const ROOT=path.resolve(__dirname,'..');
 const fixture=JSON.parse(fs.readFileSync(path.join(ROOT,'tests/dfw-public-leasing-address-e2e-2026.json'),'utf8'));
 const OUT=path.join(ROOT,'artifacts/dfw-public-leasing-address-qa');
@@ -26,7 +27,8 @@ const report={
  schemaVersion:1,asOf:fixture.asOf,scope:fixture.scope,
  browser:'real headless Chromium, mobile 390px and desktop 1366px',
  liveAddressSearch:true,geocoderMocked:false,polygonOrSchoolMocked:false,
- independentDistrictFinderUiVerified:false,independentEnrollmentOrUnitEligibility:false,
+ independentDistrictFinderUiVerified:false,unitNumberRequiredByDefault:false,
+ enrollmentEligibilityNotTested:true,
  officialGradeMatchCount:0,officialGradeMismatchCount:0,
  releaseGate:{status:'NO_GO',reviewerApproved:false},
  rows:[],failures:[],warnings:[],technicalStatus:'PENDING'
@@ -70,7 +72,9 @@ async function inspect(page){
 }
 async function selectPublicAddress(page,entry,width,sequence){
  const row={id:entry.id,districtHint:entry.districtHint,viewport:width,sequence,
-  actualPropertyType:'public leasing office, unit NOT verified',
+  actualPropertyType:'public apartment complex/base street address',
+  complexName:entry.complexName,
+  apartmentPolicy:resolveApartmentPolicy(entry),
   independentFinderVerified:false,officialElementaryMatch:null,
   officialMiddleMatch:null,officialHighMatch:null,technicalStatus:'FAIL'};
  const input=page.locator('#homeAddress');
@@ -107,6 +111,9 @@ async function selectPublicAddress(page,entry,width,sequence){
   }
   await page.waitForFunction(()=>typeof home!=='undefined'&&!!home?.assignment,null,{timeout:30000});
   row.map=await inspect(page);
+  row.finderComparison=compareFinderToDashboard({sample:entry,official:null,display:row.map});
+  assert.equal(row.finderComparison.status,'UNVERIFIED_OFFICIAL_FINDER');
+  assert.equal(row.apartmentPolicy.unitRequired,false,'unit number must not be a blanket gate');
   assert.equal(row.map.hasHome,true,'no selected address');
   // Do not call an approximate or wrong-ZIP Esri result a valid address test.
   const streetKey=value=>String(value||'').split(',')[0].toLowerCase()
@@ -121,6 +128,11 @@ async function selectPublicAddress(page,entry,width,sequence){
   const actualZip=(String(row.map.selectedAddress).match(/\b\d{5}(?:-\d{4})?\b/)||[])[0]?.slice(0,5);
   assert.equal(actualZip,expectedZip,'ESRI_GEOCODER_POSTAL_MISMATCH');
   row.geocoderMatchesPublicStreetAndZip=true;
+  const sourceYears=Object.values(row.map.grades||{}).flat().map(x=>String(x.year||''));
+  row.sourceYearReview=sourceYears.some(v=>/2025[–-]26|2024[–-]25/.test(v))
+   ?'PRIOR_YEAR_LAYER_REQUIRES_CURRENT_FINDER_COMPARISON'
+   :sourceYears.some(v=>/미확인|unknown|unverified/i.test(v))
+    ?'SOURCE_YEAR_UNVERIFIED':'SOURCE_CURRENT_YEAR_LABEL_ONLY';
   assert.equal(row.map.homeMarker,true,'selected home point must appear');
   const safe=['current','finder-current','boundary-review','finder-boundary-review'];
   const canDisplay=safe.includes(row.map.assignmentStatus)&&['official','finder'].includes(row.map.sourceMode);
