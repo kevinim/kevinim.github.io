@@ -23,7 +23,7 @@ test('entire 2026-27 official PDF roster has NCES public school point, no inferr
 test('fail closed on school ID, grade, accuracy, source year, duplicated or new campus',()=>{
  const mutate=(fn)=>{const copy=JSON.parse(JSON.stringify(json));fn(copy);return()=>validate.validate(copy,nces,pdf.ROWS)};
  assert.throws(mutate(j=>j.currentYearLocationVerified=true),/Invalid Denton/);
- assert.throws(mutate(j=>j.points[0].type='high'),/not corroborated/);
+ assert.throws(mutate(j=>j.points[0].type=j.points[0].type==='high'?'middle':'high'),/not corroborated/);
  assert.throws(mutate(j=>j.points[0].ll=[0,0]),/not corroborated/);
  assert.throws(mutate(j=>j.points[0].ll[0]+=.03),/not corroborated/);
  assert.throws(mutate(j=>j.points[0].ncesDistanceMeters=500),/not corroborated/);
