@@ -9,10 +9,17 @@ const path=require('node:path');
 const http=require('node:http');
 const {chromium}=require('playwright');
 const ROOT=process.cwd(),OUT=path.resolve(ROOT,'artifacts/public-residential-e2e');
-const SAMPLE={id:'st-martin-frisco-base',address:'9425 Rolater Rd, Frisco, TX 75035',kind:'public-apartment-leasing-base',source:'https://www.apartments.com/schools/tx/shawnee-trail-elementary-school/g5jhlbw/',district:'FISD'};
+const TEST_CASES={
+  apartment:{id:'st-martin-frisco-base',address:'9425 Rolater Rd, Frisco, TX 75035',kind:'public-apartment-leasing-base',
+   source:'https://www.har.com/st-martin-frisco-tx/apartment_9535A?print=1',district:'FISD'},
+  listedHouse:{id:'lockshire-frisco-public-lease',address:'11379 Lockshire Dr, Frisco, TX 75035',kind:'publicly-listed-single-family-for-lease',
+   source:'https://exitrealty.com/listing/nltpoLnSFv6oQIYsNTltb/11379-lockshire-drive-frisco-tx-75035',district:'FISD'}
+};
+const SAMPLE=TEST_CASES[process.env.PUBLIC_RESIDENTIAL_CASE||'apartment'];
+if(!SAMPLE)throw Error('Invalid public address QA case');
 const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json','.geojson':'application/geo+json','.css':'text/css'};
 fs.mkdirSync(OUT,{recursive:true});
-const result={sampleId:SAMPLE.id,publicResidentialBase:true,unitSpecificResidenceVerified:false,source:SAMPLE.source,
+const result={sampleId:SAMPLE.id,publicResidentialBase:SAMPLE.kind==='public-apartment-leasing-base',publiclyListedResidence:true,unitSpecificResidenceVerified:false,source:SAMPLE.source,
  checkedAt:new Date().toISOString(),district:SAMPLE.district,
  officialFinderIndependentlyVerified:false,officialFinderYearAndEnrollmentVerified:false,
  mobileDesktopResults:[],issues:[],warnings:[],
@@ -55,7 +62,8 @@ const server=http.createServer((req,res)=>{
       !/주소를 검색 중/.test(document.getElementById('homeStatus')?.textContent||''),null,{timeout:70000});
     const choices=page.locator('#homeCandidates button.lisd-apartment-choice');
     if(await choices.count()>0){
-      const good=choices.filter({hasText:/9425.*Rolater/i}).first();
+      const [houseNumber,roadName]=SAMPLE.address.split(' ');
+      const good=choices.filter({hasText:new RegExp(houseNumber+'.*'+roadName,'i')}).first();
       if(await good.count())await good.click();
       else throw Error('Ambiguous geocoder result: public apartment base address was not found in candidate list');
     }
@@ -109,12 +117,12 @@ const server=http.createServer((req,res)=>{
       entry.warnings=['Real public apartment base address was not high-confidence/current-year zone resolved. NO polygon or official enrollment verification should be claimed.'];
       assert.equal(entry.homePolygonCount,0,'Unverified apartment assignment must never paint current zones');
     }
-    await page.screenshot({path:path.join(OUT,'st-martin-'+width+'.png'),fullPage:true,timeout:40000});
+    await page.screenshot({path:path.join(OUT,SAMPLE.id+'-'+width+'.png'),fullPage:true,timeout:40000});
     console.log('PUBLIC_RESIDENCE_BROWSER '+JSON.stringify({width,status:entry.assignmentStatus,district:entry.district,features:entry.assignedCandidateSchools,homePolygons:entry.homePolygonCount,schoolMarkers:entry.schoolMatchMarkerCount,clickedZonePolygons:entry.clickedSchoolZonePolygons,officialVerified:false}));
    }catch(e){
     entry.issues.push(safeJson(e));
     result.issues.push('width_'+width+':'+safeJson(e));
-    await page.screenshot({path:path.join(OUT,'st-martin-failure-'+width+'.png'),fullPage:true,timeout:40000}).catch(()=>{});
+    await page.screenshot({path:path.join(OUT,SAMPLE.id+'-failure-'+width+'.png'),fullPage:true,timeout:40000}).catch(()=>{});
    }finally{
     result.mobileDesktopResults.push(entry);
     await page.close();
@@ -128,7 +136,7 @@ const server=http.createServer((req,res)=>{
  finally{
   await browser?.close().catch(()=>{});
   await new Promise(resolve=>server.close(resolve));
-  fs.writeFileSync(path.join(OUT,'report.json'),JSON.stringify(result,null,2)+'\n');
+  fs.writeFileSync(path.join(OUT,'report-'+SAMPLE.id+'.json'),JSON.stringify(result,null,2)+'\n');
   console.log('PUBLIC_RESIDENCE_E2E '+JSON.stringify({status:result.overallResidentialEnrollmentCertification,localUIFlowVerified:result.localUIFlowVerified,dashboardRenderedWithoutErrors:result.dashboardRenderedWithoutErrors,issues:result.issues,warnings:result.warnings}));
   if(result.issues.length||result.dashboardRenderedWithoutErrors===false)process.exitCode=1;
  }
