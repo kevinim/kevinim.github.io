@@ -60,6 +60,7 @@ async function main(){
      drawSchools();
      return {name:s.name,grade:s.type,id,review:s.campusPointReview,point:s.ll,immediateCenter:[map.getCenter().lat,map.getCenter().lng],immediateZoom:map.getZoom(),immediateWithin:map.getBounds().contains(s.ll),immediateMarkers:schoolGroup.getLayers().filter(x=>x.options?.title===s.name).length};
     },id);
+    console.log('DENTON_SET_VIEW_IMMEDIATE',width,id,JSON.stringify(campus));
     // Leaflet can animate the zoom despite a top-level animate flag.
     // The QA must observe the actual map bounds before clicking a campus.
     await page.waitForFunction(ll=>map.getBounds().contains(ll)&&map.getZoom()>=13,
