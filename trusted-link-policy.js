@@ -8,7 +8,7 @@
   'www.allenisd.org','www.lisd.net','www.pisd.edu',
   'www.cfbisd.edu','earlycollege.cfbisd.edu','www.mckinneyisd.net',
   'portal.metrostudygis.com','txschools.gov','tea.texas.gov',
-  'experience.arcgis.com','app.guidek12.com',
+  'experience.arcgis.com','iisd1.maps.arcgis.com','app.guidek12.com',
   'apps.myplanware.com','www.kellerisd.net','www.nisdtx.org',
   'www.gcisd.net','www.southlakecarroll.edu','www.westlakeacademy.org',
   "www.wylieisd.net","www.melissaisd.org","www.celinaisd.com","www.littleelmisd.net","www.dentonisd.org","www.coppellisd.com","web.risd.org","www.princetonisd.net","www.annaisd.org","www.argyleisd.com","www.garlandisd.net","www.hebisd.edu","www.rockwallisd.com","mesquiteisd.org","www.irvingisd.net","www.forneyisd.net","www.dallasisd.org","www.communityisd.org"
