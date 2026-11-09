@@ -31,7 +31,7 @@ async function main(){
    const page=await browser.newPage({viewport:{width,height:950},deviceScaleFactor:1});
    const pageErrors=[];page.on('pageerror',e=>pageErrors.push(String(e.message||e)));
    await page.goto('http://127.0.0.1:'+port+'/',{waitUntil:'domcontentloaded',timeout:90000});
-   await page.waitForFunction(()=>window.schoolBoundaryAuditReady===true&&typeof map!=='undefined'&&!!map&&typeof schoolClicked==='function',{timeout:110000});
+   await page.waitForFunction(()=>window.schoolBoundaryAuditReady===true&&typeof map!=='undefined'&&!!map&&typeof schoolClicked==='function',null,{timeout:110000});
    const check=await page.evaluate(async features=>{
     // Only populate the temporary browser state; the district remains absent
     // from the real registry, so all matching geometry must be HISTORICAL.
