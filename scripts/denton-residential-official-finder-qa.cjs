@@ -66,13 +66,31 @@ async function main(){
        const form=await formDetail(page);
        item.gradeForm=form;
        console.log('DENTON_GRADE_FORM',JSON.stringify({id:s.id,selected:match.text,elements:form.elements,body:form.body.slice(0,800)}));
-       // Do not submit generic All Grades or infer hidden grade/year selectors.
-       const selects=page.locator('select');
-       if(await selects.count()>0){
-        item.gradeOutcomes.push({status:'NATIVE_SELECT_DETECTED_NEEDS_OPTION_REVIEW'});
-       } else {
-        item.gradeOutcomes.push({status:'CUSTOM_GRADE_CONTROL_REQUIRES_VERIFIED_UI_SELECTORS'});
-       }
+       // Official Angular Material controls observed in the real Browser.
+       const gradeControl=page.locator('mat-select[formcontrolname="gradeSelected"]').first();
+       const programControl=page.locator('mat-select[formcontrolname="programSelected"]').first();
+       if(await gradeControl.isVisible()&&await programControl.isVisible()){
+        const programValue=(await programControl.innerText()).trim();
+        item.programBeforeGo=programValue;
+        if(!/^DFLT$/i.test(programValue))throw Error('Current-year default program is not DFLT: '+programValue);
+        await gradeControl.click();
+        await page.locator('mat-option[role="option"]').first().waitFor({state:'visible',timeout:5000});
+        const options=(await page.locator('mat-option[role="option"]').allTextContents()).map(x=>x.trim());
+        item.gradeOptions=options;
+        console.log('DENTON_OFFICIAL_GRADE_OPTIONS',JSON.stringify({id:s.id,options}));
+        const grade2=page.locator('mat-option[role="option"]').filter({hasText:/^0?2$/}).first();
+        if(await grade2.count()){
+         await grade2.click({timeout:5000});
+         item.selectedGrade=(await gradeControl.innerText()).trim();
+         if(!/^0?2$/.test(item.selectedGrade))throw Error('Selected grade did not equal 2');
+         await page.getByRole('button',{name:'Go',exact:true}).click({timeout:10000});
+         await page.waitForTimeout(3500);
+         const after=(await page.locator('body').innerText()).slice(0,4500);
+         item.gradeOutcomes.push({grade:2,program:'DFLT',status:'OFFICIAL_GRADE_2_RESULT_SCREEN_CAPTURED_NOT_CERTIFIED',visibleText:after});
+         console.log('DENTON_GRADE2_RESULT_SCREEN',JSON.stringify({id:s.id,grade:2,body:after.slice(0,2300)}));
+         await page.screenshot({path:path.join(dir,s.id+'-grade2.png'),animations:'disabled',timeout:15000});
+        } else item.gradeOutcomes.push({grade:2,status:'GRADE_2_OPTION_NOT_AVAILABLE'});
+       } else item.gradeOutcomes.push({status:'OFFICIAL_GRADE_CONTROL_MISSING'});
        break;
       }
      }
