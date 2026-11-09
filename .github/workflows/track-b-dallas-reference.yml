@@ -1,0 +1,80 @@
+name: Track B Dallas official GIS reference and warnings (NO DEPLOY)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'dallas-attendance-live.js'
+      - 'home-lookup-v2.js'
+      - 'index.html'
+      - 'tests/dallas-*.test.cjs'
+      - 'tests/externalized-main-bootstrap.test.cjs'
+      - 'tests/csp-network-allowlist.test.cjs'
+      - 'scripts/test-track-b-dallas-browser.cjs'
+      - '.github/workflows/track-b-dallas-reference.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'dallas-attendance-live.js'
+      - 'home-lookup-v2.js'
+      - 'index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-safety:
+    name: Dallas GIS source identity, privacy, school-year warning, CSP
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Static and synthetic API source checks
+        run: |
+          node --check dallas-attendance-live.js
+          node --check home-lookup-v2.js
+          node --check scripts/test-track-b-dallas-browser.cjs
+          node --test tests/dallas-attendance-live.test.cjs tests/dallas-track-b-reference.test.cjs tests/conditional-school-release.test.cjs
+      - name: Strict CSP and unchanged bootstrap integrity
+        run: node --test tests/csp-network-allowlist.test.cjs tests/externalized-main-bootstrap.test.cjs tests/trusted-outbound-links.test.cjs
+      - name: Direct publisher source census, no copied GIS
+        run: node scripts/probe-dallas-attendance-live.cjs
+  browser:
+    name: Dallas live ArcGIS → 3 warning polygons, desktop/mobile Chromium
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Install isolated Playwright and Chromium (GitHub Free)
+        run: |
+          mkdir -p trackb-dallas-browser-tmp
+          cd trackb-dallas-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Exercise real publisher GIS, reference warnings, map popup and clearing
+        env:
+          NODE_PATH: ${{ github.workspace }}/trackb-dallas-browser-tmp/node_modules
+        run: node scripts/test-track-b-dallas-browser.cjs
+      - name: Upload sanitized screenshots and aggregate verdict (7d)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: dallas-track-b-public-source-browser-qa
+          path: |
+            artifacts/track-b-dallas/reference-browser-qa.json
+            artifacts/track-b-dallas/dallas-reference-map-390.png
+            artifacts/track-b-dallas/dallas-reference-map-1366.png
+            artifacts/track-b-dallas/dallas-reference-dashboard-390.png
+            artifacts/track-b-dallas/dallas-reference-dashboard-1366.png
+          if-no-files-found: warn
+          retention-days: 7
