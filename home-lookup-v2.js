@@ -209,6 +209,7 @@ function officialReviewPanelHtml(item){
  (showProsper?' <button type="button" class="mini-btn" id="officialProsperCheck"'+(item.officialChecking?' disabled':'')+'>Prosper 공식 좌표 조회</button>':'')+
  (irvingHref?'<a class="cardlink" href="'+escape(irvingHref)+'" target="_blank" rel="noopener noreferrer">Irving 공식 School Locator 직접 열기 ↗</a>':'')+
  (showIrving?'<div class="source">Irving ISD 공식 지도 원본: '+campusMapLinks+'</div>':'')+
+ (showDallas?'<div class="source">Dallas ISD 공식 자료: '+(dallasUrl?'<a class="cardlink" href="'+escape(dallasUrl)+'" target="_blank" rel="noopener noreferrer">SchoolSite Locator ↗</a>':'')+' '+(dallasMaps?'<a class="cardlink" href="'+escape(dallasMaps)+'" target="_blank" rel="noopener noreferrer">2026–27 공식 PDF 지도 ↗</a>':'')+'</div><button type="button" class="mini-btn" id="officialDallasCheck"'+(item.dallasChecking?' disabled':'')+'>Dallas 참고 GIS 경계 표시 (배정 미인증)</button><div id="dallasSpatialStatus" class="source" role="status">'+escape(dallasText)+'</div><div class="source">버튼 클릭 시 선택 좌표만 교육구 ArcGIS에 전송합니다. 원본 GIS의 학년도는 미확인 상태이며 대시보드에 저장하지 않습니다.</div>':'')+
  (showIrving?' <button type="button" class="mini-btn" id="officialIrvingCheck"'+(item.irvingChecking?' disabled':'')+'>참고 GIS 경계 표시 (배정 미인증)</button><div class="source" id="irvingSpatialStatus" role="status">'+escape(irvingText)+'</div><div class="source">Irving 교육구 공식 Locator에서 현재 사용 중인 GIS를 조회하지만, 초등 2024–25·중등 2025–26 명칭의 원본이므로 2026–27 등록 배정 확정이 아닙니다. 외부 브라우저의 공식 School Locator에서 최종 확인하세요.</div>':'')+
  (showProsper?'<div class="source">Prosper 버튼을 누르면 집 핀 좌표가 학군이 연결한 Infofinder에 전송됩니다. 결과는 좌표의 학교 코드 비교이며 실제 주소·호수·등록 자격 확인은 아닙니다.</div>':'')+
  '<div class="source" id="officialReviewResult" role="status"><b>'+escape(label)+'</b> · '+escape(msg)+'</div></div>';
@@ -229,6 +230,8 @@ function wireOfficialReviewPanel(item){
   update();if(home!==item)return;
   item.officialReview=item.irvingSpatial?.status==='ready'&&item.officialDraft.district==='057912'&&window.IrvingOfficialSpatial
    ?window.IrvingOfficialSpatial.compareReportedSchool(item.irvingSpatial,item.officialDraft)
+   :item.dallasSpatial?.status==='ready'&&item.officialDraft.district==='057905'&&window.DallasAttendanceLive
+   ?window.DallasAttendanceLive.compareReportedSchool(item.dallasSpatial,item.officialDraft)
    :{kind:'manual',...compareManualSchoolResult(item.assignment,item.officialDraft)};
   renderHome();
  });
