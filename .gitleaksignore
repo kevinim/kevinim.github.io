@@ -1,0 +1,5 @@
+# Agent 06: one confirmed documentation-only false positive in an immutable historical PR commit.
+# Gitleaks generic-api-key matched a sentence listing public provider names, not a credential.
+# Triage evidence: PR #181 run 42674022917, job 129351551799, doc line 34 in commit 85b6ec2.
+# Keep this allowlist fingerprint-specific. Do not add path globs or disable secret rules.
+85b6ec29735a6c3480827a8fb802f2c3e14eb1f1:docs/AGENT06_SECURITY_RELEASE_AUDIT_2026-11-09.md:generic-api-key:34
