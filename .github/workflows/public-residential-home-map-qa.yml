@@ -48,6 +48,11 @@ jobs:
           NODE_PATH: ${{ github.workspace }}/public-residence-browser-tmp/node_modules
           PUBLIC_RESIDENTIAL_CASE: monarchHouse
         run: node scripts/verify-public-residence-home-school-browser.cjs
+      - name: Frisco/Prosper conflicting real-estate listing — verify Frisco home zoning and 3 polygons
+        env:
+          NODE_PATH: ${{ github.workspace }}/public-residence-browser-tmp/node_modules
+          PUBLIC_RESIDENTIAL_CASE: friscoLathrop
+        run: node scripts/verify-public-residence-home-school-browser.cjs
       - name: One public district Finder UI query, never hidden API or bulk scraping
         env:
           NODE_PATH: ${{ github.workspace }}/public-residence-browser-tmp/node_modules
