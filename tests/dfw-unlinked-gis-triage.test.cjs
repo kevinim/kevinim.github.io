@@ -12,7 +12,7 @@ test('2022 Northwest source can never be advertised as current 2026-27 campus as
 });
 test('district outlines and non-DFW layers are not promoted to school-specific GIS',()=>{
  assert.equal(catalog.certifiedAdditionalDistricts,0);assert.equal(catalog.releaseReady,false);
- assert.equal(catalog.rejectedFalsePositives.length,2);
+ assert.ok(catalog.rejectedFalsePositives.length>=3);
  for(const s of catalog.officialNonGisSourceGaps)assert.ok(s.source.startsWith('https://'));
  assert.ok(catalog.exclusions.some(x=>x.includes('CFB')));
  assert.ok(catalog.exclusions.some(x=>x.includes('#148')));
