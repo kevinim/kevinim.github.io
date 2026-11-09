@@ -6,50 +6,58 @@ const cp=require('node:child_process');
 const path=require('node:path');
 const crypto=require('node:crypto');
 const root=path.resolve(__dirname,'..');
-// In pull_request CI, checkout uses a synthetic merge commit. Its first
-// parent is the current main baseline, including unrelated approved UI work.
-// For direct branch checks, retain the pinned original review baseline.
+const show=(sha,file)=>cp.execFileSync('git',['show',sha+':'+file],{cwd:root,encoding:'utf8'});
 const parentLine=cp.execFileSync('git',['rev-list','--parents','-n','1','HEAD'],{cwd:root,encoding:'utf8'}).trim().split(/\s+/);
-const baseline=parentLine.length>=3?parentLine[1]:'4f741596a5a594897791d3b931ef39b374bf304e';
-const old=cp.execFileSync('git',['show',baseline+':index.html'],{cwd:root,encoding:'utf8'});
+// PR CI checks out a two-parent synthetic merge. For direct branch checks,
+// use the known merged #129 bootstrap baseline rather than an unrelated parent.
+const baseline=parentLine.length>=3?parentLine[1]:'d94374e74c87d9d58355bdb0755ec6ade88c2818';
+const old=show(baseline,'index.html');
+const oldJs=show(baseline,'dashboard-main.js');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const js=fs.readFileSync(path.join(root,'dashboard-main.js'),'utf8');
-const oldStart=old.indexOf("<script>\r\n'use strict'"),oldEnd=old.indexOf('</script>',oldStart);
-const original=old.slice(oldStart+8,oldEnd);
 const external='<script src="./dashboard-main.js?v=3"></script>';
 const oldCsp=old.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
 const newCsp=html.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
+const officialEpaOrigins=' https://www.fueleconomy.gov https://fueleconomy.gov';
+const oldWithEpa=oldCsp?.replace('https://hazards.fema.gov;','https://hazards.fema.gov'+officialEpaOrigins+';');
+const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
+const oldStart=legacy.indexOf("<script>\r\n'use strict'"),oldEnd=legacy.indexOf('</script>',oldStart);
+const original=legacy.slice(oldStart+8,oldEnd);
 function hash(buf){return crypto.createHash('sha256').update(buf).digest('hex')}
-test('current production main inline classic bootstrap extracted byte-for-byte, no algorithm changes',()=>{
+function exactReplacement(input,from,to){
+ assert.equal(input.split(from).length,2,'expected exactly one existing anchor: '+from);
+ return input.replace(from,to);
+}
+test('original externalized classic bootstrap remains byte-identical to approved main and inline source',()=>{
  assert.ok(oldStart>40000&&oldEnd>oldStart+70000);
  assert.equal(hash(js),hash(original));
+ assert.equal(hash(js),hash(oldJs),'Commute feature must not modify legacy map/school bootstrap');
  assert.ok(js.startsWith("\r\n'use strict';"));
  assert.ok(js.includes('const DATA=['));
- assert.ok(js.includes('window.WestDFWIntegration')===false,'No new feature logic injected into main');
+ assert.ok(!js.includes('window.WestDFWIntegration'),'No feature logic injected into legacy main');
 });
-test('strict script CSP remains enforceable after removing the only inline hash',()=>{
- assert.ok(newCsp.includes("script-src-attr 'none'"));
- assert.ok(newCsp.includes("object-src 'none'"));
- assert.ok(newCsp.includes("base-uri 'self'"));
- assert.ok(newCsp.includes("form-action 'self'"));
- assert.ok(newCsp.includes("script-src 'self' https://unpkg.com;"));
+test('strict script CSP unchanged; only two named EPA fetch origins added',()=>{
+ assert.ok(oldCsp&&newCsp);
+ assert.notEqual(oldWithEpa,oldCsp,'Approved baseline requires the existing FEMA fetch origin');
+ assert.equal(newCsp,oldWithEpa,'Only EPA connect-src origins are permitted to change');
+ for(const directive of ["script-src-attr 'none'","object-src 'none'","base-uri 'self'","form-action 'self'"])
+  assert.ok(newCsp.includes(directive));
  const script=newCsp.split(';').map(x=>x.trim()).find(x=>x.startsWith('script-src '));
- assert.ok(script);
+ assert.equal(script,"script-src 'self' https://unpkg.com");
  assert.doesNotMatch(script,/unsafe-inline|unsafe-eval|sha256-/);
- assert.equal((oldCsp.match(/'sha256-[A-Za-z0-9+/]+=*'/g)||[]).length,1);
- assert.equal(newCsp,oldCsp.replace(/ 'sha256-[A-Za-z0-9+/]+=*'/,''));
+ assert.doesNotMatch(newCsp,/'sha256-/);
 });
-test('externalized page matches previous page except approved source tag and CSP hash',()=>{
- const expected=old.replace("<script>"+original+"</script>",external)
-   .replace(/(script-src 'self' https:\/\/unpkg\.com) 'sha256-[A-Za-z0-9+/]+=*'/,'$1');
+test('all other current main HTML remains unchanged except approved commute assets and fetch origins',()=>{
+ const style='<link rel="stylesheet" href="./features/commute/sourced-cost.css?v=1">';
+ const assetCore='<script src="./features/commute/sourced-cost-core.js?v=1"></script>';
+ const assetUI='<script src="./features/commute/sourced-cost-ui.js?v=1"></script>';
+ let expected=exactReplacement(old,oldCsp,oldWithEpa);
+ expected=exactReplacement(expected,'<script src="./features/theme-toggle.js?v=2"></script>',
+    style+'<script src="./features/theme-toggle.js?v=2"></script>');
+ expected=exactReplacement(expected,'<script src="./features/area-assessment-core.js?v=3"></script>',
+    assetCore+assetUI+'<script src="./features/area-assessment-core.js?v=3"></script>');
  const actualText=html.replace(/\r\n/g,'\n'),expectedText=expected.replace(/\r\n/g,'\n');
- if(actualText!==expectedText){
-  let i=0;while(i<actualText.length&&i<expectedText.length&&actualText[i]===expectedText[i])i++;
-  assert.fail('Only tag/hash allowed; first mismatch offset='+i+
-   ', actualLen='+actualText.length+', expectedLen='+expectedText.length+
-   ', actual='+JSON.stringify(actualText.slice(Math.max(0,i-35),i+75))+
-   ', expected='+JSON.stringify(expectedText.slice(Math.max(0,i-35),i+75)));
- }
+ assert.equal(actualText,expectedText,'Only reviewed EPA CSP and optional commute assets may differ from main');
  assert.equal(html.split(external).length,2);
  const scriptIndex=html.indexOf(external);
  assert.ok(html.indexOf('./plano-finder-live.js')<scriptIndex);
