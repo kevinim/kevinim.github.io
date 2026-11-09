@@ -69,3 +69,17 @@ test('dark palette has deeper backgrounds and explicit backgrounds for previousl
  assert.match(css,/html\[data-theme="dark"\] \.hazard-chip\.wfir\[aria-pressed="true"\]/);
  assert.doesNotMatch(css,/filter:\s*invert/);
 });
+
+
+test('dark filter cards have background and foreground rules for real labels and helper text',()=>{
+ for(const selector of [
+  '.filter-panel > .filter-settings-group','.filter-panel > .area-settings',
+  '.filter-panel > .school-settings','.filter-panel > .commute-settings',
+  '.filter-panel .settings-group-title','.filter-panel .settings-group-note',
+  '.filter-panel .filter-settings-group .field label',
+  '.filter-panel .filter-settings-group .source',
+  '.filter-panel .school-visibility-options',
+  '.filter-panel .school-visibility-options .check'
+ ])assert.ok(css.includes('html[data-theme="dark"] '+selector),'Missing filter theme rule '+selector);
+ assert.doesNotMatch(css,/filter:\s*invert/);
+});

@@ -256,3 +256,21 @@ html[data-theme="dark"] .seg button:focus-visible,
 html[data-theme="dark"] .extra-action:focus-visible{
  outline:3px solid #b6d0ff;outline-offset:2px;
 }
+
+
+/* Grouped filters: keep all surface + text pairs dark in dark mode.
+   Scope excludes map, ratings and hazard semantic colors. */
+html[data-theme="dark"] .filter-panel > .filter-settings-group{background:#18283d;border-color:#435a76;color:#edf5ff}
+html[data-theme="dark"] .filter-panel > .area-settings{background:#182b43;border-color:#496584}
+html[data-theme="dark"] .filter-panel > .school-settings{background:#1a3049;border-color:#4e6a8b}
+html[data-theme="dark"] .filter-panel > .commute-settings{background:#292b39;border-color:#70627c}
+html[data-theme="dark"] .filter-panel .settings-group-title{color:#edf5ff}
+html[data-theme="dark"] .filter-panel .settings-group-note{color:#cedced}
+html[data-theme="dark"] .filter-panel .filter-settings-group .field label{color:#dce9f8}
+html[data-theme="dark"] .filter-panel .filter-settings-group .source{color:#c7d7ec}
+html[data-theme="dark"] .filter-panel .settings-icon{background:#27496e;color:#e1edff}
+html[data-theme="dark"] .filter-panel .school-settings .settings-icon{background:#245078;color:#e5f2ff}
+html[data-theme="dark"] .filter-panel .commute-settings .settings-icon{background:#604a32;color:#ffebc9}
+html[data-theme="dark"] .filter-panel .school-visibility-options{background:#1e3048;border-color:#54708f}
+html[data-theme="dark"] .filter-panel .school-visibility-options .check{background:#253b56;border-color:#496787;color:#f0f6ff}
+html[data-theme="dark"] .filter-panel .filter-settings-group > .check{color:#f0f6ff}
