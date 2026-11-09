@@ -202,7 +202,7 @@ function main(){
   '; '+report.pinnedCount+'/'+report.assetCount+' integrity-pinned; '+
   report.errors.length+' errors, '+report.warnings.length+' warnings; '+
   report.limitations.length+' known source-coverage limitations.\n');
- for(const w of report.warnings)process.stdout.write('WARN '+w.file+': '+w.reason+'\\n'.replace('\\n','\n'));
+ for(const w of report.warnings)process.stdout.write('WARN '+w.file+': '+w.reason+'\n');
  if(report.errors.length){
   for(const e of report.errors)process.stderr.write('BLOCK '+e.file+': '+e.reason+'\n');
   process.exitCode=1;
