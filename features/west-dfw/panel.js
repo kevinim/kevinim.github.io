@@ -132,6 +132,12 @@
        '공식 출처 '+d.sourceYear+' · 자동 경계 없음'));
    if(d.dataNote)card.appendChild(element(doc,'small','west-dfw-vintage-warning',d.dataNote));
    card.appendChild(link(doc,'공식 학교 찾기 / 배정 지도',d.officialUrl));
+   // Address lookup must be user-initiated on the district's own website.
+   // The GCISD link is a static map: do not label it an address search.
+   const finder=typeof window!=='undefined'?window.WestSchoolOfficialFinder?.lookup(d.code):null;
+   if(finder&&finder.url!==d.officialUrl){
+    card.appendChild(window.WestSchoolOfficialFinder.createAnchor(doc,d.code));
+   }
    grid.appendChild(card);
   }
   wrapper.appendChild(grid);
