@@ -5,6 +5,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: agent03-address-qa-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   no-go-source-policy:
     name: Public source provenance and fail-closed policy

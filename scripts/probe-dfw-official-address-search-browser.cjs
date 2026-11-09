@@ -116,14 +116,30 @@ async function check(browser,district,entry){
      const m=out.mapAfterChoice;
      if(m?.status==='MAP_AVAILABLE'&&m?.geoCenter&&m?.mapRect){
       const cx=m.mapRect.x+m.mapRect.width/2,cy=m.mapRect.y+m.mapRect.height/2;
-      await page.mouse.click(cx,cy);
-      await page.waitForTimeout(1800);
+      // The exact center contains Esri's geocoder pin, which intercepts
+      // map identify clicks as "Search result", not "Attendance Zones".
+      // Four nearby points stay inside a roughly 30-pixel radius of
+      // the selected home and detect conflicting boundaries.
+      const offsets=[[-24,4],[24,4],[4,-24],[4,24]],samples=[];
+      for(const [dx,dy] of offsets){
+       await page.mouse.click(cx+dx,cy+dy);
+       await page.waitForTimeout(750);
+       const popup=await page.evaluate(()=>[...document.querySelectorAll('.esriPopup')]
+        .filter(e=>e.getClientRects().length>0).map(e=>e.textContent?.replace(/\s+/g,' ').trim())
+        .find(t=>t?.includes('Attendance Zones'))||'');
+       samples.push({offset:[dx,dy],parsed:parseOfficialZonePopup(popup,district)});
+      }
+      out.zoneSampleOffsets=samples;
+      const valid=samples.filter(x=>x.parsed.valid);
+      out.zoneProbeStable=valid.length===4&&new Set(valid.map(x=>JSON.stringify(x.parsed.schools))).size===1;
+      out.mapProbeWithin30pxOfSelectedCenter=true;
       out.mapPointIdentificationAttempted=true;
-      out.mapClickedAtExactGeocoderCenter=true;
-      out.mapClickPixel={x:cx,y:cy};
+      out.gradePopup=out.zoneProbeStable?valid[0].parsed:{valid:false,reason:'ZONE_IDENTIFICATION_INCONSISTENT_AROUND_ADDRESS'};
+      out.mapClickPixel={centerX:cx,centerY:cy,maxOffsetPx:Math.hypot(24,4)};
      }else{
       out.mapPointIdentificationAttempted=false;
-      out.mapClickedAtExactGeocoderCenter=false;
+      out.mapProbeWithin30pxOfSelectedCenter=false;
+      out.zoneProbeStable=false;
       out.mapIdentificationBlocked='MAP_CENTER_NOT_ACCESSIBLE';
      }
     }
@@ -137,7 +153,7 @@ async function check(browser,district,entry){
    return s.filter(e=>e.getClientRects().length>0).map(e=>e.textContent?.replace(/\s+/g,' ').trim().slice(0,600))
     .filter(Boolean).slice(0,5);
   });
-  out.gradePopup=parseOfficialZonePopup((out.visiblePopupText||[]).find(t=>t.includes('Attendance Zones')),district);
+  if(!out.gradePopup)out.gradePopup=parseOfficialZonePopup((out.visiblePopupText||[]).find(t=>t.includes('Attendance Zones')),district);
   out.screenCaptured=await safeScreen(page,entry.id);
   out.status=out.officialAddressSelected?'OFFICIAL_GEOCODER_ADDRESS_SELECTED_NOT_SCHOOL_VERIFIED':
    'OFFICIAL_FINDER_QUERY_ATTEMPT_UNVERIFIED';

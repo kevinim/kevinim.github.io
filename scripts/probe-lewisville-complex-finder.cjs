@@ -30,6 +30,11 @@ async function runOne(browser,item){
    try{await cands.first().click({timeout:7000});await page.waitForTimeout(1300);
     row.addressSuggestionSelected=true;}catch(e){row.details.push('address:'+String(e.message||e).slice(0,180))}
   }
+  // Dismiss search suggestion/dropdown before clicking the official apartment toolbar.
+  // Otherwise the dropdown intercepts x482/y110 and the picker never opens.
+  await page.mouse.click(80,250);
+  await input.press('Escape').catch(()=>{});
+  await page.waitForTimeout(550);
   // Published find-apartment icon in top-left map toolbar near x482,y110.
   await page.mouse.click(482,110);
   const chooser=page.locator('#dijit_form_FilteringSelect_0');

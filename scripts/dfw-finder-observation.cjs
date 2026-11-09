@@ -30,8 +30,8 @@ function compareIndependentOfficialUI(dashboard,official,{spatialToleranceMeters
  if(!dashboard?.map||!official||!official.officialAddressSelected){
   result.reason='MISSING_ADDRESS_SELECTION';return result;
  }
- if(official.mapClickedAtExactGeocoderCenter!==true){
-  result.status='OFFICIAL_POPUP_NOT_TIED_TO_EXACT_SELECTED_POINT';return result;
+ if(official.mapProbeWithin30pxOfSelectedCenter!==true || official.zoneProbeStable!==true){
+  result.status='OFFICIAL_NEAR_ADDRESS_ZONE_POPUP_UNSTABLE';return result;
  }
  if(dashboard.map.district!==official.district){
   result.status='DISTRICT_MISMATCH';return result;
@@ -43,7 +43,7 @@ function compareIndependentOfficialUI(dashboard,official,{spatialToleranceMeters
  if(meters===null||meters>spatialToleranceMeters){
   result.status='OFFICIAL_MAP_CENTER_NOT_ADDRESS_VALIDATED';return result;
  }
- const parsed=parseOfficialZonePopup((official.visiblePopupText||[]).find(x=>x.includes('Attendance Zones')),official.district);
+ const parsed=official.gradePopup?.valid?official.gradePopup:parseOfficialZonePopup((official.visiblePopupText||[]).find(x=>x.includes('Attendance Zones')),official.district);
  if(!parsed.valid){result.status=parsed.reason;return result;}
  const grades=dashboard.map.grades||{},schoolMatch={};
  const levels=['elementary','middle','high'];
