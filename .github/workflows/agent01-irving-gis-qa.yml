@@ -15,10 +15,12 @@ jobs:
   safety-and-regression:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          node-version: '22'
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
       - name: Agent01 provenance / geometry / cross-source safety QA
         run: node --test tests/agent01-irving-gis-acquisition.test.cjs tests/agent01-irving-embedded-high.test.cjs tests/agent01-irving-tea-crosswalk.test.cjs tests/agent01-dfw-gis-inventory.test.cjs
       - name: Existing school-zone UI and polygon-linkage regression
@@ -26,17 +28,55 @@ jobs:
   live-source-staging:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          node-version: '22'
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
       - name: Read-only Irving GIS probe (FAIL CLOSED; never release polygons)
         run: node scripts/agent01-probe-irving-gis.cjs --live
       - name: Retain metadata-only diagnostics (no GIS geometry or addresses uploaded)
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: agent01-irving-provenance-only
           path: artifacts/agent01-irving-gis-stage/source-audit.json
+          if-no-files-found: warn
+          retention-days: 7
+
+  isolated-browser:
+    name: Irving historical school-click GIS QA (390/1366px, no address)
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Isolated Chromium for staging-only 390/1366px browser evidence
+        run: |
+          mkdir -p agent01-browser-tmp
+          cd agent01-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Prepare historical-only staging geometry with preliminary TEA reference IDs
+        run: node scripts/agent01-probe-irving-gis.cjs --live
+      - name: Exercise actual dashboard schoolClicked + historical Leaflet overlay
+        env:
+          NODE_PATH: ${{ github.workspace }}/agent01-browser-tmp/node_modules
+        run: node scripts/agent01-irving-school-map-browser.cjs
+      - name: Retain 390/1366px browser screenshot and metadata (public GIS, no personal address)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: agent01-irving-staging-browser-qa
+          path: |
+            artifacts/agent01-irving-browser/staging-browser-qa.json
+            artifacts/agent01-irving-browser/irving-staging-390.png
+            artifacts/agent01-irving-browser/irving-staging-1366.png
           if-no-files-found: warn
           retention-days: 7
