@@ -3,13 +3,13 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { auditSchoolProvenance, validHttps, safeLocalFile } = require('../scripts/audit-school-provenance.cjs');
+const { auditSchoolProvenance, validHttps, safeLocalFile, readWestDfwSupplement } = require('../scripts/audit-school-provenance.cjs');
 const root = path.join(__dirname, '..');
 
 function actual() {
   const data = JSON.parse(fs.readFileSync(path.join(root, 'school-data-provenance.json'), 'utf8'));
   const { DISTRICT_REGISTRY } = require('../district-registry.js');
-  const supplementary = [JSON.parse(fs.readFileSync(path.join(root, 'data/mckinney-2026-27-provenance.json'), 'utf8'))];
+  const supplementary = [JSON.parse(fs.readFileSync(path.join(root, 'data/mckinney-2026-27-provenance.json'), 'utf8')), ...readWestDfwSupplement(root)];
   return { data, registry: DISTRICT_REGISTRY, supplementary };
 }
 
@@ -112,4 +112,12 @@ test('McKinney live-finder geometry must have explicit 2026-27 gated evidence', 
   data.districts[2].runtimeGate.statusOnlyWhenLive = false;
   const invalid = auditSchoolProvenance(data, registry);
   assert.ok(invalid.errors.some(e => e.includes('fail-closed guard')));
+});
+
+
+test('west DFW supplemental provenance records all four lookup-only ISDs without current GIS claims', () => {
+  const rows=readWestDfwSupplement(root);
+  assert.deepEqual(new Set(rows.map(r=>r.code)),new Set(['220919','220907','061911','220906']));
+  assert.ok(rows.every(r=>r.status==='lookup-only'));
+  assert.ok(rows.every(r=>validHttps(r.officialLookup)));
 });
