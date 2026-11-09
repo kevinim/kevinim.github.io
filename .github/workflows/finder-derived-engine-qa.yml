@@ -5,6 +5,9 @@ on:
     paths:
       - 'scripts/finder-derived-estimate-engine.cjs'
       - 'scripts/audit-finder-derived-research-targets.cjs'
+      - 'scripts/verify-cfb-geometry-source-triage.cjs'
+      - 'data/cfb-geometry-source-triage-2026.json'
+      - 'tests/verify-cfb-geometry-source-triage.test.cjs'
       - 'data/finder-derived-source-rights-2026.json'
       - 'data/cfb-rezoning-boundary-review-targets-2026.json'
       - 'tests/finder-derived-research-targets.test.cjs'
@@ -32,15 +35,18 @@ jobs:
         run: |
           node --check scripts/finder-derived-estimate-engine.cjs
           node --check scripts/audit-finder-derived-research-targets.cjs
+          node --check scripts/verify-cfb-geometry-source-triage.cjs
           node --check scripts/generate-finder-derived-estimates.cjs
           node --check scripts/render-finder-derived-demo-svg.cjs
-          node --test tests/finder-derived-estimate-engine.test.cjs tests/finder-derived-research-targets.test.cjs
+          node --test tests/finder-derived-estimate-engine.test.cjs tests/finder-derived-research-targets.test.cjs tests/verify-cfb-geometry-source-triage.test.cjs
       - name: Generate synthetic-only sample candidate geometry
         run: |
           node scripts/generate-finder-derived-estimates.cjs --demo tests/fixtures/finder-derived-synthetic.json artifacts/finder-derived/cfb-synthetic.json
           node -e "const f=require('./artifacts/finder-derived/cfb-synthetic.json'); if(!f.metadata.demoOnly||f.metadata.publicationApproved||f.features.some(x=>x.properties.publishable||x.properties.reviewed)||f.features.length!==6)process.exit(1)"
           node scripts/render-finder-derived-demo-svg.cjs artifacts/finder-derived/cfb-synthetic.json artifacts/finder-derived/cfb-synthetic-preview.svg
           node scripts/audit-finder-derived-research-targets.cjs
+          node scripts/verify-cfb-geometry-source-triage.cjs
+          node -e "const x=require('./artifacts/finder-derived/cfb-source-suitability.json'); if(x.status!=='NO_VERIFIED_CAMPUS_GIS'||x.currentCampusGISValidated||x.schoolAssignmentVerified||x.errors.length)process.exit(1)"
           node -e "const x=require('./artifacts/finder-derived/cfb-rezoning-review-plan.json'); if(x.status!=='SOURCE_RIGHTS_PENDING'||x.targetCount!==14||x.permissionCleared||x.mapPublishable)process.exit(1)"
       - name: Upload non-real synthetic example only (never production geometry)
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -50,5 +56,6 @@ jobs:
             artifacts/finder-derived/cfb-synthetic.json
             artifacts/finder-derived/cfb-synthetic-preview.svg
             artifacts/finder-derived/cfb-rezoning-review-plan.json
+            artifacts/finder-derived/cfb-source-suitability.json
           retention-days: 3
           if-no-files-found: error
