@@ -155,7 +155,9 @@ async function main(){
     status:report.status,coverage:report.coverage,topSix:report.topSix,
     reasons:report.reasons
   })+'\n');
-  for(const code of Object.keys(report.byDistrict)){
+  // Keep CI logs focused on the six requested districts plus McKinney;
+  // full extra-district rows remain in the downloadable JSON artifact.
+  for(const code of [...CORE,'043907']){
     const d=report.byDistrict[code];
     process.stdout.write('SCHOOL_LINKAGE_DISTRICT '+JSON.stringify({
       district:code,total:d.totalLoadedDirectory,matched:d.linked,unmatched:d.unmatched,
