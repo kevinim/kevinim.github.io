@@ -2,8 +2,6 @@ name: Agent 03 public address multi-ISD browser QA (NO-GO release)
 on:
   push:
     branches: [qa/multidistrict-public-address-browser-gate-20261109]
-  pull_request:
-    branches: [feature/address-selected-auto-school-map-20261109]
   workflow_dispatch:
 permissions:
   contents: read
