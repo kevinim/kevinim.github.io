@@ -11,3 +11,10 @@ html[data-theme="dark"] .reference-gis-warning strong{color:#fff1cf}
 .reference-gis-global-warning strong{display:block;font-size:12px;color:#3e2b10}
 html[data-theme="dark"] .reference-gis-global-warning{background:#302718;border-color:#ffba66;color:#ffecd0}
 html[data-theme="dark"] .reference-gis-global-warning strong{color:#ffecd0}
+
+/* Denton official PDF source directory is a reference, not an attendance GIS layer. */
+#dentonPdfZoneDirectory{margin:10px 0;padding:10px 12px;border-left:4px solid #c48c24}
+#dentonPdfZoneDirectory select{display:block;max-width:100%;width:100%;box-sizing:border-box;margin:7px 0 10px}
+#dentonPdfZoneDirectory .cardlink{display:inline-block;margin:5px 12px 3px 0}
+#dentonPdfZoneDirectory p{overflow-wrap:anywhere;line-height:1.6}
+html[data-theme="dark"] #dentonPdfZoneDirectory{border-left-color:#ffc078}

@@ -128,6 +128,15 @@
  <a href="https://tfsweb.tamu.edu/wildfire-and-other-disasters/burn-bans-and-information/wildfire-risk/" target="_blank" rel="noopener">TxWRAP 산불 위험</a> ·
  <a href="https://www.ncei.noaa.gov/access/storm-events-database/" target="_blank" rel="noopener">NOAA 과거 폭풍 사례</a></div>
 </details><details id="crimePanel" class="small-note" style="margin:10px 0"><summary><strong>범죄율 · 자료와 한계</strong></summary><p class="source" style="margin-top:8px">지도 위 <b>범죄율</b> 버튼으로 켜고 끕니다. 지도 색은 최신 연도의 도시(시 경계)별 인구 10만 명당 신고 범죄입니다. ZIP을 선택하면 그 ZIP이 걸친 도시들의 연도별 건수와 증가·감소 추세가 ZIP 정보에 함께 나옵니다.</p><div id="crimeStatus" class="source" role="status" aria-live="polite"></div><p class="source"><b>읽는 법과 한계.</b> 시 경계 단위 수치이며 ZIP·동네·주소별 위험이 아닙니다. 시 경계 밖(카운티 보안관 관할)과 학교·대학 경찰 사건은 포함되지 않습니다. 신고된 범죄만 집계되며 미신고 범죄는 빠집니다. 상업·관광 중심지(예: Addison)는 주민보다 낮 시간 방문객이 많아 인구 대비 비율이 높게 나옵니다. 인구 1만 명 미만 도시는 건수가 적어 해마다 크게 변합니다(점선 테두리). 12개월을 모두 보고하지 않은 해는 비율을 표시하지 않습니다(회색 점선, 0이 아님).</p><p class="source">원본: <a href="https://cde.ucr.cjis.gov/" target="_blank" rel="noopener">FBI Crime Data Explorer</a> (NIBRS 기관별 월간 신고 건수·FBI 관할 인구) · 시 경계: <a href="https://tigerweb.geo.census.gov/" target="_blank" rel="noopener">Census TIGERweb</a> · <a href="https://www.dps.texas.gov/section/crime-records/crime-texas" target="_blank" rel="noopener">Texas DPS Crime in Texas</a></p></details><div class="small-note" id="mapLoadStatus">ZIP 경계와 학교 위치 데이터를 불러오는 중…</div><hr class="rule"><h2>학교 배정구역 (자동 연결)</h2>
+<details id="dentonPdfZoneDirectory" class="small-note">
+ <summary><strong>Denton ISD 2026–27 공식 학교별 PDF 경계 지도 39개</strong> · GIS와 배정 미인증</summary>
+ <p class="source" role="note"><strong>주의 · 공식 PDF 참고 지도입니다.</strong> 학교별 원본 PDF는 공개돼 있으나 이 대시보드에 현행 학교별 GIS 도형이 연결됐다는 뜻이 아닙니다. 실제 거주지의 배정학교와 2026–27 예외는 공식 School Locator로 확인해야 합니다.</p>
+ <label for="dentonPdfCampusSelect">초등 26 · 중등 9 · 고등 4 학교별 공식 지도 선택</label>
+ <select id="dentonPdfCampusSelect" aria-label="Denton 학교별 공식 2026–27 PDF 지도"></select>
+ <a class="cardlink" id="dentonPdfCampusLink" hidden target="_blank" rel="noopener noreferrer"></a>
+ <a class="cardlink" href="https://webquery-2-denton-tx.etstack.io/" target="_blank" rel="noopener noreferrer">Denton 공식 School Locator ↗</a>
+ <a class="cardlink" href="https://www.dentonisd.org/families/attendance-zones/attendance-boundary-modification-26-27" target="_blank" rel="noopener noreferrer">2026–27 변경 안내 ↗</a>
+</details>
 <details><summary>학군 배정구역과 출처 확인</summary><div class="small-note" id="zoneDatasetStatus">공식 학군별 2026–27 배정구역 및 참고 GIS를 확인하는 중…</div>
 <div class="source" id="schoolBoundaryCoverageAudit" aria-live="polite">학교별 경계 표시 가능 여부를 검증하는 중…</div>
 <p class="source" style="margin-top:10px"><strong>현행 학군 Finder 우선:</strong> 녹색은 2026–27 검증 Frisco·Prosper, 파란색은 현재 공식 Finder가 사용하는 Plano·Lewisville 배정선입니다(일부 원본에 이전 학년도 표기). Allen의 과거 GIS는 학교를 선택하면 참고 경계선이 자동 표시됩니다. 실제 거주 주소·학년·호수는 공식 Finder에서 확인하세요.</p>
@@ -176,6 +185,7 @@
 <script src="./geocode-quality.js?v=1"></script>
 <script src="./school-zone-risk.js?v=2"></script>
 <script src="./school-boundary-match.js?v=3"></script>
+<script src="./denton-official-zone-references.js?v=1"></script>
 <script src="./phase2a-fema-hazards.js?v=3"></script>
 <script src="./phase2a-nfhl-flood.js?v=2"></script>
 <script src="./txwrap-wildfire-potential.js?v=1"></script>
