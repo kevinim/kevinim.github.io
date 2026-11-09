@@ -1,5 +1,8 @@
 # Parent school assignment guidance — DFW district expansion
 
+> **Standing roadmap decision (2026-11-09):** All DFW districts in the dashboard's full geographic and school search scope—not just the original six—must be measured and prioritized by *official assignment guidance coverage, independently matched school-specific map boundaries and explicit missing reasons*, using the full in-scope district denominator. The current 29 registered ISDs are **not** the DFW universe. See [issue #125](https://github.com/kevinim/kevinim.github.io/issues/125) and the priority rules in [HANDOFF.md](../HANDOFF.md).
+
+
 Reviewed: **2026-11-09**. Existing GitHub Pages site; no separate UAT or Production host.
 
 ## What a resident must check
