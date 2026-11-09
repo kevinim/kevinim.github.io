@@ -26,6 +26,31 @@ const result={scenarios:[],screenshots:[]};
    assert.equal((await page.locator('#k-zip').innerText()).trim(),'75013');
    await page.waitForFunction(()=>typeof state!=='undefined'&&state.schools.length>20&&
       typeof state.ratingIndex!=='undefined'&&typeof map!=='undefined'&&!!map,null,{timeout:90000});
+   // Data provenance regression: all four representative regions must use
+   // verified source geography, not stale UI placeholders or an address risk score.
+   const coverage=[
+     {zip:'75013',city:'Allen',county:'COLLIN'},
+     {zip:'75034',city:'Frisco',county:'COLLIN'},
+     {zip:'75093',city:'Plano',county:'COLLIN'},
+     {zip:'75006',city:'Carrollton',county:'DALLAS'}
+   ];
+   for(const sample of coverage){
+     await page.selectOption('#zipSelect',sample.zip);
+     await page.waitForFunction(zip=>document.querySelector('.area-qa-zip')?.textContent?.includes(zip),sample.zip,{timeout:15000});
+     await page.waitForFunction(({city,county})=>{
+       const val=target=>document.querySelector('.area-qa-row[data-target="'+target+'"] .area-qa-value')?.textContent||'';
+       const status=target=>document.querySelector('.area-qa-row[data-target="'+target+'"] .area-qa-state')?.dataset.state;
+       return status('crime')==='available'&&val('crime').includes(city)&&
+         status('hazards')==='available'&&val('hazards').includes(county);
+     },sample,{timeout:30000});
+     const details=await page.locator('.area-qa-row .area-qa-note').allInnerTexts();
+     assert.ok(details.some(t=>t.includes('TEA 2026')));
+     assert.ok(details.some(t=>t.includes('NOAA 2024–25')));
+     assert.ok(details.some(t=>t.includes('FBI NIBRS 2025')));
+     assert.ok(details.some(t=>t.includes('도로망 직접 계산')));
+   }
+   await page.selectOption('#zipSelect','75013');
+   await page.waitForFunction(()=>document.querySelector('.area-qa-zip')?.textContent?.includes('75013'),null,{timeout:10000});
    await page.locator('button[data-target="schools"].area-qa-row').click();
    assert.equal(await page.locator('#schoolOverlay').isChecked(),true);
    if(width===1280){
@@ -42,6 +67,14 @@ const result={scenarios:[],screenshots:[]};
    await page.waitForFunction(()=>document.querySelector('.area-qa-row[data-target="commute"] .area-qa-value')?.textContent?.includes('별도 계산'),null,{timeout:10000});
    await page.locator('button[data-target="hazards"].area-qa-row').click();
    assert.equal(await page.locator('#femaHazardEnabled').isChecked(),true,'hazard button must enable existing layer');
+   assert.equal(await page.locator('#noaaStormHistoryPanel').evaluate(el=>el.open),true,
+     'NOAA history should open with its separate evidence from FEMA');
+   await page.waitForFunction(()=>document.querySelector('#noaaStormCounty')?.value==='COLLIN',null,{timeout:25000});
+   assert.match(await page.locator('#areaQaActionStatus').innerText(),/NOAA.*FEMA/);
+   await page.locator('button[data-target="crime"].area-qa-row').click();
+   assert.equal(await page.locator('#crimePanel').evaluate(el=>el.open),true);
+   assert.equal(await page.locator('#crimeMapToggle').getAttribute('aria-pressed'),'true');
+
    assert.ok(!errors.length,'Browser errors: '+errors.join(' ; '));
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
    assert.ok(overflow<=2,'Horizontal overflow at '+width+': '+overflow);
