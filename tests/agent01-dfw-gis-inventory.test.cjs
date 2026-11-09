@@ -24,5 +24,8 @@ test('Irving maps cover three distinct grade levels and exact publisher web map 
  assert(v);assert.deepEqual(v.webmaps.map(z=>z.grade),['elementary','middle','high']);
  for(const row of v.webmaps){assert.match(row.arcgisWebmapId,/^[a-f\d]{32}$/);if(row.grade==='elementary')assert.match(row.academicYear,/^2024-25/);else assert.equal(row.academicYear,null);}
  assert.equal(new Set(v.webmaps.map(x=>x.arcgisWebmapId)).size,3);
- assert.equal(v.requiredForActivation.length>=6,true);
+ assert.ok(v.requiredForActivation.length>=4,'all remaining gates must be explicit');
+ assert.equal(v.choiceCampuses[0].ordinaryAttendanceZoneRequired,false);
+ assert.equal(v.officialLocator.arcgisLiveWebMapId,'8004c79f6dd144b6996e7240c5182507');
+ assert.equal(v.officialLocator.yearOfEachBoundaryOfficiallyCertified,false);
 });
