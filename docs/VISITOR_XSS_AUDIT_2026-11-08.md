@@ -1,3 +1,5 @@
+> **Post-PR #89 update:** The original audit was prepared before the stricter hash-based CSP landed. Both current pages now remove `'unsafe-inline'` and set `script-src-attr 'none'`. Browser CSP tests in this branch have been revised to prevent regression; the older 'no CSP/unsafe-inline' observations below no longer describe live code.
+
 # Visitor-side XSS negative-input audit — 2026-11-08
 
 **Status: DRAFT, non-deploying test work. NOT a penetration test or broad-public-release approval.**
