@@ -50,6 +50,68 @@ const brightness=raw=>{
    assert.ok(brightness(dark.bg)<90,'dark body not applied');
    assert.ok(brightness(dark.panelBg)<95,'dashboard cards still white');
    assert.equal(dark.mapFilter,'none','risk map must not be inverted');
+   // CSS computed style audit: reproduce formerly invisible white-on-white
+   // secondary and crime buttons, plus default and pressed map controls.
+   const contrast=await page.evaluate(()=>{
+     const host=document.createElement('div');
+     host.id='themeContrastFixtures';
+     host.style.cssText='position:absolute;top:0;left:0;z-index:-1;pointer-events:none';
+     document.body.append(host);
+     const samples=[
+      ['.btn.secondary','보조 버튼'],
+      ['.btn','주요 버튼'],
+      ['.mapquickbtn','지도 기본'],
+      ['.mapquickbtn[aria-pressed=true]','지도 선택'],
+      ['.hazard-chip','위험 기본'],
+      ['.hazard-chip.ifld[aria-pressed=true]','홍수 선택'],
+      ['.hazard-chip.wfir[aria-pressed=true]','산불 선택'],
+      ['.hazard-chip.hrcn[aria-pressed=true]','허리케인 선택'],
+      ['.hazard-chip.crime[aria-pressed=true]','범죄 선택'],
+      ['.crime-seg button','범죄 필터 기본'],
+      ['.crime-seg button[aria-pressed=true]','범죄 필터 선택'],
+      ['.extra-action','출퇴근 계산 버튼'],
+      ['.seg button','지도 필터 기본'],
+      ['.seg button.active','지도 필터 선택']
+     ];
+     const cssColor=(value)=>{
+       const m=value.match(/^rgba?\(([^)]+)\)$/);
+       return m?m[1].split(',').slice(0,3).map(v=>Number(v.trim())):null;
+     };
+     const luminance=rgb=>{
+       const ch=rgb.map(v=>v/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);
+       return .2126*ch[0]+.7152*ch[1]+.0722*ch[2];
+     };
+     const results=[];
+     for(const [selector,label] of samples){
+       const wrapper=document.createElement('div');
+       const isCrime=selector.startsWith('.crime-seg'),isSeg=selector.startsWith('.seg ');
+       if(isCrime)wrapper.className='crime-seg';
+       if(isSeg)wrapper.className='seg';
+       const el=document.createElement('button');
+       el.type='button';el.textContent=label;
+       if(selector.includes('.btn.secondary'))el.className='btn secondary';
+       else if(selector.startsWith('.btn'))el.className='btn';
+       else if(selector.includes('.mapquickbtn'))el.className='mapquickbtn';
+       else if(selector.includes('.hazard-chip')){
+        el.className='hazard-chip'+(selector.includes('.ifld')?' ifld':selector.includes('.wfir')?' wfir':
+          selector.includes('.hrcn')?' hrcn':selector.includes('.crime')?' crime':'');
+       }
+       else if(isCrime)el.className='';
+       else if(selector.startsWith('.extra-action'))el.className='extra-action';
+       else if(isSeg)el.className=selector.endsWith('.active')?'active':'';
+       if(selector.includes('aria-pressed=true'))el.setAttribute('aria-pressed','true');
+       wrapper.append(el);host.append(wrapper);
+       const style=getComputedStyle(el),fg=cssColor(style.color),bg=cssColor(style.backgroundColor);
+       const lo=Math.min(luminance(fg),luminance(bg)),hi=Math.max(luminance(fg),luminance(bg));
+       results.push({label,selector,ratio:Math.round(((hi+.05)/(lo+.05))*100)/100,
+         foreground:style.color,background:style.backgroundColor});
+     }
+     host.remove();
+     return results;
+   });
+   for(const sample of contrast)
+     assert.ok(sample.ratio>=4.5,'Unreadable dark button '+sample.label+': '+JSON.stringify(sample));
+   assert.ok(brightness(dark.bg)<40,'User requested visibly deeper dark body');
    // Native summary supports keyboard activation, and table is only rendered when opened.
    await page.locator('#regionCompare > summary').focus();
    await page.keyboard.press('Enter');
@@ -78,7 +140,7 @@ const brightness=raw=>{
    mkdirSync('artifacts/theme-ui',{recursive:true});
    const screenshot='artifacts/theme-ui/'+width+'.png';
    await page.locator('#regionCompare').screenshot({path:screenshot});
-   report.viewports.push({width,headerHeight,darkBg:dark.bg,overflow,screenshot});
+   report.viewports.push({width,headerHeight,darkBg:dark.bg,contrast,overflow,screenshot});
    await page.close();
   }
  }finally{
