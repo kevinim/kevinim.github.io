@@ -1,6 +1,6 @@
 name: TX 16-PR integrated compatibility preflight (no deploy)
 # QA-only: isolated local dry merges; no Git push, branch changes, or deployment.
-# Includes latest 2026-27 campus lifecycle tests from parent PR #158.
+# Includes latest 2026-27 campus lifecycle and main-data assertions from parent PR #158.
 on:
   pull_request:
     branches: [data/dfw-school-grade-year-quality-noncfb-20261109, main]
