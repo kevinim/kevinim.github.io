@@ -26,7 +26,11 @@ jobs:
           node-version: '24'
           package-manager-cache: false
       - name: Test security gate rules
-        run: node --test tests/public-release-gate.test.cjs tests/public-preview-build.test.cjs
+        run: node --test tests/public-release-gate.test.cjs tests/public-preview-build.test.cjs tests/family-entry.test.cjs tests/environment-plan.test.cjs
+      - name: Validate 3-environment isolation manifest (no deploy)
+        run: node scripts/validate-environment-plan.cjs deploy/environment-plan.json planning
+      - name: Build safe family gateway holding page (no deploy)
+        run: node scripts/build-family-entry.cjs preview
       - name: Run non-deploying public release audit
         run: node scripts/public-release-gate.cjs audit
       - name: Build and verify isolated public preview (no deploy)
@@ -99,10 +103,18 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/preview-browser-tmp/node_modules
         run: node scripts/test-public-preview-browser.cjs
+      - name: Build family holding page only (no deploy)
+        run: node scripts/build-family-entry.cjs preview
+      - name: Verify family gateway is responsive and contains no dashboard or external requests
+        env:
+          NODE_PATH: ${{ github.workspace }}/preview-browser-tmp/node_modules
+        run: node scripts/test-family-entry-browser.cjs
       - name: Attach browser QA evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: public-preview-browser-evidence
-          path: artifacts/security/public-preview-browser.json
+          path: |
+            artifacts/security/public-preview-browser.json
+            artifacts/security/family-entry-browser.json
           if-no-files-found: warn

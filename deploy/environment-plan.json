@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "deploymentMode": "planning",
+  "lastReviewed": "2026-11-08",
+  "familyEntry": {
+    "origin": "https://kevinim.github.io",
+    "futureContent": "public-login-link-only",
+    "publishingState": "unchanged-current-dashboard",
+    "access": "public-landing-only",
+    "deployEnabled": false
+  },
+  "familyUat": {
+    "origin": null,
+    "provider": "Cloudflare Pages",
+    "privateSourceRepository": null,
+    "access": "Cloudflare Access exact-email allowlist",
+    "primaryHostProtected": false,
+    "previewAliasesProtected": false,
+    "anonymousTestPassed": false,
+    "deployEnabled": false
+  },
+  "publicProduction": {
+    "origin": null,
+    "provider": "separate Cloudflare Pages project",
+    "build": "scripts/build-public-preview.cjs",
+    "access": "public",
+    "distinctOriginRequired": true,
+    "redistributionApproved": false,
+    "deployEnabled": false
+  },
+  "release": {
+    "deployWorkflowConfigured": false,
+    "ownerApproved": false,
+    "backupAndRollbackTested": false
+  }
+}
