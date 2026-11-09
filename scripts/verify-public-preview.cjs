@@ -5,6 +5,7 @@ const cp=require('node:child_process');
 const fs=require('node:fs');
 const path=require('node:path');
 const assert=require('node:assert/strict');
+const {verifyCspIntegrity}=require('./build-public-preview.cjs');
 const base=path.resolve('dist/public-preview');
 const build=cp.spawnSync(process.execPath,['scripts/build-public-preview.cjs',base],{encoding:'utf8'});
 if(build.status!==0){process.stderr.write('Preview build failed: '+build.stderr.slice(0,650)+'\n');process.exit(1);}
@@ -26,11 +27,16 @@ assert.equal(report.credentials.length,0);
 assert.equal(report.personalization.length,0);
 assert.equal(report.nonPublishable.length,0);
 assert.equal(report.newSensitive.length,0);
+const previewHtml=fs.readFileSync(path.join(base,'index.html'),'utf8');
+const previewCsp=verifyCspIntegrity(previewHtml);
+assert.equal(previewCsp.policy.includes("script-src-attr 'none'"),true);
+assert.equal(previewCsp.policy.includes("'unsafe-inline'"),false);
 const assets=['index.html','home-lookup-v2.js','candidate-compare.js','dfw-outside-public.json','schools.json'];
 for(const p of assets)assert.ok(fs.existsSync(path.join(base,p)),'Missing public asset '+p);
 const forbidden=['jpm-outside-dfw.json','jpm-road-times-2026-11-04.json',
  'jpm-60min-isochrone-2026-11-04.geojson','HANDOFF.md','AGENTS.md','CLAUDE.md',
- '.github/workflows/public-release-security.yml','reviewed.html','scripts/build-public-preview.cjs'];
+ '.github/workflows/public-release-security.yml','reviewed.html','scripts/build-public-preview.cjs','features/reviewed-bootstrap.js',
+ 'features/geojson-upload-guard.js','dashboard-main.js'];
 for(const p of forbidden)assert.equal(fs.existsSync(path.join(base,p)),false,'Forbidden public artifact '+p);
 function walk(dir,rel=''){
  const entries=[];
