@@ -47,9 +47,11 @@ async function main(){
    report.finderUiState='NO_UNAMBIGUOUS_PUBLIC_ADDRESS_FIELD';
   }else{
    report.finderUiState='ADDRESS_FIELD_VISIBLE_UNCERTIFIED';
-   for(const s of fixtures.samples){
-    // Each public model-home search begins from a clean official form state.
-    try{const reset=page.getByRole('button',{name:'Reset',exact:true});if(await reset.count())await reset.click({timeout:4000});}catch{}
+   for(let i=0;i<fixtures.samples.length;i++){
+    const s=fixtures.samples[i];
+    // The vendor's Reset replaces/disables address input after the first run.
+    // Use a fresh official page navigation for each independent public case.
+    if(i>0){await page.goto(target,{waitUntil:'domcontentloaded',timeout:25000});await page.waitForTimeout(4500);}
     const entry={id:s.id,address:s.address,source:s.addressSource,officialSchools:[],status:'NO_GO_UNREVIEWED'};
     try{
      await input.fill(s.address,{timeout:8000});
