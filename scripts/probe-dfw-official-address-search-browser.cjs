@@ -35,8 +35,13 @@ async function check(browser,district,entry){
    return nodes.filter(x=>x.getClientRects().length>0).slice(0,12)
      .map(x=>x.textContent?.replace(/\s+/g,' ').trim().slice(0,130)).filter(Boolean);
   });
-  const firstTwo=entry.address.split(' ').slice(0,2).map(x=>x.toLowerCase());
-  const exact=(out.suggestions||[]).find(v=>firstTwo.every(w=>v.toLowerCase().includes(w)));
+  const parts=entry.address.split(',')[0].toLowerCase().split(/\s+/)
+   .filter(Boolean).filter(x=>!['n','s','e','w','north','south','east','west'].includes(x));
+  const firstTwo=parts.slice(0,2);
+  const zip=entry.address.match(/\b\d{5}$/)?.[0];
+  const exact=(out.suggestions||[]).find(v=>firstTwo.length===2
+    &&firstTwo.every(w=>v.toLowerCase().includes(w))
+    &&(!/\b\d{5}\b/.test(v)||v.includes(zip)));
   if(exact){
    const option=page.getByText(exact,{exact:false}).first();
    try{
