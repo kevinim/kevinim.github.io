@@ -123,6 +123,13 @@ async function runDistrict(browser,d){
  finally{
   await context.close().catch(()=>{});
   report.portals.push(row);save();
+  console.log('OFFICIAL_FINDER_CONTROL_INVENTORY '+JSON.stringify({
+   district:row.district,locatorUrl:row.locator?.url||null,
+   locatorFields:row.locator?.fields?.slice(0,12)||[],
+   locatorControls:row.locator?.controls?.filter(x=>/address|search|school|apartment|apply|find/i.test(x.label||'')).slice(0,25)||[],
+   apartmentFields:row.apartmentUi?.fields?.slice(0,12)||[],
+   apartmentControls:row.apartmentUi?.controls?.filter(x=>/apartment|apply|find/i.test(x.label||'')).slice(0,20)||[]
+  }));
   console.log('OFFICIAL_DISTRICT_UI_PROBE '+JSON.stringify({
    district:row.district,status:row.status,siteOpened:row.siteOpened,
    locatorOpened:row.locatorOpened||false,
