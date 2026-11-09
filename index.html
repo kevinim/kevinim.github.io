@@ -17,7 +17,9 @@
 .school-zone-label{display:inline-block!important;font-size:10px!important;font-weight:750;line-height:1.3;max-width:100%;border-radius:5px;padding:3px 6px;margin-top:5px!important;overflow-wrap:anywhere}
 .school-zone-label.current{color:#176b47;background:#e4f5ea}.school-zone-label.finder{color:#2458a2;background:#eaf0fe}
 .school-zone-label.historical,.school-zone-label.special{color:#8d5419;background:#fff3dc}
-.school-zone-label.finder-only,.school-zone-label.unverified,.school-zone-label.nonstandard{color:#625879;background:#f1ecf7}
+.school-zone-label.finder-only,.school-zone-label.map-only,.school-zone-label.inquiry-only,.school-zone-label.unverified,.school-zone-label.nonstandard{color:#625879;background:#f1ecf7}
+.school-zone-label.choice-only{background:#fff0e0;color:#8d4517}
+.school-zone-note{margin:7px 0;font-size:11px;line-height:1.5;color:#6b4b31}
 .school-zone-label.loading{color:#566276;background:#eef1f5}.school-zone-label.error{color:#a52727;background:#feeaea}
 .school-zone-head{margin:7px 0 10px}
 .school-zone-map-hint{border:1px solid #d8c6a8;background:#fff8ea;padding:11px 15px;font-size:12px;line-height:1.55;color:#5d4b32;overflow-wrap:anywhere}
@@ -205,14 +207,18 @@ function schoolZoneInfo(s){
  const source=window.SchoolBoundaryMatch.boundarySchoolSource(s.district);
  const shapes=state.zoneData[source]||[],failed=!!state.zoneLoadErrors[source];
  const mode=districtZoneDisplay(s.district,state.liveFinder);
- const officialUrl=window.TrustedLinkPolicy?.official(OFFICIAL[s.district])||null;
+ const districtRecord=districtInfo(s.district),officialUrl=window.TrustedLinkPolicy?.official(OFFICIAL[s.district])||null;
+ const officialKind=districtRecord?.lookupKind||'finder-guidance',officialNote=districtRecord?.officialNote||null;
  const prev=schoolZoneCache.get(s);
  if(prev?.shapes===shapes&&prev.ready===state.zoneReady&&prev.failed===failed&&prev.mode===mode&&prev.officialUrl===officialUrl)return prev.value;
  const match=window.SchoolBoundaryMatch.findSchoolBoundary(s,shapes,(name,district)=>scoreRecord(name,district));
- const status=window.SchoolZoneUI.classify({matchStatus:match.status,sourceReady:state.zoneReady,sourceFailed:failed,displayMode:mode,officialUrl,schoolType:s.type});
- const value={...status,officialUrl,match};
+ const status=window.SchoolZoneUI.classify({matchStatus:match.status,sourceReady:state.zoneReady,sourceFailed:failed,displayMode:mode,officialUrl,officialKind,schoolType:s.type});
+ const value={...status,officialUrl,officialKind,officialNote,match};
  schoolZoneCache.set(s,{shapes,ready:state.zoneReady,failed,mode,officialUrl,value});
  return value;
+}
+function schoolZoneLinkLabel(kind){
+ return kind==='choice-process'?'학군 학교 선택·신청 안내':kind==='official-map'?'학군 공식 배정 지도':kind==='official-inquiry'?'학군 공식 배정 지도·문의':'학군 공식 주소 검색기';
 }
 function renderSchoolZoneMapHint(s,zone){
  const banner=el('schoolZoneMapHint');if(!banner)return;
@@ -224,9 +230,10 @@ function renderSchoolZoneMapHint(s,zone){
  if(zone.officialUrl){
   const link=document.createElement('a');
   if(window.TrustedLinkPolicy.setOfficialAnchor(link,zone.officialUrl)){
-   link.textContent='학군 공식 주소 검색기 열기';banner.appendChild(link);
+   link.textContent=schoolZoneLinkLabel(zone.officialKind)+' 열기';banner.appendChild(link);
   }
  }
+ if(zone.officialNote){const note=document.createElement('p');note.className='school-zone-note';note.textContent=zone.officialNote;banner.appendChild(note);}
 }
 
 const PROSPER_MAPS={elementary:'https://aptg.co/vgDpkm',middle:'https://aptg.co/ty_VGv',high:'https://aptg.co/hmz4Ps'};
@@ -432,7 +439,7 @@ function drawZipInsights(d){
  const cards=[asian,menaHtml(d.z),window.crimeZipHtml?.(d.z)||''].filter(Boolean);
  box.innerHTML='<div class="insights-head"><h2>선택 ZIP 상세</h2><span class="pill">'+escape(d.z+' · '+displayPlace(d.name))+'</span></div><div class="insights-grid">'+cards.map(c=>'<div class="insight-card">'+c+'</div>').join('')+'</div>';
 }
-function drawDetail(){const d=getZip();drawZipInsights(d);if(state.selectedSchool){const s=state.selectedSchool;const sRating=scoreRecord(s.name,s.district);const sScore=sRating?.score??null;const zone=schoolZoneInfo(s),finder=zone.officialUrl;const lookup=finder?'<a class="cardlink" target="_blank" rel="noopener noreferrer" href="'+escape(finder)+'">학군 공식 주소 검색기 ↗</a>':'<div class="source">이 학교의 공식 주소별 학군 Finder 링크는 아직 검증되지 않았습니다. 소속 학군에 직접 확인하세요.</div>';el('detailContent').innerHTML=`<h3>${escape(s.name)}</h3><div class="school-zone-head"><span class="school-zone-label ${zone.kind}">${escape(zone.label)}</span></div><div class="muted">${({high:'고등학교',middle:'중학교',elementary:'초등학교'})[s.type]||'학교'} · ${escape(s.districtName||s.district||'학군 미확인')} · 2026 TEA 예비: <b>${escape(ratingText(sRating))}</b></div>${s.address?`<div style="margin-top:10px;font-size:12px">${escape(s.address)}</div>`:''}<div class="source">학교 위치 출처: ${escape(s.source||'좌표·연도 미검증')} · 지도 핀은 현재 배정을 보장하지 않습니다.</div><hr class="rule"><div class="eyebrow">학교 배정 안내</div><p class="muted" style="margin:9px 0">학교 위치나 오래된 경계만으로 현재 배정이 보장되지 않습니다. 해당 주소를 공식 학군 검색기에 입력해 검증하세요.</p><div class="notice" id="zoneNotice">${s.district==='AISD'?'Allen 공개 GIS 경계는 메타데이터가 과거 연도로 표시됩니다. <b>최신 배정 확인이 필요</b>합니다.':'최신 2026–27 학교별 배정구역은 공식 학군에서 주소로 확인해야 합니다. 과거 GIS 표시가 있더라도 현재 배정 근거로 사용할 수 없습니다.'}</div>${lookup}<details><summary>학교 출처와 지도 보기</summary><a class="cardlink" target="_blank" rel="noopener" href="${escape(window.TrustedLinkPolicy?.withFallback(scoreSource(s.name,s.district),'https://txschools.gov/')||'https://txschools.gov/')}">${sScore===null?'TEA 성적 확인':'2026 점수 출처'} ↗</a>${(s.district==='FISD'||s.district==='PROSPER')?`<a class="cardlink" target="_blank" rel="noopener" href="${escape(window.TrustedLinkPolicy?.withFallback(s.district==='FISD'?FISD_MAPS[s.type]:PROSPER_MAPS[s.type],OFFICIAL[s.district])||'https://txschools.gov/')}">공식 배정구역 안내 ${({elementary:'초등',middle:'중등',high:'고등'})[s.type]} 배정구역 확인 ↗</a>`:''}<a class="cardlink" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.address||s.name+', Texas')}">학교 위치 확인 ↗</a></details><div style="margin-top:18px"><button class="btn secondary" data-clear-school>ZIP 통계로 돌아가기</button></div>`;drawBoundary();return}
+function drawDetail(){const d=getZip();drawZipInsights(d);if(state.selectedSchool){const s=state.selectedSchool;const sRating=scoreRecord(s.name,s.district);const sScore=sRating?.score??null;const zone=schoolZoneInfo(s),finder=zone.officialUrl;const lookup=finder?'<a class="cardlink" target="_blank" rel="noopener noreferrer" href="'+escape(finder)+'">'+escape(schoolZoneLinkLabel(zone.officialKind))+' ↗</a>'+(zone.officialNote?'<p class="school-zone-note">'+escape(zone.officialNote)+'</p>':''):'<div class="source">이 학교의 공식 주소별 학군 Finder 링크는 아직 검증되지 않았습니다. 소속 학군에 직접 확인하세요.</div>';el('detailContent').innerHTML=`<h3>${escape(s.name)}</h3><div class="school-zone-head"><span class="school-zone-label ${zone.kind}">${escape(zone.label)}</span></div><div class="muted">${({high:'고등학교',middle:'중학교',elementary:'초등학교'})[s.type]||'학교'} · ${escape(s.districtName||s.district||'학군 미확인')} · 2026 TEA 예비: <b>${escape(ratingText(sRating))}</b></div>${s.address?`<div style="margin-top:10px;font-size:12px">${escape(s.address)}</div>`:''}<div class="source">학교 위치 출처: ${escape(s.source||'좌표·연도 미검증')} · 지도 핀은 현재 배정을 보장하지 않습니다.</div><hr class="rule"><div class="eyebrow">학교 배정 안내</div><p class="muted" style="margin:9px 0">학교 위치나 오래된 경계만으로 현재 배정이 보장되지 않습니다. 학군별 공식 주소 검색·지도·학교 선택·문의 절차를 통해 확인하세요.</p><div class="notice" id="zoneNotice">${s.district==='AISD'?'Allen 공개 GIS 경계는 메타데이터가 과거 연도로 표시됩니다. <b>최신 배정 확인이 필요</b>합니다.':'최신 2026–27 학교별 배정구역은 공식 학군에서 주소로 확인해야 합니다. 과거 GIS 표시가 있더라도 현재 배정 근거로 사용할 수 없습니다.'}</div>${lookup}<details><summary>학교 출처와 지도 보기</summary><a class="cardlink" target="_blank" rel="noopener" href="${escape(window.TrustedLinkPolicy?.withFallback(scoreSource(s.name,s.district),'https://txschools.gov/')||'https://txschools.gov/')}">${sScore===null?'TEA 성적 확인':'2026 점수 출처'} ↗</a>${(s.district==='FISD'||s.district==='PROSPER')?`<a class="cardlink" target="_blank" rel="noopener" href="${escape(window.TrustedLinkPolicy?.withFallback(s.district==='FISD'?FISD_MAPS[s.type]:PROSPER_MAPS[s.type],OFFICIAL[s.district])||'https://txschools.gov/')}">공식 배정구역 안내 ${({elementary:'초등',middle:'중등',high:'고등'})[s.type]} 배정구역 확인 ↗</a>`:''}<a class="cardlink" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.address||s.name+', Texas')}">학교 위치 확인 ↗</a></details><div style="margin-top:18px"><button class="btn secondary" data-clear-school>ZIP 통계로 돌아가기</button></div>`;drawBoundary();return}
 let html=`<h3>${escape(displayPlace(d.name))} <span style="font-size:12px;color:#7a8b9c;font-weight:500">${d.z}</span></h3><div class="muted">인구조사 우편번호 통계구역 · 표본 추정치</div><div class="stat-list">`;
 const stats=[['JPM 도로망 (교통 미반영)',Number.isFinite(d.jpmMinutes)?d.jpmMinutes+'분':'미확인'],['전체 인구',fmt(d.pop)+'명'],['중위 연령',d.age==null?'미공개':d.age+'세'],['18세 미만 인구',pct(d.kids)],['미성년자 동거 가구',pct(d.childHH)],['중위 가구 소득',money(d.income)]];html+=stats.map(([x,y])=>`<div class="statrow"><span>${x}</span><strong>${y}</strong></div>`).join('')+'</div>';const race=[['백인 (비히스패닉)',d.white],['흑인 (비히스패닉)',d.black],['아시아계 (비히스패닉)',d.asian],['히스패닉 (모든 인종)',d.hispanic],['복수 인종 (비히스패닉)',d.multiracial],['미 원주민 (비히스패닉)',d.native],['태평양 제도계 (비히스패닉)',d.pacific],['기타 인종 (비히스패닉)',d.other]];html+='<div style="font-size:12px;font-weight:800;margin:14px 0 6px">전체 인구 구성</div>'+race.map(([name,value])=>'<div class="race-row"><span>'+escape(name)+'</span><strong>'+pct(value)+'</strong></div>').join('')+'<div class="source">ACS 2020–2024 B03002; 반올림으로 합계가 100%와 다를 수 있습니다. 지도 아래 “선택 ZIP 상세”의 아시아계·중동계 세부 항목은 복수 응답을 포함하므로 위 구성과 직접 합산하지 않습니다.</div>';el('detailContent').innerHTML=html;if(map)zoneGroup?.clearLayers()}
 window.clearSchool=()=>{state.selectedSchool=null;drawDetail();drawBoundary()};
