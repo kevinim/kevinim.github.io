@@ -55,7 +55,7 @@ test('reject coordinate injections, malformed rings, non-finite values, bad nest
   [[-96.7,'33.1'],[-96.6,33.1],[-96.6,33.2],[-96.7,'33.1']],
   [[],[-96.6,33.1],[-96.6,33.2],[]],
  ];
- for(const ring of invalid)assert.throws(()=>validate(collection(feature(polygon(ring))),TypeError);
+ for(const ring of invalid)assert.throws(()=>validate(collection(feature(polygon(ring)))),TypeError);
  assert.throws(()=>validate(collection(feature({type:'MultiPolygon',coordinates:[]}))),TypeError);
  assert.throws(()=>validate(collection(feature({type:'Polygon',coordinates:[R,...Array.from({length:LIMITS.ringsPerPolygon},()=>R)]}))),TypeError);
 });
