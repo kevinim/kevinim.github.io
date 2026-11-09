@@ -1,0 +1,44 @@
+name: Family UAT Access planning and anonymous denial test contracts (no deployment)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/check-uat-anonymous-access.cjs'
+      - 'tests/check-uat-anonymous-access.test.cjs'
+      - 'deploy/uat-access-targets.example.json'
+      - 'deploy/UAT_ACCESS_READINESS.md'
+      - '.github/workflows/uat-access-preflight.yml'
+      - 'deploy/environment-plan.json'
+      - 'scripts/validate-environment-plan.cjs'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/check-uat-anonymous-access.cjs'
+      - 'tests/check-uat-anonymous-access.test.cjs'
+      - 'deploy/uat-access-targets.example.json'
+      - 'deploy/environment-plan.json'
+      - 'scripts/validate-environment-plan.cjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  uat-identity-preflight:
+    name: UAT anonymous-denial rules and unprovisioned readiness
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Verify syntax and fail-closed anonymous-denial contract (NO NETWORK)
+        run: |
+          node --check scripts/check-uat-anonymous-access.cjs
+          node --test tests/check-uat-anonymous-access.test.cjs
+      - name: Confirm family UAT is unprovisioned and no Access claim is made (NO NETWORK)
+        run: |
+          node scripts/check-uat-anonymous-access.cjs --plan
+          node scripts/validate-environment-plan.cjs deploy/environment-plan.json planning
