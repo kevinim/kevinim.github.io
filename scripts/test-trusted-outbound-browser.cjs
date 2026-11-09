@@ -25,8 +25,9 @@ const leaflet=fs.readFileSync(require.resolve('leaflet/dist/leaflet.js'));
    await page.waitForFunction(()=>window.TrustedLinkPolicy&&typeof drawDetail==='function'&&
       typeof state!=='undefined'&&Array.isArray(state.schools)&&state.schools.length>0,null,{timeout:60000});
    const result=await page.evaluate(()=>{
-    const school=state.schools.find(x=>x.type==='elementary'&&x.district==='PISD'&&x.ll)||
-      state.schools.find(x=>x.type==='elementary'&&x.ll);
+    // Initial deterministic fallback school entries can predate asynchronous GIS coordinates.
+    const school=state.schools.find(x=>x.type==='elementary'&&x.district==='PISD')||
+      state.schools.find(x=>x.type==='elementary')||state.schools[0];
     if(!school)throw Error('No school record for real DOM test');
     const original=OFFICIAL[school.district];
     const originalSelected=state.selectedSchool;
