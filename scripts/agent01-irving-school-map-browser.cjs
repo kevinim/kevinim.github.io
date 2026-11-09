@@ -89,6 +89,33 @@ async function main(){
    assert.match(spatial.addressStatus,/집 핀 좌표/);
    assert.match(spatial.directLocatorLink||'',/^https:\/\/iisd1\.maps\.arcgis\.com\/apps\/instant\/lookup\/index\.html\?appid=f27bba7ee02141c58c8c9375431effa2$/);
    assert.equal(spatial.zoneKey,null,'2026-27 school-year approval must not be inferred from point lookup');
+   // The manual official Finder name comparison is informational: never upgrade
+   // 2024-25 / 2025-26 source polygons to verified residential assignment.
+   await page.locator('#officialReviewDistrict').selectOption('057912');
+   await page.locator('#officialReviewLevel').selectOption('middle');
+   await page.locator('#officialReviewName').fill('Crockett Middle School');
+   await page.locator('#officialReviewYear').selectOption('2026–27');
+   await page.locator('#officialManualCompare').click();
+   const manualMatch=await page.evaluate(()=>({
+    status:home.officialReview?.status,
+    certified:home.officialReview?.yearCertified,
+    independent:home.officialReview?.independentlyVerified,
+    message:document.querySelector('#officialReviewResult')?.innerText||''
+   }));
+   assert.equal(manualMatch.status,'manual-match');
+   assert.equal(manualMatch.certified,false);
+   assert.equal(manualMatch.independent,false);
+   assert.match(manualMatch.message,/독립적인 Finder 화면 검증/);
+   await page.locator('#officialReviewName').fill('Bowie Middle School');
+   await page.locator('#officialManualCompare').click();
+   const manualMismatch=await page.evaluate(()=>({
+    status:home.officialReview?.status,
+    message:document.querySelector('#officialReviewResult')?.innerText||''
+   }));
+   assert.equal(manualMismatch.status,'manual-mismatch');
+   assert.match(manualMismatch.message,/다릅니다/);
+   const mapReferences=await page.locator('#officialReviewPanel a.cardlink[href*="current-campus-level-maps"]').count();
+   assert.equal(mapReferences,3,'district-published elementary/middle/high maps must be accessible');
    // Privacy/cancellation regression: selected home/overlay clears on X.
    await page.evaluate(()=>clearHome());
    const cleared=await page.evaluate(()=>({homePresent:!!home,overlay:!!irvingReferenceLayer}));
@@ -96,7 +123,7 @@ async function main(){
    // Browser screenshots are only general public dashboard / temporary QA
    // school sources; there are no personal, residential or student addresses.
    await page.screenshot({path:path.join(OUT,'irving-staging-'+width+'.png'),fullPage:false});
-   summaries.push({width,irvingSourceLookup:{count:spatial.count,names:spatial.names,unverifiedYearWarning:true,cleared:true},gradeChecks:check.map(c=>({grade:c.grade,matched:c.match,layerCount:c.leafletLayers,historyWarning:true})),pageErrorCount:pageErrors.length});
+   summaries.push({width,irvingSourceLookup:{count:spatial.count,names:spatial.names,unverifiedYearWarning:true,userReportedMatch:manualMatch.status,userReportedMismatch:manualMismatch.status,approved:false,officialMapLinks:mapReferences,cleared:true},gradeChecks:check.map(c=>({grade:c.grade,matched:c.match,layerCount:c.leafletLayers,historyWarning:true})),pageErrorCount:pageErrors.length});
    await page.close();
   }
   fs.writeFileSync(path.join(OUT,'staging-browser-qa.json'),JSON.stringify({readyForRelease:false,sourceYearVerified:false,independentFinderChecked:false,summary:summaries},null,2)+'\n');
