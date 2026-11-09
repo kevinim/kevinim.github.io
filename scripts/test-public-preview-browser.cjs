@@ -30,6 +30,12 @@ async function main(){
   for(const width of [1280,390]){
    const page=await browser.newPage({viewport:{width,height:880},deviceScaleFactor:1});
    const local404=[],errors=[];
+   await page.addInitScript(()=>{
+    window.__previewCspViolations=[];
+    document.addEventListener('securitypolicyviolation',event=>{
+     window.__previewCspViolations.push(event.violatedDirective);
+    });
+   });
    page.on('response',r=>{
     if(r.url().startsWith(url)&&r.status()>=400)local404.push({status:r.status(),asset:new URL(r.url()).pathname});
    });
@@ -67,6 +73,18 @@ async function main(){
    assert.equal(await page.locator('#homeClear').isVisible(),true);
    await page.locator('#homeClear').click();
    assert.equal(await page.locator('#homeAddress').inputValue(),'');
+   const security=await page.evaluate(()=>{
+    const policy=document.querySelector('meta[http-equiv="Content-Security-Policy"]')?.content||'';
+    const prior=window.__previewCspViolations||[];
+    const b=document.createElement('button');
+    b.setAttribute('onclick','window.__inertPreviewProbe=1');
+    document.body.appendChild(b);b.click();b.remove();
+    return {policy,prior,probe:window.__inertPreviewProbe||0};
+   });
+   assert.match(security.policy,/script-src-attr 'none'/,'missing CSP handler protection');
+   assert.doesNotMatch(security.policy,/'unsafe-inline'/,'public preview CSP was weakened');
+   assert.equal(security.probe,0,'a hostile inline event attribute must not execute');
+   assert.deepEqual(security.prior,[],'normal preview actions triggered CSP violations');
    assert.deepEqual(local404,[],'Local referenced assets returned 4xx');
    assert.deepEqual(errors,[],'Browser runtime errors');
    results.push({viewport:width,map:true,schoolsLoaded:initial.schoolCount,privacyDisclosure:true,clearButton:true,localAssetErrors:0});
