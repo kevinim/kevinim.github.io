@@ -25,7 +25,7 @@ async function main(){
    const messages=[];page.on('pageerror',e=>messages.push(String(e)));
    await page.goto('http://127.0.0.1:'+server.address().port+'/index.html',{waitUntil:'domcontentloaded',timeout:50000});
    await page.waitForFunction(()=>!!window.DentonZonePdfReference&&
-    document.querySelectorAll('#dentonPdfCampusSelect option').length===40,
+    document.querySelectorAll('#dentonPdfCampusSelect option').length===40&&
     typeof map!=='undefined'&&!!map&&typeof zoneGroup!=='undefined'&&!!zoneGroup,
     null,{timeout:35000});
    const count=await page.evaluate(()=>({
