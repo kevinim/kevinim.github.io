@@ -3,6 +3,11 @@ on:
   pull_request:
     paths:
       - 'scripts/agent01-probe-irving-gis.cjs'
+      - 'scripts/agent01-verify-irving-live-finder.cjs'
+      - 'scripts/agent01-irving-public-address-qa.cjs'
+      - 'district-registry.js'
+      - 'trusted-link-policy.js'
+      - 'school-boundary-match.js'
       - 'scripts/agent01-irving-embedded-high.cjs'
       - 'scripts/agent01-irving-tea-crosswalk.cjs'
       - 'scripts/agent01-irving-school-map-browser.cjs'
@@ -28,9 +33,9 @@ jobs:
         with:
           node-version: '24'
       - name: Agent01 provenance / geometry / cross-source safety QA
-        run: node --test tests/agent01-irving-gis-acquisition.test.cjs tests/agent01-irving-embedded-high.test.cjs tests/agent01-irving-tea-crosswalk.test.cjs tests/agent01-dfw-gis-inventory.test.cjs
+        run: node --test tests/agent01-irving-gis-acquisition.test.cjs tests/agent01-irving-embedded-high.test.cjs tests/agent01-irving-tea-crosswalk.test.cjs tests/agent01-irving-live-finder.test.cjs tests/agent01-irving-public-address.test.cjs tests/agent01-dfw-gis-inventory.test.cjs
       - name: Existing school-zone UI and polygon-linkage regression
-        run: node --test tests/school-zone-ui.test.cjs tests/school-polygon-linkage-audit.test.cjs
+        run: node --test tests/school-zone-ui.test.cjs tests/school-polygon-linkage-audit.test.cjs tests/trusted-outbound-links.test.cjs
   live-source-staging:
     runs-on: ubuntu-latest
     steps:
@@ -42,12 +47,19 @@ jobs:
           node-version: '24'
       - name: Read-only Irving GIS probe (FAIL CLOSED; never release polygons)
         run: node scripts/agent01-probe-irving-gis.cjs --live
+      - name: Verify current district-linked official School Locator app and live 3-grade layer chain
+        run: node scripts/agent01-verify-irving-live-finder.cjs
+      - name: Three public campus-address spatial holdouts (no household addresses)
+        run: node scripts/agent01-irving-public-address-qa.cjs
       - name: Retain metadata-only diagnostics (no GIS geometry or addresses uploaded)
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: agent01-irving-provenance-only
-          path: artifacts/agent01-irving-gis-stage/source-audit.json
+          path: |
+            artifacts/agent01-irving-gis-stage/source-audit.json
+            artifacts/agent01-irving-live-finder/locator-provenance.json
+            artifacts/agent01-irving-live-finder/public-campus-holdouts.json
           if-no-files-found: warn
           retention-days: 7
 
