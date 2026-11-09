@@ -208,3 +208,56 @@ source, and drift in the 29 links already present in `main`.
 Whenever PR #173 changes its registered URLs, its candidate manifest must
 be regenerated from that exact new PR head before calling the 107-record
 list current. The pinned source SHA makes such review auditable.
+
+## Actual 107-route HTTP audit result and recommended source repairs
+
+GitHub Actions run
+[42675395619](https://github.com/kevinim/kevinim.github.io/actions/runs/42675395619)
+probed all 107 candidate links from PR #173, using their exact URLs
+without changing the current live dashboard registry:
+
+| HTTP-only outcome | URLs |
+| --- | ---: |
+| 2xx (web server responded, Finder operation NOT verified) | 101 |
+| 302 redirect, destination not followed | 4 |
+| HTTP 500, service inconclusive | 1 |
+| HTTP 404, registered landing URL broken at check time | 1 |
+| **Total** | **107** |
+
+These six records remain outstanding; the results are
+**request-time observations, not permanent district outages**.
+
+| Priority | District (TEA code) | Probe | Next source-only action |
+| --- | --- | --- | --- |
+| **P0 URL** | Midlothian `070908` | 404 | Existing registered URL `https://www.midlothianisd.org/enrollment/school-boundaries` is stale; district's live **Find My School** page is `https://www.midlothianisd.org/enrollment/find-my-school`. Official enrollment page also links to it. Update in source PR owner branch; review direct-address behavior separately |
+| **P1 service** | Cedar Hill `057904` | 500 | Registered endpoint `https://enroll.chisd.net/enrollment/` returned server error; district's working parent entry `https://www.chisd.net/services/lacy-enrollment-center` links to its School Finder ArcGIS viewer. Consider navigation-source substitution only after source owner review; native Finder and residence result unverified |
+| **P2 redirect** | Farmersville `043904` | 302 | Follow source-approved canonical destination in manual/browser check; no automatic redirect or source overwrite |
+| **P2 redirect** | Avalon `070901` | 302 | Same; canonical destination not independently certified |
+| **P2 redirect** | Quinlan `116908` | 302 | Same; canonical destination not independently certified |
+| **P2 redirect** | Weatherford `184903` | 302 | Same; canonical destination not independently certified |
+
+**Official source evidence:** Midlothian district 2026–27 enrollment page
+`https://www.midlothianisd.org/enrollment` and current Find My School page
+`https://www.midlothianisd.org/enrollment/find-my-school` (address lookup
+and year/grade caution). Cedar Hill district enrollment center at
+`https://www.chisd.net/services/lacy-enrollment-center` links to the
+external Metro Study GIS School Finder. We verified the landing page and
+linked target, **not** a live residential school allocation.
+
+No changes were made to #173's 107 entries, their URLs in registry,
+AG01/AG02/AG03 scope, or Production. Owners of the 107-link source PR
+should review the two proposed URL repairs. The four redirects are not
+automatically broken or verified. The six observations and 101 other
+2xx results cannot certify address/year/grade correctness, and #148
+remains production **NO_GO**.
+
+## Independent security-gate observation outside Agent 04 scope
+
+A separate GitHub Action `TX public release security gate (no deployment)`
+in this period has had a failure in its **all-refs/full-Git-history Gitleaks**
+job: one redacted history-level finding. The **PR-change secret scan** and
+privacy checks for this draft passed, but the exact origin of the
+all-refs finding has **not** been isolated by Agent 04. A full-history
+security failure is a release blocker and should be routed to the
+independent security workstream; do not suppress it or reinterpret
+the Agent 04 source-audit green status as permission to deploy.
