@@ -59,3 +59,17 @@ test('large unsupported triangles are rejected rather than filled',()=>{
  assert.equal(got.features.length,0);
  assert.ok(got.metadata.diagnostics.tooWide>0);
 });
+
+test('forged permission URL cannot bypass separately reviewed CFB rights registry',()=>{
+ const x=copy(fixture);
+ x.demoOnly=false;
+ x.source.permission={status:'approved',evidenceUrl:'https://example.org/fake-approval'};
+ assert.throws(()=>build(x),/district_source_not_cleared/);
+});
+test('unregistered district cannot declare its own permission to create production geometry',()=>{
+ const x=copy(fixture);
+ x.demoOnly=false;
+ x.districtCode='NEW_ISD';
+ x.source.permission={status:'approved',evidenceUrl:'https://example.org/fake-approval'};
+ assert.throws(()=>build(x),/district_source_not_cleared/);
+});
