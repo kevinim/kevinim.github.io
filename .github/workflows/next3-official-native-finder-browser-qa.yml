@@ -20,7 +20,7 @@ jobs:
           node-version: '24'
           package-manager-cache: false
       - name: Validate official UI script
-        run: node --check scripts/probe-next3-official-native-finders.cjs
+        run: node --check scripts/probe-next3-official-native-finders.cjs && node --check scripts/probe-plano-modern-2026-official-experience.cjs
       - name: Install open-source Chromium
         run: |
           mkdir -p official-finder-browser
