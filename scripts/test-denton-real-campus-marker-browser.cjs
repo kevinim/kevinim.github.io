@@ -32,6 +32,10 @@ async function main(){
      pdf.every(row=>state.schools.some(s=>s.district==='061901'&&s.type===row.level&&
       Array.isArray(s.ll)&&scoreRecord(s.name,s.district)?.id===row.id));
    },null,{timeout:65000});
+   // Initial ZIP GeoJSON loading can call map.fitBounds() after TEA/NCES,
+   // so test real marker clicks only once that first map fit is finished.
+   await page.waitForFunction(()=>document.querySelector('#mapLoadStatus')?.textContent.includes('ZIP 통계 경계 표시'),
+    null,{timeout:65000});
    const audit=await page.evaluate(()=>{
     const pdf=window.DentonZonePdfReference.ROWS;
     const all=pdf.map(row=>({
