@@ -6,7 +6,7 @@ const cp=require('node:child_process');
 const path=require('node:path');
 const crypto=require('node:crypto');
 const root=path.resolve(__dirname,'..');
-const old=cp.execFileSync('git',['show','7465a8ed09c58ae8899ae6333a60b11daf381ce6:index.html'],{cwd:root,encoding:'utf8'});
+const old=cp.execFileSync('git',['show','b11e1c481ccf36591752981e115e71541b3415d2:index.html'],{cwd:root,encoding:'utf8'});
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const js=fs.readFileSync(path.join(root,'dashboard-main.js'),'utf8');
 const oldStart=old.indexOf("<script>\r\n'use strict'"),oldEnd=old.indexOf('</script>',oldStart);
