@@ -8,6 +8,8 @@ on:
       - 'scripts/probe-prosper-second-zip-public-homes.cjs'
       - 'tests/prosper-second-zip-source-policy.test.cjs'
       - 'tests/prosper-second-zip-public-candidates-2026.json'
+      - 'scripts/audit-prosper-two-zip-staged-evidence.cjs'
+      - 'tests/prosper-two-zip-staged-evidence.test.cjs'
       - '.github/workflows/prosper-independent-official-finder-browser.yml'
   workflow_dispatch:
 permissions:
@@ -29,7 +31,10 @@ jobs:
           node --check scripts/probe-prosper-independent-finder-ui-browser.cjs
           node --check scripts/prosper-finder-ui-independent-policy.cjs
           node --check scripts/probe-prosper-second-zip-public-homes.cjs
-          node --test tests/prosper-finder-ui-independent-policy.test.cjs tests/prosper-second-zip-source-policy.test.cjs
+          node --check scripts/audit-prosper-two-zip-staged-evidence.cjs
+          node --test tests/prosper-finder-ui-independent-policy.test.cjs tests/prosper-second-zip-source-policy.test.cjs tests/prosper-two-zip-staged-evidence.test.cjs
+      - name: Reproduce source-only existing publicly advertised 75078 samples from PR172
+        run: node scripts/run-prosper-listed-home-live-source-crosscheck.cjs
       - name: Live source-only review of two publicly advertised 75035 candidates
         run: node scripts/probe-prosper-second-zip-public-homes.cjs
       - name: Install isolated open-source Chromium via npm (no paid services)
@@ -43,6 +48,8 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/prosper-independent-browser-tmp/node_modules
         run: node scripts/probe-prosper-independent-finder-ui-browser.cjs --samples
+      - name: Produce redacted 75078+75035 evidence handoff with explicit Level2 hold
+        run: node scripts/audit-prosper-two-zip-staged-evidence.cjs
       - name: Verify no private addresses and no fabricated school certification
         run: |
           node - <<'NODE'
@@ -62,5 +69,7 @@ jobs:
           path: |
             artifacts/prosper-real-home/finder-ui-browser-observation.json
             artifacts/prosper-real-home/second-zip-source-crosscheck.json
+            artifacts/prosper-real-home/official-lookup-vs-gis.json
+            artifacts/prosper-real-home/prosper-two-zip-staged-evidence.json
           if-no-files-found: warn
           retention-days: 5
