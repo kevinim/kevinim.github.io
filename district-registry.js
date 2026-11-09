@@ -68,7 +68,7 @@ const DISTRICT_REGISTRY={
  '057914':{en:"Mesquite",ko:"메스키트",zoneKey:null,currency:null,address:null,campusIdMatch:true,
   lookupKind:"finder-guidance",official:"https://mesquiteisd.org/attendance-zones",officialNote:"School Locator에서 주소를 검색하세요. 캠퍼스 지도와 진학 경로는 별도 자료입니다.",label:{}},
  '057912':{en:"Irving",ko:"어빙",zoneKey:null,currency:null,address:null,campusIdMatch:true,
-  lookupKind:"address-search",official:"https://iisd1.maps.arcgis.com/apps/instant/lookup/index.html?appid=f27bba7ee02141c58c8c9375431effa2",officialNote:"Irving ISD 공식 School Locator에서 주소를 검색해 배정학교를 확인하세요. 일반 배정구역 외 지원·전학 예외가 있을 수 있습니다. 오래된 GIS를 2026–27 확정 경계로 표시하지 않습니다.",label:{}},
+  lookupKind:"finder-guidance",official:"https://www.irvingisd.net/departments-services/registration/new-student-registration",locatorUrl:"https://iisd1.maps.arcgis.com/apps/instant/lookup/index.html?appid=f27bba7ee02141c58c8c9375431effa2",officialNote:"등록 안내 페이지의 School Locator에서 주소별 배정학교를 확인하세요. 실제 Locator 바로가기는 별도 제공되며, 원본 GIS 레이어의 학년도는 별도 확인이 필요합니다.",label:{}},
  '129902':{en:"Forney",ko:"포니",zoneKey:null,currency:null,address:null,campusIdMatch:true,
   lookupKind:"official-map",official:"https://www.forneyisd.net/about-us/attendance-zones",officialNote:"2026–27 승인 배정지도입니다. 2027–28 변경안은 아직 확정된 현행 배정이 아닙니다.",label:{}},
  '057905':{en:"Dallas",ko:"댈러스",zoneKey:null,currency:null,address:null,campusIdMatch:true,
