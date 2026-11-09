@@ -1,0 +1,23 @@
+name: Denton campus point source audit 2024-25 vs TEA 2026 (read-only NO deploy)
+on:
+  push:
+    branches: [feature/denton-public-campus-points-20261109]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-probe:
+    name: TEA campus ID -> AskTED 2024-25 GIS -> NCES 2024-25 point crosscheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # pinned
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # pinned
+        with:
+          node-version: '24'
+      - name: Fail closed on malformed point parser and run provenance-only live source probe
+        run: |
+          node --check scripts/probe-denton-public-campus-points.cjs
+          node scripts/probe-denton-public-campus-points.cjs
