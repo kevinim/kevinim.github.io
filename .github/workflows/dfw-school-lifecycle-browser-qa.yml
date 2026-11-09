@@ -1,0 +1,49 @@
+name: DFW 2026-27 school lifecycle real-browser QA (QA-only, no deploy)
+on:
+  push:
+    branches:
+      - qa/dfw-85-school-source-full-integration-20261109
+    paths:
+      - 'scripts/test-school-lifecycle-browser-2026.cjs'
+      - 'school-lifecycle.js'
+      - 'tea-ratings-2026.json'
+      - '.github/workflows/dfw-school-lifecycle-browser-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser-school-retirement:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Source syntax, academic-year and TEA campus evidence
+        run: |
+          node --check scripts/test-school-lifecycle-browser-2026.cjs
+          node --test tests/school-lifecycle-curriculum-2026.test.cjs
+      - name: Install isolated pinned Chromium
+        run: |
+          mkdir -p lifecycle-qa-browser-tmp
+          cd lifecycle-qa-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve QA-only branch commit on local loopback
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/school-lifecycle-qa-http.log 2>&1 &
+          sleep 2
+      - name: Verify mobile 390px and desktop 1366px live school results
+        run: NODE_PATH="$PWD/lifecycle-qa-browser-tmp/node_modules" node scripts/test-school-lifecycle-browser-2026.cjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: qa-school-lifecycle-browser-2026
+          path: artifacts/school-lifecycle-browser/
+          if-no-files-found: warn
+          retention-days: 7
