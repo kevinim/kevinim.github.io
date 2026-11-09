@@ -77,8 +77,10 @@ async function main(){
   const result=await probe(spec);audit.results.push(result.audit);all.push(...result.features);
  }catch(e){audit.errors.push({grade:spec.level,reason:String(e.message).slice(0,650)});}
  fs.writeFileSync(path.join(dir,'source-audit.json'),JSON.stringify(audit,null,2)+'\n');
- if(audit.errors.length||audit.results.length!==3){console.error('GIS source extraction NO_GO',audit.errors);process.exitCode=1;return;}
- fs.writeFileSync(path.join(dir,'QUARANTINED-source-year-unknown.geojson'),JSON.stringify({type:'FeatureCollection',features:all})+'\n');
+ // Retain successful grade-specific source work in CI-local quarantine even if another grade fails.
+ // Only metadata JSON is uploaded, never the source geometry or private addresses.
+ if(all.length)fs.writeFileSync(path.join(dir,'QUARANTINED-source-year-unknown.geojson'),JSON.stringify({type:'FeatureCollection',features:all})+'\n');
+ if(audit.errors.length||audit.results.length!==3){console.error('GIS source extraction NO_GO',audit.errors);console.log('Quarantined grade successes:',audit.results.map(x=>x.grade+':'+x.polygonCount).join(','));process.exitCode=1;return;}
  console.log('GIS STAGED, NOT RELEASED:',all.length,'polygons across',audit.results.length,'grades; 2026-27 validity unverified');
 }
 if(require.main===module){
