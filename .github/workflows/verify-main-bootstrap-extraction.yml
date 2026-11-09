@@ -1,0 +1,59 @@
+name: Stage 1 CSP hardening - main script extraction QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'dashboard-main.js'
+      - 'tests/externalized-main-bootstrap.test.cjs'
+      - 'scripts/test-externalized-main-browser.cjs'
+      - '.github/workflows/verify-main-bootstrap-extraction.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-source-extraction:
+    name: classic-bootstrap-integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Source is unchanged and new same-origin JS syntax is valid
+        run: |
+          node --check dashboard-main.js
+          node --test tests/externalized-main-bootstrap.test.cjs
+  offline-browser-compat:
+    name: classic-bootstrap-chromium
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned isolated Playwright and Leaflet 1.9.4
+        run: |
+          mkdir -p bootstrap-browser-tmp
+          cd bootstrap-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0 leaflet@1.9.4
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve this PR as a local static site
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/bootstrap-security-site.log 2>&1 &
+          echo $! > /tmp/bootstrap-security-pid
+          sleep 2
+      - name: Check map, ZIP selector and school click at mobile and desktop widths
+        run: NODE_PATH="$PWD/bootstrap-browser-tmp/node_modules" node scripts/test-externalized-main-browser.cjs
