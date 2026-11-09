@@ -21,7 +21,7 @@ const SPECIAL_CAMPUSES = Object.freeze([
   { district: '043907', name: 'McNeil Elementary School' },
   { district: '043907', name: 'Serenity High School' },
   { district: '043907', name: 'Caldwell Elementary School' },
-  { district: 'CFB', name: 'CFB Early College High School' },
+  { district: 'CFB', name: 'Early College High School' },
 ]);
 
 function checkOfficialUrl(value, hosts = TRUSTED_OFFICIAL_HOSTS) {
