@@ -65,3 +65,34 @@ test('running all 107 candidate checks never makes a residence assignment claim'
  assert.equal(result.release,'NO_GO');
  assert.equal(result.currentYearGISRate,null);
 });
+
+test('only exact public official hostnames already approved may enter the 107 URL probe',()=>{
+ assert.equal(safeCandidateUrl('https://example.org/fake'),false);
+ assert.equal(safeCandidateUrl('https://www.allenisd.org.evil.example/page/findaschool'),false);
+ assert.equal(safeCandidateUrl('https://www.allenisd.org:443/page/findaschool'),false);
+ assert.equal(safeCandidateUrl('https://www.allenisd.org/page/findaschool'),true);
+});
+test('HEAD 404/500 response must be checked by GET before labeling a staged Finder dead',async()=>{
+ const url='https://www.midlothianisd.org/enrollment/school-boundaries';
+ for(const headStatus of [404,500]){
+  const calls=[];
+  const r=await inspect(url,async(u,opt)=>{
+   calls.push({url:u,method:opt.method,redirect:opt.redirect});
+   return {status:opt.method==='HEAD'?headStatus:200};
+  });
+  assert.deepEqual(calls.map(c=>c.method),['HEAD','GET']);
+  assert.ok(calls.every(c=>c.url===url&&c.redirect==='manual'));
+  assert.equal(r.headHttpStatus,headStatus);
+  assert.equal(r.httpStatus,200);
+  assert.equal(r.status,'HTTP_RESPONDED_FINDER_NOT_TESTED');
+ }
+});
+test('both HEAD and GET 404 retain manual-review state; redirects never auto-follow',async()=>{
+ const url='https://www.midlothianisd.org/enrollment/school-boundaries';
+ const r=await inspect(url,async(_url,opt)=>({status:opt.method==='HEAD'?404:404}));
+ assert.equal(r.status,'HTTP_NOT_FOUND_REVIEW');
+ assert.equal(r.headHttpStatus,404);
+ const q=await inspect(url,async()=>({status:302}));
+ assert.equal(q.status,'REDIRECT_REQUIRES_REVIEW');
+ assert.equal(q.confirmationMethod,undefined);
+});
