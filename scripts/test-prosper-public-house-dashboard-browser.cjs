@@ -13,8 +13,8 @@ const live=JSON.parse(readFileSync(path.join(OUT,'official-lookup-vs-gis.json'),
 const fixtures=JSON.parse(readFileSync(path.join(ROOT,'tests/prosper-public-listed-single-family-2026.json'),'utf8'));
 const approved=live.results.filter(x=>x.status==='OFFICIAL_POINT_GIS_CORROBORATED')
  .map(row=>({source:fixtures.cases.find(x=>x.id===row.id),reference:row}))
- .filter(x=>x.source).slice(0,2);
-if(approved.length<2)throw Error('not_enough_live_official_gis_matched_homes');
+ .filter(x=>x.source).slice(0,4);
+if(approved.length<4)throw Error('not_enough_live_official_gis_matched_homes_for_full_4_house_browser_qa');
 mkdirSync(OUT,{recursive:true});
 const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8',
  '.json':'application/json','.geojson':'application/geo+json','.css':'text/css',
