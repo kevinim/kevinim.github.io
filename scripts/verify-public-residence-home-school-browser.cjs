@@ -17,7 +17,15 @@ const TEST_CASES={
   canalHouse:{id:'canal-frisco-public-lease',address:'8357 Canal St, Frisco, TX 75034',kind:'publicly-listed-single-family-for-lease',
    source:'https://www.compass.com/homedetails/8357-Canal-St-Frisco-TX-75034/2202536257184480953_lid/',district:'FISD'},
   monarchHouse:{id:'monarch-frisco-public-lease',address:'11178 Monarch Dr, Frisco, TX 75033',kind:'publicly-listed-single-family-for-lease',
-   source:'https://www.leapdfw.com/rentals/',district:'FISD'}
+   source:'https://www.leapdfw.com/rentals/',district:'FISD'},
+  prosperGaulding:{id:'gaulding-prosper-public-lease',address:'2971 Gaulding Dr, Prosper, TX 75078',kind:'publicly-listed-single-family-for-lease',
+   source:'https://www.har.com/zipcode_75078/realestate/for_rent',district:'PROSPER'},
+  prosperGilmer:{id:'gilmer-mckinney-public-lease',address:'4504 Gilmer Dr, McKinney, TX 75071',kind:'publicly-listed-single-family-for-lease',
+   source:'https://www.compass.com/homedetails/4504-Gilmer-Dr-McKinney-TX-75071/1B3M7O_pid/',district:'PROSPER'},
+  prosperPrairie:{id:'prairiedog-mckinney-public-lease',address:'9920 Prairie Dog Ln, McKinney, TX 75071',kind:'publicly-listed-single-family-for-lease',
+   source:'https://www.compass.com/homedetails/9920-Prairie-Dog-Ln-McKinney-TX-75071/1AST0J_pid/',district:'PROSPER'},
+  prosperLathrop:{id:'lathrop-frisco-public-lease',address:'7043 Lathrop Ln, Frisco, TX 75033',kind:'publicly-listed-single-family-for-lease',
+   source:'https://www.compass.com/homedetails/7043-Lathrop-Ln-Frisco-TX-75033/259619_pid/',district:'PROSPER'}
 };
 const SAMPLE=TEST_CASES[process.env.PUBLIC_RESIDENTIAL_CASE||'apartment'];
 if(!SAMPLE)throw Error('Invalid public address QA case');
@@ -82,7 +90,7 @@ const server=http.createServer((req,res)=>{
        geocode:home.geocodeQuality,
        status:home.assignment.status,
        district:home.assignment.district,
-       features:home.assignment.features?.map(f=>({name:f.properties?.school,grade:f.properties?.gradeLevel,year:f.properties?.schoolYear||null}))||[],
+       features:home.assignment.features?.map(f=>({name:f.properties?.school,grade:f.properties?.gradeLevel,year:f.properties?.schoolYear||null,code:f.properties?.schoolCode||null}))||[], latLon:home.ll,
        homePolygons:groups.currentHome,
        homeFeatureShapes:typeof homeZoneGroup!=='undefined'&&homeZoneGroup?
          homeZoneGroup.getLayers().reduce((count,l)=>count+(typeof l.getLayers==='function'?l.getLayers().length:1),0):0,
@@ -98,11 +106,32 @@ const server=http.createServer((req,res)=>{
     entry.assignmentStatus=state.status;
     entry.district=state.district||null;
     entry.assignedCandidateSchools=state.features;
+    if(SAMPLE.district==='PROSPER'&&entry.geocodeQuality.usableForSchoolCandidate&&state.district==='PROSPER'){
+      // User-style single address lookup via the official Infofinder public
+      // locator already used in scripts/check-public-address-finders-live.mjs.
+      // No bulk collection, no district database replication and no private unit.
+      const u=new URL('https://www.infofinderi.com/ifi/ws/SearchRequest.asmx/SearchLocation');
+      for(const [k,v] of Object.entries({clientId:'PI5FFG7RYZ1',x:String(state.latLon[1].toFixed(8)),
+       y:String(state.latLon[0].toFixed(8)),schoolId:'-1',gradeId:'-1'}))u.searchParams.set(k,v);
+      try{
+        const rr=await fetch(u,{signal:AbortSignal.timeout(22000)});
+        if(!rr.ok)throw Error('Official Infofinder HTTP '+rr.status);
+        const body=await rr.json();
+        if(body.resultCode!==200||!Array.isArray(body.schools))throw Error('Invalid official Infofinder response');
+        const officialCodes=body.schools.map(x=>String(x.schoolCode||'').padStart(3,'0')).sort();
+        const gisCodes=state.features.map(x=>String(x.code||'').padStart(3,'0')).sort();
+        entry.officialProsper={responseCode:body.resultCode,officialCodes,gisCodes,
+          sameThreeCodes:officialCodes.length===3&&gisCodes.length===3&&
+            officialCodes.every((x,i)=>x===gisCodes[i])};
+      }catch(e){entry.officialProsper={error:safeJson(e),sameThreeCodes:false};}
+      if(!entry.officialProsper.sameThreeCodes)entry.issues.push('official_prosper_2026_finder_vs_current_gis_mismatch');
+    }
+
     entry.homePolygonCount=state.homePolygons;entry.homeFeatureShapeCount=state.homeFeatureShapes;entry.homeMarkerCount=state.homeMarker?1:0;
     entry.schoolMatchMarkerCount=state.markerMatches;entry.UIRendered=state.visible==='true';
     entry.homeStatus=state.notice;entry.userSummary=state.userSummary;
     assert.equal(entry.homeMarkerCount,1,'Real geocoded property must create home map pin');
-    assert.ok(entry.district==='FISD'||!entry.geocodeQuality.usableForSchoolCandidate,'Do not assign apartment building to wrong district');
+    assert.ok(entry.district===SAMPLE.district||!entry.geocodeQuality.usableForSchoolCandidate,'Geocoded public residential address must not silently assign wrong ISD');
     // Only if real-source 2026-27 polygon candidates exist and geocoding is high confidence:
     // click REAL rendered school marker using Playwright, not a manually injected school.
     if(entry.geocodeQuality.usableForSchoolCandidate&&['current','boundary-review'].includes(entry.assignmentStatus)){
@@ -157,6 +186,11 @@ const server=http.createServer((req,res)=>{
   }
   result.dashboardRenderedWithoutErrors=result.mobileDesktopResults.every(x=>x.issues.length===0&&x.consoleErrors.length===0);
   result.localUIFlowVerified=result.mobileDesktopResults.every(x=>x.checkedRealEsri&&x.homeMarkerCount===1&&x.homePolygonCount>0&&x.clickedSchoolZonePolygons>0);
+  if(SAMPLE.district==='PROSPER'){
+    result.officialFinderIndependentlyVerified=result.mobileDesktopResults.every(x=>x.officialProsper?.sameThreeCodes===true);
+    result.publicAddressFinderAgreement=result.officialFinderIndependentlyVerified&&result.localUIFlowVerified;
+  }
+
   if(!result.localUIFlowVerified)result.warnings.push('Real residence-base address → current school marker → visible polygon is not proven for BOTH responsive viewports');
   if(SAMPLE.id==='st-martin-frisco-base'){
     result.thirdPartyListingHighSchool='Centennial High School';
