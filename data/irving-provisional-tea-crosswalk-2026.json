@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-11-09",
+  "district": "IRVING ISD",
+  "districtTEAId": "057912",
+  "recordType": "manually-explicit-source-name-to-preliminary-TEA-directory-ID crosswalk; NOT a source GIS campus ID",
+  "schoolYearOfPolygonsConfirmed": false,
+  "independentOfficialFinderCrosscheck": false,
+  "campusIdEqualsGISField": false,
+  "purpose": "CI-only identity diagnostic to avoid unintended name-only joins and branch release",
+  "currentYearReleaseReady": false,
+  "sourceOriginalYearsByGrade": {
+    "elementary": "2024-25 layer name",
+    "middle": null,
+    "high": "Web Map modified 2020-08-28, source academic year unknown"
+  },
+  "records": [
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Barton ES",
+      "teaCampusId": "057912101"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Brandenburg ES",
+      "teaCampusId": "057912116"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Brown ES",
+      "teaCampusId": "057912102"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Davis ES",
+      "teaCampusId": "057912121"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Farine ES",
+      "teaCampusId": "057912113"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Gilbert ES",
+      "teaCampusId": "057912122"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Good ES",
+      "teaCampusId": "057912105"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Hanes ES",
+      "teaCampusId": "057912119"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "John Haley ES",
+      "teaCampusId": "057912106"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Johnston ES",
+      "teaCampusId": "057912108"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Keyes ES",
+      "teaCampusId": "057912109"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Lee ES",
+      "teaCampusId": "057912111"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Schulze ES",
+      "teaCampusId": "057912114"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Stipes ES",
+      "teaCampusId": "057912124"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Thomas Haley ES",
+      "teaCampusId": "057912107"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Townley ES",
+      "teaCampusId": "057912120"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Lively ES",
+      "teaCampusId": "057912112"
+    },
+    {
+      "grade": "elementary",
+      "sourceSchoolName": "Townsell ES",
+      "teaCampusId": "057912123"
+    },
+    {
+      "grade": "middle",
+      "sourceSchoolName": "Travis MS",
+      "teaCampusId": "057912043"
+    },
+    {
+      "grade": "middle",
+      "sourceSchoolName": "Austin MS",
+      "teaCampusId": "057912045"
+    },
+    {
+      "grade": "middle",
+      "sourceSchoolName": "Crockett MS",
+      "teaCampusId": "057912042"
+    },
+    {
+      "grade": "middle",
+      "sourceSchoolName": "Johnson MS",
+      "teaCampusId": "057912050"
+    },
+    {
+      "grade": "middle",
+      "sourceSchoolName": "Lamar MS",
+      "teaCampusId": "057912044"
+    },
+    {
+      "grade": "middle",
+      "sourceSchoolName": "Bowie MS",
+      "teaCampusId": "057912041"
+    },
+    {
+      "grade": "middle",
+      "sourceSchoolName": "Houston MS",
+      "teaCampusId": "057912046"
+    },
+    {
+      "grade": "high",
+      "sourceSchoolName": "Irving HS",
+      "teaCampusId": "057912002"
+    },
+    {
+      "grade": "high",
+      "sourceSchoolName": "Macarthur HS",
+      "teaCampusId": "057912003"
+    },
+    {
+      "grade": "high",
+      "sourceSchoolName": "Nimitz HS",
+      "teaCampusId": "057912004"
+    }
+  ],
+  "unmatchedPreliminaryTeaCampusesNotZoningErrors": [
+    "057912048"
+  ],
+  "notes": [
+    "Lorenzo de Zavala Middle present in TEA but absent from seven loaded live middle polygons; source may have an exception/specialized program; do not synthesize or label missing a zone.",
+    "This crosswalk establishes preliminary TEA name reference only, not verified property school assignment or current-year GIS."
+  ]
+}
