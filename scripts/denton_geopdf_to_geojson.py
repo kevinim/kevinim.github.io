@@ -45,6 +45,43 @@ SCHOOL_COLOR = {
 }
 
 
+
+# Native fill-path index, official PDF fill RGB, TEA ID, map text label and
+# PDF-page map-label x/y. The map's 26 school-colored native paths were
+# independently enumerated against its 26 printed school names, including
+# duplicate fill RGB (#fccdb6). The index+color+label guards fail on map drift.
+ELEMENTARY_VECTOR_SOURCES = {
+   6: ("#fcf9b6","061901118","Hawk Elementary","HAWK",(1159.9,1599.1)),
+  69: ("#fcb6dd","061901123","Stephens Elementary","STEPHENS",(1299.6,1521.8)),
+ 204: ("#c2fce2","061901102","Houston Elementary","HOUSTON",(918.5,1413.8)),
+ 278: ("#bdfcf8","061901116","Pecan Creek Elementary","PECAN",(1162.0,1350.4)),
+ 351: ("#e9bfff","061901115","EP Rayzor Elementary","RAYZOR",(421.2,1610.1)),
+ 498: ("#efd2fc","061901106","McNair Elementary","MCNAIR",(913.0,1693.2)),
+ 560: ("#fcb3fc","061901112","Evers Park Elementary","EVERS",(729.8,712.5)),
+ 718: ("#dffcd4","061901104","Alexander Elementary","ALEXANDER",(988.8,1072.5)),
+ 763: ("#e9c0fc","061901119","Savannah Elementary","SAVANNAH",(2269.6,1019.5)),
+ 840: ("#d6c19c","061901130","Hill Elementary","HILL",(1872.7,1205.9)),
+ 908: ("#b6d4fc","061901111","Borman Elementary","BORMAN",(488.2,1247.5)),
+1066: ("#fccdb6","061901108","Rivera Elementary","RIVERA",(1036.9,1248.2)),
+1146: ("#fcc0d8","061901128","Union Park Elementary","UNION",(2100.1,1009.6)),
+1223: ("#d7dffc","061901125","Cross Oaks Elementary","CROSS",(1570.9,1195.4)),
+1395: ("#fccdb6","061901113","WS Ryan Elementary","RYAN",(834.2,1535.2)),
+1477: ("#ffebad","061901107","Newton Rayzor Elementary","RAYZOR",(710.6,1120.5)),
+1527: ("#eaffbf","061901127","Bell Elementary","BELL",(2032.1,1144.0)),
+1590: ("#b8fcfc","061901109","Shultz Elementary","SHULTZ",(949.6,949.4)),
+1649: ("#fce7d7","061901117","Providence Elementary","PROVIDENCE",(1739.9,1046.6)),
+1739: ("#fcb3b9","061901105","Hodge Elementary","HODGE",(1179.1,657.3)),
+2095: ("#b3fcd5","061901122","Blanton Elementary","BLANTON",(890.3,1920.2)),
+2193: ("#d6b19c","061901132","Reeves Elementary","REEVES",(673.9,983.5)),
+2316: ("#fcd2db","061901126","Adkins Elementary","ADKINS",(901.5,2146.3)),
+2492: ("#fcdeb6","061901131","Martinez Elementary","MARTINEZ",(2169.6,1155.1)),
+2546: ("#d6d69c","061901129","Sandbrock Ranch Elementary","SANDBROCK",(2164.5,797.9)),
+2612: ("#c7c8fc","061901121","Nelson Elementary","NELSON",(1058.5,1535.2)),
+}
+assert len(ELEMENTARY_VECTOR_SOURCES)==26
+assert len({row[1] for row in ELEMENTARY_VECTOR_SOURCES.values()})==26
+
+
 def _array(obj: str, field: str) -> list[float]:
  match = re.search(r"/"+re.escape(field)+r"\s*\[([^\]]+)\]", obj)
  if not match:
@@ -200,33 +237,61 @@ def extract(level, download_dir, out_dir):
                  min(calibration["pdfViewportBBox"][1],calibration["pdfViewportBBox"][3]),
                  max(calibration["pdfViewportBBox"][0],calibration["pdfViewportBBox"][2]),
                  max(calibration["pdfViewportBBox"][1],calibration["pdfViewportBBox"][3]))
- for i,d in enumerate(page.get_drawings()):
+ drawings=page.get_drawings()
+ allowed_colors=set(SCHOOL_COLOR.get(level,{}))
+ if level=="elementary":
+  allowed_colors|={x[0] for x in ELEMENTARY_VECTOR_SOURCES.values()}
+ for i,d in enumerate(drawings):
   color=color_key(d.get("fill"))
-  if color not in SCHOOL_COLOR[level]:
+  if color not in allowed_colors:
    continue
   bbox=fitz.Rect(d.get("rect"))
   inside=frame & bbox
   if inside.is_empty or inside.get_area() < 10000:
    continue
-  # Exclude matching legend samples at the right of the original map.
   if bbox.x0 >= frame.x1:
    continue
   groups.setdefault(color,[]).append((i,d,inside.get_area()))
  features=[]
- for fill,(campus_id,school_name) in SCHOOL_COLOR[level].items():
-  paths=sorted(groups.get(fill,[]),key=lambda x:-x[2])
-  if not paths:
-   raise ValueError("Official map zone fill not found: "+school_name+" "+fill)
-  index,selected,area=paths[0]
-  if area < 30000:
+ if level=="elementary":
+  assignments=[(color,campus_id,name,idx,token,anchor)
+    for idx,(color,campus_id,name,token,anchor) in ELEMENTARY_VECTOR_SOURCES.items()]
+ else:
+  assignments=[(fill,campus_id,name,None,None,None)
+    for fill,(campus_id,name) in SCHOOL_COLOR[level].items()]
+ mapwords=[(str(w[4]).upper(), (float(w[0])+float(w[2]))/2,
+             (float(w[1])+float(w[3]))/2) for w in page.get_text("words")]
+ for fill,campus_id,school_name,explicit_idx,token,anchor in assignments:
+  if explicit_idx is not None:
+   if explicit_idx>=len(drawings):
+    raise ValueError("Elementary source drawing index absent: "+school_name)
+   selected=drawings[explicit_idx]
+   index=explicit_idx
+   area=(fitz.Rect(selected["rect"])&frame).get_area()
+   if color_key(selected.get("fill"))!=fill:
+    raise ValueError("Elementary PDF native color changed for "+school_name)
+   if not any(t==token and abs(x-anchor[0])<36 and abs(y-anchor[1])<30
+              for t,x,y in mapwords):
+    raise ValueError("Source PDF map text label missing or moved: "+school_name)
+  else:
+   paths=sorted(groups.get(fill,[]),key=lambda x:-x[2])
+   if not paths:
+    raise ValueError("Official map zone fill not found: "+school_name+" "+fill)
+   index,selected,area=paths[0]
+  if area < 15000:
    raise ValueError("Official map zone candidate too small "+school_name)
   original_rings=split_path_into_closed_rings(selected)
   zone=shapely_from_pdf_rings(original_rings,convert)
+  if anchor is not None:
+   point=Point(convert(anchor))
+   if not zone.buffer(0.00008).covers(point):
+    raise ValueError("Elementary map label anchor not inside assigned colored zone: "+school_name)
   prop={
    "district":"061901","schoolYear":"2026-27","campusId":campus_id,
    "school":school_name,"level":level,
    "sourcePdf":url,"sourceType":"DERIVED_FROM_OFFICIAL_GEOPDF",
    "sourceVectorFill":fill,"sourceVectorDrawingIndex":index,
+   "sourcePdfMapLabelAnchor":list(anchor) if anchor else None,
    "sourcePDFLocalPaths":len(original_rings),
    "coordinateSource":"GeoPDF /VP /Measure /GEO /GPTS /LPTS",
    "qaStatus":"STAGING_SOURCE_VECTOR_NOT_INDEPENDENTLY_ENROLLMENT_CERTIFIED",
@@ -305,14 +370,14 @@ def main():
  opt=args.parse_args()
  out=Path(opt.out);out.mkdir(parents=True,exist_ok=True)
  tmp=out/"sources";tmp.mkdir(exist_ok=True)
- for level in ("high","middle"):
+ for level in ("high","middle","elementary"):
   data=extract(level,tmp,out)
   print("DENTON_GEOPDF_LEVEL_SUMMARY",json.dumps({
    "level":level,"features":len(data["features"]),
    "crs":"EPSG:4326","rmsMeters":data["metadata"]["calibration"]["cornerRMSErrorMeters"],
    "source":"OFFICIAL_GEOPDF_DERIVED","production":"NO_GO",
   }),flush=True)
- print("DENTON_GEOPDF_STAGING_TOTAL",json.dumps({"schoolPolygons":13,"schoolYears":"2026-27",
+ print("DENTON_GEOPDF_STAGING_TOTAL",json.dumps({"schoolPolygons":39,"schoolYears":"2026-27",
   "georeferenced":True,"releaseCertified":False,"production":"NO_GO"}),flush=True)
 
 
