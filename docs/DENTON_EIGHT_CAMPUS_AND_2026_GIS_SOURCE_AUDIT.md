@@ -72,3 +72,17 @@ The [current Denton ISD campus directory](https://www.dentonisd.org/our-district
 The audit retains the live directory addresses as *directory-published addresses*, not guaranteed postal or map-point truth. No coordinate, map geometry, or school assignment status is upgraded. Obtain site footprint/entrance corroboration and publisher clarification before certifying a precise location; ZIP-only geocoding is particularly unsafe.
 
 **Future-year contamination guard:** The district also publishes a [proposed 2028–29 high/middle-school modification](https://www.dentonisd.org/families/attendance-zones/attendance-boundary-modification), including potential changes to Calhoun, Rodriguez and the high-school zones. The district explicitly states it does **not** change 2026–27/2027–28 assignments. Proposed 2028–29 maps cannot fill 2026–27 GIS gaps and must not be counted as official current-year polygons. The source disposition file and regression tests enforce this classification.
+
+## Safe import staging after the District supplies real 2026–27 GIS
+
+New read-only checker: `scripts/validate-denton-2026-zone-import.cjs`. It is intentionally **not a GIS downloader, converter, polygon generator, mapper, or residential enrollment certifier**. No live polygons or coordinates are added by this QA change. It runs on a locally held candidate GeoJSON with a separately supplied provenance JSON:
+
+```sh
+node scripts/validate-denton-2026-zone-import.cjs candidate-denton-2026-27.geojson provenance.json
+```
+
+For staging, convert a publisher-authorized source to GeoJSON **only after obtaining the source**; keep an original immutable copy elsewhere. Every feature must have `properties.campusId` (exact nine-digit TEA ID), `properties.district='061901'`, `properties.schoolYear='2026-27'`, `properties.level` (elementary/middle/high) and genuine Polygon/MultiPolygon geometry. In `provenance.json`, provide `district`, `schoolYear`, `crs='EPSG:4326'`, `sourceUrl` (HTTPS), and `districtConfirmationUrl` (district-owned official HTTPS page). `releaseApproved` and `residentialAssignmentCertified` must not be set true. The tool requires exactly the 39 IDs in the existing 2026–27 official PDF roster. It checks counts, IDs, grade types, ring closure, nondegenerate shape, self-intersections and broad location bounds.
+
+A valid GeoJSON returns **STAGING_GEOMETRY_PASS_NOT_ASSIGNMENT_CERTIFIED**, **productionStatus=NO_GO**, and **residenceFinderHoldoutsVerified=false**. This is a *schema/geometric preflight only*, not confirmation that the publisher really authorized public reuse, the year was correctly attributed, attendance polygons do not overlap, a precise residential address belongs to a given zone, or that every boundary agrees with the current School Locator. Source ownership and data rights, full topological/coverage audit, March 2026 amendments, original release/version metadata and independently reviewed residential holdouts remain separate non-waivable gates under #148.
+
+Synthetic-only regression tests in `tests/denton-zone-import-gate.test.cjs` exercise pass-with-NO_GO, wrong ID/grade/year, missing campus, duplicated IDs, bad coordinates/CRS, wrong source host, broken rings and rejected forged certifications. The test fixtures do not contain private homes and do not represent genuine Denton boundaries. No current 2026–27 Denton polygon was imported or certified.
