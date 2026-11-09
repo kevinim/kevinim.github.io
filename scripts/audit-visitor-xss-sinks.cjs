@@ -12,7 +12,9 @@ const path = require('node:path');
 
 const SINK_LIMITS = Object.freeze({
   'index.html': 13,
-  'reviewed.html': 10,
+  'reviewed.html': 0,
+  'features/reviewed-bootstrap.js': 10,
+  'features/geojson-upload-guard.js': 0,
   'home-lookup-v2.js': 2,
   'candidate-compare.js': 2,
   'features/dashboard-extras.js': 3,
