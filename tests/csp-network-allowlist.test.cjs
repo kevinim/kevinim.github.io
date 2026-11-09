@@ -8,6 +8,7 @@ const root=path.join(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const mainConnect=[
  'https://geocode.arcgis.com',
+ 'https://iisd1.maps.arcgis.com',
  'https://nominatim.openstreetmap.org',
  'https://router.project-osrm.org',
  'https://static.friscoisd.org',
@@ -62,6 +63,7 @@ test('index and reviewed CSP expose only enumerated fetch and image origins',()=
 test('all live vendor endpoints remain reachable under index connect-src',()=>{
  const sourceNames=[
   ['home-lookup-v2.js','https://geocode.arcgis.com'],
+  ['irving-official-spatial.js','https://iisd1.maps.arcgis.com'],
   ['texas-address-suggest.js','https://geocode.arcgis.com'],
   ['collin-parcel-check.js','https://services2.arcgis.com'],
   ['plano-finder-live.js','https://services4.arcgis.com'],
