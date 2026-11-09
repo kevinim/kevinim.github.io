@@ -1,0 +1,39 @@
+name: Denton real public residential official Finder grade-by-grade QA (NO DEPLOY)
+on:
+  push:
+    branches: [qa/denton-eight-points-and-2026-gis-source-audit-20261109]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ui:
+    name: Public residential exact-address official locator UI + grade controls, always NO_GO until certified
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - run: |
+          mkdir -p denton-residential-qa-tmp
+          cd denton-residential-qa-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Run read-only official grade-specific Finder discovery on public listings
+        env:
+          NODE_PATH: ${{ github.workspace }}/denton-residential-qa-tmp/node_modules
+        run: |
+          node --check scripts/denton-residential-official-finder-qa.cjs
+          node scripts/denton-residential-official-finder-qa.cjs
+      - name: Upload short-retention screenshots and no-go evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: denton-real-residential-finder-read-only
+          path: artifacts/denton-residential-finder/
+          retention-days: 7
+          if-no-files-found: warn
