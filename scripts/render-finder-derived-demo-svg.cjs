@@ -35,7 +35,7 @@ try{
    const c=f.geometry.coordinates[0],pts=c.map(p=>x(p[0])+','+y(p[1])).join(' ');
    const color=f.properties.campusId.endsWith('_A')?'#2dd4bf':'#fbbf24';
    svg.push('<polygon points="'+pts+'" fill="'+color+'" fill-opacity="0.55" stroke="'+color+'" stroke-width="2"/>');
-   svg.push('<text x="'+(j?167:21)+'" y="218" font-size="12" font-family="sans-serif" fill="'+color+'">'+escape(f.properties.school)+'</text>');
+   svg.push('<text x="'+(j?167:21)+'" y="218" font-size="12" font-family="sans-serif" fill="'+color+'">'+escape(f.properties.campusId)+'</text>');
   });
   svg.push('</g>');
  });
