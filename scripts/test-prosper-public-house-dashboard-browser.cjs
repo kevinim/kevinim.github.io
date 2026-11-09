@@ -136,6 +136,18 @@ async function main(){
      if(errors.length)throw Error('browser_javascript_errors:'+errors.slice(0,2).join(';'));
      check.status='PUBLIC_HOUSE_BROWSER_OFFICIAL_GIS_CORROBORATED';
      await page.screenshot({path:path.join(OUT,sample.source.id+'-'+width+'px.png'),fullPage:false,timeout:25000});
+     // No stale residential polygon, marker or address may persist after Clear.
+     await page.locator('#homeClear').click({timeout:12000});
+     const cleared=await page.evaluate(()=>({
+      homeNull:home===null,
+      markerGone:homeMarker===null,
+      zoneGroups:homeZoneGroup.getLayers().length,
+      addressInput:document.getElementById('homeAddress').value,
+      clearHidden:document.getElementById('homeClear').hidden
+     }));
+     assert.deepEqual(cleared,{homeNull:true,markerGone:true,zoneGroups:0,
+      addressInput:'',clearHidden:true},'home clearing must reset map and search');
+     check.clearHomeLeavesNoZone=true;
     }catch(e){
      check.status='NOT_VERIFIED';
      check.issue=String(e?.message||e).slice(0,250);
