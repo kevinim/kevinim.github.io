@@ -5,7 +5,11 @@ import {createRequire} from 'node:module';
 
 const readText = name => readFileSync(new URL('../' + name, import.meta.url), 'utf8');
 const readJson = name => JSON.parse(readText(name));
-const html = readText('index.html');
+const htmlFile = readText('index.html');
+const externalMainJs = readText('dashboard-main.js');
+// Tests inspect both the HTML shell and its same-origin classic bootstrap.
+// This preserves prior semantic checks without requiring scripts to remain inline.
+const html = htmlFile + '\n' + externalMainJs;
 const audit = readJson('school-data-provenance.json');
 const plano = readJson('plano-locator-reference.geojson');
 const allen = readJson('allen-attendance-historical.geojson');
@@ -61,10 +65,11 @@ const test = (name, fn) => {
   } else {total++;console.log('PASS '+name)}
 };
 
-const inlineScripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)]
- .map(x => x[1]).filter(Boolean);
+const inlineScripts = [externalMainJs,...[...htmlFile.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)]
+ .map(x => x[1]).filter(Boolean)];
 
-test('main page inline JavaScript compiles', () => {
+test('main page externalized classic JavaScript compiles', () => {
+  assert.ok(htmlFile.includes('<script src="./dashboard-main.js?v=1"></script>'));
   assert.ok(inlineScripts.length >= 1);
   inlineScripts.forEach((script, i) => new Script(script, { filename: 'inline-' + i }));
 });
@@ -933,7 +938,7 @@ test('P0 current Plano official Finder zoning GIS is live, all levels complete, 
  });
 });
 test('P0 current Finder and prior unlinked GIS are visually distinct without falsely promoting year',()=>{
- const web=readText('index.html'),home=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
+ const web=html,home=(readText('home-lookup-v2.js')+' '+readText('district-registry.js'));
  assert.ok(web.includes('id="referenceBoundaryOverlay"'));
  assert.ok(web.includes('loadPlanoLiveFinder(zoneFetch)'));
  assert.ok(web.includes('state.liveFinder.PISD_LOOKUP=true'));
