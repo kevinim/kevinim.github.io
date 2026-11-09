@@ -98,7 +98,33 @@
    officialFinder:'https://iisd1.maps.arcgis.com/apps/instant/lookup/index.html?appid=f27bba7ee02141c58c8c9375431effa2',
    features,names:Object.fromEntries(features.map(f=>[f.properties.gradeLevel,f.properties.school]))};
  }
- const api=Object.freeze({lookup,validateMap,decodeHighLayer,polygonContains,wmPoint,wgs84,queryUrl,SOURCES,MAP_URL});
+ // Compare a user-transcribed official Locator label with the reference GIS.
+ // User input is NOT independent official Finder evidence or year certification.
+ function schoolKey(value){
+  return String(value||'').toLowerCase()
+   .replace(/\b(elementary school|elementary|elem|el)\b/g,'es')
+   .replace(/\b(middle school|middle|m\s*\.?\s*s\.?)\b/g,'ms')
+   .replace(/\b(high school|high|h\s*\.?\s*s\.?)\b/g,'hs')
+   .replace(/\bschool\b/g,'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
+ }
+ function compareReportedSchool(reference,{gradeLevel,schoolName,schoolYear}={}){
+  const base={kind:'irving-user-reported-reference',yearCertified:false,
+   independentlyVerified:false,productionAssignmentApproved:false};
+  if(!reference||reference.status!=='ready'||!reference.names)return {
+   ...base,status:'no-source',message:'먼저 Irving 공식 GIS 좌표 조회로 참고 경계를 확인하세요.'};
+  if(!['elementary','middle','high'].includes(gradeLevel)||!String(schoolName||'').trim())return {
+   ...base,status:'missing-input',message:'초등·중등·고등 중 학년을 선택하고 공식 Locator에 표시된 학교명을 입력하세요.'};
+  if(schoolYear!=='2026–27')return {
+   ...base,status:'year-unconfirmed',message:'사용자 입력의 적용 학년도가 2026–27로 확인되지 않았습니다. 최신 배정 일치 여부를 판정하지 않습니다.'};
+  const expected=reference.names[gradeLevel],a=schoolKey(expected),b=schoolKey(schoolName);
+  if(!a||!b)return {...base,status:'no-source',message:'해당 학년의 GIS 학교명 비교가 불가능합니다.'};
+  const match=a===b;
+  return {...base,status:match?'manual-match':'manual-mismatch',
+   gradeLevel,sourceVintage:gradeLevel==='elementary'?'2024–25':gradeLevel==='middle'?'2025–26':'미인증',
+   message:match?'사용자가 입력한 공식 Locator 학교명과 GIS 참고 구역이 일치합니다. 독립적인 Finder 화면 검증이나 2026–27 GIS 현행성 승인으로 간주하지 않습니다.':
+    '사용자가 입력한 공식 Locator 학교명과 GIS 참고 구역이 다릅니다. GIS 경계를 신뢰하지 말고 Irving ISD에서 확인하세요.'};
+ }
+ const api=Object.freeze({lookup,compareReportedSchool,schoolKey,validateMap,decodeHighLayer,polygonContains,wmPoint,wgs84,queryUrl,SOURCES,MAP_URL});
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root)root.IrvingOfficialSpatial=api;
 })(typeof window!=='undefined'?window:null);
