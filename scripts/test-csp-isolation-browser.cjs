@@ -22,7 +22,8 @@ function weakenForCounterfactual(baseline){
  // models the OLD policy, never a policy recommendation or a runtime change.
  const loosened=baseline
   .replace(/'sha256-[A-Za-z0-9+/]+=*'/g,"'unsafe-inline'")
-  .replace(/;\s*script-src-attr 'none'/g,'');
+  .replace(/;\s*script-src-attr 'none'/g,'')
+  .replace(/script-src ([^;]+)(;|$)/,(full,sources,end)=>sources.includes("'unsafe-inline'")?full:"script-src "+sources+" 'unsafe-inline'"+end);
  assert.match(loosened,/'unsafe-inline'/);
  assert.doesNotMatch(loosened,/script-src-attr/);
  return loosened;
@@ -60,12 +61,12 @@ async function inspect(browser,policy,width){
   browser=await chromium.launch({headless:true,args:['--no-sandbox']});
   for(const p of pages){
    assert.equal(p.summary.allowsUnsafeInline,false,'Current CSP must remain strict');
-   assert.equal(p.summary.inlineHashes,1,'Current inline bootstrap must remain hash-locked');
+   assert.equal(p.summary.inlineHashes,p.name==='index.html'?1:0,'Current CSP inline hash count must match the actual script blocks');
    const older=weakenForCounterfactual(p.summary.policy);
    for(const width of [390,1280]){
     const secure=await inspect(browser,p.summary.policy,width);
     assert.deepEqual(secure,{bootstrap:0,handler:0},
-      'Current hash-lock + script-src-attr must reject unrelated inline JS and HTML handlers');
+      'Current strict CSP must reject unrelated inline JS and HTML handlers');
     const permissive=await inspect(browser,older,width);
     assert.deepEqual(permissive,{bootstrap:1,handler:1},
       'Loosening CSP reproduces the old inline execution weakness');
