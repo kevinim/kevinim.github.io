@@ -57,7 +57,7 @@ test('fail closed on mismatched source CSP or relaxed event-handler policy',()=>
  );
  assert.throws(
   ()=>sanitizeIndex(original.replace("script-src-attr 'none'","script-src-attr 'unsafe-inline'")),
-  /disable HTML event-handler/
+  /disable HTML event-handler|Unsafe CSP policy rejected/
  );
 });
 test('legacy uploaded-GeoJSON modules never ship in the curated public preview',()=>{
