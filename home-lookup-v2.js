@@ -235,6 +235,35 @@ function wireOfficialReviewPanel(item){
    :{kind:'manual',...compareManualSchoolResult(item.assignment,item.officialDraft)};
   renderHome();
  });
+ get('officialDallasCheck')?.addEventListener('click',async()=>{
+  if(home!==item)return;
+  if(!item.geocodeQuality?.usableForSchoolCandidate){
+   item.dallasSpatial={status:'error',reason:'주소 위치 정확도가 충분하지 않습니다.'};renderHome();return;
+  }
+  if(!window.DallasAttendanceLive){item.dallasSpatial={status:'error',reason:'참고 GIS 모듈을 불러오지 못했습니다.'};renderHome();return}
+  homeOfficialRequest?.abort();const ctrl=new AbortController();homeOfficialRequest=ctrl;
+  item.dallasChecking=true;item.dallasSpatial=null;clearDallasReference();renderHome();
+  try{
+   // Source-linked, on demand: only point coordinates, never the complete address.
+   const check=await window.DallasAttendanceLive.lookup([item.ll[1],item.ll[0]],ctrl.signal);
+   if(home!==item||ctrl.signal.aborted)return;
+   const colors={elementary:'#f59e0b',middle:'#fb923c',high:'#f97316'};
+   dallasReferenceLayer=L.featureGroup().addTo(map);
+   for(const feature of check.features){
+    const layer=L.geoJSON(feature,{style:{color:colors[feature.properties.gradeLevel],weight:3,
+     opacity:.86,dashArray:'7 5',fillOpacity:.035}}).addTo(dallasReferenceLayer);
+    layer.bindPopup('<div class="reference-gis-popup"><strong>Dallas 참고 GIS · 학교 배정 미인증</strong><div>'+escape(feature.properties.school)+'</div><div>원본 수정일: '+escape(feature.properties.sourceVintage||'미확인')+'</div><div>2026–27 배정학교 확정 정보가 아닙니다. 공식 SchoolSite Locator에서 확인하세요.</div></div>');
+   }
+   item.dallasSpatial={status:'ready',names:check.names,yearCertified:false};
+   if(dallasReferenceLayer.getBounds().isValid())
+    map.fitBounds(dallasReferenceLayer.getBounds(),{padding:[22,22],maxZoom:12});
+  }catch(err){
+   if(ctrl.signal.aborted||home!==item)return;
+   clearDallasReference();item.dallasSpatial={status:'error',reason:'정확한 초·중·고 참고 경계를 확인하지 못했습니다. 공식 지도 서비스 또는 SchoolSite Locator를 확인하세요.'};
+  }finally{
+   if(home===item&&!ctrl.signal.aborted){item.dallasChecking=false;homeOfficialRequest=null;renderHome()}
+  }
+ });
  get('officialIrvingCheck')?.addEventListener('click',async()=>{
   if(home!==item)return;
   if(!item.geocodeQuality?.usableForSchoolCandidate){
