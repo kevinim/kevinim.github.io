@@ -12,6 +12,8 @@ on:
       - 'data/dfw-school-coverage-matrix-2026.json'
       - 'data/dfw-noncfb-grade-year-source-evidence-2026.json'
       - 'data/dfw-noncfb-campus-transition-evidence-2026.json'
+      - 'school-lifecycle.js'
+      - 'tests/school-lifecycle-curriculum-2026.test.cjs'
       - 'tests/dfw-noncfb-grade-year-source-quality.test.cjs'
       - '.github/workflows/dfw-noncfb-grade-year-source-qa.yml'
   workflow_dispatch:
@@ -36,6 +38,6 @@ jobs:
           node scripts/build-dfw-school-coverage-matrix.cjs --check
       - name: School year warnings, parent links, source and map safety
         run: |
-          node --test tests/dfw-noncfb-grade-year-source-quality.test.cjs tests/dfw-school-coverage-matrix.test.cjs tests/west-dfw-official-finder.test.cjs tests/dfw-parent-guidance-batch4.test.cjs tests/trusted-outbound-links.test.cjs
+          node --test tests/dfw-noncfb-grade-year-source-quality.test.cjs tests/school-lifecycle-curriculum-2026.test.cjs tests/dfw-school-coverage-matrix.test.cjs tests/west-dfw-official-finder.test.cjs tests/dfw-parent-guidance-batch4.test.cjs tests/trusted-outbound-links.test.cjs
       - name: Public source privacy regression
         run: node scripts/check-public-personalization.cjs .
