@@ -1,0 +1,40 @@
+name: Denton public model-address official Finder UI reconnaissance (NO DEPLOY)
+on:
+  push:
+    branches: [qa/denton-eight-points-and-2026-gis-source-audit-20261109]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  read-only-finder-scout:
+    name: Public builder model-home official Finder UI probe; assignment always NO_GO
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Install isolated free Chromium
+        run: |
+          mkdir -p denton-finder-browser-probe-tmp
+          cd denton-finder-browser-probe-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Read-only public builder address Finder UI probe
+        env:
+          NODE_PATH: ${{ github.workspace }}/denton-finder-browser-probe-tmp/node_modules
+        run: |
+          node --check scripts/probe-denton-official-finder-live.cjs
+          node scripts/probe-denton-official-finder-live.cjs
+      - name: Preserve UI screenshots, source-visible diagnostics and NO_GO flags
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: denton-public-model-finder-ui-scout
+          path: artifacts/denton-official-finder-probe/
+          if-no-files-found: warn
+          retention-days: 7
