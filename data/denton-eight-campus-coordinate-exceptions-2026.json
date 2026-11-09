@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "district": "061901",
+  "asOf": "2026-11-09",
+  "reviewScope": "Eight Denton 2026–27 official PDF campuses excluded from 2024–25 TEA/NCES <=250m double-source coordinate corroboration",
+  "officialDistrictDirectory": "https://www.dentonisd.org/our-district/our-schools",
+  "officialSchoolZonePdfIndex": "https://www.dentonisd.org/families/attendance-zones",
+  "officialSchoolLocator": "https://webquery-2-denton-tx.etstack.io/",
+  "historicalCampusPointSources": [
+    "https://services.arcgis.com/0L95CJ0VTaxqcmED/ArcGIS/rest/services/EXTERNAL_schools/FeatureServer/0",
+    "https://services1.arcgis.com/Ua5sjt3LWTPigjyD/ArcGIS/rest/services/Public_School_Locations_Current/FeatureServer/0"
+  ],
+  "campusAddressSourceVerified": true,
+  "eightCurrentCampusCoordinatesVerified": false,
+  "schoolAttendanceZonePolygonVerified": false,
+  "addressAssignmentVerified": false,
+  "readyForProduction": false,
+  "note": "All addresses are public school buildings, not homes. A district-published current school street address corroborates campus identity, but does not prove the 2024–25 point or any 2026–27 attendance boundary. Do not silently replace existing NCES points.",
+  "exceptions": [
+    {
+      "id": "061901003",
+      "school": "Denton High School",
+      "level": "high",
+      "publicCampusAddress": {
+        "street": "3001 Bronco Way",
+        "city": "Denton",
+        "state": "TX",
+        "zip": "76207"
+      },
+      "schoolSourceUrl": "https://dentonhs.dentonisd.org/our-school",
+      "status": "current-campus-address-crosschecked-coordinate-unverified",
+      "historicalPointDiscrepancy": "coordinate-disagreement",
+      "historicalDistanceMeters": 350,
+      "priorNCESPointAvailable": true,
+      "priorIndependentTEA2024CoordinateCorroborated": false,
+      "currentLocationCoordinateApproved": false,
+      "currentAttendanceZoneApproved": false,
+      "notes": "2022 new campus on Bronco Way replaces former Fulton Street campus; investigate whether historical geocoders chose different site/building anchors"
+    },
+    {
+      "id": "061901045",
+      "school": "Calhoun Middle School",
+      "level": "middle",
+      "publicCampusAddress": {
+        "street": "1125 Crescent St",
+        "city": "Denton",
+        "state": "TX",
+        "zip": "76201"
+      },
+      "schoolSourceUrl": "https://calhounms.dentonisd.org/our-school",
+      "status": "current-campus-address-crosschecked-coordinate-unverified",
+      "historicalPointDiscrepancy": "coordinate-disagreement",
+      "historicalDistanceMeters": 304,
+      "priorNCESPointAvailable": true,
+      "priorIndependentTEA2024CoordinateCorroborated": false,
+      "currentLocationCoordinateApproved": false,
+      "currentAttendanceZoneApproved": false,
+      "notes": "Relocated August 2024 to old Denton High campus on Crescent St; current official entrance/location needs a fresh independent geocode"
+    },
+    {
+      "id": "061901050",
+      "school": "Rodriguez Middle School",
+      "level": "middle",
+      "publicCampusAddress": {
+        "street": "8650 Martop Road",
+        "city": "Oak Point",
+        "state": "TX",
+        "zip": "76227"
+      },
+      "schoolSourceUrl": "https://rodriguezms.dentonisd.org/",
+      "status": "current-campus-address-crosschecked-coordinate-unverified",
+      "historicalPointDiscrepancy": "coordinate-disagreement",
+      "historicalDistanceMeters": 459,
+      "priorNCESPointAvailable": true,
+      "priorIndependentTEA2024CoordinateCorroborated": false,
+      "currentLocationCoordinateApproved": false,
+      "currentAttendanceZoneApproved": false,
+      "notes": "No authoritative resolution of 459m historical-source displacement; check current campus building/entrance and site boundary"
+    },
+    {
+      "id": "061901132",
+      "school": "Reeves Elementary School",
+      "level": "elementary",
+      "publicCampusAddress": {
+        "street": "2225 Riney Rd",
+        "city": "Denton",
+        "state": "TX",
+        "zip": "76207"
+      },
+      "schoolSourceUrl": "https://www.dentonisd.org/our-district/our-schools",
+      "status": "current-campus-address-crosschecked-coordinate-unverified",
+      "historicalPointDiscrepancy": "tea-nces-id-missing",
+      "historicalDistanceMeters": null,
+      "priorNCESPointAvailable": true,
+      "priorIndependentTEA2024CoordinateCorroborated": false,
+      "currentLocationCoordinateApproved": false,
+      "currentAttendanceZoneApproved": false,
+      "notes": "TEA layer lacks matched NCES school ID; crosswalk by 9-digit TEA ID and current official address rather than fuzzy name"
+    },
+    {
+      "id": "061901051",
+      "school": "Pat Hagan Cheek Middle School",
+      "level": "middle",
+      "publicCampusAddress": {
+        "street": "200 Denton Way",
+        "city": "Aubrey",
+        "state": "TX",
+        "zip": "76227"
+      },
+      "schoolSourceUrl": "https://cheekms.dentonisd.org/our-school",
+      "status": "current-campus-address-crosschecked-coordinate-unverified",
+      "historicalPointDiscrepancy": "tea-geometry-missing",
+      "historicalDistanceMeters": null,
+      "priorNCESPointAvailable": true,
+      "priorIndependentTEA2024CoordinateCorroborated": false,
+      "currentLocationCoordinateApproved": false,
+      "currentAttendanceZoneApproved": false,
+      "notes": "District and NCES use Aubrey mailing city; 2026–27 middle-zone PDF prints Prosper for identical street/ZIP. Official campus is in Town of Prosper, postal city Aubrey; do not treat city label as coordinate or school-ID conflict"
+    },
+    {
+      "id": "061901129",
+      "school": "Sandbrock Ranch Elementary School",
+      "level": "elementary",
+      "publicCampusAddress": {
+        "street": "3690 Hunter Street",
+        "city": "Aubrey",
+        "state": "TX",
+        "zip": "76227"
+      },
+      "schoolSourceUrl": "https://www.dentonisd.org/our-district/our-schools",
+      "status": "current-campus-address-crosschecked-coordinate-unverified",
+      "historicalPointDiscrepancy": "tea-geometry-missing",
+      "historicalDistanceMeters": null,
+      "priorNCESPointAvailable": true,
+      "priorIndependentTEA2024CoordinateCorroborated": false,
+      "currentLocationCoordinateApproved": false,
+      "currentAttendanceZoneApproved": false,
+      "notes": "Current official campus address independently supplied; TEA 2024–25 geometry absent"
+    },
+    {
+      "id": "061901130",
+      "school": "Fred Hill Elementary School",
+      "level": "elementary",
+      "publicCampusAddress": {
+        "street": "501 Ryan Spiritas Parkway",
+        "city": "Little Elm",
+        "state": "TX",
+        "zip": "75068"
+      },
+      "schoolSourceUrl": "https://www.dentonisd.org/our-district/our-schools",
+      "status": "current-campus-address-crosschecked-coordinate-unverified",
+      "historicalPointDiscrepancy": "tea-geometry-missing",
+      "historicalDistanceMeters": null,
+      "priorNCESPointAvailable": true,
+      "priorIndependentTEA2024CoordinateCorroborated": false,
+      "currentLocationCoordinateApproved": false,
+      "currentAttendanceZoneApproved": false,
+      "notes": "School published under Hill Elementary; school-specific 2026–27 PDF TEA campus ID 061901130. No second independent coordinate available in prior probe"
+    },
+    {
+      "id": "061901131",
+      "school": "Dorothy Martinez Elementary School",
+      "level": "elementary",
+      "publicCampusAddress": {
+        "street": "2855 Eppright Dr",
+        "city": "Little Elm",
+        "state": "TX",
+        "zip": "76227"
+      },
+      "schoolSourceUrl": "https://www.dentonisd.org/our-district/our-schools",
+      "status": "current-campus-address-crosschecked-coordinate-unverified",
+      "historicalPointDiscrepancy": "tea-geometry-missing",
+      "historicalDistanceMeters": null,
+      "priorNCESPointAvailable": true,
+      "priorIndependentTEA2024CoordinateCorroborated": false,
+      "currentLocationCoordinateApproved": false,
+      "currentAttendanceZoneApproved": false,
+      "notes": "School published under Martinez Elementary; school-specific 2026–27 PDF TEA campus ID 061901131. No second independent coordinate available in prior probe"
+    }
+  ]
+}
