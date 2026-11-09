@@ -13,8 +13,8 @@ function safeCandidateUrl(value){
  // A standalone main-based QA branch lacks the 78 unmerged PR #173 hosts.
  // Independently pin the exact 107-host allowlist from that PR's reviewed trust policy.
  // Never accept arbitrary manifest domains, credentials, ports, control chars or redirects.
- if(typeof value!=='string'||value.length>2048||
-    !value.startsWith('https://')||/[\\u0000-\\u0020\\u007f\\\\]/.test(value))
+ if(typeof value!=='string'||value.length>2048||!value.startsWith('https://')||
+    [...value].some(ch=>ch.charCodeAt(0)<=32||ch.charCodeAt(0)===127||ch.charCodeAt(0)===92))
   return false;
  const authority=value.slice(8).split(/[/?#]/)[0];
  if(authority.includes(':')||authority.includes('@'))return false;
