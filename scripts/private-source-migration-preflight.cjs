@@ -21,7 +21,7 @@ const MANDATORY=Object.freeze([
   'scripts/build-family-entry.cjs','scripts/build-public-preview.cjs',
   '.github/workflows/public-release-security.yml',
 ]);
-const PRIVATE_MARKER=/\bJPM_ADDRESS\b|\bJPM Plano\b|\bjpmMinutes\b|\bjpm-[a-z0-9-]+\.(?:json|geojson)\b/gi;
+const PRIVATE_MARKER=/\bJPM_ADDRESS\b|\bJPM Plano\b|\bjpmMinutes\b|\bjpm-[a-z0-9-]+\.(?:json|geojson)\b/i;
 const FATAL_NAME=/(?:^|\/)(?:\.git|node_modules|dist|artifacts)(?:\/|$)|(?:^|\/)\.env(?:\..*)?$|(?:^|\/)(?:id_rsa|id_ed25519|credentials(?:\.[^/]+)?|secrets?\.(?:json|ya?ml))$|\.(?:pem|p12|pfx|key)$/i;
 const RESTRICTED_NAME=/(?:^|\/)jpm[-_]|(?:^|\/)(?:index|reviewed)\.html$/i;
 const DEPLOY_NAME=/^(?:\.github\/|deploy\/)|^(?:CNAME|\.nojekyll|wrangler(?:\.[^/]*)?|netlify\.toml|vercel\.json|firebase\.json|package(?:-lock)?\.json)$/i;
