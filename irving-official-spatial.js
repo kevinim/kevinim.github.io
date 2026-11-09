@@ -108,7 +108,7 @@
    .replace(/\bschool\b/g,'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
  }
  function compareReportedSchool(reference,{gradeLevel,schoolName,schoolYear}={}){
-  const base={kind:'irving-user-reported-reference',yearCertified:false,
+  const base={kind:'irving',yearCertified:false,
    independentlyVerified:false,productionAssignmentApproved:false};
   if(!reference||reference.status!=='ready'||!reference.names)return {
    ...base,status:'no-source',message:'먼저 Irving 공식 GIS 좌표 조회로 참고 경계를 확인하세요.'};
