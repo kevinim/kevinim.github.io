@@ -44,7 +44,7 @@ const AreaAssessmentCore=(()=>{
       return {status:'unknown',message:'선택 목적지는 아래 통근 패널에서 별도 계산'};
     const t=area?.jpmMinutes;
     if(!Number.isFinite(t)||t<0)return {status:'unknown',message:'이 ZIP의 도로망 통근시간 미확인'};
-    return {status:'available',minutes:Math.round(t),message:'JPM Plano · ZIP 대표점 약 '+Math.round(t)+'분 (교통량 미반영)'};
+    return {status:'available',minutes:Math.round(t),message:'기본 목적지 · ZIP 대표점 약 '+Math.round(t)+'분 (교통량 미반영)'};
   }
   return {summarizeSchools,summarizeNoaa,summarizeCrime,summarizeCommute};
 })();
