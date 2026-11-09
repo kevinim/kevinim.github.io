@@ -47,11 +47,11 @@ function expectedPublicHtml(source){
   '<link rel="stylesheet" href="./features/theme-toggle.css?v=1"><link rel="stylesheet" href="./features/map-control-contrast.css?v=1"><link rel="stylesheet" href="./features/track-b-reference-warning.css?v=1">');
  // Exactly this publisher source, privacy sentence and same-origin script.
  s=replaceOnce(s,'https://geocode.arcgis.com https://nominatim.openstreetmap.org',
-  'https://geocode.arcgis.com https://iisd1.maps.arcgis.com https://nominatim.openstreetmap.org');
+  'https://geocode.arcgis.com https://iisd1.maps.arcgis.com https://services.arcgis.com https://nominatim.openstreetmap.org');
  s=replaceOnce(s,'주소 검색: © Esri. 외부 서비스의',
-  '주소 검색: © Esri. Irving 참고 GIS 버튼을 누르면 집 핀 좌표만 Irving ISD 연계 ArcGIS 서비스에 전송되며 이 사이트는 경계 결과를 저장하지 않습니다. 외부 서비스의');
+  '주소 검색: © Esri. Dallas 참고 GIS 버튼을 누르면 선택한 좌표만 Dallas ISD ArcGIS 원본 서비스에 전송하며 결과 도형은 현재 브라우저에서만 표시합니다. Irving 참고 GIS 버튼을 누르면 집 핀 좌표만 Irving ISD 연계 ArcGIS 서비스에 전송되며 이 사이트는 경계 결과를 저장하지 않습니다. 외부 서비스의');
  s=replaceOnce(s,'<script src="./home-lookup-v2.js?v=15"></script>',
-  '<script src="./irving-official-spatial.js?v=1"></script><script src="./home-lookup-v2.js?v=15"></script>');
+  '<script src="./irving-official-spatial.js?v=1"></script><script src="./dallas-attendance-live.js?v=1"></script><script src="./home-lookup-v2.js?v=15"></script>');
  s=replaceOnce(s,'<label class="check"><input type="checkbox" id="referenceBoundaryOverlay"> 과거 GIS 참고 경계선 표시</label></div>',
   '<label class="check"><input type="checkbox" id="referenceBoundaryOverlay"> 과거 GIS 참고 경계선 표시</label></div><p class="reference-gis-global-warning" role="note"><strong>지도 경계는 학교 배정 확정 정보가 아닙니다.</strong> 연도가 오래되거나 현행성이 확인되지 않은 GIS는 참고용입니다. 입학·배정은 반드시 해당 학군의 공식 주소 검색기에서 확인하세요.</p>');
  return s;
@@ -108,7 +108,7 @@ test('index changes limited to approved blank destination, hidden precomputed ma
 });
 test('strict script CSP preserved exactly and personal office artifacts absent',()=>{
  const allowed=oldCsp.replace('https://geocode.arcgis.com https://nominatim.openstreetmap.org',
-  'https://geocode.arcgis.com https://iisd1.maps.arcgis.com https://nominatim.openstreetmap.org');
+  'https://geocode.arcgis.com https://iisd1.maps.arcgis.com https://services.arcgis.com https://nominatim.openstreetmap.org');
  assert.equal(newCsp,allowed,'Irving ArcGIS exact origin is the only allowed new CSP endpoint');
  for(const part of ["script-src-attr 'none'","object-src 'none'","base-uri 'self'","form-action 'self'"])
   assert.ok(newCsp.includes(part));
@@ -130,7 +130,7 @@ test('HTML has external executable scripts only and no inline handlers',()=>{
 test('all school, region and risk modules preserved exactly once',()=>{
  for(const name of ['features/west-dfw/attach.js','features/area-assessment.js',
  'features/resilience/winter-map.js','school-boundary-match.js','home-lookup-v2.js',
- 'features/dfw-school-coverage-panel.js','irving-official-spatial.js']){
+ 'features/dfw-school-coverage-panel.js','irving-official-spatial.js','dallas-attendance-live.js']){
   assert.equal(html.split(name).length,2,name);
  }
 });
