@@ -7,7 +7,7 @@ const root=path.resolve(__dirname,'..');
 const dir=path.join(root,'.github/workflows');
 const pendingElsewhere=new Set(['public-release-security.yml','verify-main-bootstrap-extraction.yml']);
 const files=fs.readdirSync(dir).filter(x=>x.endsWith('.yml')&&!pendingElsewhere.has(x));
-const uses=/^\s*-\s*uses:\s*([a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+)@([^\s#]+)/gm;
+const uses=/^\s*(?:-\s*)?uses:\s*([a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+)@([^\s#]+)/gm;
 
 test('test-only and browser workflows reference immutable action commits',()=>{
  assert.ok(files.length>=36,'unexpected workflow count; audit required');
