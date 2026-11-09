@@ -14,6 +14,7 @@ const TRUSTED_OFFICIAL_HOSTS = Object.freeze([
   'portal.metrostudygis.com', 'txschools.gov',
   'apps.myplanware.com', 'www.kellerisd.net', 'www.nisdtx.org',
   'www.gcisd.net', 'www.southlakecarroll.edu', 'www.westlakeacademy.org',
+  'www.wylieisd.net', 'www.melissaisd.org', 'www.celinaisd.com', 'www.littleelmisd.net', 'www.dentonisd.org', 'www.coppellisd.com', 'web.risd.org', 'www.princetonisd.net', 'www.annaisd.org', 'www.argyleisd.com', 'www.garlandisd.net', 'www.hebisd.edu', 'www.rockwallisd.com', 'mesquiteisd.org', 'www.irvingisd.net', 'www.forneyisd.net', 'www.dallasisd.org', 'www.communityisd.org',
 ]);
 
 const SPECIAL_CAMPUSES = Object.freeze([

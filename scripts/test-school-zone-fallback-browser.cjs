@@ -36,7 +36,7 @@ fs.mkdirSync(out,{recursive:true});
         banner=document.getElementById('schoolZoneMapHint');
        const badge=document.querySelector('#detailContent .school-zone-label');
        const officialInDetail=[...document.querySelectorAll('#detailContent a')]
-        .find(a=>a.textContent.includes('학군 공식 주소 검색기'));
+        .find(a=>a.getAttribute('href')===status.officialUrl);
        const record={
         district:code,school:s.name,kind:status.kind,match:status.match.status,layers,
         hintVisible:!banner.hidden,badge:badge?.textContent?.trim(),
@@ -45,9 +45,9 @@ fs.mkdirSync(out,{recursive:true});
         hint:banner.textContent?.slice(0,150)
        };
        samples.push(record);
-       if(!counts[code])counts[code]={picked:0,drawn:0,finderOnly:0,unverified:0,special:0};
+       if(!counts[code])counts[code]={picked:0,drawn:0,finderOnly:0,mapOnly:0,unverified:0,special:0};
        const c=counts[code];c.picked++;
-       if(layers>0)c.drawn++;if(status.kind==='finder-only')c.finderOnly++;
+       if(layers>0)c.drawn++;if(status.kind==='finder-only')c.finderOnly++;if(status.kind==='map-only')c.mapOnly++;
        if(status.kind==='unverified')c.unverified++;if(status.kind==='special')c.special++;
       }
      }
@@ -91,8 +91,9 @@ fs.mkdirSync(out,{recursive:true});
       }
     }
     assert.ok(result.counts.CFB?.finderOnly>=3,'CFB school samples must offer their official Finder');
-    for(const code of ['220919','220907','061911','220906'])
+    for(const code of ['220919','220907','061911'])
      assert.ok(result.counts[code]?.finderOnly>=2,'West DFW '+code+' must link the approved district tool without invented polygons');
+    assert.ok(result.counts['220906']?.mapOnly>=2,'GCISD must show official map status, not an address-school Finder');
     assert.ok(result.counts.FISD?.drawn>=3,'Frisco known polygons must draw');
     assert.ok(result.counts.AISD?.drawn>=2,'Allen historic polygons must draw with notice');
     assert.ok(result.listBadge.includes('공식 조회'),'list must label CFB as official lookup only');

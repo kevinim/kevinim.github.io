@@ -162,6 +162,30 @@ function readWestDfwSupplement(root) {
   }));
 }
 
+// Adjacent DFW school-district navigation is a separate evidence manifest.
+// These entries provide official parent instructions, NOT student-address
+// assignment polygon GIS; choice systems must remain choice systems.
+function readNeighborDfwSupplement(root) {
+ const manifest=JSON.parse(fs.readFileSync(path.join(root,'data/dfw-neighbor-official-school-links-2026.json'),'utf8'));
+ const {DISTRICT_REGISTRY}=require('../district-registry.js');
+ const {official}=require('../trusted-link-policy.js');
+ const allowed=new Set(['finder-guidance','official-map','official-inquiry','choice-process']);
+ if(manifest.schemaVersion!==1||!Array.isArray(manifest.districts)||manifest.districts.length!==18)
+  throw Error('invalid_neighbor_school_provenance_manifest');
+ const seen=new Set();
+ return manifest.districts.map(d=>{
+  const record=DISTRICT_REGISTRY[d.code];
+  if(!/^\d{6}$/.test(d.code)||seen.has(d.code)||!allowed.has(d.kind)||
+    !record||record.lookupKind!==d.kind||record.zoneKey!==null||
+    record.address!==null||record.currency!==null||
+    record.official!==d.url||official(d.url)!==d.url||
+    typeof d.sourceYear!=='string'||d.sourceYear.length<12)
+   throw Error('unsafe_neighbor_school_district_source '+d.code);
+  seen.add(d.code);
+  return {code:d.code,status:'lookup-only',geometryYear:'no-certified-GIS',officialLookup:d.url};
+ });
+}
+
 function run() {
   const root = path.resolve(__dirname, '..');
   const provenance = JSON.parse(fs.readFileSync(path.join(root, 'school-data-provenance.json'), 'utf8'));
@@ -169,7 +193,7 @@ function run() {
   const mckinney = JSON.parse(fs.readFileSync(path.join(root, 'data/mckinney-2026-27-provenance.json'), 'utf8'));
   const report = auditSchoolProvenance(provenance, DISTRICT_REGISTRY, {
     readLocal: local => JSON.parse(fs.readFileSync(path.join(root, local), 'utf8')),
-    supplementary: [mckinney,...readWestDfwSupplement(root)],
+    supplementary: [mckinney,...readWestDfwSupplement(root),...readNeighborDfwSupplement(root)],
   });
 
   if (report.summary) {
@@ -189,4 +213,4 @@ function run() {
 }
 
 if (require.main === module) run();
-module.exports = { auditSchoolProvenance, validHttps, safeLocalFile, KNOWN_UNTRACKED, readWestDfwSupplement };
+module.exports = { auditSchoolProvenance, validHttps, safeLocalFile, KNOWN_UNTRACKED, readWestDfwSupplement, readNeighborDfwSupplement };
