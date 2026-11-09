@@ -240,9 +240,32 @@ def extract(level, download_dir, out_dir):
    "areaDeg2":round(zone.area,7),"bounds":[round(x,6) for x in zone.bounds],
    "calibrationRmsMeters":calibration["cornerRMSErrorMeters"],
   },separators=(",",":")),flush=True)
- # Zones within one school level should not have significant overlaps. Road
- # edges may touch: accept small computational seam, fail large zone overlaps.
+ # Exact PDF painted appearance is controlled by original drawing order:
+ # later opaque even-odd fills visually cover earlier fills. Subtract all
+ # later school fills from each earlier school polygon in this same source
+ # PDF. This restores the actual colored map surface (not guessed proximity).
  from shapely.geometry import shape
+ paint_sequence=sorted(features,key=lambda f:f["properties"]["sourceVectorDrawingIndex"])
+ later_union=None
+ for feat in reversed(paint_sequence):
+  native=shape(feat["geometry"])
+  visible=native.difference(later_union) if later_union is not None else native
+  if visible.is_empty or not visible.is_valid or visible.geom_type not in ("Polygon","MultiPolygon"):
+   raise ValueError("Native PDF paint-order reconciliation erased/invalidated "+feat["properties"]["campusId"])
+  lost=max(0,native.area-visible.area)
+  removed_share=lost/native.area
+  if removed_share>0.28:
+   raise ValueError("Too much school area occluded by later PDF school fill: "+
+    feat["properties"]["campusId"]+" "+str(round(removed_share,4)))
+  feat["geometry"]=mapping(visible)
+  feat["properties"]["pdfPainterOverlapClippedFraction"]=round(removed_share,6)
+  feat["properties"]["nativePaintOrderReconciled"]=True
+  later_union=unary_union([later_union,native]) if later_union is not None else native
+  print("DENTON_GEOPDF_PAINT_ORDER",json.dumps({"campusId":feat["properties"]["campusId"],
+    "lossFraction":round(removed_share,6),"remainingAreaDeg2":round(visible.area,7)},
+    separators=(",",":")),flush=True)
+ # Zones within one school level now have zero area overlap aside from
+ # minuscule floating-point seams. Fail closed on any material error.
  shapes=[shape(x["geometry"]) for x in features]
  intersections=[]
  for i in range(len(shapes)):
