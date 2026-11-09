@@ -4,6 +4,7 @@
 const fs=require('node:fs');
 const path=require('node:path');
 const cp=require('node:child_process');
+const crypto=require('node:crypto');
 const gate=require('./public-release-gate.cjs');
 const OUTPUT='dist/public-preview';
 function replaceExact(text,needle,replacement,label){
@@ -16,7 +17,46 @@ function replaceRegexOnce(text,re,replacement,label){
  if(found.length!==1)throw Error('Unexpected template occurrence count for '+label+': '+found.length);
  return text.replace(re,replacement);
 }
+
+/**
+ * PR #89 replaced unsafe-inline with a hash of the exact HTML inline classic
+ * bootstrap. A sanitized public build necessarily changes that script.
+ * Recalculate ONLY the hash for the single known script and fail closed on
+ * unknown policies or multiple scripts; never weaken the deployed CSP.
+ * Browser HTML parsing normalizes CRLF to LF before computing script hashes.
+ */
+function cspSourceSnapshot(html){
+ const metas=[...html.matchAll(/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"\s*\/?>/gi)];
+ if(metas.length!==1)throw Error('Public preview requires exactly one CSP meta policy');
+ const meta=metas[0],policy=meta[1];
+ if(/'unsafe-inline'|'unsafe-eval'/i.test(policy))throw Error('Unsafe CSP policy rejected');
+ if(!/(?:^|;)\s*script-src-attr\s+'none'\s*(?:;|$)/.test(policy))
+  throw Error('CSP must explicitly disable HTML event-handler attributes');
+ if(!/script-src\s+'self'/.test(policy)||!/object-src\s+'none'/.test(policy)||!/base-uri\s+'self'/.test(policy))
+  throw Error('Missing core CSP protections');
+ const allowed=[...policy.matchAll(/'sha256-[A-Za-z0-9+/]+=*'/g)].map(x=>x[0]);
+ if(allowed.length!==1)throw Error('Expected one exact inline-script CSP hash');
+ const scripts=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
+  .filter(x=>!/\bsrc\s*=/.test(x[1]));
+ if(scripts.length!==1||!scripts[0][2].trim())
+  throw Error('Public preview requires exactly one known inline main bootstrap; external JS changes need privacy review');
+ const digest=crypto.createHash('sha256').update(scripts[0][2].replace(/\r\n?/g,'\n'),'utf8').digest('base64');
+ return {meta:meta[0],token:allowed[0],expected:"'sha256-"+digest+"'",policy};
+}
+function verifyCspIntegrity(html){
+ const state=cspSourceSnapshot(html);
+ if(state.token!==state.expected)throw Error('CSP SHA-256 hash does not match browser-normalized inline bootstrap');
+ return state;
+}
+function relockSanitizedCsp(html){
+ const source=cspSourceSnapshot(html);
+ const updated=replaceExact(html,source.meta,source.meta.replace(source.token,source.expected),'strict preview CSP hash');
+ verifyCspIntegrity(updated);
+ return updated;
+}
+
 function sanitizeIndex(source){
+ verifyCspIntegrity(source);
  let s=source;
  s=replaceRegexOnce(s,/<option value="jpm">[^<]*<\/option>/g,'','personal office option');
  s=replaceExact(s,'<option value="custom">다른 주소 직접 입력</option>','<option value="custom" selected>다른 주소 직접 입력</option>','default custom address');
@@ -59,6 +99,7 @@ function sanitizeIndex(source){
    +'실제 학교 배정은 학군 공식 주소검색으로, 홍수·범죄·정전 위험은 공식 최신 자료로 확인하세요. '
    +'<b>현재 화면은 검토용 공개 프리뷰로 운영 배포가 승인되지 않았습니다.</b></aside>';
  s=replaceExact(s,afterHeader,afterHeader+notice,'public privacy notice placement');
+ s=relockSanitizedCsp(s);
  if(/\bjpm\b|JPM|JPMorgan|jpm-|8181 Communications/i.test(s))
    throw Error('Personal commute identifier remains in public HTML; review required');
  if(/<input id="destination" value="[^"]+"/.test(s))
@@ -70,6 +111,8 @@ function safeFiles(){
  return tracked.filter(f=>gate.isPublishable(f))
   .filter(f=>!/^jpm-/i.test(path.basename(f)))
   .filter(f=>!/^reviewed\.html$/i.test(f))
+  // Legacy uploader has its own bootstrap and is NOT part of the curated public app.
+  .filter(f=>!['features/reviewed-bootstrap.js','features/geojson-upload-guard.js','dashboard-main.js'].includes(f))
   .filter(f=>!/(?:^|\/)(?:.*-audit-20\d\d|official-resident-finder-audit)/i.test(f))
   .filter(f=>f!=='index.html' && f!=='jpm-outside-dfw.json' && f!=='dfw-outside-public.json')
   .sort();
@@ -111,4 +154,4 @@ if(require.main===module)try{
  const built=build(process.argv[2]||OUTPUT);
  process.stdout.write('Public preview built locally for security review only; '+built.files+' curated files; NOT DEPLOYED.\n');
 }catch(e){process.stderr.write('Public preview blocked: '+e.message+'\n');process.exitCode=1;}
-module.exports={sanitizeIndex,safeFiles,build};
+module.exports={sanitizeIndex,safeFiles,build,cspSourceSnapshot,verifyCspIntegrity,relockSanitizedCsp};
