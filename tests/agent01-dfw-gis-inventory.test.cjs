@@ -22,7 +22,7 @@ test('candidate district codes match TEA matrix; do not duplicate parallel agent
 test('Irving maps cover three distinct grade levels and exact publisher web map IDs',()=>{
  const v=x.candidates.find(c=>c.districtCode==='057912');
  assert(v);assert.deepEqual(v.webmaps.map(z=>z.grade),['elementary','middle','high']);
- for(const row of v.webmaps){assert.match(row.arcgisWebmapId,/^[a-f\d]{32}$/);assert.equal(row.academicYear,null);}
+ for(const row of v.webmaps){assert.match(row.arcgisWebmapId,/^[a-f\d]{32}$/);if(row.grade==='elementary')assert.match(row.academicYear,/^2024-25/);else assert.equal(row.academicYear,null);}
  assert.equal(new Set(v.webmaps.map(x=>x.arcgisWebmapId)).size,3);
  assert.equal(v.requiredForActivation.length>=6,true);
 });
