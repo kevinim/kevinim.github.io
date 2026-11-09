@@ -33,9 +33,11 @@ jobs:
           node --check home-lookup-v2.js
           node --check home-assignment-map.js
           node --check scripts/test-home-assignment-map-browser.cjs
+          node --check scripts/audit-dfw-home-automation-readiness.cjs
+          node scripts/audit-dfw-home-automation-readiness.cjs > /tmp/dfw-home-map-structural-census.json
       - name: Run school map privacy and regression unit tests
         run: |
-          node --test tests/home-assignment-map.test.cjs tests/school-zone-ui.test.cjs tests/school-polygon-linkage-audit.test.cjs tests/school-data-release-preflight.test.cjs
+          node --test tests/home-assignment-map.test.cjs tests/dfw-home-automation-readiness.test.cjs tests/school-zone-ui.test.cjs tests/school-polygon-linkage-audit.test.cjs tests/school-data-release-preflight.test.cjs
   browser:
     name: Mobile/desktop address to school map
     runs-on: ubuntu-latest
