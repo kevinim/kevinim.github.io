@@ -10,10 +10,29 @@ const {inFriscoBorder,inGeometry,schoolKey}=require('./attendance-geo-audit.cjs'
 const read=name=>JSON.parse(readFileSync(new URL('../'+name,import.meta.url),'utf8'));
 const samples=read('tests/public-address-finder-crosscheck-2026.json').records;
 async function json(url){
- const res=await fetch(url,{signal:AbortSignal.timeout(27000),cache:'no-store'});
- if(!res.ok)throw Error(url+' HTTP '+res.status);
- const data=await res.json();if(data?.error)throw Error(JSON.stringify(data.error));
- return data;
+ // External Esri and Infofinder can transiently time out. Retry transport-only
+ // failures but NEVER turn unknown or mismatching school assignments into pass.
+ let last;
+ for(let attempt=1;attempt<=3;attempt++){
+  try{
+   const res=await fetch(url,{signal:AbortSignal.timeout(27000),cache:'no-store'});
+   if(!res.ok){
+    const error=new Error('official_source_http_'+res.status);
+    error.retryable=res.status===429||res.status>=500;
+    throw error;
+   }
+   const data=await res.json();if(data?.error)throw Error('official_source_application_error');
+   return data;
+  }catch(err){
+   last=err;
+   const text=String(err?.message||err);
+   const retryable=err?.retryable===true||/timeout|abort|fetch failed|ETIMEDOUT|ECONNRESET|ENOTFOUND|EAI_AGAIN/i.test(text);
+   if(!retryable||attempt===3)break;
+   console.warn('TRANSIENT official source transport error; retry '+attempt+'/3');
+   await new Promise(resolve=>setTimeout(resolve,450*attempt));
+  }
+ }
+ throw last;
 }
 const [frisco,prosper]=await Promise.all([
  json('https://static.friscoisd.org/js/json/school.borders.2627.json'),
