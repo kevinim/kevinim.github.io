@@ -38,6 +38,16 @@ jobs:
           NODE_PATH: ${{ github.workspace }}/public-residence-browser-tmp/node_modules
           PUBLIC_RESIDENTIAL_CASE: listedHouse
         run: node scripts/verify-public-residence-home-school-browser.cjs
+      - name: Live publicly listed Frisco 75034 house → 3 actual campus zones
+        env:
+          NODE_PATH: ${{ github.workspace }}/public-residence-browser-tmp/node_modules
+          PUBLIC_RESIDENTIAL_CASE: canalHouse
+        run: node scripts/verify-public-residence-home-school-browser.cjs
+      - name: Live publicly listed Frisco 75033 house → 3 actual campus zones
+        env:
+          NODE_PATH: ${{ github.workspace }}/public-residence-browser-tmp/node_modules
+          PUBLIC_RESIDENTIAL_CASE: monarchHouse
+        run: node scripts/verify-public-residence-home-school-browser.cjs
       - name: One public district Finder UI query, never hidden API or bulk scraping
         env:
           NODE_PATH: ${{ github.workspace }}/public-residence-browser-tmp/node_modules
