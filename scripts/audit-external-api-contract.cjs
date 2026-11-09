@@ -14,6 +14,7 @@ const path = require('node:path');
 const REQUIRED_FILES = Object.freeze([
   'index.html',
   'reviewed.html',
+  'features/reviewed-bootstrap.js',
   'texas-address-suggest.js',
   'home-lookup-v2.js',
   'collin-parcel-check.js',
@@ -29,7 +30,10 @@ function auditProviderContract(files) {
   if (errors.length) return { errors, warnings, coverage: null };
 
   const main = get('index.html');
-  const archived = get('reviewed.html');
+  const archivedHtml = get('reviewed.html');
+  const archivedBootstrap = get('features/reviewed-bootstrap.js');
+  const archived = archivedHtml+'\n'+archivedBootstrap;
+  if(!archivedHtml.includes('src="./features/reviewed-bootstrap.js?v=1"'))errors.push('legacy reviewed bootstrap script reference removed');
   const suggest = get('texas-address-suggest.js');
   const home = get('home-lookup-v2.js');
   const parcel = get('collin-parcel-check.js');
@@ -61,7 +65,7 @@ function auditProviderContract(files) {
       !main.includes('OSRM') || !main.includes('Collin CAD') || !main.includes('Google Maps')) {
     errors.push('home address external-disclosure element or known provider names removed');
   }
-  for (const [name, body] of [['index.html', main], ['reviewed.html', archived]]) {
+  for (const [name, body] of [['index.html', main], ['reviewed.html + reviewed-bootstrap.js', archived]]) {
     const canonicalTile = body.includes('https://tile.openstreetmap.org/');
     const legacySubdomainTile = body.includes('https://{s}.tile.openstreetmap.org/');
     if (!canonicalTile && !legacySubdomainTile) {

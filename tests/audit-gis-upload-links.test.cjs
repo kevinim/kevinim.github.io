@@ -8,7 +8,7 @@ const { knownBoundaryException, boundaryMissingExplanation } = require('../schoo
 const {checkOfficialUrl,auditSchoolBoundaryTrust,SPECIAL_CAMPUSES} = require('../scripts/audit-gis-upload-links.cjs');
 const root=path.resolve(__dirname,'..');
 const source = p=>fs.readFileSync(path.join(root,p),'utf8');
-const files=()=>Object.fromEntries(['index.html','reviewed.html','school-boundary-match.js'].map(p=>[p,source(p)]));
+const files=()=>Object.fromEntries(['index.html','reviewed.html','features/reviewed-bootstrap.js','features/geojson-upload-guard.js','school-boundary-match.js'].map(p=>[p,source(p)]));
 
 test('all district and special-campus links have explicitly trusted HTTPS hosts',()=>{
  const r=auditSchoolBoundaryTrust(files());
@@ -52,11 +52,17 @@ test('dangerous HTML sink regression in main GIS warning is detected',()=>{
 });
 test('legacy uploaded polygon file entrypoint stays under security review',()=>{
  const modified=files();
- modified['reviewed.html']=modified['reviewed.html'].replace('Array.isArray(j.features)','Boolean(j.features)');
+ modified['features/reviewed-bootstrap.js']=modified['features/reviewed-bootstrap.js'].replace('SchoolGeoJSONGuard.validate','unsafeValidate');
  assert.ok(auditSchoolBoundaryTrust(modified).errors.some(e=>e.includes('GeoJSON entrypoint')));
 });
 test('legacy Allen GIS year label must remain HTML-escaped',()=>{
  const modified=files();
- modified['reviewed.html']=modified['reviewed.html'].replace('j.features.map(f=>escape(f.properties.YearUpdated','j.features.map(f=>String(f.properties.YearUpdated');
+ modified['features/reviewed-bootstrap.js']=modified['features/reviewed-bootstrap.js'].replace('j.features.map(f=>escape(f.properties.YearUpdated','j.features.map(f=>String(f.properties.YearUpdated');
  assert.ok(auditSchoolBoundaryTrust(modified).errors.some(e=>e.includes('historical date')));
+});
+
+test('missing guard or lowered validation is rejected',()=>{
+ const filesCopy=files();
+ filesCopy['features/geojson-upload-guard.js']=filesCopy['features/geojson-upload-guard.js'].replace('fileBytes:4*1024*1024','fileBytes:999*1024*1024');
+ assert.ok(auditSchoolBoundaryTrust(filesCopy).errors.some(e=>e.includes('GeoJSON entrypoint')));
 });

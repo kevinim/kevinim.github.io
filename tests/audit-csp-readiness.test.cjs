@@ -6,24 +6,29 @@ const path=require('node:path');
 const {extractCspMeta,parseDirectives,analyzeCspPage,checkCurrentRepo}=
  require('../scripts/audit-csp-readiness.cjs');
 
-test('both current HTML entrypoints enforce hash-locked CSP and reject inline handler attributes',()=>{
+test('both current HTML entrypoints enforce strict CSP with no inline handler attributes',()=>{
  const rows=checkCurrentRepo();
  assert.deepEqual(rows.map(r=>r.name),['index.html','reviewed.html']);
  assert.ok(rows.every(r=>!r.errors.length),JSON.stringify(rows));
  for(const r of rows){
-  assert.equal(r.summary.inlineScriptBlocks,1,r.name);
-  assert.equal(r.summary.inlineHashes,1,r.name);
+  const expected=r.name==='index.html'?1:0;
+  assert.equal(r.summary.inlineScriptBlocks,expected,r.name);
+  assert.equal(r.summary.inlineHashes,expected,r.name);
   assert.equal(r.summary.allowsUnsafeInline,false,r.name);
   assert.equal(r.summary.inlineEventAttributes,0,r.name);
   assert.ok(r.warnings.some(x=>x.includes('connect-src absent')));
  }
 });
-test('current source still uses pinned hash-backed inline bootstrap (not unsafe-inline)',()=>{
+test('main source is hash-locked, and reviewed.html is now external-script-only',()=>{
  for(const r of checkCurrentRepo()){
-  assert.ok(r.summary.inlineScriptBytes>10000,r.name);
+  if(r.name==='index.html')assert.ok(r.summary.inlineScriptBytes>10000,r.name);
+  else assert.equal(r.summary.inlineScriptBytes,0,r.name);
   assert.match(r.summary.policy,/script-src-attr 'none'/);
   assert.doesNotMatch(r.summary.policy,/'unsafe-inline'/);
  }
+ const reviewed=fs.readFileSync(path.resolve(__dirname,'../reviewed.html'),'utf8');
+ assert.ok(reviewed.includes('src="./features/reviewed-bootstrap.js?v=1"'));
+ assert.ok(reviewed.includes('src="./features/geojson-upload-guard.js?v=1"'));
 });
 test('missing CSP is a regression',()=>{
  assert.ok(analyzeCspPage('<script>1</script>','sample').errors.some(e=>e.includes('missing source-level')));
