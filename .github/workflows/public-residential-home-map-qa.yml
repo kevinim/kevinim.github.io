@@ -33,6 +33,11 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/public-residence-browser-tmp/node_modules
         run: node scripts/verify-public-residence-home-school-browser.cjs
+      - name: Actual publicly listed single-family house via live Esri → school map
+        env:
+          NODE_PATH: ${{ github.workspace }}/public-residence-browser-tmp/node_modules
+          PUBLIC_RESIDENTIAL_CASE: listedHouse
+        run: node scripts/verify-public-residence-home-school-browser.cjs
       - name: One public district Finder UI query, never hidden API or bulk scraping
         env:
           NODE_PATH: ${{ github.workspace }}/public-residence-browser-tmp/node_modules
