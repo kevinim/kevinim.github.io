@@ -1,0 +1,151 @@
+name: TX final independent regression (no deployment)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/final-independent-regression.yml'
+      - 'scripts/evaluate-final-regression.cjs'
+      - 'tests/evaluate-final-regression.test.cjs'
+      - 'docs/FINAL_INDEPENDENT_QA_2026-11-09.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  privacy-and-source:
+    name: source snapshot, privacy release gate and unprovisioned UAT
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Fail-closed final QA and strict CSP unit tests
+        run: |
+          node --test tests/evaluate-final-regression.test.cjs
+          node --test tests/strict-script-csp.test.cjs tests/trusted-outbound-links.test.cjs
+      - name: School release snapshot, geometry and source validation
+        run: |
+          node scripts/school-data-release-preflight.cjs
+          node --test tests/school-data-release-preflight.test.cjs
+      - name: Validate that no family UAT login was provisioned from source tests
+        run: |
+          node scripts/check-uat-anonymous-access.cjs --plan
+          node scripts/validate-environment-plan.cjs deploy/environment-plan.json planning
+      - name: Build private-data-sanitized public candidate and assert manual release is BLOCKED
+        run: |
+          node scripts/verify-public-preview.cjs
+          mkdir -p artifacts/final-qa
+          cp artifacts/security/public-release-audit.json artifacts/final-qa/security.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: final-qa-security
+          path: artifacts/final-qa/security.json
+          if-no-files-found: error
+
+  school-map:
+    name: real school-to-GIS links, polygons and Allen marker baseline
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Install pinned isolated Chromium
+        run: |
+          mkdir -p final-school-browser-tmp
+          cd final-school-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Audit actual loaded schools, polygon drawing and Allen viewport markers
+        run: |
+          NODE_PATH="$PWD/final-school-browser-tmp/node_modules" node scripts/school-polygon-linkage-browser.cjs
+          node scripts/verify-school-linkage-baseline.cjs
+          mkdir -p artifacts/final-qa
+          cp artifacts/school-linkage/school-polygon-linkage-census.json artifacts/final-qa/school.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: final-qa-school
+          path: artifacts/final-qa/school.json
+          if-no-files-found: error
+
+  mobile-and-region:
+    name: 7 responsive widths, address clear, region summaries and trusted links
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Install isolated Chromium and Leaflet
+        run: |
+          mkdir -p final-mobile-browser-tmp
+          cd final-mobile-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0 leaflet@1.9.4
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve exact PR commit on loopback, not production
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/final-independent-qa-http.log 2>&1 &
+          sleep 2
+      - name: Seven-width responsive layout, school controls and post-selection home-pin clearing
+        run: NODE_PATH="$PWD/final-mobile-browser-tmp/node_modules" node scripts/test-responsive-school-ui.cjs
+      - name: Region summary, ZIP change, school and hazard buttons at mobile and desktop widths
+        run: NODE_PATH="$PWD/final-mobile-browser-tmp/node_modules" node scripts/test-area-assessment-browser.cjs
+      - name: Injected school text and untrusted outbound links are inert
+        run: NODE_PATH="$PWD/final-mobile-browser-tmp/node_modules" node scripts/test-trusted-outbound-browser.cjs
+      - name: Copy redacted JSON only; never upload full screenshots
+        run: |
+          mkdir -p artifacts/final-qa
+          cp artifacts/responsive-ui/report.json artifacts/final-qa/mobile.json
+          cp artifacts/area-assessment/report.json artifacts/final-qa/area.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: final-qa-mobile
+          path: |
+            artifacts/final-qa/mobile.json
+            artifacts/final-qa/area.json
+          if-no-files-found: error
+
+  final-verdict:
+    name: Require every evidence stream, public release remains NO-GO
+    if: always()
+    needs: [privacy-and-source, school-map, mobile-and-region]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Download redacted evidence from each completed test job
+        uses: actions/download-artifact@v4
+        with:
+          pattern: final-qa-*
+          merge-multiple: true
+          path: artifacts/final-qa
+      - name: Fail closed on missing evidence or changed school/privacy baseline
+        run: node scripts/evaluate-final-regression.cjs artifacts/final-qa
+      - name: Publish final machine-readable evidence only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: final-independent-qa-verdict
+          path: artifacts/final-qa/final-verdict.json
+          if-no-files-found: warn
