@@ -36,11 +36,11 @@ test('twelve official parent routes cannot advertise an address Finder, GIS or e
   rows+=d.teaCampusRecords;
  }
  assert.equal(rows,53);
- assert.equal(m.summary.publicISDsWithRegisteredParentRoute,85);
- assert.equal(m.summary.publicISDsMissingRegisteredParentRoute,23);
- assert.equal(m.summary.registeredParentRouteRatePublicISDPercent,78.7);
- assert.equal(m.summary.publicISDCampusRowsWithRegisteredParentRoute,1880);
- assert.equal(m.summary.publicISDCampusRowsWithUnverifiedParentRoute,61);
+ assert.equal(m.summary.publicISDsWithRegisteredParentRoute,107);
+ assert.equal(m.summary.publicISDsMissingRegisteredParentRoute,1);
+ assert.equal(m.summary.registeredParentRouteRatePublicISDPercent,99.1);
+ assert.equal(m.summary.publicISDCampusRowsWithRegisteredParentRoute,1938);
+ assert.equal(m.summary.publicISDCampusRowsWithUnverifiedParentRoute,3);
  assert.equal(m.summary.campusPolygonCoverageAllDFWPercent,null);
  assert.equal(m.summary.exactAddressAssignmentCoveragePercent,null);
 });
