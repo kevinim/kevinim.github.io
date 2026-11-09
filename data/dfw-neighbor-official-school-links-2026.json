@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-11-09",
   "source": "TEA 2026 preliminary campus district codes; official ISD registration/attendance pages",
-  "scope": "Neighboring DFW districts beyond original 11; navigation only, not campus polygon GIS or guaranteed enrollment",
+  "scope": "DFW-area official parent assignment entry routes beyond original core; navigation only, not campus polygon GIS or address-specific enrollment verification",
   "rules": [
     "Code keys are TEA district codes, not city/ZIP",
     "Only HTTPS published official district landing pages; external services require user navigation",
@@ -189,6 +189,86 @@
       "url": "https://www.communityisd.org/parents",
       "guidance": "Official Parents page links Find Your Campus(es); previously published 2024–25 attendance-zone map is NOT proof of 2026–27 assignment.",
       "sourceYear": "Current finder link; old map 2024–25 must not be mislabeled",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "220905",
+      "en": "Fort Worth",
+      "ko": "포트워스",
+      "kind": "finder-guidance",
+      "url": "https://enrollment.fwisd.org/new-to-fwisd",
+      "guidance": "Use the 2026-27 School Site Locator by home address. 2026 school consolidations and choice programs require extra confirmation.",
+      "sourceYear": "2026–27 enrollment; 2026 campus closures documented; Choice schools are separate",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "220901",
+      "en": "Arlington",
+      "ko": "알링턴",
+      "kind": "finder-guidance",
+      "url": "https://www.aisd.net/district/about/school-directory",
+      "guidance": "Use Search by Home Address and select campuses labeled Zoned; Signature Programs are application only.",
+      "sourceYear": "2026–27 school directory; Zoned differs from Signature Program",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "220908",
+      "en": "Mansfield",
+      "ko": "맨스필드",
+      "kind": "finder-guidance",
+      "url": "https://www.mansfieldisd.org/student-central/attendance-zones",
+      "guidance": "Use the official Find My Bus school assignment entry; some linked maps mention 2025-26 and need a live-year check.",
+      "sourceYear": "Some public map labels still show 2025–26; current 2026–27 requires official tool verification",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "057910",
+      "en": "Grand Prairie",
+      "ko": "그랜드프레리",
+      "kind": "finder-guidance",
+      "url": "https://www.gpisd.org/about-gpisd/campus-listings-and-map",
+      "guidance": "Follow Campus Locator by Attendance Zone; special programs are not guaranteed as regular zone assignments.",
+      "sourceYear": "Official campus locator navigation; year, address and grade require downstream confirmation",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "220918",
+      "en": "Eagle Mountain–Saginaw",
+      "ko": "이글마운틴–새기노",
+      "kind": "finder-guidance",
+      "url": "https://www.emsisd.com/enroll/find-your-school-zone",
+      "guidance": "Find elementary, middle and high by property address in School Zone Finder; middle zones changed, with 7th grade grandfather options.",
+      "sourceYear": "2026–27 finder; 2026–27 middle school approved changes and 7th grade exceptions",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "220902",
+      "en": "Birdville",
+      "ko": "버드빌",
+      "kind": "finder-guidance",
+      "url": "https://www.birdvilleschools.net/families",
+      "guidance": "Select Boundary Locator and enter address; outside-district open enrollment follows another process.",
+      "sourceYear": "Current district family page points to address-based Boundary Locator",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "220912",
+      "en": "Crowley",
+      "ko": "크롤리",
+      "kind": "finder-guidance",
+      "url": "https://www.crowleyisdtx.org/parents-students/enrollment-student-registration/attendance-zones",
+      "guidance": "Use school locator address and select grade level Boundaries; 9th-grade and 10-12-grade campuses can differ.",
+      "sourceYear": "Official grade-specific locator and feeder pattern; year must be verified in locator",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "126902",
+      "en": "Burleson",
+      "ko": "벌리슨",
+      "kind": "finder-guidance",
+      "url": "https://www.burlesonisd.net/families-students/enrollment-information",
+      "guidance": "Use BISD School Search for your zoned school; choice campuses and lottery selections are not address-based guarantees.",
+      "sourceYear": "2026–27 enrollment FAQ links BISD School Search; choice and transfer rules apply",
       "sourceVerified": "official-district-website"
     }
   ]
