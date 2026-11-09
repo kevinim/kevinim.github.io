@@ -8,7 +8,9 @@ const OUT='artifacts/public-residential-e2e';
 const OFFICIAL_PAGE='https://schools.friscoisd.org/page/2026-2027-zones';
 const SAMPLES=[
  {id:'st-martin-frisco-base',address:'9425 Rolater Rd, Frisco, TX 75035',queries:['9425 Rolater','9425 Rola','9425']},
- {id:'lockshire-frisco-public-lease',address:'11379 Lockshire Dr, Frisco, TX 75035',queries:['11379 Lockshire','11379 Lock','11379']}
+ {id:'lockshire-frisco-public-lease',address:'11379 Lockshire Dr, Frisco, TX 75035',queries:['11379 Lockshire','11379 Lock','11379']},
+ {id:'canal-frisco-public-lease',address:'8357 Canal St, Frisco, TX 75034',queries:['8357 Canal','8357 Cana','8357']},
+ {id:'monarch-frisco-public-lease',address:'11178 Monarch Dr, Frisco, TX 75033',queries:['11178 Monarch','11178 Mona','11178']}
 ];
 fs.mkdirSync(OUT,{recursive:true});
 const report={checkedAt:new Date().toISOString(),officialPage:OFFICIAL_PAGE,status:'NO_OFFICIAL_ASSIGNMENT_CERTIFICATION',
@@ -89,23 +91,43 @@ function isValidAddressCandidate(label,num,road){
     return {section:section.slice(0,5500),resultHtml:domResults.map(x=>({id:x.id,cls:String(x.className).slice(0,100),text:(x.innerText||'').slice(0,400),html:x.outerHTML.slice(0,1000)}))};
    });
    item.snapshot=snapshot;
-   // Do not parse generic school mentions or static Nelson policy notices.
-   // The native selection and explicit grade-tagged results must both be present.
-   if(item.addressCandidateSelected&&!/no results found|we could not find/i.test(snapshot.section)){
-     const perLevel={
-      elementary:/\bElementary\s+School\s*:\s*([^\r\n]+)/i,
-      middle:/\bMiddle\s+School\s*:\s*([^\r\n]+)/i,
-      high:/\bHigh\s+School\s*:\s*([^\r\n]+)/i
-     };
-     for(const [grade,re] of Object.entries(perLevel)){
-      const m=snapshot.section.match(re);
-      if(m&&/^[A-Z][A-Za-z .'-]{3,100}$/.test(m[1].trim()))item.verifiedGrades[grade]=m[1].trim();
-     }
+   // Only parse a result explicitly headed "Results for [selected address]",
+   // and only three grade-scoped official school campus names. Exclude FAQ text.
+   const header=snapshot.section.match(/^Results for (.+)$/m);
+   item.resultHeading=header?.[1]||null;
+   item.resultsForSelectedAddress=!!header&&isValidAddressCandidate(header[1],num,road);
+   const blocks=[...snapshot.section.matchAll(/^Grades\s*\n\s*(K\s*[-–]\s*[0-9]+|[0-9]+\s*[-–]\s*[0-9]+)\s*\n\s*([^\r\n]+)/gmi)];
+   for(const block of blocks){
+     const range=clean(block[1]).replace(/\s/g,'').replace('–','-');
+     const school=clean(block[2]).replace(/\s*\(.+\)$/,'');
+     const level=range.startsWith('K-')?'elementary':/^(6|7)-8$/.test(range)?'middle':/^(9|10)-12$/.test(range)?'high':null;
+     if(level&&school&&/^[\p{L}][\p{L}\d&.'\- ]{2,90}$/u.test(school))
+       item.verifiedGrades[level]=school;
    }
    item.gradeMatches=Object.keys(item.verifiedGrades).length;
-   item.officialFinderVerified=item.addressCandidateSelected&&item.gradeMatches===3;
-   item.status=item.officialFinderVerified?'THREE_EXPLICIT_FINDER_GRADE_RESULTS':
-    item.addressCandidateSelected?'ADDRESS_SELECTED_SCHOOL_RESULTS_NOT_PARSED':'NO_DISTRICT_ADDRESS_CANDIDATE';
+   item.officialFinderIndependentlyVerified=item.addressCandidateSelected&&item.resultsForSelectedAddress&&item.gradeMatches===3;
+   // Compare two genuine Chromium app UIs (390/1366) to the separate official
+   // 2026-27 Finder UI, not to a hard-coded fixture or property website.
+   const appPath=path.join(OUT,'report-'+item.id+'.json');
+   if(fs.existsSync(appPath)){
+     const app=JSON.parse(fs.readFileSync(appPath,'utf8'));
+     const normalize=x=>String(x||'').toLowerCase().replace(/\b(?:elementary|middle|high|school|campus)\b/g,'')
+       .replace(/[^a-z0-9]+/g,' ').trim();
+     item.dashboardComparisons=(app.mobileDesktopResults||[]).map(w=>{
+       const byGrade=Object.fromEntries((w.assignedCandidateSchools||[]).map(x=>[x.grade,x.name]));
+       const sameGrades=Object.fromEntries(['elementary','middle','high'].map(g=>[g,normalize(byGrade[g])===normalize(item.verifiedGrades[g])&&!!item.verifiedGrades[g]]));
+       return {width:w.width,addressGeocoded:w.checkedRealEsri,appStatus:w.assignmentStatus,
+         currentZoneRendered:w.homePolygonCount>0,schoolClicked:w.clickedSchoolZonePolygons>0,
+         appSchools:byGrade,verifiedOfficial:!!item.officialFinderIndependentlyVerified,
+         match: sameGrades,allThreeMatch:Object.values(sameGrades).every(Boolean)};
+     });
+   }else item.dashboardComparisons=[];
+   item.allViewsMatchOfficial=!!item.officialFinderIndependentlyVerified&&
+     item.dashboardComparisons.length===2&&item.dashboardComparisons.every(w=>w.addressGeocoded&&
+       w.currentZoneRendered&&w.schoolClicked&&w.allThreeMatch);
+   item.status=item.allViewsMatchOfficial?'VERIFIED_PUBLIC_ADDRESS_UI_GIS_AND_FINDER_MATCH':
+     item.officialFinderIndependentlyVerified?'OFFICIAL_FINDER_OK_APP_MISMATCH':
+     item.addressCandidateSelected?'ADDRESS_SELECTED_NO_3_GRADE_RESULTS':'NO_DISTRICT_ADDRESS_CANDIDATE';
    await page.screenshot({path:path.join(OUT,'official-frisco-'+sample.id+'.png'),fullPage:true,timeout:30000}).catch(()=>{});
   }catch(e){item.status='OFFICIAL_FINDER_UI_ERROR';item.error=safe(e.message,450)}
   report.cases.push(item);
@@ -114,7 +136,7 @@ function isValidAddressCandidate(label,num,road){
  finally{await browser.close();fs.writeFileSync(path.join(OUT,'frisco-official-finder.json'),JSON.stringify(report,null,2)+'\n');
   console.log('FRISCO_OFFICIAL_FINDER_HUMAN_UI '+JSON.stringify({http:report.http,cases:report.cases.map(x=>({
    id:x.id,status:x.status,selected:x.addressCandidateSelected,address:x.selectedAddressLabel,grades:x.verifiedGrades,
-   summary:x.snapshot?.section.slice(0,220),attempts:x.queries.map(q=>({query:q.query,suggestions:q.visibleSuggestions?.map(s=>s.text),
+   summary:x.snapshot?.section.slice(0,500),allViewsMatchOfficial:x.allViewsMatchOfficial,comparison:x.dashboardComparisons,attempts:x.queries.map(q=>({query:q.query,suggestions:q.visibleSuggestions?.map(s=>s.text),
     after:q.afterSubmit?.excerpt?.slice(0,350)})),error:x.error
   })),errors:report.pageErrors,fatal:report.fatal}).slice(0,12500));
  }
