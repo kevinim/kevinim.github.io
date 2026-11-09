@@ -44,7 +44,14 @@ function expectedPublicHtml(source){
   '<script src="./school-zone-ui.js?v=1"></script>\r\n<script src="./features/conditional-school-release.js?v=1"></script>');
  // One separately reviewed Agent05 CSS link; no other HTML baseline differences are allowed.
  s=replaceOnce(s,'<link rel="stylesheet" href="./features/theme-toggle.css?v=1">',
-  '<link rel="stylesheet" href="./features/theme-toggle.css?v=1"><link rel="stylesheet" href="./features/map-control-contrast.css?v=1">');
+  '<link rel="stylesheet" href="./features/theme-toggle.css?v=1"><link rel="stylesheet" href="./features/map-control-contrast.css?v=1"><link rel="stylesheet" href="./features/track-b-reference-warning.css?v=1">');
+ // Exactly this publisher source, privacy sentence and same-origin script.
+ s=replaceOnce(s,'https://geocode.arcgis.com https://nominatim.openstreetmap.org',
+  'https://geocode.arcgis.com https://iisd1.maps.arcgis.com https://nominatim.openstreetmap.org');
+ s=replaceOnce(s,'주소 검색: © Esri. 외부 서비스의',
+  '주소 검색: © Esri. Irving 참고 GIS 버튼을 누르면 집 핀 좌표만 Irving ISD 연계 ArcGIS 서비스에 전송되며 이 사이트는 경계 결과를 저장하지 않습니다. 외부 서비스의');
+ s=replaceOnce(s,'<script src="./home-lookup-v2.js?v=15"></script>',
+  '<script src="./irving-official-spatial.js?v=1"></script><script src="./home-lookup-v2.js?v=15"></script>');
  return s;
 }
 function expectedPublicJs(source){
@@ -98,7 +105,9 @@ test('index changes limited to approved blank destination, hidden precomputed ma
  assert.ok(html.indexOf('./features/commute/workplace-marker.js')>scriptIndex);
 });
 test('strict script CSP preserved exactly and personal office artifacts absent',()=>{
- assert.equal(newCsp,oldCsp,'Privacy removal must not weaken CSP or expand external origins');
+ const allowed=oldCsp.replace('https://geocode.arcgis.com https://nominatim.openstreetmap.org',
+  'https://geocode.arcgis.com https://iisd1.maps.arcgis.com https://nominatim.openstreetmap.org');
+ assert.equal(newCsp,allowed,'Irving ArcGIS exact origin is the only allowed new CSP endpoint');
  for(const part of ["script-src-attr 'none'","object-src 'none'","base-uri 'self'","form-action 'self'"])
   assert.ok(newCsp.includes(part));
  assert.ok(newCsp.includes("script-src 'self' https://unpkg.com;"));
@@ -119,7 +128,7 @@ test('HTML has external executable scripts only and no inline handlers',()=>{
 test('all school, region and risk modules preserved exactly once',()=>{
  for(const name of ['features/west-dfw/attach.js','features/area-assessment.js',
  'features/resilience/winter-map.js','school-boundary-match.js','home-lookup-v2.js',
- 'features/dfw-school-coverage-panel.js']){
+ 'features/dfw-school-coverage-panel.js','irving-official-spatial.js']){
   assert.equal(html.split(name).length,2,name);
  }
 });
