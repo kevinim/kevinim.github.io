@@ -31,10 +31,9 @@ const brightness=raw=>{
      aria:document.querySelector('#dashboardThemeToggle')?.getAttribute('aria-pressed'),
      bg:getComputedStyle(document.body).backgroundColor
    }));
-   assert.equal(initial.theme,'light');
-   assert.equal(initial.aria,'false');
-   assert.ok(brightness(initial.bg)>180,'light body must stay bright');
-   await page.locator('#dashboardThemeToggle').click();
+   assert.equal(initial.theme,'dark','first visit must default to dark');
+   assert.equal(initial.aria,'true');
+   assert.ok(brightness(initial.bg)<40,'default dark body must be deep');
    const dark=await page.evaluate(()=>({
      theme:document.documentElement.dataset.theme,
      label:document.querySelector('#dashboardThemeToggle .theme-toggle-label')?.textContent,
@@ -45,7 +44,7 @@ const brightness=raw=>{
      mapFilter:getComputedStyle(document.querySelector('#map')).filter
    }));
    assert.equal(dark.theme,'dark');
-   assert.equal(dark.aria,'true');assert.equal(dark.saved,'dark');
+   assert.equal(dark.aria,'true');assert.equal(dark.saved,null,'default dark does not require writing storage');
    assert.equal(dark.label,'일반 모드');
    assert.ok(brightness(dark.bg)<90,'dark body not applied');
    assert.ok(brightness(dark.panelBg)<95,'dashboard cards still white');
@@ -126,14 +125,20 @@ const brightness=raw=>{
    await page.locator('#regionCompare > summary').click();
    assert.equal(await page.locator('#regionCompare').evaluate(el=>el.open),false);
    assert.equal(await page.locator('.region-compare-table-scroll').isVisible(),false);
-   await page.reload({waitUntil:'domcontentloaded',timeout:90000});
-   await page.locator('#dashboardThemeToggle').waitFor({state:'visible',timeout:30000});
-   assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),'dark','preference lost after reload');
-   assert.equal(await page.locator('#regionCompare').evaluate(el=>el.open),false,'comparison must default collapsed after reload');
    await page.locator('#dashboardThemeToggle').click();
    assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),'light');
    assert.equal(await page.evaluate(()=>localStorage.getItem('tx-dashboard-theme-v1')),'light');
    assert.equal(await page.locator('#dashboardThemeToggle').getAttribute('aria-pressed'),'false');
+   await page.reload({waitUntil:'domcontentloaded',timeout:90000});
+   await page.locator('#dashboardThemeToggle').waitFor({state:'visible',timeout:30000});
+   assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),'light','explicit user selection must persist');
+   assert.equal(await page.locator('#regionCompare').evaluate(el=>el.open),false,'comparison must default collapsed after reload');
+   await page.locator('#dashboardThemeToggle').click();
+   assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),'dark');
+   assert.equal(await page.evaluate(()=>localStorage.getItem('tx-dashboard-theme-v1')),'dark');
+   await page.evaluate(()=>localStorage.removeItem('tx-dashboard-theme-v1'));
+   await page.reload({waitUntil:'domcontentloaded',timeout:90000});
+   assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),'dark','cleared preference reverts to dark');
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
    assert.ok(overflow<=2,'horizontal viewport overflow '+overflow+' at '+width);
    assert.equal(errors.length,0,'JS errors: '+errors.join(' | '));
