@@ -1,0 +1,51 @@
+name: Agent 03 public address multi-ISD browser QA (NO-GO release)
+on:
+  push:
+    branches: [qa/multidistrict-public-address-browser-gate-20261109]
+  pull_request:
+    branches: [feature/address-selected-auto-school-map-20261109]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  no-go-source-policy:
+    name: Public source provenance and fail-closed policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # pinned v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # pinned v7
+        with:
+          node-version: '24'
+      - name: Node syntax and district evidence policy
+        run: |
+          node --check scripts/test-dfw-public-leasing-multidistrict-browser.cjs
+          node --check tests/dfw-public-leasing-address-e2e-policy.test.cjs
+          node --test tests/dfw-public-leasing-address-e2e-policy.test.cjs tests/home-assignment-map.test.cjs tests/dfw-home-automation-readiness.test.cjs
+  real-mobile-desktop-browser:
+    name: Real street-address to school map lifecycle, 3 ISDs x 2 addresses
+    runs-on: ubuntu-latest
+    timeout-minutes: 33
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # pinned v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # pinned v7
+        with:
+          node-version: '24'
+      - name: Install Chromium Playwright in ephemeral runner
+        run: |
+          npm install --no-save --ignore-scripts --no-fund --no-audit playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Real Esri autocomplete, address selection, school click, re-search and cancel
+        run: node scripts/test-dfw-public-leasing-multidistrict-browser.cjs
+      - name: Keep screenshots and machine-readable NO-GO matrix for reviewer
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # pinned v4
+        with:
+          name: agent03-multidistrict-public-base-address-no-go-evidence
+          path: artifacts/dfw-public-leasing-address-qa/
+          retention-days: 5
+          if-no-files-found: warn
