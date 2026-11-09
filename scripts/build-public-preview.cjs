@@ -127,40 +127,47 @@ function verifyExternalCspIntegrity(html){
  return {policy,inlineHashes:0};
 }
 function sanitizeExtractedAssets(sourceHtml,sourceJs){
- if(typeof sourceJs!=='string'||!sourceJs.startsWith("\r\n'use strict';")||
-    !sourceJs.includes('const DATA=[')||!sourceJs.includes("function savedCommuteFor("))
-  throw Error('External bootstrap source structure changed; explicit privacy review required');
  verifyExternalCspIntegrity(sourceHtml);
- const tag='<script src="./dashboard-main.js?v=3"></script>';
- // Preserve all already-approved regional, school, risk and safety UI assets.
- const neutral=sourceHtml;
- const meta=/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"\s*\/?>/i.exec(neutral);
- const policy=meta[1],hash=crypto.createHash('sha256')
-  .update(sourceJs.replace(/\r\n?/g,'\n'),'utf8').digest('base64');
- const hashToken="'sha256-"+hash+"'";
- const scriptToken="script-src 'self' https://unpkg.com";
- if(policy.split(scriptToken).length!==2)throw Error('Unexpected script-src source policy');
- const virtualMeta=meta[0].replace(policy,policy.replace(scriptToken,scriptToken+' '+hashToken));
- let virtual=replaceExact(neutral,meta[0],virtualMeta,'temporary locked CSP');
- virtual=replaceExact(virtual,tag,'<script>'+sourceJs+'</script>','temporary in-memory inline bootstrap');
- verifyCspIntegrity(virtual);
- const sanitized=sanitizeIndex(virtual);
- const extracted=[...sanitized.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
-  .filter(x=>!/\bsrc\s*=/.test(x[1])&&x[2].trim());
- if(extracted.length!==1)throw Error('Sanitized bootstrap count is not one');
- const publicJs=extracted[0][2];
- let publicHtml=replaceExact(sanitized,extracted[0][0],tag,'public separate JS asset');
- const newMeta=/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"\s*\/?>/i.exec(publicHtml);
- const tokens=[...newMeta[1].matchAll(/'sha256-[A-Za-z0-9+/]+=*'/g)].map(x=>x[0]);
- if(tokens.length!==1)throw Error('Expected exactly one temporary sanitized hash');
- publicHtml=replaceExact(publicHtml,' '+tokens[0],'','remove temporary inline CSP hash');
+ if(typeof sourceJs!=='string'||!sourceJs.startsWith("\r\n'use strict';")||
+  !sourceJs.includes('const DATA=[')||
+  !sourceJs.includes("fetch('./dfw-outside-public.json'"))
+  throw Error('Unexpected source bootstrap; privacy review required');
+ const privateTokens=/\bJPM\b|JPMorgan|JPM_ADDRESS|jpm-|8181\s+Communications|\bjpmMinutes\b/i;
+ if(privateTokens.test(sourceHtml)||privateTokens.test(sourceJs))
+  throw Error('Unsanitized personalized public source is forbidden');
+ if(!/<input id="destination" value=""/.test(sourceHtml)||
+  !sourceHtml.includes('<option value="custom" selected>')||
+  !sourceHtml.includes('id="oneHourOverlay" hidden disabled'))
+  throw Error('Public default destination or disabled personal overlay template changed');
+ // The source itself is now sanitized. The curated preview additionally
+ // replaces Nominatim with the existing approved Esri address helper.
+ const geocodeStart=sourceJs.indexOf("const q=new URLSearchParams({q:/");
+ const geocodeFinal="state.dest={ll:p,address:j[0].display_name};";
+ const geocodeEnd=sourceJs.indexOf(geocodeFinal,geocodeStart);
+ if(geocodeStart<0||geocodeEnd<geocodeStart||geocodeEnd-geocodeStart>1400)
+  throw Error('Public destination geocoder structure changed: explicit review required');
+ const publicJs=sourceJs.slice(0,geocodeStart)+
+  "const hits=await geocodeAddress(addr);if(!hits.length)throw Error('주소를 찾을 수 없습니다. 더 구체적인 텍사스 주소를 입력하세요');const candidate=hits[0];const p=[candidate.location.y,candidate.location.x];state.dest={ll:p,address:candidate.address||addr};"+
+  sourceJs.slice(geocodeEnd+geocodeFinal.length);
+ if(/nominatim\.openstreetmap\.org/i.test(publicJs)||privateTokens.test(publicJs))
+  throw Error('Unreviewed vendor or personalized identifier in curated bootstrap');
+ // Restrict public CSP to the actual bundled fetch origins, retain strict
+ // external-script-only execution (no inline hashes or unsafe-eval).
+ const meta=/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"\s*\/?>/i.exec(sourceHtml);
+ if(!meta)throw Error('Missing public CSP');
+ const newPolicy=meta[1].replace(/(\bconnect-src[^;]*)/,(directive)=>
+  directive.replace(/\shttps:\/\/nominatim\.openstreetmap\.org(?=\s|$)/,''));
+ if(newPolicy===meta[1])throw Error('Expected one Nominatim CSP scope to remove');
+ let publicHtml=replaceExact(sourceHtml,meta[0],meta[0].replace(meta[1],newPolicy),'curated API policy');
+ const notice='<aside role="note" style="max-width:1200px;margin:10px auto;padding:12px 16px;border:1px solid #aebbd0;border-radius:9px;font-size:13px;line-height:1.55">'
+  +'<b>주소 검색·데이터 안내</b> · 주소 자동완성과 검색은 Esri 등 외부 서비스로 검색어가 전달되며, 경로 계산 시 좌표가 공개 라우팅 서비스로 전달될 수 있습니다. '
+  +'지도 타일 제공업체도 접속 정보를 처리할 수 있습니다. 이 웹페이지는 입력한 주소를 자체 서버에 영구 저장하도록 구성하지 않았으나, 외부 제공업체의 로그·보존 기간까지 통제하지 않습니다. '
+  +'실제 학교 배정은 학군 공식 주소검색으로, 홍수·범죄·정전 위험은 공식 최신 자료로 확인하세요. '
+  +'<b>현재 화면은 검토용 공개 프리뷰로 운영 배포가 승인되지 않았습니다.</b></aside>';
+ publicHtml=replaceExact(publicHtml,'</header>','</header>'+notice,'privacy notice');
  verifyExternalCspIntegrity(publicHtml);
- for(const [label,content] of [['HTML',publicHtml],['JS',publicJs]]){
-  if(/\bJPM\b|JPMorgan|JPM_ADDRESS|jpm-|8181 Communications|\bjpmMinutes\b/i.test(content))
-   throw Error('Unredacted private office reference in sanitized public '+label);
-  if(/nominatim\.openstreetmap\.org/i.test(content))
-   throw Error('Unreviewed external geocoder remains in public '+label);
- }
+ if(privateTokens.test(publicHtml)||/nominatim\.openstreetmap\.org/i.test(publicHtml))
+  throw Error('Private identifiers or forbidden vendor remain in curated HTML');
  return {html:publicHtml,js:publicJs};
 }
 
@@ -172,7 +179,7 @@ function safeFiles(){
   // Legacy uploader has its own bootstrap and is NOT part of the curated public app.
   .filter(f=>!['features/reviewed-bootstrap.js','features/geojson-upload-guard.js','dashboard-main.js'].includes(f))
   .filter(f=>!/(?:^|\/)(?:.*-audit-20\d\d|official-resident-finder-audit)/i.test(f))
-  .filter(f=>f!=='index.html' && f!=='jpm-outside-dfw.json' && f!=='dfw-outside-public.json')
+  .filter(f=>f!=='index.html')
   .sort();
 }
 function build(outdir=OUTPUT){
@@ -188,20 +195,8 @@ function build(outdir=OUTPUT){
  const sanitized=sanitizeExtractedAssets(fs.readFileSync('index.html','utf8'),fs.readFileSync('dashboard-main.js','utf8'));
  fs.writeFileSync(path.join(out,'index.html'),sanitized.html);
  fs.writeFileSync(path.join(out,'dashboard-main.js'),sanitized.js);
- const outside=JSON.parse(fs.readFileSync('jpm-outside-dfw.json','utf8'));
- if(!Array.isArray(outside.data)||!outside.shapes?.features||!outside.race||!outside.minutes)
-   throw Error('Neighborhood dataset schema changed');
- const generic={
-  year:outside.year,data:outside.data.map(row=>{const {...data}=row;delete data.jpmMinutes;return data;}),
-  race:outside.race,minutes:{},shapes:outside.shapes
- };
- fs.writeFileSync(path.join(out,'dfw-outside-public.json'),JSON.stringify(generic));
- const compare=path.join(out,'candidate-compare.js');
- if(fs.existsSync(compare)){
-  let code=fs.readFileSync(compare,'utf8');
-  code=code.replaceAll('jpmMinutes','genericCommuteMinutes').replaceAll('JPM 도로망','사전 계산 통근');
-  fs.writeFileSync(compare,code);
- }
+ if(!fs.existsSync(path.join(out,'dfw-outside-public.json')))
+  throw Error('Neutral DFW demographic dataset must be copied explicitly');
  // This artifact is NOT approved for publishing. CI checks output but does not upload/deploy it.
  const previewFiles=fs.readdirSync(out);
  if(!previewFiles.includes('index.html')||!previewFiles.includes('dfw-outside-public.json'))

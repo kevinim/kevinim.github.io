@@ -60,6 +60,10 @@ const base=(process.env.DASHBOARD_BASE_URL||'http://127.0.0.1:8765/').replace(/\
    assert.match(out,/월 전체비용 미산정/);
    assert.match(out,/톨요금 미확인/);
    assert.match(avoid,/아직.*미연결|산정하지 않습니다/);
+   // A privacy-safe first visit has NO preset employer. Supply a generic test-only destination.
+   assert.equal(await page.locator('#destination').inputValue(),'');
+   await page.locator('#destination').fill('5000 Legacy Dr, Plano, TX');
+   await page.waitForFunction(()=>document.querySelector('#smartAvoidLink')?.getAttribute('href')?.includes('avoid=tolls')===true);
    assert.equal((await page.locator('#smartAvoidLink').getAttribute('href'))?.includes('avoid=tolls')||false,true);
    assert.ok(epaCalls.length>=5,'EPA vehicle chained calls failed');
    await page.locator('#smartLegacyAdvanced > summary').click();

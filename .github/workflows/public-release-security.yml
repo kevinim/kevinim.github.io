@@ -27,6 +27,10 @@ jobs:
           package-manager-cache: false
       - name: Test security gate rules
         run: node --test tests/public-release-gate.test.cjs tests/public-preview-build.test.cjs tests/family-entry.test.cjs tests/environment-plan.test.cjs
+      - name: Test recursive public privacy gate
+        run: node --test tests/check-public-personalization.test.cjs
+      - name: Check public source tree for personalized artifacts
+        run: node scripts/check-public-personalization.cjs .
       - name: Syntax check account-free backend entrypoints
         run: |
           node --check backend/api.mjs
@@ -42,6 +46,8 @@ jobs:
         run: node scripts/public-release-gate.cjs audit
       - name: Build and verify isolated public preview (no deploy)
         run: node scripts/verify-public-preview.cjs
+      - name: Block known personalized commute artifacts in public preview
+        run: node scripts/check-public-personalization.cjs dist/public-preview
       - name: Re-run source audit for final artifact metadata
         run: node scripts/public-release-gate.cjs audit
       - name: Upload redacted audit report

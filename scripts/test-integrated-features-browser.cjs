@@ -66,6 +66,8 @@ mkdirSync('artifacts/feature-integration',{recursive:true});
       body:JSON.stringify({code:'Ok',routes:[{duration:1200,distance:32186.88,
        geometry:{type:'LineString',coordinates:[[-96.785,33.129],[-96.820,33.100]]}}]})
     }));
+    assert.equal(await page.locator('#destination').inputValue(),'','No private preset may ship');
+    await page.locator('#destination').fill('5000 Legacy Dr, Plano, TX');
     await page.locator('#calcCommute').click();
     await page.waitForFunction(()=>document.querySelectorAll('.work-destination-pin .work-pin-body').length>=1,null,{timeout:25000});
     const workPin=await page.locator('.work-destination-pin .work-pin-body').first();

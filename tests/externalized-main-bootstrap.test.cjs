@@ -7,85 +7,104 @@ const path=require('node:path');
 const crypto=require('node:crypto');
 const root=path.resolve(__dirname,'..');
 const show=(sha,file)=>cp.execFileSync('git',['show',sha+':'+file],{cwd:root,encoding:'utf8'});
-// Pin the independently reviewed, already-externalized pre-commute baseline.
-// A moving synthetic PR merge parent would accidentally lose byte-for-byte
-// checks when unrelated features are merged into main.
-const baseline='d94374e74c87d9d58355bdb0755ec6ade88c2818';
-const old=show(baseline,'index.html');
-const oldJs=show(baseline,'dashboard-main.js');
+// Pin reviewed main BEFORE the intentional privacy removal. This guards
+// the entire unchanged school/map bootstrap instead of waiving integrity.
+const baseline='5a5b3a8fbe1b29ba71797525696d1f092821e6b7';
+const old=show(baseline,'index.html'),oldJs=show(baseline,'dashboard-main.js');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const js=fs.readFileSync(path.join(root,'dashboard-main.js'),'utf8');
 const external='<script src="./dashboard-main.js?v=3"></script>';
 const oldCsp=old.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
 const newCsp=html.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
-const officialEpaOrigins=' https://www.fueleconomy.gov https://fueleconomy.gov';
-const oldWithEpa=oldCsp?.replace('https://hazards.fema.gov;','https://hazards.fema.gov'+officialEpaOrigins+';');
-const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
-const oldStart=legacy.indexOf("<script>\r\n'use strict'"),oldEnd=legacy.indexOf('</script>',oldStart);
-const original=legacy.slice(oldStart+8,oldEnd);
-function hash(buf){return crypto.createHash('sha256').update(buf).digest('hex')}
-function exactReplacement(input,from,to){
- assert.equal(input.split(from).length,2,'expected exactly one existing anchor: '+from);
- return input.replace(from,to);
+const hash=buf=>crypto.createHash('sha256').update(buf).digest('hex');
+function replaceOnce(source,from,to){
+ assert.equal(source.split(from).length,2,'exactly one approved source anchor: '+from.slice(0,90));
+ return source.replace(from,to);
 }
-test('original externalized classic bootstrap remains byte-identical to approved main and inline source',()=>{
- assert.ok(oldStart>40000&&oldEnd>oldStart+70000);
- assert.equal(hash(js),hash(original));
- assert.equal(hash(js),hash(oldJs),'Commute feature must not modify legacy map/school bootstrap');
+function replacePatternOnce(source,re,to){
+ const matches=[...source.matchAll(new RegExp(re.source,re.flags.includes('g')?re.flags:re.flags+'g'))];
+ assert.equal(matches.length,1,'exactly one approved regex anchor: '+re);
+ return source.replace(re,to);
+}
+function expectedPublicHtml(source){
+ let s=replaceOnce(source,'<option value="jpm">JPMorgan Chase · Plano</option>','');
+ s=replaceOnce(s,'<option value="custom">다른 주소 직접 입력</option>',
+  '<option value="custom" selected>다른 주소 직접 입력</option>');
+ s=replacePatternOnce(s,/<input id="destination" value="[^"]*"/,
+  '<input id="destination" value=""');
+ s=replacePatternOnce(s,/<label class="check"><input type="checkbox" id="oneHourOverlay">[\s\S]*?<\/label><div class="source">[^<]*<\/div>/,
+  '<input type="checkbox" id="oneHourOverlay" hidden disabled aria-hidden="true"><div class="source">사전 계산된 특정 회사 기준 통근 지도는 제공되지 않습니다. 위 목적지에 주소를 직접 입력하여 경로를 확인하세요.</div>');
+ s=replaceOnce(s,'JPM 시간은 ZIP 대표점 기준이고 교통량은 반영하지 않습니다.',
+  '통근 시간은 사용자가 선택한 목적지와 ZIP 대표점을 기준으로 계산하며 실시간 교통량은 반영하지 않습니다.');
+ return s;
+}
+function expectedPublicJs(source){
+ let s=source;
+ const start=s.indexOf("fetch('./jpm-60min-isochrone-");
+ const end=s.indexOf("fetch('./data/dfw-mena-ancestry-",start);
+ assert.ok(start>5000&&end>start&&end-start<1800,'approved personal fetch section only');
+ s=s.slice(0,start)+s.slice(end);
+ s=replacePatternOnce(s,/const JPM_ADDRESS='[^']+';\r?\nconst OFFICES=\{jpm:JPM_ADDRESS,/,
+  'const OFFICES={');
+ s=replacePatternOnce(s,/function savedCommuteFor\(zip\)\{[^\r\n]*\}/,
+  'function savedCommuteFor(zip){return null}');
+ s=replaceOnce(s,"fetch('./jpm-outside-dfw.json'","fetch('./dfw-outside-public.json'");
+ s=replaceOnce(s,'Object.assign(d,outsideData.race[d.z]||{},{jpmMinutes:outsideData.minutes[d.z]??null});',
+  'Object.assign(d,outsideData.race[d.z]||{});');
+ s=replaceOnce(s,"['JPM 도로망 (교통 미반영)',Number.isFinite(d.jpmMinutes)?d.jpmMinutes+'분':'미확인'],",'');
+ s=replaceOnce(s,"state.withinHour?(Number.isFinite(d.jpmMinutes)?(d.jpmMinutes<=60?'#2878ba':'#eef2f5'):'#aab5c0')",
+  "state.withinHour?'#aab5c0'");
+ s=replaceOnce(s,"JPM 도로망: ${Number.isFinite(d.jpmMinutes)?d.jpmMinutes+'분':'미확인'}",
+  '통근 시간: 목적지 검색 후 확인');
+ s=s.replaceAll('JPM Plano 도착 · 도로망 추정','통근 지도 · 직접 경로 확인')
+  .replaceAll('JPM 도로망 자료 오류','사전 계산 통근 자료 오류')
+  .replaceAll('JPM 도착','직장 도착')
+  .replaceAll('JPM 시간','사전 계산 통근 시간');
+ return s;
+}
+test('pre-existing dashboard remains byte-exact except approved personal commute removals',()=>{
+ assert.equal(hash(js),hash(expectedPublicJs(oldJs)),
+  'Unexpected changes in existing map, school, routes or financial calculations');
+ const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
+ const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);
+ assert.ok(start>40000&&end>start+70000);
+ assert.equal(hash(oldJs),hash(legacy.slice(start+8,end)),
+  'Original external bootstrap must match pre-extraction source');
  assert.ok(js.startsWith("\r\n'use strict';"));
  assert.ok(js.includes('const DATA=['));
- assert.ok(!js.includes('window.WestDFWIntegration'),'No feature logic injected into legacy main');
+ assert.ok(!js.includes('window.WestDFWIntegration'));
 });
-test('strict script CSP unchanged; only two named EPA fetch origins added',()=>{
- assert.ok(oldCsp&&newCsp);
- assert.notEqual(oldWithEpa,oldCsp,'Approved baseline requires the existing FEMA fetch origin');
- assert.equal(newCsp,oldWithEpa,'Only EPA connect-src origins are permitted to change');
- for(const directive of ["script-src-attr 'none'","object-src 'none'","base-uri 'self'","form-action 'self'"])
-  assert.ok(newCsp.includes(directive));
- const script=newCsp.split(';').map(x=>x.trim()).find(x=>x.startsWith('script-src '));
- assert.equal(script,"script-src 'self' https://unpkg.com");
- assert.doesNotMatch(script,/unsafe-inline|unsafe-eval|sha256-/);
- assert.doesNotMatch(newCsp,/'sha256-/);
-});
-test('main HTML unchanged except explicitly approved commute and DFW coverage assets',()=>{
- const style='<link rel="stylesheet" href="./features/commute/sourced-cost.css?v=1">';
- const assetCore='<script src="./features/commute/sourced-cost-core.js?v=1"></script>';
- const assetUI='<script src="./features/commute/sourced-cost-ui.js?v=1"></script>';
- let expected=exactReplacement(old,oldCsp,oldWithEpa);
- expected=exactReplacement(expected,'<script src="./features/theme-toggle.js?v=2"></script>',
-    style+'<script src="./features/theme-toggle.js?v=2"></script>');
- expected=exactReplacement(expected,'<script src="./features/area-assessment-core.js?v=3"></script>',
-    assetCore+assetUI+'<script src="./features/area-assessment-core.js?v=3"></script>');
- // The following three exact DFW coverage tags are permitted; no changes to
- // extracted map logic, old script integrity, CSP or other markup are accepted.
- const leaflet='<link rel="stylesheet" href="./vendor/leaflet-1.9.4.css">';
- expected=exactReplacement(expected,leaflet,
-  leaflet+'\r\n<link rel="stylesheet" href="./features/dfw-school-coverage-panel.css?v=1">');
- const west='<details id="westDfwPanel" aria-label="DFW 서부 학군 및 지역 탐색">';
- expected=exactReplacement(expected,west,`<details id="dfwSchoolCoveragePanel" aria-label="DFW 전체 학군별 학교 배정 안내 연결 현황">
-<summary>DFW 전체 학군 연결 현황 · 미연결 사유와 우선순위 보기</summary>
-<div id="dfwSchoolCoverageContent" role="region" aria-label="DFW 학군 연결 현황" aria-live="polite">현황표를 불러올 준비가 되었습니다.</div>
-</details>
-`+west);
- expected=exactReplacement(expected,'</body></html>',
-  '<script src="./features/dfw-school-coverage-panel.js?v=1" defer></script></body></html>');
- const actualText=html.replace(/\r\n/g,'\n'),expectedText=expected.replace(/\r\n/g,'\n');
- assert.equal(actualText,expectedText,'Only reviewed EPA/commute and exact DFW school coverage additions may differ from approved baseline');
+test('index changes limited to approved blank destination, hidden precomputed map and neutral text',()=>{
+ assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expectedPublicHtml(old).replace(/\r\n/g,'\n')),
+  'Unexpected application HTML modification outside privacy removal');
  assert.equal(html.split(external).length,2);
  const scriptIndex=html.indexOf(external);
  assert.ok(html.indexOf('./plano-finder-live.js')<scriptIndex);
  assert.ok(html.indexOf('./features/commute/workplace-marker.js')>scriptIndex);
- assert.doesNotMatch(external,/\bdefer\b|\basync\b|type=/);
 });
-test('all application scripts external, no inline executable tags or event handlers in HTML',()=>{
+test('strict script CSP preserved exactly and personal office artifacts absent',()=>{
+ assert.equal(newCsp,oldCsp,'Privacy removal must not weaken CSP or expand external origins');
+ for(const part of ["script-src-attr 'none'","object-src 'none'","base-uri 'self'","form-action 'self'"])
+  assert.ok(newCsp.includes(part));
+ assert.ok(newCsp.includes("script-src 'self' https://unpkg.com;"));
+ assert.doesNotMatch(newCsp,/unsafe-eval|'sha256-/);
+ const all=html+'\n'+js;
+ assert.doesNotMatch(all,/\bJPM\b|JPMorgan|JPM_ADDRESS|jpm-|8181\s+Communications|\bjpmMinutes\b/i);
+ assert.match(html,/<input id="destination" value=""/);
+ assert.ok(html.includes('id="oneHourOverlay" hidden disabled'));
+ assert.ok(js.includes("fetch('./dfw-outside-public.json'"));
+ assert.ok(!js.includes('fetch(\'./jpm-'));
+});
+test('HTML has external executable scripts only and no inline handlers',()=>{
  const scripts=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
  assert.ok(scripts.length>20);
  assert.equal(scripts.filter(s=>!/\bsrc\s*=/.test(s[1])&&s[2].trim()).length,0);
  assert.doesNotMatch(html,/\s(?:onclick|onload|onerror|onchange|onsubmit)\s*=/i);
 });
-test('existing West DFW / area / schools / risk scripts remain loaded once',()=>{
- for(const asset of ['features/west-dfw/attach.js','features/area-assessment.js',
- 'features/resilience/winter-map.js','school-boundary-match.js','home-lookup-v2.js']){
-  assert.equal(html.split(asset).length,2,asset);
+test('all school, region and risk modules preserved exactly once',()=>{
+ for(const name of ['features/west-dfw/attach.js','features/area-assessment.js',
+ 'features/resilience/winter-map.js','school-boundary-match.js','home-lookup-v2.js',
+ 'features/dfw-school-coverage-panel.js']){
+  assert.equal(html.split(name).length,2,name);
  }
 });

@@ -61,7 +61,7 @@ test('sanitized public bootstrap is actually transformed and no private original
  assert.ok(safe.html.includes('./features/west-dfw/official-finder.js'));
 });
 test('tampering with sensitive template or injecting personal markers fails closed',()=>{
- assert.throws(()=>sanitizeExtractedAssets(original,originalJs.replace('const JPM_ADDRESS=','const UNKNOWN_JPM_ADDRESS=')),/template|personal|anchor|expected|structure/i);
+ assert.throws(()=>sanitizeExtractedAssets(original,originalJs.replace('const OFFICES=','const JPM_ADDRESS="private";const OFFICES=')),/private|personal|identifier/i);
  assert.throws(()=>sanitizeExtractedAssets(original,originalJs+'\\n// JPM_ADDRESS'),/private office reference|personal|identifier/i);
 });
 test('fail closed on unsafe or unexpected source policy',()=>{

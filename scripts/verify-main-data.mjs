@@ -92,7 +92,7 @@ test('home-search, candidate comparison and commute preserved', () => {
   for (const id of ['homeForm','homeAddress','homeCandidates','candidateCards','destination','calcCommute','officeSelect','schoolList','zoneDatasetStatus','districtZoneAudit','map']) {
     assert.ok(html.includes('id="' + id + '"'), id);
   }
-  for (const x of ['jpm-60min-isochrone-2026-11-04.geojson','county-scopes.json','dfw-zcta-boundaries.geojson','home-lookup-v2.js','candidate-compare.js']) {
+  for (const x of ['dfw-outside-public.json','county-scopes.json','dfw-zcta-boundaries.geojson','home-lookup-v2.js','candidate-compare.js']) {
     assert.ok(html.includes(x), x);
   }
 });
@@ -1190,7 +1190,7 @@ test('ZIP map data and Plano school identity preserved',()=>{
 });
 test('Middle Eastern / Arab ancestry (ACS B04006) covers every dashboard ZIP and stays separate from race',()=>{
  const mena=readJson('data/dfw-mena-ancestry-2024.json');
- const rows=[...readJson('dfw-demographics.json').data,...readJson('jpm-outside-dfw.json').data];
+ const rows=[...readJson('dfw-demographics.json').data,...readJson('dfw-outside-public.json').data];
  assert.ok(mena.source.includes('B04006'));
  assert.deepEqual(mena.missing,[]);
  assert.equal(Object.keys(mena.data).length,new Set(rows.map(d=>d.z)).size);
@@ -1309,7 +1309,7 @@ test('Crime trends per ZIP: city-level 3-year counts and direction, never ZIP-al
  const require=createRequire(import.meta.url);
  const {crimeTrend,crimeZipHtml}=require('../crime-city-map.js');
  const zc=readJson('data/dfw-crime-zip-cities-2023-2025.json');
- const rows=[...readJson('dfw-demographics.json').data,...readJson('jpm-outside-dfw.json').data];
+ const rows=[...readJson('dfw-demographics.json').data,...readJson('dfw-outside-public.json').data];
  assert.equal(Object.keys(zc.zips).length,new Set(rows.map(d=>d.z)).size,'every dashboard ZIP has an overlap entry');
  for(const [zip,z] of Object.entries(zc.zips)){
   const total=z.cities.reduce((a,c)=>a+c.share,0)+z.outsideCityShare;
