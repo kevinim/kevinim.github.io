@@ -1,0 +1,552 @@
+{
+  "source": "NOAA NCEI Storm Events, preaggregated from existing checked-in local county snapshot",
+  "sourceFile": "data/noaa-storm-events-dfw-2024-2025.json",
+  "sourceBlobSha": "bfda1ab067f3f15207586f706aff5f19c9e45dea",
+  "years": [
+    2024,
+    2025
+  ],
+  "unit": "county-reported events; not risk probability",
+  "summary": [
+    {
+      "county": "COLLIN",
+      "year": 2024,
+      "category": "flood",
+      "count": 7
+    },
+    {
+      "county": "COLLIN",
+      "year": 2024,
+      "category": "hail",
+      "count": 34
+    },
+    {
+      "county": "COLLIN",
+      "year": 2024,
+      "category": "lightning",
+      "count": 1
+    },
+    {
+      "county": "COLLIN",
+      "year": 2024,
+      "category": "tornado",
+      "count": 3
+    },
+    {
+      "county": "COLLIN",
+      "year": 2024,
+      "category": "wind",
+      "count": 12
+    },
+    {
+      "county": "COLLIN",
+      "year": 2025,
+      "category": "flood",
+      "count": 9
+    },
+    {
+      "county": "COLLIN",
+      "year": 2025,
+      "category": "hail",
+      "count": 33
+    },
+    {
+      "county": "COLLIN",
+      "year": 2025,
+      "category": "lightning",
+      "count": 4
+    },
+    {
+      "county": "COLLIN",
+      "year": 2025,
+      "category": "tornado",
+      "count": 1
+    },
+    {
+      "county": "COLLIN",
+      "year": 2025,
+      "category": "wind",
+      "count": 30
+    },
+    {
+      "county": "DALLAS",
+      "year": 2024,
+      "category": "flood",
+      "count": 23
+    },
+    {
+      "county": "DALLAS",
+      "year": 2024,
+      "category": "hail",
+      "count": 28
+    },
+    {
+      "county": "DALLAS",
+      "year": 2024,
+      "category": "wind",
+      "count": 18
+    },
+    {
+      "county": "DALLAS",
+      "year": 2025,
+      "category": "flood",
+      "count": 44
+    },
+    {
+      "county": "DALLAS",
+      "year": 2025,
+      "category": "hail",
+      "count": 16
+    },
+    {
+      "county": "DALLAS",
+      "year": 2025,
+      "category": "lightning",
+      "count": 7
+    },
+    {
+      "county": "DALLAS",
+      "year": 2025,
+      "category": "tornado",
+      "count": 1
+    },
+    {
+      "county": "DALLAS",
+      "year": 2025,
+      "category": "wind",
+      "count": 16
+    },
+    {
+      "county": "DENTON",
+      "year": 2024,
+      "category": "flood",
+      "count": 6
+    },
+    {
+      "county": "DENTON",
+      "year": 2024,
+      "category": "hail",
+      "count": 85
+    },
+    {
+      "county": "DENTON",
+      "year": 2024,
+      "category": "lightning",
+      "count": 2
+    },
+    {
+      "county": "DENTON",
+      "year": 2024,
+      "category": "tornado",
+      "count": 2
+    },
+    {
+      "county": "DENTON",
+      "year": 2024,
+      "category": "wind",
+      "count": 17
+    },
+    {
+      "county": "DENTON",
+      "year": 2025,
+      "category": "flood",
+      "count": 9
+    },
+    {
+      "county": "DENTON",
+      "year": 2025,
+      "category": "hail",
+      "count": 24
+    },
+    {
+      "county": "DENTON",
+      "year": 2025,
+      "category": "lightning",
+      "count": 5
+    },
+    {
+      "county": "DENTON",
+      "year": 2025,
+      "category": "tornado",
+      "count": 2
+    },
+    {
+      "county": "DENTON",
+      "year": 2025,
+      "category": "wind",
+      "count": 42
+    },
+    {
+      "county": "ELLIS",
+      "year": 2024,
+      "category": "flood",
+      "count": 5
+    },
+    {
+      "county": "ELLIS",
+      "year": 2024,
+      "category": "hail",
+      "count": 22
+    },
+    {
+      "county": "ELLIS",
+      "year": 2024,
+      "category": "tornado",
+      "count": 1
+    },
+    {
+      "county": "ELLIS",
+      "year": 2024,
+      "category": "wind",
+      "count": 2
+    },
+    {
+      "county": "ELLIS",
+      "year": 2025,
+      "category": "flood",
+      "count": 13
+    },
+    {
+      "county": "ELLIS",
+      "year": 2025,
+      "category": "hail",
+      "count": 14
+    },
+    {
+      "county": "ELLIS",
+      "year": 2025,
+      "category": "wind",
+      "count": 5
+    },
+    {
+      "county": "GRAYSON",
+      "year": 2024,
+      "category": "flood",
+      "count": 13
+    },
+    {
+      "county": "GRAYSON",
+      "year": 2024,
+      "category": "hail",
+      "count": 35
+    },
+    {
+      "county": "GRAYSON",
+      "year": 2024,
+      "category": "lightning",
+      "count": 1
+    },
+    {
+      "county": "GRAYSON",
+      "year": 2024,
+      "category": "wind",
+      "count": 10
+    },
+    {
+      "county": "GRAYSON",
+      "year": 2025,
+      "category": "flood",
+      "count": 2
+    },
+    {
+      "county": "GRAYSON",
+      "year": 2025,
+      "category": "hail",
+      "count": 36
+    },
+    {
+      "county": "GRAYSON",
+      "year": 2025,
+      "category": "lightning",
+      "count": 1
+    },
+    {
+      "county": "GRAYSON",
+      "year": 2025,
+      "category": "tornado",
+      "count": 1
+    },
+    {
+      "county": "GRAYSON",
+      "year": 2025,
+      "category": "wind",
+      "count": 18
+    },
+    {
+      "county": "HUNT",
+      "year": 2024,
+      "category": "flood",
+      "count": 1
+    },
+    {
+      "county": "HUNT",
+      "year": 2024,
+      "category": "hail",
+      "count": 10
+    },
+    {
+      "county": "HUNT",
+      "year": 2024,
+      "category": "tornado",
+      "count": 1
+    },
+    {
+      "county": "HUNT",
+      "year": 2024,
+      "category": "wind",
+      "count": 2
+    },
+    {
+      "county": "HUNT",
+      "year": 2025,
+      "category": "flood",
+      "count": 3
+    },
+    {
+      "county": "HUNT",
+      "year": 2025,
+      "category": "hail",
+      "count": 2
+    },
+    {
+      "county": "HUNT",
+      "year": 2025,
+      "category": "wind",
+      "count": 1
+    },
+    {
+      "county": "JOHNSON",
+      "year": 2024,
+      "category": "flood",
+      "count": 4
+    },
+    {
+      "county": "JOHNSON",
+      "year": 2024,
+      "category": "hail",
+      "count": 5
+    },
+    {
+      "county": "JOHNSON",
+      "year": 2024,
+      "category": "lightning",
+      "count": 1
+    },
+    {
+      "county": "JOHNSON",
+      "year": 2024,
+      "category": "wind",
+      "count": 4
+    },
+    {
+      "county": "JOHNSON",
+      "year": 2025,
+      "category": "flood",
+      "count": 5
+    },
+    {
+      "county": "JOHNSON",
+      "year": 2025,
+      "category": "hail",
+      "count": 22
+    },
+    {
+      "county": "JOHNSON",
+      "year": 2025,
+      "category": "wind",
+      "count": 5
+    },
+    {
+      "county": "KAUFMAN",
+      "year": 2024,
+      "category": "flood",
+      "count": 11
+    },
+    {
+      "county": "KAUFMAN",
+      "year": 2024,
+      "category": "hail",
+      "count": 7
+    },
+    {
+      "county": "KAUFMAN",
+      "year": 2024,
+      "category": "wind",
+      "count": 14
+    },
+    {
+      "county": "KAUFMAN",
+      "year": 2025,
+      "category": "flood",
+      "count": 2
+    },
+    {
+      "county": "KAUFMAN",
+      "year": 2025,
+      "category": "hail",
+      "count": 6
+    },
+    {
+      "county": "KAUFMAN",
+      "year": 2025,
+      "category": "wind",
+      "count": 3
+    },
+    {
+      "county": "PARKER",
+      "year": 2024,
+      "category": "flood",
+      "count": 2
+    },
+    {
+      "county": "PARKER",
+      "year": 2024,
+      "category": "hail",
+      "count": 8
+    },
+    {
+      "county": "PARKER",
+      "year": 2024,
+      "category": "wind",
+      "count": 1
+    },
+    {
+      "county": "PARKER",
+      "year": 2025,
+      "category": "flood",
+      "count": 3
+    },
+    {
+      "county": "PARKER",
+      "year": 2025,
+      "category": "hail",
+      "count": 35
+    },
+    {
+      "county": "PARKER",
+      "year": 2025,
+      "category": "lightning",
+      "count": 1
+    },
+    {
+      "county": "PARKER",
+      "year": 2025,
+      "category": "tornado",
+      "count": 5
+    },
+    {
+      "county": "PARKER",
+      "year": 2025,
+      "category": "wind",
+      "count": 13
+    },
+    {
+      "county": "ROCKWALL",
+      "year": 2024,
+      "category": "wind",
+      "count": 2
+    },
+    {
+      "county": "ROCKWALL",
+      "year": 2025,
+      "category": "flood",
+      "count": 4
+    },
+    {
+      "county": "ROCKWALL",
+      "year": 2025,
+      "category": "wind",
+      "count": 1
+    },
+    {
+      "county": "TARRANT",
+      "year": 2024,
+      "category": "flood",
+      "count": 13
+    },
+    {
+      "county": "TARRANT",
+      "year": 2024,
+      "category": "hail",
+      "count": 106
+    },
+    {
+      "county": "TARRANT",
+      "year": 2024,
+      "category": "lightning",
+      "count": 2
+    },
+    {
+      "county": "TARRANT",
+      "year": 2024,
+      "category": "wind",
+      "count": 12
+    },
+    {
+      "county": "TARRANT",
+      "year": 2025,
+      "category": "flood",
+      "count": 20
+    },
+    {
+      "county": "TARRANT",
+      "year": 2025,
+      "category": "hail",
+      "count": 66
+    },
+    {
+      "county": "TARRANT",
+      "year": 2025,
+      "category": "lightning",
+      "count": 7
+    },
+    {
+      "county": "TARRANT",
+      "year": 2025,
+      "category": "wind",
+      "count": 40
+    },
+    {
+      "county": "WISE",
+      "year": 2024,
+      "category": "flood",
+      "count": 6
+    },
+    {
+      "county": "WISE",
+      "year": 2024,
+      "category": "hail",
+      "count": 23
+    },
+    {
+      "county": "WISE",
+      "year": 2024,
+      "category": "lightning",
+      "count": 1
+    },
+    {
+      "county": "WISE",
+      "year": 2025,
+      "category": "flood",
+      "count": 5
+    },
+    {
+      "county": "WISE",
+      "year": 2025,
+      "category": "hail",
+      "count": 11
+    },
+    {
+      "county": "WISE",
+      "year": 2025,
+      "category": "tornado",
+      "count": 2
+    },
+    {
+      "county": "WISE",
+      "year": 2025,
+      "category": "wind",
+      "count": 11
+    }
+  ]
+}
