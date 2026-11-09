@@ -27,6 +27,7 @@ jobs:
       - name: Syntax validation
         run: |
           node --check scripts/build-cfb-finder-derived-cells.cjs
+          node --check scripts/validate-cfb-finder-derived-boundaries.cjs
           node --check tests/cfb-finder-derived-cells.test.cjs
       - name: Synthetic geospatial QA and independent publisher NO-GO gate
         run: |
