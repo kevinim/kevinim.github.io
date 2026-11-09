@@ -1,0 +1,65 @@
+name: Prosper real 2026-27 public home → school Finder match (no deploy)
+on:
+  push:
+    branches: [qa/public-residential-e2e-school-map-20261109]
+  pull_request:
+    branches: [feature/address-selected-auto-school-map-20261109]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-public-address:
+    name: Live Esri and 2026-27 campus polygons versus official Infofinder
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # pinned v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # pinned v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Validate individual and aggregate QA scripts
+        run: node --check scripts/verify-public-residence-home-school-browser.cjs && node --check scripts/summarize-prosper-public-residence-qa.cjs
+      - name: Install Chromium isolated from project
+        run: |
+          mkdir -p prosper-public-browser-tmp
+          cd prosper-public-browser-tmp
+          npm init -y >/dev/null
+          npm install --ignore-scripts --no-audit --no-fund playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Real Prosper rental in 75078
+        continue-on-error: true
+        env:
+          NODE_PATH: ${{ github.workspace }}/prosper-public-browser-tmp/node_modules
+          PUBLIC_RESIDENTIAL_CASE: prosperGaulding
+        run: node scripts/verify-public-residence-home-school-browser.cjs
+      - name: Real Prosper-ISD rental in McKinney 75071 (Gilmer)
+        continue-on-error: true
+        env:
+          NODE_PATH: ${{ github.workspace }}/prosper-public-browser-tmp/node_modules
+          PUBLIC_RESIDENTIAL_CASE: prosperGilmer
+        run: node scripts/verify-public-residence-home-school-browser.cjs
+      - name: Second real Prosper-ISD rental in McKinney 75071 (Prairie Dog)
+        continue-on-error: true
+        env:
+          NODE_PATH: ${{ github.workspace }}/prosper-public-browser-tmp/node_modules
+          PUBLIC_RESIDENTIAL_CASE: prosperPrairie
+        run: node scripts/verify-public-residence-home-school-browser.cjs
+      - name: New Prosper-ISD rental in Frisco 75033
+        continue-on-error: true
+        env:
+          NODE_PATH: ${{ github.workspace }}/prosper-public-browser-tmp/node_modules
+          PUBLIC_RESIDENTIAL_CASE: prosperLathrop
+        run: node scripts/verify-public-residence-home-school-browser.cjs
+      - name: Require 3+ actual public home E2E matches in 2+ ZIPs
+        run: node scripts/summarize-prosper-public-residence-qa.cjs
+      - name: Preserve all outcome evidence, including failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # pinned v4
+        with:
+          name: prosper-live-public-homes-finder-vs-gis
+          path: artifacts/public-residential-e2e/
+          if-no-files-found: warn
+          retention-days: 7
