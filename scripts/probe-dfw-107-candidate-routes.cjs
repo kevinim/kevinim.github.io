@@ -8,10 +8,22 @@ const ROOT=path.resolve(__dirname,'..');
 const read=p=>JSON.parse(fs.readFileSync(path.join(ROOT,p),'utf8'));
 const MANIFEST='data/dfw-107-parent-route-qa-candidate-2026.json';
 const {official}=require('../trusted-link-policy.js');
+const reviewedHostManifest=read('data/dfw-pr173-reviewed-hostnames-2026.json');
+const REVIEWED_HOSTS=new Set(reviewedHostManifest.hostnames);
 function safeCandidateUrl(value){
- // Only the same exact HTTPS hosts already trusted by the public dashboard.
- // Prevent a malicious candidate manifest from triggering requests to arbitrary hosts.
- return typeof value==='string'&&official(value)===value;
+ // A standalone main-based QA branch lacks the 78 unmerged PR #173 hosts.
+ // Independently pin the exact 107-host allowlist from that PR's reviewed trust policy.
+ // Never accept arbitrary manifest domains, credentials, ports, control chars or redirects.
+ if(typeof value!=='string'||value.length>2048||
+    !value.startsWith('https://')||/[\\u0000-\\u0020\\u007f\\\\]/.test(value))
+  return false;
+ const authority=value.slice(8).split(/[/?#]/)[0];
+ if(authority.includes(':')||authority.includes('@'))return false;
+ try{
+  const u=new URL(value);
+  return u.protocol==='https:'&&!u.username&&!u.password&&!u.port&&
+   REVIEWED_HOSTS.has(u.hostname) && (official(value)===value||REVIEWED_HOSTS.has(u.hostname));
+ }catch{return false}
 }
 
 function validate(manifest,main){
@@ -21,6 +33,10 @@ function validate(manifest,main){
   /^([a-f0-9]{40})$/.test(manifest?.sourceHeadSha||''),'UNPINNED_QA_SOURCE');
  check(manifest?.noAddressQueries===true&&manifest?.noRedirectFollow===true,
   'UNSAFE_QUERY_OR_REDIRECT_POLICY');
+ check(reviewedHostManifest.schemaVersion===1&&reviewedHostManifest.sourcePr===173&&
+  reviewedHostManifest.sourceHeadSha===manifest?.sourceHeadSha&&
+  reviewedHostManifest.hostCount===107&&REVIEWED_HOSTS.size===107,
+  'UNPINNED_OR_INCOMPLETE_EXACT_HOST_ALLOWLIST');
  const candidates=Array.isArray(manifest?.districts)?manifest.districts:[];
  const unknown=Array.isArray(manifest?.unregistered)?manifest.unregistered:[];
  check(candidates.length===107&&manifest?.registeredRoutes===107,
