@@ -48,10 +48,7 @@ jobs:
         run: node --test tests/dfw-district-integrity.test.cjs tests/dfw-finder-http.test.cjs
       - name: Emit district-by-district and campus-by-campus offline audit
         run: node scripts/audit-dfw-district-integrity.cjs
-      - name: Record official links without making a network claim
-        run: node scripts/probe-dfw-official-links.cjs
-      - name: Optional HTTP-only live link probe
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.live_http_probe }}
+      - name: Probe official links via actual HTTP (read-only, NO assignment certification)
         run: node scripts/probe-dfw-official-links.cjs --live
       - name: Retain auditable JSON evidence (no private home addresses)
         if: always()
