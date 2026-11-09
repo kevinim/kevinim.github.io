@@ -29,3 +29,13 @@ Independent integration of open PRs [#148](https://github.com/kevinim/kevinim.gi
 2. Perform read-only audit of #141 with the combined school UX and source protections; do not edit #141.
 3. Add a source-acquisition response processing checklist, with statuses \`not-received\`, \`received\`, \`current-year-verified\`, \`redistribution-approved\` and \`school-assignment-holdouts-verified\`; never equate file availability with current-year truth.
 4. Wait for CFB official records reply before importing current GIS; costs require explicit prior approval.
+
+## Full-DFW denominator added (read-only)
+The reference TEA-based DFW source covers **108 public ISDs** among 152 TEA codes in the 11-county source; current main has 29 registered official parent-lookup links, 79 missing. PR #141 adds eight links (37 registered / 71 missing) in a separate branch. **Neither state is proof of per-school attendance polygons, current-year assignment, or residential E2E verification.**
+
+\`scripts/audit-dfw-school-qa-readiness.cjs\` dynamically checks the complete \`data/dfw-school-coverage-matrix-2026.json\` denominator and rejects invalid source counts, missing-reason gaps, missing campus-year provenance, and unsupported claims of 100% accuracy. It outputs \`artifacts/dfw-school-qa/coverage-gate.json\`, with \`NO_GO_FULL_DFW_CERTIFICATION\` until independently demonstrated. Unlike the narrow seven-district #148 release evidence gate, this **does not silently treat the 7 focus districts as all of DFW**. A test demonstrates that adding eight official links must not increase polygon or address-validation counts.
+
+Read-only review of the PR #141 branch confirmed its CFB district registry still uses \`zoneKey:null\` and \`address:null\` with the exact official CFB Finder; no CFB polygon source was silently registered. The current tested CI run is on the integration head without PR #141's other data changes. Do not report browser end-to-end compatibility with an unmerged PR that has not been included in the test checkout.
+
+## Conditional email monitoring
+A separate, daily condition-watch automation checks the Gmail thread for the CFB Texas Public Information Act records request and notifies only when an actual new material reply arrives. It does **not** send follow-ups, approve charges, ingest private data or auto-deploy maps. The run is scheduled for 30 daily checks; a response may still require personal review.
