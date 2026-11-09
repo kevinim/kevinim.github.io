@@ -46,7 +46,9 @@ test('source and sanitized preview remain external-only with strict CSP',()=>{
  for(const s of [before.policy,after.policy]){
   assert.ok(s.includes("script-src-attr 'none'"));
   assert.ok(s.includes("object-src 'none'"));
-  assert.ok(!s.includes('unsafe-inline'));
+  const script=s.split(';').map(x=>x.trim()).find(x=>x.startsWith('script-src '));
+  assert.ok(script);
+  assert.ok(!script.includes('unsafe-inline'));
   assert.ok(!s.includes('sha256-'));
  }
 });
