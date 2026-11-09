@@ -16,6 +16,42 @@ const report={schemaVersion:1,asOf:'2026-11-09',scope:'public apartment-complex 
  independentAssignedSchoolMatches:0,releaseGate:'NO_GO',checks:[]};
 function save(){fs.writeFileSync(path.join(OUT,'official-address-ui-attempts.json'),JSON.stringify(report,null,2)+'\n');}
 async function safeScreen(page,id){try{await page.screenshot({path:path.join(OUT,'official-address-'+id+'.png'),timeout:16000});return true;}catch{return false;}}
+async function inspectOfficialMap(page){
+ return page.evaluate(async()=>new Promise(resolve=>{
+  let finished=false;
+  const done=value=>{if(finished)return;finished=true;clearTimeout(timer);resolve(value)};
+  const timer=setTimeout(()=>done({status:'AMD_MAP_TIMEOUT'}),5500);
+  if(typeof window.require!=='function')return done({status:'AMD_REQUIRE_UNAVAILABLE'});
+  try{
+   window.require(['jimu/MapManager','esri/geometry/webMercatorUtils'],(Manager,utils)=>{
+    try{
+     const manager=Manager.getInstance();
+     const map=manager?.map||manager?.mapManager?.map;
+     if(!map)return done({status:'MAP_MANAGER_EMPTY',keys:Object.keys(manager||{}).slice(0,20)});
+     const c=map.extent?.getCenter(),v=c?(c.spatialReference?.wkid===4326?c:utils.webMercatorToGeographic(c)):null;
+     const rect=(map.container||map.root||document.getElementById(map.id))?.getBoundingClientRect();
+     done({status:'MAP_AVAILABLE',center:c?{x:c.x,y:c.y,wkid:c.spatialReference?.wkid}:null,
+      geoCenter:v?{lng:v.x,lat:v.y}:null,
+      mapRect:rect?{x:rect.x,y:rect.y,width:rect.width,height:rect.height}:null,
+      zoom:map.getZoom?.(),id:map.id});
+    }catch(e){done({status:'MAP_READ_ERROR',message:String(e).slice(0,140)})}
+   },err=>done({status:'AMD_LOAD_ERROR',message:String(err).slice(0,140)}));
+  }catch(e){done({status:'AMD_THROW',message:String(e).slice(0,140)})}
+ }));
+}
+async function inspectPlanoWelcome(page){
+ return page.evaluate(()=>{
+  const matches=[...document.querySelectorAll('*')].filter(e=>e.textContent?.trim()==='OK' &&
+   e.children.length===0 && e.getBoundingClientRect().width>0).slice(0,10);
+  const hit=document.elementFromPoint(978,645);
+  return {okNodes:matches.map(e=>({tag:e.tagName,html:e.outerHTML.slice(0,500),
+   parent:e.parentElement?.outerHTML.slice(0,900),bounds:((r)=>({x:r.x,y:r.y,w:r.width,h:r.height}))(e.getBoundingClientRect())})),
+   hit:hit?.outerHTML.slice(0,700)||null,
+   welcomeVisible:[...document.querySelectorAll('*')].some(e=>e.children.length===0 &&
+    e.textContent?.includes('Welcome to the Find My School Map')&&e.getBoundingClientRect().width>0)};
+ });
+}
+
 async function check(browser,district,entry){
  const out={id:entry.id,district,complex:entry.complexName,source:TARGETS[district],
   officialAddressSelected:false,officialGradeAssignmentsVerified:false,
@@ -31,6 +67,7 @@ async function check(browser,district,entry){
    if(await welcome.count())try{await welcome.click({force:true,timeout:4500});out.dismissedWelcome=true;}catch{}
    if(!out.dismissedWelcome)try{await page.mouse.click(978,642);out.dismissedWelcome=true;}catch{}
   }
+  if(district==='PISD')out.welcomeDiagnostic=await inspectPlanoWelcome(page);
   const search=page.locator('input[placeholder="Find address or place"]').first();
   await search.waitFor({state:'visible',timeout:25000});
   out.officialInputDetected=true;
@@ -50,11 +87,13 @@ async function check(browser,district,entry){
    const c=candidates.nth(i);
    if(await c.isVisible())out.suggestions.push((await c.innerText()).trim().slice(0,160));
   }
+  out.mapBeforeChoice=await inspectOfficialMap(page);
   if(out.suggestions.length){
    try{
     await candidates.first().click({timeout:5000});
     await page.waitForTimeout(1900);
     out.officialAddressSelected=true;
+    out.mapAfterChoice=await inspectOfficialMap(page);
     if(['043907','LISD'].includes(district)){
      // District explicitly instructs the resident to click near their address
      // after selecting geocoder suggestion to identify campus zones.
@@ -85,6 +124,7 @@ async function check(browser,district,entry){
   console.log('OFFICIAL_ADDRESS_UI_ATTEMPT '+JSON.stringify({
    id:out.id,district,status:out.status,input:out.officialInputDetected||false,
    exactSuggestion:out.officialAddressSelected,unverified:true,issue:out.issue||out.suggestionIssue||null}));
+  console.log('OFFICIAL_ADDRESS_UI_DIAGNOSTIC '+JSON.stringify({id:out.id,mapBefore:out.mapBeforeChoice,mapAfter:out.mapAfterChoice,welcome:out.welcomeDiagnostic}));
   await context.close().catch(()=>{});
  }
 }
