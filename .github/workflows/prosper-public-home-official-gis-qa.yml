@@ -25,9 +25,21 @@ jobs:
         run: |
           node --check scripts/prosper-public-home-crosscheck-core.cjs
           node --check scripts/run-prosper-listed-home-live-source-crosscheck.cjs
+          node --check scripts/test-prosper-public-house-dashboard-browser.cjs
           node --test tests/prosper-public-home-crosscheck-core.test.cjs
       - name: Five real publicly listed homes, live geocoder and district official point locator
         run: node scripts/run-prosper-listed-home-live-source-crosscheck.cjs
+      - name: Install open-source Chromium for real local dashboard E2E
+        run: |
+          mkdir -p prosper-public-browser-tmp
+          cd prosper-public-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Real property geocoding to 3 school map polygons on mobile and desktop
+        env:
+          NODE_PATH: ${{ github.workspace }}/prosper-public-browser-tmp/node_modules
+        run: node scripts/test-prosper-public-house-dashboard-browser.cjs
       - name: Upload source corroboration with NO enrollment assertion
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
