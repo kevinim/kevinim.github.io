@@ -20,6 +20,9 @@ on:
       - 'school-boundary-match.js'
       - 'data/phase2a-fema-nri-dfw-2025.geojson'
       - '.github/workflows/phase2a-browser-qa.yml'
+permissions:
+  contents: read
+
 jobs:
   browser-smoke:
     runs-on: ubuntu-latest
@@ -27,8 +30,8 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
       - name: Isolated Playwright browser
@@ -65,7 +68,7 @@ jobs:
         run: node scripts/test-untrusted-data-browser.cjs
       - name: Attach phase2a browser screenshot
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: phase2a-local-browser-qa
           path: artifacts/phase2a-browser/
