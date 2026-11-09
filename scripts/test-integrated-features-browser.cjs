@@ -20,6 +20,12 @@ mkdirSync('artifacts/feature-integration',{recursive:true});
    await page.evaluate(()=>window.noteCommuteRouteDistance(32186.88,'zip'));
    assert.equal(await page.locator('#tollOutMiles').inputValue(),'20');
    assert.equal(await page.locator('#tollBackMiles').inputValue(),'20');
+   // Sourced commute moved legacy manual calculator into a collapsed advanced drawer.
+   // Open it before manipulating hidden controls; preserve all original assertions.
+   if(await page.locator('#smartLegacyAdvanced').count()){
+    await page.locator('#smartLegacyAdvanced > summary').click();
+    assert.equal(await page.locator('#tollOut').isVisible(),true);
+   }
    await page.locator('#tollDays').fill('20');
    await page.locator('#tollOutMiles').fill('20');
    await page.locator('#tollBackMiles').fill('25');
