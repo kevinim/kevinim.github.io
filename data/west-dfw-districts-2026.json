@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-11-08",
+  "schoolYear": "2026-27",
+  "intent": "West DFW location and official district Finder navigation; not a school assignment GIS dataset.",
+  "westCityCaution": "Westlake and Southlake have overlapping ISD boundaries. City/ZIP is not an assigned school, eligibility or attendance zone.",
+  "districts": [
+    {
+      "code": "220919",
+      "name": "Carroll ISD",
+      "ko": "캐럴",
+      "cities": [
+        "Southlake",
+        "Westlake (part)"
+      ],
+      "sourceYear": "2026-27 enrollment page",
+      "officialUrl": "https://www.southlakecarroll.edu/district-information/district-departments/student-services/online-enrollment-portal",
+      "boundaryStatus": "external-official-finder-only",
+      "localSchoolPolygonCount": 0,
+      "notes": "Residence in Southlake/Westlake does not automatically mean Carroll ISD zoning; transfer/open enrollment is distinct from zoned admission."
+    },
+    {
+      "code": "220907",
+      "name": "Keller ISD",
+      "ko": "켈러",
+      "cities": [
+        "Keller",
+        "Westlake (part)",
+        "Southlake (part)"
+      ],
+      "sourceYear": "not verified",
+      "officialUrl": "https://www.kellerisd.net/about-kisd/maps",
+      "boundaryStatus": "external-official-finder-only",
+      "localSchoolPolygonCount": 0,
+      "notes": "Official K-4 and secondary zone maps and address lookup available; live address check required.",
+      "dataNote": "Keller 시 GIS의 경계 원본은 2018–19학년도 자료입니다. 현행 2026–27 학교 배정에는 사용하지 않습니다."
+    },
+    {
+      "code": "061911",
+      "name": "Northwest ISD",
+      "ko": "노스웨스트",
+      "cities": [
+        "Westlake (part)",
+        "Roanoke",
+        "Trophy Club",
+        "Haslet",
+        "Justin"
+      ],
+      "sourceYear": "2026-27 board-approved",
+      "officialUrl": "https://www.nisdtx.org/departments/facilities/attendance-boundaries",
+      "boundaryStatus": "external-official-finder-only",
+      "localSchoolPolygonCount": 0,
+      "notes": "Select 2026-27 in school zone locator; 2027-28 proposal is NOT current approved 2026-27 assignment."
+    },
+    {
+      "code": "220906",
+      "name": "Grapevine-Colleyville ISD",
+      "ko": "그레이프바인–콜리빌",
+      "cities": [
+        "Grapevine",
+        "Colleyville",
+        "Southlake (part)"
+      ],
+      "sourceYear": "not verified",
+      "officialUrl": "https://www.gcisd.net/page/attendance-area-maps/",
+      "boundaryStatus": "external-official-maps-only",
+      "localSchoolPolygonCount": 0,
+      "notes": "Official elementary/middle/high printable maps; map boundaries require verified year and address check."
+    }
+  ],
+  "areas": [
+    {
+      "zip": "76092",
+      "label": "Southlake",
+      "note": "ZIP code crosses district boundaries"
+    },
+    {
+      "zip": "76262",
+      "label": "Westlake · Trophy Club · Roanoke",
+      "note": "ZIP is NOT the Town of Westlake boundary"
+    },
+    {
+      "zip": "76248",
+      "label": "Keller",
+      "note": "ZIP does not guarantee Keller ISD"
+    },
+    {
+      "zip": "76034",
+      "label": "Colleyville",
+      "note": "ZIP does not guarantee GCISD"
+    },
+    {
+      "zip": "76051",
+      "label": "Grapevine",
+      "note": "ZIP does not guarantee GCISD"
+    },
+    {
+      "zip": "76052",
+      "label": "Haslet",
+      "note": "ZIP can include multiple districts"
+    },
+    {
+      "zip": "76247",
+      "label": "Justin",
+      "note": "ZIP can include multiple districts"
+    }
+  ],
+  "specialSchool": {
+    "label": "Westlake Academy",
+    "type": "public-charter-not-neighborhood-assignment",
+    "officialUrl": "https://www.westlakeacademy.org/admissions/admissions-process",
+    "note": "Town of Westlake primary-residency priority. Other applicants follow charter admissions and lottery rules; ZIP 76262 alone is not primary residency."
+  }
+}
