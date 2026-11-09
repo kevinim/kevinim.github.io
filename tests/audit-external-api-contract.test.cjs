@@ -13,7 +13,7 @@ function actual() {
 test('current known provider links, user disclosure and safe Esri/parcel parameters remain intact', () => {
   const a = auditProviderContract(actual());
   assert.deepEqual(a.errors, []);
-  assert.equal(a.coverage.reviewedFiles, 5);
+  assert.equal(a.coverage.reviewedFiles, 6);
   assert.equal(a.coverage.monitoredProviderMarkers, 8);
   assert.ok(a.warnings.some(w => w.includes('cross-user quotas')));
 });
@@ -46,7 +46,7 @@ test('unexpected parcel owner-field expansion fails prior to release', () => {
 
 test('an insecure OSM tile URL is rejected', () => {
   const files = actual();
-  files['reviewed.html'] = files['reviewed.html'].replace('https://{s}.tile.openstreetmap.org/', 'http://{s}.tile.openstreetmap.org/');
+  files['features/reviewed-bootstrap.js'] = files['features/reviewed-bootstrap.js'].replace('https://{s}.tile.openstreetmap.org/', 'http://{s}.tile.openstreetmap.org/');
   const report = auditProviderContract(files);
   assert.ok(report.errors.some(e => e.includes('insecure OSM tile protocol')));
 });
