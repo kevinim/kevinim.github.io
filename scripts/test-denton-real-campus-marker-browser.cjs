@@ -56,10 +56,15 @@ async function main(){
     const campus=await page.evaluate(id=>{
      const s=state.schools.find(x=>x.district==='061901'&&scoreRecord(x.name,x.district)?.id===id);
      state.showSchools=true;state.level='all';state.ratingFilter='all';
-     map.stop();map.setView(s.ll,14,{animate:false});map.invalidateSize();
+     map.stop();map.setView(s.ll,14,{animate:false,zoom:{animate:false},pan:{animate:false}});map.invalidateSize();
      drawSchools();
      return {name:s.name,grade:s.type,id,review:s.campusPointReview,point:s.ll,immediateCenter:[map.getCenter().lat,map.getCenter().lng],immediateZoom:map.getZoom(),immediateWithin:map.getBounds().contains(s.ll),immediateMarkers:schoolGroup.getLayers().filter(x=>x.options?.title===s.name).length};
     },id);
+    // Leaflet can animate the zoom despite a top-level animate flag.
+    // The QA must observe the actual map bounds before clicking a campus.
+    await page.waitForFunction(ll=>map.getBounds().contains(ll)&&map.getZoom()>=13,
+     campus.point,{timeout:12000});
+    await page.evaluate(()=>drawSchools());
     const selector='.leaflet-marker-icon[title='+JSON.stringify(campus.name)+']';
     const diag=await page.evaluate(name=>{
      const s=state.schools.find(x=>x.district==='061901'&&x.name===name);
