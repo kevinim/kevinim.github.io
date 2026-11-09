@@ -15,6 +15,9 @@
   if(typeof raw!=='string'||!raw||raw.length>2048||!/^https:\/\//.test(raw))return null;
   // URL() normalizes some malicious whitespace and backslashes; reject before parsing.
   if(/[\u0000-\u0020\u007f\\]/.test(raw)||/%(?:0[0-9a-f]|1[0-9a-f]|7f)/i.test(raw))return null;
+  // Explicit ports, even :443, are not required by any approved district link.
+  const authority=raw.slice(8).split(/[/?#]/)[0];
+  if(authority.includes(':'))return null;
   try{
    const url=new URL(raw);
    if(url.protocol!=='https:'||url.username||url.password||url.port||!hosts.has(url.hostname))return null;
