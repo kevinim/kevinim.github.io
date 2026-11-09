@@ -24,7 +24,7 @@
       "officialFinder": "https://www.irvingisd.net/departments-services/registration/find-my-assigned-school",
       "sourceClass": "district-embedded-arcgis-webmaps",
       "currentYearCertified": false,
-      "geometryStage": "25-polygon-CI-only-quarantine-18-elementary-7-middle-no-high",
+      "geometryStage": "28-historical-or-year-unverified-gis-polygons-CI-quarantined-only",
       "webmaps": [
         {
           "grade": "elementary",
@@ -51,15 +51,19 @@
           "sourceURL": "https://www.irvingisd.net/departments-services/performance-outcomes-data/planning/current-campus-level-maps/high-school-boundary-map",
           "arcgisWebmapId": "94e441e70e5049daa74c0cc2bb5a7cad",
           "academicYear": null,
-          "legacyLayerName": "High School Boundaries",
-          "historicFeatureCountThirdPartyUnconfirmed": 3,
-          "noCampusLevelPolygonVisibleInWebmap": true,
+          "legacyLayerName": "High Schools (embedded FeatureCollection: high / HIGH_DESC)",
+          "historicFeatureCountThirdPartyUnconfirmed": null,
+          "noCampusLevelPolygonVisibleInWebmap": false,
           "observedOtherMapLayers": [
-            "District Boundary",
-            "High Schools (campus locations)",
-            "Middle Schools (campus locations)",
-            "Elementary Schools (campus locations)"
-          ]
+            "District Boundary (outer polygon)",
+            "Schools (campus points)",
+            "High Schools (3 embedded attendance polygons)"
+          ],
+          "liveObservedEmbeddedPolygonFeatures": 3,
+          "liveObservedDistinctSchools": 3,
+          "originalSpatialReference": "EPSG:3857",
+          "arcgisWebmapLastModifiedUTC": "2020-08-28T21:25:24.000Z",
+          "geometryAcquisitionMode": "embeddedFeatureCollection-ArcGISFeatureLayer-not-remote-FeatureServer"
         }
       ],
       "requiredForActivation": [
@@ -71,10 +75,14 @@
         "public terms for derived data",
         "390/1366px live school-click map QA"
       ],
-      "rejectionReason": "18 elementary 2024–25 source-title polygons and 7 middle polygons (unknown year) extracted into CI-only WGS84 GeoJSON quarantine. High WebMap has no confirmed school-specific polygon. ArcGIS ownership, reuse terms, TEA campus IDs, official Finder holdouts unverified; no dashboard connection.",
-      "liveValidatedFeatureCountTotal": 25,
-      "liveValidatedSourceLayers": 2,
-      "liveValidatedSchoolYearCurrent": false
+      "rejectionReason": "Original district-linked WebMaps expose 18 elementary (2024–25 layer title), 7 middle (year unknown) and 3 historical high school polygons (WebMap modified 2020-08-28) in EPSG:3857 embedded FeatureCollection. All 28 normalized to WGS84 in CI-only quarantine and matched to explicit 2026 preliminary TEA campus-name references. This is NOT 2026–27 legal school assignment. Official Finder independent address holdouts, source reuse, campus year and rights are still open; no dashboard integration or production approval.",
+      "liveValidatedFeatureCountTotal": 28,
+      "liveValidatedSourceLayers": 3,
+      "liveValidatedSchoolYearCurrent": false,
+      "explicitPreliminaryTeaDirectoryMappings": 28,
+      "missingMiddleRegularAssignmentInLayer": [
+        "Lorenzo de Zavala / 057912048 — special STEM academy / source does not supply ordinary middle polygon"
+      ]
     },
     {
       "districtCode": "220905",
@@ -132,6 +140,7 @@
   "licenseApproved": false,
   "schoolClickE2ECertified": false,
   "productionAllowed": false,
-  "newStagedUnreleasedSchoolZonePolygonFeatures": 25,
-  "newStagedUnreleasedDistricts": 1
+  "newStagedUnreleasedSchoolZonePolygonFeatures": 28,
+  "newStagedUnreleasedDistricts": 1,
+  "newPreliminaryTeaCampusReferenceMappings": 28
 }
