@@ -25,14 +25,22 @@ test('NOAA primary-county event counts do not equal probability',()=>{
 test('FBI rates are municipal and fail closed for ZIP mixed jurisdiction / missing rates',()=>{
   const base={metadata:{years:[2023,2024,2025]},zips:{'75013':{cities:[{ori:'A',share:0.96}],outsideCityShare:0.04},
     '75099':{cities:[{ori:'A',share:0.49},{ori:'B',share:0.3}],outsideCityShare:0.21}},
-    cities:{A:{city:'Allen',years:{'2025':{violentRate:156,propertyRate:1234}}},
-      B:{city:'Example',years:{'2025':{violentRate:null,propertyRate:null}}}}};
+    cities:{A:{city:'Allen',years:{'2025':{violentRate:156,propertyRate:1234,violentMonths:12,propertyMonths:12}}},
+      B:{city:'Example',years:{'2025':{violentRate:null,propertyRate:null,violentMonths:0,propertyMonths:0}}}}};
   const r=summarizeCrime(base,'75013');
   assert.equal(r.status,'available');assert.equal(r.city,'Allen');assert.match(r.message,/10만 명당/);
   assert.equal(summarizeCrime(base,'75099').status,'mixed');
   assert.equal(summarizeCrime(base,'00000').status,'unknown');
+  base.cities.A.years['2025'].violentMonths=11;
+  assert.equal(summarizeCrime(base,'75013').status,'unknown');
+  base.cities.A.years['2025'].violentMonths=12;
   base.cities.A.years['2025'].violentRate=null;
   assert.equal(summarizeCrime(base,'75013').status,'unknown');
+  base.cities.A.years['2025'].violentRate=156;
+  base.zips['75013'].outsideCityShare=null;
+  assert.equal(summarizeCrime(base,'75013').status,'unknown');
+  base.zips['75013'].outsideCityShare=0.04;
+  assert.equal(summarizeCrime(base,'75013').status,'available');
 });
 test('commute summary shows only the user-calculated travel time, no fixed office data',()=>{
   assert.equal(summarizeCommute(18,true).minutes,18);
@@ -57,4 +65,22 @@ test('main page keeps legacy data-binding IDs but loads standalone assessment',(
   const module=fs.readFileSync(path.join(root,'features/area-assessment.js'),'utf8');
   assert.doesNotMatch(module,/schoolGroup\.(?:clearLayers|addLayer)|zoneGroup\.(?:clearLayers|addLayer)|map\.setView|map\.fitBounds/);
   assert.doesNotMatch(module,/localStorage|sessionStorage|fetch\(['"]https?:\/\//);
+});
+
+test('every quick check labels its real data geography and snapshot year',()=>{
+ const {regionEvidenceMeta}=require('../features/area-assessment-core.js');
+ for(const id of ['schools','hazards','crime','commute'])
+   assert.ok(regionEvidenceMeta(id).length>12,id);
+ assert.match(regionEvidenceMeta('schools'),/2026.*배정 아님/);
+ assert.match(regionEvidenceMeta('hazards'),/2024–25.*카운티.*FEMA/);
+ assert.match(regionEvidenceMeta('crime'),/2025.*도시.*ZIP 범죄율 아님/);
+ assert.doesNotMatch(regionEvidenceMeta('commute'),/JPM|jpm/);
+});
+test('new UI does not silently claim a NOAA county report equals the FEMA risk layer',()=>{
+ const ui=fs.readFileSync(path.join(root,'features/area-assessment.js'),'utf8');
+ assert.match(ui,/NOAA는 2024–25 카운티 과거 기록/);
+ assert.match(ui,/FEMA 2025 홍수 상대 위험도/);
+ assert.match(ui,/noaaStormHistoryPanel/);
+ assert.match(ui,/areaQaActionStatus/);
+ assert.doesNotMatch(ui,/schoolGroup\.(?:clearLayers|addLayer)|map\.fitBounds|map\.setView/);
 });
