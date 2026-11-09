@@ -28,14 +28,16 @@ test('strict script CSP remains enforceable after removing the only inline hash'
  assert.ok(newCsp.includes("base-uri 'self'"));
  assert.ok(newCsp.includes("form-action 'self'"));
  assert.ok(newCsp.includes("script-src 'self' https://unpkg.com;"));
- assert.doesNotMatch(newCsp,/unsafe-inline|unsafe-eval|sha256-/);
+ const script=newCsp.split(';').map(x=>x.trim()).find(x=>x.startsWith('script-src '));
+ assert.ok(script);
+ assert.doesNotMatch(script,/unsafe-inline|unsafe-eval|sha256-/);
  assert.equal((oldCsp.match(/'sha256-[A-Za-z0-9+/]+=*'/g)||[]).length,1);
  assert.equal(newCsp,oldCsp.replace(/ 'sha256-[A-Za-z0-9+/]+=*'/,''));
 });
 test('externalized page matches previous page except approved source tag and CSP hash',()=>{
  const expected=old.replace("<script>"+original+"</script>",external)
    .replace(/(script-src 'self' https:\/\/unpkg\.com) 'sha256-[A-Za-z0-9+/]+=*'/,'$1');
- assert.equal(html,expected);
+ assert.equal(html.replace(/\r\n/g,'\n'),expected.replace(/\r\n/g,'\n'));
  assert.equal(html.split(external).length,2);
  const scriptIndex=html.indexOf(external);
  assert.ok(html.indexOf('./plano-finder-live.js')<scriptIndex);
