@@ -21,6 +21,7 @@ Run:
 ~~~bash
 node --test tests/finder-derived-estimate-engine.test.cjs
 node scripts/generate-finder-derived-estimates.cjs --demo tests/fixtures/finder-derived-synthetic.json artifacts/finder-derived/cfb-synthetic.json
+node scripts/render-finder-derived-demo-svg.cjs artifacts/finder-derived/cfb-synthetic.json artifacts/finder-derived/cfb-synthetic-preview.svg
 ~~~
 The output is **6 small synthetic candidate triangles** (two hypothetical school groups × elementary/middle/high). Campus names are explicitly fictitious, and coordinates do not represent real enrollment claims. It writes only to artifacts/finder-derived/, never deployable data/; every feature is \`reviewed:false\`, \`publishable:false\`, \`finder-derived-unreviewed\`. A failed run logs error codes, not addresses.
 
