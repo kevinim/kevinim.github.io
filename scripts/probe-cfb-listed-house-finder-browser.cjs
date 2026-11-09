@@ -41,6 +41,7 @@ function safeLabel(s){return clean(s).slice(0,180)}
   const page=await context.newPage();
   const nav=await page.goto(FINDER,{waitUntil:'domcontentloaded',timeout:60000});
   if(!nav?.ok())throw Error('official_finder_navigation_'+(nav?.status()||'none'));
+  await page.waitForTimeout(3500);
   for(const item of cases){
    const row={id:item.id,listingEvidence:item.listing,address:item.address,
     siteStatus:'observed',nativeCandidateSelected:false,
@@ -48,10 +49,24 @@ function safeLabel(s){return clean(s).slice(0,180)}
    try{
     const clear=page.getByRole('button',{name:/clear location/i}).first();
     if(await clear.count())await clear.click({timeout:4500}).catch(()=>{});
-    const inp=page.locator('input').filter({visible:true});
-    const address=page.locator('input[type="text"],input[type="search"]')
-      .filter({visible:true}).first();
-    if(!(await address.count()))throw Error('no_visible_address_input');
+    // District's GuideK12 UI hydrates asynchronously after DOMContentLoaded.
+    // Wait for a visible official address entry field, not the initial HTML shell.
+    await page.waitForFunction(() => [...document.querySelectorAll('input')].some(el=>{
+      const type=el.getAttribute('type')||'text';
+      return ['text','search'].includes(type)&&!!el.getClientRects().length;
+    }),null,{timeout:24000});
+    const inputs=page.locator('input[type="text"],input[type="search"],input:not([type])');
+    let address=null;
+    for(let n=0;n<await inputs.count();n++){
+      const c=inputs.nth(n);
+      if(!await c.isVisible())continue;
+      const p=String(await c.getAttribute('placeholder')||'');
+      if(/address|search|type to/i.test(p)||await c.locator('xpath=ancestor::*[contains(@class,"address_input")]').count()){
+        address=c;break;
+      }
+      if(!address)address=c;
+    }
+    if(!address)throw Error('no_visible_address_input_after_hydration');
     await address.fill('');
     await address.pressSequentially(item.address.split(',')[0].slice(0,-3),{delay:65});
     await page.waitForTimeout(1700);
