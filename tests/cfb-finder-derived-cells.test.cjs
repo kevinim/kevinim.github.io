@@ -109,7 +109,7 @@ test('existing reviewer gate still rejects a geometrically supported but unappro
   const cli=spawnSync(process.execPath,['scripts/validate-cfb-finder-derived-boundaries.cjs',file],
    {cwd:path.resolve(__dirname,'..'),encoding:'utf8'});
   assert.notEqual(cli.status,0);
-  assert.match(cli.stdout,/NO_GO/);
+  assert.match(cli.stdout,/NO_GO/,'stderr: '+cli.stderr+' status: '+cli.status);
   assert.match(cli.stdout,/permission_or_review_missing|estimate_unreviewed/);
  }finally{fs.rmSync(temp,{recursive:true,force:true})}
 });
