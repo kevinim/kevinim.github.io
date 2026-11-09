@@ -83,3 +83,54 @@ test('district source quality update cannot alter district route totals or endor
  assert.equal(s.campusPolygonCoverageAllDFWPercent,null);
  assert.equal(s.exactAddressAssignmentCoveragePercent,null);
 });
+
+
+test('seven sourced campus changes reconcile exactly to TEA identities without fabricating new-campus ratings',()=>{
+ const tea=JSON.parse(fs.readFileSync('tea-ratings-2026.json','utf8'));
+ const all=JSON.parse(fs.readFileSync('data/dfw-noncfb-campus-transition-evidence-2026.json','utf8'));
+ assert.equal(all.schemaVersion,1);
+ assert.equal(all.entries.length,7);
+ assert.equal(all.counts.existingTEACampusRecordsWithChangedStatus,5);
+ assert.equal(all.counts.newCampusesMissingTEARecords,2);
+ const ids=new Set();
+ let existing=0,unratedNew=0;
+ for(const e of all.entries){
+  assert.notEqual(e.districtCode,'057903');
+  assert.notEqual(e.districtCode,'CFB');
+  assert.ok(e.source.startsWith('https://'));
+  assert.match(e.effectiveAcademicYear,/^20[0-9]{2}-[0-9]{2}$/);
+  assert.ok(e.footnote.length>60);
+  assert.ok(e.destinationNote.length>40);
+  assert.ok(!('zoneGeometry' in e)&&!('polygon' in e)&&!('actualResidentialAddress' in e));
+  if(e.presentInTea2026Snapshot){
+   existing++;
+   assert.ok(!ids.has(e.campusId),e.campusId);
+   ids.add(e.campusId);
+   const record=tea.data.find(x=>x.id===e.campusId);
+   assert.ok(record,e.campusId);
+   assert.equal(record.name,e.schoolNameFromTEA);
+   assert.equal(record.id.slice(0,6),e.districtCode);
+  }else{
+   unratedNew++;
+   assert.equal(e.campusId,null);
+   assert.equal(e.schoolNameFromTEA,null);
+   assert.equal(e.status,'new-campus-absent-from-snapshot');
+   assert.ok(!tea.data.some(x=>x.id.startsWith(e.districtCode)&&new RegExp(e.schoolName.includes('Romer')?'ROMER':'BARKSDALE','i').test(x.name)));
+  }
+ }
+ assert.equal(existing,5);
+ assert.equal(unratedNew,2);
+});
+test('operating-year status is not contaminated by future school closure plans',()=>{
+ const rows=JSON.parse(fs.readFileSync('data/dfw-noncfb-campus-transition-evidence-2026.json','utf8')).entries;
+ const by=Object.fromEntries(rows.filter(x=>x.campusId).map(x=>[x.campusId,x]));
+ for(const code of ['061901120','220906103','220906108']){
+  assert.equal(by[code].effectiveAcademicYear,'2026-27');
+  assert.equal(by[code].regularAssignmentCampus2026_27,false);
+ }
+ assert.equal(by['220919106'].status,'future-closure-only');
+ assert.equal(by['220919106'].effectiveAcademicYear,'2027-28');
+ assert.equal(by['220919106'].regularAssignmentCampus2026_27,true);
+ assert.equal(by['220919102'].status,'current-year-feeder-change');
+ assert.equal(by['220919102'].regularAssignmentCampus2026_27,true);
+});
