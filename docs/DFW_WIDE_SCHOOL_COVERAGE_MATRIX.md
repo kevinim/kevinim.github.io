@@ -12,29 +12,46 @@ The initial automated census uses the **11-county Dallas–Fort Worth–Arlingto
 | District/LEA identifiers | 152 |
 | Named ISDs | 108 |
 | Other LEAs (charter/alternative/special types require classification) | 44 |
-| ISDs with a registered, allowlisted official school-confirmation entry | 29 |
-| ISDs with no *registered* parent entry path in this dashboard | **79** |
-| Registered parent guidance rate among 108 observed ISDs | **26.9%** |
-| TEA school records within the 79 unregistered ISDs | **834** |
+| ISDs with a registered, allowlisted official school-confirmation entry | 37 |
+| ISDs with no *registered* parent entry path in this dashboard | **71** |
+| Registered parent guidance rate among 108 observed ISDs | **34.3%** |
+| TEA school records within the 71 unregistered ISDs | **435** |
 
 These are **source administrative county-of-record proxies**, not boundaries of every district serving residential parcels. TEA districtCounty does not determine a particular campus's position or a student's enrollment eligibility. Cross-county districts and schools not in the supplied source may be missed. NCTCOG's broader 12-county area adds **Hood County**, which this TEA source omits; **unknown is not zero**. These 152 observed LEAs do not prove exhaustive real-estate parcel service coverage.
 
-## Highest current school confirmation backlog
+## 2026-11-09 parent-facing official guidance added (8 ISDs)
 
-P0 means our dashboard has **not verified and registered a parent assignment path**. It does *not* mean the school district has no official finder.
+This is a **verified official entry URL** and appropriate instructions/limitations. It does **not** certify an address result, modern GIS polygon, school assignment, or district boundary. Parents must enter address and grade at the district's official tool; application-based or transfer schools require separate confirmation.
+
+| TEA code | District | Official page | Caution |
+| --- | --- | --- | --- |
+| 220905 | Fort Worth | https://enrollment.fwisd.org/new-to-fwisd | 2026–27 School Site Locator; 2026 closures and choice options must be reviewed |
+| 220901 | Arlington | https://www.aisd.net/district/about/school-directory | Use Search by Home Address; Zoned vs Signature Program |
+| 220908 | Mansfield | https://www.mansfieldisd.org/student-central/attendance-zones | Find My Bus; some published maps still say 2025–26 |
+| 057910 | Grand Prairie | https://www.gpisd.org/about-gpisd/campus-listings-and-map | Campus Locator by Attendance Zone; choice-school exceptions |
+| 220918 | Eagle Mountain–Saginaw | https://www.emsisd.com/enroll/find-your-school-zone | 2026–27 Finder; middle school changes and grandfathered 7th graders |
+| 220902 | Birdville | https://www.birdvilleschools.net/families | Boundary Locator from family entry; open enrollment is separate |
+| 220912 | Crowley | https://www.crowleyisdtx.org/parents-students/enrollment-student-registration/attendance-zones | School locator requires grade-level selection, 9th vs 10–12th may differ |
+| 126902 | Burleson | https://www.burlesonisd.net/families-students/enrollment-information | BISD School Search; choice campus/lottery not automatic zoning |
+
+**Reconciliation:** 8 official entries, 399 TEA school rows previously in P0; registered count 29→37 of 108 ISDs (26.9%→34.3%); unregistered 79→71 (834→435 campus records). GIS mapping is *unchanged*. All new entries are added to the exact-host outbound allowlist. The parents' address and grades are never submitted by the dashboard.
+
+## Highest remaining school confirmation backlog
+
+P0 means the dashboard has **not yet verified and registered a parent assignment path**. It does *not* mean the school district lacks an official Finder.
 
 | Priority | ISD | Campus records |
 | ---: | --- | ---: |
-| 1 | Fort Worth | 134 |
-| 2 | Arlington | 74 |
-| 3 | Mansfield | 48 |
-| 4 | Grand Prairie | 37 |
-| 5 | Eagle Mountain–Saginaw | 32 |
-| 6 | Birdville | 31 |
-| 7 | Crowley | 23 |
-| 8 | Burleson | 20 |
-| 9 | Waxahachie | 18 |
-| 10 | Duncanville | 14 |
+| 1 | Waxahachie | 18 |
+| 2 | Duncanville | 14 |
+| 3 | Midlothian | 13 |
+| 4 | Royse City | 13 |
+| 5 | Aledo | 12 |
+| 6 | Azle | 12 |
+| 7 | Cleburne | 12 |
+| 8 | Ennis | 12 |
+| 9 | Weatherford | 12 |
+| 10 | Cedar Hill | 11 |
 
 Other TEA LEAs (44) are tracked separately. A charter or choice program cannot be treated as an ordinary address-assigned ISD.
 
@@ -60,4 +77,4 @@ The JSON reports missing *reason* states, including no known official parent rou
 
 ## Next work
 
-Start official parent-source verification with Fort Worth, Arlington, Mansfield, Grand Prairie, Eagle Mountain–Saginaw, Birdville, Crowley and Burleson, then work through **all 79 unregistered ISDs**, not just favorite suburbs. For each, store TEA code, authority URL, last verification date, active year, grade, search/map/choice/inquiry type, GIS availability and licensing, missing reason and next action. Expand source boundaries to Hood and any cross-county overlap before labeling the DFW geographic denominator exhaustive. Confirm school-specific missing reasons with a browser source audit, including school-choice exceptions and transient failures.
+Continue parent-source verification with Waxahachie, Duncanville, Midlothian, Royse City, Aledo, Azle, Cleburne and Ennis, then work through **all 71 unregistered ISDs**, not just favorite suburbs. For each, store TEA code, authority URL, last verification date, active year, grade, search/map/choice/inquiry type, GIS availability and licensing, missing reason and next action. Expand source boundaries to Hood and any cross-county overlap before labeling the DFW geographic denominator exhaustive. Confirm school-specific missing reasons with a browser source audit, including school-choice exceptions and transient failures.
