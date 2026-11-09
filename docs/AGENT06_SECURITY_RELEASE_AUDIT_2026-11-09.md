@@ -31,7 +31,7 @@ Release decision: NO-GO for broad public promotion. This is not permission to me
 2. Frontend sensitive content: public-source and curated-artifact migration remain gated.
 3. Address history and location: targeted non-persistence check; provider-side retention not measurable.
 4. XSS: existing CSP/SRI/hostile-input CI; targeted address sink regression.
-5. External API: Esri/OSRM/Nominatim/OSM usage inventoried; privacy and terms not signed off.
+5. External provider connections: Esri, OSRM, Nominatim and OpenStreetMap usage inventoried. Privacy and terms not signed off.
 6. Dependencies: unreviewed Leaflet 1.9.4 XSS advisory GHSA-h5cx-hfj5-x8v3 (https://github.com/advisories/GHSA-h5cx-hfj5-x8v3), SRI/CSP/escaped popup mitigation, and unpinned transitive CI installation risk noted; no package-based frontend dependency lock found in main root.
 7. GitHub Actions: review of read-only security jobs; immutable action updates pending #142; check required status contexts.
 8. Pages and headers: source-level CSP verified; live HTTP policy verification remains outside this branch.
@@ -52,6 +52,9 @@ Release decision: NO-GO for broad public promotion. This is not permission to me
 - Recheck actual public HTTP headers, retired asset cache responses, third-party terms and license/attribution obligations.
 - Retain #148 residential school assignment NO-GO until its independent official Finder/current-year GIS evidence passes.
 - Owner reviews and explicitly approves the ordered merge/deployment. No auto-merge, push to main or production Pages changes are performed by this review.
+
+## Scanner false-positive triage
+The existing PR branch contains one historical documentation-only `generic-api-key` pattern detection (commit `85b6ec2`, audit line 34), caused by a public-provider enumeration, not an API credential. A single exact Gitleaks fingerprint is documented in `.gitleaksignore`, rather than disabling secret scanning or rewriting branch history. Do not broaden this exception; all other detections remain release blockers.
 
 ## Known limits
 This audit has no access to provider-side request logs, actual user browser state, historical forks, hidden GitHub secrets, or the full deployment/CDN infrastructure. Green CI on an isolated branch is necessary but not sufficient for Production release.
