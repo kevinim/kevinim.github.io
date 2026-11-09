@@ -14,6 +14,8 @@ on:
       - 'data/school-data-release-lock.json'
       - 'scripts/school-polygon-linkage-*.cjs'
       - 'tests/school-polygon-linkage-audit.test.cjs'
+      - 'tests/verify-school-linkage-baseline.test.cjs'
+      - 'data/school-polygon-linkage-baseline.json'
       - '.github/workflows/school-polygon-linkage-census.yml'
   push:
     branches: [main]
@@ -45,7 +47,8 @@ jobs:
         run: |
           node --check scripts/school-polygon-linkage-audit.cjs
           node --check scripts/school-polygon-linkage-browser.cjs
-          node --test tests/school-polygon-linkage-audit.test.cjs
+          node --check scripts/verify-school-linkage-baseline.cjs
+          node --test tests/school-polygon-linkage-audit.test.cjs tests/verify-school-linkage-baseline.test.cjs
       - name: Install isolated Chromium only
         run: |
           mkdir -p school-linkage-browser-tmp
@@ -57,6 +60,8 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/school-linkage-browser-tmp/node_modules
         run: node scripts/school-polygon-linkage-browser.cjs
+      - name: Compare matched school and Allen marker counts to verified baseline
+        run: node scripts/verify-school-linkage-baseline.cjs
       - name: Upload school-only, non-personal coverage findings
         if: always()
         uses: actions/upload-artifact@v4
