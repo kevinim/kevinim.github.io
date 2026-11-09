@@ -10,9 +10,9 @@ const fixture=require('../tests/dfw-public-leasing-address-e2e-2026.json');
 const OUT=path.join(ROOT,'artifacts/dfw-official-finder-ui-probe');
 fs.mkdirSync(OUT,{recursive:true});
 const officialPages=[
- {district:'043907',url:'https://www.mckinneyisd.net/page/attendance-zones-maps/',label:'26-27 School Locator'},
+ {district:'043907',url:'https://www.mckinneyisd.net/page/attendance-zones-maps/',label:'26-27 School Locator',directLocator:'https://portal.metrostudygis.com/arcgis/apps/webappviewer/index.html?id=ed198c434d47474b88709e98d1f0a125'},
  {district:'PISD',url:'https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder',label:'Find My School'},
- {district:'LISD',url:'https://www.lisd.net/resources/families/school-locator',label:'VIEW 2026-2027 SCHOOL LOCATOR'}
+ {district:'LISD',url:'https://www.lisd.net/resources/families/school-locator',label:'VIEW 2026-2027 SCHOOL LOCATOR',directLocator:'https://portal.metrostudygis.com/arcgis/apps/webappviewer/index.html?id=8b1628e7345e4a98a4dcf6c852581656'}
 ];
 const report={asOf:'2026-11-09',schemaVersion:1,publicBasesOnly:true,
  unitNumberRequiredByDefault:false,independentGradeAssignmentsCertified:0,
@@ -58,6 +58,15 @@ async function runDistrict(browser,d){
     const next=pages.length>before?pages[pages.length-1]:page;
     if(next!==page){
      try{await next.waitForLoadState('domcontentloaded',{timeout:15000})}catch{}
+    }
+    if(!row.locatorOpened && d.directLocator){
+     try{
+      await next.goto(d.directLocator,{waitUntil:'domcontentloaded',timeout:33000});
+      await next.waitForTimeout(6000);
+      row.officialPublishedDirectLocatorFallback=true;
+      row.locatorIsDifferent=true;
+      row.locatorOpened=true;
+     }catch(e){row.errors.push('published_locator_fallback:'+short(e));}
     }
     row.locator=await inventory(next);
     row.locatorIsDifferent=next.url()!==d.url;
