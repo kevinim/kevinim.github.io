@@ -44,7 +44,11 @@ async function lookupOfficialBrowser(page,sample){
   ui.baselineSchoolNames=observedSchoolNames(before,features);
   ui.foundUiSchoolNames=observedSchoolNames(after,features);
   ui.newSchoolNames=ui.foundUiSchoolNames.filter(x=>!ui.baselineSchoolNames.includes(x));
-  ui.hasVisibleGradeResult=ui.newSchoolNames.length>=3;
+  const grades=['elementary','middle','high'];
+  ui.visibleNewSchoolNamesByGrade=Object.fromEntries(grades.map(grade=>[grade,
+   [...new Set(features.filter(f=>f.properties?.gradeLevel===grade&&
+    ui.newSchoolNames.includes(f.properties?.school)).map(f=>f.properties.school))]]));
+  ui.hasVisibleGradeResult=grades.every(grade=>ui.visibleNewSchoolNamesByGrade[grade].length===1);
   ui.networkResponses=requests.filter(x=>/Search|school|location|route/i.test(x.pathname));
   ui.status=ui.hasVisibleGradeResult?'UI_VISIBLE_SCHOOL_RESULT':'FINDER_LOOKUP_INCONCLUSIVE';
  }catch(e){ui.errorType=String(e.name||'Error').slice(0,40);}
