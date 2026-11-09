@@ -22,7 +22,7 @@ fs.mkdirSync(out,{recursive:true});
     await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:90000});
     await page.waitForFunction(()=>window.schoolBoundaryAuditReady===true&&state.schools.length>1500&&typeof schoolZoneInfo==='function',null,{timeout:110000});
     const result=await page.evaluate(()=>{
-     const codes=['FISD','PISD','AISD','LISD','PROSPER','CFB','043907'];
+     const codes=['FISD','PISD','AISD','LISD','PROSPER','CFB','043907','220919','220907','061911','220906'];
      const samples=[], counts={},base=state.selectedSchool;
      state.showOldZones=true;state.showHistoric=true;
      for(const code of codes){
@@ -73,7 +73,7 @@ fs.mkdirSync(out,{recursive:true});
       scrollWidth:document.documentElement.scrollWidth,viewport:innerWidth,
       totalSchools:state.schools.length};
     });
-    assert.ok(result.samples.length>=28,'must sample 4 schools from 7 districts');
+    assert.ok(result.samples.length>=40,'must sample 3-4 schools from every North and West DFW district');
     const mapKinds=new Set(['current','finder','historical']);
     for(const r of result.samples){
       if(mapKinds.has(r.kind)){
@@ -91,6 +91,8 @@ fs.mkdirSync(out,{recursive:true});
       }
     }
     assert.ok(result.counts.CFB?.finderOnly>=3,'CFB school samples must offer their official Finder');
+    for(const code of ['220919','220907','061911','220906'])
+     assert.ok(result.counts[code]?.finderOnly>=2,'West DFW '+code+' must link the approved district tool without invented polygons');
     assert.ok(result.counts.FISD?.drawn>=3,'Frisco known polygons must draw');
     assert.ok(result.counts.AISD?.drawn>=2,'Allen historic polygons must draw with notice');
     assert.ok(result.listBadge.includes('공식 조회'),'list must label CFB as official lookup only');
