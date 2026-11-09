@@ -5,6 +5,7 @@ on:
       - 'scripts/agent01-probe-irving-gis.cjs'
       - 'tests/agent01-*.test.cjs'
       - 'data/dfw-agent01-gis-source-inventory-2026.json'
+      - 'data/irving-provisional-tea-crosswalk-2026.json'
       - 'docs/AGENT01_DFW_GIS_ACQUISITION_2026-11-09.md'
       - '.github/workflows/agent01-irving-gis-qa.yml'
   workflow_dispatch:
@@ -19,7 +20,7 @@ jobs:
         with:
           node-version: '22'
       - name: Agent01 provenance / geometry / cross-source safety QA
-        run: node --test tests/agent01-irving-gis-acquisition.test.cjs tests/agent01-irving-embedded-high.test.cjs tests/agent01-dfw-gis-inventory.test.cjs
+        run: node --test tests/agent01-irving-gis-acquisition.test.cjs tests/agent01-irving-embedded-high.test.cjs tests/agent01-irving-tea-crosswalk.test.cjs tests/agent01-dfw-gis-inventory.test.cjs
       - name: Existing school-zone UI and polygon-linkage regression
         run: node --test tests/school-zone-ui.test.cjs tests/school-polygon-linkage-audit.test.cjs
   live-source-staging:
