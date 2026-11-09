@@ -14,7 +14,7 @@ function precise(address,c){
   .replace(/[^a-z0-9]/g,'');
  if(street(expected[2])!==street(result[2]))return false;
  return c.score>=95&&['PointAddress','Subaddress'].includes(a.Addr_type)&&
-  String(a.Region||'').toUpperCase()==='TX'&&String(a.Postal||'').slice(0,5)===expected[3]&&
+  ['TX','TEXAS'].includes(String(a.Region||'').trim().toUpperCase())&&String(a.Postal||'').slice(0,5)===expected[3]&&
   Number.isFinite(g.x)&&Number.isFinite(g.y)&&g.x>=-107&&g.x<=-93&&g.y>=25&&g.y<=37;
 }
 function compare({address,candidate,locator,geojson}){
