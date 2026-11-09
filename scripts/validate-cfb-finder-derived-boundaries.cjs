@@ -9,7 +9,7 @@ catch{console.log('CFB_ESTIMATE_GATE '+JSON.stringify({status:'NO_GO',errors:['r
 if(data.schemaVersion!==1||data.district!=='CFB')errors.push('invalid_dataset');
 if(data.sourceType!=='official-finder-derived-estimate')errors.push('provenance_missing');
 if(!data.finderTermsReviewed||!data.reviewerApproved)errors.push('permission_or_review_missing');
-if(!/^20\\d{2}-20\\d{2}$/.test(data.schoolYear||''))errors.push('year_missing');
+if(!/^20\d{2}-20\d{2}$/.test(data.schoolYear||''))errors.push('year_missing');
 if(!Array.isArray(data.features)||!data.features.length)errors.push('no_features');
 for(const [i,f] of (data.features||[]).entries()){
  const p=f.properties||{},g=f.geometry||{};
