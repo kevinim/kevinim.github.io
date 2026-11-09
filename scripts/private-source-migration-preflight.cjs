@@ -53,7 +53,7 @@ function relativeEntrypointRefs(html){
  const urls=[];
  for(const m of html.matchAll(/<(?:script|link|img)\b[^>]*\b(?:src|href)=["'](\.?\/[^"'?#]+)["']/gi))
    urls.push(m[1]);
- for(const m of html.matchAll(/\bfetch\(\s*["'](\.?\/[^"'?#]+)["']/g))
+ for(const m of html.matchAll(/\bfetch\(\s*["'](\.?\/[^"'?#]+)["']\s*(?=[,)])/g))
    urls.push(m[1]);
  const invalid=[],paths=[];
  for(const value of urls){
