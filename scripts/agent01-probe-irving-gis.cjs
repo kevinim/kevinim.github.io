@@ -81,7 +81,7 @@ async function main(){
  // Retain successful grade-specific source work in CI-local quarantine even if another grade fails.
  // Only metadata JSON is uploaded, never the source geometry or private addresses.
  if(all.length)fs.writeFileSync(path.join(dir,'QUARANTINED-source-year-unknown.geojson'),JSON.stringify({type:'FeatureCollection',features:all})+'\n');
- if(audit.errors.length||audit.results.length!==3){console.error('GIS source extraction NO_GO',audit.errors);console.log('Quarantined grade successes:',audit.results.map(x=>x.grade+':'+x.polygonCount).join(','));process.exitCode=1;return;}
+ if(audit.errors.length||audit.results.length!==3){console.error('GIS source extraction NO_GO',audit.errors);console.log('Quarantined grade successes:',audit.results.map(x=>x.grade+':'+x.polygonCount+' polygons/'+x.schoolCount+' distinct names').join(','));process.exitCode=1;return;}
  console.log('GIS STAGED, NOT RELEASED:',all.length,'polygons across',audit.results.length,'grades; 2026-27 validity unverified');
 }
 if(require.main===module){
