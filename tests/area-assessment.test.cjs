@@ -52,7 +52,7 @@ test('commute summary shows only the user-calculated travel time, no fixed offic
 test('visible assessment is placed across the main width before the map',()=>{
   const src=fs.readFileSync(path.join(root,'features/area-assessment.js'),'utf8');
   assert.match(src,/document\.querySelector\('\.main'\)/);
-  assert.match(src,/parent\.before\(section\)/);
+  assert.match(src,/main\.before\(section\)/);
   assert.doesNotMatch(src,/\.home-controls'\)/);
 });
 test('main page keeps legacy data-binding IDs but loads standalone assessment',()=>{
