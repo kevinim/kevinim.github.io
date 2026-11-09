@@ -114,7 +114,8 @@ function verifyExternalCspIntegrity(html){
  const match=/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"\s*\/?>/i.exec(html);
  if(!match)throw Error('External bootstrap requires CSP meta');
  const policy=match[1];
- if(/'unsafe-inline'|'unsafe-eval'|'sha256-/i.test(policy))throw Error('External bootstrap CSP must not allow inline scripts');
+ const script=policy.split(';').map(x=>x.trim()).find(x=>x.startsWith('script-src '));
+ if(!script||/'unsafe-inline'|'unsafe-eval'|'sha256-/i.test(script))throw Error('External bootstrap script-src CSP must not allow inline scripts');
  if(!/script-src\s+'self'/.test(policy)||!/(?:^|;)\s*script-src-attr\s+'none'\s*(?:;|$)/.test(policy)||
     !/object-src\s+'none'/.test(policy)||!/base-uri\s+'self'/.test(policy)||!/form-action\s+'self'/.test(policy))
   throw Error('External bootstrap CSP protections missing');
