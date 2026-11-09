@@ -3,7 +3,7 @@ on:
   push:
     branches: [qa/public-residential-e2e-school-map-20261109]
   pull_request:
-    branches: [feature/home-address-assigned-school-map-20261109, main]
+    branches: [feature/address-selected-auto-school-map-20261109, main]
   workflow_dispatch:
 permissions:
   contents: read
