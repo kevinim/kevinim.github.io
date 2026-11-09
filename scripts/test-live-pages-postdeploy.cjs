@@ -103,7 +103,7 @@ async function verify(browser,width){
   if(width===1366){
    // Only enable locally bundled NRI data. Do not depend on FEMA's separate remote NFHL service.
    const panel=page.locator('#phase2HazardPanel');
-   if(!(await panel.getAttribute('open')))await panel.locator('summary').click();
+   if(!(await panel.evaluate(node=>node.open)))await panel.locator('summary').click();
    await page.locator('#femaHazardEnabled').check();
    await page.waitForFunction(()=>document.getElementById('femaHazardStatus')?.textContent?.includes('1,734'),null,{timeout:70000});
    entry.checks.push('Live FEMA NRI overlay loads 1,734 tracts');
@@ -111,7 +111,7 @@ async function verify(browser,width){
    assert.equal(await page.locator('#zipOverlay').isChecked(),true,
     'ZIP overlay should restore after NRI toggle');
    const txwrap=page.locator('#txwrapWHPPanel');
-   if(!(await txwrap.getAttribute('open')))await txwrap.locator('summary').click();
+   if(!(await txwrap.evaluate(node=>node.open)))await txwrap.locator('summary').click();
    await page.locator('#txwrapWHPEnabled').check();
    await sleep(4000);
    const raster=await page.locator('#txwrapWHPStatus').innerText();
@@ -146,7 +146,7 @@ async function verify(browser,width){
  try{
   for(const width of [1366,390]){
    try{report.viewports.push(await verify(browser,width))}
-   catch(e){report.issues.push({width,error:String(e.message||e),details:e.details});break}
+   catch(e){report.issues.push({width,error:String(e.message||e),details:e.details});continue}
   }
  }finally{
   await browser.close().catch(()=>{});
