@@ -24,7 +24,7 @@ test('outage and pending state are distinct from missing school geometry',()=>{
  assert.equal(c({schoolType:'other'}).kind,'nonstandard');
 });
 test('main UI has direct school badge and map explanation without TEA as fake attendance search',()=>{
- const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+ const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8')+'\n'+fs.readFileSync(path.join(__dirname,'../dashboard-main.js'),'utf8');
  assert.ok(html.includes('<script src="./school-zone-ui.js?v=1"></script>'));
  assert.ok(html.includes('id="schoolZoneMapHint"'));
  assert.ok(html.includes('function schoolZoneInfo(s)'));
