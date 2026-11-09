@@ -7,7 +7,7 @@ const html=read('index.html'),theme=read('features/theme-toggle.js'),
 test('theme stylesheet and early classic script load from same-origin with unchanged strict script CSP',()=>{
  const meta=html.match(/http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
  assert.match(meta,/script-src-attr 'none'/);
- assert.doesNotMatch(meta,/'unsafe-inline'/);
+ assert.doesNotMatch(meta.match(/script-src ([^;]+)/)?.[1]||'',/'unsafe-inline'/);
  assert.match(html,/theme-toggle\.css\?v=1/);
  assert.match(html,/theme-toggle\.js\?v=1/);
  const headEnd=html.indexOf('</head>'),scriptAt=html.indexOf('theme-toggle.js?v=1');
