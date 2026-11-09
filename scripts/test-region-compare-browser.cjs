@@ -39,10 +39,10 @@ const report={viewports:[]};
    assert.equal(await page.locator('.region-compare-select[data-slot="1"]').inputValue(),'75034');
    assert.match(await page.locator('#regionCompareStatus').innerText(),/중복/);
    await page.locator('#regionCompareThird').click();
-   assert.equal(await page.locator('#regionCompareTable thead th').count(),3);
+   await page.waitForFunction(()=>document.querySelectorAll('#regionCompareTable thead th').length===3,null,{timeout:15000});
    assert.equal(await page.locator('.region-compare-select[data-slot="2"]').isVisible(),false);
    await page.locator('#regionCompareThird').click();
-   assert.equal(await page.locator('#regionCompareTable thead th').count(),4);
+   await page.waitForFunction(()=>document.querySelectorAll('#regionCompareTable thead th').length===4,null,{timeout:15000});
    assert.equal(await page.locator('.region-compare-select[data-slot="2"]').isVisible(),true);
    // Map-facing ZIP swap is explicitly user-triggered and does not alter home address candidates.
    await page.locator('#regionCompareTable button[data-map-zip="75013"]').click();
