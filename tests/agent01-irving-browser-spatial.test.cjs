@@ -65,6 +65,7 @@ test('Irving user-entered Finder school-name comparison never promotes the histo
  const reference={status:'ready',names:{elementary:'Barton ES',middle:'Crockett MS',high:'Macarthur HS'}};
  const base={gradeLevel:'middle',schoolName:'Crockett Middle School',schoolYear:'2026–27'};
  const match=M.compareReportedSchool(reference,base);
+ assert.equal(match.kind,'irving');
  assert.equal(match.status,'manual-match');
  assert.equal(match.yearCertified,false);
  assert.equal(match.independentlyVerified,false);
