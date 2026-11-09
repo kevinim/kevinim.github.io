@@ -35,8 +35,8 @@ test('main bootstrap is a classic local script loaded synchronously at the origi
 });
 test('existing CSP retained until all inline handlers can migrate safely',()=>{
  assert.match(html,/<meta http-equiv="Content-Security-Policy" content="script-src 'self' https:\/\/unpkg\.com 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'">/);
- assert.ok(/\bonclick\s*=|\bonchange\s*=|\boninput\s*=/.test(html),
-   'remaining inline event attributes must be migrated before removing unsafe-inline');
+ assert.ok(/\bonclick\s*=|\bonchange\s*=|\boninput\s*=/.test(main.toString('utf8')),
+   'generated inline event attributes in the JS bootstrap must be migrated before removing unsafe-inline');
 });
 test('same-origin source remains actual application entrypoint, not a second separately initialized app',()=>{
  assert.match(html,/<script src="\.\/dashboard-main\.js\?v=1"><\/script>/);
