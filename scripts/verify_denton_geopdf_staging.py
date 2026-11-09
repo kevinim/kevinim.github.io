@@ -12,7 +12,7 @@ from shapely.ops import unary_union
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"artifacts/denton-geopdf-derived"
 JS=(ROOT/"denton-official-zone-references.js").read_text(encoding="utf-8")
-match=re.search(r"const ROWS=Object\.freeze\((\[.*?\])\);",JS,re.S)
+match=re.search(r"const ROWS=Object\.freeze\((\[.*?\])\.map\(Object\.freeze\)\);",JS,re.S)
 if not match:raise SystemExit("Official 39-school PDF source roster could not be parsed")
 roster=json.loads(match.group(1))
 expected={(r["id"],r["level"]) for r in roster}
