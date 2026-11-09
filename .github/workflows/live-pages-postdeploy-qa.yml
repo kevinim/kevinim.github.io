@@ -1,0 +1,45 @@
+name: Live Pages postdeployment security and school regression
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/test-live-pages-postdeploy.cjs'
+      - '.github/workflows/live-pages-postdeploy-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate QA script syntax
+        run: node --check scripts/test-live-pages-postdeploy.cjs
+      - name: Install isolated Chromium for public-site checks
+        run: |
+          mkdir -p live-pages-qa-tmp
+          cd live-pages-qa-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Test REAL deployed site — CSP, schools, Allen, mobile and FEMA
+        env:
+          NODE_PATH: ${{ github.workspace }}/live-pages-qa-tmp/node_modules
+          DASHBOARD_BASE_URL: https://kevinim.github.io/
+        run: node scripts/test-live-pages-postdeploy.cjs
+      - name: Archive live QA report/screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-pages-postdeployment-QA
+          path: artifacts/live-postdeploy/
+          if-no-files-found: warn
