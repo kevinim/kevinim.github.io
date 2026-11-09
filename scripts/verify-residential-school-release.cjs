@@ -21,7 +21,7 @@ if(evidence){
   if(!Array.isArray(cases)||cases.length<3){
    blockers.push(district+':insufficient_independent_residential_samples');continue;
   }
-  const zipCount=new Set(cases.map(c=>c.zip).filter(z=>/^\\d{5}$/.test(String(z)))).size;
+  const zipCount=new Set(cases.map(c=>c.zip).filter(z=>/^\d{5}$/.test(String(z)))).size;
   if(zipCount<2)blockers.push(district+':insufficient_zip_diversity');
   for(const c of cases){
    if(!c.officialFinderVerified||!c.dashboardAddressResolved||

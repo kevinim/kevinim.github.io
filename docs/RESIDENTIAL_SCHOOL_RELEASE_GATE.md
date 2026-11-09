@@ -13,5 +13,9 @@ For each of Frisco, Plano, Allen, Lewisville, Prosper, CFB and McKinney, obtain 
 - **Frisco:** 2 public-facility examples matched; no independent residential sampling. 73/73 directory polygon links are not enrollment verification.
 - **McKinney:** 25/30 directory links, five special/nonstandard entries; residential comparison pending.
 
+## Testability and approval scope
+
+The seven currently required districts are checked for at least two distinct 5-digit ZIPs per district. Any one-ZIP geography exception requires a separately reviewed explicit policy change; supplying a flag inside an evidence file cannot waive validation. The synthetic positive unit test verifies that the gate is **technically passable**, but is not evidence of any real school assignment. The real gate remains NO-GO until independent residential evidence for all seven districts exists. This current-branch security/maintenance PR must not be treated as a family-UAT or public-launch approval.
+
 ## Operation
 Run `node scripts/verify-residential-school-release.cjs` in release CI. It fails when independently approved evidence is absent, stale, incomplete, or has any failed required step. No release workflow may ignore the exit code. The workflow does not deploy. **GitHub branch protection / ruleset must separately require the job**; adding a YAML job alone does not configure repository rulesets. An owner must explicitly approve any changed scope or exception. PR #141 is independently managed and untouched.
