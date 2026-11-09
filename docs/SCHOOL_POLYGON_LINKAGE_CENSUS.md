@@ -41,6 +41,33 @@ Current/finder-year statuses stay separate: Frisco and Prosper sourced 2026–27
 - `PASS_WITH_SOURCE_LIMITATIONS` means only the current browser session was examined. No silent inference of GIS source freshness or address eligibility.
 - Report names are campus names from public school data, never household address text.
 
+## Verified PR browser baseline — 2026-11-09
+
+**Reference:** GitHub Actions workflow run `42548036191` on the isolated PR, after all six target district sources had loaded successfully in that session. All counts below are currently loaded school-directory records, **not** districtwide official school totals or a current-year enrollment guarantee.
+
+| District | Loaded schools | Polygon-linked | Unlinked | Per-session source evidence |
+|---|---:|---:|---:|---|
+| Frisco | 73 | 73 | 0 | 75 2026–27 source features, live district feed |
+| Plano | 63 | 62 | 1 | 64 Finder-linked features, underlying year not independently confirmed 2026–27; 1 special campus |
+| Allen | 22 | 21 | 1 | 20 historical GIS features (2019/2023); 1 special campus; **not current assignment** |
+| Lewisville | 54 | 53 | 1 | 696 Finder-linked features (multipart/mixed vintages); 1 special campus |
+| Prosper | 31 | 31 | 0 | 31 official 2026–27 local source features |
+| CFB | 30 | 0 | 30 | No dashboard per-campus polygon source; 29 source gaps and 1 special campus, despite operational resident Finder |
+| **Six districts** | **273** | **240** | **33** | **87.9% app linkage, not districtwide official coverage** |
+| Additional McKinney | 30 | 25 | 5 | 476 loaded Finder features; 5 special/nonstandard campuses |
+
+**Interpretation:** Of the 33 unmatched entries in the target-six audit, 29 are CFB schools with no configured GIS source and 4 are explained special-campus cases. There were **zero observed ID/name linkage hints and zero known district source-fetch failures**. One actual Leaflet render sample per available district/grade combination passed (18/18).
+
+**Allen P0 marker verification:** 21 schools with valid location points in the Allen directory; after fitting the Allen school point bounds, 21 were expected visible and **21 real map marker layers matched**. This is a local PR browser test, not proof that a future production build cannot regress.
+
+**Broader data note:** 1,712 elementary/middle/high entries were loaded across all Texas districts, including **1,409 outside the six target districts**. Many of those other districts do not have configured polygon layers in this DFW dashboard. Therefore the broad `15.5%` app-linkage percentage must **not** be presented as an official DFW school GIS coverage measure.
+
+### Guardrail against regression
+
+`data/school-polygon-linkage-baseline.json` pins the observed **minimum counts** per district from the reference run. `scripts/verify-school-linkage-baseline.cjs` fails CI if a normally loaded district loses listed campuses or linked boundaries, the baseline's source-vintage classification changes silently, the polygon render sample is too small, or Allen location markers disappear.
+
+If a real remote source request fails, that district is classified **INCONCLUSIVE** and excluded from missing-geometry assertions; do not simply replace it with invented boundaries. Refresh baseline minima only after a documented legitimate district change and an independently reviewed browser source audit.
+
 ## Runtime dependencies
 
 The live Frisco, Plano, Lewisville and McKinney services may change independently of the pinned Git revision. File integrity is covered by PR #84. To reproduce this audit with a specific version, record PR head SHA and GitHub Actions run ID; do not compare findings from different runtime network conditions as if they measured the same dataset.
