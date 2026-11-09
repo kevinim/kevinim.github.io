@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths:
       - 'scripts/finder-derived-estimate-engine.cjs'
+      - 'scripts/validate-official-school-gis-intake.cjs'
+      - 'tests/validate-official-school-gis-intake.test.cjs'
       - 'scripts/audit-finder-derived-research-targets.cjs'
       - 'scripts/verify-cfb-geometry-source-triage.cjs'
       - 'data/cfb-geometry-source-triage-2026.json'
@@ -34,11 +36,12 @@ jobs:
       - name: Verify source
         run: |
           node --check scripts/finder-derived-estimate-engine.cjs
+          node --check scripts/validate-official-school-gis-intake.cjs
           node --check scripts/audit-finder-derived-research-targets.cjs
           node --check scripts/verify-cfb-geometry-source-triage.cjs
           node --check scripts/generate-finder-derived-estimates.cjs
           node --check scripts/render-finder-derived-demo-svg.cjs
-          node --test tests/finder-derived-estimate-engine.test.cjs tests/finder-derived-research-targets.test.cjs tests/verify-cfb-geometry-source-triage.test.cjs
+          node --test tests/finder-derived-estimate-engine.test.cjs tests/finder-derived-research-targets.test.cjs tests/verify-cfb-geometry-source-triage.test.cjs tests/validate-official-school-gis-intake.test.cjs
       - name: Generate synthetic-only sample candidate geometry
         run: |
           node scripts/generate-finder-derived-estimates.cjs --demo tests/fixtures/finder-derived-synthetic.json artifacts/finder-derived/cfb-synthetic.json
