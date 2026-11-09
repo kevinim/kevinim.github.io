@@ -4,12 +4,12 @@
 // stay at city level: a ZIP shows the trends of the cities it lies in, it is
 // never assigned a share of a city's crimes.
 // Input:  data/dfw-crime-city-2023-2025.geojson, dfw-zcta-boundaries.geojson,
-//         jpm-outside-dfw.json (outside-area ZIP shapes)
+//         dfw-outside-public.json (outside-area ZIP shapes)
 // Output: data/dfw-crime-zip-cities-2023-2025.json
 import {readFileSync,writeFileSync} from 'node:fs';
 const read=p=>JSON.parse(readFileSync(p,'utf8'));
 const crime=read('data/dfw-crime-city-2023-2025.geojson');
-const zips=[...read('dfw-zcta-boundaries.geojson').features,...read('jpm-outside-dfw.json').shapes.features];
+const zips=[...read('dfw-zcta-boundaries.geojson').features,...read('dfw-outside-public.json').shapes.features];
 
 const polys=g=>g?.type==='Polygon'?[g.coordinates]:g?.type==='MultiPolygon'?g.coordinates:[];
 function ringHas(p,ring){let inside=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const [xi,yi]=ring[i],[xj,yj]=ring[j];if(((yi>p[1])!==(yj>p[1]))&&(p[0]<(xj-xi)*(p[1]-yi)/(yj-yi)+xi))inside=!inside}return inside}
