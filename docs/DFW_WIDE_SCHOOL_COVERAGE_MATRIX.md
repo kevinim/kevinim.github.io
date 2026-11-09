@@ -12,12 +12,31 @@ The initial automated census uses the **11-county Dallas–Fort Worth–Arlingto
 | District/LEA identifiers | 152 |
 | Named ISDs | 108 |
 | Other LEAs (charter/alternative/special types require classification) | 44 |
-| ISDs with a registered, allowlisted official school-confirmation entry | 57 |
-| ISDs with no *registered* parent entry path in this dashboard | **51** |
-| Registered parent guidance rate among 108 observed ISDs | **52.8%** |
-| TEA school records within the 51 unregistered ISDs | **211** |
+| ISDs with a registered, allowlisted official school-confirmation entry | 65 |
+| ISDs with no *registered* parent entry path in this dashboard | **43** |
+| Registered parent guidance rate among 108 observed ISDs | **60.2%** |
+| TEA school records within the 43 unregistered ISDs | **157** |
 
 These are **source administrative county-of-record proxies**, not boundaries of every district serving residential parcels. TEA districtCounty does not determine a particular campus's position or a student's enrollment eligibility. Cross-county districts and schools not in the supplied source may be missed. NCTCOG's broader 12-county area adds **Hood County**, which this TEA source omits; **unknown is not zero**. These 152 observed LEAs do not prove exhaustive real-estate parcel service coverage.
+
+## Fourth batch: 8 more official parent routes (Draft, not deployed)
+
+Eight additional school districts were verified through their district-operated public landing pages on 2026-11-09. They increase the **registered official parent entry paths** from 57 to **65/108 (60.2%)**, covering 54 more TEA school records: 1,730→**1,784/1,941**. The 11-county proxy still has **43 ISDs / 157 records** without a registered route. Neither 60.2% nor the campus-row total is a measure of current-year polygons or address-by-grade verification.
+
+| TEA code | ISD | Source type | District-operated landing page | Important limitation |
+| --- | --- | --- | --- | --- |
+| 184902 | Springtown | Inquiry / enrollment only | https://www.springtownisd.net/page/enrollment | 2026–27 공식 학생 등록 안내입니다. 주소별 지정학교 검색기는 이 페이지에서 확인되지 않았습니다. 배정 학교와 학년별 예외는 교육청 등록 담당자에게 확인하세요. 2027–28 신설 초등학교 계획을 2026–27 배정으로 간주하지 마세요. |
+| 220920 | White Settlement | Locator entry | https://www.wsisd.com/students-families/enrollment | 2026–27 공식 Enrollment의 Which School Will My Child Attend 및 School Site Locator로 주소를 조회하세요. Fine Arts·STEAM 선택, 전학·학군 외 Open Enrollment는 일반 배정과 다르며 최종 배정은 학교가 확인합니다. |
+| 220917 | Castleberry | Locator entry | https://www.castleberryisd.net/enrollnow/enrollnow | 학군 Register Now의 SchoolSearch에서 주소별 학교 배정구역을 검색하세요. Find on Map으로 경계를 볼 수도 있으나 현재 학년도와 학년·전학 예외는 등록 담당자에게 다시 확인하세요. 지도 도형은 대시보드에 수집·검증되지 않았습니다. |
+| 129903 | Kaufman | Locator entry | https://www.kaufmanisd.net/page/kisd-school-zone-finder/ | 학군 공식 KISD School Zone Finder에 주소를 입력해 학교 구역을 확인하세요. 학교별 학년 범위, 2026–27 현재 적용 여부, 예외·전학은 학군에 재확인하세요. Finder 경계는 대시보드 지도에 검증·탑재되지 않았습니다. |
+| 116901 | Caddo Mills | Locator entry | https://www.caddomillsisd.org/page/26-27-student-enrollment-information | 2026–27 학군 공식 등록 안내의 Elementary School Zoning 검색으로 주소별 초등학교를 확인하세요. 중·고등학교 구역, 학년별 변경, 전학·특수교육 배정은 이 초등 검색만으로 확정할 수 없으며 학군에 별도 문의하세요. |
+| 249905 | Decatur | Locator entry | https://www.decaturisd.us/page/enrollment | 2026–27 공식 Enrollment에서 City of Decatur의 DISD Elementary School Attendance Zones 지도를 열고 주소를 검색하세요. 세 개 초등 경계만 해당하며 STEM Academy는 별도 지원, 중·고는 학교에 확인해야 합니다. 외부 GIS를 대시보드 경계로 복제하지 않았습니다. |
+| 070905 | Ferris | Inquiry / enrollment only | https://www.ferrisisd.org/departments/student-support-services/enrollment-registration | 2026–27 공식 Enrollment/Registration 안내입니다. 학군 내 거주증명과 학년별 등록을 확인하되, 이 등록 페이지가 주소별 학교 검색기는 아닙니다. 일반 지정학교와 학군 밖 전학은 별도 절차이므로 등록 담당자에게 확인하세요. |
+| 043919 | Lovejoy | Inquiry / enrollment only | https://www.lovejoyisd.net/page/enrollment-for-new-students | 2026–27 공식 신규 등록 안내입니다. 일반 거주지 학군 배정과 별도 지원 방식 Lovejoy Scholars 프로그램은 다르며, 주소별 캠퍼스 검색기 또는 현행 학교별 경계는 확인되지 않았습니다. 등록처에서 학년·주소를 확인하세요. |
+
+**Evidence classification:** five district pages explicitly offer some locator or elementary-area search; three are registration/inquiry-only. For all eight, current-year campus polygon and verified specific residential assignment remain **unknown/unverified**. No address, grade, mapping layer, rating, polygon, or personal data was added or sent to an external provider. Source limitations and authoritative links are preserved in `data/dfw-parent-source-evidence-batch4-2026.json`.
+
+**Release requirement:** this stacked PR builds on #147 → #144 → #141 and must be rechecked against upstream after independent approval. Mandatory address→district Finder→school→map polygon evidence in Draft PR #148 remains a separate NO-GO requirement. Offline data integrity checks cannot substitute for independent address and map browser UAT or resolve unknown boundaries.
 
 ## Third batch: direct school locators versus district-only registration inquiries
 
@@ -76,22 +95,20 @@ This is a **verified official entry URL** and appropriate instructions/limitatio
 
 ## Highest remaining school confirmation backlog
 
-P0 means an official source has not been linked to the dashboard, NOT that the district has no finder or attendance boundary.
+P0 means the dashboard has not registered a verified official source, **not** that the district lacks an official tool. This queue updates dynamically with source registration; priority is based on TEA campus rows.
 
 | Priority | ISD | TEA school records |
 | ---: | --- | ---: |
-| 1 | SPRINGTOWN | 8 |
-| 2 | WHITE SETTLEMENT | 8 |
-| 3 | CASTLEBERRY | 7 |
-| 4 | KAUFMAN | 7 |
-| 5 | CADDO MILLS | 6 |
-| 6 | DECATUR | 6 |
-| 7 | FERRIS | 6 |
-| 8 | KEMP | 6 |
-| 9 | LOVEJOY | 6 |
-| 10 | MABANK | 6 |
-
-Other TEA LEAs (44) are tracked separately. A charter or choice program cannot be treated as an ordinary address-assigned ISD.
+| 1 | KEMP ISD | 6 |
+| 2 | MABANK ISD | 6 |
+| 3 | SANGER ISD | 6 |
+| 4 | ALVARADO ISD | 5 |
+| 5 | BOYD ISD | 5 |
+| 6 | BROCK ISD | 5 |
+| 7 | GODLEY ISD | 5 |
+| 8 | KENNEDALE ISD | 5 |
+| 9 | KRUM ISD | 5 |
+| 10 | LAKE DALLAS ISD | 5 |
 
 ## Three independent levels of evidence
 
@@ -115,4 +132,4 @@ The JSON reports missing *reason* states, including no known official parent rou
 
 ## Next work
 
-Continue detailed, current-year school assignment routing checks for the six official-inquiry districts in the third batch, then source the **51 remaining unregistered ISDs**, not just favorite suburbs. For each, store TEA code, authority URL, last verification date, active year, grade, search/map/choice/inquiry type, GIS availability and licensing, missing reason and next action. Expand source boundaries to Hood and any cross-county overlap before labeling the DFW geographic denominator exhaustive. Confirm school-specific missing reasons with a browser source audit, including school-choice exceptions and transient failures.
+Continue detailed, current-year school assignment routing checks for the six official-inquiry districts in the third batch, then source the **43 remaining unregistered ISDs**, not just favorite suburbs. For each, store TEA code, authority URL, last verification date, active year, grade, search/map/choice/inquiry type, GIS availability and licensing, missing reason and next action. Expand source boundaries to Hood and any cross-county overlap before labeling the DFW geographic denominator exhaustive. Confirm school-specific missing reasons with a browser source audit, including school-choice exceptions and transient failures.
