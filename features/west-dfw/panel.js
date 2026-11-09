@@ -142,7 +142,8 @@
   wrapper.appendChild(foot);
   target.dataset.state='ready';
   active={counts:counters,status,getSchools};
-  status.textContent='공식 링크 4개 연결 완료. 학교 정보는 로딩 완료 후 표시됩니다.';
+  // Both school loading and panel fetch are asynchronous. Update on either order.
+  refreshCounts();
   return {ready:true,codeCount:config.districts.length,zipCount:config.areas.length};
  }
  return {validateConfig,safeLink,schoolCount,mount,refreshCounts,REQUIRED_CODES};
