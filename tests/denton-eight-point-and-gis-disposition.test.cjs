@@ -72,3 +72,30 @@ test('no non-Denton or historic geometry source is promoted to 2026–27 school-
  assert.ok(gis.sources.some(s=>s.kind==='county-administrative-isd-polygon'));
  assert.ok(gis.sources.some(s=>s.kind==='current-district-residential-school-locator'));
 });
+
+test('official 2026–27 PDF-vs-live-directory ZIP discrepancies remain unresolved for Hill and Martinez',()=>{
+ assert.equal(audit.currentYearPdfVsLiveDirectoryZipConflicts,2);
+ const expected=[['061901130','75068','76227','HillES-ZoneMap_26-27.pdf'],['061901131','76227','75068','MartinezES-ZoneMap_26-27.pdf']];
+ for(const [id,directoryZip,pdfZip,pdfName] of expected){
+  const campus=audit.exceptions.find(x=>x.id===id);
+  assert.ok(campus);
+  assert.equal(campus.publicCampusAddress.zip,directoryZip);
+  const conflicting=campus.currentYearOfficialPdfAddressDiscrepancy;
+  assert.ok(conflicting);
+  assert.equal(conflicting.officialLiveDirectoryZip,directoryZip);
+  assert.equal(conflicting.pdfLegendZip,pdfZip);
+  assert.ok(conflicting.officialZonePdfUrl.endsWith(pdfName));
+  assert.equal(conflicting.status,'unresolved-no-coordinate-certification');
+  assert.equal(campus.currentLocationCoordinateApproved,false);
+ }
+});
+test('proposed future 2028–29 rezoning must never certify current 2026–27 polygons',()=>{
+ assert.equal(gis.schoolYear,'2026-27');
+ assert.deepEqual(gis.temporalProvenanceGuard,{currentYear:'2026-27',futureProposalYear:'2028-29',futureProposalMayCertifyCurrentYear:false,yearUnmatchedSourcesMustRemainQuarantined:true});
+ const future=gis.sources.find(x=>x.kind==='future-2028-29-proposed-attendance-rezoning');
+ assert.ok(future);
+ assert.equal(future.status,'proposal-for-2028-29-not-current');
+ assert.equal(future.usableAsCurrentCampusPolygon,false);
+ assert.equal(gis.verifiedCurrentYearSchoolPolygonLayerCount,0);
+ assert.equal(gis.releaseGate.status,'NO_GO');
+});
