@@ -28,6 +28,16 @@ const DISTRICT_REGISTRY={
   official:'https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder',label:{'finder-current':'현행 공식 Finder 경계 · 플레이노',reference:'2025–26 저장본 참고 · 플레이노'}},
  '043907':{en:'McKinney',ko:'매키니',zoneKey:'043907',currency:'live',address:'polygon',campusIdMatch:true,
   official:'https://portal.metrostudygis.com/arcgis/apps/webappviewer/index.html?id=ed198c434d47474b88709e98d1f0a125',label:{'finder-current':'2026–27 공식 Finder 경계 · 매키니'}},
+ // West DFW: district IDs verified against TEA. Official external locator only;
+ // no authorized, school-specific current-year GIS has been ingested.
+ '220919':{en:'Carroll',ko:'캐럴',zoneKey:null,currency:null,address:null,campusIdMatch:true,
+  official:'https://www.southlakecarroll.edu/district-information/district-departments/student-services/online-enrollment-portal',label:{}},
+ '220907':{en:'Keller',ko:'켈러',zoneKey:null,currency:null,address:null,campusIdMatch:true,
+  official:'https://www.kellerisd.net/about-kisd/maps',label:{}},
+ '061911':{en:'Northwest',ko:'노스웨스트',zoneKey:null,currency:null,address:null,campusIdMatch:true,
+  official:'https://www.nisdtx.org/departments/facilities/attendance-boundaries',label:{}},
+ '220906':{en:'Grapevine-Colleyville',ko:'그레이프바인–콜리빌',zoneKey:null,currency:null,address:null,campusIdMatch:true,
+  official:'https://www.gcisd.net/page/attendance-area-maps/',label:{}},
  CFB:{en:'CFB',ko:'캐럴턴–파머스브랜치',zoneKey:null,currency:null,address:null,campusIdMatch:false,
   official:'https://www.cfbisd.edu/students/school-maps-locator-system',label:{}}
 };
