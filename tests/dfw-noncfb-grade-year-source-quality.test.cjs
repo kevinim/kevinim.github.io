@@ -12,7 +12,7 @@ test('10 distinct non-CFB real TEA districts have exact official HTTPS routes an
  assert.equal(new Set(evidence.districts.map(x=>x.code)).size,10);
  assert.ok(evidence.districts.every(x=>x.code!=='CFB'&&x.code!=='057903'));
  for(const e of evidence.districts){
-  assert.match(e.code,/^\\d{6}$/);
+  assert.match(e.code,/^\d{6}$/);
   const d=DISTRICT_REGISTRY[e.code],row=matrix.districts.find(x=>x.code===e.code);
   assert.ok(d&&row,e.code);
   assert.equal(row.category,'public-isd');
@@ -23,7 +23,7 @@ test('10 distinct non-CFB real TEA districts have exact official HTTPS routes an
   assert.equal(row.parentGuidance.status,'registered-official-source');
   assert.equal(d.lookupKind,e.lookupKind);
   assert.equal(official(e.official),e.official);
-  assert.ok(e.source.startsWith('https://')&&!/[\\s]/.test(e.source));
+  assert.ok(e.source.startsWith('https://')&&!/\s/.test(e.source));
   assert.ok(e.sourceYear.length>25);
   assert.ok(e.gradeScope.length>25);
   assert.ok(e.sourceFootnote.length>85);
