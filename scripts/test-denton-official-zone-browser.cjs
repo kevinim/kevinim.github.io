@@ -35,7 +35,6 @@ async function main(){
    assert.equal(count.rows,39);
    // Existing schools.json contains no Denton location rows. Verify the honest
    // official-source directory UI instead of injecting synthetic markers.
-   await page.locator('summary').filter({hasText:'학군 배정구역과 출처 확인'}).first().click();
    await page.locator('#dentonPdfZoneDirectory summary').click();
    await page.locator('#dentonPdfCampusSelect').selectOption('061901127');
    const result=await page.evaluate(()=>{
