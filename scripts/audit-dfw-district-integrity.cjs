@@ -92,6 +92,16 @@ function audit(input) {
   const refSource = !!baselineSource;
   check(!refSource || !!r, 'REFERENCE_WITHOUT_DISTRICT_REGISTRY_' + d.code);
   check(!gisConfigured || !!r?.zoneKey, 'INVALID_ZONE_KEY_' + d.code);
+  const expectedGeometryStatus = refSource ? 'reference-browser-minimum-only' :
+   gisConfigured ? 'configured-but-no-reviewed-reference' : 'no-dashboard-school-polygons-configured';
+  check(d.geometry.status === expectedGeometryStatus, 'GIS_MATRIX_SOURCE_STATUS_DRIFT_' + d.code);
+  if (refSource) check(d.geometry.referenceLoadedMinimum === baselineSource.minimumLoaded &&
+    d.geometry.referenceMatchedMinimum === baselineSource.minimumLinked,
+    'GIS_REFERENCE_DENOMINATOR_DRIFT_' + d.code);
+  else check(d.geometry.referenceMatchedMinimum === null &&
+    d.geometry.matchedLoadedPercent === null &&
+    d.geometry.confirmedCurrentYear === false,
+    'INVENTED_CAMPUS_GIS_COVERAGE_' + d.code);
   let pointRecords = 0, missingPoints = 0, invalidPoints = 0, knownRetired = 0;
   let directoryTypeHints = 0;
   const missingID = [], pointAnomaly = [], campusNoPolygon = [];
@@ -175,10 +185,19 @@ function audit(input) {
  check(registered === matrix.summary.publicISDsWithRegisteredParentRoute, 'OFFICIAL_ROUTE_CENSUS_DRIFT');
  check(campusResults.length === matrix.summary.publicISDCampusRows, 'CAMPUS_AUDIT_LOST_ROWS');
  check(new Set(campusResults.map(c=>c.id)).size === campusResults.length, 'CAMPUS_AUDIT_DUPLICATE');
+ const otherRows = rows.filter(c => !publicISDs.some(d => d.code === c.id.slice(0,6)));
+ const otherMatched=otherRows.filter(c=>validPoint(ncesIndex.get(c.id))).length;
+ const otherMissing=otherRows.length-otherMatched;
+ check(otherRows.length === matrix.summary.otherLEACampusRows,'OTHER_LEA_CAMPUS_DENOMINATOR_DRIFT');
+ check(matched+otherMatched === identityBaseline.allInScopeHistoricalPoints,
+  'ALL_DFW_HISTORICAL_POINTS_REGRESSION');
  const missing = districts.filter(x=>x.officialFinderAvailability.url === null);
  const summary = {
   teaSourceRows:tea.data.length,dfwTeaRows:rows.length,publicISDs:districts.length,
-  otherTEALeas:matrix.districts.length-districts.length,publicISDCampusRecords:campusResults.length,
+  otherTEALeas:matrix.districts.length-districts.length,otherTEACampusRecords:otherRows.length,
+  otherLEAHistoricalPointMatches:otherMatched,otherLEAHistoricalPointsMissing:otherMissing,
+  allDFWMatchedHistoricalPoints:matched+otherMatched,allDFWMissingHistoricalPoints:absent+invalid+otherMissing,
+  publicISDCampusRecords:campusResults.length,
   registeredOfficialGuidance:registered,unregisteredOfficialGuidance:missing.length,
   configuredGISDistricts:districts.filter(d=>d.gisAvailability.status==='CONFIGURED_IN_DASHBOARD').length,
   referenceBrowserGISDistricts:districts.filter(d=>d.gisAvailability.districtReferenceMeasured).length,
