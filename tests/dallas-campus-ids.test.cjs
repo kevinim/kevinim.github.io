@@ -7,7 +7,7 @@ test('public school identity aliases normalize without guessing assignment',()=>
  assert.equal(normalizeName('BRYAN ADAMS H S'),normalizeName('Bryan Adams High School'));
 });
 test('TEA IDs, missing IDs, name disagreements and grade counts are individually audited',()=>{
- const zones=[f('057905184','Ben Milam','elementary'),f('057905058','A New Name','middle'),f('057905999','Unknown','high')];
+ const zones=[f('057905184','Ben Milam Elementary','elementary'),f('057905058','A New Name','middle'),f('057905999','Unknown','high')];
  const ratings=[{id:'057905184',officialName:'BEN MILAM EL'}, {id:'057905058',officialName:'OLD NAME MIDDLE'}];
  const out=compareCampusIdentities(zones,ratings);
  assert.deepEqual(out.totals,{polygons:3,mappedById:2,unmatchedId:1,nameDisagreements:1});
