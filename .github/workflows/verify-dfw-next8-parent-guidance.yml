@@ -1,0 +1,43 @@
+name: DFW batch 3 official school links + honest source quality QA
+on:
+  pull_request:
+    branches:
+      - main
+      - feature/dfw-parent-guidance-next12-20261109
+    paths:
+      - 'district-registry.js'
+      - 'trusted-link-policy.js'
+      - 'data/dfw-school-coverage-matrix-2026.json'
+      - 'data/dfw-parent-source-evidence-batch3-2026.json'
+      - 'tests/dfw-school-coverage-matrix.test.cjs'
+      - 'tests/dfw-parent-guidance-next12.test.cjs'
+      - 'tests/dfw-parent-guidance-batch3.test.cjs'
+      - '.github/workflows/verify-dfw-next8-parent-guidance.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-evidence-and-gis-non-inference:
+    name: DFW district authority, explicit finder-vs-inquiry, census and map safety
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Validate generated 11-county TEA census, JS and JSON structure
+        run: |
+          node --check district-registry.js
+          node --check trusted-link-policy.js
+          node scripts/build-dfw-school-coverage-matrix.cjs --check
+          node -e "const f=require('fs');const x=JSON.parse(f.readFileSync('data/dfw-parent-source-evidence-batch3-2026.json'));if(x.evidence.length!==8)throw Error('unverified evidence count');"
+      - name: Test official sources, QA guardrails and no invented student enrollment
+        run: |
+          node --test tests/dfw-school-coverage-matrix.test.cjs tests/dfw-parent-guidance-next12.test.cjs tests/dfw-parent-guidance-batch3.test.cjs tests/dfw-neighbor-finders.test.cjs tests/trusted-outbound-links.test.cjs tests/dfw-school-coverage-runtime.test.cjs
+      - name: Test public source contains no retired personalized commute datasets
+        run: node scripts/check-public-personalization.cjs .
