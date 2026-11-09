@@ -121,3 +121,51 @@ in 2026–27.
 school markers actually visible in Chromium, residential choice/enrollment
 accuracy, or production sign-off. Success of this PR is only a source/identity
 integrity PASS, not a release GO.
+
+## Six public-ISD missing historical NCES point records: investigated, not invented
+
+Machine-readable official-source evidence and a school-ID regression inventory:
+`data/dfw-public-isd-missing-point-evidence-2026.json`.
+Each record preserves a preliminary identity/exception classification,
+official source URL(s), the published address when one is available,
+and **both** `verifiedCurrentCoordinates:false` and
+`standardAttendancePolygonVerified:false`.
+
+| TEA ID | School | Source-based disposition | Remaining certification |
+| --- | --- | --- | --- |
+| `057907114` | Glenn C Hardin EL / Duncanville | District reconfigured campus to elementary in 2025; current address listed | Verify current geocoded point and 2026–27 school-level zone |
+| `184908002` | Parker County JJAEP / Peaster | County-operated juvenile justice alternative; not standard parcel-zoned enrollment | Confirm current program location if point shown; do not manufacture zone |
+| `184909103` | Brock Learning Academy / Brock | Official district directory lists school address; no NCES ID-point match | Exact point, grade/program model, current assignment rules |
+| `220902014` | Collegiate Academy of Birdville (ECHS) | District documents a weighted admissions lottery; not a default neighborhood attendance zone | Official current point; separate choice-enrollment logic |
+| `220905258` | Neighborhood PreK / Fort Worth | TEA campus administrative address is not established as a single classroom site | Verify actual instructional locations before any marker; no fictitious polygon |
+| `249902104` | Boyd PRI / Boyd | Historical TEA/meal roster identifies campus; current separate primary-campus status unresolved | Independent 2026–27 campus roster, move/closure decision, point |
+
+**Identity is not map placement.** The 2024–25 NCES point inventory has
+zero records for these six exact TEA IDs. Some missing records are
+nonstandard programs; counting all six as missing neighborhood school
+zones would be misleading. We have not edited points, polygons, admissions
+rules or school-year status in production.
+
+**Chico safety check:** the sole pending district after composite #173 is
+`249904` (Chico ISD, **Texas**, three preliminary TEA records). Search
+engines often suggest Chico Unified School District in *California*, which
+must not be accepted as Texas parent-source evidence. The Texas district's
+older HTTP site is not a verified approved HTTPS attendance Finder;
+registration remains unverified, not a fabricated official route.
+
+## CI interpretation and operational follow-through
+
+The pinned GitHub Actions job is an **offline fail-closed static audit**.
+Its green status is structural integrity only. The optional HTTP probe is
+disabled on routine PR runs and must be invoked explicitly; a successful
+HTTP 200 does **not** validate that an actual household search works.
+
+Outstanding independent responsibilities are kept explicit:
+- Agent 01: approved source acquisition and campus polygons for broader DFW
+- Agent 02: Denton 8 marker-coordinate exceptions and current GIS original
+- Agent 03: actual browser residence-to-official-Finder campus crosschecks
+- CFB separate owner: locator/derived geometry rights and residency proof
+
+The merge gate still requires a correctly sourced 2026–27 residence, grade,
+campus and visible polygon check, including exceptions and independent
+review under #148. The user has not authorized merge or deployment.
