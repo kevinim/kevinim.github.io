@@ -24,15 +24,15 @@
       "officialFinder": "https://www.irvingisd.net/departments-services/registration/find-my-assigned-school",
       "sourceClass": "district-embedded-arcgis-webmaps",
       "currentYearCertified": false,
-      "geometryStage": "live-probe-quarantined",
+      "geometryStage": "partial-seven-middle-polygons-live-extracted-elementary-pending-high-no-campus-geometry",
       "webmaps": [
         {
           "grade": "elementary",
           "sourceURL": "https://www.irvingisd.net/departments-services/performance-outcomes-data/planning/current-campus-level-maps/elementary-school-boundary-map",
           "arcgisWebmapId": "a9ea586919d64c7e9aaa7193572f46d3",
-          "academicYear": null,
-          "legacyLayerName": "Final_EL_Zones_23_24",
-          "historicFeatureCountThirdPartyUnconfirmed": 18
+          "academicYear": "2024-25 (from layer title, unverified year validity)",
+          "legacyLayerName": "New_EL_Zones_24_25",
+          "historicFeatureCountThirdPartyUnconfirmed": null
         },
         {
           "grade": "middle",
@@ -40,7 +40,9 @@
           "arcgisWebmapId": "64c8ba47e77346de9d6812736693debc",
           "academicYear": null,
           "legacyLayerName": "ReBound_MS_Zones_v5",
-          "historicFeatureCountThirdPartyUnconfirmed": 7
+          "historicFeatureCountThirdPartyUnconfirmed": 7,
+          "liveValidatedFeatureCount": 7,
+          "liveValidatedOn": "2026-11-09"
         },
         {
           "grade": "high",
@@ -48,7 +50,14 @@
           "arcgisWebmapId": "94e441e70e5049daa74c0cc2bb5a7cad",
           "academicYear": null,
           "legacyLayerName": "High School Boundaries",
-          "historicFeatureCountThirdPartyUnconfirmed": 3
+          "historicFeatureCountThirdPartyUnconfirmed": 3,
+          "noCampusLevelPolygonVisibleInWebmap": true,
+          "observedOtherMapLayers": [
+            "District Boundary",
+            "High Schools (campus locations)",
+            "Middle Schools (campus locations)",
+            "Elementary Schools (campus locations)"
+          ]
         }
       ],
       "requiredForActivation": [
@@ -60,7 +69,7 @@
         "public terms for derived data",
         "390/1366px live school-click map QA"
       ],
-      "rejectionReason": "Irving boundary changes effective 2024-25 and 2025-26; archived layers may not match current year. No GIS or school allocation is enabled."
+      "rejectionReason": "Middle 7 source polygons extracted, but GIS year and TEA IDs unconfirmed. Elementary WebMap has New_EL_Zones_24_25 (2024-25 historical), conversion under validation. High WebMap contains school location layer and district outline but no independently confirmed high-school-specific polygon. No production activation."
     },
     {
       "districtCode": "220905",
