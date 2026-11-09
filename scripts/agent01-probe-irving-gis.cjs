@@ -3,6 +3,7 @@
 // All staged polygons remain unapproved until school-year, campus-ID, terms, and Finder gates pass.
 const fs=require('node:fs'),path=require('node:path');
 const {extractEmbeddedHigh}=require('./agent01-irving-embedded-high.cjs');
+const {loadSources,attachReferenceIDs}=require('./agent01-irving-tea-crosswalk.cjs');
 const MAPS=Object.freeze([
  {level:'elementary',id:'a9ea586919d64c7e9aaa7193572f46d3',match:/^New_EL_Zones_24_25$|^Elementary.*Boundar/i},
  {level:'middle',id:'64c8ba47e77346de9d6812736693debc',match:/middle|rebound_ms_zones|midaa|mid.*boundar/i},
@@ -81,12 +82,17 @@ async function main(){
  for(const spec of MAPS)try{
   const result=await probe(spec);audit.results.push(result.audit);all.push(...result.features);
  }catch(e){audit.errors.push({grade:spec.level,reason:String(e.message).slice(0,650)});}
+ let staged=all;
+ if(!audit.errors.length)try{
+  const refs=loadSources(),joined=attachReferenceIDs(all,refs.manifest,refs.tea);
+  staged=joined.features;audit.preliminaryTEACrosswalk=joined.audit;
+ }catch(e){audit.errors.push({grade:'tea-provisional-directory',reason:String(e.message).slice(0,600)});}
  fs.writeFileSync(path.join(dir,'source-audit.json'),JSON.stringify(audit,null,2)+'\n');
  // Retain successful grade-specific source work in CI-local quarantine even if another grade fails.
  // Only metadata JSON is uploaded, never the source geometry or private addresses.
- if(all.length)fs.writeFileSync(path.join(dir,'QUARANTINED-source-year-unknown.geojson'),JSON.stringify({type:'FeatureCollection',features:all})+'\n');
+ if(staged.length)fs.writeFileSync(path.join(dir,'QUARANTINED-source-year-unknown.geojson'),JSON.stringify({type:'FeatureCollection',features:staged})+'\n');
  if(audit.errors.length||audit.results.length!==3){console.error('GIS source extraction NO_GO',audit.errors);console.log('Quarantined grade successes:',audit.results.map(x=>x.grade+':'+x.polygonCount+' polygons/'+x.schoolCount+' distinct names').join(','));process.exitCode=1;return;}
- console.log('GIS STAGED, NOT RELEASED:',all.length,'polygons across',audit.results.length,'grades; 2026-27 validity unverified');
+ console.log('GIS STAGED, NOT RELEASED:',staged.length,'polygons across',audit.results.length,'grades; 2026-27 validity unverified');
 }
 if(require.main===module){
  if(process.argv.includes('--live'))main().catch(e=>{console.error(e.message);process.exitCode=1;});
