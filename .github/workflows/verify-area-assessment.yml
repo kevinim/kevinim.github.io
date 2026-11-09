@@ -1,4 +1,4 @@
-name: P0 regional quick assessment browser and rules
+name: Regional quick assessment provenance and browser QA
 on:
   pull_request:
     branches: [main]
@@ -8,6 +8,7 @@ on:
       - 'data/area-noaa-counts-2024-2025.json'
       - 'data/noaa-storm-events-dfw-2024-2025.json'
       - 'tests/area-assessment.test.cjs'
+      - 'tests/area-regional-coverage.test.cjs'
       - 'tests/area-noaa-summary.test.cjs'
       - 'scripts/test-area-assessment-browser.cjs'
       - '.github/workflows/verify-area-assessment.yml'
@@ -24,7 +25,7 @@ jobs:
         with:
           node-version: '22'
       - name: Unit rules and source freshness
-        run: node --test tests/area-assessment.test.cjs tests/area-noaa-summary.test.cjs
+        run: node --test tests/area-assessment.test.cjs tests/area-noaa-summary.test.cjs tests/area-regional-coverage.test.cjs
       - name: Existing main-map verification
         run: node scripts/verify-main-data.mjs
       - name: Install isolated Chromium
