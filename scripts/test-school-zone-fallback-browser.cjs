@@ -36,7 +36,7 @@ fs.mkdirSync(out,{recursive:true});
         banner=document.getElementById('schoolZoneMapHint');
        const badge=document.querySelector('#detailContent .school-zone-label');
        const officialInDetail=[...document.querySelectorAll('#detailContent a')]
-        .find(a=>a.textContent.includes('학군 공식 주소 검색기'));
+        .find(a=>a.getAttribute('href')===status.officialUrl);
        const record={
         district:code,school:s.name,kind:status.kind,match:status.match.status,layers,
         hintVisible:!banner.hidden,badge:badge?.textContent?.trim(),
