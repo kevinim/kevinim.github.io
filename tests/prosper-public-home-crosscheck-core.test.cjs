@@ -1,7 +1,9 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
 const {compare,precise}=require('../scripts/prosper-public-home-crosscheck-core.cjs');
-const geo=require('../prosper-attendance-2026.geojson');
+const {readFileSync}=require('node:fs');
+const {resolve}=require('node:path');
+const geo=JSON.parse(readFileSync(resolve(__dirname,'../prosper-attendance-2026.geojson'),'utf8'));
 const archive=require('./public-address-finder-crosscheck-2026.json');
 const home=archive.records.find(x=>x.district==='PROSPER'&&x.kind==='district-headquarters');
 const candidate=()=>({address:home.address,score:100,location:{x:home.point[0],y:home.point[1]},
