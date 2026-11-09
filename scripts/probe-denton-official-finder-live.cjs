@@ -48,6 +48,8 @@ async function main(){
   }else{
    report.finderUiState='ADDRESS_FIELD_VISIBLE_UNCERTIFIED';
    for(const s of fixtures.samples){
+    // Each public model-home search begins from a clean official form state.
+    try{const reset=page.getByRole('button',{name:'Reset',exact:true});if(await reset.count())await reset.click({timeout:4000});}catch{}
     const entry={id:s.id,address:s.address,source:s.addressSource,officialSchools:[],status:'NO_GO_UNREVIEWED'};
     try{
      await input.fill(s.address,{timeout:8000});
@@ -77,6 +79,10 @@ async function main(){
      }
      if(entry.status==='NO_GO_UNREVIEWED')entry.status='PUBLIC_ADDRESS_TYPED_NO_SAFE_UNIQUE_SUGGESTION';
     }catch(e){entry.status='PUBLIC_ADDRESS_UI_FAILED';entry.error=String(e).slice(0,180);}
+    if(entry.status==='PUBLIC_ADDRESS_TYPED_NO_SAFE_UNIQUE_SUGGESTION'&&entry.suggestedCandidates?.some(x=>x.text.toLowerCase().includes(s.address.split(',')[0].toLowerCase()))){
+      entry.status='AMBIGUOUS_SAME_STREET_DIFFERENT_CITY_NOT_SELECTED';
+    }
+    console.log('FINDER_PUBLIC_ADDRESS_CASE',JSON.stringify({id:s.id,status:entry.status,error:entry.error||null,visibleSuggestions:entry.suggestedCandidates?.slice(0,7)}));
     report.results.push(entry);
    }
   }
