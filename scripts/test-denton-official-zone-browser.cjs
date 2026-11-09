@@ -52,7 +52,7 @@ async function main(){
    assert.equal(result.schoolCount,39);
    assert.equal(result.hidden,false);
    assert.equal(result.url,result.correctUrl);
-   assert.match(result.url,/BellES-ZoneMap_26-27\\.pdf$/);
+   assert.ok(result.url.endsWith('BellES-ZoneMap_26-27.pdf'));
    assert.match(result.label,/Bell/);
    assert.equal(result.mapPolygonCount,0,'Never silently draw fake Denton school GIS');
    assert.equal(result.containsSourceWarning,true);
