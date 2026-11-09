@@ -20,7 +20,7 @@ const result={scenarios:[],screenshots:[]};
    assert.equal(await page.locator('.kpis').isVisible(),false,'redundant KPI cards must be hidden');
    await page.waitForFunction(()=>document.querySelector('.area-qa-row:nth-child(2) .area-qa-value')?.textContent?.includes('County'),null,{timeout:30000});
    assert.match(await page.locator('.area-qa-intro').innerText(),/기존 자료/);
-   assert.equal(await page.evaluate(()=>document.querySelector('#areaQuickAssessment').nextElementSibling?.classList.contains('main')),true,'Assessment must be positioned above main dashboard map');
+   assert.equal(await page.evaluate(()=>{const qa=document.querySelector('#areaQuickAssessment'),compare=document.querySelector('#regionCompare');return qa?.nextElementSibling===compare&&compare?.nextElementSibling?.classList.contains('main')}),true,'Assessment and focused comparison must precede map');
    await page.selectOption('#zipSelect','75013');
    await page.waitForFunction(()=>document.querySelector('.area-qa-zip')?.textContent?.includes('75013'),null,{timeout:20000});
    assert.equal((await page.locator('#k-zip').innerText()).trim(),'75013');
