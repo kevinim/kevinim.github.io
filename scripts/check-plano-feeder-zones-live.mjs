@@ -4,15 +4,11 @@
 // No private home-address input; 50 interior samples per official ES polygon.
 import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
+import {isTransientOfficialSourceFailure as transient} from './official-source-network-errors.mjs';
 const require=createRequire(import.meta.url);
 const {inGeometry,schoolKey,interiorPoints}=require('./attendance-geo-audit.cjs');
 const feeders=JSON.parse(readFileSync(new URL('../plano-official-feeder-reference-2026.json',import.meta.url),'utf8'));
 const url='https://services4.arcgis.com/uBV8NRVfoRJv7qWn/arcgis/rest/services/Plano_ISD_School_Districts/FeatureServer';
-function transient(error){
- const reason=String(error?.message||error)+' '+String(error?.cause?.code||'')+' '+
-  (error?.cause?.errors||[]).map(x=>String(x?.code||x?.message||'')).join(' ');
- return /fetch failed|ETIMEDOUT|ENETUNREACH|ECONNRESET|EAI_AGAIN|UND_ERR_CONNECT_TIMEOUT|TimeoutError|HTTP (?:429|50[0-9])/i.test(reason);
-}
 const writeHealth=result=>{
  mkdirSync('artifacts',{recursive:true});
  writeFileSync('artifacts/plano-feeder-source-health.json',JSON.stringify({
