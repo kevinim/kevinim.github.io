@@ -52,6 +52,8 @@ function expectedPublicHtml(source){
   '주소 검색: © Esri. Irving 참고 GIS 버튼을 누르면 집 핀 좌표만 Irving ISD 연계 ArcGIS 서비스에 전송되며 이 사이트는 경계 결과를 저장하지 않습니다. 외부 서비스의');
  s=replaceOnce(s,'<script src="./home-lookup-v2.js?v=15"></script>',
   '<script src="./irving-official-spatial.js?v=1"></script><script src="./home-lookup-v2.js?v=15"></script>');
+ s=replaceOnce(s,'<label class="check"><input type="checkbox" id="referenceBoundaryOverlay"> 과거 GIS 참고 경계선 표시</label></div>',
+  '<label class="check"><input type="checkbox" id="referenceBoundaryOverlay"> 과거 GIS 참고 경계선 표시</label></div><p class="reference-gis-global-warning" role="note"><strong>지도 경계는 학교 배정 확정 정보가 아닙니다.</strong> 연도가 오래되거나 현행성이 확인되지 않은 GIS는 참고용입니다. 입학·배정은 반드시 해당 학군의 공식 주소 검색기에서 확인하세요.</p>');
  return s;
 }
 function expectedPublicJs(source){
