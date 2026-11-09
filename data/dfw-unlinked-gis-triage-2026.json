@@ -86,6 +86,10 @@
     {
       "source": "https://services.arcgis.com/obpUicnfIYG1DOsR/ArcGIS/rest/services/AISD_Current_Boundaries/FeatureServer",
       "reason": "Service extent and acronym indicate Austin-area AISD; not Arlington TX"
+    },
+    {
+      "source": "https://services6.arcgis.com/v7auOQplZtfB4Cxz/ArcGIS/rest/services/2025_2026_GCS_Locator_Map_UPDATE_WFL1/FeatureServer/14",
+      "reason": "Apparent 2026-27 elementary/middle/high zones are GCS outside DFW (WebMercator longitude around -80), not GCISD or any Texas district; never auto-promote by title alone."
     }
   ],
   "certifiedAdditionalDistricts": 0,

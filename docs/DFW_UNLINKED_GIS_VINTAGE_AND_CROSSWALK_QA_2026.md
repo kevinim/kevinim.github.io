@@ -45,7 +45,7 @@ GIS data and does not increase 7/108 source-connected districts.
 This Draft adds `.github/workflows/dfw-unlinked-gis-provenance-qa.yml`, which runs
 the centralized canonical versioned bootstrap check, existing public-preview XSS/source
 trust regression, unlinked GIS vintage test, TEA crosswalk and real publisher-polygon
-mobile/desktop browser test. The bootstrap guard allows reviewed cache versions like
+mobile/desktop browser test, with 390px and 1366px rendered Leaflet map and school-candidate screenshots preserved as short-lived, no-address CI artifacts. The bootstrap guard allows reviewed cache versions like
 `v=5` while still rejecting missing, duplicate, cross-origin, inline or malformed
 external script tags; it removes outdated `v=3` checks without disabling CSP.
 
@@ -53,3 +53,5 @@ Release remains NO_GO until independent official Finder vs public nonprivate hol
 and property-specific legally appropriate cases satisfy gate #148, GIS year/provenance
 and permissions are verified, campus crosswalk exceptions reviewed, and the user
 explicitly approves any Production deployment. No paid services or addresses stored.
+
+Additional false-positive safeguard: a 2026–27 `GCS` Locator Map ArcGIS layer occurs outside Texas (~80°W); it is **not** Grapevine-Colleyville ISD (GCISD), and must never count toward DFW school-zone coverage.

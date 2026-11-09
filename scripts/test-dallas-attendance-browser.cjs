@@ -73,7 +73,7 @@ async function run(){
      overlay={layers:homeZoneGroup.getLayers().length,
       evidence:node.dataset.evidence,visible:node.dataset.visible,
       warning:node.textContent};
-     home=null;drawHomeAssignmentMap();drawSchools();
+     // Keep only the nonresidential QA sample while collecting rendered screenshots.
     }
     return {loaded:zones.length,byLevel,live,display,status,probe:!!probe,
      actual,overlay,error:state.zoneLoadErrors?.['057905']||null};
@@ -98,7 +98,16 @@ async function run(){
    assert.equal(snapshot.overlay.evidence,'publisher-unconfirmed');
    assert.equal(snapshot.overlay.visible,'true');
    assert.match(snapshot.overlay.warning,/미완료/);
+   // Actual Leaflet renderer evidence for manual review; no real address or input ever used.
+   const capture=path.join(ROOT,'artifacts','gis-browser');
+   fs.mkdirSync(capture,{recursive:true});
+   await page.locator('#map').screenshot({
+    path:path.join(capture,'dallas-provisional-map-'+width+'px.png'),animations:'disabled',timeout:20000});
+   await page.locator('#homeSchoolInfo').screenshot({
+    path:path.join(capture,'dallas-provisional-candidate-'+width+'px.png'),animations:'disabled',timeout:20000});
+   await page.evaluate(()=>{home=null;drawHomeAssignmentMap();drawSchools()});
    console.log('PASS Dallas public GIS live → nonresidential point → school candidates → orange dashed zone at '+width+'px',snapshot.byLevel);
+   console.log('SCREENSHOT_RENDERED',width,'only synthetic GIS interior, no user home address');
    await page.close();
   }
  }finally{await browser.close();await new Promise(resolve=>server.close(resolve))}

@@ -28,6 +28,14 @@ jobs:
           node scripts/verify-main-data.mjs
       - name: Live published Dallas GIS -> TEA campus identity evidence (no addresses/polygons persisted)
         run: node scripts/audit-dallas-campus-ids.cjs
+      - name: Attach public school-ID crosswalk report, no geometry or households
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # pinned v4.6.2
+        with:
+          name: dallas-tea-campus-crosswalk-audit
+          path: ${{ runner.temp }}/dallas-campus-id-crosswalk-audit.json
+          if-no-files-found: warn
+          retention-days: 14
   browser:
     name: Real Dallas publisher polygons -> Leaflet candidate map 390px/1366px (nonresidential)
     runs-on: ubuntu-latest
@@ -50,3 +58,11 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/gis-browser-qa-tmp/node_modules
         run: node scripts/test-dallas-attendance-browser.cjs
+      - name: Attach rendered Leaflet map and candidate screenshots (no address)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # pinned v4.6.2
+        with:
+          name: dallas-gis-provisional-browser-390-1366
+          path: artifacts/gis-browser/
+          if-no-files-found: warn
+          retention-days: 14
