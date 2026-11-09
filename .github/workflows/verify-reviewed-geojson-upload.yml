@@ -1,0 +1,64 @@
+name: Reviewed GeoJSON upload security QA
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'reviewed.html'
+      - 'features/geojson-upload-guard.js'
+      - 'features/reviewed-bootstrap.js'
+      - 'tests/geojson-upload-guard.test.cjs'
+      - 'tests/strict-script-csp.test.cjs'
+      - 'scripts/test-reviewed-upload-browser.cjs'
+      - '.github/workflows/verify-reviewed-geojson-upload.yml'
+  push:
+    branches: [security/reviewed-geojson-upload-limits-20261108]
+
+permissions:
+  contents: read
+
+jobs:
+  source-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Parse guarded bootstrap and security browser script
+        run: |
+          node --check features/geojson-upload-guard.js
+          node --check features/reviewed-bootstrap.js
+          node --check scripts/test-reviewed-upload-browser.cjs
+      - name: Validate GeoJSON limits and strict browser script CSP
+        run: node --test tests/geojson-upload-guard.test.cjs tests/strict-script-csp.test.cjs
+
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated pinned Leaflet and Chromium
+        run: |
+          mkdir -p reviewed-upload-browser-tmp
+          cd reviewed-upload-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0 leaflet@1.9.4
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve exact PR snapshot
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/reviewed-upload-site.log 2>&1 &
+          sleep 2
+      - name: Upload good/bad GeoJSON in real Leaflet browser
+        env:
+          NODE_PATH: ${{ github.workspace }}/reviewed-upload-browser-tmp/node_modules
+        run: node scripts/test-reviewed-upload-browser.cjs
