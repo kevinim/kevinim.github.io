@@ -65,8 +65,13 @@ async function main(){
      });
      await page.screenshot({path:path.join(dir,s.id+'-typed-address.png'),animations:'disabled',timeout:12000});
      console.log('FINDER_PUBLIC_ADDRESS_ENTRY',JSON.stringify({id:s.id,suggestions:entry.suggestedCandidates,screenText:entry.suggestedText.slice(0,500)}));
-     const street=s.address.split(',')[0].toLowerCase().replace(/\\./g,'');
-     const matches=entry.suggestedCandidates.filter(x=>x.text.toLowerCase().replace(/\\./g,'').includes(street));
+     const street=s.address.split(',')[0].toLowerCase().replace(/[.]/g,'');
+     const expectedCity=s.address.split(',')[1].trim().toLowerCase();
+     // Never click a same-street-name candidate from a DIFFERENT city.
+     const matches=entry.suggestedCandidates.filter(x=>{
+       const label=x.text.toLowerCase().replace(/[.]/g,'');
+       return label.includes(street)&&label.includes(expectedCity);
+     });
      if(matches.length===1){
        const candidate=page.locator('[role="option"],.pac-item,[class*="suggestion" i],[class*="autocomplete" i]').filter({hasText:matches[0].text}).first();
        if(await candidate.count()){
