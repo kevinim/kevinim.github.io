@@ -25,6 +25,10 @@ async function run(){
  try{
   for(const width of [390,1366]){
    const page=await browser.newPage({viewport:{width,height:800}});
+   const diagnostics=[];
+   page.on('requestfailed',req=>{if(req.url().includes('arcgis'))diagnostics.push('REQUEST '+req.url().slice(0,145)+' '+req.failure()?.errorText)});
+   page.on('console',msg=>{if(msg.type()==='error')diagnostics.push('CONSOLE '+msg.text().slice(0,300))});
+   page.on('pageerror',err=>diagnostics.push('PAGE '+String(err).slice(0,250)));
    await page.goto('http://127.0.0.1:'+server.address().port+'/index.html',{
     waitUntil:'domcontentloaded',timeout:40000});
    await page.waitForFunction(()=>typeof state!=='undefined'&&state.zoneReady&&
@@ -74,6 +78,13 @@ async function run(){
     return {loaded:zones.length,byLevel,live,display,status,probe:!!probe,
      actual,overlay,error:state.zoneLoadErrors?.['057905']||null};
    });
+   if(snapshot.error){
+    try{snapshot.directAccess=await page.evaluate(async()=>{try{
+      const url='https://services.arcgis.com/RfrtTbYxQ8YIhjWT/ArcGIS/rest/services/Elementary_Attendance_Boundaries/FeatureServer/0?f=pjson';
+      const r=await fetch(url);return {ok:r.ok,status:r.status,type:r.type};
+     }catch(e){return {failure:String(e)}}});}catch(e){snapshot.directAccess={failure:String(e)}}
+    snapshot.diagnostics=diagnostics.slice(-22);
+   }
    assert.equal(snapshot.error,null,JSON.stringify(snapshot));
    assert.equal(snapshot.loaded,187,JSON.stringify(snapshot));
    assert.deepEqual(snapshot.byLevel,{elementary:135,middle:30,high:22});
