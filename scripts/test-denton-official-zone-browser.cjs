@@ -24,54 +24,49 @@ async function main(){
    const page=await browser.newPage({viewport:{width,height:830}});
    const messages=[];page.on('pageerror',e=>messages.push(String(e)));
    await page.goto('http://127.0.0.1:'+server.address().port+'/index.html',{waitUntil:'domcontentloaded',timeout:50000});
-   await page.waitForFunction(()=>typeof state!=='undefined'&&state.schools?.length>0&&
-    typeof map!=='undefined'&&!!map&&typeof schoolClicked==='function'&&
-    !!window.DentonZonePdfReference,null,{timeout:70000});
-   const campus=await page.evaluate(()=>{
-    const ms=window.DentonZonePdfReference;
-    const c=state.schools.find(s=>s.district==='061901'&&
-     s.ll?.length===2&&ms.lookup(s,scoreRecord(s.name,s.district)?.id)?.id);
-    if(!c)return null;
-    return {name:c.name,level:c.type,id:scoreRecord(c.name,c.district)?.id,
-     url:ms.lookup(c,scoreRecord(c.name,c.district)?.id)?.url};
-   });
-   assert.ok(campus,'No real Denton TEA-ID-matched campus markers; cannot certify browser UI');
-   await page.evaluate(n=>{
-    const s=state.schools.find(x=>x.district==='061901'&&x.name===n);
-    state.level='all';state.ratingFilter='all';state.showSchools=true;
-    map.setView(s.ll,14,{animate:false});map.invalidateSize();drawSchools();
-   },campus.name);
-   const marker=page.locator('.leaflet-marker-icon[title='+JSON.stringify(campus.name)+']').first();
-   await marker.waitFor({state:'attached',timeout:20000});
-   await marker.click({force:true,timeout:15000});
-   await page.waitForFunction(()=>!!document.querySelector('#zoneNotice .denton-zone-reference'),null,{timeout:20000});
+   await page.waitForFunction(()=>!!window.DentonZonePdfReference&&
+    document.querySelectorAll('#dentonPdfCampusSelect option').length===40,
+    null,{timeout:35000});
+   const count=await page.evaluate(()=>({
+    rows:window.DentonZonePdfReference.ROWS.length,
+    locatedDentonSchools:state.schools.filter(s=>s.district==='061901'&&s.ll).length,
+    realSchoolLocationData:state.schools.length}));
+   assert.equal(count.rows,39);
+   // Existing schools.json contains no Denton location rows. Verify the honest
+   // official-source directory UI instead of injecting synthetic markers.
+   await page.locator('#dentonPdfZoneDirectory summary').click();
+   await page.locator('#dentonPdfCampusSelect').selectOption('061901127');
    const result=await page.evaluate(()=>{
-    const note=document.querySelector('#zoneNotice'),source=note?.querySelector('.denton-zone-reference');
-    const anchors=[...source?.querySelectorAll('a')||[]].map(a=>({url:a.href,label:a.textContent,rel:a.rel}));
-    return {zoneLayers:zoneGroup.getLayers().length,sourceType:source?.dataset.sourceType,
-     schoolYear:source?.dataset.schoolYear,heading:source?.querySelector('strong')?.textContent,
-     warning:source?.querySelector('small')?.textContent,anchors,
-     selectedDistrict:state.selectedSchool?.district,selectedName:state.selectedSchool?.name};
+    const a=document.getElementById('dentonPdfCampusLink');
+    const panel=document.getElementById('dentonPdfZoneDirectory');
+    const source=window.DentonZonePdfReference.lookup(
+     {district:'061901',type:'elementary'},'061901127');
+    return {label:a.textContent,url:a.href,hidden:a.hidden,correctUrl:source.url,
+     schoolCount:document.querySelectorAll('#dentonPdfCampusSelect option').length-1,
+     containsSourceWarning:/GIS.*미연결|GIS.*폴리곤/.test(panel.textContent),
+     mapPolygonCount:zoneGroup.getLayers().length,
+     panelWidth:panel.getBoundingClientRect().width,
+     panelScrollWidth:panel.scrollWidth};
    });
-   assert.equal(result.selectedDistrict,'061901');
-   assert.equal(result.selectedName,campus.name);
-   assert.equal(result.zoneLayers,0,'do not fabricate or draw Denton current polygons');
-   assert.equal(result.sourceType,'official-pdf-reference-not-GIS');
-   assert.equal(result.schoolYear,'2026-27');
-   assert.match(result.heading,/지도 폴리곤 미확보/);
-   assert.match(result.warning,/School Locator/);
-   assert.equal(result.anchors.length,3);
-   assert.equal(result.anchors[0].url,campus.url);
-   assert.match(result.anchors[0].url,/\.pdf$/);
-   assert.match(result.anchors[1].url,/webquery-2-denton-tx\.etstack\.io/);
-   for(const a of result.anchors)assert.match(a.rel,/noopener/);
+   assert.equal(result.schoolCount,39);
+   assert.equal(result.hidden,false);
+   assert.equal(result.url,result.correctUrl);
+   assert.match(result.url,/BellES-ZoneMap_26-27\\.pdf$/);
+   assert.match(result.label,/Bell/);
+   assert.equal(result.mapPolygonCount,0,'Never silently draw fake Denton school GIS');
+   assert.equal(result.containsSourceWarning,true);
+   assert.ok(result.panelScrollWidth<=result.panelWidth+12,
+    'Denton PDF selector overflow at '+width+'px: '+JSON.stringify(result));
    const dir=path.join(ROOT,'artifacts','denton-browser');fs.mkdirSync(dir,{recursive:true});
-   await page.locator('#zoneNotice').screenshot({path:path.join(dir,'denton-official-pdf-no-polygon-'+width+'px.png'),timeout:20000,animations:'disabled'});
-   await page.locator('#map').screenshot({path:path.join(dir,'denton-marker-without-polygon-'+width+'px.png'),timeout:20000,animations:'disabled'});
-   console.log('PASS '+width+'px REAL DENTON marker → TEA ID → official 2026-27 PDF, no fabricated polygon',
-    {id:campus.id,level:campus.level,links:result.anchors.length,pageErrors:messages.length});
+   await page.locator('#dentonPdfZoneDirectory').screenshot({
+    path:path.join(dir,'denton-39-official-pdf-sources-'+width+'px.png'),
+    timeout:20000,animations:'disabled'});
+   await page.locator('#map').screenshot({
+    path:path.join(dir,'denton-no-fabricated-campus-gis-'+width+'px.png'),
+    timeout:20000,animations:'disabled'});
+   console.log('PASS '+width+'px real Denton official PDF directory; 39 TEA ID sources, no fake school polygon',count);
    await page.close();
   }
  }finally{await browser.close();await new Promise(ok=>server.close(ok))}
 }
-main().catch(e=>{console.error('DENTON_BROWSER_QA_FAILED',e);process.exitCode=1;server.close()});
+main().catch(e=>{console.error('DENTON_PDF_DIRECTORY_BROWSER_QA_FAILED',e);process.exitCode=1;server.close()});
