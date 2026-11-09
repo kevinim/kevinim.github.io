@@ -76,8 +76,7 @@ function auditSchoolBoundaryTrust(files, registry = DISTRICT_REGISTRY) {
       !uploadGuard.includes('fileBytes:4*1024*1024') ||
       !uploadGuard.includes('totalVertices:50000') ||
       !uploadGuard.includes("source.type!=='FeatureCollection'") ||
-      !uploadGuard.includes("geom.type==='Polygon'") ||
-      !uploadGuard.includes("geom.type==='MultiPolygon'")) {
+      !uploadGuard.includes("['Polygon','MultiPolygon'].includes(geom.type)")) {
     errors.push('legacy uploaded-GeoJSON entrypoint changed; verify external bootstrap, file and geometry limits');
   }
   if (!legacyScript.includes('j.features.map(f=>escape(f.properties.YearUpdated')) {
