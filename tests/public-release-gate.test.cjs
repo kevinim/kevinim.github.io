@@ -43,9 +43,14 @@ test('byte-identical migration of old inline bootstrap does not fake new persona
  const fs=require('node:fs');
  const base='4f741596a5a594897791d3b931ef39b374bf304e';
  const old=cp.execFileSync('git',['show',base+':index.html'],{encoding:'utf8'});
- const js=fs.readFileSync('dashboard-main.js','utf8');
- const moved=gate.existingBootstrapMovedVerbatim(base,'dashboard-main.js',js);
- assert.equal(moved,js,'relocation must match exact original code');
- assert.equal(gate.existingBootstrapMovedVerbatim(base,'dashboard-main.js',js+'\nconst JPM_ADDRESS="new";'),null);
- assert.equal(gate.existingBootstrapMovedVerbatim(base,'unreviewed.js',js),null);
+ // Validate the original byte-identical externalization, not today's intentionally
+ // sanitized bootstrap. Privacy deletion must NOT be classified as byte-identical.
+ const extracted=cp.execFileSync('git',['show','d94374e74c87d9d58355bdb0755ec6ade88c2818:dashboard-main.js'],{encoding:'utf8'});
+ const current=fs.readFileSync('dashboard-main.js','utf8');
+ const moved=gate.existingBootstrapMovedVerbatim(base,'dashboard-main.js',extracted);
+ assert.equal(moved,extracted,'original relocated source must match pre-extraction data exactly');
+ assert.equal(gate.existingBootstrapMovedVerbatim(base,'dashboard-main.js',current),null,
+  'intentional redaction is not a byte-identical migration');
+ assert.equal(gate.existingBootstrapMovedVerbatim(base,'dashboard-main.js',extracted+'\nconst JPM_ADDRESS="new";'),null);
+ assert.equal(gate.existingBootstrapMovedVerbatim(base,'unreviewed.js',extracted),null);
 });
