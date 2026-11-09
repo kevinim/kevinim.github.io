@@ -1,0 +1,53 @@
+name: TX west DFW official school Finder links (no deploy)
+on:
+  pull_request:
+    branches: [qa/west-dfw-gis-source-vintage-20261108]
+  push:
+    branches: [feature/west-dfw-official-school-lookup-20261109]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  finder:
+    name: Verify direct school-click finder links with real west school points
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Check official link module syntax and safe navigation
+        run: |
+          node --check features/west-dfw/official-finder.js
+          node --check features/west-dfw/panel.js
+          node --check scripts/test-west-dfw-browser.cjs
+          node --test tests/west-dfw-official-finder.test.cjs tests/west-dfw-panel.test.cjs tests/audit-west-dfw-zone-sources.test.cjs
+      - name: Confirm no unverified polygon auto-publish and existing school dataset intact
+        run: |
+          node scripts/audit-west-dfw-zone-sources.cjs
+          node scripts/school-data-release-preflight.cjs
+      - name: Install isolated Chromium
+        run: |
+          mkdir -p west-finder-browser-tmp
+          cd west-finder-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Test actual campus selection and direct official links on desktop and mobile
+        env:
+          NODE_PATH: ${{ github.workspace }}/west-finder-browser-tmp/node_modules
+        run: node scripts/test-west-dfw-browser.cjs
+      - name: Upload school-only evidence (no residential input or deployment)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: west-dfw-official-finder-evidence
+          path: |
+            artifacts/west-dfw/west-dfw-browser.json
+            artifacts/west-dfw/west-dfw-zone-provenance-report.json
+          if-no-files-found: warn
