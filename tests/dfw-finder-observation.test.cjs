@@ -16,7 +16,7 @@ test('visible popup unrelated to selected home is never certified',()=>{
  const display={id:'test',map:{district:'043907',selectedHomePoint:{lat:33.159,lng:-96.651},
   grades:{elementary:[{school:'MCGOWEN',year:'2026–27'}],middle:[{school:'EVANS',year:'2026–27'}],
    high:[{school:'MCKINNEY',year:'2026–27'}]},renderedPolygonFeatures:3,matchedMarkers:3}};
- const popup={id:'test',district:'043907',officialAddressSelected:true,
+ const popup={id:'test',district:'043907',officialAddressSelected:true,mapClickedAtExactGeocoderCenter:true,
   mapAfterChoice:{geoCenter:{lat:33.161,lng:-96.633}},visiblePopupText:[mc]};
  assert.ok(distanceMeters(display.map.selectedHomePoint,popup.mapAfterChoice.geoCenter)>75);
  assert.equal(compareIndependentOfficialUI(display,popup).status,'OFFICIAL_MAP_CENTER_NOT_ADDRESS_VALIDATED');
@@ -29,8 +29,11 @@ test('old or unknown source polygon remains unapproved even if names match',()=>
  const display={id:'LISD-test',map:{district:'LISD',selectedHomePoint:{lat:33.059,lng:-96.916},
   grades:{elementary:[{school:'MEMORIAL',year:'학년도 미확인'}],middle:[{school:'GRIFFIN',year:'학년도 미확인'}],
   high:[{school:'THE COLONY',year:'2025–26'}]},renderedPolygonFeatures:3,matchedMarkers:3}};
- const official={id:'LISD-test',district:'LISD',officialAddressSelected:true,
+ const official={id:'LISD-test',district:'LISD',officialAddressSelected:true,mapClickedAtExactGeocoderCenter:true,
   mapAfterChoice:{geoCenter:{lat:33.059,lng:-96.916}},visiblePopupText:[li]};
+ official.mapClickedAtExactGeocoderCenter=false;
+ assert.equal(compareIndependentOfficialUI(display,official).status,'OFFICIAL_POPUP_NOT_TIED_TO_EXACT_SELECTED_POINT');
+ official.mapClickedAtExactGeocoderCenter=true;
  const res=compareIndependentOfficialUI(display,official);
  assert.equal(res.status,'SCHOOLS_MATCH_BUT_GIS_YEAR_NOT_CERTIFIED');
  assert.equal(res.grade9,'THE COLONY');
