@@ -78,3 +78,45 @@ New `scripts/agent01-irving-embedded-high.cjs` converts only the exact pinned hi
 One known gap: TEA `057912048` (Lorenzo de Zavala Middle) is not represented among the seven current public middle polygons. This may reflect the district's STEM/choice model; absence must **not** be represented as an inferred eighth polygon, nor a campus closure. Parent-address Finder remains the assignment authority.
 
 **Limits:** 28 school references linked to a preliminary TEA roster are NOT 28 independently verified, current 2026–27 attendance polygons. No household address data were queried, stored or published. No production source configuration, campus marker, school filter or map rendering file is modified. Existing mandatory #148 NO_GO must remain active until the current-year official Finder/address holdouts, authoritative layer rights, and rendered dashboard school-click QA are independently satisfied.
+
+
+## November 9 second pass — resolving actionable NO-GO gates
+
+### A. The operational district School Locator is now source-chain verified
+
+The current [Irving ISD Find My Assigned School page](https://www.irvingisd.net/departments-services/registration/find-my-assigned-school) links directly to the [Irving ArcGIS Instant Lookup app](https://iisd1.maps.arcgis.com/apps/instant/lookup/index.html?appid=f27bba7ee02141c58c8c9375431effa2). The app ID is `f27bba7ee02141c58c8c9375431effa2`, last modified **2026-10-06T17:25:54Z**, and its exact referenced WebMap is `8004c79f6dd144b6996e7240c5182507`, modified **2026-08-20T20:28:42Z**. The app and WebMap are publicly accessible and have the same ArcGIS account owner. The app's actual lookup source IDs resolve to:
+
+- Elementary `18dade44172-layer-14` → `New_EL_Zones_24_25/FeatureServer/4`: **18** polygons. Label still indicates **2024–25**.
+- Middle `195aa532ade-layer-9` → `ReBound_MS_Zones_v5/FeatureServer/5`: **7** polygons. Live WebMap calls this layer **MS_Zones_25-26**.
+- High `HS_Zone_Robust_shapefile_8340` → embedded `HS_Zone_Robust`: **3** polygons. Raw vertex geometry verified equal to the old district high boundary WebMap.
+
+This is strong evidence of **the exact polygon sources actively selected by the district's operational Locator**, but the app/map update dates do **not** independently certify each boundary as approved 2026–27 or authorize independent republication.
+
+`scripts/agent01-verify-irving-live-finder.cjs` implements an independent *read-only* multi-item provenance guard from district HTML link → ArcGIS app config → linked WebMap → grade layer identifiers; any source change fails the gate. It saves only provenance metadata to CI artifacts.
+
+### B. Source-specific De Zavala exception is resolved
+
+The [Irving ISD School Choice FAQ](https://www.irvingisd.net/families/school-choice/faq) explicitly states that incoming 2026–27 grade-6 students may apply to **de Zavala Middle School STEM Academy**, while existing grades 7–8 continue without reapplying. The district's board rebalanced de Zavala as a School of Opportunity starting 2025–26. Therefore there are seven ordinary middle geographic zones and a separate application-based school; the "missing eighth middle school zone" is a **false data-quality gap**.
+
+`school-boundary-match.js` contains the narrowly-scoped Irving `057912048` special-campus exception. It tells the user why no ordinary polygon is displayed and links the official FAQ. It does not fabricate a polygon or change other district mappings.
+
+### C. An operational read-only fallback is implemented without redistributing GIS
+
+The PR changes the Irving `district-registry.js` official lookup from the indirect registration page to the district-linked official ArcGIS Locator directly, and adds only the **exact** `iisd1.maps.arcgis.com` host to `trusted-link-policy.js`. The registry keeps `zoneKey:null` and `address:null`. Thus users can independently query official school assignments while unapproved polygon data never enter the normal map source or automatic home assignment. Unsupported host aliases and spoofed URLs are denied.
+
+The live browser test of the actual third-party ArcGIS app was attempted using a public non-residential campus address, but its search field failed to render in the external browser automation environment. There is **no independent visual Finder-result certification**, and that specific gate remains open.
+
+### D. Public-address GIS holdout path implemented
+
+`scripts/agent01-irving-public-address-qa.cjs` tests the three publicly published school **campus** addresses of Barton, Brown and Farine. It geocodes the locations without API keys and checks the exact district Locator elementary, middle and high zone source geometries; it demands a one-to-one zone per grade, at least 97 geocoding score, and the expected public elementary campus. No residential addresses, apartment numbers, household data or student records are used or uploaded.
+
+The three manual preliminary elementary source queries matched their respective campuses. CI runs this complete 3-level check and stores *only the public campus IDs, geocoder confidence, school names and explicit non-enrollment warning*, not the queried addresses or complete shapes. Results are a **technical point-in-zone QA**, not legally confirmed current school attendance or Finder UI search.
+
+### Remaining independent release blockers
+
+- Effective school-year and zoning changes *within* historical-titled 2024–25/2025–26 source layers must be reconciled with district 2026–27 approvals, or the actual live Locator must certify the specific address-level result through a working browser.
+- District or ArcGIS owner must clarify acceptable reuse if hosting copied polygon geometry. Safe external linking to their own Locator does not require copying.
+- Production address → elementary/middle/high assignment with reliable external official Finder comparison remains **NO_GO**. A school campus coordinate is not a residential assignment holdout.
+- Agent 06 must investigate the independent historical Git Gitleaks finding; it is outside Agent 01's remit. No merge, production deployment, or release sign-off is authorized by this PR.
+
+The Draft branch implementation supplies a **one-click official Locator handoff** as a functional fallback now, not a substitute for automatic 2026–27 assignment certification.
