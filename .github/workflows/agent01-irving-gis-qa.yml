@@ -57,7 +57,7 @@ jobs:
         run: node scripts/agent01-probe-irving-gis.cjs --live
       - name: Verify current district-linked official School Locator app and live 3-grade layer chain
         run: node scripts/agent01-verify-irving-live-finder.cjs
-      - name: Three public campus-address spatial holdouts (no household addresses)
+      - name: Five public campus/civic-address spatial holdouts (no household addresses)
         run: node scripts/agent01-irving-public-address-qa.cjs
       - name: Retain metadata-only diagnostics (no GIS geometry or addresses uploaded)
         if: always()
@@ -67,7 +67,7 @@ jobs:
           path: |
             artifacts/agent01-irving-gis-stage/source-audit.json
             artifacts/agent01-irving-live-finder/locator-provenance.json
-            artifacts/agent01-irving-live-finder/public-campus-holdouts.json
+            artifacts/agent01-irving-live-finder/public-facility-holdouts.json
           if-no-files-found: warn
           retention-days: 7
 
