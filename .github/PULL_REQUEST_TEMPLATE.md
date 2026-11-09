@@ -18,4 +18,4 @@
 
 **Caution:** Only the owner's manual **Merge pull request** represents sign-off to update the **current** public GitHub Pages site. Self-approval via PR Review is not supported. Do not auto-merge, treat green CI as automatic permission to ship, or interpret this merge as a launch approval for future family UAT/separate Public Production.
 
-Process: [Free release-signoff runbook](../docs/FREE_RELEASE_SIGNOFF_RUNBOOK.md)
+Process: [Free release-signoff runbook](https://github.com/kevinim/kevinim.github.io/blob/main/docs/FREE_RELEASE_SIGNOFF_RUNBOOK.md)
