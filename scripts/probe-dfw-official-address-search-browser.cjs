@@ -27,8 +27,9 @@ async function check(browser,district,entry){
   await page.goto(TARGETS[district],{waitUntil:'domcontentloaded',timeout:40000});
   // Plano ArcGIS Experience opens a welcome overlay blocking its actual search.
   if(district==='PISD'){
-   const welcome=page.getByRole('button',{name:'OK',exact:true}).first();
-   if(await welcome.count())try{await welcome.click({timeout:4500});out.dismissedWelcome=true;}catch{}
+   const welcome=page.getByText('OK',{exact:true}).last();
+   if(await welcome.count())try{await welcome.click({force:true,timeout:4500});out.dismissedWelcome=true;}catch{}
+   if(!out.dismissedWelcome)try{await page.mouse.click(978,642);out.dismissedWelcome=true;}catch{}
   }
   const search=page.locator('input[placeholder="Find address or place"]').first();
   await search.waitFor({state:'visible',timeout:25000});
@@ -57,9 +58,12 @@ async function check(browser,district,entry){
     if(['043907','LISD'].includes(district)){
      // District explicitly instructs the resident to click near their address
      // after selecting geocoder suggestion to identify campus zones.
-     await page.mouse.click(915,465);
-     await page.waitForTimeout(1600);
+     const close=page.locator('.esriPopup .titleButton.close').first();
+     if(await close.count())try{await close.click({timeout:2500});}catch{}
+     await page.mouse.click(840,480);
+     await page.waitForTimeout(1800);
      out.mapPointIdentificationAttempted=true;
+     out.identifyClickIsApproximateMapOffset=true;
     }
    }catch(e){out.clickIssue=String(e.message||e).slice(0,180);}
   }else{
