@@ -39,13 +39,20 @@ async function run({sampleMode=process.argv.includes('--samples')}={}){
   officialUrl:URL,year:'2026-27',schoolAssignmentIndependentlyCertified:false,
   signedReviewerCount:0,productionAuthorized:false,mode:sampleMode?'public-house-ui-probe':'no-address-discovery',
   cases:[],frames:[],status:'INCONCLUSIVE'};
+ // Independent source transport diagnostic; never mistake status=200 for enrollment evidence.
+ report.httpDiagnostic={status:null,errorType:null,headOnly:false};
+ try{
+  const response=await fetch(URL,{method:'GET',redirect:'manual',signal:AbortSignal.timeout(15000)});
+  report.httpDiagnostic.status=response.status;
+ }catch(e){report.httpDiagnostic.errorType=String(e.name||'Error').slice(0,50);}
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  try{
   const page=await browser.newPage({viewport:{width:1366,height:900},locale:'en-US'});
   const blockers=[];
   page.on('pageerror',e=>blockers.push(String(e.name||'PageError').slice(0,40)));
   try{
-   await page.goto(URL,{waitUntil:'domcontentloaded',timeout:30000});
+   await page.goto(URL,{waitUntil:'commit',timeout:25000});
+   await page.waitForLoadState('domcontentloaded',{timeout:12000}).catch(()=>{});
    await page.waitForTimeout(6500);
    const frames=page.frames();
    for(const frame of frames){
@@ -62,6 +69,7 @@ async function run({sampleMode=process.argv.includes('--samples')}={}){
   }catch(e){
    report.status='OFFICIAL_BROWSER_UNREACHABLE';
    report.errorType=String(e.name||'Error').slice(0,60);
+   report.browserDiagnostic=String(e.message||'').replace(/https?:\/\/[^\s]+/g,'[official-url]').slice(0,170);
   }
   report.pageErrorKinds=[...new Set(blockers)];
   await page.close();
@@ -71,7 +79,8 @@ async function run({sampleMode=process.argv.includes('--samples')}={}){
  fs.mkdirSync(path.dirname(OUTPUT),{recursive:true});
  fs.writeFileSync(OUTPUT,JSON.stringify(report,null,2)+'\n');
  console.log('PROSPER_OFFICIAL_FINDER_UI_BROWSER '+JSON.stringify({
-  status:report.status,frames:report.frames,caseCount:report.cases.length,
+  status:report.status,errorType:report.errorType,browserDiagnostic:report.browserDiagnostic,
+  httpDiagnostic:report.httpDiagnostic,frames:report.frames,caseCount:report.cases.length,
   policyResult:gate,pageErrorKinds:report.pageErrorKinds
  }));
  return report;
