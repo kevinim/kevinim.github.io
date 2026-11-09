@@ -30,8 +30,13 @@ jobs:
           node --check dashboard-main.js
           node --check home-lookup-v2.js
           node --check district-registry.js
+          if ! node scripts/build-dfw-school-coverage-matrix.cjs --check; then
+            node scripts/build-dfw-school-coverage-matrix.cjs
+            git --no-pager diff -- data/dfw-school-coverage-matrix-2026.json | head -n 180
+            exit 1
+          fi
           node --check scripts/probe-dallas-attendance-live.cjs
-          node --test tests/dallas-attendance-live.test.cjs tests/dallas-school-map-integration.test.cjs tests/home-assignment-map.test.cjs tests/dfw-home-automation-readiness.test.cjs tests/school-zone-ui.test.cjs
+          node --test tests/dallas-attendance-live.test.cjs tests/dallas-school-map-integration.test.cjs tests/home-assignment-map.test.cjs tests/dfw-home-automation-readiness.test.cjs tests/school-zone-ui.test.cjs tests/dfw-school-coverage-matrix.test.cjs tests/dfw-school-coverage-runtime.test.cjs
       - name: Read 2026-updated Dallas ArcGIS public polygons and validate complete 3-level source
         run: node scripts/probe-dallas-attendance-live.cjs
   browser:
