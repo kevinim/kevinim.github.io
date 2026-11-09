@@ -174,3 +174,15 @@ test('unknown district evidence fails closed instead of silently creating an app
  const r=status(e);assert.ok(r.errors.includes('UNKNOWN_DISTRICT_EVIDENCE'));
  assert.equal(r.counts[LEVELS.HOLD],8);
 });
+
+test('a field named address, unit or raw geolocation is rejected even without address prefix',()=>{
+ for(const key of ['address','unit','lat','lng','geoPoint']){
+  const e=assignmentReady();e.districts.AISD.assignment.cases[0][key]='sensitive';
+  const r=status(e);assert.ok(r.errors.includes('PRIVATE_ADDRESS_OR_LOCATION_FIELD_FORBIDDEN'),key);
+  assert.equal(r.districts.AISD.tier,LEVELS.HOLD,key);
+ }
+});
+test('impossible dates do not pass the 90-day freshness requirement',()=>{
+ const e=finderOnly();e.districts.AISD.finder.observedOn='2026-02-30';
+ assert.equal(status(e).districts.AISD.tier,LEVELS.HOLD);
+});
