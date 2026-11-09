@@ -128,6 +128,10 @@
     }
   ],
   "missingReasonTotals": {
+    "other-lea-admissions-model-needs-classification": {
+      "districts": 44,
+      "teaCampusRecords": 241
+    },
     "historical-campus-polygons-not-current-assignment": {
       "districts": 1,
       "teaCampusRecords": 23
@@ -139,10 +143,6 @@
     "current-year-source-reference-still-needs-live-recheck": {
       "districts": 2,
       "teaCampusRecords": 108
-    },
-    "other-lea-admissions-model-needs-classification": {
-      "districts": 44,
-      "teaCampusRecords": 241
     },
     "live-finder-source-can-change-since-reference-run": {
       "districts": 1,
