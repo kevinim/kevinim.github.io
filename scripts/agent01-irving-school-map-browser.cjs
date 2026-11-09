@@ -51,7 +51,7 @@ async function main(){
      results.push({grade,school:temp.name,match:match.status,leafletLayers:zoneGroup.getLayers().length,
        historicalNotice:document.getElementById('zoneNotice')?.innerText||'',
        yearVerified:feature.properties.sourceYearVerified,
-       currentDistrictRegistered:!!window.DISTRICT_REGISTRY?.['057912']});
+       currentGISSourceActivated:!!window.DISTRICT_REGISTRY?.['057912']?.zoneKey});
     }
     state.zoneData['057912']=original;
     return results;
@@ -60,7 +60,7 @@ async function main(){
     assert.equal(c.match,'matched','GIS school-name click match '+c.grade);
     assert.ok(c.leafletLayers>0,'visible Leaflet zone missing '+c.grade);
     assert.equal(c.yearVerified,false);
-    assert.equal(c.currentDistrictRegistered,false);
+    assert.equal(c.currentGISSourceActivated,false);
     assert.match(c.historicalNotice,/과거 GIS 경계/);
    }
    // Browser screenshots are only general public dashboard / temporary QA
