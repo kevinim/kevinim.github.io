@@ -37,6 +37,17 @@ mkdirSync(dir,{recursive:true});
    assert.equal(await p.evaluate(()=>document.documentElement.dataset.theme),'dark',
     width+': dark theme restore failed');
 
+   // P0 public privacy on the actual deployed Pages document: never report
+   // addresses or data contents, only pass/fail and safe aggregate counts.
+   assert.equal(await p.locator('#officeSelect').inputValue(),'custom',
+    width+': a private office selection was preselected');
+   assert.equal(await p.locator('#destination').inputValue(),'',
+    width+': destination must be blank on a fresh session');
+   assert.equal(await p.locator('#oneHourOverlay').isHidden(),true,
+    width+': precomputed single-employer 60-minute overlay is still public');
+   assert.equal(await p.locator('#oneHourOverlay').isDisabled(),true,
+    width+': precomputed single-employer map must not activate');
+
    // Newly merged commute panel must remain optional, and unknown tolls
    // must not silently become zero or a purported monthly total.
    await p.locator('#tollCostPanel > summary').click();
@@ -73,9 +84,47 @@ mkdirSync(dir,{recursive:true});
     width+': mobile horizontal overflow '+JSON.stringify(viewport));
    await p.screenshot({path:dir+'/deployed-responsive-'+width+'.png',
     fullPage:false,timeout:30000});
-   return {width,defaultDark:true,themeToggle:true,allenMarkerCount:markerCount,aisdMarkers:allenMarkers,
+   return {width,defaultDark:true,themeToggle:true,privateDestinationBlank:true,legacyOverlayDisabled:true,allenMarkerCount:markerCount,aisdMarkers:allenMarkers,
     manualCostFolded:true,unknownTollNotPriced:true,...viewport};
   }
+  // HTTP checks are made against the real published Pages origin. A previous
+  // Git commit's sensitive dataset must not survive in current site assets.
+  // Never print file content, address strings, or raw response bodies.
+  const retired=[
+   'jpm-60min-isochrone-2026-11-04.geojson',
+   'jpm-road-times-2026-11-04.json',
+   'jpm-outside-dfw.json'
+  ];
+  result.privacy={currentHtml:true,currentJs:true,legacyAssetsGone:0,neutralDataLoaded:false};
+  const privateMarkers=/\bJPM\b|JPMorgan|JPM_ADDRESS|jpm-(?:60min|road-times|outside-dfw)|\bjpmMinutes\b|8181\s+Communications/i;
+  const indexResponse=await page.request.get(base+'?privacy-audit='+Date.now());
+  assert.equal(indexResponse.status(),200,'Deployed HTML is not available');
+  assert.doesNotMatch(await indexResponse.text(),privateMarkers,
+   'The public HTML still contains a previous personalized commute reference');
+  for(const asset of ['dashboard-main.js','candidate-compare.js']){
+   const response=await page.request.get(base+asset+'?privacy-audit='+Date.now());
+   assert.equal(response.status(),200,'Expected public script unavailable: '+asset);
+   assert.doesNotMatch(await response.text(),privateMarkers,
+    'Known personalized token reappeared in publicly served '+asset);
+  }
+  for(const asset of retired){
+   const response=await page.request.get(base+asset+'?privacy-audit='+Date.now(),
+    {failOnStatusCode:false});
+   assert.equal(response.status(),404,'Retired personalized asset still published: '+asset);
+   result.privacy.legacyAssetsGone++;
+  }
+  const neutralResponse=await page.request.get(base+'dfw-outside-public.json?privacy-audit='+Date.now());
+  assert.equal(neutralResponse.status(),200,'Neutral DFW demographics are not published');
+  const neutral=await neutralResponse.json();
+  assert.ok(Array.isArray(neutral.data)&&neutral.data.length>0,
+   'Neutral DFW demographic table missing');
+  assert.ok(neutral.data.every(row=>!Object.hasOwn(row,'jpmMinutes')),
+   'Neutral demographic data still include individualized travel statistics');
+  assert.equal(Object.keys(neutral.minutes||{}).length,0,
+   'Neutral demographic asset unexpectedly includes precomputed commute times');
+  result.privacy.neutralDataLoaded=true;
+  result.checks.push('LIVE P0 privacy: blank destination on two viewports, old assets 404, sanitized scripts and neutral demographics');
+
   result.liveUi=[await checkCurrentLiveUI(page,1380)];
   const mobile=await browser.newPage({viewport:{width:390,height:844},
     deviceScaleFactor:1,isMobile:true,hasTouch:true});
