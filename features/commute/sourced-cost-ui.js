@@ -12,6 +12,9 @@
  };
  let fuel=null,counties=null,vehicle=null,activeFuel=null,initialized=false;
  let sourceLoaded=false,yearLoaded=false,renderPending=false;
+ // Once the user edits the advanced manual fuel input, auto-source refreshes
+ // must not overwrite that explicit scenario assumption during this session.
+ let manualFuelOverride=false;
  const menuIds=['smartVehicleYear','smartVehicleMake','smartVehicleModel','smartVehicleOption'];
  function announce(message){
   const el=$('smartSourceStatus');if(el)el.textContent=message;
@@ -132,14 +135,14 @@
   if(!text)return;
   if(price.price===null){
    text.textContent=zipData.origin+' '+zipData.zip+' · 해당 지역 AAA 권역 평균이 없거나 저장본이 오래됐습니다. 임의 $/gal을 사용하지 않습니다.';
-   $('tollFuel').value='';
+   if(!manualFuelOverride)$('tollFuel').value='';
    return;
   }
   const age=Math.ceil(core.dateAgeDays(price.priceDate));
   text.textContent=zipData.origin+' '+zipData.zip+' → AAA '+price.metro+' 평균 · '+price.priceDate+
    ' 기준 '+price.grade+' $'+price.price.toFixed(4)+'/gal'+(age>7?' (7일 이상 지난 자료)':'')+
    ' · 개별 주유소 가격 아님';
-  $('tollFuel').value=String(price.price);
+  if(!manualFuelOverride)$('tollFuel').value=String(price.price);
  }
  function mount(){
   const toll=$('tollCostPanel'),body=toll?.querySelector(':scope > .extra-body');
@@ -227,6 +230,7 @@
   });
   $('smartVehicleOption').addEventListener('change',chooseVehicle);
   $('smartFuelGrade').addEventListener('change',()=>{sourceStatus();scheduleRender()});
+  $('tollFuel')?.addEventListener('input',()=>{manualFuelOverride=true;});
   for(const id of ['tollDays','tollOutMiles','tollBackMiles','destination','zipSelect']){
    $(id)?.addEventListener('change',scheduleRender);
   }
