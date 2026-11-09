@@ -1,0 +1,58 @@
+name: Prosper independent official Finder UI (read-only, no deploy)
+on:
+  pull_request:
+    paths:
+      - 'scripts/probe-prosper-independent-finder-ui-browser.cjs'
+      - 'scripts/prosper-finder-ui-independent-policy.cjs'
+      - 'tests/prosper-finder-ui-independent-policy.test.cjs'
+      - '.github/workflows/prosper-independent-official-finder-browser.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  official-finder-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6 pinned
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7 pinned
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Syntax and fail-closed official source observation tests
+        run: |
+          node --check scripts/probe-prosper-independent-finder-ui-browser.cjs
+          node --check scripts/prosper-finder-ui-independent-policy.cjs
+          node --test tests/prosper-finder-ui-independent-policy.test.cjs
+      - name: Install isolated open-source Chromium via npm (no paid services)
+        run: |
+          mkdir -p prosper-independent-browser-tmp
+          cd prosper-independent-browser-tmp
+          npm init -y > /dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Inspect actual Prosper official Infofinder DOM and user inputs (no address submission)
+        env:
+          NODE_PATH: ${{ github.workspace }}/prosper-independent-browser-tmp/node_modules
+        run: node scripts/probe-prosper-independent-finder-ui-browser.cjs
+      - name: Verify no private addresses and no fabricated school certification
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync('artifacts/prosper-real-home/finder-ui-browser-observation.json','utf8'));
+          if(r.schoolAssignmentIndependentlyCertified!==false||r.productionAuthorized!==false||
+             r.policyResult.independentlyVerifiedResidentialAssignments!==0||
+             r.policyResult.level2PromotionAllowed!==false||
+             r.policyResult.productionAuthorized!==false)throw Error('False Finder approval');
+          console.log('PROSPER_FINDER_NO_FAKE_ASSIGNMENT_APPROVAL');
+          NODE
+      - name: Retain source-only redacted browser control observation
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # pinned v4
+        with:
+          name: prosper-official-finder-independent-ui-controls
+          path: artifacts/prosper-real-home/finder-ui-browser-observation.json
+          if-no-files-found: warn
+          retention-days: 5
