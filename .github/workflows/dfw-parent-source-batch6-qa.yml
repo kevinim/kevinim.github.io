@@ -31,7 +31,11 @@ jobs:
           node --check district-registry.js
           node --check scripts/audit-school-provenance.cjs
           node --check tests/dfw-parent-guidance-batch6.test.cjs
-          node scripts/build-dfw-school-coverage-matrix.cjs --check
+          if ! node scripts/build-dfw-school-coverage-matrix.cjs --check; then
+            node scripts/build-dfw-school-coverage-matrix.cjs
+            git --no-pager diff -- data/dfw-school-coverage-matrix-2026.json | head -n 180
+            exit 1
+          fi
       - name: Source and security tests
         run: |
           node --test tests/dfw-parent-guidance-batch6.test.cjs tests/dfw-parent-guidance-batch5.test.cjs tests/dfw-parent-guidance-batch4.test.cjs tests/dfw-parent-guidance-batch3.test.cjs tests/dfw-parent-guidance-next12.test.cjs tests/dfw-school-coverage-matrix.test.cjs tests/audit-school-provenance.test.cjs tests/audit-gis-upload-links.test.cjs tests/dfw-neighbor-finders.test.cjs tests/school-zone-ui.test.cjs
