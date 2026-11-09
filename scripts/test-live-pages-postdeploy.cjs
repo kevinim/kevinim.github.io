@@ -110,6 +110,28 @@ async function verify(browser,width){
    await page.locator('#femaHazardEnabled').uncheck();
    assert.equal(await page.locator('#zipOverlay').isChecked(),true,
     'ZIP overlay should restore after NRI toggle');
+   const flood=page.locator('#nfhlFloodPanel');
+   if(!(await flood.evaluate(node=>node.open)))await page.locator('#nfhlFloodPanel > summary').click();
+   await page.locator('#nfhlEnabled').check();
+   if(await page.evaluate(()=>map.getZoom()<14)){
+    assert.match(await page.locator('#nfhlStatus').innerText(),/줌 14/,
+      'NFHL must not issue broad-area real-time queries below zoom 14');
+    entry.checks.push('NFHL broad-area query guard requires zoom 14');
+   }
+   await page.evaluate(()=>map.setView([32.778,-96.813],15));
+   await page.waitForFunction(()=>{
+    const t=document.getElementById('nfhlStatus')?.textContent||'';
+    return t.includes('NFHL 공식 실시간 조회')||t.includes('조회에 실패했습니다')||t.includes('서비스를 사용할 수 없습니다');
+   },null,{timeout:65000}).catch(()=>{});
+   const nfhlStatus=await page.locator('#nfhlStatus').innerText();
+   entry.nfhlStatus=nfhlStatus;
+   if(nfhlStatus.includes('NFHL 공식 실시간 조회')&&/\d+개 홍수구역/.test(nfhlStatus))
+    entry.checks.push('Live FEMA NFHL responds with a flood-zone overlay');
+   else entry.warnings.push('External FEMA NFHL response unavailable or empty: '+nfhlStatus.slice(0,180));
+   await page.locator('#nfhlEnabled').uncheck();
+   assert.equal(await page.locator('#zipOverlay').isChecked(),true,
+    'ZIP overlay should restore after NFHL toggle');
+
    const txwrap=page.locator('#txwrapWHPPanel');
    if(!(await txwrap.evaluate(node=>node.open)))await page.locator('#txwrapWHPPanel > summary').click();
    await page.locator('#txwrapWHPEnabled').check();
@@ -122,6 +144,17 @@ async function verify(browser,width){
    await page.locator('#txwrapWHPEnabled').uncheck();
    assert.equal(await page.locator('#zipOverlay').isChecked(),true,
     'ZIP overlay should restore after wildfire raster toggle');
+   const grid=page.locator('#gridResiliencePanel');
+   assert.equal(await grid.count(),1,'Winter/grid resilience panel must exist');
+   if(!(await grid.evaluate(node=>node.open)))await page.locator('#gridResiliencePanel > summary').click();
+   await page.locator('#winterMapEnabled').check();
+   await page.waitForFunction(()=>/FEMA 2025.*(?:1734|1,734)개 Census tract/.test(
+    document.getElementById('winterMapStatus')?.textContent||''),null,{timeout:60000});
+   entry.winterStatus=await page.locator('#winterMapStatus').innerText();
+   entry.checks.push('Winter NRI tract overlay loads and labels address-level outage limitation');
+   await page.locator('#winterMapEnabled').uncheck();
+   assert.equal(await page.locator('#zipOverlay').isChecked(),true,
+    'ZIP overlay should restore after winter hazard toggle');
   }
   const violations=await page.evaluate(()=>window.__liveCspViolations||[]);
   entry.cspViolations=violations;
