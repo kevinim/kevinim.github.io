@@ -12,10 +12,15 @@ async function probe(url,fetchImpl=fetch){
  let response;
  try{
   response=await fetchImpl(url,{method:'HEAD',redirect:'manual',signal:AbortSignal.timeout(10000)});
-  if([405,501].includes(response.status))
+  // Many CMS/CDN hosts reject HEAD while GET is healthy. Confirm 404/5xx with GET
+  // before reporting an unusable official page; no redirect or home-address data.
+  const headHttpStatus=response.status;
+  const getConfirmed=[404,405,410,500,501,502,503,504].includes(headHttpStatus);
+  if(getConfirmed)
    response=await fetchImpl(url,{method:'GET',redirect:'manual',signal:AbortSignal.timeout(10000)});
   const s=response.status;
-  return {httpStatus:s,status:s>=200&&s<300?'HTTP_RESPONDED_FINDER_NOT_TESTED':
+  return {...(getConfirmed?{headHttpStatus,confirmationMethod:'GET'}:{}),
+   httpStatus:s,status:s>=200&&s<300?'HTTP_RESPONDED_FINDER_NOT_TESTED':
    s>=300&&s<400?'REDIRECT_REQUIRES_REVIEW':
    [401,403,429].includes(s)?'BLOCKED_OR_RATE_LIMITED_INCONCLUSIVE':
    [404,410].includes(s)?'HTTP_NOT_FOUND_MANUAL_REVIEW':'HTTP_ERROR_INCONCLUSIVE'};
@@ -33,7 +38,7 @@ async function run(report,{live=false,fetchImpl=fetch}={}){
  }
  const counts={};for(const r of results)counts[r.status]=(counts[r.status]||0)+1;
  return {schemaVersion:1,liveHttpProbeExecuted:live,lookupOperationalCertified:false,
-  assignmentCertified:false,method:'HEAD then GET for 405/501; no redirects followed and no address queries',
+  assignmentCertified:false,method:'HEAD then same-URL GET for 404/405/410/5xx; no redirects followed and no address queries',
   resultCounts:counts,records:results};
 }
 if(require.main===module)run(audit(load()),{live:process.argv.includes('--live')})
