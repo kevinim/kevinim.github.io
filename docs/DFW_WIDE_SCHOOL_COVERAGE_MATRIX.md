@@ -12,12 +12,49 @@ The initial automated census uses the **11-county Dallas–Fort Worth–Arlingto
 | District/LEA identifiers | 152 |
 | Named ISDs | 108 |
 | Other LEAs (charter/alternative/special types require classification) | 44 |
-| ISDs with a registered, allowlisted official school-confirmation entry | 85 |
+| ISDs with a registered, allowlisted official school-confirmation entry | 107 |
 | ISDs with no *registered* parent entry path in this dashboard | **43** |
-| Registered parent guidance rate among 108 observed ISDs | **78.7%** |
-| TEA school records within the 23 unregistered ISDs | **61** |
+| Registered parent guidance rate among 108 observed ISDs | **99.1%** |
+| TEA school records within the 1 unregistered ISD | **3** |
 
 These are **source administrative county-of-record proxies**, not boundaries of every district serving residential parcels. TEA districtCounty does not determine a particular campus's position or a student's enrollment eligibility. Cross-county districts and schools not in the supplied source may be missed. NCTCOG's broader 12-county area adds **Hood County**, which this TEA source omits; **unknown is not zero**. These 152 observed LEAs do not prove exhaustive real-estate parcel service coverage.
+
+## Seventh batch: 22 official parent routes; Chico intentionally unverified (stacked on #159)
+
+**November 9, 2026:** After cumulative pending PRs are merged, registered official parent *entry* pages reach **107/108 ISDs (99.1%)** and **1,938/1,941 TEA campus records** in the initial 11-county administrative proxy. These values measure links to district-provided parent guidance, **not** successful exact-address school assignment or campus attendance-zone geometry.
+
+| TEA code | District | Official district parent guidance | Important qualification |
+| --- | --- | --- | --- |
+| 126908 | Venus | https://www.venusisd.net/en-US/enrollment | 2026–27 신규·재학생 등록과 거주증빙, 현재 비거주자 전학 불가. 홈페이지 등록은 개별 주소별 배정학교 Finder가 아닙니다. |
+| 249906 | Paradise | https://www.pisd.net/enrollment-registration | 2026–27 공식 등록과 거주증빙 안내. 학군 밖 전학에는 별도 승인, 주소별 학교검색기는 검증되지 않았습니다. |
+| 043917 | Blue Ridge | https://www.brisd.net/page/student-enrollment-information | 2026–27 등록 공지에서 연결된 공식 학교 등록 페이지. 웹사이트 상세 내용 표시가 제한되어 학군 등록 경로 확인 필요. |
+| 070915 | Maypearl | https://www.maypearlisd.org/students-families/enrollment-and-registration | 2026–27 ASCENDER 등록 및 엄격한 거주증빙. 학교 담당자의 등록 심사를 공개 주소별 학교 배정 검색기로 취급할 수 없습니다. |
+| 070910 | Palmer | https://www.palmer-isd.org/o/phs/page/back-2-school | 학교 공식 신규학생 등록 지침·거주증빙·교무실 연락처. 2026 재학생 등록 공지와 신규 절차를 구분하세요. |
+| 116915 | Bland | https://www.blandisd.us/11759_4 | 2026–27 학생 등록과 매년 거주증빙을 안내. 학군 외부 전학을 받지 않는다고 공지하며 주소검색은 별도 확인입니다. |
+| 116916 | Boles | https://www.bolesisd.com/ | 학군 홈페이지의 Enrollment/Registration은 학군별 ASCENDER 등록으로 연결됩니다. 이 페이지는 개별 주거지 배정 검색기가 아닙니다. |
+| 116902 | Celeste | https://www.celesteisd.org/ | 공식 학군 홈페이지 Parents & Community 메뉴의 Parent Portal. 주소별 학교 자동배정 또는 현행 폴리곤 결과는 제공되지 않습니다. |
+| 116906 | Lone Oak | https://www.loneoakisd.net/for-parents/enrollment-registration | 공식 신규·재학생 등록과 학군 밖 전학 서류 구분. 구역·학년에 따른 배정은 등록 담당자의 확인이 필요합니다. |
+| 116909 | Wolfe City | https://www.wcisd.net/ | 공식 홈페이지 Registration 및 Parent Portal 링크가 있지만 등록 상세 페이지가 서버 오류를 반환했습니다. 직접 배정 조회를 확인하지 못했습니다. |
+| 126904 | Grandview | https://www.gvisd.org/zebrafamilyconnection | 공식 Zebra Family Connection에서 신규 학생 등록 안내로 이동합니다. 학년별 실제 주소 배정은 캠퍼스 확인이 필요합니다. |
+| 126907 | Rio Vista | https://www.rvisd.net/apps/pages/index.jsp?type=d&uREC_ID=413241 | 2025–26 제목 아래 2026–27 등록과 거주증빙 안내가 혼재합니다. 과거 정보를 현재 학교 배정 근거로 사용하지 마세요. |
+| 129910 | Scurry-Rosser | https://www.scurry-rosser.com/documents/enrollment-and-registration/786030 | 공식 등록 안내 문서와 26–27 전학 서식 제공. 공개 주소별 배정 결과를 검증한 것은 아닙니다. |
+| 184904 | Millsap | https://www.millsapisd.net/parents-students/registration/2026-2027-new-student-registration | 2026–27 공식 신규학생 등록과 거주증빙 절차. 학군 밖 전학은 별도 신청 대상입니다. |
+| 184901 | Poolville | https://www.poolville.net/student-enrollment-and-transfers | 공식 학생 등록 안내 일부가 2025–26으로 표기되어 있습니다. 2026–27 적용 여부를 다시 확인해야 합니다. |
+| 249901 | Alvord | https://www.alvordisd.net/registration | 공식 등록 페이지에 2027–28 재학생 등록 일정도 함께 있습니다. 2026–27 실제 주소 배정으로 혼동하면 안 됩니다. |
+| 070907 | Italy | https://www.italyisd.org/page/student-enrollment | 공식 학생 등록 안내 중 일부에 2025년 개시 날짜가 남아 있습니다. 2026–27 절차·배정 확인이 필요합니다. |
+| 116910 | Campbell | https://www.campbellisd.org/for-parents/prospective-parents | 공식 Prospective Parents에서 신규학생 등록과 학군 밖 전학 신청을 별도로 안내합니다. 현행 학교별 주소검색은 미확인입니다. |
+| 070901 | Avalon | https://www.avalonisd.net/apps/pages/index.jsp?pREC_ID=220809&type=d&uREC_ID=111233 | 학군 공식 Q&A는 등록을 위해 교장에게 직접 문의할 것을 안내합니다. 공개 자동 배정검색기는 확인되지 않았습니다. |
+| 070909 | Milford | https://www.milfordisd.org/ | 교육청 홈페이지에서 해당 학군 ASCENDER Parent Portal로 이동합니다. 해당 링크는 학교별 주소검색기가 아닙니다. |
+| 184911 | Garner | https://www.garnerisd.net/registration | 공식 등록 페이지는 매년 거주증빙과 보호자 예외 서류를 확인합니다. 이는 공개 주소별 학교검색이 아닙니다. |
+| 249908 | Slidell | https://www.slidellisd.net/parents | 2026–27 공식 신규·재학생 등록과 거주증빙에 관한 안내입니다. 학교별 현행 GIS 또는 개별 주소 배정 검증은 별도로 필요합니다. |
+
+### Explicitly unresolved: Chico ISD (249904)
+
+The official homepage, https://www.chicoisdtx.net/, is reachable but has no publicly readable/verified current parent enrollment or registrar search entry. It is **not counted as a registered parent guidance route**, and its three TEA campus rows remain P0. It must not be auto-converted into a finder from merely the fact that a website exists. Future source evidence requires an official registration page or confirmed district parent contact navigation.
+
+All 22 new paths are **`official-inquiry`**, not verified current-year address Finders. Even registration forms, portals, a school's grade span, and TEA district outlines are not proof of an individual school assignment. Poolville and Italy include older 2025–26/2025 references, Rio Vista mixes 2025–26 and 2026–27 material, and Alvord includes 2027–28 content. The enrollment detail link on Wolfe City returned an error; the official home/parent portal remains the appropriate cautious entry. No private residence was submitted and no new polygons were inferred.
+
+**Duplicate/compatibility check:** an in-progress Pilot Point branch corrected #159's generic URL to the official direct registration route; this change is included and independently tested. PR #158 modifies existing `district-registry.js` / matrix year and grade warnings; it must be merged without overwriting those notes, then the deterministic generator and complete QA rerun. Separate CFB Finder PR #155 and release gate #148 remain independent.
 
 ## Sixth batch: twelve more official parent guidance paths (stacked on PR #157; not deployed)
 
@@ -133,24 +170,13 @@ This is a **verified official entry URL** and appropriate instructions/limitatio
 
 ## Highest remaining school confirmation backlog
 
-P0 means the dashboard has not registered the district's official parent route, not that the district lacks a Finder. Ranked by TEA campus records.
-
-| Priority | ISD | TEA school records |
-| ---: | --- | ---: |
-| 1 | PARADISE ISD | 4 |
-| 2 | VENUS ISD | 4 |
-| 3 | ALVORD ISD | 3 |
-| 4 | BLAND ISD | 3 |
-| 5 | BLUE RIDGE ISD | 3 |
-| 6 | BOLES ISD | 3 |
-| 7 | CELESTE ISD | 3 |
-| 8 | CHICO ISD | 3 |
-| 9 | GRANDVIEW ISD | 3 |
-| 10 | LONE OAK ISD | 3 |
+| Priority | ISD | TEA school records | Source gap |
+| ---: | --- | ---: | --- |
+| 1 | Chico ISD | 3 | Official homepage found, but no verified parent enrollment/registrar route. Registration and attendance-zone status remain unknown. |
 
 ## Three independent levels of evidence
 
-**1 — Parent-facing official route:** 85/108 registered after all stacked PRs, with exact HTTPS allowlisted links. Landing pages/zone maps/choice procedures are not necessarily a verified address-and-grade lookup.
+**1 — Parent-facing official route:** 107/108 registered after all stacked PRs, with exact HTTPS allowlisted links. Landing pages/zone maps/choice procedures are not necessarily a verified address-and-grade lookup.
 
 **2 — School-by-school map polygon linkage:** not yet measurable as a DFW-wide current-year rate. Previous browser *reference minima* exist only for seven districts: Frisco 73/73, Plano 62/63, Allen 21/22 (historical), Lewisville 53/54 (mixed year), Prosper 31/31, CFB 0/30 (official Finder, no exported GIS), McKinney 25/30 (live source and exceptions). These are per-session loaded school matches, **not** current-year legal enrollment results. The other 145 districts do not receive fabricated 0% scores.
 
@@ -170,4 +196,4 @@ The JSON reports missing *reason* states, including no known official parent rou
 
 ## Next work
 
-Continue detailed, current-year school assignment routing checks for the six official-inquiry districts in the third batch, then source the **23 remaining unregistered ISDs**, not just favorite suburbs. For each, store TEA code, authority URL, last verification date, active year, grade, search/map/choice/inquiry type, GIS availability and licensing, missing reason and next action. Expand source boundaries to Hood and any cross-county overlap before labeling the DFW geographic denominator exhaustive. Confirm school-specific missing reasons with a browser source audit, including school-choice exceptions and transient failures.
+Continue detailed, current-year school assignment routing checks for the six official-inquiry districts in the third batch, then source the **1 remaining unregistered ISD**, not just favorite suburbs. For each, store TEA code, authority URL, last verification date, active year, grade, search/map/choice/inquiry type, GIS availability and licensing, missing reason and next action. Expand source boundaries to Hood and any cross-county overlap before labeling the DFW geographic denominator exhaustive. Confirm school-specific missing reasons with a browser source audit, including school-choice exceptions and transient failures.
