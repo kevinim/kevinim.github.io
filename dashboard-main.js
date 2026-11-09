@@ -525,11 +525,19 @@ async function loadBoundaryData(){
   {district:'PISD_LOOKUP',url:'./plano-locator-reference.geojson',label:'플레이노 현재 공식 Finder GIS (원본 2025–26)'},
   {district:'043907',url:'https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/23b28d101ba947498650f6c7b9ef251b/data?f=json',label:'매키니 2026–27 공식 School Zone Finder'},
   {district:'PROSPER',url:'./prosper-attendance-2026.geojson',label:'프로스퍼 2026–27 (공식 검색기 · 31개 학교 배정구역)'},
+  {district:'057905',url:null,label:'Dallas ISD 공개 초·중·고 GIS (2026년 7월 갱신 · 현행 배정 미검증)'},
 
   {district:'AISD',url:'./allen-attendance-historical.geojson',label:'Allen 2019·2023'}
  ];
  const results=await Promise.all(sources.map(async x=>{
   try{
+   if(x.district==='057905'){
+    if(!window.DallasAttendanceLive?.load)throw Error('Dallas GIS adapter unavailable');
+    const result=await window.DallasAttendanceLive.load(zoneFetch);
+    state.zoneData['057905']=result.features;
+    state.liveFinder['057905']=true; // Published 2026-updated data, NOT independently verified school assignment.
+    return x.label+': 공개 초등·중등·고등 '+result.features.length+'개 도형 확인 · SchoolSite Finder와 학년도 대조 미완료';
+   }
    if(x.district==='PISD_LOOKUP'){
      try{
       const zones=await loadPlanoLiveFinder(zoneFetch);
@@ -653,8 +661,8 @@ function drawBoundary(){
  if(!s){renderSchoolZoneMapHint(null,null);return;}
  const note=el('zoneNotice');
  const zoneDisplay=districtZoneDisplay(s.district,state.liveFinder);
- const officialYear=zoneDisplay==='official',finderLinked=zoneDisplay==='finder';
- const historical=!officialYear&&!finderLinked;
+ const officialYear=zoneDisplay==='official',finderLinked=zoneDisplay==='finder',publisherProvisional=zoneDisplay==='published';
+ const historical=!officialYear&&!finderLinked&&!publisherProvisional;
  if((historical&&!state.showOldZones)||(!historical&&!state.showHistoric)){
    if(note)note.textContent='배정 경계선 표시를 직접 끈 상태입니다. 학교를 다시 선택하면 해당 경계선을 자동으로 표시합니다.';
    return;
@@ -669,7 +677,7 @@ function drawBoundary(){
   if(layer.getBounds().isValid())map.fitBounds(layer.getBounds(),{padding:[28,28],maxZoom:13});
   const yrs=[...new Set(found.map(f=>f.properties?.sourceVintage).filter(Boolean))].join(', ');
   const grades=[...new Set(found.map(f=>f.properties?.grades).filter(Boolean))].join(', ');
-  if(note)note.innerHTML=s.district==='043907'?'<b>McKinney ISD 2026–27 공식 School Zone Finder 배정구역</b> · 2025년 12월 교육위원회 승인 지도 기준입니다. 5·8·12학년 기존 학교 유지(grandfather) 등 예외가 있으니 실제 주소는 학군 Finder로 확인하세요.':s.district==='PISD'&&finderLinked?'<b>Plano 현행 공식 Finder가 사용하는 배정선</b> · 원본 레이어는 2025–26 명칭입니다. 실제 주소·학년·호수는 Finder로 확인하세요.':s.district==='LISD'&&finderLinked?'<b>Lewisville 현행 공식 Finder가 사용하는 배정선</b> · 고등 레이어의 내부 연도는 2025–26. 실제 주소·아파트 호수는 Finder로 확인하세요.':s.district==='PROSPER'?'<b>Prosper 공식 검색기 배정구역 2026–27 · '+escape(yrs)+'</b> · 초등 20개, 중등 7개, 고등 4개 전체 구역 원본을 학군 검색기 좌표와 교차 검증했습니다. 녹색 도형은 배정구역 참고이며 실제 집 주소·학년·특수 프로그램/예외·등록 자격은 공식 Prosper ISD 검색기로 확인하세요.':current?'<b>Frisco 공식 검색기 경계 '+escape(yrs)+'</b> · 녹색 도형, 학년 '+escape(grades)+(grades.includes(',')?' (여러 학년의 구역을 함께 표시)':'')+'. 배정 예외와 정원 제한이 있을 수 있으므로 학군에 최종 확인하세요.':'<b style="color:#ab531b">과거 GIS 경계 '+escape(yrs)+' (현재 배정 보장 X)</b> · 주황색 점선 '+found.length+'개 도형 표시. 실제 2026–27 배정은 해당 주소로 공식 학군 검색에서 확인하세요.';
+  if(note)note.innerHTML=s.district==='057905'&&publisherProvisional?'<b>Dallas ISD 공개 초·중·고 GIS · 2026년 7월 갱신</b> (주황색 점선 참고 경계) · 2026–27 현행 학년도와 학교별 정확성 독립검증 미완료. 최종 배정은 SchoolSite Locator·PowerSchool 주소대장 및 학교 등록 담당자에게 확인하세요.':s.district==='043907'?'<b>McKinney ISD 2026–27 공식 School Zone Finder 배정구역</b> · 2025년 12월 교육위원회 승인 지도 기준입니다. 5·8·12학년 기존 학교 유지(grandfather) 등 예외가 있으니 실제 주소는 학군 Finder로 확인하세요.':s.district==='PISD'&&finderLinked?'<b>Plano 현행 공식 Finder가 사용하는 배정선</b> · 원본 레이어는 2025–26 명칭입니다. 실제 주소·학년·호수는 Finder로 확인하세요.':s.district==='LISD'&&finderLinked?'<b>Lewisville 현행 공식 Finder가 사용하는 배정선</b> · 고등 레이어의 내부 연도는 2025–26. 실제 주소·아파트 호수는 Finder로 확인하세요.':s.district==='PROSPER'?'<b>Prosper 공식 검색기 배정구역 2026–27 · '+escape(yrs)+'</b> · 초등 20개, 중등 7개, 고등 4개 전체 구역 원본을 학군 검색기 좌표와 교차 검증했습니다. 녹색 도형은 배정구역 참고이며 실제 집 주소·학년·특수 프로그램/예외·등록 자격은 공식 Prosper ISD 검색기로 확인하세요.':current?'<b>Frisco 공식 검색기 경계 '+escape(yrs)+'</b> · 녹색 도형, 학년 '+escape(grades)+(grades.includes(',')?' (여러 학년의 구역을 함께 표시)':'')+'. 배정 예외와 정원 제한이 있을 수 있으므로 학군에 최종 확인하세요.':'<b style="color:#ab531b">과거 GIS 경계 '+escape(yrs)+' (현재 배정 보장 X)</b> · 주황색 점선 '+found.length+'개 도형 표시. 실제 2026–27 배정은 해당 주소로 공식 학군 검색에서 확인하세요.';
   if(note&&s.district==='FISD'&&window.SchoolBoundaryMatch.boundarySchoolKey(s.name)==='isbell'){
    const gradeLabels=[...new Set(found.map(f=>f.properties?.grades).filter(Boolean))];
    const explain=document.createElement('small');explain.className='source boundary-footnote';
