@@ -26,15 +26,21 @@ const AreaAssessmentCore=(()=>{
   }
   function summarizeCrime(dataset,zip){
     const z=dataset?.zips?.[String(zip||'')],year=String(dataset?.metadata?.years?.at(-1)||'');
-    if(!z||!Array.isArray(z.cities)||!z.cities.length)return {status:'unknown',message:'FBI 도시별 자료 연결 없음'};
+    if(!z||!Array.isArray(z.cities)||!z.cities.length)
+      return {status:'unknown',message:'이 ZIP의 FBI 도시 관할 연결 자료 없음'};
+    if(!Number.isFinite(z.outsideCityShare)||z.outsideCityShare<0||z.outsideCityShare>1)
+      return {status:'unknown',message:'도시 관할 비율 검증 필요 · 비교 보류'};
+    if(z.cities.some(c=>!c||typeof c.ori!=='string'||!Number.isFinite(c.share)||c.share<0||c.share>1))
+      return {status:'unknown',message:'도시 관할 구성 자료 검증 필요 · 비교 보류'};
     const major=z.cities.slice().sort((a,b)=>b.share-a.share)[0];
-    if(!major||major.share<0.5||(Number(z.outsideCityShare)||0)>=0.5)
-      return {status:'mixed',message:'ZIP에 여러 관할 구역 혼재 · 도시별 지도 확인'};
+    if(major.share<0.5||z.outsideCityShare>=0.5)
+      return {status:'mixed',message:'ZIP에 여러 관할 구역 혼재 · 개별 도시 자료 확인'};
     const city=dataset.cities?.[major.ori],recent=city?.years?.[year];
-    if(!city||!recent)return {status:'unknown',message:'주요 관할 도시의 보고 자료 없음'};
+    if(!city||!recent)return {status:'unknown',message:'주요 관할 도시의 FBI '+year+'년 신고 자료 없음'};
     const violent=recent.violentRate,property=recent.propertyRate;
-    if(!Number.isFinite(violent)||!Number.isFinite(property))
-      return {status:'unknown',message:'FBI '+year+' 신고 월수 불충분 · 비교 보류'};
+    if(recent.violentMonths!==12||recent.propertyMonths!==12||
+       !Number.isFinite(violent)||!Number.isFinite(property)||violent<0||property<0)
+      return {status:'unknown',message:'FBI '+year+'년 12개월 신고 불충분 · 비율 표시 안 함'};
     return {status:'available',city:city.city,year,share:major.share,violent,property,
       message:year+' '+city.city+' · 폭력 '+Math.round(violent)+' / 재산 '+Math.round(property)+' (10만 명당)'};
   }
@@ -46,7 +52,16 @@ const AreaAssessmentCore=(()=>{
     return {status:'available',minutes:Math.round(minutes),
       message:'선택 목적지 · ZIP 대표점 약 '+Math.round(minutes)+'분 (교통량 미반영)'};
   }
-  return {summarizeSchools,summarizeNoaa,summarizeCrime,summarizeCommute};
+  function regionEvidenceMeta(id){
+    const records={
+      schools:'TEA 2026 예비 · ZIP 소재 학교 · 주소 배정 아님',
+      hazards:'NOAA 2024–25 카운티 보고 · FEMA 지도는 별도 지표',
+      crime:'FBI NIBRS 2025 · 도시 신고율 · ZIP 범죄율 아님',
+      commute:'선택 목적지 도로망 직접 계산 · 실시간 교통 미반영'
+    };
+    return records[id]||'출처 확인 필요';
+  }
+  return {summarizeSchools,summarizeNoaa,summarizeCrime,summarizeCommute,regionEvidenceMeta};
 })();
 if(typeof window!=='undefined')window.AreaAssessmentCore=AreaAssessmentCore;
 if(typeof module!=='undefined'&&module.exports)module.exports=AreaAssessmentCore;
