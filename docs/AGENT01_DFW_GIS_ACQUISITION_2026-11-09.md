@@ -59,3 +59,22 @@
 The live-source staging check is **expected to remain red / NO_GO** when a grade lacks a validated layer; this is a meaningful source incompleteness blocker, not evidence that released map functionality is broken. Independently, the unit/regression safety job passed on the source-staging branch. An official district website embedding a map does not independently certify the item owner, last edit, academic year, reuse rights, or correctness for a property.
 
 Do not claim these 25 features represent 25 distinct verified current-year campuses until grade-level `schoolCount`, TEA ID crosswalk and 2026–27 authoritative Finder agreement are reviewed.
+
+## Follow-up: Irving high-school embedded GIS recovered (2026-11-09)
+
+The previous statement that the high school WebMap has only campus points and no attendance polygons was **incorrect**. The [district's official High School Boundary Map](https://www.irvingisd.net/departments-services/performance-outcomes-data/planning/current-campus-level-maps/high-school-boundary-map) embeds the original Esri `featureCollection.layers[0].featureSet.features` and does not advertise a regular FeatureServer URL for that layer. Raw item `94e441e70e5049daa74c0cc2bb5a7cad` is an ArcGIS Web Map last modified **2020-08-28T21:25:24Z**.
+
+| Grade | Actual input | Source grade and location validation | School count | Year/release |
+| --- | --- | --- | ---: | --- |
+| Elementary | `New_EL_Zones_24_25/FeatureServer/4` | District-linked Esri public polygon, 4326 output | 18 | **2024–25** in source title; historical |
+| Middle | `ReBound_MS_Zones_v5/FeatureServer/5` | District-linked Esri public polygon, 4326 output | 7 | Layer academic year unverified |
+| High | WebMap `94e441e70e5049daa74c0cc2bb5a7cad`, embedded `High Schools` (`high`), `HIGH_DESC` | **3 polygons**, original WKID 102100/3857, strict single-ring Web Mercator → 4326; Irving, Macarthur, Nimitz | 3 | Map modified 2020; effective boundary year not confirmed |
+| **Total** | | **28 distinct named features** | **28** | All CI-local and non-production |
+
+New `scripts/agent01-irving-embedded-high.cjs` converts only the exact pinned high school WebMap and its single well-defined polygon feature layer, with explicit three-school allowlist, exactly three records and closed-ring/DFW-bound checks. Any unfamiliar or multi-ring topology fails closed to avoid changing legal borders inadvertently. The original WebMap is district-linked, but ArcGIS item ownership, source reuse and 2026–27 zoning validity remain unverified.
+
+**Preliminary TEA campus-name reference crosswalk:** `data/irving-provisional-tea-crosswalk-2026.json` explicitly enumerates 18 elementary, 7 middle and 3 high source labels mapped to TEA 9-digit campus IDs from `tea-ratings-2026.json` (2026 preliminary snapshot). `scripts/agent01-irving-tea-crosswalk.cjs` rejects unknown source names, duplicated IDs, missing grades or any attempt to assert current-year verification. It adds only `provisionalTEAReferenceId`; the true source `campusId` remains null and the campus assignment verification flags remain false.
+
+One known gap: TEA `057912048` (Lorenzo de Zavala Middle) is not represented among the seven current public middle polygons. This may reflect the district's STEM/choice model; absence must **not** be represented as an inferred eighth polygon, nor a campus closure. Parent-address Finder remains the assignment authority.
+
+**Limits:** 28 school references linked to a preliminary TEA roster are NOT 28 independently verified, current 2026–27 attendance polygons. No household address data were queried, stored or published. No production source configuration, campus marker, school filter or map rendering file is modified. Existing mandatory #148 NO_GO must remain active until the current-year official Finder/address holdouts, authoritative layer rights, and rendered dashboard school-click QA are independently satisfied.
