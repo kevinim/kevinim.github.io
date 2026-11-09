@@ -22,13 +22,14 @@ function load(root = ROOT) {
   matrix: read(root, 'data/dfw-school-coverage-matrix-2026.json'),
   polygonBaseline: read(root, 'data/school-polygon-linkage-baseline.json'),
   identityBaseline: read(root, 'data/dfw-campus-identity-baseline-2026.json'),
+  pointExceptionEvidence: read(root, 'data/dfw-public-isd-missing-point-evidence-2026.json'),
   provenance: read(root, 'school-data-provenance.json'),
   registry: DISTRICT_REGISTRY,
   retired: RETIRED_CAMPUSES_2026
  };
 }
 function audit(input) {
- const {tea, nces, local, matrix, polygonBaseline, identityBaseline, provenance, registry, retired} = input;
+ const {tea, nces, local, matrix, polygonBaseline, identityBaseline, pointExceptionEvidence, provenance, registry, retired} = input;
  const errors = [], notes = [];
  const check = (ok, code) => { if (!ok) errors.push(code); };
  const counties = new Set(COUNTIES);
@@ -62,6 +63,19 @@ function audit(input) {
   const k = s.district + '|' + normalize(s.name);
   if (!localSchools.has(k)) localSchools.set(k, []);
   localSchools.get(k).push(s);
+ }
+ const exceptions=new Map();
+ check(Array.isArray(pointExceptionEvidence.records) &&
+  pointExceptionEvidence.records.length === identityBaseline.pointExceptionCount,
+  'POINT_EXCEPTION_CENSUS_CHANGED');
+ for (const e of pointExceptionEvidence.records || []) {
+  check(!exceptions.has(e.id),'DUPLICATE_POINT_EXCEPTION_'+e.id);
+  check(/^\d{9}$/.test(e.id) && typeof e.classification === 'string' &&
+   e.verifiedCurrentCoordinates === false && e.standardAttendancePolygonVerified === false &&
+   Array.isArray(e.officialSources) && e.officialSources.length > 0 &&
+   e.officialSources.every(u => typeof u === 'string' && u.startsWith('https://')),
+   'UNSAFE_POINT_EXCEPTION_EVIDENCE_'+e.id);
+  exceptions.set(e.id,e);
  }
  const registryRows = new Map();
  for (const r of matrix.districts) {
@@ -113,7 +127,9 @@ function audit(input) {
    const p = ncesIndex.get(c.id);
    const pointState = !p ? 'NO_HISTORICAL_NCES_POINT' :
     validPoint(p) ? 'HISTORICAL_NCES_POINT_NOT_CURRENT_CERTIFIED' : 'INVALID_HISTORICAL_POINT';
-   if (!p) { missingPoints++; missingID.push(c.id); }
+   if (!p) { missingPoints++; missingID.push(c.id);
+    check(exceptions.has(c.id),'UNEXPLAINED_MISSING_PUBLIC_POINT_'+c.id);
+   } else check(!exceptions.has(c.id),'STALE_MISSING_POINT_EVIDENCE_'+c.id);
    else if (!validPoint(p)) { invalidPoints++; pointAnomaly.push(c.id); }
    else pointRecords++;
    const lifecycle = retired.find(x => (x.district === key || x.district === d.code) &&
@@ -131,7 +147,12 @@ function audit(input) {
     lifecycle:lifecycle ? {status:'HISTORICAL_RECORD_RETIRED_OR_CHANGED',source:lifecycle.source,effective:lifecycle.retiredFrom} : {status:'NOT_REVIEWED'},
     gradeRange:{min:null,max:null,source:'TEA ratings snapshot has no grade-range columns; local type hint is not a verified grade range',
       directoryTypeHint:hints.length===1 ? hints[0].type : null},
-    coordinate:{status:pointState,sourceYear:nces.schoolYear || '2024–25',
+    coordinate:{status:pointState,exceptionEvidence:exceptions.has(c.id) ?
+     {classification:exceptions.get(c.id).classification,reason:exceptions.get(c.id).reason,
+      publishedAddressOnly:exceptions.get(c.id).publishedAddress,
+      officialSources:exceptions.get(c.id).officialSources,
+      currentPointOrZoneCertified:false} : null,
+     sourceYear:nces.schoolYear || '2024–25',
       lat:p && validPoint(p) ? p.ll[0] : null, lon:p && validPoint(p) ? p.ll[1] : null,
       independentlyVerifiedCurrent:false},
     schoolBoundaryLinkage:{status:missingReason,exactSchoolPolygonMatched:null,
@@ -197,6 +218,7 @@ function audit(input) {
   otherTEALeas:matrix.districts.length-districts.length,otherTEACampusRecords:otherRows.length,
   otherLEAHistoricalPointMatches:otherMatched,otherLEAHistoricalPointsMissing:otherMissing,
   allDFWMatchedHistoricalPoints:matched+otherMatched,allDFWMissingHistoricalPoints:absent+invalid+otherMissing,
+  auditedPublicPointExceptionRecords:exceptions.size,
   publicISDCampusRecords:campusResults.length,
   registeredOfficialGuidance:registered,unregisteredOfficialGuidance:missing.length,
   configuredGISDistricts:districts.filter(d=>d.gisAvailability.status==='CONFIGURED_IN_DASHBOARD').length,
@@ -213,7 +235,8 @@ function audit(input) {
  return {schemaVersion:1,asOf:matrix.generatedOn,sourceFiles:[
   'tea-ratings-2026.json','nces-locations-2024.json','schools.json',
   'data/dfw-school-coverage-matrix-2026.json','data/school-polygon-linkage-baseline.json',
-  'school-data-provenance.json','school-lifecycle.js'],
+  'school-data-provenance.json','school-lifecycle.js',
+  'data/dfw-public-isd-missing-point-evidence-2026.json'],
   technicalAudit:errors.length?'FAIL':'PASS_WITH_UNVERIFIED_SOURCES',
   errors,notes,summary,duplicateNameCandidates:mismatchNames,
   districts:districts.sort((a,b)=>a.code.localeCompare(b.code)),
