@@ -8,7 +8,7 @@ const code=s=>String(s??'').trim().padStart(3,'0');
 function precise(address,c){
  const a=c?.attributes||{},g=c?.location||{};
  const expected=String(address).match(/^\s*(\d+)\s+(.+),\s*[^,]+,\s*(?:TX|Texas)\s+(\d{5})/i);
- const result=String(c?.address||'').match(/^\s*(\d+)\s+(.+),/);
+ const result=String(c?.address||'').match(/^\s*(\d+)\s+([^,]+),/);
  if(!expected||!result||expected[1]!==result[1])return false;
  const street=s=>s.toLowerCase().replace(/\b(road|rd|street|st|drive|dr|lane|ln|court|ct|trail|trl|boulevard|blvd)\b/g,'')
   .replace(/[^a-z0-9]/g,'');
