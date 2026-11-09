@@ -1,0 +1,43 @@
+name: Real public residential-building address → school map Chromium UAT (no deploy)
+on:
+  push:
+    branches: [qa/public-residential-e2e-school-map-20261109]
+  pull_request:
+    branches: [feature/home-address-assigned-school-map-20261109, main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real-leasing-office-address:
+    name: Real Esri property geocoding → app school selection → actual map polygon
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # pinned v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # pinned v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Node syntax
+        run: node --check scripts/verify-public-residence-home-school-browser.cjs
+      - name: Install isolated open-source Chromium
+        run: |
+          mkdir -p public-residence-browser-tmp
+          cd public-residence-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Actual public residential-building address through live Esri and Leaflet
+        env:
+          NODE_PATH: ${{ github.workspace }}/public-residence-browser-tmp/node_modules
+        run: node scripts/verify-public-residence-home-school-browser.cjs
+      - name: Preserve real-screen evidence and no-go classification
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # pinned v4
+        with:
+          name: public-residential-school-map-browser-review
+          path: artifacts/public-residential-e2e/
+          if-no-files-found: warn
+          retention-days: 7
