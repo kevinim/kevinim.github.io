@@ -3,7 +3,7 @@ on:
   push:
     branches: [feature/dfw-parent-guidance-batch6-20261109]
   pull_request:
-    branches: [main]
+    branches: [feature/dfw-parent-guidance-batch5-20261109, main]
     paths:
       - 'district-registry.js'
       - 'data/dfw-parent-source-evidence-batch6-2026.json'
