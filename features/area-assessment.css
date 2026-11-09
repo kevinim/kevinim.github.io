@@ -1,0 +1,19 @@
+/* P0: preserve legacy KPI DOM IDs used by renderData, but do not repeat them visually. */
+.kpis{display:none!important}
+.area-qa{margin:0 0 16px;padding:16px 18px;border:1px solid #dce5f0;border-radius:13px;background:#f9fbff;box-shadow:0 3px 18px rgba(27,46,88,.045)}
+.area-qa-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.area-qa-top h3{font-size:15px;letter-spacing:-.25px;margin:0;color:#17345e}
+.area-qa-zip{white-space:nowrap;font-size:11px;font-weight:650;color:#456080;background:#e9f0fa;padding:5px 8px;border-radius:20px}
+.area-qa-intro{font-size:11px;line-height:1.5;color:#5b6e85;margin:7px 0 10px}
+.area-qa-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.area-qa-row{font:inherit;display:flex;align-items:center;text-align:left;justify-content:space-between;width:100%;min-width:0;gap:10px;padding:9px 11px;border:1px solid #dce6f4;border-radius:9px;background:#fff;color:#1a2c45;transition:background .12s,border-color .12s}
+.area-qa-row:hover{background:#f0f6ff;border-color:#a9c4e5}
+.area-qa-row:focus-visible{outline:3px solid #3568b7;outline-offset:2px}
+.area-qa-body{display:grid;gap:3px;min-width:0;flex:1}
+.area-qa-label{font-size:12px;font-weight:800;color:#254b7d}
+.area-qa-value{font-size:12px;font-weight:650;line-height:1.45;overflow-wrap:anywhere}
+.area-qa-note{font-size:10px;line-height:1.4;color:#64748b}
+.area-qa-mark{font-weight:800;font-size:22px;line-height:1;color:#7090b5;flex:none}
+.area-qa-foot{font-size:10px;line-height:1.4;color:#657992;margin:9px 0 0}
+@media(max-width:720px){.area-qa{padding:12px;margin-bottom:12px}.area-qa-list{grid-template-columns:minmax(0,1fr)}.area-qa-row{padding:10px}.area-qa-top{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){.area-qa-row{transition:none}}
