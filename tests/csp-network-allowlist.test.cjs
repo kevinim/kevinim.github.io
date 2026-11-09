@@ -66,10 +66,10 @@ test('all live vendor endpoints remain reachable under index connect-src',()=>{
   ['official-school-review.js','https://www.infofinderi.com'],
   ['phase2a-nfhl-flood.js','https://hazards.fema.gov'],
   ['features/reviewed-bootstrap.js','https://gismaps.cityofallen.org'],
-  ['index.html','https://static.friscoisd.org'],
-  ['index.html','https://portal.metrostudygis.com'],
-  ['index.html','https://nominatim.openstreetmap.org'],
-  ['index.html','https://router.project-osrm.org']
+  ['dashboard-main.js','https://static.friscoisd.org'],
+  ['dashboard-main.js','https://portal.metrostudygis.com'],
+  ['dashboard-main.js','https://nominatim.openstreetmap.org'],
+  ['dashboard-main.js','https://router.project-osrm.org']
  ];
  const origins=new Set(get('index.html','connect-src'));
  for(const [file,origin] of sourceNames){
