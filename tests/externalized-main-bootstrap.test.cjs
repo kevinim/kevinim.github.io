@@ -54,7 +54,7 @@ function expectedPublicJs(source){
  s=replaceOnce(s,"['JPM 도로망 (교통 미반영)',Number.isFinite(d.jpmMinutes)?d.jpmMinutes+'분':'미확인'],",'');
  s=replaceOnce(s,"state.withinHour?(Number.isFinite(d.jpmMinutes)?(d.jpmMinutes<=60?'#2878ba':'#eef2f5'):'#aab5c0')",
   "state.withinHour?'#aab5c0'");
- s=replaceOnce(s,"JPM 도로망: \${Number.isFinite(d.jpmMinutes)?d.jpmMinutes+'분':'미확인'}",
+ s=replaceOnce(s,"JPM 도로망: ${Number.isFinite(d.jpmMinutes)?d.jpmMinutes+'분':'미확인'}",
   '통근 시간: 목적지 검색 후 확인');
  s=s.replaceAll('JPM Plano 도착 · 도로망 추정','통근 지도 · 직접 경로 확인')
   .replaceAll('JPM 도로망 자료 오류','사전 계산 통근 자료 오류')
