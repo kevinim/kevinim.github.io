@@ -27,6 +27,13 @@ jobs:
           package-manager-cache: false
       - name: Test security gate rules
         run: node --test tests/public-release-gate.test.cjs tests/public-preview-build.test.cjs tests/family-entry.test.cjs tests/environment-plan.test.cjs
+      - name: Syntax check account-free backend entrypoints
+        run: |
+          node --check backend/api.mjs
+          node --check backend/worker.mjs
+          node --check backend/local-server.mjs
+      - name: Test fail-closed backend API and local-only harness
+        run: node --test tests/backend-api.test.mjs
       - name: Validate 3-environment isolation manifest (no deploy)
         run: node scripts/validate-environment-plan.cjs deploy/environment-plan.json planning
       - name: Build safe family gateway holding page (no deploy)
