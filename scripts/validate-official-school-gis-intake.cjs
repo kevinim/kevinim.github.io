@@ -18,7 +18,8 @@ function run(manifest, geojson,rights){
   if(!right||right.status!=='approved'||right.approvedUses?.publicRedistribution!==true||
     !/^https:\/\//.test(right.consentEvidenceUrl||'')||
     manifest.permissionEvidenceUrl!==right.consentEvidenceUrl||
-    manifest.sourceUrl!==right.finderUrl && !manifest.approvedAlternateSource)
+    !Array.isArray(right.approvedOfficialGisUrls)||
+    !right.approvedOfficialGisUrls.includes(manifest.sourceUrl))
    error('real_gis_rights_or_source_not_cleared');
   if(manifest?.independentReviewerApproved!==true||
     !/^https:\/\//.test(manifest?.reviewEvidenceUrl||''))
