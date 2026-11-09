@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "createdForSchoolYear": "2026–27",
+  "baselineCommit": "8dda561a9dfa2a77ce578db81033f85725d4f05a",
+  "updatedOn": "2026-11-08",
+  "validationMode": "local-files-only",
+  "note": "Pinned Git blob hashes are file-integrity baselines, not proof of district assignment accuracy or source-year currency. Refresh hashes only after review of new source evidence.",
+  "assets": [
+    {
+      "path": "school-data-provenance.json",
+      "gitBlobSha": "cc3029864b5f0739127696a1fb9838d6be127034",
+      "kind": "provenance",
+      "district": "all",
+      "assurance": "source-inventory",
+      "observedAt": "2026-11-07"
+    },
+    {
+      "path": "schools.json",
+      "gitBlobSha": "6d91e5e0301ce36a42813bedea87fe976e2882cd",
+      "kind": "points-schools",
+      "district": "PISD",
+      "assurance": "2022-reference",
+      "expectedCount": 73
+    },
+    {
+      "path": "schools2026-1.json",
+      "gitBlobSha": "9ff21a4290cbf6006098c74761ab20aab1bc55be",
+      "kind": "points-data",
+      "district": "mixed",
+      "assurance": "2026-campus-points",
+      "expectedCount": 7
+    },
+    {
+      "path": "schools2026-2.json",
+      "gitBlobSha": "ae3bfd935d073f0d64c41b75759d695726d3483b",
+      "kind": "points-data",
+      "district": "mixed",
+      "assurance": "2026-campus-points",
+      "expectedCount": 7
+    },
+    {
+      "path": "schools2026-3.json",
+      "gitBlobSha": "7e1341a0db7db9f153a4cc1583b857be995abc14",
+      "kind": "points-data",
+      "district": "mixed",
+      "assurance": "2026-campus-points",
+      "expectedCount": 7
+    },
+    {
+      "path": "schools2026-4.json",
+      "gitBlobSha": "fdfdbbcf3451c5f5e35db9a5bb5b12f9d3cd5f6b",
+      "kind": "points-data",
+      "district": "mixed",
+      "assurance": "2026-campus-points",
+      "expectedCount": 5
+    },
+    {
+      "path": "nces-locations-2024.json",
+      "gitBlobSha": "8f61ab10969b074afa34817632cfcf3474fdbfc9",
+      "kind": "points-data",
+      "district": "all",
+      "assurance": "2024-25-reference",
+      "expectedCount": 2213
+    },
+    {
+      "path": "tea-ratings-2026.json",
+      "gitBlobSha": "d4176c9d168230a2ef3123e4afb50b7bf2113abd",
+      "kind": "opaque-json",
+      "district": "all",
+      "assurance": "2026-rating-snapshot"
+    },
+    {
+      "path": "prosper-attendance-2026.geojson",
+      "gitBlobSha": "3e9b93735e29c23bec4e7c95cfdac2065776a3a3",
+      "kind": "features",
+      "district": "PROSPER",
+      "assurance": "2026-27-current-confirmed",
+      "expectedCount": 31,
+      "observedAt": "2026-11-06"
+    },
+    {
+      "path": "allen-attendance-historical.geojson",
+      "gitBlobSha": "5486f7c71d9f95dd4c6f9d99c01ed992df1c8474",
+      "kind": "features",
+      "district": "AISD",
+      "assurance": "historical-only",
+      "expectedCount": 20
+    },
+    {
+      "path": "plano-attendance-2019.geojson",
+      "gitBlobSha": "6a52f31a401f69d8781fc816f36c5afc5b21c28a",
+      "kind": "features",
+      "district": "PISD",
+      "assurance": "historical-only",
+      "expectedCount": 132
+    },
+    {
+      "path": "plano-locator-reference.geojson",
+      "gitBlobSha": "8817af9c74dda8b11d0d7b010b7c9e328ebc4d55",
+      "kind": "features",
+      "district": "PISD",
+      "assurance": "stored-finder-reference-not-current"
+    },
+    {
+      "path": "prosper-celina-reference-2026.geojson",
+      "gitBlobSha": "21a8ea0af61c44094a899961866d2fc46bad152b",
+      "kind": "features",
+      "district": "PROSPER",
+      "assurance": "partial-reference-year-unconfirmed",
+      "expectedCount": 13,
+      "observedAt": "2026-11-06"
+    },
+    {
+      "path": "plano-official-feeder-reference-2026.json",
+      "gitBlobSha": "4b3874a91606c1063f3cd4c8bc66ad52631919c4",
+      "kind": "feeder",
+      "district": "PISD",
+      "assurance": "feeder-not-address-assignment",
+      "observedAt": "2026-11-06"
+    },
+    {
+      "path": "cfb-official-feeder-reference-2026.json",
+      "gitBlobSha": "3c2997183b114f5d8ac670dfd5c029a594432c4e",
+      "kind": "feeder",
+      "district": "CFB",
+      "assurance": "feeder-not-address-assignment",
+      "observedAt": "2026-11-06"
+    },
+    {
+      "path": "official-resident-finder-audit-2026-11-07.json",
+      "gitBlobSha": "4369ea5c578960dca6d992555ab4120f97a0b180",
+      "kind": "finder-audit",
+      "district": "AISD/CFB",
+      "assurance": "finder-check-not-parcel-proof",
+      "observedAt": "2026-11-07"
+    }
+  ],
+  "knownLimitations": [
+    {
+      "district": "FISD",
+      "code": "live-runtime-boundaries",
+      "details": "Official 2026–27 Frisco zone feed loads at runtime; this file lock does not measure remote service availability."
+    },
+    {
+      "district": "PISD",
+      "code": "stored-finder-reference-not-current",
+      "details": "Saved GIS reference is labeled 2025–26. A working official Finder link does not prove the cached polygons apply to 2026–27."
+    },
+    {
+      "district": "AISD",
+      "code": "historical-polygons",
+      "details": "Stored Allen polygons are historical; official address-range Finder results are a separate evidence class."
+    },
+    {
+      "district": "LISD",
+      "code": "live-finder-required",
+      "details": "Current school assignment relies on live official Finder; this lock cannot certify the live layer."
+    },
+    {
+      "district": "CFB",
+      "code": "no-current-districtwide-polygon",
+      "details": "Official resident Finder works for tested addresses but current-year polygon coverage is not verified."
+    },
+    {
+      "district": "PROSPER",
+      "code": "partial-Celina-reference",
+      "details": "Celina GIS reference is partial and source year unconfirmed; not suitable for districtwide address assignments."
+    },
+    {
+      "district": "043907",
+      "code": "live-finder-required",
+      "details": "McKinney current polygons depend on a live Finder; local assets do not provide a districtwide current-year replacement."
+    }
+  ]
+}
