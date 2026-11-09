@@ -270,6 +270,126 @@
       "guidance": "Use BISD School Search for your zoned school; choice campuses and lottery selections are not address-based guarantees.",
       "sourceYear": "2026–27 enrollment FAQ links BISD School Search; choice and transfer rules apply",
       "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "070912",
+      "en": "Waxahachie",
+      "ko": "왁서해치",
+      "kind": "finder-guidance",
+      "url": "https://www.wisd.org/departments/transportation",
+      "guidance": "학군 Transportation의 Find Your School에서 공식 검색기로 이동하세요. 버스노선과 학교 배정은 다르며 주소·학년별 배정은 학군에서 확인하세요.",
+      "sourceYear": "Official parent entry; current-year GIS not independently verified. 학군 Transportation의 Find Your School에서 공식 검색기로 이동하세요. 버스노선과 학교 배정은 다르며 주소·학년별 배정은 학군에서 확인하세요.",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "057907",
+      "en": "Duncanville",
+      "ko": "던컨빌",
+      "kind": "official-map",
+      "url": "https://www.duncanvilleisd.org/buildingthefuture/rezoning",
+      "guidance": "2026–27 변경된 출석구역을 확인하세요. 이전 Current Zoning과 Proposed Feeder Pattern을 확정 배정으로 혼동하지 말고 학군의 전학 예외를 확인하세요.",
+      "sourceYear": "Official parent entry; current-year GIS not independently verified. 2026–27 변경된 출석구역을 확인하세요. 이전 Current Zoning과 Proposed Feeder Pattern을 확정 배정으로 혼동하지 말고 학군의 전학 예외를 확인하세요.",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "070908",
+      "en": "Midlothian",
+      "ko": "미들로시언",
+      "kind": "finder-guidance",
+      "url": "https://www.midlothianisd.org/enrollment/school-boundaries",
+      "guidance": "공식 Find My School에서 주소별 초·중·고 배정을 확인하세요. 신설 도로·신축 단지는 검색에 반영되지 않을 수 있어 경계 부근은 학군에 재확인하세요.",
+      "sourceYear": "Official parent entry; current-year GIS not independently verified. 공식 Find My School에서 주소별 초·중·고 배정을 확인하세요. 신설 도로·신축 단지는 검색에 반영되지 않을 수 있어 경계 부근은 학군에 재확인하세요.",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "126903",
+      "en": "Cleburne",
+      "ko": "클리번",
+      "kind": "finder-guidance",
+      "url": "https://www.c-isd.com/students-families",
+      "guidance": "학군 Students & Families의 Find My School Zone에서 주소별 학교 확인을 진행하세요. 학년도와 학년·전학 예외는 등록담당자에게 재확인하세요.",
+      "sourceYear": "Official parent entry; current-year GIS not independently verified. 학군 Students & Families의 Find My School Zone에서 주소별 학교 확인을 진행하세요. 학년도와 학년·전학 예외는 등록담당자에게 재확인하세요.",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "184907",
+      "en": "Aledo",
+      "ko": "앨리도",
+      "kind": "official-map",
+      "url": "https://www.aledoisd.org/parents-students/new-and-returning-student-registration/registration-frequently-asked-questions",
+      "guidance": "공식 등록 FAQ에서 Attendance Zone Committee의 최종 초·중학교 경계 지도를 참조하세요. 게시 지도는 2024년 채택본으로 2026–27 적용 여부를 학군에 확인하세요. 자동 주소 Finder는 미확인입니다.",
+      "sourceYear": "Official parent entry; current-year GIS not independently verified. 공식 등록 FAQ에서 Attendance Zone Committee의 최종 초·중학교 경계 지도를 참조하세요. 게시 지도는 2024년 채택본으로 2026–27 적용 여부를 학군에 확인하세요. 자동 주소 Finder는 미확인입니다.",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "184903",
+      "en": "Weatherford",
+      "ko": "웨더퍼드",
+      "kind": "finder-guidance",
+      "url": "https://www.weatherfordisd.com/apps/pages/index.jsp?type=d&uREC_ID=236882",
+      "guidance": "공식 School Zone Finder에서 주소를 검색하세요. 초·중학교 구역과 학년도·전학 예외를 구분하여 학군에 확인하세요.",
+      "sourceYear": "Official parent entry; current-year GIS not independently verified. 공식 School Zone Finder에서 주소를 검색하세요. 초·중학교 구역과 학년도·전학 예외를 구분하여 학군에 확인하세요.",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "220915",
+      "en": "Azle",
+      "ko": "애즐",
+      "kind": "finder-guidance",
+      "url": "https://www.azleisd.net/page/attendance-zones-school-locator/",
+      "guidance": "2026–27 School Search에서 주소를 입력하세요. 변경된 초등 PK–5 및 주니어하이 6–8 학년 구역을 확인하세요.",
+      "sourceYear": "Official parent entry; current-year GIS not independently verified. 2026–27 School Search에서 주소를 입력하세요. 변경된 초등 PK–5 및 주니어하이 6–8 학년 구역을 확인하세요.",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "057904",
+      "en": "Cedar Hill",
+      "ko": "시더힐",
+      "kind": "finder-guidance",
+      "url": "https://enroll.chisd.net/enrollment/",
+      "guidance": "학군 공식 Enrollment의 School Finder에서 주소별 학교를 확인하세요. Signature Studies 및 학군내·학군외 전학은 별도 심사입니다.",
+      "sourceYear": "Official parent entry; current-year GIS not independently verified. 학군 공식 Enrollment의 School Finder에서 주소별 학교를 확인하세요. Signature Studies 및 학군내·학군외 전학은 별도 심사입니다.",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "057906",
+      "en": "DeSoto",
+      "ko": "디소토",
+      "kind": "official-map",
+      "url": "https://www.desotoisd.org/cms/one.aspx?pageId=21214842",
+      "guidance": "학군 공식 Attendance Zones 지도에서 주소를 검색하세요. Selective Enrollment·Choice·전학은 일반 주소별 배정과 다르고 적용 학년도는 별도 확인이 필요합니다.",
+      "sourceYear": "Official parent entry; current-year GIS not independently verified. 학군 공식 Attendance Zones 지도에서 주소를 검색하세요. Selective Enrollment·Choice·전학은 일반 주소별 배정과 다르고 적용 학년도는 별도 확인이 필요합니다.",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "057913",
+      "en": "Lancaster",
+      "ko": "랭커스터",
+      "kind": "finder-guidance",
+      "url": "https://www.lancasterisd.org/page/attendance-zone-locator",
+      "guidance": "공식 Attendance Zone Locator에서 주소별 지정 초등학교를 확인하세요. 중·고등학교와 특수프로그램 배정은 별도 검증이 필요합니다.",
+      "sourceYear": "Official parent entry; current-year GIS not independently verified. 공식 Attendance Zone Locator에서 주소별 지정 초등학교를 확인하세요. 중·고등학교와 특수프로그램 배정은 별도 검증이 필요합니다.",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "070911",
+      "en": "Red Oak",
+      "ko": "레드오크",
+      "kind": "finder-guidance",
+      "url": "https://www.redoakisd.org/district-85/roisd-attendance",
+      "guidance": "School Zone Locator는 주소별 초등학교 구역을 보여줍니다. 중·고등학교·경계 밖 주소·전학은 학군에서 별도 확인하세요.",
+      "sourceYear": "Official parent entry; current-year GIS not independently verified. School Zone Locator는 주소별 초등학교 구역을 보여줍니다. 중·고등학교·경계 밖 주소·전학은 학군에서 별도 확인하세요.",
+      "sourceVerified": "official-district-website"
+    },
+    {
+      "code": "129901",
+      "en": "Crandall",
+      "ko": "크랜달",
+      "kind": "finder-guidance",
+      "url": "https://www.crandall-isd.net/attendancezone",
+      "guidance": "학군 Attendance Zone Finder에서 주소를 확인하세요. 성장에 따라 배정구역이 매년 재검토되므로 2026–27 적용 여부와 최신 변경사항을 확인하세요.",
+      "sourceYear": "Official parent entry; current-year GIS not independently verified. 학군 Attendance Zone Finder에서 주소를 확인하세요. 성장에 따라 배정구역이 매년 재검토되므로 2026–27 적용 여부와 최신 변경사항을 확인하세요.",
+      "sourceVerified": "official-district-website"
     }
   ]
 }

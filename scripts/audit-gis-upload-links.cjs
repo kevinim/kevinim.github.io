@@ -16,6 +16,9 @@ const TRUSTED_OFFICIAL_HOSTS = Object.freeze([
   'www.gcisd.net', 'www.southlakecarroll.edu', 'www.westlakeacademy.org',
   'enrollment.fwisd.org','www.aisd.net','www.mansfieldisd.org','www.gpisd.org',
   'www.emsisd.com','www.birdvilleschools.net','www.crowleyisdtx.org','www.burlesonisd.net',
+  'www.wisd.org', 'www.duncanvilleisd.org', 'www.midlothianisd.org', 'www.c-isd.com', 'www.aledoisd.org', 'www.weatherfordisd.com', 'www.azleisd.net', 'enroll.chisd.net', 'www.desotoisd.org', 'www.lancasterisd.org', 'www.redoakisd.org', 'www.crandall-isd.net',
+  'www.rcisd.org', 'www.ennis.k12.tx.us', 'www.eisd.org', 'www.greenvilleisd.com', 'www.joshuaisd.org', 'www.terrellisd.org', 'www.aubreyisd.net', 'www.hpisd.org',
+  'www.springtownisd.net', 'www.wsisd.com', 'www.castleberryisd.net', 'www.kaufmanisd.net', 'www.caddomillsisd.org', 'www.decaturisd.us', 'www.ferrisisd.org', 'www.lovejoyisd.net',
   'www.wylieisd.net', 'www.melissaisd.org', 'www.celinaisd.com', 'www.littleelmisd.net', 'www.dentonisd.org', 'www.coppellisd.com', 'web.risd.org', 'www.princetonisd.net', 'www.annaisd.org', 'www.argyleisd.com', 'www.garlandisd.net', 'www.hebisd.edu', 'www.rockwallisd.com', 'mesquiteisd.org', 'www.irvingisd.net', 'www.forneyisd.net', 'www.dallasisd.org', 'www.communityisd.org',
 ]);
 
