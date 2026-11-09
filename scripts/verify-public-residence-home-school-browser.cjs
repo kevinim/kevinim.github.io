@@ -18,6 +18,8 @@ const TEST_CASES={
    source:'https://www.compass.com/homedetails/8357-Canal-St-Frisco-TX-75034/2202536257184480953_lid/',district:'FISD'},
   monarchHouse:{id:'monarch-frisco-public-lease',address:'11178 Monarch Dr, Frisco, TX 75033',kind:'publicly-listed-single-family-for-lease',
    source:'https://www.leapdfw.com/rentals/',district:'FISD'},
+  friscoLathrop:{id:'lathrop-frisco-MLS-residence',address:'7043 Lathrop Ln, Frisco, TX 75033',
+   kind:'publicly-listed-townhome-for-lease',source:'https://www.apartments.com/7043-lathrop-ln-frisco-tx/jmg0zh7/',district:'FISD'},
   prosperGaulding:{id:'gaulding-prosper-public-lease',address:'2971 Gaulding Dr, Prosper, TX 75078',kind:'publicly-listed-single-family-for-lease',
    source:'https://www.har.com/zipcode_75078/realestate/for_rent',district:'PROSPER'},
   prosperGilmer:{id:'gilmer-mckinney-public-lease',address:'4504 Gilmer Dr, McKinney, TX 75071',kind:'publicly-listed-single-family-for-lease',
