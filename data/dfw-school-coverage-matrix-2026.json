@@ -365,7 +365,7 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.annaisd.org/parents-students/attendance-zones",
-        "yearCaution": "26–27 Interactive Map에서 주소를 입력하세요. 아파트는 별도 검색을 지원합니다.",
+        "yearCaution": "26–27 Interactive Map을 선택하여 주소별 출석구역을 검색하세요. 아파트는 일반 도로명 검색만으로 판단하지 말고 공식 Find an Apartment 목록에서 단지를 선택해야 합니다. 페이지에 함께 게시된 2025–26 지도를 2026–27 배정으로 혼동하지 마세요. 현행 학교별 GIS는 대시보드에 없습니다.",
         "registryKey": "043902"
       },
       "geometry": {
@@ -431,7 +431,7 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.celinaisd.com/who-we-are/attendance-zones",
-        "yearCaution": "현행 배정 안내와 2027–28 예정 변경안이 같은 페이지에 있습니다. 현행 학년도만 확인하세요.",
+        "yearCaution": "공식 Current Elementary Attendance Boundaries는 현행 초등 배정 안내입니다. 같은 페이지의 2027–28 Proposed Elementary Boundary Adjustments는 제안 단계로 2026–27 배정에 사용하면 안 됩니다. 중·고 학교 지정·학년 구성은 별도 공식 확인이 필요합니다. 대시보드에는 현행 학교별 GIS가 없습니다.",
         "registryKey": "043903"
       },
       "geometry": {
@@ -695,7 +695,7 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.melissaisd.org/page/interactive-zoning-map",
-        "yearCaution": "공식 지도 안내에 2025–26 학년도 문구가 남아 있습니다. 조회 화면에서 적용 학년도를 확인하거나 교육청에 문의하세요.",
+        "yearCaution": "공식 Interactive Zoning Map 설명에는 2025–26 학년도 문구가 남아 있습니다. 해당 화면·폴리곤을 2026–27 현행으로 자동 간주하지 말고 실제 검색기에서 학년도와 주소·학교를 확인하세요. 초등 구역은 설명되어 있으나 중·고 주소별 배정은 별도 검증이 필요합니다.",
         "registryKey": "043908"
       },
       "geometry": {
@@ -761,7 +761,7 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.princetonisd.net/departments/enrollment/attendance-zones",
-        "yearCaution": "2026–27 현행 구역과 2027–28 차기 구역이 모두 게시돼 있습니다. 2026–27만 사용하세요.",
+        "yearCaution": "학군 Attendance Zones 페이지에 2026–27 및 2027–28 School Zone Finder와 초등·중등 지도 링크가 별도로 있습니다. 2026–27 배정에는 반드시 2026–27 항목을 선택하고, 2027–28 변경 구역이나 버스 검색을 현행 배정 근거로 쓰지 마세요. 주소별 결과는 공식 Finder에서 확인하세요.",
         "registryKey": "043911"
       },
       "geometry": {
@@ -2312,7 +2312,7 @@
         "status": "registered-official-source",
         "lookupType": "official-map",
         "officialUrl": "https://www.dentonisd.org/families/attendance-zones",
-        "yearCaution": "2026–27 학년별 공식 구역 지도입니다. 주소·학년 최종 확인은 교육청 School Locator에서 하세요.",
+        "yearCaution": "Denton ISD의 2026–27 공식 초·중·고 Attendance Zones를 이용하세요. Paloma Creek Elementary는 2026–27부터 기존 방식으로 학생을 받지 않고 Bell·Union Park·Sandbrock Ranch·Savannah 등으로 재배정되었습니다(구역별 확인 필수). 2028–29 Mia Price 고교 조정은 제안안으로 현행 배정이 아닙니다. 주소·전학 예외는 공식 조회로 확인하세요.",
         "registryKey": "061901"
       },
       "geometry": {
@@ -2477,7 +2477,7 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.littleelmisd.net/for-parents/enrollment-registration/attendance-zones",
-        "yearCaution": "학군 공식 Interactive School Zone Finder에 주소를 입력하세요. 프로그램·학년별 예외를 확인하세요.",
+        "yearCaution": "학군 공식 Interactive School Zone Finder에서 주소를 검색하세요. 안내 페이지에 초등학교 및 Strike·Walker Middle School 구역 지도가 확인되지만, 이 자료만으로 고등학교 배정이나 2026–27 학교별 GIS의 연도를 확정할 수 없습니다. 학년·전학·프로그램 예외는 학교에 확인하세요.",
         "registryKey": "061914"
       },
       "geometry": {
@@ -2543,7 +2543,7 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.nisdtx.org/departments/facilities/attendance-boundaries",
-        "yearCaution": null,
+        "yearCaution": "2026–27 공식 School Zone Locator에서 School Year를 반드시 2026–27로 선택하세요. Romer Elementary·Barksdale Middle 신설 및 2026–27 승인 재배정이 적용됩니다. 일부 5·7·8학년 기존 재학생 잔류 예외가 있습니다. 2027–28 고교 조정은 별도 제안안으로 2026–27 배정선이 아닙니다. 대시보드에는 학교별 승인 GIS가 미탑재되어 있습니다.",
         "registryKey": "061911"
       },
       "geometry": {
@@ -4457,7 +4457,7 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.southlakecarroll.edu/district-information/district-departments/student-services/online-enrollment-portal",
-        "yearCaution": null,
+        "yearCaution": "2026–27 공식 등록 안내: Carroll Elementary는 Eubanks Intermediate·Dawson Middle로 이어지는 변경된 진학 경로를 확인하세요. Durham Intermediate 폐쇄 및 6–8학년 재편은 2027–28 시행 예정이므로 2026–27 배정에 적용하면 안 됩니다. 정확한 주소·학년·전학은 공식 조회에서 확인하세요. 현재 학년도 학교별 GIS는 대시보드에 없습니다.",
         "registryKey": "220919"
       },
       "geometry": {
@@ -4721,7 +4721,7 @@
         "status": "registered-official-source",
         "lookupType": "official-map",
         "officialUrl": "https://www.gcisd.net/page/attendance-area-maps/",
-        "yearCaution": null,
+        "yearCaution": "GCISD는 2026–27부터 Dove Elementary와 Bransford Elementary를 통합해 일부 초등학교 배정을 변경했습니다. 공식 Attendance Area Maps의 초·중·고 지도를 참고하되 게시된 각 PDF의 현행 연도와 재배정 반영 여부는 개별 확인이 필요합니다. 경계 인근 주소는 교육청에 확인하세요. 주소별 자동 Finder 및 검증된 GIS 도형은 미확보입니다.",
         "registryKey": "220906"
       },
       "geometry": {
@@ -4787,7 +4787,7 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.kellerisd.net/about-kisd/maps",
-        "yearCaution": null,
+        "yearCaution": "Keller ISD 공식 Maps의 Find Your Campuses/Feeder Pattern을 이용하세요. City of Keller ArcGIS는 초·중간·중·고 학교별 폴리곤을 제공하지만 SCHL_YEAR는 2018–19로 확인되어 2026–27 공식 배정선으로 표시할 수 없습니다. 초등 K–4와 5–12 경로 및 현행 주소·학년 배정은 학군 공식 조회로 확인하세요.",
         "registryKey": "220907"
       },
       "geometry": {
