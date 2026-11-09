@@ -1,0 +1,38 @@
+name: Prosper public single-family live GIS ↔ official Finder QA (no deploy)
+on:
+  push:
+    branches:
+      - qa/prosper-public-residential-gis-e2e-20261109
+  pull_request:
+    branches:
+      - feature/address-selected-auto-school-map-20261109
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  prosper-real-address-source-crosscheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Static crosswalk validity and privacy-safe negative cases
+        run: |
+          node --check scripts/prosper-public-home-crosscheck-core.cjs
+          node --check scripts/run-prosper-listed-home-live-source-crosscheck.cjs
+          node --test tests/prosper-public-home-crosscheck-core.test.cjs
+      - name: Five real publicly listed homes, live geocoder and district official point locator
+        run: node scripts/run-prosper-listed-home-live-source-crosscheck.cjs
+      - name: Upload source corroboration with NO enrollment assertion
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: prosper-public-houses-live-official-gis-evidence
+          path: artifacts/prosper-real-home/
+          retention-days: 5
+          if-no-files-found: warn
