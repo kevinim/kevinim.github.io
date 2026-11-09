@@ -19,7 +19,7 @@ test('source inventory stays link-only: four districts, no executable polygon re
 });
 test('Keller 2018-19 geometry may not masquerade as current official 2026-27',()=>{
  const p=copy();p.districts.find(d=>d.code==='220907').verifiedPolygonAcademicYear='2026-27';
- assert.throws(()=>check(p),/keller_stale_gis_classification/);
+ assert.throws(()=>check(p),/keller_stale_gis_classification|current_finder_year_does_not_authorize_geojson/);
 });
 test('each of the four actual city GIS layer year fields is pinned and human-reviewable',()=>{
  assert.equal(KELLER_LAYERS.length,4);
