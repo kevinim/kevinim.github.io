@@ -39,8 +39,10 @@ function auditSchoolBoundaryTrust(files, registry = DISTRICT_REGISTRY) {
   const errors = [], warnings = [];
   const source = files?.['index.html'] || '';
   const legacy = files?.['reviewed.html'] || '';
+  const legacyScript = files?.['features/reviewed-bootstrap.js'] || '';
+  const uploadGuard = files?.['features/geojson-upload-guard.js'] || '';
   const match = files?.['school-boundary-match.js'] || '';
-  if (!source || !legacy || !match) {
+  if (!source || !legacy || !legacyScript || !uploadGuard || !match) {
     errors.push('Missing required school boundary source files');
     return {errors, warnings, inventory: null};
   }
@@ -66,26 +68,33 @@ function auditSchoolBoundaryTrust(files, registry = DISTRICT_REGISTRY) {
   }
   if (!source.includes('sourceLink.href=failure.sourceUrl'))
     warnings.push('main official evidence-link implementation changed; manually review allowed URL protocols');
-  if (!legacy.includes('function loadBoundaryFile(') ||
-      !legacy.includes("j.type!=='FeatureCollection'") ||
-      !legacy.includes('Array.isArray(j.features)')) {
-    errors.push('legacy uploaded-GeoJSON entrypoint changed; do not silently drop upload audit');
+  if (!legacy.includes('src="./features/geojson-upload-guard.js?v=1"') ||
+      !legacy.includes('src="./features/reviewed-bootstrap.js?v=1"') ||
+      !legacyScript.includes('function loadBoundaryFile(') ||
+      !legacyScript.includes('SchoolGeoJSONGuard.assertFileSize') ||
+      !legacyScript.includes('SchoolGeoJSONGuard.validate') ||
+      !uploadGuard.includes('fileBytes:4*1024*1024') ||
+      !uploadGuard.includes('totalVertices:50000') ||
+      !uploadGuard.includes("source.type!=='FeatureCollection'") ||
+      !uploadGuard.includes("geom.type==='Polygon'") ||
+      !uploadGuard.includes("geom.type==='MultiPolygon'")) {
+    errors.push('legacy uploaded-GeoJSON entrypoint changed; verify external bootstrap, file and geometry limits');
   }
-  if (!legacy.includes('j.features.map(f=>escape(f.properties.YearUpdated')) {
+  if (!legacyScript.includes('j.features.map(f=>escape(f.properties.YearUpdated')) {
     errors.push('legacy Allen historical date is no longer explicitly escaped before HTML insertion');
   }
   if (!source.includes("results.map(escape).join('<br>')")) {
     warnings.push('main remote school-loader status output changed; review untrusted error messages');
   }
-  warnings.push('Legacy reviewed.html uploader only checks FeatureCollection/features array. No file byte, feature count, geometry coordinate bounds, polygon ring limit or nesting-depth enforcement observed.');
+  warnings.push('Legacy reviewed.html now enforces browser-side GeoJSON limits; this is not a guarantee against every resource-exhaustion case or external data poisoning.');
   warnings.push('Source URL allowlist is audit-only; current main sourceLink.href assignment does not itself enforce it at runtime.');
   warnings.push('Remote school GIS polygon labels and Leaflet data paths require browser verification; no exploit or integrity guarantee established.');
-  return {errors, warnings, inventory: {districts: checked.length, exceptionLinks: SPECIAL_CAMPUSES.length, filesReviewed: 3}};
+  return {errors, warnings, inventory: {districts: checked.length, exceptionLinks: SPECIAL_CAMPUSES.length, filesReviewed: 5}};
 }
 
 function run() {
   const root = path.resolve(__dirname, '..');
-  const files = Object.fromEntries(['index.html','reviewed.html','school-boundary-match.js']
+  const files = Object.fromEntries(['index.html','reviewed.html','features/reviewed-bootstrap.js','features/geojson-upload-guard.js','school-boundary-match.js']
     .map(p => [p, fs.readFileSync(path.join(root,p),'utf8')]));
   const r = auditSchoolBoundaryTrust(files);
   if (r.inventory) console.log('GIS official links: ' + r.inventory.districts + ' districts; ' + r.inventory.exceptionLinks + ' special-campus source links');
