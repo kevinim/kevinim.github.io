@@ -3,10 +3,10 @@
 // One human-style public apartment building BASE address on district's public
 // 2026-27 Finder UI. No hidden APIs, bulk collection, student records or auth.
 const {chromium}=require('playwright'),fs=require('node:fs'),path=require('node:path');
-const OUT='artifacts/public-residential-e2e',URL='https://schools.friscoisd.org/page/2026-2027-zones';
+const OUT='artifacts/public-residential-e2e',OFFICIAL_PAGE='https://schools.friscoisd.org/page/2026-2027-zones';
 const address='9425 Rolater Rd, Frisco, TX 75035';
 fs.mkdirSync(OUT,{recursive:true});
-const report={checkedAt:new Date().toISOString(),officialPage:URL,publicApartmentBuilding:true,
+const report={checkedAt:new Date().toISOString(),officialPage:OFFICIAL_PAGE,publicApartmentBuilding:true,
  officialFinderIndependentlyVerified:false,sourceYearUrl:'2026-27',addressEntered:false,
  candidateSelected:false,explicitZonedSchools:{},frames:[],inputs:[],diagnostics:[],status:'UNVERIFIED'};
 const safeUrl=s=>{try{const u=new URL(s);return u.origin+u.pathname}catch{return '[invalid]'}};
@@ -15,7 +15,7 @@ async function run(){
  try{
  const page=await browser.newPage({viewport:{width:1366,height:900}});
  page.on('pageerror',e=>report.diagnostics.push(String(e.message||e).slice(0,160)));
- const response=await page.goto(URL,{waitUntil:'domcontentloaded',timeout:75000});
+ const response=await page.goto(OFFICIAL_PAGE,{waitUntil:'domcontentloaded',timeout:75000});
  report.http=response?.status()||null;
  await page.waitForTimeout(5000);
  for(const frame of page.frames()){
@@ -32,7 +32,7 @@ async function run(){
    const [placeholder,aria,type]=await Promise.all([
     input.getAttribute('placeholder'),input.getAttribute('aria-label'),input.getAttribute('type')]);
    const x=((placeholder||'')+' '+(aria||'')).toLowerCase();
-   if((!type||['text','search'].includes(type))&&/enter (your )?address|street address|find your zone|search by address|type your address|address search/.test(x)){
+   if((!type||['text','search'].includes(type))&&/enter (your )?address|street address|find your zone|search by address|search address|type your address|address search/.test(x)){
     chosen={frame,input};break;
    }
   }
