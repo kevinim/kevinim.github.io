@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 /**
- * Isolated browser negatives using the REAL reviewed.html inline application
+ * Isolated browser negatives using the REAL reviewed.html external application
  * functions and the REAL Leaflet polygon renderer.
  *
  * No public URL, address, vendor request or exfiltration endpoint is touched.
@@ -13,8 +13,11 @@ const assert=require('node:assert/strict');
 const {chromium}=require('playwright');
 const ROOT=path.resolve(__dirname,'..');
 const html=fs.readFileSync(path.join(ROOT,'reviewed.html'),'utf8');
-const inline=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(x=>x[1]).filter(s=>s.includes('async function loadBoundaryFile'));
-assert.equal(inline.length,1,'must load the actual legacy upload code from reviewed.html');
+const guard=fs.readFileSync(path.join(ROOT,'features/geojson-upload-guard.js'),'utf8');
+const bootstrap=fs.readFileSync(path.join(ROOT,'features/reviewed-bootstrap.js'),'utf8');
+assert.ok(html.includes('src="./features/geojson-upload-guard.js?v=1"'),'reviewed.html must load GeoJSON validator');
+assert.ok(html.includes('src="./features/reviewed-bootstrap.js?v=1"'),'reviewed.html must load bootstrap');
+assert.ok(bootstrap.includes('async function loadBoundaryFile'),'must test actual uploader');
 const payload='<img src=x onerror="window.__gisQaExecuted=1">';
 const second='<svg onload="window.__gisQaExecuted=2"></svg>';
 const polygon={
@@ -39,7 +42,8 @@ async function setup(browser,width){
  await page.setContent('<!doctype html><html><body><div id="map" style="height:400px;width:600px"></div>'+
   '<div id="toast"></div><div id="zoneNotice"></div></body></html>');
  await page.addScriptTag({content:fs.readFileSync(require.resolve('leaflet/dist/leaflet.js'),'utf8')});
- await page.addScriptTag({content:inline[0]});
+ await page.addScriptTag({content:guard});
+ await page.addScriptTag({content:bootstrap});
  await page.evaluate(()=>{
   window.__gisQaExecuted=0;
   // Legacy DOMContentLoaded initialization is intentionally NOT triggered:
@@ -109,6 +113,6 @@ async function uploadAsFile(page,payloadText){
    }finally{await page.close();}
   }
   console.log('PASS six isolated GIS negative-input browser checks (2 viewport sizes x 3 cases).');
-  console.log('LIMITATION: no full-app penetration test, no upload size/geometry limit verification, no provider licensing certification.');
+  console.log('LIMITATION: isolated browser tests are not a complete penetration test or provider licensing certification.');
  }finally{await browser.close();}
 })().catch(e=>{console.error('FAIL GIS browser QA:',e.stack||String(e));process.exitCode=1});
