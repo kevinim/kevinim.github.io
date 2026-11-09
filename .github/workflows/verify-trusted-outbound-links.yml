@@ -1,0 +1,62 @@
+name: Trusted outbound links and school HTML sink QA
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'home-lookup-v2.js'
+      - 'trusted-link-policy.js'
+      - 'tests/trusted-outbound-links.test.cjs'
+      - 'scripts/test-trusted-outbound-browser.cjs'
+      - '.github/workflows/verify-trusted-outbound-links.yml'
+  push:
+    branches: [security/trusted-outbound-links-20261108]
+
+permissions:
+  contents: read
+
+jobs:
+  source-guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check exact-host URL policy and both source HTML sinks
+        run: |
+          node --check trusted-link-policy.js
+          node --check home-lookup-v2.js
+          node --check scripts/test-trusted-outbound-browser.cjs
+          node --test tests/trusted-outbound-links.test.cjs tests/strict-script-csp.test.cjs tests/audit-gis-upload-links.test.cjs
+
+  browser-guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Isolated pinned Chromium and Leaflet runtime
+        run: |
+          mkdir -p trusted-links-browser-tmp
+          cd trusted-links-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0 leaflet@1.9.4
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve PR snapshot on local HTTP
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/trusted-links-server.log 2>&1 &
+          sleep 2
+      - name: Validate actual school links, inert HTML and safe denial on both viewports
+        env:
+          NODE_PATH: ${{ github.workspace }}/trusted-links-browser-tmp/node_modules
+        run: node scripts/test-trusted-outbound-browser.cjs
