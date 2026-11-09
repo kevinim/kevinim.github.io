@@ -12,12 +12,33 @@ The initial automated census uses the **11-county Dallas–Fort Worth–Arlingto
 | District/LEA identifiers | 152 |
 | Named ISDs | 108 |
 | Other LEAs (charter/alternative/special types require classification) | 44 |
-| ISDs with a registered, allowlisted official school-confirmation entry | 73 |
+| ISDs with a registered, allowlisted official school-confirmation entry | 85 |
 | ISDs with no *registered* parent entry path in this dashboard | **43** |
-| Registered parent guidance rate among 108 observed ISDs | **67.6%** |
-| TEA school records within the 35 unregistered ISDs | **114** |
+| Registered parent guidance rate among 108 observed ISDs | **78.7%** |
+| TEA school records within the 23 unregistered ISDs | **61** |
 
 These are **source administrative county-of-record proxies**, not boundaries of every district serving residential parcels. TEA districtCounty does not determine a particular campus's position or a student's enrollment eligibility. Cross-county districts and schools not in the supplied source may be missed. NCTCOG's broader 12-county area adds **Hood County**, which this TEA source omits; **unknown is not zero**. These 152 observed LEAs do not prove exhaustive real-estate parcel service coverage.
+
+## Sixth batch: twelve more official parent guidance paths (stacked on PR #157; not deployed)
+
+**Verified 2026-11-09.** Registrations rise **73 → 85/108 (78.7%)**, matching TEA campus records **1827 → 1880/1941**. **23 districts / 61 TEA school records** remain without registered official parent guidance.
+
+| TEA code | ISD | Official district entry | Caveat |
+| --- | --- | --- | --- |
+| 249902 | Boyd | https://www.boydisd.net/enrollments | Boyd ISD 공식 등록·전출 및 ASCENDER Parent Portal 안내입니다. 주소별 학교 배정 Finder가 아니며, 거주지와 학년에 따른 실제 캠퍼스는 학군 PEIMS 담당자에게 확인해야 합니다. |
+| 184909 | Brock | https://www.brockisd.net/apps/pages/index.jsp?pREC_ID=1200231&termREC_ID=&type=d&uREC_ID=532370 | Brock ISD 2026–27 공식 Skyward 학생 등록입니다. TEA School District Locator는 학군 외곽 조회이지 학교별 지정학교 검색기가 아닙니다. 학년별 캠퍼스 및 학군 밖 전학 승인 여부를 확인하세요. |
+| 220910 | Lake Worth | https://www.lwisd.org/registration-process | Lake Worth ISD 2026–27 공식 등록 안내입니다. 제출 거주지 서류는 학교 측이 검토하지만 공개 주소검색기는 아닙니다. 학군 밖 전학 및 특수 프로그램 예외와 실제 학년별 지정학교를 별도 확인하세요. |
+| 184908 | Peaster | https://www.peaster.net/parents-students | Peaster ISD 공식 학부모 페이지는 ASCENDER 및 신규 Pre-K·Kindergarten 등록과 전학 안내로 연결됩니다. Pre-K·K 등록 안내를 모든 학년 배정으로 해석하지 말고 1–12학년 주소별 학교는 학군에 확인하세요. |
+| 061903 | Pilot Point | https://www.pilotpointisd.com/ | Pilot Point ISD 공식 사이트의 Getting Started → Registration Information에서 등록 절차를 확인하세요. 2026–27 학군 밖 전학은 별도이며 공개 주소별 학교 검색기는 확인되지 않았습니다. |
+| 249903 | Bridgeport | https://www.bridgeportisd.net/enrollment | Bridgeport ISD 2026–27 공식 등록 안내입니다. 학군 밖 학생은 별도 전학 신청이 필요합니다. 학군 외곽 지도는 학교별 출석구역 폴리곤이 아니므로 학년별 지정학교는 Registrar에게 확인하세요. |
+| 116903 | Commerce | https://www.commerceisd.org/for-parents/back-to-school/student-online-registration | Commerce ISD 공식 학생 등록 안내에는 CES PK–2, ACW 3–5, CMS 6–8, CHS 9–12 캠퍼스별 학년이 나옵니다. 학년별 캠퍼스 목록은 주소 배정 증명이 아니며 학군 경계와 전학 여부도 확인해야 합니다. |
+| 043904 | Farmersville | https://www.farmersvilleisd.net/apps/pages/index.jsp?pREC_ID=2424228&type=d&uREC_ID=445987 | Farmersville ISD 공식 안내는 2026–27 Pre-K, K–12 신규·재학생 등록과 전학 절차를 구분합니다. Skyward 등록은 주소별 학교검색기가 아니므로 주소와 학년의 지정학교는 학군에 문의하세요. |
+| 057919 | Sunnyvale | https://www.sunnyvaleisd.com/page/enrolling-in-sisd | Sunnyvale ISD 공식 Enrolling 페이지는 학년별 네 캠퍼스와 학군 거주 확인용 지도를 안내합니다. SISD Attendance Zone 지도는 학군 경계이지 학교별 2026–27 배정 폴리곤은 아닙니다. |
+| 061906 | Ponder | https://www.ponderisd.net/page/registration-information | Ponder ISD 공식 홈페이지의 Registration 26–27 링크입니다. 페이지에서 개별 주소별 학교 배정 결과나 최신 학교별 경계는 확인되지 않았습니다. 학년 및 거주지 배정은 등록 담당자에게 문의하세요. |
+| 116908 | Quinlan | https://www.quinlanisd.net/apps/pages/index.jsp?pREC_ID=915702&type=d&uREC_ID=415959 | Quinlan ISD 공식 등록 및 2026–27 전학 안내입니다. Pre-K와 기존 학생은 절차가 다르며 ASCENDER 등록은 공개 주소별 배정 Finder가 아닙니다. 정확한 캠퍼스는 학군 담당자에게 확인하세요. |
+| 126906 | Keene | https://www.keeneisd.org/student-central/enrollment-and-registration | Keene ISD 공식 Enrollment 페이지는 신규·기존 학생 등록을 안내합니다. 학군 밖 학생은 제한적 Open Enrollment 승인이 필요하며 등록은 주소별 학교검색이 아닙니다. 지정 캠퍼스는 Registrar에 확인하세요. |
+
+These twelve district pages are classified **official-inquiry**, not address-by-grade assignment Finder. Student registration portals, transportation, district outer maps, campus grade lists and school district boundary maps do not demonstrate current 2026–27 campus attendance polygons. No household address entered, no polygons generated, no third-party data rehosted. Provenance: `data/dfw-parent-source-evidence-batch6-2026.json`.
 
 ## Fifth batch: 8 official parent guidance entries (stacked on PR #150; not deployed)
 
@@ -112,24 +133,24 @@ This is a **verified official entry URL** and appropriate instructions/limitatio
 
 ## Highest remaining school confirmation backlog
 
-P0 means the dashboard has no registered official parent route, not proof that the district lacks a Finder. Ranking uses TEA school rows.
+P0 means the dashboard has not registered the district's official parent route, not that the district lacks a Finder. Ranked by TEA campus records.
 
 | Priority | ISD | TEA school records |
 | ---: | --- | ---: |
-| 1 | BOYD ISD | 5 |
-| 2 | BROCK ISD | 5 |
-| 3 | LAKE WORTH ISD | 5 |
-| 4 | PEASTER ISD | 5 |
-| 5 | PILOT POINT ISD | 5 |
-| 6 | BRIDGEPORT ISD | 4 |
-| 7 | COMMERCE ISD | 4 |
-| 8 | FARMERSVILLE ISD | 4 |
-| 9 | KEENE ISD | 4 |
-| 10 | PARADISE ISD | 4 |
+| 1 | PARADISE ISD | 4 |
+| 2 | VENUS ISD | 4 |
+| 3 | ALVORD ISD | 3 |
+| 4 | BLAND ISD | 3 |
+| 5 | BLUE RIDGE ISD | 3 |
+| 6 | BOLES ISD | 3 |
+| 7 | CELESTE ISD | 3 |
+| 8 | CHICO ISD | 3 |
+| 9 | GRANDVIEW ISD | 3 |
+| 10 | LONE OAK ISD | 3 |
 
 ## Three independent levels of evidence
 
-**1 — Parent-facing official route:** 73/108 registered after all stacked PRs, with exact HTTPS allowlisted links. Landing pages/zone maps/choice procedures are not necessarily a verified address-and-grade lookup.
+**1 — Parent-facing official route:** 85/108 registered after all stacked PRs, with exact HTTPS allowlisted links. Landing pages/zone maps/choice procedures are not necessarily a verified address-and-grade lookup.
 
 **2 — School-by-school map polygon linkage:** not yet measurable as a DFW-wide current-year rate. Previous browser *reference minima* exist only for seven districts: Frisco 73/73, Plano 62/63, Allen 21/22 (historical), Lewisville 53/54 (mixed year), Prosper 31/31, CFB 0/30 (official Finder, no exported GIS), McKinney 25/30 (live source and exceptions). These are per-session loaded school matches, **not** current-year legal enrollment results. The other 145 districts do not receive fabricated 0% scores.
 
@@ -149,4 +170,4 @@ The JSON reports missing *reason* states, including no known official parent rou
 
 ## Next work
 
-Continue detailed, current-year school assignment routing checks for the six official-inquiry districts in the third batch, then source the **35 remaining unregistered ISDs**, not just favorite suburbs. For each, store TEA code, authority URL, last verification date, active year, grade, search/map/choice/inquiry type, GIS availability and licensing, missing reason and next action. Expand source boundaries to Hood and any cross-county overlap before labeling the DFW geographic denominator exhaustive. Confirm school-specific missing reasons with a browser source audit, including school-choice exceptions and transient failures.
+Continue detailed, current-year school assignment routing checks for the six official-inquiry districts in the third batch, then source the **23 remaining unregistered ISDs**, not just favorite suburbs. For each, store TEA code, authority URL, last verification date, active year, grade, search/map/choice/inquiry type, GIS availability and licensing, missing reason and next action. Expand source boundaries to Hood and any cross-county overlap before labeling the DFW geographic denominator exhaustive. Confirm school-specific missing reasons with a browser source audit, including school-choice exceptions and transient failures.
