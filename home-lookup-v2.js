@@ -121,7 +121,7 @@ function renderHome(){
   const matches=homeZipMatches(home.ll),schools=homeFriscoMatches(home.ll);home.matches=schools;
   const zipText=matches.length?matches.map(d=>escape(d.z+' · '+d.name)).join(', '):'지도에 포함된 ZIP 경계를 확인하지 못했습니다.';
   home.assignment=schoolAssignmentFor(home);const schoolText=assignmentHtml(home.assignment);
-  const official='<details'+(['unavailable','error','conflict','needs-address-verification','boundary-review','finder-boundary-review','feeder-review','apartment-split-review'].includes(home.assignment.status)?' open':'')+'><summary>학군별 공식 배정 확인</summary>'+Object.entries(OFFICIAL).map(([id,url])=>'<a class="cardlink" href="'+escape(url)+'" target="_blank" rel="noopener">'+escape(districtName(id,'ko')||id)+' ↗</a>').join('')+'</details>';
+  const official='<details'+(['unavailable','error','conflict','needs-address-verification','boundary-review','finder-boundary-review','feeder-review','apartment-split-review'].includes(home.assignment.status)?' open':'')+'><summary>학군별 공식 배정 확인</summary>'+Object.entries(OFFICIAL).map(([id,url])=>{const safe=window.TrustedLinkPolicy?.official(url);return safe?'<a class="cardlink" href="'+escape(safe)+'" target="_blank" rel="noopener noreferrer">'+escape(districtName(id,'ko')||id)+' ↗</a>':''}).join('')+'</details>';
   const office=el('destination').value.trim();
   const parcel=home.parcel||{status:'idle'};
   const message=parcel.status==='idle'?'별도 필지 주소 대조를 실행할 수 있습니다.':parcel.status==='checking'?'Collin CAD 필지 확인 중…':parcel.reason||'필지 확인 불가';
@@ -164,7 +164,7 @@ function officialReviewPanelHtml(item){
  const label=result?.kind==='prosper'?'Prosper 공개 API 조회 결과':'사용자가 입력한 공식 결과 대조';
  const officialUrl=district==='PISD'?PLANO_2026_27_EXPERIENCE:OFFICIAL[district]||null;
  const currentYearLink=['PISD','PROSPER','LISD'].includes(district);
- const officialLink=officialUrl?'<a class="cardlink" href="'+escape(officialUrl)+'" target="_blank" rel="noopener">'+(currentYearLink?'2026–27 학군 검색기 열기':'학군 공식 주소 검색기 열기')+'</a>':'';
+ const safeOfficialUrl=window.TrustedLinkPolicy?.official(officialUrl); const officialLink=safeOfficialUrl?'<a class="cardlink" href="'+escape(safeOfficialUrl)+'" target="_blank" rel="noopener noreferrer">'+(currentYearLink?'2026–27 학군 검색기 열기':'학군 공식 주소 검색기 열기')+'</a>':'';
  const note=district==='LISD'?'Lewisville 아파트는 주소 대신 별도의 Find an Apartment 검색을 이용하세요.':district==='AISD'?'Allen 아파트 건물·호수 예외가 있으므로 학교 등록 담당자 확인이 필요합니다.':district==='PISD'?'Plano Jackson Elementary는 Coit Rd 동·서쪽에 따라 상급 학교가 달라집니다.':'검색기에 주소·학년을 입력한 뒤 나온 학교명을 복사하세요.';
  const showProsper=district==='PROSPER'&&['current','boundary-review'].includes(a.status);
  return '<div class="small-note" id="officialReviewPanel" style="margin-top:10px"><b>공식 학군 주소 조회 결과 교차검증</b>'+
