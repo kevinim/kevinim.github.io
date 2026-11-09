@@ -25,6 +25,7 @@ jobs:
           node --check scripts/dfw-official-finder-evidence-policy.cjs
           node --check scripts/dfw-finder-observation.cjs
           node --check scripts/audit-dfw-independent-finder-observation.cjs
+          node --check scripts/probe-lewisville-complex-finder.cjs
           node --check tests/dfw-public-leasing-address-e2e-policy.test.cjs
           node --test tests/dfw-public-leasing-address-e2e-policy.test.cjs tests/dfw-official-finder-evidence-policy.test.cjs tests/dfw-finder-observation.test.cjs tests/home-assignment-map.test.cjs tests/dfw-home-automation-readiness.test.cjs
   real-mobile-desktop-browser:
@@ -53,6 +54,9 @@ jobs:
       - name: Reconcile captured official attendance zone popups with dashboard (NO-GO unless independently supported)
         if: always()
         run: node scripts/audit-dfw-independent-finder-observation.cjs
+      - name: Check two public Lewisville apartment complex names in official Find an Apartment selector
+        if: always()
+        run: node scripts/probe-lewisville-complex-finder.cjs
       - name: Keep screenshots and machine-readable NO-GO matrix for reviewer
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # pinned v4
