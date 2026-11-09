@@ -88,17 +88,27 @@ async function run(){
       }),{expected,actual});
       assert.ok(names.actual.includes(names.expected),
        'public 2026-27 official fixture mismatch '+grade+': '+JSON.stringify(names));
-      const clicked=await page.evaluate(async ({school,grade})=>{
+      // Trigger the real school-list button, not a direct schoolClicked() shortcut.
+      const listed=await page.evaluate(({school,grade})=>{
        const key=n=>window.SchoolBoundaryMatch.boundarySchoolKey(n);
        const target=state.schools.find(s=>s.district==='FISD'&&
          s.type===grade&&key(s.name)===key(school));
        if(!target)return {targetMissing:true};
-       await schoolClicked(target);
+       state.schoolQuery=target.name.toLowerCase();
+       document.getElementById('schoolScope').value='all';
+       drawList();
+       return {targetMissing:false,index:state.schools.indexOf(target),name:target.name};
+      },{school:expected,grade});
+      assert.ok(!listed.targetMissing,'campus must be available for list click '+grade);
+      const schoolButton=page.locator('#schoolList button.school[data-sid="'+listed.index+'"]');
+      await schoolButton.click({timeout:12000});
+      const clicked=await page.evaluate(index=>{
+       const target=state.schools[index];
        return {targetMissing:false,selected:state.selectedSchool===target,
         layers:zoneGroup.getLayers().length,
         mapNotice:document.getElementById('zoneNotice')?.textContent||'',
         sourceKind:schoolZoneInfo(target).kind};
-      },{school:expected,grade});
+      },listed.index);
       assert.ok(!clicked.targetMissing&&clicked.selected,
        'campus click selection must work '+grade+' '+JSON.stringify(clicked));
       assert.ok(clicked.layers>0,'school click must render a real GIS polygon '+grade);
