@@ -95,7 +95,10 @@ if(require.main===module)run({live:process.argv.includes('--live')})
   console.log('AGENT04_CANDIDATE107 '+JSON.stringify({status:result.status,
    sourceHeadSha:result.sourceHeadSha,live:result.liveHttpProbeExecuted,
    candidateGuidanceRoutes:result.candidateGuidanceRoutes,
-   resultCounts:result.resultCounts,errors:result.errors,output:out}));
+   resultCounts:result.resultCounts,
+   non200:result.records.filter(r=>r.status!=='HTTP_RESPONDED_FINDER_NOT_TESTED')
+    .map(r=>({code:r.code,name:r.name,httpStatus:r.httpStatus,status:r.status,url:r.url})),
+   errors:result.errors,output:out}));
   if(result.errors.length)process.exitCode=1;
  }).catch(e=>{console.error('AGENT04_CANDIDATE_ERROR '+(e.stack||e));process.exitCode=1});
 module.exports={safeCandidateUrl,validate,inspect,run};
