@@ -22,6 +22,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Check transport outage classifier does not excuse GIS mismatches
+        run: |
+          node --check scripts/official-source-network-errors.mjs
+          node --check scripts/check-plano-feeder-zones-live.mjs
+          node --check scripts/check-plano-public-address-layer-live.mjs
+          node --test tests/official-source-network-errors.test.mjs
       - name: Inspect district source availability (advisory, not address-zone certification)
         run: node scripts/check-official-source-health-live.mjs
       - name: Recheck Frisco and Prosper public institutional address samples
@@ -43,6 +49,7 @@ jobs:
             artifacts/official-school-source-health.json
             artifacts/public-address-source-crosscheck.json
             artifacts/plano-public-address-arcgis-check.json
+            artifacts/plano-feeder-source-health.json
             artifacts/cfb-farmers-branch-source-drift.json
             artifacts/lisd-5289-budget-suites-source-drift.json
           if-no-files-found: warn
