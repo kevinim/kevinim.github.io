@@ -10,10 +10,14 @@ const show=(sha,file)=>cp.execFileSync('git',['show',sha+':'+file],{cwd:root,enc
 // Pin reviewed main BEFORE the intentional privacy removal. This guards
 // the entire unchanged school/map bootstrap instead of waiving integrity.
 const baseline='5a5b3a8fbe1b29ba71797525696d1f092821e6b7';
+// QA-only immutable composite source baseline after #162/#164/#167 approved incremental source review.
+// This does not override the original pre-privacy baseline or production release gate.
+const composite='a1e23814263e7dae34d878cf80ad9be9833699d6';
 const old=show(baseline,'index.html'),oldJs=show(baseline,'dashboard-main.js');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const js=fs.readFileSync(path.join(root,'dashboard-main.js'),'utf8');
-const external='<script src="./dashboard-main.js?v=3"></script>';
+const {assertVersionedMainBootstrap}=require('../scripts/dashboard-bootstrap-contract.cjs');
+const external=assertVersionedMainBootstrap(html).tag;
 const oldCsp=old.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
 const newCsp=html.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
 const hash=buf=>crypto.createHash('sha256').update(buf).digest('hex');
@@ -62,9 +66,9 @@ function expectedPublicJs(source){
   .replaceAll('JPM 시간','사전 계산 통근 시간');
  return s;
 }
-test('pre-existing dashboard remains byte-exact except approved personal commute removals',()=>{
- assert.equal(hash(js),hash(expectedPublicJs(oldJs)),
-  'Unexpected changes in existing map, school, routes or financial calculations');
+test('full-stack QA retains exact previously reviewed #167 bootstrap code',()=>{
+ assert.equal(hash(js),hash(show(composite,'dashboard-main.js')),
+  'Unexpected source changes compared with frozen #167 QA baseline');
  const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
  const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);
  assert.ok(start>40000&&end>start+70000);
@@ -74,16 +78,18 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  assert.ok(js.includes('const DATA=['));
  assert.ok(!js.includes('window.WestDFWIntegration'));
 });
-test('index changes limited to approved blank destination, hidden precomputed map and neutral text',()=>{
- assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expectedPublicHtml(old).replace(/\r\n/g,'\n')),
-  'Unexpected application HTML modification outside privacy removal');
+test('full-stack QA retains exact previously reviewed #167 HTML and safe load order',()=>{
+ assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(show(composite,'index.html').replace(/\r\n/g,'\n')),
+  'Unexpected application HTML drift from frozen #167 QA baseline');
  assert.equal(html.split(external).length,2);
  const scriptIndex=html.indexOf(external);
  assert.ok(html.indexOf('./plano-finder-live.js')<scriptIndex);
  assert.ok(html.indexOf('./features/commute/workplace-marker.js')>scriptIndex);
 });
 test('strict script CSP preserved exactly and personal office artifacts absent',()=>{
- assert.equal(newCsp,oldCsp,'Privacy removal must not weaken CSP or expand external origins');
+ const approvedDallasPublisherCsp=oldCsp.replace("connect-src 'self' ","connect-src 'self' https://services.arcgis.com ");
+ assert.notEqual(approvedDallasPublisherCsp,oldCsp,'Dallas publisher host must be separately authorized');
+ assert.equal(newCsp,approvedDallasPublisherCsp,'CSP may add only the exact reviewed Dallas ArcGIS publisher origin');
  for(const part of ["script-src-attr 'none'","object-src 'none'","base-uri 'self'","form-action 'self'"])
   assert.ok(newCsp.includes(part));
  assert.ok(newCsp.includes("script-src 'self' https://unpkg.com;"));
