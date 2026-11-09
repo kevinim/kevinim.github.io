@@ -41,8 +41,11 @@ test('strict script CSP remains enforceable after removing the only inline hash'
 test('externalized page preserves original HTML except reviewed static DFW coverage panel additions',()=>{
  let expected=old.replace("<script>"+original+"</script>",external)
    .replace(/(script-src 'self' https:\/\/unpkg\.com) 'sha256-[A-Za-z0-9+/]+=*'/,'$1');
- // Only these exact extra DOM/CSS/script tags are permitted by this test.
+ // Only these exact extra DOM/CSS/script tags and the previously-approved
+ // theme stylesheet fix version bump are permitted by this test.
  // The actual extracted app bootstrap is still checked byte-for-byte above.
+ expected=expected.replace('<script src="./features/theme-toggle.js?v=1"></script>',
+  '<script src="./features/theme-toggle.js?v=2"></script>');
  const leafletTag='<link rel="stylesheet" href="./vendor/leaflet-1.9.4.css">';
  expected=expected.replace(leafletTag,leafletTag+'\r\n<link rel="stylesheet" href="./features/dfw-school-coverage-panel.css?v=1">');
  const oldWest='<details id="westDfwPanel" aria-label="DFW 서부 학군 및 지역 탐색">';
