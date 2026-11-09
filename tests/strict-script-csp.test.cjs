@@ -18,7 +18,8 @@ function verifyPage(name) {
  assert.match(policy,/form-action 'self'/);
  const scripts=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].filter(m=>! /\bsrc\s*=/.test(m[1]));
  assert.equal(scripts.length,1,name+' must have exactly one hash-locked inline bootstrap');
- // HTML parsing normalizes CRLF to LF before browsers evaluate CSP inline-script hashes.\n const inline=scripts[0][2],browserText=inline.replace(/\r\n?/g,'\n'),hash=crypto.createHash('sha256').update(browserText,'utf8').digest('base64');
+ // HTML parsing normalizes CRLF to LF before browsers evaluate CSP inline-script hashes.
+ const inline=scripts[0][2],browserText=inline.replace(/\r\n?/g,'\n'),hash=crypto.createHash('sha256').update(browserText,'utf8').digest('base64');
  assert.ok(policy.includes("'sha256-"+hash+"'"),name+' inline script differs from CSP hash — update the CSP hash with every bootstrap edit');
  assert.equal((policy.match(/'sha256-/g)||[]).length,1,name+' must allow only its current bootstrap hash');
  assert.ok(!/\s(?:onclick|onload|onerror|oninput|onchange|onsubmit|onkeydown|onkeyup)\s*=\s*["']/i.test(html),name+' retains an inline event attribute');
