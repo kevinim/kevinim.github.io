@@ -66,8 +66,10 @@ function auditSchoolBoundaryTrust(files, registry = DISTRICT_REGISTRY) {
   ]) {
     if (!source.includes(marker)) errors.push('main school GIS warning is no longer text-only: ' + marker);
   }
-  if (!source.includes('sourceLink.href=failure.sourceUrl'))
-    warnings.push('main official evidence-link implementation changed; manually review allowed URL protocols');
+  if (!source.includes('failure.sourceUrl&&window.TrustedLinkPolicy?.official(failure.sourceUrl)') ||
+      !source.includes('sourceLink.href=window.TrustedLinkPolicy.official(failure.sourceUrl)') ||
+      !source.includes('<script src="./trusted-link-policy.js?v=1"></script>'))
+    errors.push('main official evidence-link is no longer verified by the exact-host HTTPS policy');
   if (!legacy.includes('src="./features/geojson-upload-guard.js?v=1"') ||
       !legacy.includes('src="./features/reviewed-bootstrap.js?v=1"') ||
       !legacyScript.includes('function loadBoundaryFile(') ||
@@ -86,7 +88,7 @@ function auditSchoolBoundaryTrust(files, registry = DISTRICT_REGISTRY) {
     warnings.push('main remote school-loader status output changed; review untrusted error messages');
   }
   warnings.push('Legacy reviewed.html now enforces browser-side GeoJSON limits; this is not a guarantee against every resource-exhaustion case or external data poisoning.');
-  warnings.push('Source URL allowlist is audit-only; current main sourceLink.href assignment does not itself enforce it at runtime.');
+  warnings.push('Source URL allowlist now guards the main missing-boundary evidence link at runtime; verify the exact-host policy remains current when official domains change.');
   warnings.push('Remote school GIS polygon labels and Leaflet data paths require browser verification; no exploit or integrity guarantee established.');
   return {errors, warnings, inventory: {districts: checked.length, exceptionLinks: SPECIAL_CAMPUSES.length, filesReviewed: 5}};
 }
