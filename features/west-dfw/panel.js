@@ -35,7 +35,8 @@
       !safeLink(d.officialUrl,LINK_HOSTS[d.code])||
       d.localSchoolPolygonCount!==0||
       !['external-official-finder-only','external-official-maps-only'].includes(d.boundaryStatus)||
-      typeof d.sourceYear!=='string'||typeof d.notes!=='string')
+      typeof d.sourceYear!=='string'||typeof d.notes!=='string'||
+      (d.code==='220907'&&(!d.dataNote||!d.dataNote.includes('2018–19')))
     throw Error('west_official_reference_invalid');
   }
   if(new Set(config.areas.map(a=>a?.zip)).size!==7||
@@ -129,6 +130,7 @@
    card.appendChild(element(doc,'small',null,
      d.sourceYear==='not verified'?'학년도 독립 검증 필요 · 자동 경계 없음':
        '공식 출처 '+d.sourceYear+' · 자동 경계 없음'));
+   if(d.dataNote)card.appendChild(element(doc,'small','west-dfw-vintage-warning',d.dataNote));
    card.appendChild(link(doc,'공식 학교 찾기 / 배정 지도',d.officialUrl));
    grid.appendChild(card);
   }
