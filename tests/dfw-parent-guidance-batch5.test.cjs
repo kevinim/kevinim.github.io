@@ -36,11 +36,11 @@ test('eight new official routes have provenance, safe links and no invented assi
   campusRows+=d.teaCampusRecords;
  }
  assert.equal(maps,2);assert.equal(inquiries,6);assert.equal(campusRows,43);
- assert.equal(matrix.summary.publicISDsWithRegisteredParentRoute,85);
- assert.equal(matrix.summary.publicISDsMissingRegisteredParentRoute,23);
- assert.equal(matrix.summary.registeredParentRouteRatePublicISDPercent,78.7);
- assert.equal(matrix.summary.publicISDCampusRowsWithRegisteredParentRoute,1880);
- assert.equal(matrix.summary.publicISDCampusRowsWithUnverifiedParentRoute,61);
+ assert.equal(matrix.summary.publicISDsWithRegisteredParentRoute,107);
+ assert.equal(matrix.summary.publicISDsMissingRegisteredParentRoute,1);
+ assert.equal(matrix.summary.registeredParentRouteRatePublicISDPercent,99.1);
+ assert.equal(matrix.summary.publicISDCampusRowsWithRegisteredParentRoute,1938);
+ assert.equal(matrix.summary.publicISDCampusRowsWithUnverifiedParentRoute,3);
  assert.equal(matrix.summary.campusPolygonCoverageAllDFWPercent,null);
  assert.equal(matrix.summary.exactAddressAssignmentCoveragePercent,null);
 });
