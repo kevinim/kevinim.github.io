@@ -50,7 +50,6 @@ async function main(){
      const match=window.SchoolBoundaryMatch.findSchoolBoundary(temp,features,()=>null);
      results.push({grade,school:temp.name,match:match.status,leafletLayers:zoneGroup.getLayers().length,
        historicalNotice:document.getElementById('zoneNotice')?.innerText||'',
-       officialFinderHref:document.querySelector('#detailContent a.cardlink[href*="f27bba7ee02141c58c8c9375431effa2"]')?.href||null,
        yearVerified:feature.properties.sourceYearVerified,
        currentGISSourceActivated:!!window.DISTRICT_REGISTRY?.['057912']?.zoneKey});
     }
@@ -63,7 +62,6 @@ async function main(){
     assert.equal(c.yearVerified,false);
     assert.equal(c.currentGISSourceActivated,false);
     assert.match(c.historicalNotice,/과거 GIS 경계/);
-    assert.match(c.officialFinderHref||'',/^https:\/\/iisd1\.maps\.arcgis\.com\/apps\/instant\/lookup\/index\.html\?appid=f27bba7ee02141c58c8c9375431effa2$/);
    }
    // Exercise the actual house-search UI with a PUBLIC school campus coordinate.
    // This is publisher-source point QA, not a real household assignment result.
@@ -82,12 +80,14 @@ async function main(){
     count:irvingReferenceLayer?.getLayers()?.length||0,
     notice:document.getElementById('irvingSpatialStatus')?.innerText||'',
     addressStatus:document.getElementById('homePrivacy')?.innerText||'',
+    directLocatorLink:document.querySelector('#officialReviewPanel a.cardlink[href*="f27bba7ee02141c58c8c9375431effa2"]')?.href||null,
     zoneKey:window.DISTRICT_REGISTRY?.['057912']?.zoneKey
    }));
    assert.deepEqual(spatial.names,{elementary:'Barton ES',middle:'Crockett MS',high:'Irving HS'});
    assert.equal(spatial.count,3,'all three official GIS source features must render in Leaflet');
    assert.match(spatial.notice,/학년도 확인 필요/);
    assert.match(spatial.addressStatus,/집 핀 좌표/);
+   assert.match(spatial.directLocatorLink||'',/^https:\/\/iisd1\.maps\.arcgis\.com\/apps\/instant\/lookup\/index\.html\?appid=f27bba7ee02141c58c8c9375431effa2$/);
    assert.equal(spatial.zoneKey,null,'2026-27 school-year approval must not be inferred from point lookup');
    // Privacy/cancellation regression: selected home/overlay clears on X.
    await page.evaluate(()=>clearHome());
