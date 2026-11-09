@@ -1,0 +1,72 @@
+name: TX school polygon linkage census (no deploy)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'schools*.json'
+      - 'tea-ratings-2026.json'
+      - 'nces-locations-2024.json'
+      - 'school-*.js'
+      - 'district-registry.js'
+      - 'index.html'
+      - '*attendance*.geojson'
+      - '*locator*.geojson'
+      - 'data/school-data-release-lock.json'
+      - 'scripts/school-polygon-linkage-*.cjs'
+      - 'tests/school-polygon-linkage-audit.test.cjs'
+      - 'tests/verify-school-linkage-baseline.test.cjs'
+      - 'data/school-polygon-linkage-baseline.json'
+      - 'docs/SCHOOL_POLYGON_LINKAGE_CENSUS.md'
+      - '.github/workflows/school-polygon-linkage-census.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'schools*.json'
+      - 'school-*.js'
+      - 'district-registry.js'
+      - 'index.html'
+      - '*attendance*.geojson'
+      - '*locator*.geojson'
+      - 'data/school-data-release-lock.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  school-linkage:
+    name: All loaded schools vs polygons and sampled real map layers
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Check source code and classification contract
+        run: |
+          node --check scripts/school-polygon-linkage-audit.cjs
+          node --check scripts/school-polygon-linkage-browser.cjs
+          node --check scripts/verify-school-linkage-baseline.cjs
+          node --test tests/school-polygon-linkage-audit.test.cjs tests/verify-school-linkage-baseline.test.cjs
+      - name: Install isolated Chromium only
+        run: |
+          mkdir -p school-linkage-browser-tmp
+          cd school-linkage-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Audit browser-loaded district polygon sources against school directory
+        env:
+          NODE_PATH: ${{ github.workspace }}/school-linkage-browser-tmp/node_modules
+        run: node scripts/school-polygon-linkage-browser.cjs
+      - name: Compare matched school and Allen marker counts to verified baseline
+        run: node scripts/verify-school-linkage-baseline.cjs
+      - name: Upload school-only, non-personal coverage findings
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: school-polygon-linkage-census
+          path: artifacts/school-linkage/school-polygon-linkage-census.json
+          if-no-files-found: warn

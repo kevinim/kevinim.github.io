@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "recordedOn": "2026-11-09",
+  "referenceBrowserRun": 42548036191,
+  "referenceCommit": "1fdf0a72eac5b91177d66ee9d70d91cffb6469f0",
+  "denominator": "loaded elementary/middle/high dashboard directory entries, not official enrollment population",
+  "targetSix": {
+    "minimumLoaded": 273,
+    "minimumLinked": 240
+  },
+  "districts": {
+    "FISD": {
+      "minimumLoaded": 73,
+      "minimumLinked": 73,
+      "mode": "official-2026-27-live-feed"
+    },
+    "PISD": {
+      "minimumLoaded": 63,
+      "minimumLinked": 62,
+      "mode": "official-finder-linked-layer-year-not-confirmed"
+    },
+    "AISD": {
+      "minimumLoaded": 22,
+      "minimumLinked": 21,
+      "mode": "historical-2019-2023-reference"
+    },
+    "LISD": {
+      "minimumLoaded": 54,
+      "minimumLinked": 53,
+      "mode": "official-finder-linked-mixed-vintages"
+    },
+    "PROSPER": {
+      "minimumLoaded": 31,
+      "minimumLinked": 31,
+      "mode": "official-2026-27-pinned-local"
+    },
+    "CFB": {
+      "minimumLoaded": 30,
+      "minimumLinked": 0,
+      "mode": "resident-finder-only-no-dashboard-polygons"
+    },
+    "043907": {
+      "minimumLoaded": 30,
+      "minimumLinked": 25,
+      "mode": "live-official-finder-only"
+    }
+  },
+  "requiredRenderSamples": 12,
+  "allenMarkerCheck": {
+    "minimumVisible": 20,
+    "maxMissing": 0
+  },
+  "notes": [
+    "Minima are the actual app linkage counts observed on the reference CI run, not official district school totals.",
+    "An official third-party service outage makes the comparison INCONCLUSIVE for affected districts; it must not become a false source-absence conclusion.",
+    "A non-outage drop in loaded school count or matched polygons requires review, and intended district boundary updates must explicitly revise the baseline with fresh evidence.",
+    "CFB has no configured school-specific GIS polygon export; resident finder functionality is independent."
+  ]
+}
