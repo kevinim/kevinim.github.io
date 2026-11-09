@@ -18,4 +18,10 @@ jobs:
         with:
           node-version: '22'
       - run: node scripts/verify-main-data.mjs
-      - run: node --test tests/actions-immutable-permissions.test.cjs
+      - name: Required security and privacy controls for every main-bound PR
+        run: |
+          node --test tests/actions-immutable-permissions.test.cjs tests/public-privacy-disclosure.test.cjs tests/no-legacy-source-builders.test.cjs tests/audit-runtime-privacy-assets.test.cjs
+          node scripts/audit-runtime-privacy-assets.cjs
+          node scripts/check-public-personalization.cjs .
+          node scripts/validate-environment-plan.cjs deploy/environment-plan.json planning
+          node scripts/verify-public-preview.cjs
