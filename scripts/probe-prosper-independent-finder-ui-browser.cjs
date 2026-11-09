@@ -39,7 +39,14 @@ async function lookupOfficialBrowser(page,sample){
       resultType:Array.isArray(root)?'array':typeof root,
       resultCount:Array.isArray(root)?root.length:null,
       resultKeys:root&&typeof root==='object'&&!Array.isArray(root)?Object.keys(root).slice(0,20):[],
-      sampleRowKeys:Array.isArray(root)&&root[0]&&typeof root[0]==='object'?Object.keys(root[0]).slice(0,20):[]};
+      sampleRowKeys:Array.isArray(root)&&root[0]&&typeof root[0]==='object'?Object.keys(root[0]).slice(0,20):[],
+      exactAddressMatch:root?.exactAddressMatch===true,
+      resultCode:Number.isFinite(root?.resultCode)?root.resultCode:null,
+      addressCandidatesCount:Array.isArray(root?.addresses)?root.addresses.length:null,
+      schoolResultsCount:Array.isArray(root?.schools)?root.schools.length:null,
+      tripCount:Array.isArray(root?.trips)?root.trips.length:null,
+      schoolItemKeys:Array.isArray(root?.schools)&&root.schools[0]?
+       Object.keys(root.schools[0]).slice(0,28):[]};
     }).catch(()=>{});
    }
   }}catch{}
