@@ -23,14 +23,14 @@ jobs:
         run: node --check scripts/triage-next3-public-residential-school-browser.cjs
       - name: Isolated Playwright Chromium install (free, no service keys)
         run: |
-          mkdir -p .tmp-next3-browser
-          cd .tmp-next3-browser
+          mkdir -p next3-browser-temp
+          cd next3-browser-temp
           npm init -y >/dev/null
           npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
           ./node_modules/.bin/playwright install --with-deps chromium
       - name: Actual house address -> app school markers and polygons; district Finder controls
         env:
-          NODE_PATH: ${{ github.workspace }}/.tmp-next3-browser/node_modules
+          NODE_PATH: ${{ github.workspace }}/next3-browser-temp/node_modules
         run: node scripts/triage-next3-public-residential-school-browser.cjs
       - name: Archive every evidence report and desktop-mobile screenshots
         if: always()
