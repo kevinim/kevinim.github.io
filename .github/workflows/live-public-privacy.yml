@@ -1,0 +1,34 @@
+name: Live Pages retired-assets privacy audit (read only)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/test-live-public-privacy.mjs'
+      - '.github/workflows/live-public-privacy.yml'
+      - 'scripts/build-crime-zip-cities.mjs'
+      - 'scripts/build-mena-ancestry.mjs'
+  workflow_dispatch:
+  schedule:
+    - cron: '30 12 * * 1'
+permissions:
+  contents: read
+jobs:
+  live-privacy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Validate neutral offline source scripts and audit script
+        run: |
+          node --check scripts/build-crime-zip-cities.mjs
+          node --check scripts/build-mena-ancestry.mjs
+          node --check scripts/test-live-public-privacy.mjs
+          node --test tests/no-legacy-source-builders.test.cjs
+      - name: Check live Pages origin and retired public file URLs
+        run: node scripts/test-live-public-privacy.mjs
