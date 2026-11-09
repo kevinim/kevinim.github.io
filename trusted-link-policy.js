@@ -12,7 +12,7 @@
   'apps.myplanware.com','www.kellerisd.net','www.nisdtx.org',
   'www.gcisd.net','www.southlakecarroll.edu','www.westlakeacademy.org',
   "enrollment.fwisd.org","www.aisd.net","www.mansfieldisd.org","www.gpisd.org","www.emsisd.com","www.birdvilleschools.net","www.crowleyisdtx.org","www.burlesonisd.net",
-  "www.wylieisd.net","www.melissaisd.org","www.celinaisd.com","www.littleelmisd.net","www.dentonisd.org","www.coppellisd.com","web.risd.org","www.princetonisd.net","www.annaisd.org","www.argyleisd.com","www.garlandisd.net","www.hebisd.edu","www.rockwallisd.com","mesquiteisd.org","www.irvingisd.net","www.forneyisd.net","www.dallasisd.org","www.communityisd.org"
+  "www.wylieisd.net","www.melissaisd.org","www.celinaisd.com","www.littleelmisd.net","www.dentonisd.org","www.coppellisd.com","web.risd.org","www.princetonisd.net","www.annaisd.org","www.argyleisd.com","www.garlandisd.net","www.hebisd.edu","www.rockwallisd.com","mesquiteisd.org","www.irvingisd.net","www.forneyisd.net","www.dallasisd.org","www.communityisd.org","www.wisd.org","www.duncanvilleisd.org","www.midlothianisd.org","www.c-isd.com","www.aledoisd.org","www.weatherfordisd.com","www.azleisd.net","enroll.chisd.net","www.desotoisd.org","www.lancasterisd.org","www.redoakisd.org","www.crandall-isd.net"
  ]);
  const hosts=new Set(APPROVED_HOSTS);
  function official(raw) {
