@@ -39,6 +39,8 @@ async function measure(page,width,base){
    status:box.dataset.state,districtCodes:districts.map(x=>x.dataset.district),
    availableZips:zips.filter(b=>!b.disabled).map(b=>b.dataset.zip),
    linkHosts:links.map(a=>new URL(a.href).hostname),
+   directLookupHosts:[...box.querySelectorAll('.west-dfw-district .west-dfw-direct-lookup')].map(a=>new URL(a.href).hostname),
+   directLookupRelSafe:[...box.querySelectorAll('.west-dfw-district .west-dfw-direct-lookup')].every(a=>a.rel.includes('noopener')&&a.rel.includes('noreferrer')),
    relSafe:links.every(a=>a.target==='_blank'&&/noopener/.test(a.rel)&&/noreferrer/.test(a.rel)),
    hasKellerHistoricalWarning:box.querySelector('[data-district="220907"] .west-dfw-vintage-warning')?.textContent.includes('2018–19')===true,
    hasDisclosure:box.textContent.includes('학군 배정 경계가 아닙니다')&&
@@ -52,7 +54,9 @@ async function measure(page,width,base){
  assert.equal(result.status,'ready');
  assert.deepEqual(new Set(result.districtCodes),new Set(['220919','220907','061911','220906']));
  assert.deepEqual(new Set(result.availableZips),new Set(['76092','76262','76248','76034','76051','76052','76247']));
- assert.equal(result.linkHosts.length,8,'4 ISD links + 3 direct official lookup links + 1 charter');
+ assert.equal(result.linkHosts.length,5,'4 official ISD overview links + 1 charter');
+ assert.equal(result.directLookupHosts.length,3,'Carroll/Keller/Northwest offer separate direct lookup cards');
+ assert.equal(result.directLookupRelSafe,true,'Direct official links must use noopener noreferrer');
  assert.equal(result.relSafe,true);
  assert.equal(result.hasDisclosure,true);
  assert.equal(result.hasKellerHistoricalWarning,true,'Keller stale GIS needs visible 2018-19 disclosure');
