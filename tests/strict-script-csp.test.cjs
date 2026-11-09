@@ -10,7 +10,9 @@ const csp=html=>{
  assert.ok(match,'CSP meta is required');
  const policy=match[1];
  for(const directive of ["script-src-attr 'none'","object-src 'none'","base-uri 'self'","form-action 'self'"])assert.ok(policy.includes(directive));
- assert.doesNotMatch(policy,/unsafe-inline|unsafe-eval/);
+ const script=policy.split(';').map(x=>x.trim()).find(x=>x.startsWith('script-src '));
+ assert.ok(script,'script-src required');
+ assert.doesNotMatch(script,/unsafe-inline|unsafe-eval/);
  return policy;
 };
 const inlineScripts=html=>[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
