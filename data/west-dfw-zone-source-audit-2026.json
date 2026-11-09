@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "auditedAtUtc": "2026-11-09",
+  "targetSchoolYear": "2026-27",
+  "scope": "Source inventory and vintage validation only; NO GEOMETRY DOWNLOAD OR DEPLOYMENT.",
+  "globalReleaseState": {
+    "automaticPolygonIngestionEnabled": false,
+    "polygonDisplayEnabled": false,
+    "exactAddressAssignmentEnabled": false,
+    "redistributionRightsVerified": false,
+    "permittedSourceUsage": "link-only"
+  },
+  "districts": [
+    {
+      "code": "220919",
+      "name": "Carroll ISD",
+      "sourceType": "district-official-enrollment-and-zone-search",
+      "officialSource": "https://www.southlakecarroll.edu/district-information/district-departments/student-services/online-enrollment-portal",
+      "addressLookupEvidence": "https://www.southlakecarroll.edu/district-information/district-departments/student-services/online-enrollment-portal/frequently-asked-questions",
+      "currentLocatorExists": true,
+      "verifiedPolygonAcademicYear": null,
+      "verifiedRawPolygonEndpoint": null,
+      "candidateFormat": "interactive district map/search; no confirmed public campus GeoJSON",
+      "reuseRights": "not-reviewed",
+      "mapStatus": "official-finder-only",
+      "sourceNotes": "2026–27 enrollment is published, but enrollment-year label is NOT independent proof of current campus polygon vintage. City of Southlake and Westlake have distinct school-district boundaries and optional transfers."
+    },
+    {
+      "code": "220907",
+      "name": "Keller ISD",
+      "sourceType": "city-published-arcgis-reference",
+      "officialSource": "https://www.kellerisd.net/about-kisd/maps",
+      "addressLookupEvidence": "https://www.kellerisd.net/about-kisd/maps",
+      "currentLocatorExists": true,
+      "verifiedPolygonAcademicYear": "2018-19",
+      "verifiedRawPolygonEndpoint": "https://arcgis.cityofkeller.com/arcgis/rest/services/Kellermaps/KEL_KISD_AGO/MapServer",
+      "candidateFormat": "ArcGIS MapServer JSON/geoJSON metadata and polygon layers",
+      "reuseRights": "not-reviewed",
+      "mapStatus": "stale-city-gis-reference-no-current-polygon",
+      "sourceNotes": "2018–19 SCHL_YEAR found via unique school-year query on ALL 4 available grade/level layers, not merely a page update timestamp. City GIS is not proof of 2026–27 assignment. Keller ISD is separately planning 2027–28 consolidation; do not treat future plans as current.",
+      "observedLayers": [
+        {
+          "id": 2,
+          "level": "elementary",
+          "nameField": "ELEM_NAME",
+          "schoolYearField": "SCHL_YEAR",
+          "campusIdField": "CAMPUS_ID",
+          "observedSchoolYears": [
+            "2018-19"
+          ],
+          "observedFeatureCount": 23
+        },
+        {
+          "id": 3,
+          "level": "high",
+          "nameField": "HIGH_NAME",
+          "schoolYearField": "SCHL_YEAR",
+          "campusIdField": "CAMPUS_ID",
+          "observedSchoolYears": [
+            "2018-19"
+          ],
+          "observedFeatureCount": 4
+        },
+        {
+          "id": 4,
+          "level": "intermediate",
+          "nameField": "INT_NAME",
+          "schoolYearField": "SCHL_YEAR",
+          "campusIdField": "CAMPUS_ID",
+          "observedSchoolYears": [
+            "2018-19"
+          ],
+          "observedFeatureCount": 7
+        },
+        {
+          "id": 5,
+          "level": "middle",
+          "nameField": "MID_NAME",
+          "schoolYearField": "SCHL_YEAR",
+          "campusIdField": "CAMPUS_ID",
+          "observedSchoolYears": [
+            "2018-19"
+          ],
+          "observedFeatureCount": 7
+        }
+      ]
+    },
+    {
+      "code": "061911",
+      "name": "Northwest ISD",
+      "sourceType": "official-year-specific-district-finder",
+      "officialSource": "https://www.nisdtx.org/departments/facilities/attendance-boundaries",
+      "addressLookupEvidence": "https://www.nisdtx.org/departments/facilities/attendance-boundaries/proposed-2026-2027-boundaries",
+      "currentLocatorExists": true,
+      "verifiedPolygonAcademicYear": "2026-27",
+      "verifiedRawPolygonEndpoint": null,
+      "candidateFormat": "official school-year selector + map; approved 2026–27 current in Finder",
+      "reuseRights": "not-reviewed",
+      "mapStatus": "current-official-finder-but-no-licensed-geojson",
+      "sourceNotes": "Board-approved 2026–27 zones (January 12, 2026) visible in official school-year-selectable Finder; no extracted/re-distributable file verified. 2027–28 high school rezoning was a proposal as of audit; do not merge years."
+    },
+    {
+      "code": "220906",
+      "name": "Grapevine-Colleyville ISD",
+      "sourceType": "official-published-printable-maps",
+      "officialSource": "https://www.gcisd.net/page/attendance-area-maps/",
+      "addressLookupEvidence": "https://www.gcisd.net/page/attendance-area-maps/",
+      "currentLocatorExists": false,
+      "verifiedPolygonAcademicYear": null,
+      "verifiedRawPolygonEndpoint": null,
+      "candidateFormat": "elementary/middle/high printable map document links",
+      "reuseRights": "not-reviewed",
+      "mapStatus": "official-printable-maps-year-unconfirmed",
+      "sourceNotes": "Official district map page says maps are guidance, with address-near-boundary check by district. Page does not establish 2026–27 raw GIS or reuse permission. Dove ES consolidation took effect 2026–27; do not infer older PDF map is current."
+    }
+  ],
+  "evidence": [
+    {
+      "kind": "official-primary",
+      "district": "220919",
+      "url": "https://www.southlakecarroll.edu/district-information/district-departments/student-services/online-enrollment-portal/frequently-asked-questions",
+      "status": "Carroll address-based campus search exists"
+    },
+    {
+      "kind": "official-primary",
+      "district": "220907",
+      "url": "https://www.kellerisd.net/about-kisd/maps",
+      "status": "Keller district provides maps and Find My School"
+    },
+    {
+      "kind": "arcgis-layer-fields",
+      "district": "220907",
+      "url": "https://arcgis.cityofkeller.com/arcgis/rest/services/Kellermaps/KEL_KISD_AGO/MapServer/2",
+      "status": "Polygon, fields ELEM_NAME SCHL_YEAR CAMPUS_ID; other layer names vary by grade"
+    },
+    {
+      "kind": "arcgis-attribute-query",
+      "district": "220907",
+      "url": "https://arcgis.cityofkeller.com/arcgis/rest/services/Kellermaps/KEL_KISD_AGO/MapServer/2/query?where=1%3D1&outFields=SCHL_YEAR&returnGeometry=false&returnDistinctValues=true&f=json",
+      "status": "2018-19 unique year (no geometry read)"
+    },
+    {
+      "kind": "official-primary",
+      "district": "061911",
+      "url": "https://www.nisdtx.org/departments/facilities/attendance-boundaries/proposed-2026-2027-boundaries",
+      "status": "2026–27 approved maps and Finder school-year selection"
+    },
+    {
+      "kind": "official-primary",
+      "district": "220906",
+      "url": "https://www.gcisd.net/page/attendance-area-maps/",
+      "status": "Printable campus attendance maps with caution; no year or GIS export verified"
+    }
+  ]
+}
