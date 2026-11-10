@@ -38,6 +38,23 @@ class TestAg03(unittest.TestCase):
         with self.assertRaises(ValueError):
             ag.fit_transform([cps()[0]] * 8, "affine")
 
+    def test_cfb_abbreviated_tea_campus_aliases(self):
+        rows = [
+            {"district":"CFB", "id":"057903047", "name":"BUSH MIDDLE"},
+            {"district":"CFB", "id":"057903002", "name":"SMITH H S"},
+            {"district":"CFB", "id":"057903001", "name":"TURNER H S"},
+            {"district":"CFB", "id":"057903123", "name":"RIVERCHASE ELE"},
+        ]
+        for level, name, campus in [
+            ("middle","Barbara Bush Middle School","057903047"),
+            ("high","Newman Smith High School","057903002"),
+            ("high","R. L. Turner High School","057903001"),
+            ("elementary","Riverchase Elementary","057903123"),
+        ]:
+            catalog, unresolved=ag.school_roster(level, rows, {level:[name]})
+            self.assertEqual(catalog[0]["teaCampusId"],campus)
+            self.assertEqual(unresolved,[])
+
     def test_source_guards(self):
         district = {"metadata":{"notSchoolAttendanceZones":True},"features":[{
             "properties":{"districtCode":"057903"}, "geometry": mapping(Polygon([
@@ -97,7 +114,8 @@ class TestAg03(unittest.TestCase):
                     maps=urls,district=boundary,calibration=None,roster=roster,tea_rows=tea,
                     review={"high":{}},method="affine")
             self.assertEqual(e["draftGeographicFragments"],2)
-            self.assertEqual(e["geometryRejected"]["invalid_geometry"],1)
+            self.assertEqual(e["geometryRejected"]["self_intersection"],1)
+            self.assertEqual(e["selfIntersectionRejected"],1)
             self.assertGreater(e["geometryTopology"]["fragmentAreaOvercountApproxSqKm"],0)
             self.assertEqual(e["mappedCampusCount"],0)
             self.assertEqual(e["blocker"],"INSUFFICIENT_INDEPENDENT_VERIFIED_ANCHORS")
