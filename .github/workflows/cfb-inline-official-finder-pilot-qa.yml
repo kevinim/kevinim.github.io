@@ -1,5 +1,7 @@
 name: CFB inline official SchoolSearch pilot QA (NO DEPLOY)
 on:
+  push:
+    branches: [feature/cfb-official-finder-inline-pilot-20261110]
   pull_request:
     branches: [main]
     paths:
