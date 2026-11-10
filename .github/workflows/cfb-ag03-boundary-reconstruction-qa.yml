@@ -1,0 +1,81 @@
+name: CFB AG03 exploratory school boundary reconstruction (NO DEPLOY)
+on:
+  pull_request:
+    paths:
+      - 'scripts/cfb-ag03-*.py'
+      - 'scripts/cfb-ag03-reconstruct.py'
+      - 'data/cfb-ag03-*.json'
+      - 'tests/test_cfb_ag03_reconstruct.py'
+      - '.github/workflows/cfb-ag03-boundary-reconstruction-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-unit-and-release-guard:
+    name: Synthetic geometry / provenance / fail-closed tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Install isolated free GIS dependencies
+        run: |
+          python3 -m venv /tmp/cfb-ag03-python
+          /tmp/cfb-ag03-python/bin/pip install --disable-pip-version-check --no-cache-dir numpy shapely opencv-python-headless
+      - name: Validate all three grade geometry contract and no-promotion gates
+        run: |
+          /tmp/cfb-ag03-python/bin/python -m unittest discover -s tests -p 'test_cfb_ag03_reconstruct.py' -v
+          /tmp/cfb-ag03-python/bin/python scripts/cfb-ag03-reconstruct.py
+          /tmp/cfb-ag03-python/bin/python scripts/cfb-ag03-method-comparison.py
+      - name: Verify repository contains NO publishable candidate GIS in data/
+        run: |
+          python3 - <<'PY'
+          import json, pathlib
+          base=pathlib.Path("artifacts/cfb-ag03")
+          for level in ("elementary","middle","high"):
+              p=base/f"cfb-{level}-DRAFT_UNVERIFIED.geojson"
+              fc=json.loads(p.read_text())
+              assert fc["metadata"]["status"]=="DRAFT_UNVERIFIED_VISUAL_ONLY"
+              assert fc["metadata"]["residentialAssignmentEnabled"] is False
+              assert not fc["features"] or all(f["properties"]["releaseEligible"] is False for f in fc["features"])
+          print("All E/M/H GeoJSON draft schemas fail closed. Zero live school assignment promotion.")
+          PY
+      - name: Store offline grade blockers and empty draft schemas
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: CFB-AG03-offline-geometry-guard
+          path: artifacts/cfb-ag03/
+          if-no-files-found: warn
+          retention-days: 7
+  raster-exploratory:
+    name: Opt-in official raster E/M/H reconstruction + topology (UNVERIFIED)
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Install open-source pixel and geometry tooling
+        run: |
+          python3 -m venv /tmp/cfb-ag03-python
+          /tmp/cfb-ag03-python/bin/pip install --disable-pip-version-check --no-cache-dir pillow numpy opencv-python-headless shapely
+      - name: Try existing approved public source rasters; report failures as missing evidence
+        continue-on-error: true
+        run: /tmp/cfb-ag03-python/bin/python scripts/extract-cfb-approved-raster-pixels.py
+      - name: Generate E/M/H draft GeoJSON, gap/overlap, missing zone and method reports
+        run: |
+          /tmp/cfb-ag03-python/bin/python scripts/cfb-ag03-reconstruct.py
+          /tmp/cfb-ag03-python/bin/python scripts/cfb-ag03-method-comparison.py
+      - name: Preserve AG04 research handoff (NOT public website files)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: CFB-AG03-DRAFT-UNVERIFIED-geometry-E-M-H
+          path: |
+            artifacts/cfb-ag03/
+            artifacts/cfb-reconstruction/pixel-extraction-summary.json
+          if-no-files-found: warn
+          retention-days: 7
