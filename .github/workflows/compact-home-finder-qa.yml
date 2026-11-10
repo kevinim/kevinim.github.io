@@ -1,0 +1,64 @@
+name: Compact address school Finder UX QA (NO DEPLOY)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'home-lookup-v2.js'
+      - 'index.html'
+      - 'tests/compact-home-finder.test.cjs'
+      - 'scripts/test-compact-home-finder-browser.cjs'
+      - 'tests/conditional-school-release.test.cjs'
+      - 'scripts/verify-main-data.mjs'
+      - 'scripts/test-integrated-features.cjs'
+      - 'tests/externalized-main-bootstrap.test.cjs'
+      - '.github/workflows/compact-home-finder-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  node:
+    name: Official link safety, no mass links, preserved release policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - run: |
+          node --check home-lookup-v2.js
+          node --test tests/compact-home-finder.test.cjs tests/conditional-school-release.test.cjs tests/track-b-reference-gis.test.cjs
+          node --test tests/externalized-main-bootstrap.test.cjs
+  browser:
+    name: Real 390/1366px Chromium compact Finder test (synthetic only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Install isolated Chromium
+        run: |
+          mkdir -p compact-home-browser-tmp
+          cd compact-home-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Browser E2E with synthetic Carrollton address
+        env:
+          NODE_PATH: ${{ github.workspace }}/compact-home-browser-tmp/node_modules
+        run: node scripts/test-compact-home-finder-browser.cjs
+      - name: Save UI screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: compact-school-finder-mobile-desktop
+          path: artifacts/compact-home-finder/*.png
+          if-no-files-found: warn
+          retention-days: 7
