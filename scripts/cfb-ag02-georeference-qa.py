@@ -243,12 +243,23 @@ def cross_grade_candidates(elementary, target):
                   max(elementary.width*elementary.height, 1))
         pred = cv2.perspectiveTransform(sp.reshape(-1, 1, 2), H)[:, 0, :]
         median_px = float(np.median(np.linalg.norm(pred-dp, axis=1))) if len(sp) else math.inf
-        ok = len(sp) >= 12 and spread >= .10 and median_px <= 3.
+        source_quad = np.float32([[0, 0], [elementary.width, 0],
+                                  [elementary.width, elementary.height],
+                                  [0, elementary.height]]).reshape(-1, 1, 2)
+        destination_quad = cv2.perspectiveTransform(source_quad, H)[:, 0, :]
+        margins = np.array([target.width, target.height]) * .05
+        frame_plausible = (np.isfinite(destination_quad).all()
+            and bool(np.all(destination_quad >= -margins))
+            and bool(np.all(destination_quad <= np.array(target.size)+margins))
+            and .20 <= cv2.contourArea(destination_quad)/max(target.width*target.height,1) <= 1.20)
+        ok = len(sp) >= 20 and spread >= .10 and median_px <= 3. and frame_plausible
         attempts[method] = {"status": "UNVERIFIED_CANDIDATE" if ok else
                             "REJECTED_WEAK_DISTRIBUTION",
                             "rawMatches": len(good), "ransacInliers": len(sp),
                             "sourceImageCoverageRatio": round(spread, 4),
                             "medianInlierReprojectionPx": round(median_px, 2),
+                            "globalFramePlausible": frame_plausible,
+                            "transformedSourceCorners": destination_quad.round(1).tolist(),
                             "elementaryToTargetHomography": H.tolist() if ok else None}
     accepted = [(k,v) for k,v in attempts.items()
                 if v["status"] == "UNVERIFIED_CANDIDATE"]
@@ -390,6 +401,32 @@ def main():
                 except Exception as exc:
                     matches[level] = {"status": "EXPERIMENT_FAILED",
                                       "reason": str(exc)[:250]}
+    # AG03-compatible inverse image homography + elementary candidate affine.
+    # This is coordinate-equivalent JSON, not a 6-parameter World File or official GIS.
+    for level, match in matches.items():
+        if (match.get("status") != "UNVERIFIED_CANDIDATE"
+                or "affineTransform" not in results["elementary"]):
+            continue
+        h = np.asarray(match["chosenTransform"], dtype=float)
+        inv = np.linalg.inv(h)
+        bridge = {
+            "schemaVersion": 1, "grade": level, "sourceYear": "2025-26",
+            "sourceType": "approved_publisher_raster_unverified_image_matching",
+            "targetImageSize": checks[level]["size"],
+            "targetImageSha256": checks[level]["sha256"],
+            "sourceRasterURL": next(m["url"] for m in manifest["maps"] if m["level"] == level),
+            "chain": "target_pixel -> inverse(E_to_target_H) -> elementary_pixel -> elementary_affine -> WGS84",
+            "targetPixelToElementaryPixelHomography": inv.tolist(),
+            "elementaryPixelToWGS84Model": results["elementary"]["affineTransform"],
+            "automaticImageMatchAlgorithm": match["chosenMethod"],
+            "independentVerifiedGCP": 0,
+            "independentHoldoutRMSE": None,
+            "isOfficialGIS": False, "residentialAssignmentApproved": False,
+            "AG03Use": "DRAFT_VISUAL_ALIGNMENT_ONLY_NOT_FOR_ASSIGNMENT"
+        }
+        (output / f"{level}-DRAFT-composite-pixel-to-wgs84.json").write_text(
+            json.dumps(bridge, indent=2)+"\n")
+        results[level]["draftCompositeTransform"] = f"{level}-DRAFT-composite-pixel-to-wgs84.json"
     (output / "cross-grade-automated-candidates.json").write_text(
         json.dumps({"sourceYear": "2025-26", "status": "RESEARCH_ONLY",
                     "matches": matches}, indent=2)+"\n")
@@ -399,6 +436,7 @@ def main():
                                "verifiedGCP": v["verifiedGCP"],
                                "independentRMSEMeters": v["independentHoldoutRMSEMeters"],
                                "image": v["image"], "worldFile": v.get("worldFile"),
+                               "compositeTransform": v.get("draftCompositeTransform"),
                                "models": v["modelComparisons"]}
                           for k, v in results.items()},
                "crossGrade": matches}
