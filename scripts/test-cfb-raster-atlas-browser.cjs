@@ -54,6 +54,7 @@ async function main(){
     assert.match(await page.locator('#cfbAtlasImageWrap img').getAttribute('src'),/^https:\/\/resources\.finalsite\.net\//);
     assert.equal(await page.locator('#cfbAtlasBands button[data-level="'+level+'"]').getAttribute('aria-pressed'),'true');
     await page.locator('#cfbAtlasImageWrap img').waitFor({state:'visible',timeout:7000});
+    await page.waitForFunction(()=>{const image=document.querySelector('#cfbAtlasImageWrap img');return !!image&&image.complete&&image.naturalWidth>0},{timeout:10000});
    }
    assert.equal(remoteImages,3,'Exactly one official image per selected grade');
    await page.locator('#cfbAtlasAreaSelect').selectOption('Morningside subdivision');
