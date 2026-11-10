@@ -59,16 +59,15 @@ jobs:
         run: |
           python -m py_compile scripts/denton_geopdf_public_parcel_qa.py
           python scripts/denton_geopdf_public_parcel_qa.py
-      - name: Save PDF-local drawings, map previews and raw inspection reports
+      - name: Enforce public-artifact restrictions before extracting official GeoPDF
+        run: python -m unittest discover -s tests -p 'test_denton_pdf_artifact_restrictions.py' -v
+      - name: Publish QA STATUS summaries only (NO GIS, PDFs, addresses or coordinates)
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: denton-official-2026-27-pdf-vector-forensic-staging
+          name: denton-geo-review-status-no-polygons
           path: |
-            artifacts/denton-pdf-vector-poc/
-            artifacts/denton-pdf-geo-probe/
-            artifacts/denton-geopdf-derived/
-            artifacts/denton-geopdf-topology-diagnostic/
-            artifacts/denton-elementary-legend-poc/
+            artifacts/denton-geopdf-derived/staging-integrity-report.json
+            artifacts/denton-geopdf-derived/public-cad-parcel-check-STAGING.json
           retention-days: 7
           if-no-files-found: warn

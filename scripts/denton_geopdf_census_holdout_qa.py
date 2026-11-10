@@ -76,7 +76,15 @@ for sample in source["samples"]:
      if observed==[row["campusId"]] else "NO_GO_PDF_DERIVED_ZONE_MISMATCH_OR_BOUNDARY")
   group["grades"].append(match)
  results.append(group)
- print("DENTON_GEOPDF_CENSUS_HOLDOUT",json.dumps(group,separators=(",",":")),flush=True)
+ # Action logs contain only campus IDs and diagnostic status, never a house
+ # street address, geocoded coordinate or raw polygon geometry.
+ safe={"addressId":sample["id"],"gradeChecks":[{"grade":g["grade"],
+   "campusId":g["officialFinderSchoolId"],
+   "status":g["validationStatus"],
+   "nearestDerivedBoundaryMeters":g.get("nearestDerivedSchoolBoundaryMeters"),
+   "edgeReviewStatus":g.get("edgeReviewStatus")} for g in group["grades"]],
+   "fullAddressLogged":False,"coordinatesLogged":False,"release":"NO_GO"}
+ print("DENTON_GEOPDF_CENSUS_HOLDOUT",json.dumps(safe,separators=(",",":")),flush=True)
 matchCount=sum(g["validationStatus"]=="DERIVED_PDF_POLYGON_MATCHES_FINDER_SAMPLE" for x in results for g in x["grades"])
 total=sum(len(x["grades"]) for x in results)
 audit={"sourceYear":"2026-27","samples":3,"grades":total,
