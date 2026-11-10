@@ -101,9 +101,12 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  assert.ok(js.includes('const DATA=['));
  assert.ok(!js.includes('window.WestDFWIntegration'));
 });
-test('main index is byte-exact to newest approved CFB baseline, except home lookup cache version',()=>{
+test('main index preserves approved CFB baseline plus reviewed AG05 references',()=>{
  const source=show('b7c330aab35f0183a234f057acb2ab1e35f38943','index.html');
- const expected=replaceOnce(source,'./home-lookup-v2.js?v=16','./home-lookup-v2.js?v=17');
+ let expected=replaceOnce(source,'./home-lookup-v2.js?v=16','./home-lookup-v2.js?v=17');
+ expected=replaceOnce(expected,'./features/cfb-official-inline.css?v=1','./features/cfb-official-inline.css?v=2');
+ expected=replaceOnce(expected,'./features/cfb-official-bridge.js?v=1" defer></script></body>',
+  './features/cfb-official-bridge.js?v=2" defer></script><script src="./features/cfb-zone-overlay.js?v=1" defer></script></body>');
  assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expected.replace(/\r\n/g,'\n')),
   'No HTML drift beyond approved cache-busting home address lookup version');
  const originalPanel=show('b1a787eb6bd877318a1275a4a29225069782ece7','index.html')
