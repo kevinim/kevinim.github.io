@@ -1,0 +1,50 @@
+name: Track B production Pages live school map smoke (read-only)
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/test-track-b-live-pages.cjs'
+      - '.github/workflows/track-b-live-production-smoke.yml'
+  workflow_run:
+    workflows: ['pages build and deployment']
+    types: [completed]
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  pages-school-smoke:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    name: Live Pages 390/1366 Allen + Denton + CFB + Dallas/Irving
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Install isolated free Chromium
+        run: |
+          mkdir -p live-pages-playwright-tmp
+          cd live-pages-playwright-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Exercise actual publicly deployed website, no residence or private history
+        env:
+          NODE_PATH: ${{ github.workspace }}/live-pages-playwright-tmp/node_modules
+          DASHBOARD_BASE_URL: https://kevinim.github.io/
+        run: node scripts/test-track-b-live-pages.cjs
+      - name: Aggregate public-only result and screenshots (7 days)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: track-b-live-production-browser-390-1366
+          path: |
+            artifacts/track-b-live-pages/track-b-live-report.json
+            artifacts/track-b-live-pages/track-b-live-390.png
+            artifacts/track-b-live-pages/track-b-live-1366.png
+          if-no-files-found: warn
+          retention-days: 7
