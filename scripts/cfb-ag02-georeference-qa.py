@@ -427,6 +427,39 @@ def main():
         (output / f"{level}-DRAFT-composite-pixel-to-wgs84.json").write_text(
             json.dumps(bridge, indent=2)+"\n")
         results[level]["draftCompositeTransform"] = f"{level}-DRAFT-composite-pixel-to-wgs84.json"
+        # Provide review-only transferred campus markers to make M/H manual GCP work
+        # actionable; these inherit rough E points and are NOT independently verified.
+        source_symbols = np.asarray([p["pixel"] for p in elementary["controlPoints"]], dtype=float)
+        homog = np.column_stack((source_symbols, np.ones(len(source_symbols))))
+        warped = (h @ homog.T).T
+        if np.any(np.abs(warped[:, 2]) < 1e-6):
+            raise ValueError("degenerate transferred campus symbol")
+        warped = warped[:, :2] / warped[:, 2:3]
+        candidates = []
+        w, hh = checks[level]["size"]
+        for p, q in zip(elementary["controlPoints"], warped):
+            if 0 <= q[0] < w and 0 <= q[1] < hh:
+                candidates.append({
+                    "campusId": p["campusId"], "school": p["school"],
+                    "pixel": [round(float(q[0]), 2), round(float(q[1]), 2)],
+                    "latlon": p["latlon"], "sourceElementaryPixel": p["pixel"],
+                    "pixelConfidence": "cross_grade_ORB_transferred_rough_elementary",
+                    "pixelVerified": False, "groundVerified": False,
+                    "role": "candidate-only", "eligibleIndependentHoldout": False})
+        candidates_data = {
+            "schemaVersion": 1, "level": level, "sourceSchoolYear": "2025-26",
+            "rasterPixelSize": checks[level]["size"],
+            "provenance": "ORB image-to-image transfer of 14 rough E school symbols; not fresh surveyed street GCPs",
+            "originalElementaryApproximateAnchors": len(elementary["controlPoints"]),
+            "transferredCandidatesInFrame": len(candidates),
+            "independentlyVerifiedGCP": 0,
+            "status": "SUGGESTIONS_ONLY_NOT_VALIDATED",
+            "residentialAssignmentAllowed": False,
+            "controlPoints": candidates}
+        (output / f"{level}-DRAFT-transferred-marker-suggestions.json").write_text(
+            json.dumps(candidates_data, indent=2)+"\n")
+        results[level]["draftTransferredMarkers"] = len(candidates)
+
     (output / "cross-grade-automated-candidates.json").write_text(
         json.dumps({"sourceYear": "2025-26", "status": "RESEARCH_ONLY",
                     "matches": matches}, indent=2)+"\n")
@@ -437,6 +470,7 @@ def main():
                                "independentRMSEMeters": v["independentHoldoutRMSEMeters"],
                                "image": v["image"], "worldFile": v.get("worldFile"),
                                "compositeTransform": v.get("draftCompositeTransform"),
+                               "transferredMarkerSuggestions": v.get("draftTransferredMarkers", 0),
                                "models": v["modelComparisons"]}
                           for k, v in results.items()},
                "crossGrade": matches}
