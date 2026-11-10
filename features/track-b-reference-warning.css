@@ -18,3 +18,13 @@ html[data-theme="dark"] .reference-gis-global-warning strong{color:#ffecd0}
 #dentonPdfZoneDirectory .cardlink{display:inline-block;margin:5px 12px 3px 0}
 #dentonPdfZoneDirectory p{overflow-wrap:anywhere;line-height:1.6}
 html[data-theme="dark"] #dentonPdfZoneDirectory{border-left-color:#ffc078}
+
+/* Denton school points: historical reference, never a home assignment layer. */
+.denton-campus-provenance{margin:12px 0;padding:12px;border:2px solid #be7d26;border-radius:8px;background:#fff6e8;color:#372610;line-height:1.6}
+.denton-campus-provenance strong{display:block;color:#3c260a}
+.denton-campus-provenance p{font-size:12px;overflow-wrap:anywhere;margin:6px 0}
+.denton-campus-provenance small{display:block;font-size:11px;opacity:.95;margin-top:8px}
+.denton-campus-provenance a.cardlink{display:inline-block;margin:5px 9px 2px 0}
+html[data-theme="dark"] .denton-campus-provenance{background:#332718;border-color:#f1a957;color:#ffebcf}
+html[data-theme="dark"] .denton-campus-provenance strong{color:#ffecda}
+@media(max-width:430px){.denton-campus-provenance{padding:10px}}
