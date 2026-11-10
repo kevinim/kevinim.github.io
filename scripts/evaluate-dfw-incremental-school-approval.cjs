@@ -106,7 +106,8 @@ function evaluateDistrict(code,d,{today,academicYear}){
  result.productionAuthorized=false;
  return result;
 }
-function evaluate(evidence,{today='2026-11-09',productionCommit=null}={}){
+function currentUtcDay(){return new Date().toISOString().slice(0,10);}
+function evaluate(evidence,{today=currentUtcDay(),productionCommit=null}={}){
  const errors=[];
  if(evidence?.schemaVersion!==2)errors.push('INVALID_POLICY_SCHEMA');
  if(evidence?.academicYear!==POLICY_YEAR)errors.push('NOT_2026_27_POLICY_EVIDENCE');
@@ -154,7 +155,7 @@ function runCli(){
  let source,report;
  try{
   source=JSON.parse(fs.readFileSync(path.resolve(ROOT,input),'utf8'));
-  report=evaluate(source,{today:process.env.DFW_REVIEW_DATE||'2026-11-09',
+  report=evaluate(source,{today:process.env.DFW_REVIEW_DATE||currentUtcDay(),
    productionCommit:process.env.DFW_PRODUCTION_SHA||null});
  }catch(err){
   report={schemaVersion:2,errors:['EVIDENCE_FILE_MISSING_OR_INVALID'],
