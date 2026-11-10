@@ -9,6 +9,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 from shapely.geometry import shape,Point
+from denton_geopdf_edge_review import projected_boundaries,margin_meters,classify_margin,EDGE_REVIEW_DISTANCE_METERS
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"artifacts/denton-geopdf-derived"
@@ -20,6 +21,8 @@ for level in ("elementary","middle","high"):
  data=json.loads((OUT/(level+"-2026-27-geopdf-derived-STAGING.geojson")).read_text())
  layers[level]=[(x["properties"]["campusId"],shape(x["geometry"])) for x in data["features"]]
 assert sum(len(x) for x in layers.values())==39
+boundaries={level:projected_boundaries([geometry for _,geometry in features]) for level,features in layers.items()}
+assert all(boundaries.values())
 
 def norm(s):
  return re.sub(r"[^A-Z0-9]+"," ",s.upper()).strip()
@@ -64,6 +67,11 @@ for sample in source["samples"]:
    pt=Point(where["x"],where["y"])
    observed=[id for id,polygon in layers[level] if polygon.covers(pt)]
    match["derivedPolygonSchoolsContainingCensusStreetPoint"]=observed
+   margin=margin_meters(where["x"],where["y"],boundaries[level])
+   match["nearestDerivedSchoolBoundaryMeters"]=margin
+   match["edgeReviewStatus"]=classify_margin(margin)
+   match["parcelLocationVerified"]=False
+   match["borderAddressFinderVerified"]=False
    match["validationStatus"]=("DERIVED_PDF_POLYGON_MATCHES_FINDER_SAMPLE"
      if observed==[row["campusId"]] else "NO_GO_PDF_DERIVED_ZONE_MISMATCH_OR_BOUNDARY")
   group["grades"].append(match)
@@ -75,8 +83,13 @@ audit={"sourceYear":"2026-27","samples":3,"grades":total,
  "matches":matchCount,"missingOrContradictory":total-matchCount,
  "censusLimitations":"Public Census street centerline geocoding is independent but may be interpolated; it is not a verified parcel/home point.",
  "release":"NO_GO","independentParcelAccuracyProven":False,
- "reuseRightsConfirmed":False,"results":results}
+ "reuseRightsConfirmed":False,"edgeReviewDistanceMeters":EDGE_REVIEW_DISTANCE_METERS,
+ "nearEdgeStreetSamples":sum(g.get('edgeReviewStatus','').startswith('NO_GO_') for x in results for g in x['grades']),
+ "boundaryAdjacentParcelFinderCasesIndependentlyVerified":0,
+ "minimumSampleBoundaryMarginMeters":min((g['nearestDerivedSchoolBoundaryMeters'] for x in results for g in x['grades'] if isinstance(g.get('nearestDerivedSchoolBoundaryMeters'),(int,float))),default=None),
+ "results":results}
 (OUT/"census-street-holdout-report.json").write_text(json.dumps(audit,indent=2)+"\n")
 print("DENTON_GEOPDF_CENSUS_HOLDOUT_SUMMARY",json.dumps({
  "matches":matchCount,"total":total,"certifiedParcelBoundaryResults":0,
+ "nearEdgeStreetSamples":audit['nearEdgeStreetSamples'],"boundaryAdjacentParcelFinderCasesIndependentlyVerified":0,
  "production":"NO_GO"},separators=(",",":")),flush=True)
