@@ -43,9 +43,22 @@ async function main(){
    assert.ok(f,'third-party frame not created');
    await f.waitForLoadState('domcontentloaded',{timeout:45000});
    // Real provider frame must render useful official content in the browser.
-   const bodyText=await f.locator('body').innerText({timeout:30000});
+   // DOMContentLoaded precedes vendor SPA rendering; wait for actual content.
+   // The vendor is cross-origin, but Playwright can inspect the test frame.
+   let bodyText='';
+   try{
+    await f.waitForFunction(()=>/Carrollton.Farmers Branch ISD|SchoolSearch/i.test(
+     document.body?.innerText||''),null,{timeout:25000});
+    bodyText=await f.locator('body').innerText({timeout:10000});
+   }catch(err){
+    const debug=await f.evaluate(()=>({url:location.href,title:document.title,
+      bodyText:(document.body?.innerText||'').slice(0,300),
+      htmlLength:document.documentElement?.outerHTML?.length||0})).catch(e=>({browserError:String(e).slice(0,300)}));
+    console.error('CFB_PROVIDER_FRAME_DIAGNOSTIC',JSON.stringify({width,...debug}));
+    throw Error('GuideK12 failed to render official content after a bounded SPA wait: '+String(err).slice(0,160));
+   }
    assert.match(bodyText,/Carrollton.Farmers Branch ISD|SchoolSearch/i,
-    'GuideK12 is blocked from embedding on this origin; keep this PR NO_GO');
+    'GuideK12 did not render official content inside the browser');
    const dims=await page.evaluate(()=>{
     const p=document.getElementById('cfbOfficialFinderPanel').getBoundingClientRect();
     const f=document.querySelector('#cfbInlineFinderFrameHost iframe').getBoundingClientRect();
