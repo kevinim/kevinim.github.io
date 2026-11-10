@@ -17,7 +17,7 @@ permissions:
   contents: read
 jobs:
   pages-school-smoke:
-    if: ${{ (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') && (github.event_name != 'deployment_status' || (github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'github-pages')) }}
+    if: ${{ (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') && (github.event_name != 'deployment_status' || github.event.deployment_status.state == 'success') }}
     name: Live Pages 390/1366 Allen + Denton + CFB + Dallas/Irving
     runs-on: ubuntu-latest
     timeout-minutes: 15
