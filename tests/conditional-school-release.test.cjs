@@ -65,7 +65,7 @@ test('wrong district, vintage, licensing, holdouts or fabricated digest cannot a
 test('page loads fail-closed policy before home lookup, and renderHome actually downgrades assignments',()=>{
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  const policy='./features/conditional-school-release.js?v=1';
- const home='./home-lookup-v2.js?v=16';
+ const home='./home-lookup-v2.js?v=17';
  assert.ok(html.includes(policy),'policy missing from public app');
  assert.ok(html.indexOf(policy)<html.indexOf(home),'release policy must load before address handler');
  const src=fs.readFileSync(path.join(root,'home-lookup-v2.js'),'utf8');
