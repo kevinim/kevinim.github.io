@@ -37,7 +37,7 @@ const mainImage=[
  'https://server.arcgisonline.com',
  'https://gis.texaswildfirerisk.com'
 ];
-const reviewedImage=mainImage.filter(x=>!x.includes('arcgisonline.com')&&!x.includes('texaswildfirerisk.com'));
+const reviewedImage=mainImage.filter(x=>!x.includes('arcgisonline.com')&&!x.includes('texaswildfirerisk.com')&&!x.includes('finalsite.net'));
 const get=(name,key)=>{
  const policy=extractCspMeta(read(name))?.value;
  assert.ok(policy,name+' must have source CSP');
