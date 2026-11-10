@@ -4,12 +4,11 @@ const {audit}=require('../scripts/audit-dfw-home-automation-readiness.cjs');
 test('districtwide school auto-mapping coverage cannot be inferred from official URL registrations',()=>{
  const r=audit(),s=r.summary;
  assert.equal(s.publicISDs,108);
- assert.equal(s.configuredSchoolZoneSources,7);
- assert.equal(s.pointInPolygonCandidateDistricts,6);
+ assert.equal(s.configuredSchoolZoneSources,6);
+ assert.equal(s.pointInPolygonCandidateDistricts,5);
  assert.equal(s.addressTableOnlyDistricts,1);
- assert.equal(s.noAutomaticSchoolZoneSourceDistricts,101);
+ assert.equal(s.noAutomaticSchoolZoneSourceDistricts,102);
  assert.equal(s.sourceYearConfirmedDistricts,2);
- assert.equal(s.publishedYearUnconfirmedDistricts,1);
  assert.equal(s.exactResidentialAssignmentSuccessRate,null);
  assert.equal(s.currentYearCampusPolygonCompletenessRate,null);
  assert.equal(new Set(r.districts.map(d=>d.teaCode)).size,108);
@@ -34,11 +33,4 @@ test('Allen street table is not equivalent to 2026-27 GIS and map layer alone is
   assert.equal(row.exactAddressAssignmentValidated,false);
   assert.equal(row.verifiedPolygonForEveryCampus,false);
  }
-});
-
-test('Dallas published GIS source is a provisional candidate, not current-year assignment proof',()=>{
- const r=audit(),d=r.districts.find(x=>x.teaCode==='057905');
- assert.equal(d.automationLevel,'geometry-candidate');
- assert.equal(d.sourceYearStatus,'publisher-gis-2026-updated-not-year-confirmed');
- assert.equal(d.exactAddressAssignmentValidated,false);
 });

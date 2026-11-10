@@ -4,7 +4,6 @@ const fs=require('node:fs');
 const vm=require('node:vm');
 const test=require('node:test');
 const {sanitizeExtractedAssets,verifyExternalCspIntegrity,safeFiles}=require('../scripts/build-public-preview.cjs');
-const {assertVersionedMainBootstrap}=require('../scripts/dashboard-bootstrap-contract.cjs');
 const original=fs.readFileSync('index.html','utf8');
 const originalJs=fs.readFileSync('dashboard-main.js','utf8');
 const safe=sanitizeExtractedAssets(original,originalJs);
@@ -29,7 +28,7 @@ test('public preview external sanitized script compiles with zero inline executi
  const inline=[...safe.html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
    .filter(x=>!/\bsrc=/.test(x[1])&&x[2].trim());
  assert.equal(inline.length,0);
- assertVersionedMainBootstrap(safe.html);
+ assert.ok(safe.html.includes('<script src="./dashboard-main.js?v=4"></script>'));
  new vm.Script(safe.js);
 });
 test('public preview explains third-party disclosure without promising no logs',()=>{

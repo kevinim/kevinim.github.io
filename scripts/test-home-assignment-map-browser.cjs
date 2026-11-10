@@ -49,10 +49,10 @@ async function run(){
     home=null;drawHomeAssignmentMap();drawSchools();
     return {loaded,blocked,cleared:homeZoneGroup.getLayers().length};
    });
-   assert.equal(result.loaded.layers,1,'synthetic home should draw one polygon at '+width);
-   assert.equal(result.loaded.active,'true','home zone should be visible at '+width);
-   assert.equal(result.loaded.marker,true,'assigned synthetic school marker should be highlighted at '+width);
-   assert.equal(result.loaded.source,'current-gis');
+   assert.equal(result.loaded.layers,0,'unapproved synthetic home must not draw a polygon at '+width);
+   assert.equal(result.loaded.active,'false','unapproved home zone must remain hidden at '+width);
+   assert.equal(result.loaded.marker,false,'unapproved marker must not be promoted at '+width);
+   assert.equal(result.loaded.source,'conditional-hold');
    assert.equal(result.blocked,0,'unverified address cannot draw zones');
    assert.equal(result.cleared,0,'clear removes map overlays');
    console.log('PASS home auto-school overlay at '+width+'px (synthetic geometry only)');

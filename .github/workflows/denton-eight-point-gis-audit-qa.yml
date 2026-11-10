@@ -5,7 +5,7 @@ on:
       - qa/denton-eight-points-and-2026-gis-source-audit-20261109
   pull_request:
     branches:
-      - feature/denton-public-campus-points-20261109
+      - main
   workflow_dispatch:
 concurrency:
   group: denton-agent02-${{ github.workflow }}-${{ github.head_ref || github.ref_name }}

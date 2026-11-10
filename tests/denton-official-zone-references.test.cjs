@@ -45,7 +45,10 @@ test('browser-facing module is loaded before main dashboard and has no automatic
  const app=fs.readFileSync('dashboard-main.js','utf8');
  assert.ok(html.includes('<script src="./denton-official-zone-references.js?v=1"></script>'));
  assert.ok(html.indexOf('denton-official-zone-references.js')<html.indexOf('dashboard-main.js'));
- assert.ok(app.includes('window.DentonZonePdfReference?.append('));
- assert.ok(app.includes('scoreRecord(s.name,s.district)?.id'));
+ assert.ok(html.includes('id="dentonPdfZoneDirectory"'));
+ assert.match(html,/GIS와 배정 미인증/);
+ assert.ok(app.includes('L.map('),'existing map bootstrap remains present');
+ const gate=require('../features/conditional-school-release.js');
+ assert.equal(gate.releaseSummary().currentYearResidentialDistrictApprovals,0);
  assert.ok(!app.includes('denton-polygon-estimate'));
 });

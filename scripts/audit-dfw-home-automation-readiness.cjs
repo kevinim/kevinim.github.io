@@ -13,8 +13,7 @@ function audit(){
    ?'geometry-candidate':r?.address==='allen-table'?'address-table-only':'official-link-or-no-source';
   const year=r?.currency==='always'?'2026-27-source':
    r?.currency==='live'?'live-finder-required':
-   r?.currency==='finder'?'finder-linked-year-check':
-   r?.currency==='published'?'publisher-gis-2026-updated-not-year-confirmed':'historical-or-unknown';
+   r?.currency==='finder'?'finder-linked-year-check':'historical-or-unknown';
   return {teaCode:d.code,name:d.name,parentRoute:d.parentGuidance?.status||'not-verified',
    automationLevel:level,sourceYearStatus:year,zoneSourceKey:r?.zoneKey||null,
    exactAddressAssignmentValidated:false,verifiedPolygonForEveryCampus:false};
@@ -26,7 +25,6 @@ function audit(){
   addressTableOnlyDistricts:count('address-table-only'),
   noAutomaticSchoolZoneSourceDistricts:count('official-link-or-no-source'),
   sourceYearConfirmedDistricts:sourceDistricts.filter(d=>d.sourceYearStatus==='2026-27-source').length,
-  publishedYearUnconfirmedDistricts:sourceDistricts.filter(d=>d.sourceYearStatus==='publisher-gis-2026-updated-not-year-confirmed').length,
   exactResidentialAssignmentSuccessRate:null,currentYearCampusPolygonCompletenessRate:null};
  return {asOf:'2026-11-09',scope:'11-county TEA district administrative proxy (NOT legal all-DFW geographic coverage)',
   notes:['Link-only enrollment/registrar routes never qualify as automatic campus assignment.',

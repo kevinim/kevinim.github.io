@@ -1,0 +1,64 @@
+name: CFB official Finder and 2025 approved zone maps reference (NO DEPLOY)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'features/track-b-reference-warning.css'
+      - 'tests/cfb-official-rezoning-reference.test.cjs'
+      - 'scripts/test-cfb-official-source-browser.cjs'
+      - '.github/workflows/cfb-official-reference-track-b.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    name: CFB official URL, 2025-26 data-year warning and source-only policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Exact publisher and safe Track B guardrails
+        run: |
+          node --test tests/cfb-official-rezoning-reference.test.cjs tests/conditional-school-release.test.cjs
+          node --test tests/externalized-main-bootstrap.test.cjs tests/csp-network-allowlist.test.cjs
+  browser:
+    name: Actual desktop/mobile Chromium CFB zone-reference warning
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Isolated Chromium
+        run: |
+          mkdir -p cfb-browser-tmp
+          cd cfb-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: School search and zone-source links on 390 and 1366
+        env:
+          NODE_PATH: ${{ github.workspace }}/cfb-browser-tmp/node_modules
+        run: node scripts/test-cfb-official-source-browser.cjs
+      - name: Save public official-link screenshots for review
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cfb-approved-2025-source-warning-390-1366
+          path: artifacts/cfb-public-sources/*.png
+          if-no-files-found: warn
+          retention-days: 7

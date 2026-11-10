@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-11-09",
+  "scope": "Two approved district-source navigation replacements on a child of #160; not school assignment/GIS acquisition",
+  "basePr": 160,
+  "sourceYear": "2026-27",
+  "noResidentialAddresses": true,
+  "verifiedAddressAssignments": 0,
+  "currentYearSchoolPolygonsAcquired": 0,
+  "productionRelease": "NO_GO",
+  "repairs": [
+    {
+      "teaDistrictCode": "070908",
+      "name": "Midlothian ISD",
+      "oldUrl": "https://www.midlothianisd.org/enrollment/school-boundaries",
+      "newUrl": "https://www.midlothianisd.org/enrollment/find-my-school",
+      "routeType": "finder-guidance",
+      "oldUrlObservation": "HEAD-only 404 in 2026-11-09 CI; GET/browser page may differ",
+      "newUrlEvidence": "Official current district Find My School page explicitly provides attendance zones, mapped address lookup, boundary uncertainty and district confirmation",
+      "officialEvidenceUrl": "https://www.midlothianisd.org/enrollment",
+      "certifications": {
+        "officialSource": true,
+        "currentYearSchoolLevelGIS": false,
+        "independentRealResidentialAssignment": false
+      },
+      "reason": "Use dedicated district canonical Find My School URL rather than legacy school-boundaries entry"
+    },
+    {
+      "teaDistrictCode": "057904",
+      "name": "Cedar Hill ISD",
+      "oldUrl": "https://enroll.chisd.net/enrollment/",
+      "newUrl": "https://www.chisd.net/services/lacy-enrollment-center/k-12-new-student-registration",
+      "routeType": "finder-guidance",
+      "oldUrlObservation": "HTTP 500 in 2026-11-09 source-link HEAD probe; not proof of user-facing outage",
+      "newUrlEvidence": "Official Cedar Hill K-12 registration page instructs parent to first use SchoolFinder tool, accessible via district navigation",
+      "officialEvidenceUrl": "https://www.chisd.net/services/lacy-enrollment-center",
+      "certifications": {
+        "officialSource": true,
+        "currentYearSchoolLevelGIS": false,
+        "independentRealResidentialAssignment": false
+      },
+      "reason": "Replace server-error-prone enrollment endpoint with district-managed parent instructions containing SchoolFinder"
+    }
+  ],
+  "notes": [
+    "Neither link repair changes the historical GIS, current-year polygon certification, or real address-grade assignment gate #148.",
+    "404/500 from HEAD is rechecked using GET by Agent04 standalone audit PR #180; a source correction cannot be called live-Finder certification.",
+    "This corrective PR is based on #160 and must be reviewed/merged only after its upstream dependency chain; no direct main production deploy."
+  ]
+}

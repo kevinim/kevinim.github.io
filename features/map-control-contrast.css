@@ -1,0 +1,109 @@
+/* Agent 05: scoped map-control contrast. GIS polygons, raster tiles and ratings are unchanged. */
+html[data-theme="dark"] .maphead{
+  background:linear-gradient(120deg,#152439,#1b2b41);
+  border-bottom-color:#3d536f;
+  color:#eaf2ff;
+}
+html[data-theme="dark"] .maphead .hazard-chips{
+  background:#16283d;
+  border-color:#3e5572;
+}
+html[data-theme="dark"] .maphead .hazard-chips-label,
+html[data-theme="dark"] .maphead .legend,
+html[data-theme="dark"] .map-foot,
+html[data-theme="dark"] .basemap-control{
+  color:#cfddf0;
+}
+html[data-theme="dark"] .maphead .hazard-chip:not([aria-pressed="true"]){
+  --feature-pale:#243853;
+  --feature-border:#527296;
+  --feature-text:#eaf2ff;
+  --feature-icon:#d3e4ff;
+  color:var(--feature-text);
+}
+html[data-theme="dark"] .maphead .hazard-chip:not([aria-pressed="true"]) svg{
+  color:var(--feature-icon);
+  background:#1a2b43;
+  box-shadow:0 0 0 1px #45617f;
+}
+html[data-theme="dark"] .maphead .hazard-chip:hover:not([aria-pressed="true"]){
+  background:#314d71;
+  border-color:#9ab9e3;
+}
+html[data-theme="dark"] .maphead .hazard-chip[aria-pressed="true"]{
+  color:#fff;
+}
+html[data-theme="dark"] .maphead .hazard-chip[aria-pressed="true"] svg{
+  color:#fff;
+}
+html[data-theme="dark"] .maphead .mapquickbtn,
+html[data-theme="dark"] .maphead button:not(.hazard-chip){
+  background:#2b4668;
+  border-color:#7196c3;
+  color:#f1f6ff;
+}
+html[data-theme="dark"] .maphead .mapquickbtn:hover{
+  background:#3a5a80;
+}
+html[data-theme="dark"] #map .leaflet-bar a,
+html[data-theme="dark"] #map .leaflet-control-layers-toggle{
+  background-color:#1c304a;
+  color:#f2f6ff;
+  border-color:#6d8ab0;
+}
+html[data-theme="dark"] #map .leaflet-bar a:hover,
+html[data-theme="dark"] #map .leaflet-bar a:focus-visible{
+  background-color:#315172;
+  color:#fff;
+}
+html[data-theme="dark"] #map .leaflet-bar,
+html[data-theme="dark"] #map .leaflet-control-layers{
+  border-color:#587493;
+  background:#1c304a;
+}
+html[data-theme="dark"] .map-foot{
+  background:#1a293b;
+  border-top-color:#3f526d;
+}
+html[data-theme="dark"] .home-address-autocomplete .home-input-clear{
+  background:#2b4768;
+  color:#f1f6ff;
+  border-color:#6e91b8;
+}
+html[data-theme="dark"] .home-address-autocomplete .home-input-clear:hover{
+  background:#3a5d85;
+  color:#fff;
+}
+html[data-theme="dark"] .filter-panel .school-visibility-options{
+  background:#1a2b40;
+  border-color:#476281;
+}
+html[data-theme="dark"] .filter-panel .school-visibility-options .check{
+  color:#e0ebfa;
+}
+/* The grouped filter cards also need dark surfaces; the old light gradients
+   otherwise make muted help text unreadable in the default dark theme. */
+html[data-theme="dark"] .filter-panel>.filter-settings-group,
+html[data-theme="dark"] .filter-panel>.area-settings,
+html[data-theme="dark"] .filter-panel>.school-settings,
+html[data-theme="dark"] .filter-panel>.commute-settings{
+  background:#1e3047;
+  border-color:#455f80;
+}
+html[data-theme="dark"] .filter-panel .settings-group-title{color:#f0f5ff}
+html[data-theme="dark"] .filter-panel .settings-group-note{color:#c1d2e8}
+html[data-theme="dark"] .filter-panel .school-settings .seg button.active{
+  background:#375f9e;
+  color:#fff;
+}
+html[data-theme="dark"] .maphead button:focus-visible,
+html[data-theme="dark"] #map .leaflet-control-zoom a:focus-visible{
+  outline:3px solid #b8d6ff;
+  outline-offset:2px;
+}
+@media(max-width:540px){
+ .maphead{min-width:0}
+ .maphead .hazard-chips{min-width:0}
+ .maphead .hazard-chip{min-width:0}
+ #map .leaflet-control-zoom{margin-top:8px;margin-left:8px}
+}

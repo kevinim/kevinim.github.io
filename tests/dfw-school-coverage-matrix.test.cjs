@@ -26,11 +26,11 @@ test('full 11-county source proxy, separate public ISDs and other TEA LEAs',()=>
  assert.equal(s.teaDistrictCodes,152);
  assert.equal(s.publicISDs,108);
  assert.equal(s.otherLEAs,44);
- assert.equal(s.publicISDsWithRegisteredParentRoute,29);
- assert.equal(s.publicISDsMissingRegisteredParentRoute,79);
- assert.equal(s.registeredParentRouteRatePublicISDPercent,26.9);
- assert.equal(s.publicISDCampusRowsWithUnverifiedParentRoute,834);
- assert.equal(s.publicISDCampusRowsWithRegisteredParentRoute,1107);
+ assert.equal(s.publicISDsWithRegisteredParentRoute,107);
+ assert.equal(s.publicISDsMissingRegisteredParentRoute,1);
+ assert.equal(s.registeredParentRouteRatePublicISDPercent,99.1);
+ assert.equal(s.publicISDCampusRowsWithUnverifiedParentRoute,3);
+ assert.equal(s.publicISDCampusRowsWithRegisteredParentRoute,1938);
  assert.equal(s.otherLEACampusRows,241);
  assert.equal(s.publicISDCampusRows+s.otherLEACampusRows,s.sourceCampusRows);
  assert.equal(committed.districts.length,152);
@@ -42,9 +42,8 @@ test('full 11-county source proxy, separate public ISDs and other TEA LEAs',()=>
 });
 
 test('PRIORITY P0 targets verified missing parent lookup route across whole DFW',()=>{
- assert.deepEqual(committed.priorityQueue.slice(0,7),
-  ['220905','220901','220908','057910','220918','220902','220912']);
- for(const code of committed.priorityQueue.slice(0,7)){
+ assert.deepEqual(committed.priorityQueue.filter(code=>byCode(code).priority==='P0'),['249904']);
+ for(const code of committed.priorityQueue.filter(code=>byCode(code).priority==='P0')){
   const x=byCode(code);
   assert.equal(x.priority,'P0');
   assert.equal(x.parentGuidance.status,'not-verified');
@@ -54,6 +53,38 @@ test('PRIORITY P0 targets verified missing parent lookup route across whole DFW'
  for(const x of committed.districts.filter(x=>x.category==='public-isd')){
   assert.equal(x.priority==='P0',x.parentGuidance.status==='not-verified',x.name);
  }
+});
+
+
+test('eight verified official parent entry sources are registered without inventing GIS or address assignment',()=>{
+ const codes=['220905','220901','220908','057910','220918','220902','220912','126902'];
+ const {DISTRICT_REGISTRY}=require('../district-registry.js');
+ const {official}=require('../trusted-link-policy.js');
+ let campuses=0;
+ for(const code of codes){
+  const record=byCode(code),entry=DISTRICT_REGISTRY[code];
+  assert.ok(record&&entry,'missing source '+code);
+  assert.equal(record.category,'public-isd');
+  assert.equal(entry.zoneKey,null);
+  assert.equal(entry.address,null);
+  assert.equal(entry.lookupKind,'finder-guidance');
+  assert.match(entry.officialNote,/주소|School|학군/);
+  assert.equal(official(entry.official),entry.official);
+  assert.equal(record.parentGuidance.registryKey,code);
+  assert.equal(record.parentGuidance.officialUrl,entry.official);
+  assert.equal(record.parentGuidance.status,'registered-official-source');
+  assert.equal(record.parentGuidance.lookupType,'finder-guidance');
+  assert.equal(record.parentGuidance.yearCaution,entry.officialNote);
+  assert.equal(record.priority,'P1');
+  assert.equal(record.geometry.status,'no-dashboard-school-polygons-configured');
+  assert.equal(record.missingReason,'official-parent-route-linked-but-campus-gis-not-ingested');
+  assert.equal(record.geometry.matchedLoadedPercent,null);
+  campuses+=record.teaCampusRecords;
+ }
+ assert.equal(campuses,399);
+ assert.deepEqual(committed.priorityQueue.slice(0,3),['249904','057905','220905']);
+ assert.equal(committed.summary.registeredParentRouteRatePublicISDPercent,99.1);
+ assert.equal(official('https://untrusted.example.invalid/locator'),null);
 });
 
 test('canonical nine-digit TEA campus ID reconciles alias ISD codes to actual districts',()=>{
@@ -118,7 +149,7 @@ test('HTML loads optional coverage UI without modifying inline CSP bootstrap',()
  assert.ok(html.includes('id="dfwSchoolCoverageContent"'));
  assert.ok(html.includes('./features/dfw-school-coverage-panel.js?v=1'));
  assert.ok(html.includes('./features/dfw-school-coverage-panel.css?v=1'));
- assert.match(html,/src="\.\/school-zone-ui\.js\?v=\d+"/);
+ assert.ok(html.includes('src="./school-zone-ui.js?v=1"'));
  const ui=fs.readFileSync(path.join(root,'features/dfw-school-coverage-panel.js'),'utf8');
  assert.ok(ui.includes('document.createElement'));
  assert.ok(!ui.includes('.innerHTML'));

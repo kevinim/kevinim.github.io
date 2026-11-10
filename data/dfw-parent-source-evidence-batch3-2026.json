@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "verifiedOn": "2026-11-09",
+  "basedOnPRs": [
+    141,
+    144
+  ],
+  "scope": "Official district-operated parent landing page only. Not attendance GIS or certified address assignment.",
+  "coverage": {
+    "previousRegisteredDistricts": 49,
+    "newRegisteredDistricts": 57,
+    "totalObservedISDs": 108,
+    "registeredPercent": 52.8,
+    "addedTEACampusRecords": 81,
+    "remainingISDs": 51,
+    "remainingSchoolRows": 211
+  },
+  "evidence": [
+    {
+      "teaCode": "199902",
+      "district": "Royse City",
+      "officialLandingUrl": "https://www.rcisd.org/page/enroll",
+      "host": "www.rcisd.org",
+      "routeKind": "official-inquiry",
+      "sourceObservation": "Royse City ISD enrollment entry; older campus rezoning notices, current school-zone locator not independently confirmed",
+      "limitations": "공식 신규 등록 안내입니다. 2025–26 초등 경계 지도와 2026 중학교 신설·재조정 자료가 있어 구버전 배정선을 현행으로 사용하지 마세요. 최신 학년도·주소별 학교는 학군에 직접 확인하세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false
+    },
+    {
+      "teaCode": "070903",
+      "district": "Ennis",
+      "officialLandingUrl": "https://www.ennis.k12.tx.us/o/eisd/page/new-to-ennis-isd",
+      "host": "www.ennis.k12.tx.us",
+      "routeKind": "official-inquiry",
+      "sourceObservation": "Ennis ISD official New to Ennis ISD navigation; address-to-campus resolver not verified",
+      "limitations": "공식 New to Ennis ISD 등록 안내입니다. 주소별 School Finder 작동 및 2026–27 배정 경계는 확인되지 않았으므로 등록 담당자에게 주소와 학년을 문의하세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false
+    },
+    {
+      "teaCode": "220904",
+      "district": "Everman",
+      "officialLandingUrl": "https://www.eisd.org/page/registration-for-new-returning-students",
+      "host": "www.eisd.org",
+      "routeKind": "official-inquiry",
+      "sourceObservation": "Everman ISD Registration for New and Returning Students; open enrollment separate",
+      "limitations": "교육청의 신규·재학생 등록 경로입니다. 일반 지정학교와 Open Enrollment·전학은 다르며, 주소별 School Finder가 확인되지 않아 교육청 등록 담당자에게 직접 확인하세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false
+    },
+    {
+      "teaCode": "116905",
+      "district": "Greenville",
+      "officialLandingUrl": "https://www.greenvilleisd.com/page/student-services/",
+      "host": "www.greenvilleisd.com",
+      "routeKind": "official-inquiry",
+      "sourceObservation": "Greenville ISD Student Services lists new online enrollment, no verified attendance locator",
+      "limitations": "학군 Student Services의 New Student Online Enrollment Registration에서 등록을 시작하세요. 등록 페이지는 주소별 출석구역 조회기가 아니며 초·중·고 최종 배정은 교육청에 별도로 문의하세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false
+    },
+    {
+      "teaCode": "126905",
+      "district": "Joshua",
+      "officialLandingUrl": "https://www.joshuaisd.org/our-district/attendance-zones",
+      "host": "www.joshuaisd.org",
+      "routeKind": "finder-guidance",
+      "sourceObservation": "Joshua ISD district-operated Attendance Zones page includes Interactive School Zone Finder",
+      "limitations": "공식 Attendance Zones의 Interactive School Zone Finder에서 주소별 학교를 찾으세요. 게시 지도와 실제 현행 학년·특별프로그램 배정은 학군에 재확인하세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false
+    },
+    {
+      "teaCode": "129906",
+      "district": "Terrell",
+      "officialLandingUrl": "https://www.terrellisd.org/page/enrollment-and-registration",
+      "host": "www.terrellisd.org",
+      "routeKind": "official-inquiry",
+      "sourceObservation": "Terrell ISD enrollment and registration landing page; no proven address-specific locator",
+      "limitations": "공식 Enrollment and Registration 안내입니다. 주소별 배정 확인용 별도 Finder는 검증되지 않았으므로 등록 담당자에게 학년·주소와 학교 지정 여부를 문의하세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false
+    },
+    {
+      "teaCode": "061907",
+      "district": "Aubrey",
+      "officialLandingUrl": "https://www.aubreyisd.net/page/getting-started-at-aubrey-isd",
+      "host": "www.aubreyisd.net",
+      "routeKind": "official-inquiry",
+      "sourceObservation": "Aubrey ISD getting started; board-approved 2025-26 middle school boundary with exceptions",
+      "limitations": "공식 Getting Started 안내와 2026–27 전학 정보로 이동하세요. 공개 중학교 경계 자료는 2025–26 승인본이며 현행 학년·주소별 구역 확인 또는 자동 Finder 검증은 별도 필요합니다.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false
+    },
+    {
+      "teaCode": "057911",
+      "district": "Highland Park (Dallas)",
+      "officialLandingUrl": "https://www.hpisd.org/about/enrollment",
+      "host": "www.hpisd.org",
+      "routeKind": "finder-guidance",
+      "sourceObservation": "Dallas Highland Park ISD enrollment explicitly links School Site Locator and boundary map; distinct from Amarillo ISD",
+      "limitations": "Dallas의 Highland Park ISD 공식 Enrollment 페이지에서 School Site Locator와 HPISD Boundary Map으로 주소를 확인하세요. Amarillo의 동명 Highland Park ISD와 혼동하지 마세요. 전학·증빙·학년별 배정은 학교에서 확인하세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false
+    }
+  ]
+}

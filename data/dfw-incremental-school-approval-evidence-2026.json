@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 2,
+  "datasetKind": "REDACTED_REVIEW_ATTESTATIONS_ONLY",
+  "academicYear": "2026-27",
+  "asOf": "2026-11-09",
+  "productionCommit": null,
+  "explicitlyAuthorizesProduction": false,
+  "status": "BASELINE_NOT_CERTIFIED",
+  "instructions": "Replace nulls with independently reviewed, redacted, dated district Finder and GIS evidence, do not place private addresses or coordinates in repository. Evidence SHA256 alone is not approval.",
+  "districts": {
+    "FISD": {
+      "districtName": "Frisco ISD",
+      "sourcePullRequests": [
+        165,
+        162
+      ],
+      "uncertifiedSourceObservation": "Public facility QA and campus GIS do not certify a residential address",
+      "finder": {
+        "url": null,
+        "operationalResultVerified": false,
+        "reviewedByDistrictSource": false,
+        "academicYear": "2026-27",
+        "observedOn": null
+      },
+      "assignment": {
+        "independentReviewerApproved": false,
+        "collectorId": null,
+        "reviewerId": null,
+        "reviewedOn": null,
+        "finderResultsIndependentOfDashboardGIS": false,
+        "cases": []
+      },
+      "boundary": {
+        "officialPublisherUrl": null,
+        "academicYear": "2026-27",
+        "districtPublishedCurrentYear": false,
+        "reuseRightsReviewed": false,
+        "independentReviewerApproved": false,
+        "reviewerId": null,
+        "reviewedOn": null,
+        "cases": []
+      }
+    },
+    "PISD": {
+      "districtName": "Plano ISD",
+      "sourcePullRequests": [
+        178,
+        162
+      ],
+      "uncertifiedSourceObservation": "Live public apartment address browser QA exists; independent Finder grade results missing",
+      "finder": {
+        "url": null,
+        "operationalResultVerified": false,
+        "reviewedByDistrictSource": false,
+        "academicYear": "2026-27",
+        "observedOn": null
+      },
+      "assignment": {
+        "independentReviewerApproved": false,
+        "collectorId": null,
+        "reviewerId": null,
+        "reviewedOn": null,
+        "finderResultsIndependentOfDashboardGIS": false,
+        "cases": []
+      },
+      "boundary": {
+        "officialPublisherUrl": null,
+        "academicYear": "2026-27",
+        "districtPublishedCurrentYear": false,
+        "reuseRightsReviewed": false,
+        "independentReviewerApproved": false,
+        "reviewerId": null,
+        "reviewedOn": null,
+        "cases": []
+      }
+    },
+    "AISD": {
+      "districtName": "Allen ISD",
+      "sourcePullRequests": [
+        170,
+        179
+      ],
+      "uncertifiedSourceObservation": "Historical zones and published split streets; current-year GIS not confirmed",
+      "finder": {
+        "url": null,
+        "operationalResultVerified": false,
+        "reviewedByDistrictSource": false,
+        "academicYear": "2026-27",
+        "observedOn": null
+      },
+      "assignment": {
+        "independentReviewerApproved": false,
+        "collectorId": null,
+        "reviewerId": null,
+        "reviewedOn": null,
+        "finderResultsIndependentOfDashboardGIS": false,
+        "cases": []
+      },
+      "boundary": {
+        "officialPublisherUrl": null,
+        "academicYear": "2026-27",
+        "districtPublishedCurrentYear": false,
+        "reuseRightsReviewed": false,
+        "independentReviewerApproved": false,
+        "reviewerId": null,
+        "reviewedOn": null,
+        "cases": []
+      }
+    },
+    "LISD": {
+      "districtName": "Lewisville ISD",
+      "sourcePullRequests": [
+        178,
+        162
+      ],
+      "uncertifiedSourceObservation": "Apartment-complex selector exists, but district grade outcomes not independently captured",
+      "finder": {
+        "url": null,
+        "operationalResultVerified": false,
+        "reviewedByDistrictSource": false,
+        "academicYear": "2026-27",
+        "observedOn": null
+      },
+      "assignment": {
+        "independentReviewerApproved": false,
+        "collectorId": null,
+        "reviewerId": null,
+        "reviewedOn": null,
+        "finderResultsIndependentOfDashboardGIS": false,
+        "cases": []
+      },
+      "boundary": {
+        "officialPublisherUrl": null,
+        "academicYear": "2026-27",
+        "districtPublishedCurrentYear": false,
+        "reuseRightsReviewed": false,
+        "independentReviewerApproved": false,
+        "reviewerId": null,
+        "reviewedOn": null,
+        "cases": []
+      }
+    },
+    "PROSPER": {
+      "districtName": "Prosper ISD",
+      "sourcePullRequests": [
+        172,
+        175
+      ],
+      "uncertifiedSourceObservation": "Five public residential point GIS crosschecks are correlated, not independent visual Finder enrollment proof",
+      "finder": {
+        "url": null,
+        "operationalResultVerified": false,
+        "reviewedByDistrictSource": false,
+        "academicYear": "2026-27",
+        "observedOn": null
+      },
+      "assignment": {
+        "independentReviewerApproved": false,
+        "collectorId": null,
+        "reviewerId": null,
+        "reviewedOn": null,
+        "finderResultsIndependentOfDashboardGIS": false,
+        "cases": []
+      },
+      "boundary": {
+        "officialPublisherUrl": null,
+        "academicYear": "2026-27",
+        "districtPublishedCurrentYear": false,
+        "reuseRightsReviewed": false,
+        "independentReviewerApproved": false,
+        "reviewerId": null,
+        "reviewedOn": null,
+        "cases": []
+      }
+    },
+    "CFB": {
+      "districtName": "CFB ISD",
+      "sourcePullRequests": [
+        155,
+        170
+      ],
+      "uncertifiedSourceObservation": "Official locator exists; no published authorized school-specific current polygon in dashboard",
+      "finder": {
+        "url": null,
+        "operationalResultVerified": false,
+        "reviewedByDistrictSource": false,
+        "academicYear": "2026-27",
+        "observedOn": null
+      },
+      "assignment": {
+        "independentReviewerApproved": false,
+        "collectorId": null,
+        "reviewerId": null,
+        "reviewedOn": null,
+        "finderResultsIndependentOfDashboardGIS": false,
+        "cases": []
+      },
+      "boundary": {
+        "officialPublisherUrl": null,
+        "academicYear": "2026-27",
+        "districtPublishedCurrentYear": false,
+        "reuseRightsReviewed": false,
+        "independentReviewerApproved": false,
+        "reviewerId": null,
+        "reviewedOn": null,
+        "cases": []
+      }
+    },
+    "043907": {
+      "districtName": "McKinney ISD",
+      "sourcePullRequests": [
+        178,
+        162
+      ],
+      "uncertifiedSourceObservation": "Public apartment search/browser tests exist; grade-specific district Finder output unverified",
+      "finder": {
+        "url": null,
+        "operationalResultVerified": false,
+        "reviewedByDistrictSource": false,
+        "academicYear": "2026-27",
+        "observedOn": null
+      },
+      "assignment": {
+        "independentReviewerApproved": false,
+        "collectorId": null,
+        "reviewerId": null,
+        "reviewedOn": null,
+        "finderResultsIndependentOfDashboardGIS": false,
+        "cases": []
+      },
+      "boundary": {
+        "officialPublisherUrl": null,
+        "academicYear": "2026-27",
+        "districtPublishedCurrentYear": false,
+        "reuseRightsReviewed": false,
+        "independentReviewerApproved": false,
+        "reviewerId": null,
+        "reviewedOn": null,
+        "cases": []
+      }
+    },
+    "057912": {
+      "districtName": "Irving ISD",
+      "sourcePullRequests": [
+        177
+      ],
+      "uncertifiedSourceObservation": "Operational official GIS has older source year labels; residential/current-year endorsement absent",
+      "finder": {
+        "url": null,
+        "operationalResultVerified": false,
+        "reviewedByDistrictSource": false,
+        "academicYear": "2026-27",
+        "observedOn": null
+      },
+      "assignment": {
+        "independentReviewerApproved": false,
+        "collectorId": null,
+        "reviewerId": null,
+        "reviewedOn": null,
+        "finderResultsIndependentOfDashboardGIS": false,
+        "cases": []
+      },
+      "boundary": {
+        "officialPublisherUrl": null,
+        "academicYear": "2026-27",
+        "districtPublishedCurrentYear": false,
+        "reuseRightsReviewed": false,
+        "independentReviewerApproved": false,
+        "reviewerId": null,
+        "reviewedOn": null,
+        "cases": []
+      }
+    }
+  }
+}

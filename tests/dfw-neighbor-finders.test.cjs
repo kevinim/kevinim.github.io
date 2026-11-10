@@ -9,9 +9,9 @@ const ui=require('../school-zone-ui.js');
 const file=name=>JSON.parse(fs.readFileSync(path.resolve(__dirname,'..',name),'utf8'));
 const manifest=file('data/dfw-neighbor-official-school-links-2026.json');
 const tea=file('tea-ratings-2026.json');
-test('18 new districts are real TEA 2026 LEA identifiers, not a city or guessed ZIP',()=>{
- assert.equal(manifest.districts.length,18);
- assert.equal(new Set(manifest.districts.map(x=>x.code)).size,18);
+test('38 sourced districts are real TEA 2026 LEA identifiers, not a city or guessed ZIP',()=>{
+ assert.equal(manifest.districts.length,38);
+ assert.equal(new Set(manifest.districts.map(x=>x.code)).size,38);
  const codes=new Set(tea.data.map(x=>x.district));
  for(const d of manifest.districts){
   assert.ok(/^\d{6}$/.test(d.code),'numeric TEA code '+d.code);
@@ -26,7 +26,9 @@ test('official district URLs use exact approved HTTPS hosts and contain no addre
  for(const d of manifest.districts){
   const u=new URL(d.url);
   assert.equal(u.protocol,'https:');
-  assert.equal(u.search,'');
+  if(d.code==='184903')assert.equal(u.search,'?type=d&uREC_ID=236882');
+  else if(d.code==='057906')assert.equal(u.search,'?pageId=21214842');
+  else assert.equal(u.search,'');
   assert.equal(u.hash,'');
   assert.equal(u.username,'');
   assert.equal(u.password,'');
