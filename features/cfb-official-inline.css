@@ -1,0 +1,11 @@
+/* Official source shown only after opt-in; never a dashboard-certified zone. */
+.cfb-inline-panel[hidden]{display:none!important}
+.cfb-inline-panel{margin-bottom:15px;scroll-margin-top:12px;min-width:0}
+.cfb-inline-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.cfb-inline-heading h2{margin:0;font-size:16px}
+.cfb-inline-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0}
+.cfb-inline-actions .mini-btn{min-height:36px;padding:8px 12px}
+.cfb-open-inline{max-width:100%;white-space:normal;margin:6px 3px 0 0;text-align:left}
+.cfb-inline-frame-host{width:100%;min-width:0}
+.cfb-official-iframe{display:block;width:100%;height:min(760px,80vh);min-height:530px;border:1px solid var(--line,#cbd5e1);border-radius:9px;background:transparent}
+@media(max-width:720px){.cfb-official-iframe{min-height:620px;height:76vh}.cfb-inline-heading h2{font-size:15px}}
