@@ -41,10 +41,13 @@
       "schoolLevelVector": false,
       "campusTEAIds": null,
       "publicDisplayEvidence": "publisher official page and existing PR #208 map atlas",
-      "directBinaryFetchInThisAudit": "not-tested",
+      "directBinaryFetchInThisAudit": "verified-HEAD-200-2026-11-10",
       "license": "no-redistribution-license-established",
       "reuseDecision": "source-reference-only; do-not-rehost-or-auto-assign",
-      "sourcePage": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning"
+      "sourcePage": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning",
+      "verificationEvidenceUrl": "https://github.com/kevinim/kevinim.github.io/actions/runs/42925309355",
+      "observedHttpStatus": 200,
+      "observedContentType": "image/jpeg"
     },
     {
       "id": "approved-middle-2025",
@@ -59,10 +62,13 @@
       "schoolLevelVector": false,
       "campusTEAIds": null,
       "publicDisplayEvidence": "publisher official page and existing PR #208 map atlas",
-      "directBinaryFetchInThisAudit": "not-tested",
+      "directBinaryFetchInThisAudit": "verified-HEAD-200-2026-11-10",
       "license": "no-redistribution-license-established",
       "reuseDecision": "source-reference-only; do-not-rehost-or-auto-assign",
-      "sourcePage": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning"
+      "sourcePage": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning",
+      "verificationEvidenceUrl": "https://github.com/kevinim/kevinim.github.io/actions/runs/42925309355",
+      "observedHttpStatus": 200,
+      "observedContentType": "image/png"
     },
     {
       "id": "approved-high-2025",
@@ -77,10 +83,13 @@
       "schoolLevelVector": false,
       "campusTEAIds": null,
       "publicDisplayEvidence": "publisher official page and existing PR #208 map atlas",
-      "directBinaryFetchInThisAudit": "not-tested",
+      "directBinaryFetchInThisAudit": "verified-HEAD-200-2026-11-10",
       "license": "no-redistribution-license-established",
       "reuseDecision": "source-reference-only; do-not-rehost-or-auto-assign",
-      "sourcePage": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning"
+      "sourcePage": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning",
+      "verificationEvidenceUrl": "https://github.com/kevinim/kevinim.github.io/actions/runs/42925309355",
+      "observedHttpStatus": 200,
+      "observedContentType": "image/png"
     },
     {
       "id": "furneaux-reassignment-2025",
@@ -99,9 +108,12 @@
       "schoolLevelVector": false,
       "campusTEAIds": null,
       "publicDisplayEvidence": "publisher official detail page and search-indexed CDN image",
-      "directBinaryFetchInThisAudit": "not-tested",
+      "directBinaryFetchInThisAudit": "verified-HEAD-200-2026-11-10",
       "license": "no-redistribution-license-established",
-      "reuseDecision": "source-reference-only; do-not-rehost-or-auto-assign"
+      "reuseDecision": "source-reference-only; do-not-rehost-or-auto-assign",
+      "verificationEvidenceUrl": "https://github.com/kevinim/kevinim.github.io/actions/runs/42925309355",
+      "observedHttpStatus": 200,
+      "observedContentType": "image/png"
     },
     {
       "id": "mccoy-reassignment-2025",
@@ -121,9 +133,12 @@
       "schoolLevelVector": false,
       "campusTEAIds": null,
       "publicDisplayEvidence": "publisher official detail page and search-indexed CDN image",
-      "directBinaryFetchInThisAudit": "not-tested",
+      "directBinaryFetchInThisAudit": "verified-HEAD-200-2026-11-10",
       "license": "no-redistribution-license-established",
-      "reuseDecision": "source-reference-only; do-not-rehost-or-auto-assign"
+      "reuseDecision": "source-reference-only; do-not-rehost-or-auto-assign",
+      "verificationEvidenceUrl": "https://github.com/kevinim/kevinim.github.io/actions/runs/42925309355",
+      "observedHttpStatus": 200,
+      "observedContentType": "image/png"
     },
     {
       "id": "long-reassignment-2025",
@@ -142,9 +157,12 @@
       "schoolLevelVector": false,
       "campusTEAIds": null,
       "publicDisplayEvidence": "publisher official detail page and search-indexed CDN image",
-      "directBinaryFetchInThisAudit": "not-tested",
+      "directBinaryFetchInThisAudit": "verified-HEAD-200-2026-11-10",
       "license": "no-redistribution-license-established",
-      "reuseDecision": "source-reference-only; do-not-rehost-or-auto-assign"
+      "reuseDecision": "source-reference-only; do-not-rehost-or-auto-assign",
+      "verificationEvidenceUrl": "https://github.com/kevinim/kevinim.github.io/actions/runs/42925309355",
+      "observedHttpStatus": 200,
+      "observedContentType": "image/png"
     }
   ],
   "gisCandidates": [
@@ -161,7 +179,9 @@
       "arcgisUrl": "https://services2.arcgis.com/5MVN2jsqIrNZD4tP/arcgis/rest/services/School_Districts__2026/FeatureServer/0",
       "license": "Creative Commons Attribution",
       "licenseEvidenceUrl": "https://data.capitol.texas.gov/dataset/school-districts",
-      "reuse": "already harvested in PR #208; jurisdiction only"
+      "reuse": "already harvested in PR #208; jurisdiction only",
+      "liveMetadataEvidenceUrl": "https://github.com/kevinim/kevinim.github.io/actions/runs/42925309355",
+      "liveMetadataGeometryTypeConfirmed": true
     },
     {
       "id": "nces-2021-22-cfb-school-points",
@@ -173,7 +193,9 @@
       "sourceUrl": "https://services3.arcgis.com/KkgpUIloCxkczPwY/ArcGIS/rest/services/CFBISD_SchoolPoints/FeatureServer/3",
       "license": "public domain for underlying NCES school-location data (layer metadata)",
       "licenseEvidenceUrl": "https://services3.arcgis.com/KkgpUIloCxkczPwY/ArcGIS/rest/services/CFBISD_SchoolPoints/FeatureServer/3",
-      "reuse": "historic campus reference only; not accurate current school locations or zones"
+      "reuse": "historic campus reference only; not accurate current school locations or zones",
+      "liveMetadataEvidenceUrl": "https://github.com/kevinim/kevinim.github.io/actions/runs/42925309355",
+      "liveMetadataGeometryTypeConfirmed": true
     },
     {
       "id": "dunaway-cfb-project",
