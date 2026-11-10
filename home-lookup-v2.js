@@ -142,10 +142,21 @@ function compactHomeFinderModel(address,raw){
  const evidence=raw?.district&&valid.includes(raw.district)&&
   ['current','finder-current','reference','unverified-year','boundary-review','finder-boundary-review'].includes(raw.status);
  const conflict=['conflict','needs-address-verification','apartment-split-review'].includes(raw?.status);
- const likely=evidence?raw.district:!conflict?nearby.find(x=>valid.includes(x))||'':'';
- const near=[...new Set([...(evidence?[raw.district]:[]),...nearby,...(raw?.status==='conflict'?(raw.matches||[]).map(m=>m.district):[])])].filter(x=>valid.includes(x));
+ // District jurisdiction is not elementary/middle/high attendance. Only use
+ // Texas Legislative Council 2025-26 polygons as a cautious Finder LINK hint.
+ // The 250m border guard disables a ZIP guess near a contested boundary.
+ const loc=typeof home!=='undefined'&&home?.address===address&&home?.geocodeQuality?.usableForSchoolCandidate?home.ll:null;
+ const geo=/\bCarrollton\b|\bFarmers Branch\b/i.test(a)&&loc?window.CfbJurisdiction?.lookup(loc):null;
+ const geoGood=geo?.status==='district-reference'&&valid.includes(geo.district);
+ const geoUncertain=geo?.status==='boundary-review'||geo?.status==='conflict';
+ const likely=geoUncertain?'':geoGood?geo.district:evidence?raw.district:!conflict?nearby.find(x=>valid.includes(x))||'':'';
+ const near=[...new Set([...(geoGood?[geo.district]:[]),...(evidence?[raw.district]:[]),...nearby,...(raw?.status==='conflict'?(raw.matches||[]).map(m=>m.district):[])])].filter(x=>valid.includes(x));
  const other=valid.filter(x=>!near.includes(x)).sort((a,b)=>String(districtName(a,'ko')||a).localeCompare(String(districtName(b,'ko')||b),'ko'));
- return {likely,near,other,why:evidence?'GIS 참고자료 기반 후보':likely?'도시·ZIP 기준 첫 확인 후보':'소속 학군 미확인'};
+ const why=geoUncertain?'공식 2025–26 학군 외곽 경계 인접 · 배정 학군 확정 금지':
+  geoGood?'Texas Legislative Council 2025–26 학군 외곽 GIS 참고 (학교 배정 아님)':
+  evidence?'기존 GIS 참고자료 기반 후보':
+  likely?'도시·ZIP 기준 첫 확인 후보':'소속 학군 미확인';
+ return {likely,near,other,why};
 }
 function compactHomeFinderHtml(address,raw){
  const m=compactHomeFinderModel(address,raw);
@@ -377,6 +388,13 @@ function useHomeCandidate(candidate){
   if(!map){el('homeStatus').textContent='지도가 아직 준비되지 않았습니다. 잠시 후 주소 검색을 다시 눌러 주세요.';return false}
   homeVersion++;homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;
   home={address:candidate.address,typedAddress:candidate.savedTypedAddress||el('homeAddress').value.trim(),ll:[candidate.location.y,candidate.location.x],geocodeQuality:candidate.savedGeocodeQuality||assessResidentialGeocode(el('homeAddress').value.trim(),candidate),parcel:candidate.savedParcel||{status:'idle'},officialReview:candidate.savedOfficialReview||null,officialDraft:candidate.savedOfficialDraft||null};
+  // Fetch the static jurisdiction layer only for a searched Carrollton-area
+  // address. Never include coordinates/address in the network URL; no stored PII.
+  // A source-only district hint must never authorize per-campus assignments.
+  if(/\bCarrollton\b|\bFarmers Branch\b/i.test(home.address)&&home.geocodeQuality?.usableForSchoolCandidate){
+   const selectedHome=home;
+   window.CfbJurisdiction?.load?.().then(()=>{if(home===selectedHome)renderHome()}).catch(()=>{});
+  }
   el('homeCandidates').replaceChildren();
   if(homeMarker)map.removeLayer(homeMarker);
   homeMarker=L.marker(home.ll,{zIndexOffset:4000,icon:L.divIcon({className:'',html:'<svg class="house-pin" width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"><path d="M4 19L21 4l17 15h-4v17H8V19z" fill="white" stroke="#a72e2e" stroke-width="2"/><path d="M3 19L21 3l18 16-3 3L21 9 6 22z" fill="#d63737" stroke="white" stroke-width="1.5"/><path d="M18 36V24h7v12" fill="#d63737"/></svg>',iconSize:[42,42],iconAnchor:[21,37]}),title:'HOME'}).addTo(map).bindPopup('<b>HOME</b><br>'+escape(home.address));
