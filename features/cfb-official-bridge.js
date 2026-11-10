@@ -82,8 +82,10 @@
    for(const {school:s,ll} of locations){
     const letter=s.type==='elementary'?'초':s.type==='middle'?'중':'고';
     const icon=L.divIcon({className:'',html:'<div class="mapmark cfb-manual-campus">'+letter+'</div>',iconSize:[27,27],iconAnchor:[13,13]});
+    const tooltip=document.createElement('span');
+    tooltip.textContent=s.name+' · 사용자 확인 참고';
     L.marker(ll,{title:s.name,icon}).addTo(markerLayer)
-      .bindTooltip(s.name+' · 사용자 확인 참고').on('click',()=>{if(typeof schoolClicked==='function')schoolClicked(s)});
+      .bindTooltip(tooltip).on('click',()=>{if(typeof schoolClicked==='function')schoolClicked(s)});
    }
    if(locations.length>1)map.fitBounds(L.latLngBounds(locations.map(x=>x.ll)),{padding:[35,35],maxZoom:13});
    else map.setView(locations[0].ll,13);
