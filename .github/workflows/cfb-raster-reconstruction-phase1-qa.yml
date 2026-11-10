@@ -10,6 +10,7 @@ on:
       - 'index.html'
       - 'scripts/measure-cfb-raster-registration.cjs'
       - 'scripts/extract-cfb-approved-raster-pixels.py'
+      - 'scripts/recheck-cfb-public-finder-holdouts.cjs'
       - 'scripts/test-cfb-raster-atlas-browser.cjs'
       - 'tests/cfb-raster-atlas-and-georef.test.cjs'
       - 'tests/csp-network-allowlist.test.cjs'
@@ -96,5 +97,36 @@ jobs:
         with:
           name: cfb-unlabelled-pixel-contours-NOT-GIS
           path: artifacts/cfb-reconstruction/pixel-*.json
+          if-no-files-found: warn
+          retention-days: 7
+  public-finder-holdouts:
+    name: Advisory official GuideK12 2 public-address native Finder recheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Install isolated Chromium
+        run: |
+          mkdir -p cfb-public-finder-probe-tmp
+          cd cfb-public-finder-probe-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Check ONLY two public, previously verified addresses
+        env:
+          NODE_PATH: ${{ github.workspace }}/cfb-public-finder-probe-tmp/node_modules
+        run: node scripts/recheck-cfb-public-finder-holdouts.cjs
+      - name: Save advisory official source comparison (0 GIS crosschecks)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cfb-public-finder-holdouts-RECHECK-NOT-GIS
+          path: artifacts/cfb-reconstruction/current-finder-public-address-recheck.json
           if-no-files-found: warn
           retention-days: 7
