@@ -38,6 +38,8 @@ async function main(){
      savedGeocodeQuality:{usableForSchoolCandidate:true}};
     if(!useHomeCandidate(sample))throw Error('public campus address cannot populate home search');
    });
+   // The optional official GIS controls are now collapsed by design.
+   await page.locator('#homeAdvancedSchoolTools > summary').click();
    await page.locator('#officialIrvingCheck').click({timeout:10000});
    await page.waitForFunction(()=>home?.irvingChecking===false&&home?.irvingSpatial?.status==='ready',
     null,{timeout:60000});
@@ -75,6 +77,8 @@ async function main(){
    assert.equal(spatial.zoneKey,null,'2026-27 school-year approval must not be inferred from point lookup');
    // The manual official Finder name comparison is informational: never upgrade
    // 2024-25 / 2025-26 source polygons to verified residential assignment.
+   // GIS result re-render closes the optional panel; reopen for the manual source check.
+   await page.locator('#homeAdvancedSchoolTools > summary').click();
    await page.locator('#officialReviewDistrict').selectOption('057912');
    await page.locator('#officialReviewLevel').selectOption('middle');
    await page.locator('#officialReviewName').fill('Crockett Middle School');
@@ -90,6 +94,8 @@ async function main(){
    assert.equal(manualMatch.certified,false);
    assert.equal(manualMatch.independent,false);
    assert.match(manualMatch.message,/독립적인 Finder 화면 검증/);
+   // The first comparison also re-renders the collapsed panel.
+   await page.locator('#homeAdvancedSchoolTools > summary').click();
    await page.locator('#officialReviewName').fill('Bowie Middle School');
    await page.locator('#officialManualCompare').click();
    const manualMismatch=await page.evaluate(()=>({
