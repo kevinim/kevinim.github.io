@@ -251,19 +251,32 @@ def main():
                 checks[m["level"]] = {"status": "UNAVAILABLE", "reason": str(exc)[:250]}
     results = {}
     for level in LEVELS:
-        pts = (elementary["controlPoints"] if level == "elementary" else [])
+        gcp_path = ROOT / f"data/cfb-ag02-{level}-gcps.json"
+        manual = load(gcp_path) if gcp_path.exists() else None
+        if manual and (manual.get("sourceSchoolYear") != "2025-26"
+                       or manual.get("level") != level):
+            raise ValueError("GCP provenance year/level mismatch: " + str(gcp_path))
+        pts = (manual["controlPoints"] if manual else
+               elementary["controlPoints"] if level == "elementary" else [])
+        # Flags alone are not proof: require documented pixel and ground evidence.
         vetted = [p for p in pts if p.get("pixelVerified") is True
-                  and p.get("groundVerified") is True]
+                  and p.get("groundVerified") is True
+                  and p.get("pixelEvidence") and p.get("groundSourceUrl")]
         independent = [p for p in vetted if p.get("role") == "independent-holdout"]
         fitpts = [p for p in pts if p.get("role") != "independent-holdout"]
-        size = (elementary["rasterPixelSize"] if level == "elementary" else None)
+        verified_fit = [p for p in vetted if p.get("role") != "independent-holdout"]
+        size = (manual.get("rasterPixelSize") if manual else
+                elementary["rasterPixelSize"] if level == "elementary" else None)
         if level in images:
             size = list(images[level].size)
         report = {"district": "CFB", "level": level, "sourceYear": "2025-26",
                   "sourceStatus": "official_approved_raster_illustration",
                   "certified2026_27GIS": False, "residentialAssignmentApproved": False,
                   "totalCandidateGCP": len(pts), "verifiedGCP": len(vetted),
+                  "verifiedFitGCP": len(verified_fit),
                   "independentHoldoutGCP": len(independent),
+                  "gcpEvidenceFile": str(gcp_path.relative_to(ROOT)) if manual else
+                                     "data/cfb-elementary-raster-calibration-draft.json" if level == "elementary" else None,
                   "image": checks.get(level, {"status": "NOT_FETCHED"}),
                   "modelComparisons": [], "independentHoldoutRMSEMeters": None,
                   "verdict": "NOT_CALIBRATED"}
@@ -273,9 +286,12 @@ def main():
                     model = fit(fitpts, kind)
                     rows = residual_rows(model, fitpts, "fit-rough-or-vetted")
                     score = proxy_spatial_holdout(fitpts, kind)
+                    independent_rows = residual_rows(
+                        model, independent, "independent-vetted-holdout") if independent else []
                     report["modelComparisons"].append({
                         "model": kind, "fitRMSEMeters": round(rms(rows), 2),
-                        "internalRoughSpatialHoldout": score})
+                        "internalRoughSpatialHoldout": score,
+                        "verifiedIndependentRMSEMeters": round(rms(independent_rows), 2) if independent_rows else None})
                     if kind != "affine":
                         continue
                     with (output / f"{level}-residuals.csv").open("w", newline="") as f:
@@ -286,26 +302,31 @@ def main():
                              output / f"{level}-residuals.svg", "2025-26 CFB "+level)
                     report["affineTransform"] = model
                     report["transformFormat"] = "pixel_to_local_ENU_m_wgs84_origin"
-                    if independent:
-                        holdrows = residual_rows(model, independent, "independent-verified")
-                        report["independentHoldoutRMSEMeters"] = round(rms(holdrows), 2)
-                    if (level in images and size == elementary["rasterPixelSize"]
-                            and level == "elementary"):
+                    if independent_rows:
+                        report["independentHoldoutRMSEMeters"] = round(rms(independent_rows), 2)
+                        with (output / f"{level}-independent-holdout.csv").open("w", newline="") as f:
+                            writer = csv.DictWriter(f, fieldnames=list(independent_rows[0]))
+                            writer.writeheader()
+                            writer.writerows(independent_rows)
+                    if (level in images and size == list(images[level].size)
+                            and (level == "elementary" or len(verified_fit) >= MIN_VERIFIED)): 
                         # World file maps pixel-centre to longitude/latitude, WGS84.
                         ll = geographic(model, [[0, 0], [1, 0], [0, 1]])
                         origin, along_x, along_y = ll
                         values = [along_x[0]-origin[0], along_x[1]-origin[1],
                                   along_y[0]-origin[0], along_y[1]-origin[1],
                                   origin[0], origin[1]]
-                        (output / "elementary-DRAFT-UNVERIFIED.jgw").write_text(
+                        world = f"{level}-DRAFT-REVIEW-ONLY.wld"
+                        (output / world).write_text(
                             "\n".join(f"{x:.12f}" for x in values)+"\n")
-                        report["worldFile"] = "elementary-DRAFT-UNVERIFIED.jgw"
-                    elif level == "elementary":
-                        report["worldFileBlocked"] = "source image size not independently verified"
+                        report["worldFile"] = world
+                        report["worldFileCRS"] = "EPSG:4326 (pixel centers)"
+                    else:
+                        report["worldFileBlocked"] = "image dimensions absent/mismatched or fewer than 8 verified fit GCP"
                 except (ValueError, np.linalg.LinAlgError) as exc:
                     report["modelComparisons"].append({"model": kind, "error": str(exc)})
         report["verdict"] = ("RESEARCH_ONLY_UNVERIFIED" if pts else "NO_GCP")
-        if len(vetted) >= MIN_VERIFIED and len(independent) >= 3:
+        if len(verified_fit) >= MIN_VERIFIED and len(independent) >= 3:
             report["verdict"] = "HOLDOUT_REVIEW_REQUIRED"
         (output / f"{level}-calibration.json").write_text(json.dumps(report, indent=2)+"\n")
         results[level] = report
