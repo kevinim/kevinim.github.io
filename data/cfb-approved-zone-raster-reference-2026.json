@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "district": "CFB",
+  "approvedSchoolYear": "2025-26",
+  "approvedByBoard": "2025-03-06",
+  "sourcePage": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning",
+  "currentFinder": "https://www.cfbisd.edu/students/school-maps-locator-system",
+  "rasterReferenceOnly": true,
+  "georeferenced": false,
+  "reconstructedCampusPolygonCount": 0,
+  "validForAutomaticResidenceAssignment": false,
+  "maps": [
+    {
+      "level": "elementary",
+      "label": "초등학교",
+      "sourceLabel": "Approved Elementary Attendance Zone",
+      "url": "https://resources.finalsite.net/images/f_auto,q_auto/v1750789234/cfbisdedu/m03d0jbfr3hqfnrg7eka/elementary-zones.jpg",
+      "reviewStatus": "publisher-raster-only"
+    },
+    {
+      "level": "middle",
+      "label": "중학교",
+      "sourceLabel": "Approved Middle School Attendance Zone",
+      "url": "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1738861157/cfbisdedu/raatffwyo1ypgwihngcu/middleschoolproposed-02.png",
+      "reviewStatus": "publisher-raster-only"
+    },
+    {
+      "level": "high",
+      "label": "고등학교",
+      "sourceLabel": "Approved High School Attendance Zone",
+      "url": "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1738861128/cfbisdedu/lhksclpohnt5xm2zvgsq/highschoolproposed-02.png",
+      "reviewStatus": "publisher-raster-only"
+    }
+  ],
+  "areaChangeSource": "./data/cfb-rezoning-boundary-review-targets-2026.json",
+  "finderHoldoutEvidence": "./tests/cfb-official-resident-finder-verified-2026-11-07.json",
+  "notes": [
+    "Board-approved 2025–26 raster zones are source illustrations; no spatial reference or vector polygons are published in this dataset.",
+    "Board-approved 2025–26 rezoning change list is not a complete address-zone table.",
+    "2026–27 current finder applies the March 6 2025 board approved zones according to the district but current independent per-campus GIS year is unverified.",
+    "Previously verified public-address Finder fixtures are NOT reconstructed polygon holdout PASS results.",
+    "No third-party image is loaded until a user explicitly opens the reference atlas and selects a grade."
+  ]
+}
