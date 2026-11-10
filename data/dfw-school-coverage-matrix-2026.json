@@ -38,12 +38,12 @@
     "teaDistrictCodes": 152,
     "publicISDs": 108,
     "otherLEAs": 44,
-    "publicISDsWithRegisteredParentRoute": 107,
-    "publicISDsMissingRegisteredParentRoute": 1,
-    "registeredParentRouteRatePublicISDPercent": 99.1,
+    "publicISDsWithRegisteredParentRoute": 108,
+    "publicISDsMissingRegisteredParentRoute": 0,
+    "registeredParentRouteRatePublicISDPercent": 100,
     "publicISDCampusRows": 1941,
-    "publicISDCampusRowsWithRegisteredParentRoute": 1938,
-    "publicISDCampusRowsWithUnverifiedParentRoute": 3,
+    "publicISDCampusRowsWithRegisteredParentRoute": 1941,
+    "publicISDCampusRowsWithUnverifiedParentRoute": 0,
     "otherLEACampusRows": 241,
     "campusPolygonCoverageAllDFWPercent": null,
     "exactAddressAssignmentCoveragePercent": null
@@ -124,7 +124,7 @@
       "teaCampusRecords": 26,
       "districtCodesWithSchoolRecords": 7,
       "publicISDs": 7,
-      "publicISDsWithRegisteredParentRoute": 6
+      "publicISDsWithRegisteredParentRoute": 7
     }
   ],
   "missingReasonTotals": {
@@ -137,8 +137,8 @@
       "teaCampusRecords": 23
     },
     "official-parent-route-linked-but-campus-gis-not-ingested": {
-      "districts": 100,
-      "teaCampusRecords": 1582
+      "districts": 101,
+      "teaCampusRecords": 1585
     },
     "current-year-source-reference-still-needs-live-recheck": {
       "districts": 2,
@@ -155,14 +155,9 @@
     "choice-not-address-zoning": {
       "districts": 1,
       "teaCampusRecords": 66
-    },
-    "official-parent-lookup-not-yet-verified": {
-      "districts": 1,
-      "teaCampusRecords": 3
     }
   },
   "priorityQueue": [
-    "249904",
     "057905",
     "220905",
     "220901",
@@ -256,6 +251,7 @@
     "043917",
     "116916",
     "116902",
+    "249904",
     "126904",
     "116906",
     "070915",
@@ -5213,11 +5209,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.chicoisdtx.net/",
+        "yearCaution": "Chico ISD(Wise County, TX)의 공식 교육구 사이트·학교 행정실 문의 경로입니다. 2026–27 주소별 School Locator와 학교별 출석구역 GIS는 확인되지 않았습니다. Chico Elementary·Middle·High 3개 학교는 공식 학교 목록이며 학년·거주지 배정·전학 가능 여부는 교육구 행정실(940-644-2228)에 직접 확인하세요. 이 링크는 주소 자동 배정 결과가 아닙니다.",
+        "registryKey": "249904"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -5228,8 +5224,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
