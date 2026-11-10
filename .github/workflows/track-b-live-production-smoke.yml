@@ -10,11 +10,14 @@ on:
     workflows: ['pages build and deployment']
     types: [completed]
     branches: [main]
+  deployment_status:
+  schedule:
+    - cron: '17 12 * * 1'
 permissions:
   contents: read
 jobs:
   pages-school-smoke:
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') && (github.event_name != 'deployment_status' || (github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'github-pages')) }}
     name: Live Pages 390/1366 Allen + Denton + CFB + Dallas/Irving
     runs-on: ubuntu-latest
     timeout-minutes: 15
