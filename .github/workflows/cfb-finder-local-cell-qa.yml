@@ -1,5 +1,7 @@
 name: CFB local Finder evidence cells — offline negative QA
 on:
+  push:
+    branches: [feature/cfb-evidence-backed-local-zone-cells-20261109]
   pull_request:
     branches:
       - main
