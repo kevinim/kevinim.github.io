@@ -18,3 +18,15 @@ All 39 campus IDs, source metadata flags, same-grade topology and nine prior add
 No PDF/vector/polygon artifact is retained or published by this child QA job, only the short-retention numerical boundary-risk summary. Parent #187 remains STAGING (NO DEPLOY) until the actual native district school GIS/rights response and official Finder edge-parcel corroboration are available. This new QA never authorizes an address auto school assignment.
 
 Status: independent technical evidence, not permission to republish.
+
+## Executed outcome — GitHub Actions 42738150956
+
+The **entire 39-polygon** regenerated staging pipeline passed, including independent 39-ID topology review, the previously established 9/9 public street-vs-Finder checks, and new edge sensitivity. It generated **658 deterministic synthetic plus/minus 3m/30m border offset checks** and **nine** numeric distances from source street-centerline geocodes to derived school boundaries:
+
+539.7m, 1280.4m, 1284.0m, 330.7m, **73.2m**, 1336.5m, 370.5m, 2155.5m, 2283.6m.
+
+**1/9 public street/grade observations is within 100m of a derived school edge**, and 0/9 is within 25m. This case must be prioritized for exact official Finder/address-point/parcel-side review. The 73.2m value is a distance to a PDF-derived line, **not** a measured survey margin or proof the sampled address is assigned correctly; the Census address estimate can be interpolated.
+
+Actual rights to publish derived GIS: **unverified**. Current-year parcel-edge official Finder holdouts: **0**. The original independent 9/9 school-ID matches were not new edge-parcel validation. STAGING NO-GO remains.
+
+Evidence: https://github.com/kevinim/kevinim.github.io/actions/runs/42738150956
