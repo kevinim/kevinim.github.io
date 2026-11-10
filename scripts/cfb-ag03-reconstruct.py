@@ -44,9 +44,16 @@ def write(path, obj):
     path.write_text(json.dumps(obj, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
 
 
+CAMPUS_OFFICIAL_NAME_ALIASES = {
+    # CFB campus-directory name -> exact shorter 2026 TEA record name.
+    "Barbara Bush Middle School": "BUSH MIDDLE",
+    "Newman Smith High School": "SMITH H S",
+    "R. L. Turner High School": "TURNER H S",
+}
+
 def normalized(name):
     name = re.sub(r"[^a-z0-9]+", " ", str(name).lower()).strip()
-    return re.sub(r"\b(elementary|elem|el|middle|high|school|h s|m s)\b", "", name).replace(" ", "")
+    return re.sub(r"\b(elementary|elem|ele|el|middle|high|school|h s|m s)\b", "", name).replace(" ", "")
 
 
 def school_roster(level, tea_rows, roster):
@@ -54,7 +61,8 @@ def school_roster(level, tea_rows, roster):
     refs = [r for r in tea_rows if r.get("district") in ("CFB", "057903")]
     result, unresolved = [], []
     for name in roster[level]:
-        matches = [r for r in refs if normalized(r.get("officialName") or r.get("name")) == normalized(name)]
+        lookup_name = CAMPUS_OFFICIAL_NAME_ALIASES.get(name, name)
+        matches = [r for r in refs if normalized(r.get("officialName") or r.get("name")) == normalized(lookup_name)]
         item = {"schoolName": name, "teaCampusId": matches[0]["id"] if len(matches) == 1 else None,
                 "teaIdentityYear": 2026, "schoolYearZoneVerified": False,
                 "identityResolution": "unique_2026_TEA_name" if len(matches) == 1 else "REQUIRES_REVIEW"}
@@ -195,16 +203,20 @@ def reconstruct_grade(level, *, pixel_dir, output_dir, maps, district, calibrati
         if calibration is None:
             error = "AG02_CALIBRATION_MISSING"
         else:
-            pts = control_points(calibration, data["imageSize"])
-            project, registration = fit_transform(pts, method)
-            registration["verifiedPixelAnchors"] = int(calibration.get("verifiedPixelAnchors", 0))
-            # A strong 2025 raster alignment does not certify 2026–27 zoning.
-            if registration["verifiedPixelAnchors"] < 8:
-                error = "INSUFFICIENT_INDEPENDENT_VERIFIED_ANCHORS"
-            elif registration["trainRmsMeters"] > 40:
-                error = "CALIBRATION_ERROR_EXCEEDS_REVIEW_THRESHOLD"
-            else:
-                error = "FINDER_CROSSCHECK_NOT_COMPLETED"
+            try:
+                pts = control_points(calibration, data["imageSize"])
+                project, registration = fit_transform(pts, method)
+                registration["verifiedPixelAnchors"] = int(calibration.get("verifiedPixelAnchors", 0))
+                # Training fit does not validate source anchors or current-year zones.
+                if registration["verifiedPixelAnchors"] < 8:
+                    error = "INSUFFICIENT_INDEPENDENT_VERIFIED_ANCHORS"
+                elif registration["trainRmsMeters"] > 40:
+                    error = "CALIBRATION_ERROR_EXCEEDS_REVIEW_THRESHOLD"
+                else:
+                    error = "FINDER_CROSSCHECK_NOT_COMPLETED"
+            except (ValueError, ImportError) as exc:
+                project, registration = None, None
+                error = "CALIBRATION_REJECTED: " + str(exc)
     if data is not None and project:
         for idx, item in enumerate(data.get("contours", [])):
             ring = item.get("imagePixelRing")
@@ -214,8 +226,12 @@ def reconstruct_grade(level, *, pixel_dir, output_dir, maps, district, calibrati
             try:
                 raw = Polygon(project(ring))
                 # Preserve invalid fragments as rejections; buffer(0) masks defects.
-                if raw.is_empty or not raw.is_valid or raw.area <= 0:
-                    rejected["invalid_geometry"] += 1
+                if raw.is_empty or raw.area <= 0:
+                    rejected["empty_or_zero_area"] += 1
+                    continue
+                if not raw.is_valid:
+                    reason = explain_validity(raw).lower()
+                    rejected["self_intersection" if "self-intersection" in reason else "invalid_geometry"] += 1
                     continue
                 clip = raw.intersection(district)
                 if clip.is_empty:
@@ -260,7 +276,7 @@ def reconstruct_grade(level, *, pixel_dir, output_dir, maps, district, calibrati
         "mappedCampusCount": len(labeled_ids), "rosterCandidateCount": len(candidates),
         "unresolvedTeaIdentities": unresolved, "missingCampusBoundaryCandidates": [
             x for x in candidates if not x["teaCampusId"] or x["teaCampusId"] not in labeled_ids],
-        "geometryRejected": dict(rejected), "selfIntersectingAccepted": 0,
+        "geometryRejected": dict(rejected), "selfIntersectionRejected": rejected.get("self_intersection", 0), "selfIntersectingAccepted": 0,
         "geometryTopology": {"districtAreaApproxSqKm": round(area, 3),
             "fragmentUnionAreaApproxSqKm": round(covered, 3),
             "districtUncoveredApproxSqKm": round(max(0, area - covered), 3),
@@ -314,7 +330,9 @@ def main(argv=None):
     write(args.out_dir / "cfb-ag03-summary.json", rollup)
     print("CFB_AG03_DRAFT_QA " + json.dumps({r["level"]: {
         "fragments": r["draftGeographicFragments"], "labeled": r["mappedCampusCount"],
-        "blocker": r["blocker"]} for r in reports}, sort_keys=True))
+        "topology": r["geometryTopology"], "rejected": r["geometryRejected"],
+        "missingSchoolCandidates": len(r["missingCampusBoundaryCandidates"]),
+        "unresolvedTEA": len(r["unresolvedTeaIdentities"]), "blocker": r["blocker"]} for r in reports}, sort_keys=True))
     return rollup
 
 
