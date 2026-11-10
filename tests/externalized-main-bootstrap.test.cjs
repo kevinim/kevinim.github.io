@@ -67,7 +67,7 @@ function expectedPublicHtml(source){
  assert.equal(fnv32(approvedPanel),'732c4e01','CFB panel markup drift');
  s=replaceOnce(s,"frame-src 'none'; media-src 'none'","frame-src https://app.guidek12.com; media-src 'none'");
  s=replaceOnce(s,'<link rel="stylesheet" href="./features/dfw-school-coverage-panel.css?v=1">',
-  '<link rel="stylesheet" href="./features/dfw-school-coverage-panel.css?v=1">\\n<link rel="stylesheet" href="./features/cfb-official-inline.css?v=1">');
+  '<link rel="stylesheet" href="./features/dfw-school-coverage-panel.css?v=1">\n<link rel="stylesheet" href="./features/cfb-official-inline.css?v=1">');
  s=replaceOnce(s,'<div class="main"><aside class="panel filter-panel">',approvedPanel+'<div class="main"><aside class="panel filter-panel">');
  s=replaceOnce(s,'<a class="cardlink" href="https://www.cfbisd.edu/students/school-maps-locator-system" target="_blank" rel="noopener noreferrer">CFB 공식 School Search · 현재 주소 조회 ↗</a>',
   '<a class="cardlink" href="https://www.cfbisd.edu/students/school-maps-locator-system" target="_blank" rel="noopener noreferrer">CFB 공식 School Search · 현재 주소 조회 ↗</a>\n <button id="cfbOpenInlineFinder" type="button" class="mini-btn cfb-open-inline">대시보드 안에서 공식 Finder 열기</button>');
