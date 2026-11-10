@@ -226,12 +226,15 @@ def reconstruct_grade(level, *, pixel_dir, output_dir, maps, district, calibrati
             try:
                 raw = Polygon(project(ring))
                 # Preserve invalid fragments as rejections; buffer(0) masks defects.
-                if raw.is_empty or raw.area <= 0:
-                    rejected["empty_or_zero_area"] += 1
+                if raw.is_empty:
+                    rejected["empty_geometry"] += 1
                     continue
                 if not raw.is_valid:
                     reason = explain_validity(raw).lower()
                     rejected["self_intersection" if "self-intersection" in reason else "invalid_geometry"] += 1
+                    continue
+                if raw.area <= 0:
+                    rejected["zero_area"] += 1
                     continue
                 clip = raw.intersection(district)
                 if clip.is_empty:
