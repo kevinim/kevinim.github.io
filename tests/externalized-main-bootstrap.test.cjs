@@ -105,8 +105,18 @@ test('index changes limited to approved blank destination, hidden precomputed ma
  assert.equal(hash(show('99cc1fca0781b4589bb8de97fa3069f428bdffbe','index.html').replace(/\r\n/g,'\n')),
   hash(expectedPublicHtml(old).replace(/\r\n/g,'\n')),
   'Pre-feature main HTML must remain the previously reviewed privacy/Track B candidate');
- assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(show('3909de14ac3a612c5b4a460167ceda656159158d','index.html').replace(/\r\n/g,'\n')),
-  'New feature HTML must match the independently reviewed and browser-tested integration');
+ const shipped=show('2dd85258d78af7e51c6ffcad824c087e19e7f0c7','index.html');
+ const panelMatch=html.match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/);
+ const originalPanel=show('b1a787eb6bd877318a1275a4a29225069782ece7','index.html').match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
+ assert.ok(panelMatch&&originalPanel,'Reviewed CFB panel missing');
+ assert.equal(hash(panelMatch[0]),hash(originalPanel),'CFB approved markup changed');
+ let expected=replaceOnce(shipped,"frame-src 'none'; media-src 'none'","frame-src https://app.guidek12.com; media-src 'none'");
+ expected=replaceOnce(expected,'<link rel="stylesheet" href="./features/dfw-school-coverage-panel.css?v=1">','<link rel="stylesheet" href="./features/dfw-school-coverage-panel.css?v=1">\n<link rel="stylesheet" href="./features/cfb-official-inline.css?v=1">');
+ expected=replaceOnce(expected,'<div class="main"><aside class="panel filter-panel">',originalPanel+'\n<div class="main"><aside class="panel filter-panel">');
+ const link='<a class="cardlink" href="https://www.cfbisd.edu/students/school-maps-locator-system" target="_blank" rel="noopener noreferrer">CFB 공식 School Search · 현재 주소 조회 ↗</a>';
+ expected=replaceOnce(expected,link,link+'\n <button id="cfbOpenInlineFinder" type="button" class="mini-btn cfb-open-inline">대시보드 안에서 공식 Finder 열기</button>');
+ expected=replaceOnce(expected,'</body></html>','<script src="./features/cfb-official-inline.js?v=1" defer></script><script src="./features/cfb-official-bridge.js?v=1" defer></script></body></html>');
+ assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expected.replace(/\r\n/g,'\n')),'Unexpected application HTML change outside reviewed CFB opt-in panel');
  assert.equal(html.split(external).length,2);
  const conditional='./features/conditional-school-release.js?v=1';
  assert.equal(html.split(conditional).length,2,'conditional school policy is loaded exactly once');
@@ -119,7 +129,7 @@ test('index changes limited to approved blank destination, hidden precomputed ma
 test('strict script CSP preserved exactly and personal office artifacts absent',()=>{
  const allowed=oldCsp.replace('https://geocode.arcgis.com https://nominatim.openstreetmap.org',
   'https://geocode.arcgis.com https://iisd1.maps.arcgis.com https://services.arcgis.com https://nominatim.openstreetmap.org');
- assert.equal(newCsp,allowed,'Irving ArcGIS exact origin is the only allowed new CSP endpoint');
+ assert.equal(newCsp,allowed.replace("frame-src 'none'","frame-src https://app.guidek12.com"),'Only CFB official Finder frame origin added to reviewed CSP');
  for(const part of ["script-src-attr 'none'","object-src 'none'","base-uri 'self'","form-action 'self'"])
   assert.ok(newCsp.includes(part));
  assert.ok(newCsp.includes("script-src 'self' https://unpkg.com;"));
