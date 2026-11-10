@@ -68,6 +68,29 @@
   const row=pdf.ROWS.find(x=>x.id===id);
   return row&&['elementary','middle','high'].includes(row.level)?row:null;
  }
+ function syncTypes(){
+  // This is only school *grade-level* classification from exact published
+  // campus ID; existing NCES marker coordinates are never altered.
+  if(typeof window==='undefined'||typeof state==='undefined'||!state?.schools||typeof scoreRecord!=='function')return 0;
+  const pdf=window.DentonZonePdfReference;if(!pdf?.ROWS)return 0;
+  const byId=new Map(pdf.ROWS.map(r=>[r.id,r]));
+  let changes=0;
+  for(const s of state.schools){
+   if(s.district!==DISTRICT)continue;
+   const id=s.id||scoreRecord(s.name,s.district)?.id;
+   const row=byId.get(id);if(!row)continue;
+   if(s.type!==row.level){s.type=row.level;changes++}
+   if(s.id!==id){s.id=id;changes++}
+   const quality=statusFor(id).state;
+   const provenance=quality==='historical-two-source'?'two-source-historical':
+    quality==='historical-exception'?'unreviewed-historical':null;
+   if(provenance&&s.campusPointReview!==provenance){s.campusPointReview=provenance;changes++}
+  }
+  if(changes&&typeof drawSchools==='function'&&typeof drawList==='function'){
+   drawSchools();drawList();
+  }
+  return changes;
+ }
  function refresh(doc){
   if(typeof window==='undefined'||typeof state==='undefined')return;
   const panel=doc.getElementById('detailContent');if(!panel)return;
@@ -109,7 +132,7 @@
  }
  function start(doc){
   if(bound)return;bound=true;
-  const panel=doc.getElementById('detailContent');
+  const panel=doc.getElementById('detailContent'),schoolList=doc.getElementById('schoolList');
   if(panel&&typeof MutationObserver!=='undefined'){
    let busy=false;
    const obs=new MutationObserver(()=>{
@@ -118,8 +141,13 @@
    });
    obs.observe(panel,{childList:true,subtree:true});
   }
-  load().then(()=>refresh(doc));
+  if(schoolList&&typeof MutationObserver!=='undefined'){
+   const obs=new MutationObserver(()=>{syncTypes();refresh(doc)});
+   obs.observe(schoolList,{childList:true});
+  }
+  syncTypes();
+  load().then(()=>{syncTypes();refresh(doc)});
  }
- return Object.freeze({DISTRICT,YEAR,statusFor,rowForSelected,makeSection,load,start,refresh,
+ return Object.freeze({DISTRICT,YEAR,statusFor,rowForSelected,makeSection,load,start,refresh,syncTypes,
   get loadState(){return loadState}});
 });
