@@ -32,17 +32,32 @@ async function main(){
     await page.goto(domain,{waitUntil:'domcontentloaded',timeout:65000});
     const input=page.locator('.address_input input[type="text"]').first();
     await input.waitFor({state:'visible',timeout:20000});
-    await input.fill(test.address);
+    // Native GuideK12 suggestions require genuine keyboard input, not
+    // only programmatic .fill() (which can show the all-school catalog).
+    report.phase='native-street-autocomplete';
     const options=page.locator('.address_input .search_result_container .search_result');
-    await options.first().waitFor({state:'visible',timeout:12000});
-    const choices=await options.allInnerTexts();
+    const street=test.address.split(',')[0];
+    await input.pressSequentially(street,{delay:50});
+    await page.waitForTimeout(2300);
+    let choices=await options.allInnerTexts().catch(()=>[]);
     const expected=normalize(test.candidateSelected);
-    const matchIndex=choices.findIndex(x=>normalize(x)===expected);
+    let matchIndex=choices.findIndex(x=>normalize(x)===expected);
+    if(matchIndex<0){
+     report.phase='native-full-address-autocomplete';
+     await input.fill('');
+     await input.pressSequentially(test.address,{delay:32});
+     await page.waitForTimeout(2800);
+     choices=await options.allInnerTexts().catch(()=>[]);
+     matchIndex=choices.findIndex(x=>normalize(x)===expected);
+    }
     report.candidates=choices.length;
+    report.candidateLabels=choices.slice(0,8).map(x=>x.trim().slice(0,110));
     report.exactCandidateMatch=matchIndex>=0;
     if(matchIndex<0){report.status='NO_EXACT_NATIVE_ADDRESS_MATCH';results.push(report);continue}
+    report.phase='native-address-selected';
     await options.nth(matchIndex).click({timeout:12000});
     report.nativeCandidateSelected=true;
+    report.phase='read-assigned-school-labels';
     await page.waitForFunction(()=>document.body?.innerText?.includes('Assigned school'),null,{timeout:18000});
     const actual=assigned(await page.locator('body').innerText());
     report.found=actual;
@@ -56,8 +71,9 @@ async function main(){
    }catch(error){
     report.status='FINDER_UI_NOT_VERIFIED';
     report.failureKind=String(error?.name||'Error').slice(0,80);
+    report.errorMessage=String(error?.message||'').split('\n')[0].slice(0,180);
+    report.hasGenericCatalog=await page.locator('body').innerText().then(x=>/Matching Results/i.test(x)).catch(()=>false);
    }finally{
-    results.push(...([])); // report is appended below only on paths without early continue
     await page.close();
    }
    if(!results.includes(report))results.push(report);
@@ -70,7 +86,8 @@ async function main(){
   geometryCrosscheckCount:0,verifiedResidentialZoningByReconstructedGeometry:0,
   verdict:overall,samples:results};
  fs.mkdirSync(path.dirname(outfile),{recursive:true});fs.writeFileSync(outfile,JSON.stringify(report,null,2)+'\n');
- console.log('CFB_OFFICIAL_PUBLIC_FINDER_RECHECK '+JSON.stringify({verdict:overall,found:results.length,matched:results.filter(r=>r.status==='OFFICIAL_FINDER_TWO_HOLDOUTS_RECHECK_MATCH').length,geospatialMatches:0}));
+ console.log('CFB_OFFICIAL_PUBLIC_FINDER_RECHECK '+JSON.stringify({verdict:overall,found:results.length,matched:results.filter(r=>r.status==='OFFICIAL_FINDER_TWO_HOLDOUTS_RECHECK_MATCH').length,geospatialMatches:0,
+  diagnostics:results.map(r=>({address:r.address,status:r.status,phase:r.phase,exact:r.exactCandidateMatch,candidateLabels:r.candidateLabels,failure:r.failureKind,errorMessage:r.errorMessage,hasGenericCatalog:r.hasGenericCatalog}))}));
  if(overall!=='TWO_EXISTING_PUBLIC_FINDER_FIXTURES_RECONFIRMED')process.exitCode=2; // advisory, no production promotion
 }
 main().catch(e=>{console.error('CFB_OFFICIAL_FINDER_RECHECK_ERROR',e.name||'Error');process.exitCode=1});
