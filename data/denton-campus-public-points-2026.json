@@ -1,0 +1,617 @@
+{
+  "schemaVersion": 1,
+  "district": "061901",
+  "asOf": "2026-11-09",
+  "schoolLocationVintage": "2024-25",
+  "activeCampusCrossReference": "Denton ISD 2026-27 official campus-specific attendance PDF list",
+  "positionSource": "2024-25 AskTED export published as ArcGIS EXTERNAL_schools",
+  "positionSourceUrl": "https://services.arcgis.com/0L95CJ0VTaxqcmED/ArcGIS/rest/services/EXTERNAL_schools/FeatureServer/0",
+  "independentSource": "NCES EDGE Public School Locations Current (school year 2024-2025)",
+  "independentSourceUrl": "https://services1.arcgis.com/Ua5sjt3LWTPigjyD/ArcGIS/rest/services/Public_School_Locations_Current/FeatureServer/0",
+  "reviewRule": "exact nine-digit TEA campus ID in current district PDF list, named campus in 2026 TEA rating listing, 2024 AskTED geocoder score at least 95, independent 2024-25 NCES 12-digit school ID and points 250m or less apart. Does not certify position or assignment for 2026–27.",
+  "note": "School-site points are approximate public campus coordinates, NOT residential addresses and NOT school attendance-zone boundaries. Missing or disputed sites are not fabricated.",
+  "currentYearLocationVerified": false,
+  "attendanceZoneCertified": false,
+  "readyForProduction": false,
+  "points": [
+    {
+      "id": "061901002",
+      "name": "RYAN H S",
+      "type": "high",
+      "district": "061901",
+      "ll": [
+        33.211161,
+        -97.075827
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 43,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 98.84
+    },
+    {
+      "id": "061901007",
+      "name": "GUYER H S",
+      "type": "high",
+      "district": "061901",
+      "ll": [
+        33.136371,
+        -97.102314
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 132,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901008",
+      "name": "RAY BRASWELL H S",
+      "type": "high",
+      "district": "061901",
+      "ll": [
+        33.217722,
+        -96.926072
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 234,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901041",
+      "name": "CROWNOVER MIDDLE",
+      "type": "middle",
+      "district": "061901",
+      "ll": [
+        33.147513,
+        -97.082159
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 30,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901044",
+      "name": "STRICKLAND MIDDLE",
+      "type": "middle",
+      "district": "061901",
+      "ll": [
+        33.2433,
+        -97.128005
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 21,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 98.84
+    },
+    {
+      "id": "061901046",
+      "name": "MCMATH MIDDLE",
+      "type": "middle",
+      "district": "061901",
+      "ll": [
+        33.188598,
+        -97.127226
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 37,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901047",
+      "name": "NAVO MIDDLE",
+      "type": "middle",
+      "district": "061901",
+      "ll": [
+        33.227883,
+        -96.928416
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 12,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901048",
+      "name": "HARPOOL MIDDLE",
+      "type": "middle",
+      "district": "061901",
+      "ll": [
+        33.116598,
+        -97.123671
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 3,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 98.08
+    },
+    {
+      "id": "061901049",
+      "name": "BETTYE MYERS MIDDLE",
+      "type": "middle",
+      "district": "061901",
+      "ll": [
+        33.162921,
+        -97.041951
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 93,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 99.53
+    },
+    {
+      "id": "061901102",
+      "name": "HOUSTON EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.17508,
+        -97.116053
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 10,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 98.82000000000001
+    },
+    {
+      "id": "061901104",
+      "name": "ALICE MOORE ALEXANDER",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.219963,
+        -97.104803
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 27,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 98.04
+    },
+    {
+      "id": "061901105",
+      "name": "HODGE EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.250455,
+        -97.089876
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 118,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901106",
+      "name": "MCNAIR EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.146082,
+        -97.120858
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 6,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901107",
+      "name": "NEWTON RAYZOR EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.227784,
+        -97.146369
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 245,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 98.82000000000001
+    },
+    {
+      "id": "061901108",
+      "name": "RIVERA EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.208155,
+        -97.115629
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 26,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901109",
+      "name": "NETTE SHULTZ",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.24168,
+        -97.113708
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 71,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 98.04
+    },
+    {
+      "id": "061901111",
+      "name": "BORMAN EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.190047,
+        -97.145973
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 9,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901112",
+      "name": "EVERS PARK EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.247485,
+        -97.134584
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 11,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901113",
+      "name": "RYAN EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.160392,
+        -97.135407
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 1,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901115",
+      "name": "EP RAYZOR EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.086898,
+        -97.129066
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 21,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901116",
+      "name": "PECAN CREEK EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.170571,
+        -97.066458
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 5,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901117",
+      "name": "PROVIDENCE EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.22602,
+        -96.963062
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 28,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901118",
+      "name": "HAWK EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.147927,
+        -97.084211
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 3,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901119",
+      "name": "SAVANNAH EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.224778,
+        -96.912369
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 15,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901121",
+      "name": "NELSON EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.162966,
+        -97.104807
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 2,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901122",
+      "name": "BLANTON EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.11433,
+        -97.124017
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 9,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 98.08
+    },
+    {
+      "id": "061901123",
+      "name": "STEPHENS EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.164037,
+        -97.041695
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 4,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 99.53
+    },
+    {
+      "id": "061901125",
+      "name": "CROSS OAKS EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.208272,
+        -96.983527
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 15,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 97.97
+    },
+    {
+      "id": "061901126",
+      "name": "DOROTHY P ADKINS EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.076377,
+        -97.111422
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 26,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901127",
+      "name": "CATHERINE BELL EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.214293,
+        -96.928911
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 55,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    },
+    {
+      "id": "061901128",
+      "name": "UNION PARK EL",
+      "type": "elementary",
+      "district": "061901",
+      "ll": [
+        33.237832,
+        -96.911002
+      ],
+      "sourceYear": "2024-25",
+      "ncesYear": "2024-2025",
+      "ncesDistanceMeters": 109,
+      "approximate": true,
+      "sourceConfidence": "two-source-public-campus-point",
+      "gradeYearPdfReference": "2026-27",
+      "isZoneBoundary": false,
+      "publicCampusOnly": true,
+      "geocoderScore": 100
+    }
+  ],
+  "excludedIds": [
+    "061901003",
+    "061901045",
+    "061901050",
+    "061901051",
+    "061901129",
+    "061901130",
+    "061901131",
+    "061901132"
+  ]
+}
