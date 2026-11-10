@@ -55,6 +55,24 @@ class TestCalibration(unittest.TestCase):
         self.assertTrue(all(p["pixelConfidence"] == "rough-visual" for p in data["controlPoints"]))
         self.assertEqual(sum(p.get("pixelVerified") is True for p in data["controlPoints"]), 0)
 
+    def test_rough_leave_one_out_is_not_independent_ground_validation(self):
+        pts = self.synthetic()
+        score = geo.rough_leave_one_out(pts, "affine")
+        self.assertEqual(score["count"], len(pts))
+        self.assertLess(score["rmseMeters"], 0.05)
+        # Actual independent residuals are scored after separately excluding the holdout.
+        model = geo.fit(pts[:16], "affine")
+        holdout = geo.residual_rows(model, pts[16:], "independent-vetted-holdout")
+        self.assertLess(geo.rms(holdout), 0.05)
+        self.assertEqual(len(holdout), 4)
+
+    def test_feature_matching_blank_images_fail_closed(self):
+        from PIL import Image
+        blank = Image.new("RGB", (505, 609), (255, 255, 255))
+        result = geo.cross_grade_candidates(blank, blank)
+        self.assertEqual(result["status"], "NO_RELIABLE_CROSS_GRADE_MATCH")
+        self.assertEqual(result["independentlyVerifiedControlPoints"], 0)
+
     def test_public_cdn_allowlist(self):
         with self.assertRaises(ValueError):
             geo.approved_image("https://example.com/elementary.jpg")
