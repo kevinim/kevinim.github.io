@@ -102,11 +102,12 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  assert.ok(!js.includes('window.WestDFWIntegration'));
 });
 test('index changes limited to approved blank destination, hidden precomputed map and neutral text',()=>{
- assert.equal(hash(show('99cc1fca0781b4589bb8de97fa3069f428bdffbe','index.html').replace(/\r\n/g,'\n')),
-  hash(expectedPublicHtml(old).replace(/\r\n/g,'\n')),
-  'Pre-feature main HTML must remain the previously reviewed privacy/Track B candidate');
- assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(show('3909de14ac3a612c5b4a460167ceda656159158d','index.html').replace(/\r\n/g,'\n')),
-  'New feature HTML must match the independently reviewed and browser-tested integration');
+ // Pin the exact current main commit immediately before this UX-only PR.
+ // The sole permitted index delta is the cache-busting home lookup version.
+ const reviewedMain=show('2dd85258d78af7e51c6ffcad824c087e19e7f0c7','index.html');
+ const expectedAfter=replaceOnce(reviewedMain,'./home-lookup-v2.js?v=16','./home-lookup-v2.js?v=17');
+ assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expectedAfter.replace(/\r\n/g,'\n')),
+  'Only the reviewed home lookup cache version may change; all other HTML must be byte-exact');
  assert.equal(html.split(external).length,2);
  const conditional='./features/conditional-school-release.js?v=1';
  assert.equal(html.split(conditional).length,2,'conditional school policy is loaded exactly once');
