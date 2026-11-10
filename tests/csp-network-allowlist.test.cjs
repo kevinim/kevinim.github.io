@@ -28,6 +28,7 @@ const reviewedConnect=[
  'https://gismaps.cityofallen.org'
 ];
 const mainImage=[
+ 'https://resources.finalsite.net',
  'https://unpkg.com',
  'https://tile.openstreetmap.org',
  'https://a.tile.openstreetmap.org',
