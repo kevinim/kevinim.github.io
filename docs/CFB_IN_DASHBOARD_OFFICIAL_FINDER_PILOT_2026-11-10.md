@@ -32,3 +32,20 @@ GitHub Action `cfb-inline-official-finder-pilot-qa.yml` executes offline tests a
 
 ## No conflict
 No edits to `home-lookup-v2.js`, school assignment policies, school markers, CFB GIS sources, or the parallel address-zoom/QA branches. This code is a narrow optional official-source UI only.
+
+## Same-session user-confirmed school cards (added in response to owner)
+The optional manual bridge now connects **school names a visitor confirms in the official Finder** to existing CFB TEA school records. Three grade-band dropdowns are filtered to exactly `district==='CFB'` and uniquely matching campus names, with fail-closed handling for missing/duplicate names. User click displays grade, campus name, TEA score, and current available campus **point** markers in the existing Leaflet map. A school card can invoke the same existing campus detail UI. These are **not** official zone GIS polygons or independent address enrollment assignments.
+
+No provider API, scraping, cross-origin iframe reads, address storage, or approximate ZIP/nearest-school matching. The selections stay in-memory and reset on home address change, clear, or panel close. This is a useful manual one-time handoff, **not** the owner's requested full one-input end-to-end automatic assignment. That requires a licensed publisher zone layer or documented GuideK12 API/postMessage contract.
+
+## New official acquisition lead
+Dunaway publicly documents having built GIS for Carrollton-Farmers Branch ISD with **attendance-zone overlays**:
+- https://dunaway.com/project/carrollton-farmers-branch-isd-gis-mapping/
+- https://dunaway.com/news_insights/mapping-the-future-how-gis-technology-optimizes-school-district-management/
+
+This increases confidence that machine-readable geographic boundaries exist within CFB/district-contractor systems. It **does not** establish that the data are published, current to 2026–27, available for reuse, or accessible without consent. Next acquisition request should specify (a) current elementary/middle/high attendance feature layers with polygon geometries, (b) official campus IDs/names and effective school years, (c) allowed public reuse/redistribution, (d) update cadence and post-approval exception rules. Do not ingest private student-address points or internal staff/facility layers. Existing district records request is already outstanding; avoid duplicate sender-side requests.
+
+## Practical integration stages
+1. Existing official GuideK12 display and manual campus-to-TEA map bridge: source UI, not automatic assignment.
+2. District-authorized WGS84 `GeoJSON`/`FeatureServer` source: district containment, school-band point-in-polygon, source-year warnings, exact campus ID match, apartment edge checks.
+3. Independently cross-check test addresses with official GuideK12 and 2026–27 decision metadata; only then consider release policy grants and address-level auto highlight.
