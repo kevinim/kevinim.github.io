@@ -125,6 +125,53 @@ function homeDirections(reverse){
   const destination=el('destination').value.trim(),point=home.ll.join(',');
   return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(reverse?destination:point)+'&destination='+encodeURIComponent(reverse?point:destination)+'&travelmode=driving';
 }
+
+// Show ONE relevant Finder destination, never the entire directory as buttons.
+// A district hinted by city/ZIP is only a navigation hint, not a school assignment.
+function compactHomeFinderModel(address,raw){
+ const a=String(address||''),valid=Object.keys(OFFICIAL).filter(k=>typeof OFFICIAL[k]==='string'&&OFFICIAL[k]);
+ let nearby=[];
+ if(/\bCarrollton\b/i.test(a))nearby=/\b75010\b/.test(a)?['LISD','CFB','057905']:['CFB','LISD','057905'];
+ else if(/\bLewisville\b/i.test(a))nearby=['LISD'];
+ else if(/\bFrisco\b/i.test(a))nearby=['FISD','LISD','PROSPER'];
+ else if(/\bProsper\b/i.test(a))nearby=['PROSPER','FISD'];
+ else if(/\bPlano\b/i.test(a))nearby=['PISD','LISD'];
+ else if(/\bAllen\b/i.test(a))nearby=['AISD'];
+ else if(/\bDallas\b/i.test(a))nearby=['057905'];
+ else if(/\bIrving\b/i.test(a))nearby=['057912','CFB'];
+ const evidence=raw?.district&&valid.includes(raw.district)&&
+  ['current','finder-current','reference','unverified-year','boundary-review','finder-boundary-review'].includes(raw.status);
+ const conflict=['conflict','needs-address-verification','apartment-split-review'].includes(raw?.status);
+ const likely=evidence?raw.district:!conflict?nearby.find(x=>valid.includes(x))||'':'';
+ const near=[...new Set([...(evidence?[raw.district]:[]),...nearby,...(raw?.status==='conflict'?(raw.matches||[]).map(m=>m.district):[])])].filter(x=>valid.includes(x));
+ const other=valid.filter(x=>!near.includes(x)).sort((a,b)=>String(districtName(a,'ko')||a).localeCompare(String(districtName(b,'ko')||b),'ko'));
+ return {likely,near,other,why:evidence?'GIS 참고자료 기반 후보':likely?'도시·ZIP 기준 첫 확인 후보':'소속 학군 미확인'};
+}
+function compactHomeFinderHtml(address,raw){
+ const m=compactHomeFinderModel(address,raw);
+ const opts=keys=>keys.map(code=>'<option value="'+escape(code)+'"'+(code===m.likely?' selected':'')+'>'+escape(districtName(code,'ko')||code)+'</option>').join('');
+ const url=m.likely?window.TrustedLinkPolicy?.official(OFFICIAL[m.likely]):null;
+ return '<div class="field" id="homeCompactFinder" style="margin:12px 0">'+
+ '<label for="homeFinderDistrict">학군별 공식 배정 확인</label>'+
+ '<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">'+
+ '<select id="homeFinderDistrict" aria-label="공식 검색 학군 선택" style="flex:1 1 190px;width:auto;min-width:0;max-width:100%">'+
+ '<option value=""'+(m.likely?'':' selected')+'>학군 선택</option>'+
+ (m.near.length?'<optgroup label="이 지역의 확인 후보">'+opts(m.near)+'</optgroup>':'')+
+ '<optgroup label="다른 학군">'+opts(m.other)+'</optgroup></select>'+
+ '<a id="homeFinderLaunch" class="btn" style="display:inline-flex;align-items:center;justify-content:center;width:auto;min-height:38px;padding:9px 12px;background:#3158cd;color:#fff;text-decoration:none" target="_blank" rel="noopener noreferrer"'+(url?' href="'+escape(url)+'"':' hidden')+'>공식 검색기 열기 ↗</a></div>'+
+ '<div id="homeFinderHint" class="source">'+escape(m.why)+' · 실제 배정은 공식 학군에서 주소로 확인</div></div>';
+}
+function wireCompactHomeFinder(){
+ const input=el('homeFinderDistrict'),link=el('homeFinderLaunch'),hint=el('homeFinderHint');
+ if(!input||!link)return;
+ input.addEventListener('change',()=>{
+  const code=input.value,href=code&&DISTRICT_REGISTRY[code]?window.TrustedLinkPolicy?.official(OFFICIAL[code]):null;
+  if(href){link.href=href;link.hidden=false;link.textContent=DISTRICT_REGISTRY[code]?.lookupKind==='official-inquiry'?'공식 안내 열기 ↗':'공식 검색기 열기 ↗'}
+  else{link.hidden=true;link.removeAttribute('href')}
+  if(hint)hint.textContent='선택한 학군의 공식 자료에서 주소·학년을 확인하세요. 아직 배정 미확인 상태입니다.';
+ });
+}
+
 function renderHome(){
   if(!home)return;
   const matches=homeZipMatches(home.ll),schools=homeFriscoMatches(home.ll);home.matches=schools;
@@ -133,13 +180,16 @@ function renderHome(){
   const rawSchoolCandidate=schoolAssignmentFor(home);
   home.assignment=window.ConditionalSchoolRelease?.apply(rawSchoolCandidate)||
     {status:'conditional-finder-only',releaseScope:'informational-only'};
-  const schoolText=assignmentHtml(home.assignment);
-  const official='<details'+(['unavailable','error','conflict','needs-address-verification','boundary-review','finder-boundary-review','feeder-review','apartment-split-review','conditional-finder-only'].includes(home.assignment.status)?' open':'')+'><summary>학군별 공식 배정 확인</summary>'+Object.entries(OFFICIAL).map(([id,url])=>{const safe=window.TrustedLinkPolicy?.official(url);return safe?'<a class="cardlink" href="'+escape(safe)+'" target="_blank" rel="noopener noreferrer">'+escape(districtName(id,'ko')||id)+' ↗</a>':''}).join('')+'</details>';
+  const schoolText=['conditional-finder-only','unavailable'].includes(home.assignment.status)?'<b>학교 자동 배정 미인증 · 공식 Finder 확인 필요</b>':assignmentHtml(home.assignment);
+  const official=compactHomeFinderHtml(home.address,rawSchoolCandidate);
   const office=el('destination').value.trim();
   const parcel=home.parcel||{status:'idle'};
   const message=parcel.status==='idle'?'별도 필지 주소 대조를 실행할 수 있습니다.':parcel.status==='checking'?'Collin CAD 필지 확인 중…':parcel.reason||'필지 확인 불가';
   const parcelPanel='<div class="small-note" style="margin-top:10px"><b>Collin CAD 필지 주소 대조 (학교 배정과 별개)</b><div class="source" role="status">'+escape(message)+(parcel.parcelAddress?' · 조회된 필지: '+escape(parcel.parcelAddress):'')+'</div><button class="mini-btn" type="button" id="parcelCheck"'+(parcel.status==='checking'?' disabled':'')+'>필지 주소 대조</button><div class="source">버튼을 누르면 집 핀의 좌표를 Collin CAD에 전송합니다. 필지 일치가 초·중·고 배정을 의미하지 않습니다.</div></div>';
-  el('homeSchoolInfo').innerHTML='<hr class="rule"><h2>집 주소 학교 후보</h2><div id="homeMapAssignmentStatus" class="small-note home-map-assignment-status" role="status" aria-live="polite"></div><div class="source">'+escape(home.address)+'</div><p>'+schoolText+'</p><div class="source">경계·학년·예외를 학군에서 확인하세요. 학교 위치나 ZIP은 배정을 보장하지 않습니다.</div>'+official+parcelPanel+officialReviewPanelHtml(home);
+  el('homeSchoolInfo').innerHTML='<hr class="rule"><h2>주소별 학교 확인</h2><div class="source">'+escape(home.address)+'</div><p>'+schoolText+'</p>'+official+
+   '<details id="homeAdvancedSchoolTools" style="margin-top:12px"><summary>추가 검증 도구</summary>'+
+   '<div id="homeMapAssignmentStatus" class="small-note home-map-assignment-status" role="status" aria-live="polite"></div>'+parcelPanel+officialReviewPanelHtml(home)+'</details>';
+  wireCompactHomeFinder();
   wireOfficialReviewPanel(home);
   const parcelButton=el('parcelCheck');if(parcelButton)parcelButton.onclick=checkHomeParcel;
   el('homeResult').innerHTML=office?'<div class="home-actions"><button type="button" class="mini-btn" id="homeRoute">집에서 운전시간 계산</button> <a class="cardlink" href="'+escape(homeDirections(false))+'" target="_blank" rel="noopener">집 → 회사 Google ↗</a> <a class="cardlink" href="'+escape(homeDirections(true))+'" target="_blank" rel="noopener">회사 → 집 ↗</a><div id="homeRouteStatus" class="source" role="status">집 주소 기준 · 교통량 미반영</div></div>':'목적지를 입력하세요.';
