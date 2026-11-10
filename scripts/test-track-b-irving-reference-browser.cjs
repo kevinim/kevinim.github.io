@@ -15,6 +15,10 @@ function serve(req,res){
   fs.createReadStream(file).pipe(res);
  }catch{return res.writeHead(400).end()}
 }
+async function openAdvanced(page){
+ const panel=page.locator('#homeAdvancedSchoolTools');
+ if(!(await panel.evaluate(el=>el.open)))await panel.locator('summary').click();
+}
 async function main(){
  fs.mkdirSync(OUT,{recursive:true});
  const server=http.createServer(serve);
@@ -39,14 +43,14 @@ async function main(){
     if(!useHomeCandidate(sample))throw Error('public campus address cannot populate home search');
    });
    // The optional official GIS controls are now collapsed by design.
-   await page.locator('#homeAdvancedSchoolTools > summary').click();
+   await openAdvanced(page);
    await page.locator('#officialIrvingCheck').click({timeout:10000});
    await page.waitForFunction(()=>home?.irvingChecking===false&&home?.irvingSpatial?.status==='ready',
     null,{timeout:60000});
    const spatial=await page.evaluate(()=>({
     names:home.irvingSpatial.names,
     count:irvingReferenceLayer?.getLayers()?.length||0,
-    notice:document.getElementById('irvingSpatialStatus')?.innerText||'',
+    notice:document.getElementById('irvingSpatialStatus')?.textContent||'',
     addressStatus:document.getElementById('homePrivacy')?.innerText||'',
     directLocatorLink:document.querySelector('#officialReviewPanel a.cardlink[href*="f27bba7ee02141c58c8c9375431effa2"]')?.href||null,
     zoneKey:window.DISTRICT_REGISTRY?.['057912']?.zoneKey
@@ -55,7 +59,7 @@ async function main(){
    assert.equal(spatial.count,3,'all three official GIS source features must render in Leaflet');
    const safe=await page.evaluate(()=>({
     status:home?.assignment?.status,
-    warning:document.querySelector('.reference-gis-warning')?.innerText||'',
+    warning:document.querySelector('.reference-gis-warning')?.textContent||'',
     popup:(()=>{
      let found='';const walk=(layer,depth)=>{
       if(!layer||depth>5||found)return;
@@ -78,8 +82,9 @@ async function main(){
    // The manual official Finder name comparison is informational: never upgrade
    // 2024-25 / 2025-26 source polygons to verified residential assignment.
    // GIS result re-render closes the optional panel; reopen for the manual source check.
-   await page.locator('#homeAdvancedSchoolTools > summary').click();
+   await openAdvanced(page);
    await page.locator('#officialReviewDistrict').selectOption('057912');
+   await openAdvanced(page); // District change may trigger renderHome and re-collapse advanced controls.
    await page.locator('#officialReviewLevel').selectOption('middle');
    await page.locator('#officialReviewName').fill('Crockett Middle School');
    await page.locator('#officialReviewYear').selectOption('2026–27');
@@ -88,19 +93,19 @@ async function main(){
     status:home.officialReview?.status,
     certified:home.officialReview?.yearCertified,
     independent:home.officialReview?.independentlyVerified,
-    message:document.querySelector('#officialReviewResult')?.innerText||''
+    message:document.querySelector('#officialReviewResult')?.textContent||''
    }));
    assert.equal(manualMatch.status,'manual-match');
    assert.equal(manualMatch.certified,false);
    assert.equal(manualMatch.independent,false);
    assert.match(manualMatch.message,/독립적인 Finder 화면 검증/);
    // The first comparison also re-renders the collapsed panel.
-   await page.locator('#homeAdvancedSchoolTools > summary').click();
+   await openAdvanced(page);
    await page.locator('#officialReviewName').fill('Bowie Middle School');
    await page.locator('#officialManualCompare').click();
    const manualMismatch=await page.evaluate(()=>({
     status:home.officialReview?.status,
-    message:document.querySelector('#officialReviewResult')?.innerText||''
+    message:document.querySelector('#officialReviewResult')?.textContent||''
    }));
    assert.equal(manualMismatch.status,'manual-mismatch');
    assert.match(manualMismatch.message,/다릅니다/);
