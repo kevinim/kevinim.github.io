@@ -36,6 +36,7 @@ async function main(){
    await page.waitForFunction(()=>typeof map!=='undefined'&&!!map&&typeof L!=='undefined'&&
       !!window.CFBZoneOverlay&&!!window.ConditionalSchoolRelease,{timeout:70000});
    assert.equal(await page.locator('#cfbInlineFinderFrameHost iframe').count(),0);
+   await page.locator('#cfbOfficialRezoningReference summary').click();
    await page.locator('#cfbOpenInlineFinder').click();
    await page.locator('#cfbZoneReferenceControls').waitFor({timeout:12000});
    assert.equal(await page.locator('#cfbShowDraftZone').isChecked(),false);
