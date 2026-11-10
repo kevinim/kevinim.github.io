@@ -158,7 +158,7 @@ function compactHomeFinderHtml(address,raw){
  '<option value=""'+(m.likely?'':' selected')+'>학군 선택</option>'+
  (m.near.length?'<optgroup label="이 지역의 확인 후보">'+opts(m.near)+'</optgroup>':'')+
  '<optgroup label="다른 학군">'+opts(m.other)+'</optgroup></select>'+
- '<a id="homeFinderLaunch" class="btn" style="display:inline-flex;align-items:center;justify-content:center;width:auto;min-height:38px;padding:9px 12px;background:#3158cd;color:#fff;text-decoration:none" target="_blank" rel="noopener noreferrer"'+(url?' href="'+escape(url)+'"':' hidden')+'>공식 검색기 열기 ↗</a></div>'+
+ '<a id="homeFinderLaunch" class="btn" style="display:'+(url?'inline-flex':'none')+';align-items:center;justify-content:center;width:auto;min-height:38px;padding:9px 12px;background:#3158cd;color:#fff;text-decoration:none" target="_blank" rel="noopener noreferrer"'+(url?' href="'+escape(url)+'"':' hidden')+'>공식 검색기 열기 ↗</a></div>'+
  '<div id="homeFinderHint" class="source">'+escape(m.why)+' · 실제 배정은 공식 학군에서 주소로 확인</div></div>';
 }
 function wireCompactHomeFinder(){
@@ -166,8 +166,8 @@ function wireCompactHomeFinder(){
  if(!input||!link)return;
  input.addEventListener('change',()=>{
   const code=input.value,href=code&&DISTRICT_REGISTRY[code]?window.TrustedLinkPolicy?.official(OFFICIAL[code]):null;
-  if(href){link.href=href;link.hidden=false;link.textContent=DISTRICT_REGISTRY[code]?.lookupKind==='official-inquiry'?'공식 안내 열기 ↗':'공식 검색기 열기 ↗'}
-  else{link.hidden=true;link.removeAttribute('href')}
+  if(href){link.href=href;link.hidden=false;link.style.display='inline-flex';link.textContent=DISTRICT_REGISTRY[code]?.lookupKind==='official-inquiry'?'공식 안내 열기 ↗':'공식 검색기 열기 ↗'}
+  else{link.hidden=true;link.style.display='none';link.removeAttribute('href')}
   if(hint)hint.textContent='선택한 학군의 공식 자료에서 주소·학년을 확인하세요. 아직 배정 미확인 상태입니다.';
  });
 }
@@ -189,6 +189,13 @@ function renderHome(){
   el('homeSchoolInfo').innerHTML='<hr class="rule"><h2>주소별 학교 확인</h2><div class="source">'+escape(home.address)+'</div><p>'+schoolText+'</p>'+official+
    '<details id="homeAdvancedSchoolTools" style="margin-top:12px"><summary>추가 검증 도구</summary>'+
    '<div id="homeMapAssignmentStatus" class="small-note home-map-assignment-status" role="status" aria-live="polite"></div>'+parcelPanel+officialReviewPanelHtml(home)+'</details>';
+  // Preserve optional controls without exposing a large panel in the collapsed view.
+  // Explicit visibility is needed because older dashboard CSS can override native details styles.
+  const advanced=el('homeAdvancedSchoolTools');
+  if(advanced){
+   const syncAdvanced=()=>{for(const child of advanced.children)if(child.tagName!=='SUMMARY')child.style.display=advanced.open?'':'none'};
+   advanced.addEventListener('toggle',syncAdvanced);syncAdvanced();
+  }
   wireCompactHomeFinder();
   wireOfficialReviewPanel(home);
   const parcelButton=el('parcelCheck');if(parcelButton)parcelButton.onclick=checkHomeParcel;
