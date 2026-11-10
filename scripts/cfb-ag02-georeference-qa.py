@@ -267,6 +267,7 @@ def main():
         verified_fit = [p for p in vetted if p.get("role") != "independent-holdout"]
         size = (manual.get("rasterPixelSize") if manual else
                 elementary["rasterPixelSize"] if level == "elementary" else None)
+        declared_size = size
         if level in images:
             size = list(images[level].size)
         report = {"district": "CFB", "level": level, "sourceYear": "2025-26",
@@ -278,6 +279,7 @@ def main():
                   "gcpEvidenceFile": str(gcp_path.relative_to(ROOT)) if manual else
                                      "data/cfb-elementary-raster-calibration-draft.json" if level == "elementary" else None,
                   "image": checks.get(level, {"status": "NOT_FETCHED"}),
+                  "declaredControlImageSize": declared_size,
                   "modelComparisons": [], "independentHoldoutRMSEMeters": None,
                   "verdict": "NOT_CALIBRATED"}
         if len(fitpts) >= 4:
@@ -308,8 +310,9 @@ def main():
                             writer = csv.DictWriter(f, fieldnames=list(independent_rows[0]))
                             writer.writeheader()
                             writer.writerows(independent_rows)
-                    if (level in images and size == list(images[level].size)
-                            and (level == "elementary" or len(verified_fit) >= MIN_VERIFIED)): 
+                    if (level in images and declared_size is not None
+                            and declared_size == list(images[level].size)
+                            and (level == "elementary" or len(verified_fit) >= MIN_VERIFIED)):
                         # World file maps pixel-centre to longitude/latitude, WGS84.
                         ll = geographic(model, [[0, 0], [1, 0], [0, 1]])
                         origin, along_x, along_y = ll
