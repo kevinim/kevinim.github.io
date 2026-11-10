@@ -57,7 +57,7 @@ test('compact HTML renders ONE launch anchor and a SELECT rather than 100 visibl
 test('picker changes only validated official URL; unknown code disables launch',()=>{
  const listeners={};
  const input={value:'LISD',addEventListener:(name,fn)=>{listeners[name]=fn}};
- const link={hidden:false,href:official.LISD,removeAttribute(k){delete this[k]}};
+ const link={hidden:false,href:official.LISD,style:{display:'inline-flex'},removeAttribute(k){delete this[k]}};
  const hint={textContent:''};
  Object.assign(nodes,{homeFinderDistrict:input,homeFinderLaunch:link,homeFinderHint:hint});
  ctx.wireCompactHomeFinder();
@@ -66,6 +66,7 @@ test('picker changes only validated official URL; unknown code disables launch',
  assert.equal(link.hidden,false);
  input.value='invalid';listeners.change();
  assert.equal(link.hidden,true);
+ assert.equal(link.style.display,'none');
  assert.equal(link.href,undefined);
 });
 test('home UI gates auto assignment and hides noisy parcel/manual tools behind details',()=>{
