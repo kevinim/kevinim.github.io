@@ -66,8 +66,34 @@ async function main(){
    });
    assert.ok(dims.frameWidth<=dims.panelWidth+1);
    assert.ok(dims.frameWidth<=dims.viewport+1);
+   // Test the *real* dashboard campus directory, cards and Leaflet marker,
+   // without inferring a residential enrollment or scraping the provider frame.
+   await page.waitForFunction(()=>typeof state!=='undefined'&&Array.isArray(state.schools)&&
+    state.schools.some(s=>s.district==='CFB'&&s.type==='elementary'&&
+     Array.isArray(s.ll)&&s.ll.length===2&&s.ll.every(Number.isFinite))&&
+    typeof map!=='undefined'&&!!map,{timeout:30000});
+   const campus=await page.evaluate(()=>state.schools.find(s=>s.district==='CFB'&&
+    s.type==='elementary'&&Array.isArray(s.ll)&&s.ll.length===2&&s.ll.every(Number.isFinite)).name);
+   await page.locator('#cfbManualElementary').focus();
+   await page.locator('#cfbManualElementary').selectOption(campus);
+   await page.locator('#cfbManualApply').click();
+   await page.locator('#cfbManualSchoolCards .cfb-manual-card').first().waitFor({timeout:12000});
+   const cardText=await page.locator('#cfbManualSchoolCards').innerText();
+   assert.ok(cardText.includes(campus));
+   assert.ok(cardText.includes('사용자가 공식 Finder에서 직접 선택한 참고 정보'));
+   await page.locator('.cfb-manual-campus').first().waitFor({timeout:10000});
+   const cardCount=await page.locator('#cfbManualSchoolCards .cfb-manual-card').count();
+   const markerCount=await page.locator('.cfb-manual-campus').count();
+   assert.equal(cardCount,1,'manual campus bridge must show one actual CFB school card');
+   assert.ok(markerCount>=1,'manual campus bridge must show native map point');
+   await page.locator('#homeAddress').dispatchEvent('input');
+   assert.equal(await page.locator('#cfbManualSchoolCards .cfb-manual-card').count(),0,
+    'address change must erase stale school selections');
+   assert.equal(await page.locator('.cfb-manual-campus').count(),0,
+    'address change must remove temporary manual campus map markers');
    assert.deepEqual(errors,[]);
-   results.push({width,src,loaded:true,frameWidth:dims.frameWidth,viewport:dims.viewport});
+   results.push({width,src,loaded:true,frameWidth:dims.frameWidth,viewport:dims.viewport,
+    manualBridge:{cardCount,markerCount,clearedOnAddressChange:true}});
    await page.locator('#cfbCloseInlineFinder').click();
    assert.equal(await page.locator('#cfbInlineFinderFrameHost iframe').count(),0);
    await page.close();
