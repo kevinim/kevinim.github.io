@@ -73,6 +73,17 @@ class TestCalibration(unittest.TestCase):
         self.assertEqual(result["status"], "NO_RELIABLE_CROSS_GRADE_MATCH")
         self.assertEqual(result["independentlyVerifiedControlPoints"], 0)
 
+    def test_historical_city_gis_is_not_a_current_approval(self):
+        spec_legacy = importlib.util.spec_from_file_location(
+            "legacy", ROOT/"scripts/cfb-ag02-legacy-gis-audit.py")
+        old = importlib.util.module_from_spec(spec_legacy)
+        spec_legacy.loader.exec_module(old)
+        self.assertEqual(set(old.SERVICES), {"elementary", "middle", "high"})
+        with self.assertRaises(ValueError):
+            old.get_public_json("https://unauthorized.invalid/FeatureServer/0")
+        self.assertEqual(old.CFB, "Carrollton-Farmers Branch ISD")
+        self.assertEqual(old.ALLOWED_EDIT_YEAR, 2020)
+
     def test_public_cdn_allowlist(self):
         with self.assertRaises(ValueError):
             geo.approved_image("https://example.com/elementary.jpg")
