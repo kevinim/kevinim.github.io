@@ -124,6 +124,24 @@ def rms(rows):
             if rows else None)
 
 
+def rough_leave_one_out(points, kind):
+    """Out-of-fit rough GCP diagnostic; not an independent survey."""
+    required = {"affine": 4, "projective": 6, "quadratic": 8}[kind]
+    if len(points) <= required:
+        return None
+    errors = []
+    for i, p in enumerate(points):
+        remaining = points[:i] + points[i+1:]
+        try:
+            m = fit(remaining, kind)
+            rows = residual_rows(m, [p], "rough-leave-one-out")
+            errors.extend(rows)
+        except (ValueError, np.linalg.LinAlgError):
+            return None
+    return {"count": len(errors), "rmseMeters": round(rms(errors), 2),
+            "maxMeters": round(max(r["distanceErrorM"] for r in errors), 2)}
+
+
 def proxy_spatial_holdout(points, kind):
     """Internal proxy ONLY: withheld rough anchors are not independently verified."""
     if len(points) < 12:
@@ -190,42 +208,58 @@ def approved_image(url):
 
 
 def cross_grade_candidates(elementary, target):
-    """Automated SIFT pilot: only proposes matching image coordinates, never GCP proof."""
+    """SIFT and ORB trials; never certify GCPs from automated image matches."""
     import cv2
     a = cv2.cvtColor(np.array(elementary), cv2.COLOR_RGB2GRAY)
     b = cv2.cvtColor(np.array(target), cv2.COLOR_RGB2GRAY)
-    sift = cv2.SIFT_create(nfeatures=6000)
-    ka, da = sift.detectAndCompute(a, None)
-    kb, db = sift.detectAndCompute(b, None)
-    if da is None or db is None:
-        return {"status": "NO_FEATURES", "proposedControlPoints": 0}
-    pairs = cv2.BFMatcher().knnMatch(da, db, k=2)
-    good = [p for p, q in pairs if p.distance < .68*q.distance]
-    if len(good) < 20:
-        return {"status": "INSUFFICIENT_MATCHES", "rawMatches": len(good),
-                "proposedControlPoints": 0}
-    src = np.float32([ka[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
-    dst = np.float32([kb[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
-    H, inliers = cv2.findHomography(src, dst, cv2.RANSAC, 3.0)
-    if H is None:
-        return {"status": "HOMOGRAPHY_FAILED", "rawMatches": len(good),
-                "proposedControlPoints": 0}
-    keep = inliers.ravel().astype(bool)
-    s, d = src[keep, 0, :], dst[keep, 0, :]
-    spread = (float(np.prod(np.ptp(s, axis=0))) /
-              max(elementary.width*elementary.height, 1))
-    reprojection = cv2.perspectiveTransform(s.reshape(-1, 1, 2), H)[:, 0, :]
-    median_error = float(np.median(np.linalg.norm(reprojection-d, axis=1)))
-    ok = len(s) >= 12 and spread >= .10 and median_error <= 3.
-    return {"status": "UNVERIFIED_CANDIDATE" if ok else "REJECTED_WEAK_DISTRIBUTION",
-            "rawMatches": len(good), "ransacInliers": len(s),
-            "elementaryImageCoverageRatio": round(spread, 4),
-            "medianInlierReprojectionPx": round(median_error, 2),
-            "sourceElementaryToTargetHomography": H.tolist() if ok else None,
-            "proposedControlPoints": len(s) if ok else 0,
-            "independentlyVerifiedControlPoints": 0,
-            "note": "SIFT matches are NOT manually ground-verified street intersections"}
-
+    attempts = {}
+    for method in ("SIFT", "ORB"):
+        if method == "SIFT":
+            detector = cv2.SIFT_create(nfeatures=6000)
+            norm, ratio = cv2.NORM_L2, .68
+        else:
+            detector = cv2.ORB_create(nfeatures=10000, fastThreshold=10)
+            norm, ratio = cv2.NORM_HAMMING, .76
+        ka, da = detector.detectAndCompute(a, None)
+        kb, db = detector.detectAndCompute(b, None)
+        if da is None or db is None or len(da) < 2 or len(db) < 2:
+            attempts[method] = {"status": "NO_FEATURES"}
+            continue
+        pairs = cv2.BFMatcher(norm).knnMatch(da, db, k=2)
+        good = [pair[0] for pair in pairs if len(pair) == 2
+                and pair[0].distance < ratio*pair[1].distance]
+        if len(good) < 20:
+            attempts[method] = {"status": "INSUFFICIENT_MATCHES", "rawMatches": len(good)}
+            continue
+        src = np.float32([ka[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
+        dst = np.float32([kb[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
+        H, mask = cv2.findHomography(src, dst, cv2.RANSAC, 3.0)
+        if H is None or mask is None:
+            attempts[method] = {"status": "HOMOGRAPHY_FAILED", "rawMatches": len(good)}
+            continue
+        keep = mask.ravel().astype(bool)
+        sp, dp = src[keep, 0, :], dst[keep, 0, :]
+        spread = (float(np.prod(np.ptp(sp, axis=0))) /
+                  max(elementary.width*elementary.height, 1))
+        pred = cv2.perspectiveTransform(sp.reshape(-1, 1, 2), H)[:, 0, :]
+        median_px = float(np.median(np.linalg.norm(pred-dp, axis=1))) if len(sp) else math.inf
+        ok = len(sp) >= 12 and spread >= .10 and median_px <= 3.
+        attempts[method] = {"status": "UNVERIFIED_CANDIDATE" if ok else
+                            "REJECTED_WEAK_DISTRIBUTION",
+                            "rawMatches": len(good), "ransacInliers": len(sp),
+                            "sourceImageCoverageRatio": round(spread, 4),
+                            "medianInlierReprojectionPx": round(median_px, 2),
+                            "elementaryToTargetHomography": H.tolist() if ok else None}
+    accepted = [(k,v) for k,v in attempts.items()
+                if v["status"] == "UNVERIFIED_CANDIDATE"]
+    if accepted:
+        winner = max(accepted, key=lambda t: (t[1]["sourceImageCoverageRatio"],
+                                               t[1]["ransacInliers"]))
+        return {"status": "UNVERIFIED_CANDIDATE", "chosenMethod": winner[0],
+                "chosenTransform": winner[1]["elementaryToTargetHomography"],
+                "attempts": attempts, "independentlyVerifiedControlPoints": 0}
+    return {"status": "NO_RELIABLE_CROSS_GRADE_MATCH", "attempts": attempts,
+            "independentlyVerifiedControlPoints": 0}
 
 def main():
     cli = argparse.ArgumentParser()
@@ -293,6 +327,7 @@ def main():
                     report["modelComparisons"].append({
                         "model": kind, "fitRMSEMeters": round(rms(rows), 2),
                         "internalRoughSpatialHoldout": score,
+                        "roughLeaveOneOut": rough_leave_one_out(fitpts, kind),
                         "verifiedIndependentRMSEMeters": round(rms(independent_rows), 2) if independent_rows else None})
                     if kind != "affine":
                         continue
@@ -302,6 +337,8 @@ def main():
                         writer.writerows(rows)
                     draw_svg(rows, size or [505, 609],
                              output / f"{level}-residuals.svg", "2025-26 CFB "+level)
+                    report["highestRoughResiduals"] = sorted(
+                        rows, key=lambda r: r["distanceErrorM"], reverse=True)[:4]
                     report["affineTransform"] = model
                     report["transformFormat"] = "pixel_to_local_ENU_m_wgs84_origin"
                     if independent_rows:
@@ -324,6 +361,17 @@ def main():
                             "\n".join(f"{x:.12f}" for x in values)+"\n")
                         report["worldFile"] = world
                         report["worldFileCRS"] = "EPSG:4326 (pixel centers)"
+                        w, h = size
+                        corners = geographic(model, [[-.5, -.5], [w-.5, -.5],
+                                                     [w-.5, h-.5], [-.5, h-.5], [-.5, -.5]])
+                        footprint = {"type": "FeatureCollection", "features": [{
+                            "type": "Feature", "properties": {"sourceYear": "2025-26",
+                                "level": level, "status": "UNVERIFIED_DRAFT",
+                                "notOfficialAttendanceGIS": True,
+                                "residenceAssignmentAllowed": False},
+                            "geometry": {"type": "Polygon", "coordinates": [corners.tolist()]}}]}
+                        (output / f"{level}-DRAFT-footprint.geojson").write_text(
+                            json.dumps(footprint, indent=2)+"\n")
                     else:
                         report["worldFileBlocked"] = "image dimensions absent/mismatched or fewer than 8 verified fit GCP"
                 except (ValueError, np.linalg.LinAlgError) as exc:
@@ -349,9 +397,11 @@ def main():
                "currentYearCertified": False, "automaticAddressAssignmentAllowed": False,
                "levels": {k: {"verdict": v["verdict"], "candidateGCP": v["totalCandidateGCP"],
                                "verifiedGCP": v["verifiedGCP"],
-                               "independentRMSEMeters": v["independentHoldoutRMSEMeters"]}
+                               "independentRMSEMeters": v["independentHoldoutRMSEMeters"],
+                               "image": v["image"], "worldFile": v.get("worldFile"),
+                               "models": v["modelComparisons"]}
                           for k, v in results.items()},
-               "crossGrade": {k: v.get("status") for k, v in matches.items()}}
+               "crossGrade": matches}
     (output / "summary.json").write_text(json.dumps(summary, indent=2)+"\n")
     print("CFB_AG02_GEOREF " + json.dumps(summary))
 
