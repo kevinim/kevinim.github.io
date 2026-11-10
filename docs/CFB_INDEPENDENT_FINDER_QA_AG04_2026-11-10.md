@@ -11,13 +11,21 @@
 - The elementary scratch reconstruction has 14 roughly placed control points,
   **zero independently validated anchors**, ~356.4 m fit RMS, and ~601.9 m p95.
   No elementary/middle/high school polygon is certified for an actual home.
-- Two previously verified **public-property** Finder fixtures from November 7
-  were not reconfirmed in the latest PR #208 advisory (0/2 conclusive).
-  This is inconclusive UI evidence, not proof that their past school names changed.
-- New independently recorded actual Finder results for AG 04: **0 properties**;
-  elementary 0 / middle 0 / high 0. Certified GIS comparisons: **0**.
-  Thus geometry PASS **0**, FAIL **0**, and boundary-adjacent failure list
-  **not yet measurable**. Accuracy is **undefined**, not 100% or 0%.
+- **Corrected after inspecting the actual Nov 10 Actions job log**:
+  PR #208's latest native-autocomplete advisory run #42894866573
+  **reconfirmed both existing public properties (2/2)**. Its run log records
+  exact native selections and the E/M/H school comparisons matched for both.
+  Earlier 0/2 statements reflected a stale probe and were incorrect.
+  This is direct official Finder UI evidence, not reconstructed polygon proof.
+- Existing #208 current Finder browser observation: **2 public properties**,
+  elementary **2/2**, middle **2/2**, high **2/2** (six grade results).
+- AG 04 has now added a **separately implemented real Chromium Finder verifier**
+  (`scripts/cfb-independent-live-finder.cjs`), wired to free PR CI.
+  Its fresh independent run should be interpreted from that job's evidence,
+  not assumed successful until the live job has completed.
+- **Independent school-zone geometry comparisons: 0**, because AG03 polygons
+  are unverified. Geometry PASS **0**, FAIL **0**, and boundary-adjacent failure
+  list **not yet measurable**. Geometry accuracy is **undefined**.
 
 ## Approved one-at-a-time manual Finder procedure
 
@@ -46,13 +54,18 @@
 
 **Root cause of past recheck:** programmatic fill can show the all-campus
 Matching Results catalog. PR #208 added sequential typing and native
-suggestion clicking, but the most recent 2-case probe was still inconclusive.
+suggestion clicking; the current Nov 10 log confirms **2/2**. AG04 now performs
+its own bounded live browser recheck and separately records E/M/H counts.
 This independent tool refuses to count generic catalog entries as assignments.
 
 ## Offline reproducible QA
 
-- Evaluator: scripts/cfb-independent-finder-qa.cjs
-- Tests: tests/cfb-independent-finder-qa.test.cjs
+- Offline evaluator: scripts/cfb-independent-finder-qa.cjs
+- Offline tests: tests/cfb-independent-finder-qa.test.cjs
+- Independent live Chromium validator: scripts/cfb-independent-live-finder.cjs
+  (exactly the two previously public fixture addresses, sequential
+  keyboard input, exact native candidate selection, explicit Assigned school,
+  redacted per-grade comparison, no hidden API/bulk queries).
 - No browser scraping or network calls; only manually confirmed evidence and
   AG 03's *ephemeral*, non-production polygon artifact are read.
 - A case uses a non-identifying ID (e.g. PUBLIC-campusA), assetType of
@@ -127,9 +140,22 @@ certification metrics. Record real evidence outside the repository.
   represent the same attendance plan as current GuideK12 school-year context.
 - QA-CFB-03 (GEOMETRY): remeasure 8+ independently checked street/road control
   points per grade and validate **edge** residuals; 356m RMS not home-grade safe.
-- QA-CFB-04 (FINDER/ADDRESS): old 2 public fixtures currently 0/2 confirmed;
-  only exact native candidate + Assigned school labels count.
+- QA-CFB-04 (FINDER/ADDRESS): **corrected: 2/2 reconfirmed in PR #208 run
+  #42894866573**; ensure the independent AG04 live job reproduces this.
+  Only exact native candidate + Assigned school labels count.
 - QA-CFB-05 (GEOMETRY): paired opposite-side zone border samples, 250m
   ambiguity guard, and split-feeder exceptions required before promotion.
 
 No changes to AG 03's polygons, mapping files, live UI, or production gates.
+
+## Corrections and audit trace (Nov 10, 2026)
+
+The original AG04 PR #209 description and PR #208 handoff comment were
+written before inspecting the full newest live job log. They incorrectly
+reported the **old** 0/2 outcome. The observed GitHub Actions log
+[run #42894866573](https://github.com/kevinim/kevinim.github.io/actions/runs/42894866573)
+contains `TWO_EXISTING_PUBLIC_FINDER_FIXTURES_RECONFIRMED`, `found:2`,
+`matched:2`, `exact:true` for each sample. AG04's independent browser
+test is distinct from PR #208's previous code and reads no private API.
+This correction does **not** imply that apartment unit assignments or any
+E/M/H zone polygon have been certified.
