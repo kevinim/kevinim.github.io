@@ -6,6 +6,7 @@ on:
       - 'scripts/cfb-ag03-reconstruct.py'
       - 'data/cfb-ag03-*.json'
       - 'tests/test_cfb_ag03_reconstruct.py'
+      - 'tests/test_cfb_ag03_certification_review.py'
       - '.github/workflows/cfb-ag03-boundary-reconstruction-qa.yml'
   workflow_dispatch:
 permissions:
@@ -26,8 +27,10 @@ jobs:
       - name: Validate all three grade geometry contract and no-promotion gates
         run: |
           /tmp/cfb-ag03-python/bin/python -m unittest discover -s tests -p 'test_cfb_ag03_reconstruct.py' -v
+          /tmp/cfb-ag03-python/bin/python -m unittest discover -s tests -p 'test_cfb_ag03_certification_review.py' -v
           /tmp/cfb-ag03-python/bin/python scripts/cfb-ag03-reconstruct.py
           /tmp/cfb-ag03-python/bin/python scripts/cfb-ag03-method-comparison.py
+          /tmp/cfb-ag03-python/bin/python scripts/cfb-ag03-certification-review.py
       - name: Verify repository contains NO publishable candidate GIS in data/
         run: |
           python3 - <<'PY'
@@ -69,6 +72,7 @@ jobs:
         run: |
           /tmp/cfb-ag03-python/bin/python scripts/cfb-ag03-reconstruct.py
           /tmp/cfb-ag03-python/bin/python scripts/cfb-ag03-method-comparison.py
+          /tmp/cfb-ag03-python/bin/python scripts/cfb-ag03-certification-review.py
       - name: Preserve AG04 research handoff (NOT public website files)
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
