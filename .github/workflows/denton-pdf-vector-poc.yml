@@ -53,6 +53,12 @@ jobs:
         run: |
           python -m py_compile scripts/denton_geopdf_census_holdout_qa.py
           python scripts/denton_geopdf_census_holdout_qa.py
+      - name: Test exact public CAD parcel identity and fail-closed polygon match (synthetic)
+        run: python -m unittest discover -s tests -p 'test_denton_geopdf_public_parcel_qa.py' -v
+      - name: Limited no-owner-fields Denton County parcel-to-derived school zone review
+        run: |
+          python -m py_compile scripts/denton_geopdf_public_parcel_qa.py
+          python scripts/denton_geopdf_public_parcel_qa.py
       - name: Save PDF-local drawings, map previews and raw inspection reports
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
