@@ -70,6 +70,27 @@ async function main(){
    assert.match(evidence,/폴리곤과의 교차검증은 아직 이루어지지 않았습니다/);
    assert.equal(await page.locator('#cfbInlineFinderFrameHost iframe').count(),0,
     'Reference map must never secretly start official Finder iframe');
+   // One opt-in layer uses Texas Legislative Council district OUTER boundaries,
+   // never promotes campus-grade attendance zones or a residence assignment.
+   const outlines=page.locator('#cfbDistrictOutlineToggle');
+   await outlines.waitFor({state:'visible',timeout:10000});
+   assert.equal(await outlines.getAttribute('aria-pressed'),'false');
+   await outlines.click();
+   await page.waitForFunction(()=>window.CfbJurisdiction?.lookup([32.956574,-96.89425]).status==='district-reference',
+    null,{timeout:10000});
+   const jurisdiction=await page.evaluate(()=>({
+    cfb:window.CfbJurisdiction.lookup([32.956574,-96.89425]).district,
+    lewisville:window.CfbJurisdiction.lookup([33.06,-96.91]).district,
+    dallas:window.CfbJurisdiction.lookup([32.7801,-96.8002]).district,
+    reference:document.getElementById('cfbDistrictOutlineStatus').textContent
+   }));
+   assert.equal(jurisdiction.cfb,'CFB');
+   assert.equal(jurisdiction.lewisville,'LISD');
+   assert.equal(jurisdiction.dallas,'057905');
+   assert.match(jurisdiction.reference,/학군 전체 경계/);
+   assert.equal(await outlines.getAttribute('aria-pressed'),'true');
+   await outlines.click();
+   assert.equal(await outlines.getAttribute('aria-pressed'),'false');
    const dimensions=await page.evaluate(()=>{
     const x=document.getElementById('cfbAtlas').getBoundingClientRect();
     return {width:x.width,viewport:document.documentElement.clientWidth,bodyScroll:document.body.scrollWidth};
