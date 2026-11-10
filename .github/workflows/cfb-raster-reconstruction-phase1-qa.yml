@@ -4,6 +4,11 @@ on:
     branches: [main]
     paths:
       - 'data/cfb-approved-zone-raster-reference-2026.json'
+      - 'data/carrollton-three-isd-boundaries-2025.geojson'
+      - 'home-lookup-v2.js'
+      - 'features/cfb-district-jurisdiction.js'
+      - 'tests/cfb-district-jurisdiction.test.cjs'
+      - 'tests/compact-home-finder.test.cjs'
       - 'data/cfb-elementary-raster-calibration-draft.json'
       - 'features/cfb-approved-zone-atlas.js'
       - 'features/cfb-approved-zone-atlas.css'
@@ -34,9 +39,11 @@ jobs:
           node-version: '24'
       - run: |
           node --check features/cfb-approved-zone-atlas.js
+          node --check features/cfb-district-jurisdiction.js
+          node --check home-lookup-v2.js
           node --check scripts/measure-cfb-raster-registration.cjs
           node scripts/measure-cfb-raster-registration.cjs
-          node --test tests/cfb-raster-atlas-and-georef.test.cjs tests/csp-network-allowlist.test.cjs tests/cfb-official-rezoning-reference.test.cjs tests/conditional-school-release.test.cjs
+          node --test tests/cfb-raster-atlas-and-georef.test.cjs tests/csp-network-allowlist.test.cjs tests/cfb-official-rezoning-reference.test.cjs tests/conditional-school-release.test.cjs tests/cfb-district-jurisdiction.test.cjs tests/compact-home-finder.test.cjs
           node --test tests/externalized-main-bootstrap.test.cjs
       - name: Save measured georeference residuals (review-only)
         if: always()
