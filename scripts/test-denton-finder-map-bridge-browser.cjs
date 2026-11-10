@@ -52,32 +52,45 @@ async function main(){
     await marker.waitFor({state:'attached',timeout:12000});
     await marker.click({force:true,timeout:12000});
     await page.waitForFunction(id=>state.selectedSchool&&scoreRecord(state.selectedSchool.name,state.selectedSchool.district)?.id===id,id,{timeout:12000});
+    await page.waitForFunction(id=>document.getElementById('dentonCampusProvenance')?.dataset.campusId===id,id,{timeout:14000});
     const actual=await page.evaluate(()=>{
-     const note=document.querySelector('#zoneNotice');
+     const node=document.getElementById('dentonCampusProvenance');
+     const ref=window.DentonZonePdfReference?.lookup(state.selectedSchool,
+      scoreRecord(state.selectedSchool.name,state.selectedSchool.district)?.id);
      return {id:scoreRecord(state.selectedSchool.name,state.selectedSchool.district)?.id,
       school:state.selectedSchool.name,
       level:state.selectedSchool.type,
       markerQuality:state.selectedSchool.campusPointReview,
-      pdf:note?.querySelector('.denton-zone-reference a')?.href,
-      sourceType:note?.querySelector('.denton-zone-reference')?.dataset.sourceType,
-      warning:note?.textContent||'',
+      pointStatus:node?.dataset.pointStatus,
+      pdf:node?.querySelector('a')?.href,
+      sourceType:ref?.status,
+      polygonReady:ref?.polygonReady,
+      warning:node?.textContent||'',
       attendanceLayerCount:zoneGroup.getLayers().length};
     });
     assert.equal(actual.id,id);
     assert.equal(actual.level,expected.level);
-    assert.equal(actual.pdf,expected.url);
+    assert.equal(actual.pdf,expected.url,
+     'Current publicly visible Denton campus PDF link must match exact official TEA school ID');
     assert.equal(actual.sourceType,'official-pdf-reference-not-GIS');
+    assert.equal(actual.polygonReady,false);
     assert.equal(actual.attendanceLayerCount,0,'Finder campus must not create unverified attendance polygons');
-    assert.match(actual.warning,/지도 폴리곤 미확보/);
+    assert.match(actual.warning,/학교 건물 마커는 배정구역이 아닙니다/);
+    assert.match(actual.warning,/GIS 경계/);
     if(evidence.rows.some(x=>x.campusId===id&&x.historicCampusCoordinateHold)){
-      assert.equal(actual.markerQuality,'single-source-historical','Unverified campus point must remain provisional');
-      assert.match(actual.warning,/현행 위치 검증은 미완료/);
+      assert.equal(actual.markerQuality,'unreviewed-historical','Held campus point must remain provisional');
+      assert.equal(actual.pointStatus,'historical-exception');
+      assert.match(actual.warning,/현재 학교 마커 좌표 미인증/);
+    }else{
+      assert.equal(actual.markerQuality,'two-source-historical');
+      assert.equal(actual.pointStatus,'historical-two-source');
+      assert.match(actual.warning,/현행 위치·배정 미인증/);
     }
     findings.push({width,id,school:actual.school,level:actual.level,pdfMatched:true,quality:actual.markerQuality,
       polygonPresent:false,status:'CAMPUS_MARKER_AND_OFFICIAL_PDF_MATCH_FINDER_RESULT_NO_POLYGON_CERTIFICATION'});
     console.log('DENTON_FINDER_MAP_BRIDGE_PASS',JSON.stringify({width,id,school:actual.school,quality:actual.markerQuality,pdfMatched:true,currentPolygon:false}));
     if(id==='061901132'||id==='061901003'){
-     await page.locator('#zoneNotice').screenshot({path:path.join(dest,id+'-'+width+'px.png'),animations:'disabled',timeout:18000});
+     await page.locator('#dentonCampusProvenance').screenshot({path:path.join(dest,id+'-'+width+'px.png'),animations:'disabled',timeout:18000});
     }
    }
    await page.close();
