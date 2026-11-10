@@ -81,7 +81,7 @@
  function showForSchool(s){
   clearLayer();
   selected=(s&&s.district==='CFB'&&GRADES.has(s.type)&&schoolKey(s.name))?
-   {school:schoolKey(s.name),grade:s.type}:null;
+   {school:schoolKey(s.name),grade:s.type,campus:s}:null;
   if(!selected){status('CFB 초·중·고 학교를 선택하면 연결된 참고 경계를 확인할 수 있습니다.','unavailable');return 'unavailable'}
   const matches=records.filter(r=>r.school===selected.school&&r.grade===selected.grade);
   if(matches.length!==1){
@@ -119,7 +119,8 @@
   }
  }
  function reset(){
-  selected=null;clearLayer();
+  selected=null;allowDraft=false;clearLayer();
+  const checkbox=byId('cfbShowDraftZone');if(checkbox)checkbox.checked=false;
   status('경계 미확인 · 공식 Finder에서 초·중·고 학교를 수동 확인하세요.','unavailable');
  }
  function setDraftVisibility(on){
@@ -127,10 +128,7 @@
   const checkbox=byId('cfbShowDraftZone');
   if(checkbox)checkbox.checked=allowDraft;
   if(!allowDraft)clearLayer();
-  if(selected&&typeof state!=='undefined'&&state?.schools){
-   const s=state.schools.find(x=>x.district==='CFB'&&x.type===selected.grade&&schoolKey(x.name)===selected.school);
-   if(s)return showForSchool(s);
-  }
+  if(selected?.campus)return showForSchool(selected.campus);
   if(!allowDraft)status('추정 경계 숨김 · 실제 배정은 공식 Finder에서 확인하세요.','draft-hidden');
   return allowDraft;
  }
@@ -162,6 +160,7 @@
  }
  return Object.freeze({setGeoJSON,showForSchool,reset,setDraftVisibility,
   getSummary:()=>Object.freeze({features:records.length,verified:records.filter(x=>x.kind==='verified').length,
+    overlayVisible:!!layer,
     rejected:invalidCount,draftVisible:allowDraft,automaticAssignmentApproved:false}),
   validGeometry});
 });
