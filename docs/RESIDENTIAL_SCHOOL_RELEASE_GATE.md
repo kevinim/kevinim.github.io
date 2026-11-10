@@ -19,3 +19,11 @@ The seven currently required districts are checked for at least two distinct 5-d
 
 ## Operation
 Run `node scripts/verify-residential-school-release.cjs` in release CI. It fails when independently approved evidence is absent, stale, incomplete, or has any failed required step. No release workflow may ignore the exit code. The workflow does not deploy. **GitHub branch protection / ruleset must separately require the job**; adding a YAML job alone does not configure repository rulesets. An owner must explicitly approve any changed scope or exception. PR #141 is independently managed and untouched.
+
+## Conditional GO and CI job separation (2026-11-10)
+
+The previous pull-request workflow always executed the strict release gate against missing evidence and failed every policy-only PR. That failed check did not imply a code bug; it blocked safe Track B documentation/UX from normal review.
+
+The PR job now verifies policy syntax, synthetic tests, and that absent residential evidence remains **NO_GO**. A separate manual full-residential-authorization job still executes the **strict seven-district evidence gate**. A green policy-integrity check is **not** school enrollment certification or permission for Track C. Current immutable ConditionalSchoolRelease grants remain empty, with no approved address-based auto-assignments.
+
+Before Track C publication, invoke the strict gate in the actual production release workflow, gather current source-specific non-private residential evidence and independent owner review, and independently verify branch protection (Issue #135). The policy check alone cannot substitute for any of these steps.
