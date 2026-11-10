@@ -60,8 +60,11 @@ def parcel_match(parcel,school_id,level_features):
         return {"status":"NO_GO_PARCEL_INTERSECTS_COMPETING_SCHOOL_ZONE"}
     proj=transform(WGS_TO_METERS.transform,parcel)
     border=transform(WGS_TO_METERS.transform,target.boundary)
-    return {"status":"PARCEL_WITHIN_DERIVED_PDF_ZONE_NOT_ENROLLMENT_CERTIFIED",
-            "approximateParcelToDerivedZoneBoundaryMeters":round(proj.distance(border),1)}
+    margin=round(proj.distance(border),1)
+    return {"status":("NO_GO_CAD_PARCEL_WITHIN_100M_DERIVED_ATTENDANCE_BOUNDARY"
+              if margin < 100.0 else "PARCEL_INTERIOR_DERIVED_PDF_NOT_ENROLLMENT_CERTIFIED"),
+            "approximateParcelToDerivedZoneBoundaryMeters":margin,
+            "nearBorderThresholdMeters":100.0}
 
 def public_query():
     # No owner name, PID/geoID, deed, mailing address or student data requested.
