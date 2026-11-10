@@ -25,7 +25,7 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
     return route.abort();
    });
    let asset=0;
-   page.on('response',r=>{if(r.url().includes('/dashboard-main.js?v=3')&&r.status()===200)asset++});
+   page.on('response',r=>{if(r.url().includes('/dashboard-main.js?v=4')&&r.status()===200)asset++});
    try{
     await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});
     await page.waitForFunction(()=>typeof map!=='undefined'&&map&&typeof state!=='undefined'&&
