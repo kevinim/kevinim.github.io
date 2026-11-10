@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-10",
+  "district": {
+    "name": "Carrollton-Farmers Branch ISD",
+    "teaDistrictId": "057903",
+    "abbr": "CFB"
+  },
+  "schoolYears": [
+    "2025-26",
+    "2026-27"
+  ],
+  "certifiedCampusAttendancePolygons": 0,
+  "automaticResidenceAssignmentAllowed": false,
+  "provenancePolicy": "Source visibility is not a redistribution grant; school-grade residence zones cannot be inferred from district outlines, school points, images, or change-only narratives.",
+  "existingParallelWork": {
+    "pr208": "https://github.com/kevinim/kevinim.github.io/pull/208",
+    "approvedRasterManifestOnPr208": "data/cfb-approved-zone-raster-reference-2026.json",
+    "districtBoundaryOnPr208": "data/carrollton-three-isd-boundaries-2025.geojson",
+    "calibrationOnPr208": "data/cfb-elementary-raster-calibration-draft.json",
+    "doNotModifyPr208Files": true
+  },
+  "officialSources": {
+    "currentFinder": "https://www.cfbisd.edu/students/school-maps-locator-system",
+    "guidek12": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/",
+    "approved2025": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning",
+    "publicRecordsPortal": "https://www.cfbisd.edu/departments/public-information-requests",
+    "contractorReference": "https://dunaway.com/project/carrollton-farmers-branch-isd-gis-mapping/"
+  },
+  "rasterAssets": [
+    {
+      "id": "approved-elementary-2025",
+      "level": "elementary",
+      "scope": "districtwide-attendance-raster",
+      "assetUrl": "https://resources.finalsite.net/images/f_auto,q_auto/v1750789234/cfbisdedu/m03d0jbfr3hqfnrg7eka/elementary-zones.jpg",
+      "existingPr208": true,
+      "schoolYear": "2025-26",
+      "publisher": "CFBISD",
+      "format": "image/raster",
+      "geometryType": "NOT_GEOGRAPHIC_GIS",
+      "schoolLevelVector": false,
+      "campusTEAIds": null,
+      "publicDisplayEvidence": "publisher official page and existing PR #208 map atlas",
+      "directBinaryFetchInThisAudit": "not-tested",
+      "license": "no-redistribution-license-established",
+      "reuseDecision": "source-reference-only; do-not-rehost-or-auto-assign",
+      "sourcePage": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning"
+    },
+    {
+      "id": "approved-middle-2025",
+      "level": "middle",
+      "scope": "districtwide-attendance-raster",
+      "assetUrl": "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1738861157/cfbisdedu/raatffwyo1ypgwihngcu/middleschoolproposed-02.png",
+      "existingPr208": true,
+      "schoolYear": "2025-26",
+      "publisher": "CFBISD",
+      "format": "image/raster",
+      "geometryType": "NOT_GEOGRAPHIC_GIS",
+      "schoolLevelVector": false,
+      "campusTEAIds": null,
+      "publicDisplayEvidence": "publisher official page and existing PR #208 map atlas",
+      "directBinaryFetchInThisAudit": "not-tested",
+      "license": "no-redistribution-license-established",
+      "reuseDecision": "source-reference-only; do-not-rehost-or-auto-assign",
+      "sourcePage": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning"
+    },
+    {
+      "id": "approved-high-2025",
+      "level": "high",
+      "scope": "districtwide-attendance-raster",
+      "assetUrl": "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1738861128/cfbisdedu/lhksclpohnt5xm2zvgsq/highschoolproposed-02.png",
+      "existingPr208": true,
+      "schoolYear": "2025-26",
+      "publisher": "CFBISD",
+      "format": "image/raster",
+      "geometryType": "NOT_GEOGRAPHIC_GIS",
+      "schoolLevelVector": false,
+      "campusTEAIds": null,
+      "publicDisplayEvidence": "publisher official page and existing PR #208 map atlas",
+      "directBinaryFetchInThisAudit": "not-tested",
+      "license": "no-redistribution-license-established",
+      "reuseDecision": "source-reference-only; do-not-rehost-or-auto-assign",
+      "sourcePage": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning"
+    },
+    {
+      "id": "furneaux-reassignment-2025",
+      "level": "elementary",
+      "scope": "partial-reassignment-raster",
+      "sourcePage": "https://www.cfbisd.edu/about-us/facility-planning-advisory-group/proposed-plan-for-furneaux-elementary",
+      "assetUrl": "https://resources.finalsite.net/images/f_auto%2Cq_auto%2Ct_image_size_2/v1738777173/cfbisdedu/fkr0wuflvdoqyjbte7gd/Furneaux-zone.png",
+      "receivingSchools": [
+        "Davis Elementary",
+        "Thompson Elementary"
+      ],
+      "schoolYear": "2025-26",
+      "publisher": "CFBISD",
+      "format": "image/raster",
+      "geometryType": "NOT_GEOGRAPHIC_GIS",
+      "schoolLevelVector": false,
+      "campusTEAIds": null,
+      "publicDisplayEvidence": "publisher official detail page and search-indexed CDN image",
+      "directBinaryFetchInThisAudit": "not-tested",
+      "license": "no-redistribution-license-established",
+      "reuseDecision": "source-reference-only; do-not-rehost-or-auto-assign"
+    },
+    {
+      "id": "mccoy-reassignment-2025",
+      "level": "elementary",
+      "scope": "partial-reassignment-raster",
+      "sourcePage": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/proposed-plan-for-mccoy-elementary",
+      "assetUrl": "https://resources.finalsite.net/images/f_auto%2Cq_auto%2Ct_image_size_2/v1740002987/cfbisdedu/p6zzu2dkqwtje9y99n0d/mccoy-zone-correct.png",
+      "receivingSchools": [
+        "Good Elementary",
+        "Blanton Elementary",
+        "Carrollton Elementary"
+      ],
+      "schoolYear": "2025-26",
+      "publisher": "CFBISD",
+      "format": "image/raster",
+      "geometryType": "NOT_GEOGRAPHIC_GIS",
+      "schoolLevelVector": false,
+      "campusTEAIds": null,
+      "publicDisplayEvidence": "publisher official detail page and search-indexed CDN image",
+      "directBinaryFetchInThisAudit": "not-tested",
+      "license": "no-redistribution-license-established",
+      "reuseDecision": "source-reference-only; do-not-rehost-or-auto-assign"
+    },
+    {
+      "id": "long-reassignment-2025",
+      "level": "middle",
+      "scope": "partial-reassignment-raster",
+      "sourcePage": "https://www.cfbisd.edu/about-us/facility-planning-advisory-group/proposed-plan-for-long-middle-school",
+      "assetUrl": "https://resources.finalsite.net/images/f_auto%2Cq_auto%2Ct_image_size_2/v1738782160/cfbisdedu/mnbmuoydolfwbw8b0ay3/long-zone.png",
+      "receivingSchools": [
+        "Blalack Middle School",
+        "Polk Middle School"
+      ],
+      "schoolYear": "2025-26",
+      "publisher": "CFBISD",
+      "format": "image/raster",
+      "geometryType": "NOT_GEOGRAPHIC_GIS",
+      "schoolLevelVector": false,
+      "campusTEAIds": null,
+      "publicDisplayEvidence": "publisher official detail page and search-indexed CDN image",
+      "directBinaryFetchInThisAudit": "not-tested",
+      "license": "no-redistribution-license-established",
+      "reuseDecision": "source-reference-only; do-not-rehost-or-auto-assign"
+    }
+  ],
+  "gisCandidates": [
+    {
+      "id": "tlc-2526-isd-outline",
+      "type": "official-district-jurisdiction",
+      "publisher": "Texas Legislative Council",
+      "schoolYear": "2025-26",
+      "geometryType": "esriGeometryPolygon",
+      "schoolAttendancePolygon": false,
+      "schoolTEAId": "057903",
+      "sourceUrl": "https://data.capitol.texas.gov/dataset/school-districts",
+      "downloadUrl": "https://data.capitol.texas.gov/dataset/f2f1e176-e68a-4d39-af89-37ec7e7962dd/resource/57fb5e91-c849-4a33-aaa4-ea073ca98f8f/download/schooldistricts_sy2526.zip",
+      "arcgisUrl": "https://services2.arcgis.com/5MVN2jsqIrNZD4tP/arcgis/rest/services/School_Districts__2026/FeatureServer/0",
+      "license": "Creative Commons Attribution",
+      "licenseEvidenceUrl": "https://data.capitol.texas.gov/dataset/school-districts",
+      "reuse": "already harvested in PR #208; jurisdiction only"
+    },
+    {
+      "id": "nces-2021-22-cfb-school-points",
+      "type": "historical-school-locations",
+      "publisher": "NCES EDGE (third-party ArcGIS hosted copy)",
+      "schoolYear": "2021-22",
+      "geometryType": "esriGeometryPoint",
+      "schoolAttendancePolygon": false,
+      "sourceUrl": "https://services3.arcgis.com/KkgpUIloCxkczPwY/ArcGIS/rest/services/CFBISD_SchoolPoints/FeatureServer/3",
+      "license": "public domain for underlying NCES school-location data (layer metadata)",
+      "licenseEvidenceUrl": "https://services3.arcgis.com/KkgpUIloCxkczPwY/ArcGIS/rest/services/CFBISD_SchoolPoints/FeatureServer/3",
+      "reuse": "historic campus reference only; not accurate current school locations or zones"
+    },
+    {
+      "id": "dunaway-cfb-project",
+      "type": "contractor-case-study",
+      "publisher": "Dunaway",
+      "schoolYear": "not independently verified",
+      "geometryType": "none-publicly-exported",
+      "schoolAttendancePolygon": false,
+      "sourceUrl": "https://dunaway.com/project/carrollton-farmers-branch-isd-gis-mapping/",
+      "license": "not established",
+      "reuse": "evidence that district GIS project included attendance-zone overlays; request authoritative export"
+    },
+    {
+      "id": "cfb-guidek12-current",
+      "type": "official-live-address-finder",
+      "publisher": "CFBISD/GuideK12",
+      "schoolYear": "2026-27-finder-context; polygon-year-not-certified",
+      "geometryType": "interactive-map-no-public-export-verified",
+      "schoolAttendancePolygon": false,
+      "sourceUrl": "https://www.cfbisd.edu/students/school-maps-locator-system",
+      "license": "bulk/export/derivative terms not established",
+      "reuse": "manual selected candidate cross-check only; do not scrape"
+    },
+    {
+      "id": "tea-geographic-data",
+      "type": "district-boundary-only-documentation",
+      "publisher": "Texas Education Agency",
+      "schoolYear": "not-campus-applicable",
+      "geometryType": "jurisdiction-not-attendance",
+      "schoolAttendancePolygon": false,
+      "sourceUrl": "https://tea.texas.gov/families-and-students/school-district-locator/geographic-data",
+      "license": "not applicable to campus zones",
+      "reuse": "TEA warns district boundary does not identify school attendance zone"
+    }
+  ],
+  "sourceConflicts": [
+    {
+      "id": "mccoy-parks-to-good-vs-blanton",
+      "grade": "elementary",
+      "affectedPlaces": [
+        "Parks of Carrollton",
+        "Jackson Place",
+        "Bluffview",
+        "Bluffview II",
+        "Parkway Villas",
+        "Oxford TS",
+        "Lakeview at Josey Ranch"
+      ],
+      "districtWidePageClaim": "Blanton Elementary",
+      "detailedMccoyPageClaim": "Good Elementary",
+      "source1": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning",
+      "source2": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/proposed-plan-for-mccoy-elementary",
+      "status": "UNRESOLVED_OFFICIAL_PAGE_CONFLICT",
+      "resolution": "2026-27 live GuideK12 exact-address candidate plus district clarification; NEVER auto-assign from narratives"
+    },
+    {
+      "id": "furneaux-woodlake-vs-woodland",
+      "grade": "elementary",
+      "districtWidePageClaim": "Woodlake subdivision on Frankford Rd -> Thompson",
+      "detailedFurneauxPageClaim": "Woodland subdivision on Frankford Road -> Thompson",
+      "source1": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning",
+      "source2": "https://www.cfbisd.edu/about-us/facility-planning-advisory-group/proposed-plan-for-furneaux-elementary",
+      "status": "UNRESOLVED_NAME_MISMATCH",
+      "resolution": "Do not assume the place names are synonyms; ask district or verify exact properties"
+    }
+  ],
+  "outstanding": [
+    {
+      "id": "2025-26-campus-vector",
+      "status": "NOT_VERIFIED",
+      "next": "await official public-records reply; request existing campus E/M/H vector files or accessible FeatureServer, published effective date, campus IDs"
+    },
+    {
+      "id": "2026-27-campus-vector",
+      "status": "NOT_VERIFIED",
+      "next": "request certified 2026-27 school-level geometry separately; finder availability does not imply export"
+    },
+    {
+      "id": "cfb-visual-reuse-rights",
+      "status": "NOT_VERIFIED",
+      "next": "district must confirm permission for images, traced derived boundaries and public redistribution"
+    },
+    {
+      "id": "campus-tea-id-join",
+      "status": "NOT_VERIFIED",
+      "next": "AG03 join campus names to authoritative TEA identifiers using existing project TEA dataset; no identifiers invented for aggregate maps"
+    },
+    {
+      "id": "current-address-crosscheck",
+      "status": "NOT_VERIFIED",
+      "next": "AG04 exact native-autocomplete Finder selection and independent public residential holdouts"
+    }
+  ]
+}
