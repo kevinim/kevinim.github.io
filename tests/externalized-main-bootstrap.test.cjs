@@ -124,7 +124,10 @@ test('main index equals previous live release plus exactly the CFB atlas source 
 test('strict script CSP preserved exactly and personal office artifacts absent',()=>{
  const allowed=oldCsp.replace('https://geocode.arcgis.com https://nominatim.openstreetmap.org',
   'https://geocode.arcgis.com https://iisd1.maps.arcgis.com https://services.arcgis.com https://nominatim.openstreetmap.org');
- assert.equal(newCsp,allowed.replace("frame-src 'none'","frame-src https://app.guidek12.com"),'Only CFB official Finder frame origin added to reviewed CSP');
+ const atlasCsp=allowed.replace("frame-src 'none'","frame-src https://app.guidek12.com")
+  .replace("img-src 'self' data: blob: https://unpkg.com",
+   "img-src 'self' data: blob: https://resources.finalsite.net https://unpkg.com");
+ assert.equal(newCsp,atlasCsp,'Only official GuideK12 frame and official Finalsite raster image origin allowed');
  for(const part of ["script-src-attr 'none'","object-src 'none'","base-uri 'self'","form-action 'self'"])
   assert.ok(newCsp.includes(part));
  assert.ok(newCsp.includes("script-src 'self' https://unpkg.com;"));
