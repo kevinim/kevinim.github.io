@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "description": "Source licensing/consent gate for candidate attendance boundaries; public map access is not reuse permission.",
+  "districts": {
+    "CFB": {
+      "status": "not-cleared",
+      "finderUrl": "https://www.cfbisd.edu/students/school-maps-locator-system",
+      "provider": "GuideK12 (district embedded viewer)",
+      "approvedUses": {
+        "automatedQueries": false,
+        "derivativeGeometry": false,
+        "publicRedistribution": false
+      },
+      "consentEvidenceUrl": null,
+      "termsUrl": "https://app.guidek12.com/ahsd/school_search/2022/terms_and_conditions.html",
+      "reviewedAt": "2026-11-09",
+      "reason": "Service terms restrict reverse engineering and require attribution; no written district/provider grant for derivative geometry identified.",
+      "officialDistrictGISRequested": false
+    }
+  }
+}
