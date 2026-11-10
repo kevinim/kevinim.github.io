@@ -5,8 +5,10 @@ on:
     paths:
       - 'index.html'
       - 'features/cfb-official-inline.js'
+      - 'features/cfb-official-bridge.js'
       - 'features/cfb-official-inline.css'
       - 'tests/cfb-official-inline-embed.test.cjs'
+      - 'tests/cfb-official-manual-bridge.test.cjs'
       - 'tests/csp-network-allowlist.test.cjs'
       - 'tests/externalized-main-bootstrap.test.cjs'
       - 'scripts/test-cfb-official-inline-live-browser.cjs'
@@ -29,8 +31,9 @@ jobs:
           node-version: '24'
       - run: |
           node --check features/cfb-official-inline.js
+          node --check features/cfb-official-bridge.js
           node --check tests/externalized-main-bootstrap.test.cjs
-          node --test tests/cfb-official-inline-embed.test.cjs tests/cfb-official-rezoning-reference.test.cjs tests/csp-network-allowlist.test.cjs tests/conditional-school-release.test.cjs
+          node --test tests/cfb-official-inline-embed.test.cjs tests/cfb-official-manual-bridge.test.cjs tests/cfb-official-rezoning-reference.test.cjs tests/csp-network-allowlist.test.cjs tests/conditional-school-release.test.cjs
           node --test tests/externalized-main-bootstrap.test.cjs
   vendor-browser:
     name: Real local-origin CFB iframe at mobile/desktop; blocked frame is NO_GO
