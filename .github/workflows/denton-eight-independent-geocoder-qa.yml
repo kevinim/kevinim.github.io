@@ -1,0 +1,39 @@
+name: Denton 8 public campus address geocoder verification (QA only)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/probe-denton-eight-public-school-geocodes.cjs'
+      - 'tests/denton-eight-public-school-geocode.test.cjs'
+      - '.github/workflows/denton-eight-independent-geocoder-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  independent-geocoders:
+    name: All 8 public school buildings, Esri/Census evidence, not current-site certification
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Offline synthetic failure and false-approval regression
+        run: |
+          node --check scripts/probe-denton-eight-public-school-geocodes.cjs
+          node --test tests/denton-eight-public-school-geocode.test.cjs
+      - name: Public school address independent free provider probe
+        env:
+          WRITE_DENTON_GEOCODE_ARTIFACT: '1'
+        run: node scripts/probe-denton-eight-public-school-geocodes.cjs
+      - name: Retain only public school QA summary, no private residences or cache
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: denton-8-public-school-independent-geocoder-evidence
+          path: artifacts/denton-eight-public-geocoder/review.json
+          if-no-files-found: warn
+          retention-days: 7
