@@ -61,3 +61,7 @@ Read-only pinned GitHub Actions workflow `.github/workflows/dfw-incremental-scho
 5. Required GitHub branch-protection policy that invokes actual Production evidence check — **not certified**.
 
 The purpose of this change is to make partial functionality **eligible for review** without converting an unverified address lookup into a school enrollment recommendation. It does not itself remove the overall Production NO-GO.
+
+## Integration and freshness audit — 2026-11-10
+
+The evaluator's default review date is now derived from the current UTC calendar day, not the original 2026-11-09 development date. CI fixtures deliberately supply an explicit fixed clock to remain reproducible. Live review must reject Finder and independent reviewer evidence older than 90 days. The branch has been synchronized with the latest #148 policy-only CI / separate manual strict Track C gate. A passing code-integrity check does not authorize real residential assignments. All eight current real-evidence entries remain HOLD until independent district/grade/Finder and publisher geometry evidence is supplied and reviewed; no private addresses are committed.
