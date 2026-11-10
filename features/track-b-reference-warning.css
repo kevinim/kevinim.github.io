@@ -28,3 +28,9 @@ html[data-theme="dark"] #dentonPdfZoneDirectory{border-left-color:#ffc078}
 html[data-theme="dark"] .denton-campus-provenance{background:#332718;border-color:#f1a957;color:#ffebcf}
 html[data-theme="dark"] .denton-campus-provenance strong{color:#ffecda}
 @media(max-width:430px){.denton-campus-provenance{padding:10px}}
+
+/* CFB sourced rezoning reference is not a campus-level GIS polygon layer. */
+#cfbOfficialRezoningReference{margin:10px 0;padding:11px 12px;border-left:4px solid #b87a22;line-height:1.65}
+#cfbOfficialRezoningReference .cardlink{display:inline-block;margin:6px 10px 3px 0}
+#cfbOfficialRezoningReference p{overflow-wrap:anywhere}
+html[data-theme="dark"] #cfbOfficialRezoningReference{border-left-color:#ffc078}
