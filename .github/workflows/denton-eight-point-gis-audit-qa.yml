@@ -1,0 +1,30 @@
+name: Denton eight campus exceptions and current-GIS provenance (NO DEPLOY)
+on:
+  push:
+    branches:
+      - qa/denton-eight-points-and-2026-gis-source-audit-20261109
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+concurrency:
+  group: denton-agent02-${{ github.workflow }}-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  audit:
+    name: All eight held points, 39 PDFs, 31 historical matches and no current-zone fabrication
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # pinned
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # pinned
+        with:
+          node-version: '24'
+      - run: |
+          node --check tests/denton-eight-point-and-gis-disposition.test.cjs
+          node --check scripts/validate-denton-2026-zone-import.cjs
+          node --test tests/denton-eight-point-and-gis-disposition.test.cjs tests/denton-campus-point-quality.test.cjs tests/denton-official-zone-references.test.cjs tests/denton-zone-import-gate.test.cjs tests/denton-independent-finder-evidence.test.cjs

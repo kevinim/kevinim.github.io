@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "district": "061901",
+  "schoolYear": "2026-27",
+  "checkedOn": "2026-11-09",
+  "scope": "Publicly discoverable, safely attributable Denton ISD school-specific attendance polygons (not administrative district boundaries or campus points)",
+  "officialCurrentYearPdfCount": 39,
+  "expectedCampusGradeCounts": {
+    "elementary": 26,
+    "middle": 9,
+    "high": 4
+  },
+  "verifiedCurrentYearSchoolPolygonLayerCount": 0,
+  "currentYearSchoolPolygonsAcquired": false,
+  "publishCurrentYearGeometry": false,
+  "officialAddressAssignmentCertified": false,
+  "directGISAcquisitionOutcome": "no approved 2026–27 campus polygon FeatureServer, shapefile or GeoJSON verified among examined sources",
+  "sources": [
+    {
+      "kind": "current-district-campus-pdfs",
+      "url": "https://www.dentonisd.org/families/attendance-zones",
+      "status": "confirmed-current-PDF-reference",
+      "details": "Official 2026–27 school-specific maps for 39 campuses; image/PDF references only, no GIS coordinates/feature geometry",
+      "usableAsCurrentCampusPolygon": false
+    },
+    {
+      "kind": "current-district-residential-school-locator",
+      "url": "https://webquery-2-denton-tx.etstack.io/",
+      "status": "official-live-address-finder",
+      "details": "External ETStack Web Query linked by Denton ISD; designed for user-entered addresses. No documented public GIS polygon download or approved automated extraction verified",
+      "usableAsCurrentCampusPolygon": false
+    },
+    {
+      "kind": "current-district-rezoning",
+      "url": "https://www.dentonisd.org/families/attendance-zones/attendance-boundary-modification-26-27",
+      "status": "approved-boundary-change-reference",
+      "details": "March 24, 2026 Paloma Creek changes impact Bell, Martinez, Sandbrock Ranch, Savannah, Union Park; requires current-year provenance and holdout comparison",
+      "usableAsCurrentCampusPolygon": false
+    },
+    {
+      "kind": "county-administrative-isd-polygon",
+      "url": "https://geo.dentoncad.com/arcgis/rest/services/ReferenceData/SchoolDistrict/MapServer/4",
+      "status": "available-district-boundary-only",
+      "details": "Denton Central Appraisal District SchoolDistrict geometry distinguishes ISDs, not individual elementary/middle/high attendance zones",
+      "usableAsCurrentCampusPolygon": false
+    },
+    {
+      "kind": "city-historical-school-points",
+      "url": "https://services2.arcgis.com/VNo0ht0YPXJoI4oE/ArcGIS/rest/services/market_area_F_WFL1/FeatureServer/0",
+      "status": "available-2023-24-point-layer",
+      "details": "DentonSchools_2023to_2024 reports esriGeometryPoint with school location fields; historical point layer cannot serve school attendance boundaries",
+      "usableAsCurrentCampusPolygon": false
+    },
+    {
+      "kind": "federal-historical-attendance-shapes",
+      "url": "https://nces.ed.gov/programs/edge/SABS",
+      "status": "historical-only",
+      "details": "NCES SABS school attendance area files stop at 2015–16, cannot certify 2026–27",
+      "usableAsCurrentCampusPolygon": false
+    },
+    {
+      "kind": "state-district-boundary-warning",
+      "url": "https://tea.texas.gov/families-and-students/school-district-locator/geographic-data",
+      "status": "school-district-only",
+      "details": "TEA geographic district data is not school attendance zone evidence",
+      "usableAsCurrentCampusPolygon": false
+    },
+    {
+      "kind": "future-2028-29-proposed-attendance-rezoning",
+      "url": "https://www.dentonisd.org/families/attendance-zones/attendance-boundary-modification",
+      "status": "proposal-for-2028-29-not-current",
+      "details": "Denton ISD explicitly says the high/middle attendance plan is proposed for 2028–29 only, with no 2026–27 or 2027–28 changes; never treat its map or school forecasts as current 2026–27 assignment polygons",
+      "usableAsCurrentCampusPolygon": false
+    }
+  ],
+  "releaseGate": {
+    "mandatory": "PR #148 exact residence→official Finder→school→2026–27 per-school polygon holdout",
+    "status": "NO_GO",
+    "policy": "Official PDFs, historic points and district-wide polygons cannot auto-promote Denton to school-level GIS coverage; do not derive geometries from non-exportable Finder without permission.",
+    "productionMergeApproved": false
+  },
+  "temporalProvenanceGuard": {
+    "currentYear": "2026-27",
+    "futureProposalYear": "2028-29",
+    "futureProposalMayCertifyCurrentYear": false,
+    "yearUnmatchedSourcesMustRemainQuarantined": true
+  }
+}
