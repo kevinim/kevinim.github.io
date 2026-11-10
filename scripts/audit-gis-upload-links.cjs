@@ -6,7 +6,6 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { DISTRICT_REGISTRY } = require('../district-registry.js');
 const { knownBoundaryException } = require('../school-boundary-match.js');
-const {assertVersionedMainBootstrap}=require('./dashboard-bootstrap-contract.cjs');
 
 const TRUSTED_OFFICIAL_HOSTS = Object.freeze([
   'www.friscoisd.org', 'www.prosper-isd.net', 'www.allenisd.org',
@@ -15,6 +14,11 @@ const TRUSTED_OFFICIAL_HOSTS = Object.freeze([
   'portal.metrostudygis.com', 'txschools.gov',
   'apps.myplanware.com', 'www.kellerisd.net', 'www.nisdtx.org',
   'www.gcisd.net', 'www.southlakecarroll.edu', 'www.westlakeacademy.org',
+  'enrollment.fwisd.org','www.aisd.net','www.mansfieldisd.org','www.gpisd.org',
+  'www.emsisd.com','www.birdvilleschools.net','www.crowleyisdtx.org','www.burlesonisd.net',
+  'www.wisd.org', 'www.duncanvilleisd.org', 'www.midlothianisd.org', 'www.c-isd.com', 'www.aledoisd.org', 'www.weatherfordisd.com', 'www.azleisd.net', 'enroll.chisd.net', 'www.chisd.net', 'www.desotoisd.org', 'www.lancasterisd.org', 'www.redoakisd.org', 'www.crandall-isd.net',
+  'www.rcisd.org', 'www.ennis.k12.tx.us', 'www.eisd.org', 'www.greenvilleisd.com', 'www.joshuaisd.org', 'www.terrellisd.org', 'www.aubreyisd.net', 'www.hpisd.org',
+  'www.springtownisd.net', 'www.wsisd.com', 'www.castleberryisd.net', 'www.kaufmanisd.net', 'www.caddomillsisd.org', 'www.decaturisd.us', 'www.ferrisisd.org', 'www.lovejoyisd.net','www.sangerisd.net','www.kempisd.org','www.mabankisd.net','www.ldisd.net','www.alvaradoisd.net','www.godleyisd.net','www.krumisd.net','www.kennedaleisd.net','www.boydisd.net','www.brockisd.net','www.lwisd.org','www.peaster.net','www.pilotpointisd.com','www.bridgeportisd.net','www.commerceisd.org','www.farmersvilleisd.net','www.sunnyvaleisd.com','www.ponderisd.net','www.quinlanisd.net','www.keeneisd.org','www.venusisd.net','www.pisd.net','www.brisd.net','www.maypearlisd.org','www.palmer-isd.org','www.blandisd.us','www.bolesisd.com','www.celesteisd.org','www.loneoakisd.net','www.wcisd.net','www.gvisd.org','www.rvisd.net','www.scurry-rosser.com','www.millsapisd.net','www.poolville.net','www.alvordisd.net','www.italyisd.org','www.campbellisd.org','www.avalonisd.net','www.milfordisd.org','www.garnerisd.net','www.slidellisd.net',
   'www.wylieisd.net', 'www.melissaisd.org', 'www.celinaisd.com', 'www.littleelmisd.net', 'www.dentonisd.org', 'www.coppellisd.com', 'web.risd.org', 'www.princetonisd.net', 'www.annaisd.org', 'www.argyleisd.com', 'www.garlandisd.net', 'www.hebisd.edu', 'www.rockwallisd.com', 'mesquiteisd.org', 'www.irvingisd.net', 'www.forneyisd.net', 'www.dallasisd.org', 'www.communityisd.org',
 ]);
 
@@ -48,9 +52,7 @@ function auditSchoolBoundaryTrust(files, registry = DISTRICT_REGISTRY) {
   const legacyScript = files?.['features/reviewed-bootstrap.js'] || '';
   const uploadGuard = files?.['features/geojson-upload-guard.js'] || '';
   const match = files?.['school-boundary-match.js'] || '';
-  let validBootstrap=false;
-  try { assertVersionedMainBootstrap(page); validBootstrap=true; } catch {}
-  if (!page || !main || !validBootstrap || !legacy || !legacyScript || !uploadGuard || !match) {
+  if (!page || !main || !page.includes('<script src="./dashboard-main.js?v=4"></script>') || !legacy || !legacyScript || !uploadGuard || !match) {
     errors.push('Missing required school boundary source files');
     return {errors, warnings, inventory: null};
   }

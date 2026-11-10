@@ -78,6 +78,71 @@ async function load(fetchImpl=fetch){
  }
  return {features:all,summary,sourceYearVerified:false};
 }
-const api=Object.freeze({SOURCES,PREFIX,sourceUrl,shapeValid,normalizeFeature,buildQuery,load});
+
+function inside(point,geom){
+ const polygons=geom?.type==='Polygon'?[geom.coordinates]:geom?.type==='MultiPolygon'?geom.coordinates:[];
+ function ringHas(ring){
+  let inside=false;const [x,y]=point;
+  for(let i=0,j=ring.length-1;i<ring.length;j=i++){
+   const a=ring[i],b=ring[j];
+   if(((a[1]>y)!==(b[1]>y))&&(x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]))inside=!inside;
+  }
+  return inside;
+ }
+ return polygons.some(poly=>Array.isArray(poly)&&poly.length&&ringHas(poly[0])&&!poly.slice(1).some(ringHas));
+}
+function pointQuery(spec,[lon,lat]){
+ if(!Number.isFinite(lon)||!Number.isFinite(lat)||lon<=-97.55||lon>=-96.3||lat<=32.35||lat>=33.25)
+  throw Error('Dallas reference point out of supported geographic bounds');
+ const u=new URL(sourceUrl(spec)+'/query');
+ const params={where:'1=1',geometry:lon+','+lat,geometryType:'esriGeometryPoint',
+  spatialRel:'esriSpatialRelIntersects',inSR:'4326',outSR:'4326',
+  outFields:spec.nameField+','+spec.campusField,returnGeometry:'true',f:'geojson'};
+ for(const [k,v] of Object.entries(params))u.searchParams.set(k,v);
+ return u.toString();
+}
+async function lookup(point,signal,fetchImpl=fetch){
+ if(!Array.isArray(point)||point.length!==2)throw Error('missing Dallas reference point');
+ if(signal?.aborted)throw Error('Dallas lookup cancelled');
+ const [lon,lat]=point;
+ // Coordinates are sent to publisher only after an explicit user click, never a typed address.
+ const query=(url,opts={})=>fetchImpl(url,{...opts,signal,cache:'no-store'});
+ const records=await Promise.all(SOURCES.map(async spec=>{
+  const meta=await getJSON(sourceUrl(spec)+'?f=pjson',query);
+  if(meta.type!=='Feature Layer'||meta.geometryType!=='esriGeometryPolygon'||
+   !meta.fields?.some(f=>f.name===spec.nameField)||
+   !meta.fields?.some(f=>f.name===spec.campusField)||
+   !meta.capabilities?.includes('Query'))throw Error('Dallas source changed '+spec.level);
+  const edited=meta.editingInfo?.lastEditDate??meta.lastEditDate;
+  if(!Number.isFinite(edited)||edited<Date.UTC(2026,6,1))
+   throw Error('Dallas publisher map year unconfirmed '+spec.level);
+  const geo=await getJSON(pointQuery(spec,point),query);
+  if(geo.type!=='FeatureCollection'||!Array.isArray(geo.features)||geo.features.length!==1||
+   geo.exceededTransferLimit===true)throw Error('Ambiguous Dallas reference source '+spec.level);
+  const feature=normalizeFeature(geo.features[0],spec);
+  if(!inside(point,feature.geometry))throw Error('Dallas polygon does not include the inspected point '+spec.level);
+  return {...feature,properties:{...feature.properties,sourceYearVerified:false,schoolYear:null,
+   sourceVintage:'GIS modified '+new Date(edited).toISOString().slice(0,10)+'; school year not certified'}};
+ }));
+ if(new Set(records.map(f=>f.properties.gradeLevel)).size!==3)throw Error('Incomplete Dallas reference source');
+ return {status:'publisher-reference-only',yearCertified:false,addressAssignmentCertified:false,
+  features:records,names:Object.fromEntries(records.map(f=>[f.properties.gradeLevel,f.properties.school])),
+  officialFinder:'https://www.dallasisd.org/departments/demographic-studies/find-your-school/schoolsite-locator-interactive-map'};
+}
+function compareReportedSchool(result,{gradeLevel,schoolName,schoolYear}={}){
+ const safe={kind:'dallas',yearCertified:false,independentlyVerified:false,productionAssignmentApproved:false};
+ if(result?.status!=='ready'||!result.names)return {...safe,status:'no-source',message:'Dallas 참고 GIS를 먼저 조회하세요.'};
+ if(!['elementary','middle','high'].includes(gradeLevel)||!String(schoolName||'').trim())
+  return {...safe,status:'missing-input',message:'학년과 공식 Finder의 학교명을 직접 입력하세요.'};
+ if(schoolYear!=='2026–27')return {...safe,status:'year-unconfirmed',message:'공식 Finder 학년도가 인증되지 않았습니다.'};
+ const key=x=>String(x||'').toUpperCase().replace(/\b(ELEMENTARY|MIDDLE|HIGH|SCHOOL|ES|MS|HS)\b/g,'').replace(/[^A-Z0-9]/g,'');
+ const expected=key(result.names[gradeLevel]),actual=key(schoolName);
+ const same=!!expected&&expected===actual;
+ return {...safe,status:same?'manual-match':'manual-mismatch',
+  message:same?'직접 입력한 학교명과 참고 GIS가 일치합니다. 독립 공식 조회 및 현행 배정 인증이 아닙니다.':
+   '입력한 공식 학교명과 참고 GIS가 다릅니다. 반드시 Dallas ISD SchoolSite Locator에서 확인하세요.'};
+}
+
+const api=Object.freeze({SOURCES,PREFIX,sourceUrl,shapeValid,normalizeFeature,buildQuery,load,inside,pointQuery,lookup,compareReportedSchool});
 if(typeof module!=='undefined')module.exports=api;
 if(typeof window!=='undefined')window.DallasAttendanceLive=api;

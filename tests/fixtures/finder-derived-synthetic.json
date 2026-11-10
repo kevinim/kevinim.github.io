@@ -1,0 +1,263 @@
+{
+  "schemaVersion": 1,
+  "districtCode": "CFB",
+  "schoolYear": "2026-2027",
+  "demoOnly": true,
+  "source": {
+    "finderUrl": "https://www.cfbisd.edu/students/school-maps-locator-system",
+    "verifiedAt": "2026-11-09",
+    "permission": {
+      "status": "unknown"
+    }
+  },
+  "campuses": [
+    {
+      "id": "DEMO_E_A",
+      "level": "elementary",
+      "name": "Synthetic Elementary A"
+    },
+    {
+      "id": "DEMO_M_A",
+      "level": "middle",
+      "name": "Synthetic Middle A"
+    },
+    {
+      "id": "DEMO_H_A",
+      "level": "high",
+      "name": "Synthetic High A"
+    },
+    {
+      "id": "DEMO_E_B",
+      "level": "elementary",
+      "name": "Synthetic Elementary B"
+    },
+    {
+      "id": "DEMO_M_B",
+      "level": "middle",
+      "name": "Synthetic Middle B"
+    },
+    {
+      "id": "DEMO_H_B",
+      "level": "high",
+      "name": "Synthetic High B"
+    }
+  ],
+  "observations": [
+    {
+      "id": "demo-a-01",
+      "role": "training",
+      "point": [
+        -96.9004,
+        32.9
+      ],
+      "zip": "75006",
+      "residentialParcelVerified": true,
+      "officialFinderVerified": true,
+      "evidenceId": "synthetic-only-a-1",
+      "schoolYear": "2026-2027",
+      "assignment": {
+        "elementary": "DEMO_E_A",
+        "middle": "DEMO_M_A",
+        "high": "DEMO_H_A"
+      }
+    },
+    {
+      "id": "demo-a-02",
+      "role": "training",
+      "point": [
+        -96.8996,
+        32.9
+      ],
+      "zip": "75006",
+      "residentialParcelVerified": true,
+      "officialFinderVerified": true,
+      "evidenceId": "synthetic-only-a-2",
+      "schoolYear": "2026-2027",
+      "assignment": {
+        "elementary": "DEMO_E_A",
+        "middle": "DEMO_M_A",
+        "high": "DEMO_H_A"
+      }
+    },
+    {
+      "id": "demo-a-03",
+      "role": "training",
+      "point": [
+        -96.9,
+        32.9005
+      ],
+      "zip": "75006",
+      "residentialParcelVerified": true,
+      "officialFinderVerified": true,
+      "evidenceId": "synthetic-only-a-3",
+      "schoolYear": "2026-2027",
+      "assignment": {
+        "elementary": "DEMO_E_A",
+        "middle": "DEMO_M_A",
+        "high": "DEMO_H_A"
+      }
+    },
+    {
+      "id": "demo-a-04",
+      "role": "holdout",
+      "point": [
+        -96.9,
+        32.90016
+      ],
+      "zip": "75006",
+      "residentialParcelVerified": true,
+      "officialFinderVerified": true,
+      "evidenceId": "synthetic-only-a-4",
+      "schoolYear": "2026-2027",
+      "assignment": {
+        "elementary": "DEMO_E_A",
+        "middle": "DEMO_M_A",
+        "high": "DEMO_H_A"
+      }
+    },
+    {
+      "id": "demo-a-05",
+      "role": "holdout",
+      "point": [
+        -96.90005000000001,
+        32.90013
+      ],
+      "zip": "75006",
+      "residentialParcelVerified": true,
+      "officialFinderVerified": true,
+      "evidenceId": "synthetic-only-a-5",
+      "schoolYear": "2026-2027",
+      "assignment": {
+        "elementary": "DEMO_E_A",
+        "middle": "DEMO_M_A",
+        "high": "DEMO_H_A"
+      }
+    },
+    {
+      "id": "demo-a-06",
+      "role": "holdout",
+      "point": [
+        -96.89995,
+        32.90013
+      ],
+      "zip": "75006",
+      "residentialParcelVerified": true,
+      "officialFinderVerified": true,
+      "evidenceId": "synthetic-only-a-6",
+      "schoolYear": "2026-2027",
+      "assignment": {
+        "elementary": "DEMO_E_A",
+        "middle": "DEMO_M_A",
+        "high": "DEMO_H_A"
+      }
+    },
+    {
+      "id": "demo-b-01",
+      "role": "training",
+      "point": [
+        -96.8954,
+        32.9
+      ],
+      "zip": "75006",
+      "residentialParcelVerified": true,
+      "officialFinderVerified": true,
+      "evidenceId": "synthetic-only-b-1",
+      "schoolYear": "2026-2027",
+      "assignment": {
+        "elementary": "DEMO_E_B",
+        "middle": "DEMO_M_B",
+        "high": "DEMO_H_B"
+      }
+    },
+    {
+      "id": "demo-b-02",
+      "role": "training",
+      "point": [
+        -96.8946,
+        32.9
+      ],
+      "zip": "75006",
+      "residentialParcelVerified": true,
+      "officialFinderVerified": true,
+      "evidenceId": "synthetic-only-b-2",
+      "schoolYear": "2026-2027",
+      "assignment": {
+        "elementary": "DEMO_E_B",
+        "middle": "DEMO_M_B",
+        "high": "DEMO_H_B"
+      }
+    },
+    {
+      "id": "demo-b-03",
+      "role": "training",
+      "point": [
+        -96.895,
+        32.9005
+      ],
+      "zip": "75006",
+      "residentialParcelVerified": true,
+      "officialFinderVerified": true,
+      "evidenceId": "synthetic-only-b-3",
+      "schoolYear": "2026-2027",
+      "assignment": {
+        "elementary": "DEMO_E_B",
+        "middle": "DEMO_M_B",
+        "high": "DEMO_H_B"
+      }
+    },
+    {
+      "id": "demo-b-04",
+      "role": "holdout",
+      "point": [
+        -96.895,
+        32.90016
+      ],
+      "zip": "75006",
+      "residentialParcelVerified": true,
+      "officialFinderVerified": true,
+      "evidenceId": "synthetic-only-b-4",
+      "schoolYear": "2026-2027",
+      "assignment": {
+        "elementary": "DEMO_E_B",
+        "middle": "DEMO_M_B",
+        "high": "DEMO_H_B"
+      }
+    },
+    {
+      "id": "demo-b-05",
+      "role": "holdout",
+      "point": [
+        -96.89505,
+        32.90013
+      ],
+      "zip": "75006",
+      "residentialParcelVerified": true,
+      "officialFinderVerified": true,
+      "evidenceId": "synthetic-only-b-5",
+      "schoolYear": "2026-2027",
+      "assignment": {
+        "elementary": "DEMO_E_B",
+        "middle": "DEMO_M_B",
+        "high": "DEMO_H_B"
+      }
+    },
+    {
+      "id": "demo-b-06",
+      "role": "holdout",
+      "point": [
+        -96.89495,
+        32.90013
+      ],
+      "zip": "75006",
+      "residentialParcelVerified": true,
+      "officialFinderVerified": true,
+      "evidenceId": "synthetic-only-b-6",
+      "schoolYear": "2026-2027",
+      "assignment": {
+        "elementary": "DEMO_E_B",
+        "middle": "DEMO_M_B",
+        "high": "DEMO_H_B"
+      }
+    }
+  ]
+}

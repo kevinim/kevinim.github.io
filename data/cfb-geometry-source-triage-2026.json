@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "district": "CFB",
+  "reviewedAt": "2026-11-09",
+  "officialRequest": {
+    "status": "draft-prepared-not-sent",
+    "submitTo": "publicinformation@cfbisd.edu",
+    "subjectIncludes": "Public Information Request",
+    "requestPolicy": "electronic-existing-records-only; no paid work without express approval",
+    "portal": "https://www.cfbisd.edu/departments/public-information-requests"
+  },
+  "candidateSources": [
+    {
+      "id": "cfb-official-address-finder",
+      "label": "CFBISD district current School Search",
+      "url": "https://www.cfbisd.edu/students/school-maps-locator-system",
+      "owner": "CFBISD",
+      "type": "official-address-lookup",
+      "schoolSpecificGeometry": false,
+      "yearEvidence": "2025-03-06 adopted rezoning referenced",
+      "sourceReusePermission": "not-confirmed",
+      "disposition": "finder-only",
+      "reason": "Official address-specific assignment, but no independently verified exportable campus polygon data or bulk derivative-rights grant."
+    },
+    {
+      "id": "dunaway-cfb-gis-project",
+      "label": "Dunaway GIS contractor's CFBISD attendance-zone overlays",
+      "url": "https://dunaway.com/project/carrollton-farmers-branch-isd-gis-mapping/",
+      "owner": "Dunaway/CFBISD",
+      "type": "contractor-attendance-zones-reference",
+      "schoolSpecificGeometry": "may-exist-not-publicly-exported",
+      "yearEvidence": "not independently confirmed 2026–27",
+      "sourceReusePermission": "not-confirmed",
+      "disposition": "records-request",
+      "reason": "Contractor confirms attendance zone overlays were part of CFBISD GIS; ask district for releasable current campus vector layers and attribution."
+    },
+    {
+      "id": "cfb-board-adopted-rezoning",
+      "label": "CFBISD March 2025 adopted 2025–26 zone changes",
+      "url": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning",
+      "owner": "CFBISD",
+      "type": "rezoning-narrative",
+      "schoolSpecificGeometry": false,
+      "yearEvidence": "2025–26",
+      "sourceReusePermission": "not-confirmed-for-geometry",
+      "disposition": "research-target-only",
+      "reason": "Street/neighborhood narrative is evidence of past changes, not georeferenced current school polygons."
+    },
+    {
+      "id": "tea-district-geometry",
+      "label": "Texas Education Agency geographic data",
+      "url": "https://tea.texas.gov/families-and-students/school-district-locator/geographic-data",
+      "owner": "Texas Education Agency",
+      "type": "school-district-outline-only",
+      "schoolSpecificGeometry": false,
+      "yearEvidence": "district boundary, not attendance school",
+      "sourceReusePermission": "not-applicable",
+      "disposition": "reject-for-campus-polygons",
+      "reason": "TEA explicitly warns district boundary geography cannot determine school attendance zones."
+    },
+    {
+      "id": "cypress-fairbanks-district",
+      "label": "CFISD Cypress-Fairbanks attendance zones (NOT CFBISD)",
+      "url": "https://www.cfisd.net/our-district/our-schools-facilities/attendance-zones/attendance-zone-maps-by-school",
+      "owner": "Cypress-Fairbanks ISD",
+      "type": "unrelated-district",
+      "schoolSpecificGeometry": true,
+      "yearEvidence": "2026–27",
+      "sourceReusePermission": "unreviewed",
+      "disposition": "reject-district-mismatch",
+      "reason": "Similar acronym is an entirely different Houston-area ISD; must never ingest as Carrollton-Farmers Branch."
+    },
+    {
+      "id": "arcgis-school-points",
+      "label": "Generic ArcGIS school boundary metadata service (points only)",
+      "url": "https://services8.arcgis.com/A76GjgcBUTTcwFGS/arcgis/rest/services/Schools_with_Attendance_Boundary/FeatureServer/0",
+      "owner": "unverified-third-party",
+      "type": "unrelated-or-unverified-point-only",
+      "schoolSpecificGeometry": false,
+      "yearEvidence": "2025 edit timestamp, not 2026–27 campus zones",
+      "sourceReusePermission": "unreviewed",
+      "disposition": "reject-unverified-provenance",
+      "reason": "Layer reports esriGeometryPoint and has no verified relationship to CFBISD; attribute named Attendance_Boundary is not polygon geometry."
+    }
+  ]
+}

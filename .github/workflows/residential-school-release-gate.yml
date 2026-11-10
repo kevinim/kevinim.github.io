@@ -1,0 +1,59 @@
+name: Residential school policy integrity and strict certification (no deploy)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/verify-residential-school-release.cjs'
+      - 'tests/residential-school-release-gate.test.cjs'
+      - 'docs/RESIDENTIAL_SCHOOL_RELEASE_GATE.md'
+      - '.github/workflows/residential-school-release-gate.yml'
+      - 'features/conditional-school-release.js'
+      - 'home-assignment-map.js'
+      - 'home-lookup-v2.js'
+      - 'school-assignment.js'
+      - 'dashboard-main.js'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  policy-integrity:
+    name: Residential policy integrity (not enrollment approval)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # pinned checkout v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # pinned setup-node v7
+        with:
+          node-version: '24'
+      - name: Syntax and positive/negative policy test
+        run: |
+          node --check scripts/verify-residential-school-release.cjs
+          node --test tests/residential-school-release-gate.test.cjs
+      - name: Assert missing authorization evidence remains NO_GO
+        run: |
+          set +e
+          node scripts/verify-residential-school-release.cjs artifacts/absent-review-evidence.json > /tmp/school-release-policy-result.txt
+          result=$?
+          set -e
+          cat /tmp/school-release-policy-result.txt
+          if [ "$result" -eq 0 ]; then
+            echo 'ERROR: missing evidence was improperly authorized'
+            exit 1
+          fi
+          grep -q '"status":"NO_GO"' /tmp/school-release-policy-result.txt
+          grep -q 'missing_reviewed_residential_e2e_evidence' /tmp/school-release-policy-result.txt
+  full-residential-authorization:
+    if: github.event_name == 'workflow_dispatch'
+    name: Manual full-residential evidence certification (NO_GO until real proof)
+    runs-on: ubuntu-latest
+    needs: policy-integrity
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # pinned checkout v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # pinned setup-node v7
+        with:
+          node-version: '24'
+      - name: Strict Track C residential release gate (never ignore failure)
+        run: node scripts/verify-residential-school-release.cjs

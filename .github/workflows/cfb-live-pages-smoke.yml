@@ -1,0 +1,44 @@
+name: CFB official Finder and manual TEA map live Pages smoke (free)
+on:
+  push:
+    branches: [qa/cfb-live-pages-browser-20261110]
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/test-cfb-official-inline-live-browser.cjs'
+      - '.github/workflows/cfb-live-pages-smoke.yml'
+  workflow_dispatch:
+  deployment_status:
+  workflow_run:
+    workflows: ['pages build and deployment']
+    types: [completed]
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  public-cfb-browser:
+    if: ${{ (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') && (github.event_name != 'deployment_status' || github.event.deployment_status.state == 'success') }}
+    name: Actual github.io Finder + manual CFB campus marker at 390/1366px
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # pinned
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # pinned
+        with:
+          node-version: '24'
+      - name: Install isolated public-site browser QA
+        run: |
+          mkdir -p cfb-live-browser-tmp
+          cd cfb-live-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Test public GitHub Pages at 390px and 1366px with NO address submission
+        env:
+          NODE_PATH: ${{ github.workspace }}/cfb-live-browser-tmp/node_modules
+          DASHBOARD_BASE_URL: https://kevinim.github.io/
+        run: |
+          node --check scripts/test-cfb-official-inline-live-browser.cjs
+          node scripts/test-cfb-official-inline-live-browser.cjs

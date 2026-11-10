@@ -6,7 +6,6 @@ const path=require('node:path');
 const cp=require('node:child_process');
 const crypto=require('node:crypto');
 const gate=require('./public-release-gate.cjs');
-const {assertVersionedMainBootstrap}=require('./dashboard-bootstrap-contract.cjs');
 const OUTPUT='dist/public-preview';
 function replaceExact(text,needle,replacement,label){
  const pos=text.indexOf(needle);
@@ -123,7 +122,8 @@ function verifyExternalCspIntegrity(html){
  const inline=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
   .filter(x=>!/\bsrc\s*=/.test(x[1])&&x[2].trim());
  if(inline.length)throw Error('External build must have zero executable inline scripts');
- assertVersionedMainBootstrap(html);
+ const tag='<script src="./dashboard-main.js?v=4"></script>';
+ if(html.split(tag).length!==2)throw Error('External bootstrap tag missing or duplicated');
  return {policy,inlineHashes:0};
 }
 function sanitizeExtractedAssets(sourceHtml,sourceJs){

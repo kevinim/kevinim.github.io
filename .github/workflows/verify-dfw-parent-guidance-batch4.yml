@@ -1,0 +1,41 @@
+name: DFW batch 4 district source coverage and no false GIS
+on:
+  pull_request:
+    branches:
+      - feature/dfw-parent-guidance-next8-20261109
+      - main
+    paths:
+      - 'district-registry.js'
+      - 'trusted-link-policy.js'
+      - 'data/dfw-school-coverage-matrix-2026.json'
+      - 'data/dfw-parent-source-evidence-batch4-2026.json'
+      - 'tests/dfw-parent-guidance-batch4.test.cjs'
+      - 'tests/dfw-school-coverage-matrix.test.cjs'
+      - 'tests/dfw-parent-guidance-next12.test.cjs'
+      - 'tests/dfw-parent-guidance-batch3.test.cjs'
+      - '.github/workflows/verify-dfw-parent-guidance-batch4.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-matrix-and-no-invented-address-gis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Syntax and deterministic official district source matrix
+        run: |
+          node --check district-registry.js
+          node --check trusted-link-policy.js
+          node scripts/build-dfw-school-coverage-matrix.cjs --check
+      - name: District source and UI safety regression
+        run: |
+          node --test tests/dfw-school-coverage-matrix.test.cjs tests/dfw-parent-guidance-next12.test.cjs tests/dfw-parent-guidance-batch3.test.cjs tests/dfw-parent-guidance-batch4.test.cjs tests/dfw-neighbor-finders.test.cjs tests/trusted-outbound-links.test.cjs tests/dfw-school-coverage-runtime.test.cjs
+      - name: Known public personalization leak regression scan
+        run: node scripts/check-public-personalization.cjs .

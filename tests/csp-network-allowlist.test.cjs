@@ -8,6 +8,8 @@ const root=path.join(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const mainConnect=[
  'https://geocode.arcgis.com',
+ 'https://iisd1.maps.arcgis.com',
+ 'https://services.arcgis.com',
  'https://nominatim.openstreetmap.org',
  'https://router.project-osrm.org',
  'https://static.friscoisd.org',
@@ -50,7 +52,7 @@ test('index and reviewed CSP expose only enumerated fetch and image origins',()=
   assert.deepEqual(get(page,'img-src'),["'self'",'data:','blob:',...img],page+' img-src drift');
   assert.deepEqual(get(page,'style-src'),["'self'","'unsafe-inline'",'https://unpkg.com']);
   assert.deepEqual(get(page,'font-src'),["'self'",'data:']);
-  assert.deepEqual(get(page,'frame-src'),["'none'"]);
+  assert.deepEqual(get(page,'frame-src'),page==='index.html'?['https://app.guidek12.com']:["'none'"]);
   assert.deepEqual(get(page,'media-src'),["'none'"]);
   assert.deepEqual(get(page,'script-src-attr'),["'none'"]);
   assert.deepEqual(get(page,'object-src'),["'none'"]);
@@ -62,6 +64,8 @@ test('index and reviewed CSP expose only enumerated fetch and image origins',()=
 test('all live vendor endpoints remain reachable under index connect-src',()=>{
  const sourceNames=[
   ['home-lookup-v2.js','https://geocode.arcgis.com'],
+  ['irving-official-spatial.js','https://iisd1.maps.arcgis.com'],
+  ['dallas-attendance-live.js','https://services.arcgis.com'],
   ['texas-address-suggest.js','https://geocode.arcgis.com'],
   ['collin-parcel-check.js','https://services2.arcgis.com'],
   ['plano-finder-live.js','https://services4.arcgis.com'],

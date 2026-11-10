@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "verifiedOn": "2026-11-09",
+  "basedOnPRs": [
+    141,
+    144,
+    147,
+    150
+  ],
+  "scope": "District official parent entry pages, not independently successful address-grade lookup or certified current-year school polygons.",
+  "coverage": {
+    "previousRegisteredDistricts": 65,
+    "newRegisteredDistricts": 73,
+    "totalObservedISDs": 108,
+    "registeredPercent": 67.6,
+    "addedTEACampusRecords": 43,
+    "remainingISDs": 35,
+    "remainingSchoolRows": 114
+  },
+  "evidence": [
+    {
+      "teaCode": "061908",
+      "district": "Sanger",
+      "ko": "생어",
+      "officialLandingUrl": "https://www.sangerisd.net/studentsparents/enrollment/new-student-registration",
+      "host": "www.sangerisd.net",
+      "routeKind": "official-inquiry",
+      "sourceObservation": "2026–27 new student registration with campus registrars; public address locator unverified",
+      "limitations": "2026–27 공식 신규 등록 경로입니다. 학군에 공개 주소별 지정학교 자동 검색기가 확인된 것은 아닙니다. 초등·중등·고등학교와 학년별 배정은 학군 등록 담당자에게 확인하세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false,
+      "personalAddressSubmitted": false
+    },
+    {
+      "teaCode": "129904",
+      "district": "Kemp",
+      "ko": "켐프",
+      "officialLandingUrl": "https://www.kempisd.org/132520_3",
+      "host": "www.kempisd.org",
+      "routeKind": "official-inquiry",
+      "sourceObservation": "ASCENDER enrollment, residency verification and campus contacts; public finder unverified",
+      "limitations": "신규학생 공식 ASCENDER 등록 절차입니다. 거주지 제출 기능은 공개 학교 배정 Finder가 아닙니다. 학년별 캠퍼스와 실거주지 배정은 학군 등록 담당자에게 문의하세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false,
+      "personalAddressSubmitted": false
+    },
+    {
+      "teaCode": "129905",
+      "district": "Mabank",
+      "ko": "메이뱅크",
+      "officialLandingUrl": "https://www.mabankisd.net/page/parentstudent.home",
+      "host": "www.mabankisd.net",
+      "routeKind": "official-inquiry",
+      "sourceObservation": "2026–27 enrollment instructions for new and returning pupils; finder unverified",
+      "limitations": "2026–27 공식 Enrollment 안내입니다. 등록 페이지는 공개 주소별 학교 검색기가 아닙니다. 캠퍼스별 학년 및 거주지 배정은 학군 Registrar에 직접 확인하세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false,
+      "personalAddressSubmitted": false
+    },
+    {
+      "teaCode": "061912",
+      "district": "Lake Dallas",
+      "ko": "레이크댈러스",
+      "officialLandingUrl": "https://www.ldisd.net/about-us/about-the-district/attendance-zones",
+      "host": "www.ldisd.net",
+      "routeKind": "official-map",
+      "sourceObservation": "Official map of three elementary attendance areas; secondary schools assigned by grade",
+      "limitations": "공식 Attendance Zones는 초등학교 세 곳의 구역 지도와 중·고등학교 학년별 단일 캠퍼스 정보를 제공합니다. 도면 적용 학년도와 개별 주소 배정은 학군에서 확인하세요. 이는 인증된 최신 GIS 폴리곤이 아닙니다.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false,
+      "personalAddressSubmitted": false
+    },
+    {
+      "teaCode": "126901",
+      "district": "Alvarado",
+      "ko": "앨버라도",
+      "officialLandingUrl": "https://www.alvaradoisd.net/about/registration",
+      "host": "www.alvaradoisd.net",
+      "routeKind": "official-inquiry",
+      "sourceObservation": "2026–27 Skyward registration, proof of residency and campus transfers; finder unverified",
+      "limitations": "2026–27 공식 Skyward 등록 안내입니다. 등록은 공개 주소별 배정 검색이 아닙니다. 캠퍼스별 출석구역 및 전학 예외는 구분되므로 학년과 주소별 학교는 학군 Registrar에 확인하세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false,
+      "personalAddressSubmitted": false
+    },
+    {
+      "teaCode": "126911",
+      "district": "Godley",
+      "ko": "갓리",
+      "officialLandingUrl": "https://www.godleyisd.net/resources/attendance-zones",
+      "host": "www.godleyisd.net",
+      "routeKind": "official-map",
+      "sourceObservation": "Elementary PK–5 map with 2022–23 beginning note; 6th, 7–8th and 9–12th districtwide grade campuses",
+      "limitations": "공식 Attendance Zones에서 PK–5 초등학교는 세 구역이며 6학년·7–8학년·9–12학년은 각각 지정 캠퍼스로 안내됩니다. 초등 지도에는 2022–23 시작 기준이 표시되므로 2026–27 최신 경계와 주소 배정을 별도 확인하세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false,
+      "personalAddressSubmitted": false
+    },
+    {
+      "teaCode": "061905",
+      "district": "Krum",
+      "ko": "크럼",
+      "officialLandingUrl": "https://www.krumisd.net/students-families/registration/enrollment",
+      "host": "www.krumisd.net",
+      "routeKind": "official-inquiry",
+      "sourceObservation": "New enrollment and 2026–27 intradistrict/interdistrict transfer applications; no public locator confirmed",
+      "limitations": "공식 Enrollment 페이지에서 2026–27 학군 내/외 전학과 신규 등록을 안내합니다. 공개 주소검색기 및 현행 학교별 경계는 검증되지 않았으며, 주소·학년에 따른 학교는 해당 Registrar에 확인하세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false,
+      "personalAddressSubmitted": false
+    },
+    {
+      "teaCode": "220914",
+      "district": "Kennedale",
+      "ko": "케너데일",
+      "officialLandingUrl": "https://www.kennedaleisd.net/registration/2026-2027/new-student-registration",
+      "host": "www.kennedaleisd.net",
+      "routeKind": "official-inquiry",
+      "sourceObservation": "2026–27 ASCENDER registration with proof-of-residency campus review; public finder unverified",
+      "limitations": "2026–27 공식 신규 등록 절차입니다. 학교가 신청 및 거주지를 검토하는 등록 절차는 공개 주소검색기가 아닙니다. 주소별 지정학교나 전학 예외는 해당 학교에 직접 확인하세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false,
+      "personalAddressSubmitted": false
+    }
+  ]
+}

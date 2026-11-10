@@ -168,14 +168,6 @@ async function loadRatings(){
   if(j.year!==2026||!Array.isArray(j.data))throw Error('rating schema');
   state.ratings=j.data.filter(r=>/^\d{9}$/.test(r.id)&&['A','B','C','D','F','Not Rated'].includes(r.rating));
   let locationById=new Map();try{const lr=await fetch('./nces-locations-2024.json',{cache:'no-store'});if(!lr.ok)throw Error('HTTP '+lr.status);const lj=await lr.json();if(!Array.isArray(lj.data))throw Error('location schema');locationById=new Map(lj.data.map(x=>[x.id,x]))}catch(e){console.error('NCES location data:',e);toast('학교 위치 자료 일부를 불러오지 못했습니다.')}
-  // Only provenance for existing campus point coordinates: never residence zoning.
-  state.dentonCampusPointEvidence=new Map();
-  try{
-   const pointResponse=await fetch('./data/denton-campus-public-points-2026.json',{cache:'no-store'});
-   if(!pointResponse.ok)throw Error('Denton point audit HTTP '+pointResponse.status);
-   state.dentonCampusPointEvidence=window.DentonCampusPointQuality.validate(
-    await pointResponse.json(),locationById,window.DentonZonePdfReference.ROWS);
-  }catch(e){console.warn('Historical Denton school marker crosscheck unavailable:',e)}
   state.ratingIndex=new Map();
   for(const r of state.ratings){for(const key of new Set([canonical(r.name),canonical(r.officialName)])){const k=r.district+'|'+key;const values=state.ratingIndex.get(k)||[];values.push(r);state.ratingIndex.set(k,values)}}
   addVerifiedAliases(state.ratingIndex,state.schools,state.ratings,(name,district)=>district+'|'+canonical(name));
@@ -183,30 +175,10 @@ async function loadRatings(){
   const existingByKey=new Map();for(const x of state.schools){const k=x.district+'|'+canonical(x.name);existingByKey.set(k,existingByKey.has(k)?null:x)}
   for(const r of state.ratings){
    if(isRetiredCampus(r))continue;
-   // The current district PDF list establishes the *type*, NOT a current site or zoned assignment.
-   const officialDentonType=r.district==='061901'?
-    window.DentonZonePdfReference?.ROWS.find(row=>row.id===r.id)?.level:null;
-   const type=officialDentonType||schoolType(r.name)||'other',
-    location=locationById.get(r.id),key=r.district+'|'+canonical(r.name);
-   const reviewedDentonPoint=!!(officialDentonType&&state.dentonCampusPointEvidence?.has(r.id));
+   const type=schoolType(r.name)||'other',location=locationById.get(r.id),key=r.district+'|'+canonical(r.name);
    const existing=(existingById.get(r.id)?.district===r.district?existingById.get(r.id):null)||(state.ratingIndex.get(key)?.length===1?existingByKey.get(key):null);
-   if(existing){
-    existing.address=existing.address||r.address||location?.address;
-    existing.ll=existing.ll||location?.ll;existing.districtName=r.districtName;
-    if(officialDentonType){
-     existing.type=officialDentonType;existing.id=r.id;
-     existing.campusPointVintage='2024-25';
-     existing.campusPointReview=reviewedDentonPoint?'two-source-historical':'single-source-historical';
-    }
-   }
-   else state.schools.push({
-    name:r.name,type,district:r.district,districtName:r.districtName,
-    id:officialDentonType?r.id:undefined,
-    address:r.address||location?.address,ll:location?.ll,
-    source:location?'NCES 2024–25 / TEA 2026 예비':'2026 TEA 예비 평가',
-    campusPointVintage:officialDentonType?'2024-25':undefined,
-    campusPointReview:officialDentonType?(reviewedDentonPoint?'two-source-historical':'single-source-historical'):undefined
-   });
+   if(existing){existing.address=existing.address||r.address||location?.address;existing.ll=existing.ll||location?.ll;existing.districtName=r.districtName}
+   else state.schools.push({name:r.name,type,district:r.district,districtName:r.districtName,address:r.address||location?.address,ll:location?.ll,source:location?'NCES 2024–25 / TEA 2026 예비':'2026 TEA 예비 평가'});
   }
   state.schools.sort((a,b)=>a.name.localeCompare(b.name));
   drawSchools();drawList();
@@ -401,7 +373,7 @@ function syncMapSize(){
 }
 function drawSchools(){
  if(!map)return;
- const homeActive=typeof home!=='undefined'&&!!home;
+ const homeActive=typeof home!=='undefined'&&!!home&&window.ConditionalSchoolRelease?.decide?.(home.assignment)?.allowed===true;
  const legend=el('schoolLegend');
  if(legend){
   legend.classList.toggle('matching',homeActive);
@@ -424,8 +396,6 @@ function drawSchools(){
   (state.level==='all'||s.type===state.level)&&
   (state.ratingFilter!=='rated'||score(s.name,s.district)!==null));
  const visible=eligible.filter(s=>bounds.contains(s.ll));
- // Candidates in adjacent ZIPs must not disappear from the home map merely
- // because their campus is off-screen or omitted by a rating filter.
  const homeCandidates=homeActive?state.schools.filter(s=>s.ll&&s.type!=='other'&&
   (state.level==='all'||s.type===state.level)&&homeSchoolMatches(s)):[];
  const displayed=[...new Set([...visible,...homeCandidates])];
@@ -444,8 +414,6 @@ function drawSchools(){
   notice.textContent='학교 마커 '+displayed.length+'개 표시 · 등록 '+state.schools.length+'개 · 필터 적합 '+eligible.length+'개 · 화면 내 '+visible.length+'개 · ZIP '+state.zip+' · Zoom '+zoom+' · 지도 '+size.x+'×'+size.y+' · 학교 위치는 배정 확정 정보가 아닙니다.';
  }
 }
-// Draw residential school candidates into their own layer so school-click
-// polygons, ZIP polygons and home polygons can coexist without interference.
 function drawHomeAssignmentMap(){
  if(!map||!homeZoneGroup)return;
  homeZoneGroup.clearLayers();
@@ -453,17 +421,26 @@ function drawHomeAssignmentMap(){
  const status=el('homeMapAssignmentStatus');
  if(!selected){if(status)status.textContent='';return;}
  const assignment=selected.assignment;
+ // Do not promote source-backed reference GIS into residential enrollment.
+ if(window.ConditionalSchoolRelease?.decide?.(assignment)?.allowed!==true){
+  if(status){
+   status.textContent='주소별 자동 배정은 아직 인증되지 않았습니다. 학군 공식 Finder를 이용하세요. 지도 참조 경계는 학교 배정 확정이 아닙니다.';
+   status.dataset.evidence='conditional-hold';
+   status.dataset.visible='false';
+  }
+  return;
+ }
  const mode=assignment?.district?districtZoneDisplay(assignment.district,state.liveFinder):'historical';
  const plan=window.HomeAssignmentMap?.plan(assignment,mode);
  if(!plan){if(status)status.textContent='지도 학교 후보 표시 기능을 불러오지 못했습니다.';return;}
  const visible=plan.features.length>0&&state.showHistoric;
  if(visible){
-  const current=plan.kind==='current-gis',unconfirmed=plan.kind==='publisher-unconfirmed';
+  const current=plan.kind==='current-gis';
   L.geoJSON({type:'FeatureCollection',features:plan.features},{
    interactive:false,
-   style:{color:current?'#087f69':unconfirmed?'#b77327':'#285ac0',weight:4,
+   style:{color:current?'#087f69':'#285ac0',weight:4,
     dashArray:plan.review?'5 5':current?null:'9 5',
-    fillColor:current?'#70cbb4':unconfirmed?'#e4b05f':'#8db6f8',fillOpacity:.20}
+    fillColor:current?'#70cbb4':'#8db6f8',fillOpacity:.20}
   }).addTo(homeZoneGroup);
  }
  if(status){
@@ -475,7 +452,8 @@ function drawHomeAssignmentMap(){
 // Run only upon an explicit address selection, never on a map move/async reload.
 function focusHomeAssignedSchools(){
  if(!map||typeof home==='undefined'||!home||!state.showSchools||
-    !home.geocodeQuality?.usableForSchoolCandidate)return;
+    !home.geocodeQuality?.usableForSchoolCandidate||
+    window.ConditionalSchoolRelease?.decide?.(home.assignment)?.allowed!==true)return;
  const points=state.schools.filter(s=>s.ll&&homeSchoolMatches(s)).map(s=>s.ll);
  if(!points.length||points.length>12)return;
  const all=[home.ll,...points];
@@ -553,19 +531,11 @@ async function loadBoundaryData(){
   {district:'PISD_LOOKUP',url:'./plano-locator-reference.geojson',label:'플레이노 현재 공식 Finder GIS (원본 2025–26)'},
   {district:'043907',url:'https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/23b28d101ba947498650f6c7b9ef251b/data?f=json',label:'매키니 2026–27 공식 School Zone Finder'},
   {district:'PROSPER',url:'./prosper-attendance-2026.geojson',label:'프로스퍼 2026–27 (공식 검색기 · 31개 학교 배정구역)'},
-  {district:'057905',url:null,label:'Dallas ISD 공개 초·중·고 GIS (2026년 7월 갱신 · 현행 배정 미검증)'},
 
   {district:'AISD',url:'./allen-attendance-historical.geojson',label:'Allen 2019·2023'}
  ];
  const results=await Promise.all(sources.map(async x=>{
   try{
-   if(x.district==='057905'){
-    if(!window.DallasAttendanceLive?.load)throw Error('Dallas GIS adapter unavailable');
-    const result=await window.DallasAttendanceLive.load(zoneFetch);
-    state.zoneData['057905']=result.features;
-    state.liveFinder['057905']=true; // Published 2026-updated data, NOT independently verified school assignment.
-    return x.label+': 공개 초등·중등·고등 '+result.features.length+'개 도형 확인 · SchoolSite Finder와 학년도 대조 미완료';
-   }
    if(x.district==='PISD_LOOKUP'){
      try{
       const zones=await loadPlanoLiveFinder(zoneFetch);
@@ -689,8 +659,8 @@ function drawBoundary(){
  if(!s){renderSchoolZoneMapHint(null,null);return;}
  const note=el('zoneNotice');
  const zoneDisplay=districtZoneDisplay(s.district,state.liveFinder);
- const officialYear=zoneDisplay==='official',finderLinked=zoneDisplay==='finder',publisherProvisional=zoneDisplay==='published';
- const historical=!officialYear&&!finderLinked&&!publisherProvisional;
+ const officialYear=zoneDisplay==='official',finderLinked=zoneDisplay==='finder';
+ const historical=!officialYear&&!finderLinked;
  if((historical&&!state.showOldZones)||(!historical&&!state.showHistoric)){
    if(note)note.textContent='배정 경계선 표시를 직접 끈 상태입니다. 학교를 다시 선택하면 해당 경계선을 자동으로 표시합니다.';
    return;
@@ -705,7 +675,7 @@ function drawBoundary(){
   if(layer.getBounds().isValid())map.fitBounds(layer.getBounds(),{padding:[28,28],maxZoom:13});
   const yrs=[...new Set(found.map(f=>f.properties?.sourceVintage).filter(Boolean))].join(', ');
   const grades=[...new Set(found.map(f=>f.properties?.grades).filter(Boolean))].join(', ');
-  if(note)note.innerHTML=s.district==='057905'&&publisherProvisional?'<b>Dallas ISD 공개 초·중·고 GIS · 2026년 7월 갱신</b> (주황색 점선 참고 경계) · 2026–27 현행 학년도와 학교별 정확성 독립검증 미완료. 최종 배정은 SchoolSite Locator·PowerSchool 주소대장 및 학교 등록 담당자에게 확인하세요.':s.district==='043907'?'<b>McKinney ISD 2026–27 공식 School Zone Finder 배정구역</b> · 2025년 12월 교육위원회 승인 지도 기준입니다. 5·8·12학년 기존 학교 유지(grandfather) 등 예외가 있으니 실제 주소는 학군 Finder로 확인하세요.':s.district==='PISD'&&finderLinked?'<b>Plano 현행 공식 Finder가 사용하는 배정선</b> · 원본 레이어는 2025–26 명칭입니다. 실제 주소·학년·호수는 Finder로 확인하세요.':s.district==='LISD'&&finderLinked?'<b>Lewisville 현행 공식 Finder가 사용하는 배정선</b> · 고등 레이어의 내부 연도는 2025–26. 실제 주소·아파트 호수는 Finder로 확인하세요.':s.district==='PROSPER'?'<b>Prosper 공식 검색기 배정구역 2026–27 · '+escape(yrs)+'</b> · 초등 20개, 중등 7개, 고등 4개 전체 구역 원본을 학군 검색기 좌표와 교차 검증했습니다. 녹색 도형은 배정구역 참고이며 실제 집 주소·학년·특수 프로그램/예외·등록 자격은 공식 Prosper ISD 검색기로 확인하세요.':current?'<b>Frisco 공식 검색기 경계 '+escape(yrs)+'</b> · 녹색 도형, 학년 '+escape(grades)+(grades.includes(',')?' (여러 학년의 구역을 함께 표시)':'')+'. 배정 예외와 정원 제한이 있을 수 있으므로 학군에 최종 확인하세요.':'<b style="color:#ab531b">과거 GIS 경계 '+escape(yrs)+' (현재 배정 보장 X)</b> · 주황색 점선 '+found.length+'개 도형 표시. 실제 2026–27 배정은 해당 주소로 공식 학군 검색에서 확인하세요.';
+  if(note)note.innerHTML=s.district==='043907'?'<b>McKinney ISD 2026–27 공식 School Zone Finder 배정구역</b> · 2025년 12월 교육위원회 승인 지도 기준입니다. 5·8·12학년 기존 학교 유지(grandfather) 등 예외가 있으니 실제 주소는 학군 Finder로 확인하세요.':s.district==='PISD'&&finderLinked?'<b>Plano 현행 공식 Finder가 사용하는 배정선</b> · 원본 레이어는 2025–26 명칭입니다. 실제 주소·학년·호수는 Finder로 확인하세요.':s.district==='LISD'&&finderLinked?'<b>Lewisville 현행 공식 Finder가 사용하는 배정선</b> · 고등 레이어의 내부 연도는 2025–26. 실제 주소·아파트 호수는 Finder로 확인하세요.':s.district==='PROSPER'?'<b>Prosper 공식 검색기 배정구역 2026–27 · '+escape(yrs)+'</b> · 초등 20개, 중등 7개, 고등 4개 전체 구역 원본을 학군 검색기 좌표와 교차 검증했습니다. 녹색 도형은 배정구역 참고이며 실제 집 주소·학년·특수 프로그램/예외·등록 자격은 공식 Prosper ISD 검색기로 확인하세요.':current?'<b>Frisco 공식 검색기 경계 '+escape(yrs)+'</b> · 녹색 도형, 학년 '+escape(grades)+(grades.includes(',')?' (여러 학년의 구역을 함께 표시)':'')+'. 배정 예외와 정원 제한이 있을 수 있으므로 학군에 최종 확인하세요.':'<b style="color:#ab531b">과거 GIS 경계 '+escape(yrs)+' (현재 배정 보장 X)</b> · 주황색 점선 '+found.length+'개 도형 표시. 실제 2026–27 배정은 해당 주소로 공식 학군 검색에서 확인하세요.';
   if(note&&s.district==='FISD'&&window.SchoolBoundaryMatch.boundarySchoolKey(s.name)==='isbell'){
    const gradeLabels=[...new Set(found.map(f=>f.properties?.grades).filter(Boolean))];
    const explain=document.createElement('small');explain.className='source boundary-footnote';
@@ -728,20 +698,6 @@ function drawBoundary(){
    const sourceLink=document.createElement('a');sourceLink.href=window.TrustedLinkPolicy.official(failure.sourceUrl);
    sourceLink.target='_blank';sourceLink.rel='noopener noreferrer';sourceLink.className='cardlink';
    sourceLink.textContent=failure.sourceLinkLabel||'미표시 원인 공식 근거 확인';note.appendChild(sourceLink);
-  }
-  // PDF guidance is only shown when Denton campus GIS polygons are unavailable.
-  // The exact TEA campus ID selects a school-specific source without guessing.
-  window.DentonZonePdfReference?.append(
-    note,s,scoreRecord(s.name,s.district)?.id,document);
-  if(s.district==='061901'&&Array.isArray(s.ll)){
-   const sourceNote=document.createElement('small');
-   sourceNote.className='source boundary-footnote';
-   const id=scoreRecord(s.name,s.district)?.id;
-   const reviewed=state.dentonCampusPointEvidence?.has(id);
-   sourceNote.textContent=reviewed?
-    '학교 위치점: TEA AskTED와 NCES 2024–25 공개 좌표가 250m 이내로 일치합니다. 위치 참고이며 2026–27 배정경계·정확한 출입구를 확인한 것은 아닙니다.':
-    '학교 위치점: NCES 2024–25 참고 좌표입니다. 다른 공식 위치 자료와의 일치 또는 2026–27 현행 위치 검증은 미완료입니다. 배정 경계가 아닙니다.';
-   note.appendChild(sourceNote);
   }
  }
 }

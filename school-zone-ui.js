@@ -12,8 +12,6 @@
   if(matchStatus==='matched'){
    if(displayMode==='official')
     return {kind:'current',label:'공식 배정선 표시',explanation:'학교별 도형이 표시됩니다. 주소·학년·예외는 공식 학군에서 최종 확인하세요.'};
-   if(displayMode==='published')
-    return {kind:'provisional',label:'공식 GIS · 학년도 검증 중',explanation:'교육청 공개 GIS는 2026년 7월 갱신되었으나 2026–27 실제 주소별 배정 검증은 미완료입니다. 공식 SchoolSite Locator에서 확인하세요.'};
    if(displayMode==='finder')
     return {kind:'finder',label:'공식 Finder 연동선',explanation:'현행 공식 Finder가 사용하는 도형입니다. 내부 자료 연도가 다를 수 있습니다.'};
    return {kind:'historical',label:'과거 참고 경계',explanation:'과거 지도를 참고용으로 표시하며 현재 배정을 보장하지 않습니다.'};
