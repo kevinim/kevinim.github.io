@@ -18,3 +18,15 @@ Live free script examines these 3 metadata sources and three ArcGIS public item 
 Existing written public-records request already sent Nov 9; no duplicate request. Once native official source is received, add specific source adapter with visible Track B uncertainty, immutable school assignment block and browser QA before any main merge.
 
 Status: QA-only, not a production geometry release.
+
+## Executed real public API result — GitHub Actions 42737708890
+
+All **10/10 PR workflows passed**, including source-discovery live ArcGIS public REST metadata. Three direct service endpoints returned usable metadata:
+
+- CFBISD_SchoolPoints — **esriGeometryPoint**, 2021–22 NCES building locations only, not school zone polygons.
+- Schools_with_Attendance_Boundary layer 0 — **esriGeometryPoint**, despite the misleading service title.
+- Schools_zones_... layer 2 — **esriGeometryPolygon**, but lacks proven CFB district owner/2025 Board-effective year/source authority.
+
+Three live ArcGIS item-catalog searches completed without provider errors and found **0 items whose title/description jointly established CFB ISD school-zone identity**. This does NOT prove no private or other unindexed district GIS exists; it confirms the inspected public candidate services cannot be promoted to official 2026–27 CFB campus-zone GIS. District's existing official GIS records request remains the acquisition path. Do not fetch geometry or record any residential address in this census.
+
+Evidence: https://github.com/kevinim/kevinim.github.io/actions/runs/42737708890
