@@ -186,3 +186,14 @@ test('impossible dates do not pass the 90-day freshness requirement',()=>{
  const e=finderOnly();e.districts.AISD.finder.observedOn='2026-02-30';
  assert.equal(status(e).districts.AISD.tier,LEVELS.HOLD);
 });
+
+test('default capability review uses the actual UTC date, not a frozen 2026 reference',()=>{
+ const report=evaluate(baseline());
+ assert.equal(report.asOf,new Date().toISOString().slice(0,10));
+ assert.equal(report.production.status,'NO_GO');
+});
+test('independent Finder verification expires instead of remaining valid forever',()=>{
+ const evidence=finderOnly();
+ assert.equal(evaluate(evidence,{today:'2026-11-10'}).districts.AISD.tier,LEVELS.FINDER);
+ assert.equal(evaluate(evidence,{today:'2027-02-15'}).districts.AISD.tier,LEVELS.HOLD);
+});
