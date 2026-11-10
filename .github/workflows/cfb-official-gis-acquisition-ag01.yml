@@ -1,0 +1,27 @@
+name: CFB Official GIS Acquisition AG01
+on:
+  pull_request:
+    paths:
+      - 'data/cfb-official-gis-acquisition-2026-11-10.json'
+      - 'scripts/check-cfb-official-gis-acquisition.cjs'
+      - 'tests/cfb-official-gis-acquisition.test.cjs'
+      - 'docs/CFB_OFFICIAL_GIS_ACQUISITION_AG01_2026-11-10.md'
+      - '.github/workflows/cfb-official-gis-acquisition-ag01.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Static provenance and negative QA gates
+        run: |
+          node --version
+          node --test tests/cfb-official-gis-acquisition.test.cjs
+          node scripts/check-cfb-official-gis-acquisition.cjs
+      - name: Advisory source HTTP and ArcGIS geometry metadata probes
+        continue-on-error: true
+        run: |
+          node scripts/check-cfb-official-gis-acquisition.cjs --live
