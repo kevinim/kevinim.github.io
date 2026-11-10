@@ -178,6 +178,8 @@ const DISTRICT_REGISTRY={
   lookupKind:"official-inquiry",official:"https://www.pilotpointisd.com/265282_3",officialNote:"Pilot Point ISD 공식 사이트의 Getting Started → Registration Information에서 등록 절차를 확인하세요. 2026–27 학군 밖 전학은 별도이며 공개 주소별 학교 검색기는 확인되지 않았습니다.",label:{}},
  '249903':{en:"Bridgeport",ko:"브리지포트",zoneKey:null,currency:null,address:null,campusIdMatch:false,
   lookupKind:"official-inquiry",official:"https://www.bridgeportisd.net/enrollment",officialNote:"Bridgeport ISD 2026–27 공식 등록 안내입니다. 학군 밖 학생은 별도 전학 신청이 필요합니다. 학군 외곽 지도는 학교별 출석구역 폴리곤이 아니므로 학년별 지정학교는 Registrar에게 확인하세요.",label:{}},
+ '249904':{en:"Chico",ko:"치코",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"official-inquiry",official:"https://www.chicoisdtx.net/",officialNote:"Chico ISD(Wise County, TX)의 공식 교육구 사이트·학교 행정실 문의 경로입니다. 2026–27 주소별 School Locator와 학교별 출석구역 GIS는 확인되지 않았습니다. Chico Elementary·Middle·High 3개 학교는 공식 학교 목록이며 학년·거주지 배정·전학 가능 여부는 교육구 행정실(940-644-2228)에 직접 확인하세요. 이 링크는 주소 자동 배정 결과가 아닙니다.",label:{}},
  '116903':{en:"Commerce",ko:"커머스",zoneKey:null,currency:null,address:null,campusIdMatch:false,
   lookupKind:"official-inquiry",official:"https://www.commerceisd.org/for-parents/back-to-school/student-online-registration",officialNote:"Commerce ISD 공식 학생 등록 안내에는 CES PK–2, ACW 3–5, CMS 6–8, CHS 9–12 캠퍼스별 학년이 나옵니다. 학년별 캠퍼스 목록은 주소 배정 증명이 아니며 학군 경계와 전학 여부도 확인해야 합니다.",label:{}},
  '043904':{en:"Farmersville",ko:"파머스빌",zoneKey:null,currency:null,address:null,campusIdMatch:false,
