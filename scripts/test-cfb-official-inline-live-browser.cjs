@@ -6,6 +6,8 @@ const path=require('node:path');
 const assert=require('node:assert/strict');
 const {chromium}=require('playwright');
 const root=process.cwd();
+const liveBase=(process.env.DASHBOARD_BASE_URL||'').trim();
+if(liveBase&&new URL(liveBase).origin!=='https://kevinim.github.io')throw Error('Live smoke must target production GitHub Pages only');
 const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json'};
 const server=http.createServer((req,res)=>{
  try{
@@ -18,14 +20,15 @@ const server=http.createServer((req,res)=>{
  }catch{return res.writeHead(400).end()}
 });
 async function main(){
- await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+ if(!liveBase)await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
  const browser=await chromium.launch({headless:true});
  const results=[];
  try{
   for(const width of [390,1366]){
    const page=await browser.newPage({viewport:{width,height:900}});
    const errors=[];page.on('pageerror',e=>errors.push(String(e)));
-   await page.goto('http://127.0.0.1:'+server.address().port+'/',{waitUntil:'domcontentloaded',timeout:80000});
+   const target=liveBase||'http://127.0.0.1:'+server.address().port+'/';
+   await page.goto(target,{waitUntil:'domcontentloaded',timeout:80000});
    const source=page.locator('#cfbOfficialRezoningReference');
    await source.locator('summary').click();
    assert.equal(await page.locator('#cfbOfficialFinderPanel').isVisible(),false);
@@ -101,7 +104,7 @@ async function main(){
   console.log(JSON.stringify({verdict:'EMBED_RENDER_VERIFIED_ON_LOCAL_ORIGIN',results}));
  }finally{
   await browser.close();
-  await new Promise(resolve=>server.close(resolve));
+  if(!liveBase)await new Promise(resolve=>server.close(resolve));
  }
 }
-main().catch(err=>{console.error('CFB_GUIDEK12_LIVE_EMBED_NOT_VERIFIED',err);process.exitCode=1;server.close()});
+main().catch(err=>{console.error('CFB_GUIDEK12_LIVE_EMBED_NOT_VERIFIED',err);process.exitCode=1;if(server.listening)server.close()});
