@@ -101,17 +101,21 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  assert.ok(js.includes('const DATA=['));
  assert.ok(!js.includes('window.WestDFWIntegration'));
 });
-test('main index is byte-exact to newest approved CFB baseline, except home lookup cache version',()=>{
- const source=show('b7c330aab35f0183a234f057acb2ab1e35f38943','index.html');
- const expected=replaceOnce(source,'./home-lookup-v2.js?v=16','./home-lookup-v2.js?v=17');
+test('main index equals previous live release plus exactly the CFB atlas source additions',()=>{
+ const original=show('4aa623a2da1c40971fc0e4231a27ab53f1d5d40b','index.html');
+ let expected=replaceOnce(original,"img-src 'self' data: blob: https://unpkg.com",
+  "img-src 'self' data: blob: https://resources.finalsite.net https://unpkg.com");
+ expected=replaceOnce(expected,'<link rel="stylesheet" href="./features/cfb-official-inline.css?v=1">',
+  '<link rel="stylesheet" href="./features/cfb-official-inline.css?v=1">\n<link rel="stylesheet" href="./features/cfb-approved-zone-atlas.css?v=1">');
+ expected=replaceOnce(expected,'<script src="./features/cfb-official-bridge.js?v=1" defer></script></body></html>',
+  '<script src="./features/cfb-official-bridge.js?v=1" defer></script><script src="./features/cfb-approved-zone-atlas.js?v=1" defer></script></body></html>');
  assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expected.replace(/\r\n/g,'\n')),
-  'No HTML drift beyond approved cache-busting home address lookup version');
- const originalPanel=show('b1a787eb6bd877318a1275a4a29225069782ece7','index.html')
-  .match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
- const actualPanel=html.match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
- assert.ok(originalPanel&&actualPanel,'Merged CFB Finder is retained');
- assert.equal(hash(actualPanel),hash(originalPanel),'Existing CFB official Finder panel untouched');
+  'Only one exact publisher image host and two first-party atlas imports are allowed');
  assert.equal(html.split(external).length,2);
+ const originalPanel=original.match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
+ const actualPanel=html.match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
+ assert.ok(originalPanel&&actualPanel,'Merged CFB Finder panel missing');
+ assert.equal(hash(actualPanel),hash(originalPanel),'Prior CFB official Finder panel HTML changed');
  const policy='./features/conditional-school-release.js?v=1';
  assert.equal(html.split(policy).length,2);
  assert.ok(html.indexOf('./school-zone-ui.js?v=1')<html.indexOf(policy));
