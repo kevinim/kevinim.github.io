@@ -12,12 +12,21 @@ The initial automated census uses the **11-county Dallas–Fort Worth–Arlingto
 | District/LEA identifiers | 152 |
 | Named ISDs | 108 |
 | Other LEAs (charter/alternative/special types require classification) | 44 |
-| ISDs with a registered, allowlisted official school-confirmation entry | 107 |
-| ISDs with no *registered* parent entry path in this dashboard | **1** |
-| Registered parent guidance rate among 108 observed ISDs | **99.1%** |
-| TEA school records within the 1 unregistered ISD | **3** |
+| ISDs with a registered, allowlisted official district parent entry (including manual inquiry) | 108 |
+| ISDs with no *registered* parent entry path in this dashboard | **0** |
+| Registered official parent entry rate among 108 observed ISDs | **100%** |
+| TEA school records within any unregistered ISD | **0** |
 
 These are **source administrative county-of-record proxies**, not boundaries of every district serving residential parcels. TEA districtCounty does not determine a particular campus's position or a student's enrollment eligibility. Cross-county districts and schools not in the supplied source may be missed. NCTCOG's broader 12-county area adds **Hood County**, which this TEA source omits; **unknown is not zero**. These 152 observed LEAs do not prove exhaustive real-estate parcel service coverage.
+
+
+## November 10 — final district official-inquiry entry, 108/108
+
+Latest committed coverage now has **108/108 (100%) allowlisted official parent entry destinations**, covering **1,941/1,941 public ISD TEA campus rows** in the initial 11-county administrative proxy. This is **navigation/inquiry coverage**, *not* 108 verified working address-to-school finders or school-specific GIS datasets.
+
+Chico ISD (TEA 249904; Wise County, TX) was the one previously unregistered ISD. Its own official https://www.chicoisdtx.net/ domain is reachable, and the City of Chico independently publishes the school district's administration office 940-644-2228 and the three Elementary/Middle/High school contacts: https://www.chico.texas.gov/1194/Public-Schools. We classify this as `official-inquiry` only, with strong user-visible warning that no public year-specific school locator, attendance GIS or automated home assignment has been certified. It is not the California Chico Unified school district.
+
+The school-zone GIS coverage denominator and release gate remain unchanged. DFW 108/108 official parent entry **does not** imply 108 school-by-school map layers or any automatic house-specific admission result. Chico's three school records move from missing-parent-entry P0 to school-level-geometry-missing P1, but exact grade/attendance and school transfers still require the actual district office.
 
 ## Seventh batch: 22 official parent routes; Chico intentionally unverified (stacked on #159)
 
@@ -48,9 +57,9 @@ These are **source administrative county-of-record proxies**, not boundaries of 
 | 184911 | Garner | https://www.garnerisd.net/registration | 공식 등록 페이지는 매년 거주증빙과 보호자 예외 서류를 확인합니다. 이는 공개 주소별 학교검색이 아닙니다. |
 | 249908 | Slidell | https://www.slidellisd.net/parents | 2026–27 공식 신규·재학생 등록과 거주증빙에 관한 안내입니다. 학교별 현행 GIS 또는 개별 주소 배정 검증은 별도로 필요합니다. |
 
-### Explicitly unresolved: Chico ISD (249904)
+### Historical source gap on November 9: Chico ISD (249904), now resolved at inquiry-only level
 
-The official homepage, https://www.chicoisdtx.net/, is reachable but has no publicly readable/verified current parent enrollment or registrar search entry. It is **not counted as a registered parent guidance route**, and its three TEA campus rows remain P0. It must not be auto-converted into a finder from merely the fact that a website exists. Future source evidence requires an official registration page or confirmed district parent contact navigation.
+At the November 9 cutoff, the official homepage https://www.chicoisdtx.net/ was reachable, but no publicly readable parent enrollment or registrar search entry was confirmed; the three TEA campus rows remained P0. On November 10 this gap was changed to a **manual official district inquiry route**, with the district office number independently published by the City of Chico. It is not a verified registration form or address finder. The three TEA campuses retain **no attendance zone GIS** and **no address-based enrollment certification**.
 
 All 22 new paths are **`official-inquiry`**, not verified current-year address Finders. Even registration forms, portals, a school's grade span, and TEA district outlines are not proof of an individual school assignment. Poolville and Italy include older 2025–26/2025 references, Rio Vista mixes 2025–26 and 2026–27 material, and Alvord includes 2027–28 content. The enrollment detail link on Wolfe City returned an error; the official home/parent portal remains the appropriate cautious entry. No private residence was submitted and no new polygons were inferred.
 
@@ -196,4 +205,4 @@ The JSON reports missing *reason* states, including no known official parent rou
 
 ## Next work
 
-Continue detailed, current-year school assignment routing checks for the six official-inquiry districts in the third batch, then source the **1 remaining unregistered ISD**, not just favorite suburbs. For each, store TEA code, authority URL, last verification date, active year, grade, search/map/choice/inquiry type, GIS availability and licensing, missing reason and next action. Expand source boundaries to Hood and any cross-county overlap before labeling the DFW geographic denominator exhaustive. Confirm school-specific missing reasons with a browser source audit, including school-choice exceptions and transient failures.
+Continue detailed, current-year school assignment routing checks for the six official-inquiry districts in the third batch, then verify Chico's **actual registration/grade assignment workflow** beyond the now-registered manual inquiry URL, not just favorite suburbs. For each, store TEA code, authority URL, last verification date, active year, grade, search/map/choice/inquiry type, GIS availability and licensing, missing reason and next action. Expand source boundaries to Hood and any cross-county overlap before labeling the DFW geographic denominator exhaustive. Confirm school-specific missing reasons with a browser source audit, including school-choice exceptions and transient failures.
