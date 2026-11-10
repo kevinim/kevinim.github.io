@@ -57,6 +57,8 @@ async function main(){
      savedGeocodeQuality:{usableForSchoolCandidate:true}};
     if(!useHomeCandidate(synthetic))throw Error('dashboard rejected safe reference test point');
    },probe.point);
+   // Advanced tools are hidden in the simplified residential results by default.
+   await page.locator('#homeAdvancedSchoolTools > summary').click();
    await page.locator('#officialDallasCheck').click({timeout:25000});
    try{
     await page.waitForFunction(()=>home?.dallasChecking===false&&home?.dallasSpatial?.status==='ready',null,{timeout:90000});

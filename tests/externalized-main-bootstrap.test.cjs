@@ -101,30 +101,21 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  assert.ok(js.includes('const DATA=['));
  assert.ok(!js.includes('window.WestDFWIntegration'));
 });
-test('index changes limited to approved blank destination, hidden precomputed map and neutral text',()=>{
- assert.equal(hash(show('99cc1fca0781b4589bb8de97fa3069f428bdffbe','index.html').replace(/\r\n/g,'\n')),
-  hash(expectedPublicHtml(old).replace(/\r\n/g,'\n')),
-  'Pre-feature main HTML must remain the previously reviewed privacy/Track B candidate');
- const shipped=show('2dd85258d78af7e51c6ffcad824c087e19e7f0c7','index.html');
- const panelMatch=html.match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/);
- const originalPanel=show('b1a787eb6bd877318a1275a4a29225069782ece7','index.html').match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
- assert.ok(panelMatch&&originalPanel,'Reviewed CFB panel missing');
- assert.equal(hash(panelMatch[0]),hash(originalPanel),'CFB approved markup changed');
- let expected=replaceOnce(shipped,"frame-src 'none'; media-src 'none'","frame-src https://app.guidek12.com; media-src 'none'");
- expected=replaceOnce(expected,'<link rel="stylesheet" href="./features/dfw-school-coverage-panel.css?v=1">','<link rel="stylesheet" href="./features/dfw-school-coverage-panel.css?v=1">\n<link rel="stylesheet" href="./features/cfb-official-inline.css?v=1">');
- expected=replaceOnce(expected,'<div class="main"><aside class="panel filter-panel">',originalPanel+'\n<div class="main"><aside class="panel filter-panel">');
- const link='<a class="cardlink" href="https://www.cfbisd.edu/students/school-maps-locator-system" target="_blank" rel="noopener noreferrer">CFB 공식 School Search · 현재 주소 조회 ↗</a>';
- expected=replaceOnce(expected,link,link+'\n <button id="cfbOpenInlineFinder" type="button" class="mini-btn cfb-open-inline">대시보드 안에서 공식 Finder 열기</button>');
- expected=replaceOnce(expected,'</body></html>','<script src="./features/cfb-official-inline.js?v=1" defer></script><script src="./features/cfb-official-bridge.js?v=1" defer></script></body></html>');
- assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expected.replace(/\r\n/g,'\n')),'Unexpected application HTML change outside reviewed CFB opt-in panel');
+test('main index is byte-exact to newest approved CFB baseline, except home lookup cache version',()=>{
+ const source=show('b7c330aab35f0183a234f057acb2ab1e35f38943','index.html');
+ const expected=replaceOnce(source,'./home-lookup-v2.js?v=16','./home-lookup-v2.js?v=17');
+ assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expected.replace(/\r\n/g,'\n')),
+  'No HTML drift beyond approved cache-busting home address lookup version');
+ const originalPanel=show('b1a787eb6bd877318a1275a4a29225069782ece7','index.html')
+  .match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
+ const actualPanel=html.match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
+ assert.ok(originalPanel&&actualPanel,'Merged CFB Finder is retained');
+ assert.equal(hash(actualPanel),hash(originalPanel),'Existing CFB official Finder panel untouched');
  assert.equal(html.split(external).length,2);
- const conditional='./features/conditional-school-release.js?v=1';
- assert.equal(html.split(conditional).length,2,'conditional school policy is loaded exactly once');
- assert.ok(html.indexOf('./school-zone-ui.js?v=1')<html.indexOf(conditional));
- assert.ok(html.indexOf(conditional)<html.indexOf('./home-lookup-v2.js?v='));
- const scriptIndex=html.indexOf(external);
- assert.ok(html.indexOf('./plano-finder-live.js')<scriptIndex);
- assert.ok(html.indexOf('./features/commute/workplace-marker.js')>scriptIndex);
+ const policy='./features/conditional-school-release.js?v=1';
+ assert.equal(html.split(policy).length,2);
+ assert.ok(html.indexOf('./school-zone-ui.js?v=1')<html.indexOf(policy));
+ assert.ok(html.indexOf(policy)<html.indexOf('./home-lookup-v2.js?v=17'));
 });
 test('strict script CSP preserved exactly and personal office artifacts absent',()=>{
  const allowed=oldCsp.replace('https://geocode.arcgis.com https://nominatim.openstreetmap.org',
