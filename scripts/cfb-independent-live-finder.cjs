@@ -89,6 +89,12 @@ async function oneCase(browser, fixture, index) {
   } catch(err) {
     result.failurePhase = result.failurePhase || 'unknown';
     result.errorClass = err?.name || 'Error'; // NEVER save raw provider DOM
+    const safeText = await page.locator('body').innerText().catch(()=> '');
+    result.diagnostics = {
+      genericMatchingResultsVisible: /Matching Results/i.test(safeText),
+      assignedLabelVisible: /Assigned school/i.test(safeText),
+      addressInputVisible: await page.locator('.address_input input[type="text"]').first().isVisible().catch(()=>false)
+    };
     result.state = 'WARNING';
   } finally {
     await context.close();
@@ -102,9 +108,22 @@ async function main() {
   const browser = await chromium.launch({headless:true,args:['--no-sandbox']});
   const rows = [];
   try {
-    // Always continue after a broken/uncertain case.
+    // Maximum two bounded attempts per existing public fixture. A transient
+    // third-party rendering/network timeout must not be reported as a
+    // school-name mismatch. Continue to the next property regardless.
     for(let i=0;i<source.samples.length;i++) {
-      rows.push(await oneCase(browser,source.samples[i],i));
+      let row = await oneCase(browser,source.samples[i],i);
+      if(row.state === 'WARNING' && row.exactNativeCandidateSelected) {
+        const firstDiagnostic = {
+          cause: row.cause, phase: row.failurePhase, ...row.diagnostics
+        };
+        const retry = await oneCase(browser,source.samples[i],i);
+        if (retry.state==='PASS' || retry.state==='FAIL') row=retry;
+        else if (retry.exactNativeCandidateSelected) row=retry;
+        row.initialAttemptWarning = firstDiagnostic;
+        row.attemptCount=2;
+      } else {row.attemptCount=1;}
+      rows.push(row);
     }
   } finally {await browser.close()}
   const grades = Object.fromEntries(GRADES.map(g=>[g,{
