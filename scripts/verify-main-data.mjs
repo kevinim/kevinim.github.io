@@ -67,7 +67,7 @@ const test = (name, fn) => {
 
 const inlineScripts = [mainBootstrap];
 test('external main application bootstrap compiles with no inline HTML execution',()=>{
- assert.ok(pageHtml.includes('<script src="./dashboard-main.js?v=3"></script>'));
+ assert.ok(pageHtml.includes('<script src="./dashboard-main.js?v=4"></script>'));
  assert.equal([...pageHtml.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].filter(x=>!/\bsrc\s*=/.test(x[1])&&x[2].trim()).length,0);
  new Script(mainBootstrap,{filename:'dashboard-main.js'});
 });
@@ -278,7 +278,7 @@ test('P0 Plano senior-high home marker and map source legend are accurate',()=>{
  assert.ok(home.includes('schoolLevelMatchesAssignment(s,f.properties.gradeLevel)'));
  assert.ok(home.includes("result.district!==s.district)return false"));
  assert.ok(html.includes('./school-assignment.js?v=6'));
- assert.ok(html.includes('./home-lookup-v2.js?v=15'));
+ assert.ok(html.includes('./home-lookup-v2.js?v=16'));
  assert.ok(html.includes('현행 공식 Finder가 사용하는 플레이노·루이스빌 경계는 파란색'));
  assert.ok(html.includes('플레이노 저장본과 앨런 과거 GIS는 주황색 점선 참고'));
 });
