@@ -68,7 +68,7 @@ test('all sensitive outbound browser sink paths consult validator before writing
  const tag='<script src="./trusted-link-policy.js?v=1"></script>';
  assert.ok(html.includes(tag));
  assert.ok(page.indexOf(tag)>=0);
- assert.ok(page.indexOf(tag)<page.indexOf('<script src="./dashboard-main.js?v=3"></script>'),'link validator must load before the main bootstrap');
+ assert.ok(page.indexOf(tag)<page.indexOf('<script src="./dashboard-main.js?v=4"></script>'),'link validator must load before the main bootstrap');
  assert.ok(html.includes('failure.sourceUrl&&window.TrustedLinkPolicy?.official(failure.sourceUrl)'));
  assert.ok(html.includes('sourceLink.href=window.TrustedLinkPolicy.official(failure.sourceUrl)'));
  assert.ok(html.includes('window.TrustedLinkPolicy?.withFallback(scoreSource('));

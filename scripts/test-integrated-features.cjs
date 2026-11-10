@@ -49,7 +49,7 @@ test('existing controls and school map logic remain present',()=>{
  assert.ok(index.includes('L.map(\'map\''));
  assert.ok(index.includes('createCrimeCityMap?.'));
  assert.ok(index.includes('createFemaHazardOverlay?.'));
- assert.ok(index.includes('./home-lookup-v2.js?v=15'));
+ assert.ok(index.includes('./home-lookup-v2.js?v=16'));
  assert.ok(home.includes("window.noteCommuteRouteDistance?.(data.routes?.[0]?.distance,'home')"));
  assert.ok(index.includes("window.noteCommuteRouteDistance?.(j.routes?.[0]?.distance,'zip')"));
 });

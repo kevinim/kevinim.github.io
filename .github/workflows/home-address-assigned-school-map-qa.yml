@@ -1,0 +1,76 @@
+name: Home address school auto-overlay QA
+on:
+  push:
+    branches: [feature/address-selected-auto-school-map-20261109]
+  pull_request:
+    branches: [main]
+    paths:
+      - 'home-assignment-map.js'
+      - 'home-lookup-v2.js'
+      - 'dashboard-main.js'
+      - 'index.html'
+      - 'tests/home-assignment-map.test.cjs'
+      - 'scripts/test-home-assignment-map-browser.cjs'
+      - '.github/workflows/home-address-assigned-school-map-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-policy:
+    name: Privacy and fail-closed source age policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # pinned
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # pinned
+        with:
+          node-version: '24'
+      - name: Syntax for all modified app scripts
+        run: |
+          node --check dashboard-main.js
+          node --check home-lookup-v2.js
+          node --check home-assignment-map.js
+          node --check scripts/test-home-assignment-map-browser.cjs
+          node --check scripts/audit-dfw-home-automation-readiness.cjs
+          node scripts/audit-dfw-home-automation-readiness.cjs > /tmp/dfw-home-map-structural-census.json
+      - name: Run school map privacy and regression unit tests
+        run: |
+          node --test tests/home-assignment-map.test.cjs tests/dfw-home-automation-readiness.test.cjs tests/school-zone-ui.test.cjs tests/school-polygon-linkage-audit.test.cjs tests/school-data-release-preflight.test.cjs
+  browser:
+    name: Mobile/desktop address to school map
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # pinned
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # pinned
+        with:
+          node-version: '24'
+      - name: Install isolated browser dependencies
+        run: |
+          mkdir -p home-map-qa-tmp
+          cd home-map-qa-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Synthetic polygon and marker UI test (never user addresses)
+        env:
+          NODE_PATH: ${{ github.workspace }}/home-map-qa-tmp/node_modules
+        run: node scripts/test-home-assignment-map-browser.cjs
+  live-public-source:
+    name: Public-facility official Finder vs GIS spot check (not residential proof)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # pinned
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # pinned
+        with:
+          node-version: '24'
+      - name: Cross-check four published public facility samples against Frisco/Prosper sources
+        run: |
+          node scripts/check-public-address-finders-live.mjs

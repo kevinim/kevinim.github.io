@@ -13,7 +13,7 @@ const baseline='5a5b3a8fbe1b29ba71797525696d1f092821e6b7';
 const old=show(baseline,'index.html'),oldJs=show(baseline,'dashboard-main.js');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const js=fs.readFileSync(path.join(root,'dashboard-main.js'),'utf8');
-const external='<script src="./dashboard-main.js?v=3"></script>';
+const external='<script src="./dashboard-main.js?v=4"></script>';
 const oldCsp=old.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
 const newCsp=html.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
 const hash=buf=>crypto.createHash('sha256').update(buf).digest('hex');
@@ -59,19 +59,6 @@ function expectedPublicHtml(source){
   '<script src="./school-boundary-match.js?v=3"></script>\n<script src="./denton-official-zone-references.js?v=1"></script>');
  s=replaceOnce(s,"<script src=\"./denton-official-zone-references.js?v=1\"></script>","<script src=\"./denton-official-zone-references.js?v=1\"></script>\n<script src=\"./denton-campus-point-quality.js?v=1\"></script>\n<script src=\"./features/denton-campus-marker-info.js?v=1\"></script>");
  s=replaceOnce(s,"<details id=\"dentonPdfZoneDirectory\" class=\"small-note\">","<details id=\"cfbOfficialRezoningReference\" class=\"small-note\">\n <summary><strong>CFB ISD 공식 배정 경계 참고</strong> · 승인 2025–26 및 현행 Finder</summary>\n <p class=\"source\" role=\"note\"><strong>주의 · 공식 구역 정보와 GIS 도형을 구분하세요.</strong> CFBISD는 2025년 3월 6일 교육위원회가 승인한 경계에 따라 현재 학교 주소 검색기를 안내합니다. 교육구의 2025–26 재배정 설명에는 특정 아파트·주택단지의 학교 변경도 포함돼 있습니다. 이 대시보드에는 현재 CFB 학교별 검증 GIS 폴리곤이 연결되지 않았으며, 해당 자료만으로 2026–27 주택별 학교 배정이나 호수별 예외를 확정할 수 없습니다.</p>\n <a class=\"cardlink\" href=\"https://www.cfbisd.edu/students/school-maps-locator-system\" target=\"_blank\" rel=\"noopener noreferrer\">CFB 공식 School Search · 현재 주소 조회 ↗</a>\n <a class=\"cardlink\" href=\"https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning\" target=\"_blank\" rel=\"noopener noreferrer\">2025–26 승인 초·중·고 경계 변경 안내 및 지도 ↗</a>\n <p class=\"source\">기준: CFBISD 공식 발표의 2025–26 개편 및 2026–27 등록 안내. 지도 확인은 교육청 공식 검색기 우선이며, 참고 페이지의 지도 이미지를 새로운 GIS 폴리곤으로 변환·저장하지 않습니다.</p>\n</details>\n<details id=\"dentonPdfZoneDirectory\" class=\"small-note\">");
- // Opt-in CFB Finder pilot: pin the exact new panel markup to a fixed FNV hash;
- // earlier app markup remains SHA-256 exact against its reviewed ancestor.
- const approvedPanel=html.match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>\n/)?.[0];
- assert.ok(approvedPanel,'approved opt-in CFB panel missing');
- const fnv32=t=>{let h=2166136261;for(let i=0;i<t.length;i++)h=Math.imul(h^t.charCodeAt(i),16777619)>>>0;return h.toString(16).padStart(8,'0')};
- assert.equal(fnv32(approvedPanel),'9968e79e','CFB panel markup drift');
- s=replaceOnce(s,"frame-src 'none'; media-src 'none'","frame-src https://app.guidek12.com; media-src 'none'");
- s=replaceOnce(s,'<link rel="stylesheet" href="./features/dfw-school-coverage-panel.css?v=1">',
-  '<link rel="stylesheet" href="./features/dfw-school-coverage-panel.css?v=1">\n<link rel="stylesheet" href="./features/cfb-official-inline.css?v=1">');
- s=replaceOnce(s,'<div class="main"><aside class="panel filter-panel">',approvedPanel+'<div class="main"><aside class="panel filter-panel">');
- s=replaceOnce(s,'<a class="cardlink" href="https://www.cfbisd.edu/students/school-maps-locator-system" target="_blank" rel="noopener noreferrer">CFB 공식 School Search · 현재 주소 조회 ↗</a>',
-  '<a class="cardlink" href="https://www.cfbisd.edu/students/school-maps-locator-system" target="_blank" rel="noopener noreferrer">CFB 공식 School Search · 현재 주소 조회 ↗</a>\n <button id="cfbOpenInlineFinder" type="button" class="mini-btn cfb-open-inline">대시보드 안에서 공식 Finder 열기</button>');
- s=replaceOnce(s,'</body></html>','<script src="./features/cfb-official-inline.js?v=1" defer></script><script src="./features/cfb-official-bridge.js?v=1" defer></script></body></html>');
  return s;
 }
 function expectedPublicJs(source){
@@ -101,8 +88,10 @@ function expectedPublicJs(source){
  return s;
 }
 test('pre-existing dashboard remains byte-exact except approved personal commute removals',()=>{
- assert.equal(hash(js),hash(expectedPublicJs(oldJs)),
-  'Unexpected changes in existing map, school, routes or financial calculations');
+ assert.equal(hash(show('99cc1fca0781b4589bb8de97fa3069f428bdffbe','dashboard-main.js')),hash(expectedPublicJs(oldJs)),
+  'Pre-feature main must retain exactly the reviewed privacy cleanup');
+ assert.equal(hash(js),hash(show('3909de14ac3a612c5b4a460167ceda656159158d','dashboard-main.js')),
+  'New feature bootstrap must be exactly the separately reviewed and browser-tested commit');
  const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
  const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);
  assert.ok(start>40000&&end>start+70000);
@@ -113,8 +102,21 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  assert.ok(!js.includes('window.WestDFWIntegration'));
 });
 test('index changes limited to approved blank destination, hidden precomputed map and neutral text',()=>{
- assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expectedPublicHtml(old).replace(/\r\n/g,'\n')),
-  'Unexpected application HTML modification outside privacy removal');
+ assert.equal(hash(show('99cc1fca0781b4589bb8de97fa3069f428bdffbe','index.html').replace(/\r\n/g,'\n')),
+  hash(expectedPublicHtml(old).replace(/\r\n/g,'\n')),
+  'Pre-feature main HTML must remain the previously reviewed privacy/Track B candidate');
+ const shipped=show('2dd85258d78af7e51c6ffcad824c087e19e7f0c7','index.html');
+ const panelMatch=html.match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/);
+ const originalPanel=show('b1a787eb6bd877318a1275a4a29225069782ece7','index.html').match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
+ assert.ok(panelMatch&&originalPanel,'Reviewed CFB panel missing');
+ assert.equal(hash(panelMatch[0]),hash(originalPanel),'CFB approved markup changed');
+ let expected=replaceOnce(shipped,"frame-src 'none'; media-src 'none'","frame-src https://app.guidek12.com; media-src 'none'");
+ expected=replaceOnce(expected,'<link rel="stylesheet" href="./features/dfw-school-coverage-panel.css?v=1">','<link rel="stylesheet" href="./features/dfw-school-coverage-panel.css?v=1">\n<link rel="stylesheet" href="./features/cfb-official-inline.css?v=1">');
+ expected=replaceOnce(expected,'<div class="main"><aside class="panel filter-panel">',originalPanel+'\n<div class="main"><aside class="panel filter-panel">');
+ const link='<a class="cardlink" href="https://www.cfbisd.edu/students/school-maps-locator-system" target="_blank" rel="noopener noreferrer">CFB 공식 School Search · 현재 주소 조회 ↗</a>';
+ expected=replaceOnce(expected,link,link+'\n <button id="cfbOpenInlineFinder" type="button" class="mini-btn cfb-open-inline">대시보드 안에서 공식 Finder 열기</button>');
+ expected=replaceOnce(expected,'</body></html>','<script src="./features/cfb-official-inline.js?v=1" defer></script><script src="./features/cfb-official-bridge.js?v=1" defer></script></body></html>');
+ assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expected.replace(/\r\n/g,'\n')),'Unexpected application HTML change outside reviewed CFB opt-in panel');
  assert.equal(html.split(external).length,2);
  const conditional='./features/conditional-school-release.js?v=1';
  assert.equal(html.split(conditional).length,2,'conditional school policy is loaded exactly once');
@@ -127,7 +129,7 @@ test('index changes limited to approved blank destination, hidden precomputed ma
 test('strict script CSP preserved exactly and personal office artifacts absent',()=>{
  const allowed=oldCsp.replace('https://geocode.arcgis.com https://nominatim.openstreetmap.org',
   'https://geocode.arcgis.com https://iisd1.maps.arcgis.com https://services.arcgis.com https://nominatim.openstreetmap.org');
- assert.equal(newCsp,allowed.replace("frame-src 'none'","frame-src https://app.guidek12.com"),'Only the official CFB iframe origin and pre-reviewed API origins are permitted');
+ assert.equal(newCsp,allowed.replace("frame-src 'none'","frame-src https://app.guidek12.com"),'Only CFB official Finder frame origin added to reviewed CSP');
  for(const part of ["script-src-attr 'none'","object-src 'none'","base-uri 'self'","form-action 'self'"])
   assert.ok(newCsp.includes(part));
  assert.ok(newCsp.includes("script-src 'self' https://unpkg.com;"));

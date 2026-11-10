@@ -31,7 +31,7 @@ test('both entrypoints use external scripts, with no inline executable hash poli
  }
  const reviewed=fs.readFileSync(path.resolve(__dirname,'../reviewed.html'),'utf8');
  const index=fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8');
- assert.ok(index.includes('<script src="./dashboard-main.js?v=3"></script>'));
+ assert.ok(index.includes('<script src="./dashboard-main.js?v=4"></script>'));
  assert.equal(checkCurrentRepo().find(x=>x.name==='index.html').summary.inlineHashes,0);
  assert.ok(reviewed.includes('src="./features/reviewed-bootstrap.js?v=1"'));
  assert.ok(reviewed.includes('src="./features/geojson-upload-guard.js?v=1"'));

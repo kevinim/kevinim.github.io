@@ -106,6 +106,7 @@ function clearHome(){
   clearIrvingReference();clearDallasReference();
   homeVersion++;homeRequest?.abort();homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;home=null;homeCandidates=[];
   if(map&&homeMarker)map.removeLayer(homeMarker);homeMarker=null;
+  if(typeof homeZoneGroup!=='undefined'&&homeZoneGroup)homeZoneGroup.clearLayers();
   el('homeCandidates').replaceChildren();el('homeResult').replaceChildren();el('homeSchoolInfo').replaceChildren();el('homeStatus').textContent='';if(homeRouteLayer)homeRouteLayer.clearLayers();
   el('homeSearch').disabled=false;if(map){drawSchools();drawList()}
 }
@@ -138,11 +139,12 @@ function renderHome(){
   const parcel=home.parcel||{status:'idle'};
   const message=parcel.status==='idle'?'별도 필지 주소 대조를 실행할 수 있습니다.':parcel.status==='checking'?'Collin CAD 필지 확인 중…':parcel.reason||'필지 확인 불가';
   const parcelPanel='<div class="small-note" style="margin-top:10px"><b>Collin CAD 필지 주소 대조 (학교 배정과 별개)</b><div class="source" role="status">'+escape(message)+(parcel.parcelAddress?' · 조회된 필지: '+escape(parcel.parcelAddress):'')+'</div><button class="mini-btn" type="button" id="parcelCheck"'+(parcel.status==='checking'?' disabled':'')+'>필지 주소 대조</button><div class="source">버튼을 누르면 집 핀의 좌표를 Collin CAD에 전송합니다. 필지 일치가 초·중·고 배정을 의미하지 않습니다.</div></div>';
-  el('homeSchoolInfo').innerHTML='<hr class="rule"><h2>집 주소 학교 후보</h2><div class="source">'+escape(home.address)+'</div><p>'+schoolText+'</p><div class="source">경계·학년·예외를 학군에서 확인하세요. 학교 위치나 ZIP은 배정을 보장하지 않습니다.</div>'+official+parcelPanel+officialReviewPanelHtml(home);
+  el('homeSchoolInfo').innerHTML='<hr class="rule"><h2>집 주소 학교 후보</h2><div id="homeMapAssignmentStatus" class="small-note home-map-assignment-status" role="status" aria-live="polite"></div><div class="source">'+escape(home.address)+'</div><p>'+schoolText+'</p><div class="source">경계·학년·예외를 학군에서 확인하세요. 학교 위치나 ZIP은 배정을 보장하지 않습니다.</div>'+official+parcelPanel+officialReviewPanelHtml(home);
   wireOfficialReviewPanel(home);
   const parcelButton=el('parcelCheck');if(parcelButton)parcelButton.onclick=checkHomeParcel;
   el('homeResult').innerHTML=office?'<div class="home-actions"><button type="button" class="mini-btn" id="homeRoute">집에서 운전시간 계산</button> <a class="cardlink" href="'+escape(homeDirections(false))+'" target="_blank" rel="noopener">집 → 회사 Google ↗</a> <a class="cardlink" href="'+escape(homeDirections(true))+'" target="_blank" rel="noopener">회사 → 집 ↗</a><div id="homeRouteStatus" class="source" role="status">집 주소 기준 · 교통량 미반영</div></div>':'목적지를 입력하세요.';
   const route=el('homeRoute');if(route)route.onclick=calculateHomeCommute;
+  if(typeof drawHomeAssignmentMap==='function')drawHomeAssignmentMap();
 }
 async function checkHomeParcel(){
  if(!home)return;
@@ -312,7 +314,7 @@ function wireOfficialReviewPanel(item){
 }
 
 function refreshHomeOffice(){if(!home)return;homeVersion++;homeRouteRequest?.abort();if(homeRouteLayer)homeRouteLayer.clearLayers();renderHome()}
-function refreshHomeSchools(){if(home){homeVersion++;homeRouteRequest?.abort();renderHome()}}
+function refreshHomeSchools(){if(home){homeVersion++;homeRouteRequest?.abort();renderHome();drawSchools()}}
 function useHomeCandidate(candidate){
   clearIrvingReference();clearDallasReference();
   if(!map){el('homeStatus').textContent='지도가 아직 준비되지 않았습니다. 잠시 후 주소 검색을 다시 눌러 주세요.';return false}
@@ -323,7 +325,8 @@ function useHomeCandidate(candidate){
   homeMarker=L.marker(home.ll,{zIndexOffset:4000,icon:L.divIcon({className:'',html:'<svg class="house-pin" width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"><path d="M4 19L21 4l17 15h-4v17H8V19z" fill="white" stroke="#a72e2e" stroke-width="2"/><path d="M3 19L21 3l18 16-3 3L21 9 6 22z" fill="#d63737" stroke="white" stroke-width="1.5"/><path d="M18 36V24h7v12" fill="#d63737"/></svg>',iconSize:[42,42],iconAnchor:[21,37]}),title:'HOME'}).addTo(map).bindPopup('<b>HOME</b><br>'+escape(home.address));
   const matches=homeZipMatches(home.ll);
   if(matches.length===1)selectZip(matches[0].z,false);
-  map.setView(home.ll,13);renderHome();drawSchools();drawList();el('homeStatus').textContent='검색 결과 위치를 지도에 표시했습니다. 주소와 핀을 확인하세요.';syncHomeClearVisibility();return true;
+  map.setView(home.ll,13);renderHome();drawSchools();drawList();
+   if(typeof focusHomeAssignedSchools==='function')focusHomeAssignedSchools();el('homeStatus').textContent='검색 결과 위치를 지도에 표시했습니다. 주소와 핀을 확인하세요.';syncHomeClearVisibility();return true;
 }
 // Similar addresses are shown rather than silently selecting an arbitrary school-zone pin.
 function showHomeCandidateChoices(candidates){
