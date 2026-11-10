@@ -51,7 +51,7 @@ async function main(){
      warning:box.textContent.includes('학교 자동 배정 미인증')
     };
    });
-   assert.equal(result.schoolStatus,'conditional-finder-only');
+   assert.equal(result.schoolStatus,'unavailable'); // No GIS source: unavailability must not be misreported as a certified assignment.
    assert.equal(result.finderCount,1);
    assert.equal(result.pickerCount,1);
    assert.equal(result.firstCode,'LISD');
