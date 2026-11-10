@@ -96,20 +96,22 @@ test('stale source lookups fail rather than being counted as current assignment'
  assert.throws(()=>buildCandidate(d,{now}),/SAMPLE_SOURCE_STALE_OR_UNVERIFIED/);
 });
 
-test('existing reviewer gate still rejects a geometrically supported but unapproved polygon',()=>{
+test('no synthetic or self-attested candidate can authorize a live school zone',()=>{
+ const out=buildCandidate(dataset(),{now});
+ assert.equal(out.publishable,false);
+ assert.equal(out.reviewerApproved,false);
+ assert.equal(out.manualIndependentApprovalRequired,true);
+ assert.equal(out.coverage.certifiedResidentialAssignmentPercent,null);
+ for(const feature of out.features){
+  assert.equal(feature.properties.officialGIS,false);
+  assert.equal(feature.properties.current,false);
+  assert.equal(feature.properties.reviewed,false);
+ }
+});
+test('offline generator contains no map entrypoint or external Finder calls',()=>{
  const fs=require('node:fs');
- const os=require('node:os');
  const path=require('node:path');
- const {spawnSync}=require('node:child_process');
- const temp=fs.mkdtempSync(path.join(os.tmpdir(),'cfb-review-'));
- try{
-  const file=path.join(temp,'candidate.json');
-  const out=buildCandidate(dataset(),{now});
-  fs.writeFileSync(file,JSON.stringify(out));
-  const cli=spawnSync(process.execPath,['scripts/validate-cfb-finder-derived-boundaries.cjs',file],
-   {cwd:path.resolve(__dirname,'..'),encoding:'utf8'});
-  assert.notEqual(cli.status,0);
-  assert.match(cli.stdout,/NO_GO/,'stderr: '+cli.stderr+' status: '+cli.status);
-  assert.match(cli.stdout,/permission_or_review_missing|estimate_unreviewed/);
- }finally{fs.rmSync(temp,{recursive:true,force:true})}
+ const source=fs.readFileSync(path.join(__dirname,'../scripts/build-cfb-finder-derived-cells.cjs'),'utf8');
+ assert.doesNotMatch(source,/\bfetch\s*\(|\bhttps\.request\s*\(|\baxios\s*\(/);
+ assert.doesNotMatch(source,/window\.school|map\.addLayer|L\.geoJSON/);
 });

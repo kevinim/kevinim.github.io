@@ -1,6 +1,6 @@
 # CFB official Finder → small evidence-backed reference cells (offline pilot)
 
-**Status on 2026-11-09: engineering and negative QA only; zero real CFB estimated polygons generated, reviewed, published or released. NO-GO.** Separate PR #149 contains the UI provenance distinction; this implementation adds a deterministic offline candidate generator without querying GuideK12 or publishing map layers. Do not merge directly to main while upstream PR #149 is pending.
+**Status on 2026-11-09: engineering and negative QA only; zero real CFB estimated polygons generated, reviewed, published or released. NO-GO.** Separate PR #149 contains the UI provenance distinction; this implementation adds a deterministic offline candidate generator without querying GuideK12 or publishing map layers. This four-file, QA-only module is independent of the closed/unmerged #149 UI proposal. It does not change the dashboard's map or its district school assignment policy.
 
 ## Sources: boundary vs actual school-zone authority
 
@@ -42,3 +42,7 @@ Both files remain in gitignored `artifacts/`; generated estimated cells and sour
 - Allen's historical 2019–2023 campus GIS and distinct street-range source require their own source-year audit, not silent reconstruction.
 
 **Current result:** a reproducible, intentionally strict engineering tool and test suite; **no truthful basis yet to draw a CFB school-specific polygon**. Continue official source/GIS licensing acquisition and legally permitted evidence collection before generating real reference data. GitHub Free / no paid provider.
+
+## Integration disposition (2026-11-10)
+
+PR #149's separate UI provenance prototype was archived. This isolated four-file module now targets the current `main` tree **without importing #149's old UI or its self-attested publication validator**. Synthetic generation remains offline only; no production changes, no 2026–27 boundary or source-rights certification, and zero CFB actual derived polygons. The synthetic tests assert that candidate artifacts always have `publishable=false`, `reviewerApproved=false`, and `officialGIS=false`. Any later proposal to expose a real CFB-derived boundary requires a new, independent publisher authorization review and the separately approved residential verification gate. Never treat a successful PR QA check as license/permission approval.

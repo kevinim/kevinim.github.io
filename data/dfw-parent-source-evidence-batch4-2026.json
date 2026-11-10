@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "verifiedOn": "2026-11-09",
+  "basedOnPRs": [
+    141,
+    144,
+    147
+  ],
+  "scope": "District-owned parent entry pages only; not observed successful residential address lookup, confirmed campus assignment or current-year school geometry.",
+  "coverage": {
+    "previousRegisteredDistricts": 57,
+    "newRegisteredDistricts": 65,
+    "totalObservedISDs": 108,
+    "registeredPercent": 60.2,
+    "addedTEACampusRecords": 54,
+    "remainingISDs": 43,
+    "remainingSchoolRows": 157
+  },
+  "evidence": [
+    {
+      "teaCode": "184902",
+      "district": "Springtown",
+      "ko": "스프링타운",
+      "officialLandingUrl": "https://www.springtownisd.net/page/enrollment",
+      "host": "www.springtownisd.net",
+      "routeKind": "official-inquiry",
+      "sourceObservation": "2026–27 학군 신규·재학생 등록 경로, 주소별 지정학교 확인 도구는 검증되지 않음",
+      "limitations": "2026–27 공식 학생 등록 안내입니다. 주소별 지정학교 검색기는 이 페이지에서 확인되지 않았습니다. 배정 학교와 학년별 예외는 교육청 등록 담당자에게 확인하세요. 2027–28 신설 초등학교 계획을 2026–27 배정으로 간주하지 마세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false,
+      "personalAddressSubmitted": false
+    },
+    {
+      "teaCode": "220920",
+      "district": "White Settlement",
+      "ko": "화이트세틀먼트",
+      "officialLandingUrl": "https://www.wsisd.com/students-families/enrollment",
+      "host": "www.wsisd.com",
+      "routeKind": "finder-guidance",
+      "sourceObservation": "2026–27 Enrollment 페이지에서 Which School will my Child Attend, Locator Tool을 명시. 예술·STEAM 및 Open Enrollment 예외",
+      "limitations": "2026–27 공식 Enrollment의 Which School Will My Child Attend 및 School Site Locator로 주소를 조회하세요. Fine Arts·STEAM 선택, 전학·학군 외 Open Enrollment는 일반 배정과 다르며 최종 배정은 학교가 확인합니다.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false,
+      "personalAddressSubmitted": false
+    },
+    {
+      "teaCode": "220917",
+      "district": "Castleberry",
+      "ko": "캐슬베리",
+      "officialLandingUrl": "https://www.castleberryisd.net/enrollnow/enrollnow",
+      "host": "www.castleberryisd.net",
+      "routeKind": "finder-guidance",
+      "sourceObservation": "공식 Register Now 사이트에서 SchoolSearch로 거주 경계 및 학교 출석구역 검색 가능. 최신 학년도 확인 별도",
+      "limitations": "학군 Register Now의 SchoolSearch에서 주소별 학교 배정구역을 검색하세요. Find on Map으로 경계를 볼 수도 있으나 현재 학년도와 학년·전학 예외는 등록 담당자에게 다시 확인하세요. 지도 도형은 대시보드에 수집·검증되지 않았습니다.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false,
+      "personalAddressSubmitted": false
+    },
+    {
+      "teaCode": "129903",
+      "district": "Kaufman",
+      "ko": "카우프먼",
+      "officialLandingUrl": "https://www.kaufmanisd.net/page/kisd-school-zone-finder/",
+      "host": "www.kaufmanisd.net",
+      "routeKind": "finder-guidance",
+      "sourceObservation": "공식 KISD School Zone Finder가 주소 입력을 안내. 학년/지도 최신성 교차확인은 미완료",
+      "limitations": "학군 공식 KISD School Zone Finder에 주소를 입력해 학교 구역을 확인하세요. 학교별 학년 범위, 2026–27 현재 적용 여부, 예외·전학은 학군에 재확인하세요. Finder 경계는 대시보드 지도에 검증·탑재되지 않았습니다.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false,
+      "personalAddressSubmitted": false
+    },
+    {
+      "teaCode": "116901",
+      "district": "Caddo Mills",
+      "ko": "캐도밀스",
+      "officialLandingUrl": "https://www.caddomillsisd.org/page/26-27-student-enrollment-information",
+      "host": "www.caddomillsisd.org",
+      "routeKind": "finder-guidance",
+      "sourceObservation": "2026–27 Elementary School Zoning 공식 페이지에 주소검색 안내. 초등 전용",
+      "limitations": "2026–27 학군 공식 등록 안내의 Elementary School Zoning 검색으로 주소별 초등학교를 확인하세요. 중·고등학교 구역, 학년별 변경, 전학·특수교육 배정은 이 초등 검색만으로 확정할 수 없으며 학군에 별도 문의하세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false,
+      "personalAddressSubmitted": false
+    },
+    {
+      "teaCode": "249905",
+      "district": "Decatur",
+      "ko": "디케이터",
+      "officialLandingUrl": "https://www.decaturisd.us/page/enrollment",
+      "host": "www.decaturisd.us",
+      "routeKind": "finder-guidance",
+      "sourceObservation": "2026–27 Enrollment 페이지에서 City of Decatur DISD Elementary School Attendance Zones 지도 링크와 주소검색 절차 안내. 초등 전용",
+      "limitations": "2026–27 공식 Enrollment에서 City of Decatur의 DISD Elementary School Attendance Zones 지도를 열고 주소를 검색하세요. 세 개 초등 경계만 해당하며 STEM Academy는 별도 지원, 중·고는 학교에 확인해야 합니다. 외부 GIS를 대시보드 경계로 복제하지 않았습니다.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false,
+      "personalAddressSubmitted": false
+    },
+    {
+      "teaCode": "070905",
+      "district": "Ferris",
+      "ko": "페리스",
+      "officialLandingUrl": "https://www.ferrisisd.org/departments/student-support-services/enrollment-registration",
+      "host": "www.ferrisisd.org",
+      "routeKind": "official-inquiry",
+      "sourceObservation": "2026–27 신규학생 온라인 등록 및 거주증명 안내. 주소별 캠퍼스 Finder는 검증되지 않음",
+      "limitations": "2026–27 공식 Enrollment/Registration 안내입니다. 학군 내 거주증명과 학년별 등록을 확인하되, 이 등록 페이지가 주소별 학교 검색기는 아닙니다. 일반 지정학교와 학군 밖 전학은 별도 절차이므로 등록 담당자에게 확인하세요.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false,
+      "personalAddressSubmitted": false
+    },
+    {
+      "teaCode": "043919",
+      "district": "Lovejoy",
+      "ko": "러브조이",
+      "officialLandingUrl": "https://www.lovejoyisd.net/page/quick-links",
+      "host": "www.lovejoyisd.net",
+      "routeKind": "official-inquiry",
+      "sourceObservation": "Verified official Quick Links page available; 2026–27 Lovejoy district announcement links a separate New Student Enrollment path that returned HTTP 404 on 2026-11-09. No address-grade locator verified; Lovejoy Scholars separate",
+      "limitations": "Lovejoy ISD의 공식 Quick Links로 이동하세요. 2026–27 신규 등록 안내에서 연결한 Enrollment for New Students 직접 주소는 점검 시 404였으므로, 주소·학년별 배정과 등록 경로는 학군에 직접 문의해야 합니다. Lovejoy Scholars 별도 선발과 일반 거주지 배정을 혼동하지 마세요. 현행 학교별 경계와 자동 주소검색은 검증되지 않았습니다.",
+      "verifiedCurrentYearAttendanceGIS": false,
+      "verifiedIndividualAddressAssignment": false,
+      "personalAddressSubmitted": false
+    }
+  ]
+}

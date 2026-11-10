@@ -6,6 +6,9 @@ on:
       - 'scripts/build-phase2a-fema-hazards.mjs'
       - '.github/workflows/build-phase2a-fema-hazards.yml'
   workflow_dispatch:
+permissions:
+  contents: read
+
 jobs:
   build-snapshot:
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
@@ -14,10 +17,10 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
       - name: Extract only selected DFW 2025 NRI tract source (FEMA)
@@ -36,7 +39,7 @@ jobs:
             git commit -m 'data: materialize official 2025 FEMA NRI DFW hazard tracts'
             git push origin HEAD:${{ github.event.pull_request.head.ref }}
           fi
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: phase2a-fema-dfw-tract-snapshot
           path: data/phase2a-fema-nri-dfw-2025.geojson

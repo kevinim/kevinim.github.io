@@ -1,0 +1,77 @@
+name: Track B Irving publisher GIS with visible warning (no deploy)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'irving-official-spatial.js'
+      - 'home-lookup-v2.js'
+      - 'index.html'
+      - 'features/track-b-reference-warning.css'
+      - 'trusted-link-policy.js'
+      - 'tests/track-b-reference-gis.test.cjs'
+      - '.github/workflows/track-b-reference-irving.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'irving-official-spatial.js'
+      - 'home-lookup-v2.js'
+      - 'index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-and-safety:
+    name: Source/provenance, strict CSP and privacy guardrails
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Syntax and no current residence enrollment claims
+        run: |
+          node --check home-lookup-v2.js
+          node --check irving-official-spatial.js
+          node --check scripts/test-track-b-irving-reference-browser.cjs
+          node --test tests/track-b-reference-gis.test.cjs tests/agent01-irving-browser-spatial.test.cjs tests/conditional-school-release.test.cjs
+      - name: Existing CSP, bootstrap integrity and trusted source regression
+        run: node --test tests/csp-network-allowlist.test.cjs tests/externalized-main-bootstrap.test.cjs tests/trusted-outbound-links.test.cjs tests/school-zone-ui.test.cjs
+  public-campus-browser:
+    name: Real desktop/mobile Chromium + publisher GIS (public school only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Isolated Chromium, free GitHub runner
+        run: |
+          mkdir -p trackb-playwright-tmp
+          cd trackb-playwright-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Confirm orange dashed live GIS, warnings, status, and clear (1366/390)
+        env:
+          NODE_PATH: ${{ github.workspace }}/trackb-playwright-tmp/node_modules
+        run: node scripts/test-track-b-irving-reference-browser.cjs
+      - name: Retain only public facility screenshots and aggregate QA
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: track-b-irving-reference-browser
+          path: |
+            artifacts/agent01-irving-browser/trackb-reference-browser-qa.json
+            artifacts/agent01-irving-browser/irving-live-reference-map-390.png
+            artifacts/agent01-irving-browser/irving-live-reference-map-1366.png
+            artifacts/agent01-irving-browser/irving-trackb-390.png
+            artifacts/agent01-irving-browser/irving-trackb-1366.png
+          if-no-files-found: warn
+          retention-days: 7
