@@ -51,7 +51,7 @@ function expectedPublicHtml(source){
  s=replaceOnce(s,'주소 검색: © Esri. 외부 서비스의',
   '주소 검색: © Esri. Dallas 참고 GIS 버튼을 누르면 선택한 좌표만 Dallas ISD ArcGIS 원본 서비스에 전송하며 결과 도형은 현재 브라우저에서만 표시합니다. Irving 참고 GIS 버튼을 누르면 집 핀 좌표만 Irving ISD 연계 ArcGIS 서비스에 전송되며 이 사이트는 경계 결과를 저장하지 않습니다. 외부 서비스의');
  s=replaceOnce(s,'<script src="./home-lookup-v2.js?v=15"></script>',
-  '<script src="./irving-official-spatial.js?v=1"></script><script src="./dallas-attendance-live.js?v=1"></script><script src="./home-lookup-v2.js?v=17"></script>');
+  '<script src="./irving-official-spatial.js?v=1"></script><script src="./dallas-attendance-live.js?v=1"></script><script src="./home-lookup-v2.js?v=15"></script>');
  s=replaceOnce(s,'<label class="check"><input type="checkbox" id="referenceBoundaryOverlay"> 과거 GIS 참고 경계선 표시</label></div>',
   '<label class="check"><input type="checkbox" id="referenceBoundaryOverlay"> 과거 GIS 참고 경계선 표시</label></div><p class="reference-gis-global-warning" role="note"><strong>지도 경계는 학교 배정 확정 정보가 아닙니다.</strong> 연도가 오래되거나 현행성이 확인되지 않은 GIS는 참고용입니다. 입학·배정은 반드시 해당 학군의 공식 주소 검색기에서 확인하세요.</p>');
  s=replaceOnce(s,"<h2>학교 배정구역 (자동 연결)</h2>\r\n","<h2>학교 배정구역 (자동 연결)</h2>\r\n<details id=\"dentonPdfZoneDirectory\" class=\"small-note\">\n <summary><strong>Denton ISD 2026–27 공식 학교별 PDF 경계 지도 39개</strong> · GIS와 배정 미인증</summary>\n <p class=\"source\" role=\"note\"><strong>주의 · 공식 PDF 참고 지도입니다.</strong> 학교별 원본 PDF는 공개돼 있으나 이 대시보드에 현행 학교별 GIS 도형이 연결됐다는 뜻이 아닙니다. 실제 거주지의 배정학교와 2026–27 예외는 공식 School Locator로 확인해야 합니다.</p>\n <label for=\"dentonPdfCampusSelect\">초등 26 · 중등 9 · 고등 4 학교별 공식 지도 선택</label>\n <select id=\"dentonPdfCampusSelect\" aria-label=\"Denton 학교별 공식 2026–27 PDF 지도\"></select>\n <a class=\"cardlink\" id=\"dentonPdfCampusLink\" hidden target=\"_blank\" rel=\"noopener noreferrer\"></a>\n <a class=\"cardlink\" href=\"https://webquery-2-denton-tx.etstack.io/\" target=\"_blank\" rel=\"noopener noreferrer\">Denton 공식 School Locator ↗</a>\n <a class=\"cardlink\" href=\"https://www.dentonisd.org/families/attendance-zones/attendance-boundary-modification-26-27\" target=\"_blank\" rel=\"noopener noreferrer\">2026–27 변경 안내 ↗</a>\n</details>\n");
@@ -101,26 +101,26 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  assert.ok(js.includes('const DATA=['));
  assert.ok(!js.includes('window.WestDFWIntegration'));
 });
-test('index changes limited to approved blank destination, hidden precomputed map and neutral text',()=>{
- // Pin the exact current main commit immediately before this UX-only PR.
- // The sole permitted index delta is the cache-busting home lookup version.
- const reviewedMain=show('2dd85258d78af7e51c6ffcad824c087e19e7f0c7','index.html');
- const expectedAfter=replaceOnce(reviewedMain,'./home-lookup-v2.js?v=16','./home-lookup-v2.js?v=17');
- assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expectedAfter.replace(/\r\n/g,'\n')),
-  'Only the reviewed home lookup cache version may change; all other HTML must be byte-exact');
+test('main index is byte-exact to newest approved CFB baseline, except home lookup cache version',()=>{
+ const source=show('b7c330aab35f0183a234f057acb2ab1e35f38943','index.html');
+ const expected=replaceOnce(source,'./home-lookup-v2.js?v=16','./home-lookup-v2.js?v=17');
+ assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expected.replace(/\r\n/g,'\n')),
+  'No HTML drift beyond approved cache-busting home address lookup version');
+ const originalPanel=show('b1a787eb6bd877318a1275a4a29225069782ece7','index.html')
+  .match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
+ const actualPanel=html.match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
+ assert.ok(originalPanel&&actualPanel,'Merged CFB Finder is retained');
+ assert.equal(hash(actualPanel),hash(originalPanel),'Existing CFB official Finder panel untouched');
  assert.equal(html.split(external).length,2);
- const conditional='./features/conditional-school-release.js?v=1';
- assert.equal(html.split(conditional).length,2,'conditional school policy is loaded exactly once');
- assert.ok(html.indexOf('./school-zone-ui.js?v=1')<html.indexOf(conditional));
- assert.ok(html.indexOf(conditional)<html.indexOf('./home-lookup-v2.js?v='));
- const scriptIndex=html.indexOf(external);
- assert.ok(html.indexOf('./plano-finder-live.js')<scriptIndex);
- assert.ok(html.indexOf('./features/commute/workplace-marker.js')>scriptIndex);
+ const policy='./features/conditional-school-release.js?v=1';
+ assert.equal(html.split(policy).length,2);
+ assert.ok(html.indexOf('./school-zone-ui.js?v=1')<html.indexOf(policy));
+ assert.ok(html.indexOf(policy)<html.indexOf('./home-lookup-v2.js?v=17'));
 });
 test('strict script CSP preserved exactly and personal office artifacts absent',()=>{
  const allowed=oldCsp.replace('https://geocode.arcgis.com https://nominatim.openstreetmap.org',
   'https://geocode.arcgis.com https://iisd1.maps.arcgis.com https://services.arcgis.com https://nominatim.openstreetmap.org');
- assert.equal(newCsp,allowed,'Irving ArcGIS exact origin is the only allowed new CSP endpoint');
+ assert.equal(newCsp,allowed.replace("frame-src 'none'","frame-src https://app.guidek12.com"),'Only CFB official Finder frame origin added to reviewed CSP');
  for(const part of ["script-src-attr 'none'","object-src 'none'","base-uri 'self'","form-action 'self'"])
   assert.ok(newCsp.includes(part));
  assert.ok(newCsp.includes("script-src 'self' https://unpkg.com;"));

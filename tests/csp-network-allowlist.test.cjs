@@ -52,7 +52,7 @@ test('index and reviewed CSP expose only enumerated fetch and image origins',()=
   assert.deepEqual(get(page,'img-src'),["'self'",'data:','blob:',...img],page+' img-src drift');
   assert.deepEqual(get(page,'style-src'),["'self'","'unsafe-inline'",'https://unpkg.com']);
   assert.deepEqual(get(page,'font-src'),["'self'",'data:']);
-  assert.deepEqual(get(page,'frame-src'),["'none'"]);
+  assert.deepEqual(get(page,'frame-src'),page==='index.html'?['https://app.guidek12.com']:["'none'"]);
   assert.deepEqual(get(page,'media-src'),["'none'"]);
   assert.deepEqual(get(page,'script-src-attr'),["'none'"]);
   assert.deepEqual(get(page,'object-src'),["'none'"]);
