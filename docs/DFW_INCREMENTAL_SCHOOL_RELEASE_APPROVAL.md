@@ -65,3 +65,7 @@ The purpose of this change is to make partial functionality **eligible for revie
 ## Integration and freshness audit — 2026-11-10
 
 The evaluator's default review date is now derived from the current UTC calendar day, not the original 2026-11-09 development date. CI fixtures deliberately supply an explicit fixed clock to remain reproducible. Live review must reject Finder and independent reviewer evidence older than 90 days. The branch has been synchronized with the latest #148 policy-only CI / separate manual strict Track C gate. A passing code-integrity check does not authorize real residential assignments. All eight current real-evidence entries remain HOLD until independent district/grade/Finder and publisher geometry evidence is supplied and reviewed; no private addresses are committed.
+
+## Main branch release note — 2026-11-10
+
+PR #148's policy-integrity and manually invoked strict full-residential certification workflows are already merged to main. This QA-only tier-report PR now targets main directly. The eight per-district example/evidence entries remain **HOLD** until independent source checks and publisher rights approvals are available; the tier evaluator never authorizes production or residential automatic school assignment. A passing required `verify` check attests only to repository quality controls, not to current-year enrollment correctness. Owner has authorized merging review-ready noncertifying code, but this does not override independent real-source evidence requirements.
