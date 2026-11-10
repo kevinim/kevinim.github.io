@@ -46,3 +46,9 @@ test('no household, geocoder calls or third-party URLs are constructed by presen
  assert.ok(!JSON.stringify(p).includes('SHOULD_NOT_LEAK'));
  assert.equal(Object.hasOwn(p,'url'),false);
 });
+
+test('production Conditional GO forbids auto overlay without independent approval',()=>{
+ const {decide,releaseSummary}=require('../features/conditional-school-release.js');
+ assert.equal(decide({status:'current',district:'FISD'}).allowed,false);
+ assert.equal(releaseSummary().currentYearResidentialDistrictApprovals,0);
+});

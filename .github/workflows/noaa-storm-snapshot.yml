@@ -7,6 +7,9 @@ on:
       - '.github/workflows/noaa-storm-snapshot.yml'
       - 'noaa-storm-history.js'
   workflow_dispatch:
+permissions:
+  contents: read
+
 jobs:
   build-snapshot:
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'feat/phase2a-noaa-storm-history-2024-2025-20261107'
@@ -15,11 +18,11 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           persist-credentials: true
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
       - name: Download official NOAA files and validate DFW county-year totals
@@ -50,7 +53,7 @@ jobs:
           fi
       - name: Attach NOAA source audit artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: noaa-storm-history-dfw-2024-2025
           path: data/noaa-storm-events-dfw-2024-2025.json

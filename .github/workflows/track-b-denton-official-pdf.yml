@@ -1,0 +1,73 @@
+name: Track B Denton 39 official 2026-27 PDF source maps (NO DEPLOY)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'denton-official-zone-references.js'
+      - 'index.html'
+      - 'features/track-b-reference-warning.css'
+      - 'tests/denton-official-zone-references.test.cjs'
+      - 'scripts/test-track-b-denton-pdf-browser.cjs'
+      - '.github/workflows/track-b-denton-official-pdf.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'denton-official-zone-references.js'
+      - 'index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    name: 39 official 2026–27 Denton campus PDF sources and exact bootstrap
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Verify official-campus year, grade, TEA IDs and release scope
+        run: |
+          node --check denton-official-zone-references.js
+          node --check scripts/test-track-b-denton-pdf-browser.cjs
+          node --test tests/denton-official-zone-references.test.cjs tests/conditional-school-release.test.cjs
+      - name: Exact existing app bootstrap and CSP unchanged
+        run: node --test tests/externalized-main-bootstrap.test.cjs tests/csp-network-allowlist.test.cjs tests/trusted-outbound-links.test.cjs
+  browser:
+    name: Denton public PDF source selector, actual 390/1366 browser
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Isolated free Chromium
+        run: |
+          mkdir -p denton-playwright-tmp
+          cd denton-playwright-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Click source directory and exact official Bell E link
+        env:
+          NODE_PATH: ${{ github.workspace }}/denton-playwright-tmp/node_modules
+        run: node scripts/test-track-b-denton-pdf-browser.cjs
+      - name: Save public-only browser screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: denton-track-b-official-pdf-390-1366
+          path: |
+            artifacts/denton-browser/denton-39-official-pdf-sources-390px.png
+            artifacts/denton-browser/denton-39-official-pdf-sources-1366px.png
+            artifacts/denton-browser/denton-no-fabricated-campus-gis-390px.png
+            artifacts/denton-browser/denton-no-fabricated-campus-gis-1366px.png
+          if-no-files-found: warn
+          retention-days: 7

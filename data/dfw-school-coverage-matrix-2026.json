@@ -38,12 +38,12 @@
     "teaDistrictCodes": 152,
     "publicISDs": 108,
     "otherLEAs": 44,
-    "publicISDsWithRegisteredParentRoute": 29,
-    "publicISDsMissingRegisteredParentRoute": 79,
-    "registeredParentRouteRatePublicISDPercent": 26.9,
+    "publicISDsWithRegisteredParentRoute": 107,
+    "publicISDsMissingRegisteredParentRoute": 1,
+    "registeredParentRouteRatePublicISDPercent": 99.1,
     "publicISDCampusRows": 1941,
-    "publicISDCampusRowsWithRegisteredParentRoute": 1107,
-    "publicISDCampusRowsWithUnverifiedParentRoute": 834,
+    "publicISDCampusRowsWithRegisteredParentRoute": 1938,
+    "publicISDCampusRowsWithUnverifiedParentRoute": 3,
     "otherLEACampusRows": 241,
     "campusPolygonCoverageAllDFWPercent": null,
     "exactAddressAssignmentCoveragePercent": null
@@ -54,77 +54,77 @@
       "teaCampusRecords": 322,
       "districtCodesWithSchoolRecords": 16,
       "publicISDs": 14,
-      "publicISDsWithRegisteredParentRoute": 11
+      "publicISDsWithRegisteredParentRoute": 14
     },
     {
       "county": "DALLAS",
       "teaCampusRecords": 757,
       "districtCodesWithSchoolRecords": 42,
       "publicISDs": 14,
-      "publicISDsWithRegisteredParentRoute": 7
+      "publicISDsWithRegisteredParentRoute": 14
     },
     {
       "county": "DENTON",
       "teaCampusRecords": 241,
       "districtCodesWithSchoolRecords": 15,
       "publicISDs": 11,
-      "publicISDsWithRegisteredParentRoute": 5
+      "publicISDsWithRegisteredParentRoute": 11
     },
     {
       "county": "ELLIS",
       "teaCampusRecords": 70,
       "districtCodesWithSchoolRecords": 11,
       "publicISDs": 10,
-      "publicISDsWithRegisteredParentRoute": 0
+      "publicISDsWithRegisteredParentRoute": 10
     },
     {
       "county": "HUNT",
       "teaCampusRecords": 41,
       "districtCodesWithSchoolRecords": 10,
       "publicISDs": 10,
-      "publicISDsWithRegisteredParentRoute": 0
+      "publicISDsWithRegisteredParentRoute": 10
     },
     {
       "county": "JOHNSON",
       "teaCampusRecords": 66,
       "districtCodesWithSchoolRecords": 9,
       "publicISDs": 9,
-      "publicISDsWithRegisteredParentRoute": 0
+      "publicISDsWithRegisteredParentRoute": 9
     },
     {
       "county": "KAUFMAN",
       "teaCampusRecords": 64,
       "districtCodesWithSchoolRecords": 7,
       "publicISDs": 7,
-      "publicISDsWithRegisteredParentRoute": 1
+      "publicISDsWithRegisteredParentRoute": 7
     },
     {
       "county": "PARKER",
       "teaCampusRecords": 50,
       "districtCodesWithSchoolRecords": 9,
       "publicISDs": 8,
-      "publicISDsWithRegisteredParentRoute": 0
+      "publicISDsWithRegisteredParentRoute": 8
     },
     {
       "county": "ROCKWALL",
       "teaCampusRecords": 36,
       "districtCodesWithSchoolRecords": 2,
       "publicISDs": 2,
-      "publicISDsWithRegisteredParentRoute": 1
+      "publicISDsWithRegisteredParentRoute": 2
     },
     {
       "county": "TARRANT",
       "teaCampusRecords": 509,
       "districtCodesWithSchoolRecords": 24,
       "publicISDs": 16,
-      "publicISDsWithRegisteredParentRoute": 4
+      "publicISDsWithRegisteredParentRoute": 16
     },
     {
       "county": "WISE",
       "teaCampusRecords": 26,
       "districtCodesWithSchoolRecords": 7,
       "publicISDs": 7,
-      "publicISDsWithRegisteredParentRoute": 0
+      "publicISDsWithRegisteredParentRoute": 6
     }
   ],
   "missingReasonTotals": {
@@ -137,12 +137,8 @@
       "teaCampusRecords": 23
     },
     "official-parent-route-linked-but-campus-gis-not-ingested": {
-      "districts": 22,
-      "teaCampusRecords": 751
-    },
-    "official-parent-lookup-not-yet-verified": {
-      "districts": 79,
-      "teaCampusRecords": 834
+      "districts": 100,
+      "teaCampusRecords": 1582
     },
     "current-year-source-reference-still-needs-live-recheck": {
       "districts": 2,
@@ -159,18 +155,46 @@
     "choice-not-address-zoning": {
       "districts": 1,
       "teaCampusRecords": 66
+    },
+    "official-parent-lookup-not-yet-verified": {
+      "districts": 1,
+      "teaCampusRecords": 3
     }
   },
   "priorityQueue": [
+    "249904",
+    "057905",
     "220905",
     "220901",
+    "043910",
+    "057909",
+    "061902",
+    "057914",
+    "057916",
     "220908",
+    "061901",
+    "057803",
+    "057848",
+    "061806",
+    "220907",
     "057910",
+    "061911",
+    "057903",
+    "057912",
+    "043907",
     "220918",
+    "220916",
     "220902",
+    "129902",
+    "043901",
     "220912",
+    "199901",
+    "043914",
     "126902",
+    "220906",
     "070912",
+    "057922",
+    "043911",
     "057907",
     "070908",
     "199902",
@@ -178,20 +202,27 @@
     "220915",
     "126903",
     "070903",
+    "061914",
     "184903",
+    "220919",
     "057904",
     "057906",
     "220904",
+    "043902",
     "116905",
     "126905",
     "057913",
+    "043918",
     "129901",
+    "043908",
     "070911",
     "129906",
     "061907",
+    "043903",
     "057911",
     "184902",
     "220920",
+    "061910",
     "220917",
     "129903",
     "116901",
@@ -225,7 +256,6 @@
     "043917",
     "116916",
     "116902",
-    "249904",
     "126904",
     "116906",
     "070915",
@@ -241,36 +271,6 @@
     "184911",
     "070909",
     "249908",
-    "057905",
-    "043910",
-    "057909",
-    "061902",
-    "057914",
-    "057916",
-    "061901",
-    "057803",
-    "057848",
-    "061806",
-    "220907",
-    "061911",
-    "057903",
-    "057912",
-    "043907",
-    "220916",
-    "129902",
-    "043901",
-    "199901",
-    "043914",
-    "220906",
-    "057922",
-    "043911",
-    "061914",
-    "220919",
-    "043902",
-    "043918",
-    "043908",
-    "043903",
-    "061910",
     "043905",
     "043912",
     "057804",
@@ -365,7 +365,7 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.annaisd.org/parents-students/attendance-zones",
-        "yearCaution": "26–27 Interactive Map에서 주소를 입력하세요. 아파트는 별도 검색을 지원합니다.",
+        "yearCaution": "26–27 Interactive Map을 선택하여 주소별 출석구역을 검색하세요. 아파트는 일반 도로명 검색만으로 판단하지 말고 공식 Find an Apartment 목록에서 단지를 선택해야 합니다. 페이지에 함께 게시된 2025–26 지도를 2026–27 배정으로 혼동하지 마세요. 현행 학교별 GIS는 대시보드에 없습니다.",
         "registryKey": "043902"
       },
       "geometry": {
@@ -395,11 +395,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.brisd.net/page/student-enrollment-information",
+        "yearCaution": "2026–27 등록 공지에서 연결된 공식 학교 등록 페이지. 웹사이트 상세 내용 표시가 제한되어 학군 등록 경로 확인 필요.",
+        "registryKey": "043917"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -410,8 +410,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -431,7 +431,7 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.celinaisd.com/who-we-are/attendance-zones",
-        "yearCaution": "현행 배정 안내와 2027–28 예정 변경안이 같은 페이지에 있습니다. 현행 학년도만 확인하세요.",
+        "yearCaution": "공식 Current Elementary Attendance Boundaries는 현행 초등 배정 안내입니다. 같은 페이지의 2027–28 Proposed Elementary Boundary Adjustments는 제안 단계로 2026–27 배정에 사용하면 안 됩니다. 중·고 학교 지정·학년 구성은 별도 공식 확인이 필요합니다. 대시보드에는 현행 학교별 GIS가 없습니다.",
         "registryKey": "043903"
       },
       "geometry": {
@@ -494,11 +494,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.farmersvilleisd.net/apps/pages/index.jsp?pREC_ID=2424228&type=d&uREC_ID=445987",
+        "yearCaution": "Farmersville ISD 공식 안내는 2026–27 Pre-K, K–12 신규·재학생 등록과 전학 절차를 구분합니다. Skyward 등록은 주소별 학교검색기가 아니므로 주소와 학년의 지정학교는 학군에 문의하세요.",
+        "registryKey": "043904"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -509,8 +509,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -626,11 +626,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.lovejoyisd.net/page/quick-links",
+        "yearCaution": "Lovejoy ISD의 공식 Quick Links로 이동하세요. 2026–27 신규 등록 안내에서 연결한 Enrollment for New Students 직접 주소는 점검 시 404였으므로, 주소·학년별 배정과 등록 경로는 학군에 직접 문의해야 합니다. Lovejoy Scholars 별도 선발과 일반 거주지 배정을 혼동하지 마세요. 현행 학교별 경계와 자동 주소검색은 검증되지 않았습니다.",
+        "registryKey": "043919"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -641,8 +641,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -695,7 +695,7 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.melissaisd.org/page/interactive-zoning-map",
-        "yearCaution": "공식 지도 안내에 2025–26 학년도 문구가 남아 있습니다. 조회 화면에서 적용 학년도를 확인하거나 교육청에 문의하세요.",
+        "yearCaution": "공식 Interactive Zoning Map 설명에는 2025–26 학년도 문구가 남아 있습니다. 해당 화면·폴리곤을 2026–27 현행으로 자동 간주하지 말고 실제 검색기에서 학년도와 주소·학교를 확인하세요. 초등 구역은 설명되어 있으나 중·고 주소별 배정은 별도 검증이 필요합니다.",
         "registryKey": "043908"
       },
       "geometry": {
@@ -761,7 +761,7 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.princetonisd.net/departments/enrollment/attendance-zones",
-        "yearCaution": "2026–27 현행 구역과 2027–28 차기 구역이 모두 게시돼 있습니다. 2026–27만 사용하세요.",
+        "yearCaution": "학군 Attendance Zones 페이지에 2026–27 및 2027–28 School Zone Finder와 초등·중등 지도 링크가 별도로 있습니다. 2026–27 배정에는 반드시 2026–27 항목을 선택하고, 2027–28 변경 구역이나 버스 검색을 현행 배정 근거로 쓰지 마세요. 주소별 결과는 공식 Finder에서 확인하세요.",
         "registryKey": "043911"
       },
       "geometry": {
@@ -1022,11 +1022,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.chisd.net/services/lacy-enrollment-center/k-12-new-student-registration",
+        "yearCaution": "학군 공식 Enrollment의 School Finder에서 주소별 학교를 확인하세요. Signature Studies 및 학군내·학군외 전학은 별도 심사입니다.",
+        "registryKey": "057904"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -1037,8 +1037,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -1154,11 +1154,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-map",
+        "officialUrl": "https://www.desotoisd.org/cms/one.aspx?pageId=21214842",
+        "yearCaution": "학군 공식 Attendance Zones 지도에서 주소를 검색하세요. Selective Enrollment·Choice·전학은 일반 주소별 배정과 다르고 적용 학년도는 별도 확인이 필요합니다.",
+        "registryKey": "057906"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -1169,8 +1169,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -1187,11 +1187,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-map",
+        "officialUrl": "https://www.duncanvilleisd.org/buildingthefuture/rezoning",
+        "yearCaution": "2026–27 변경된 출석구역을 확인하세요. 이전 Current Zoning과 Proposed Feeder Pattern을 확정 배정으로 혼동하지 말고 학군의 전학 예외를 확인하세요.",
+        "registryKey": "057907"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -1202,8 +1202,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -1385,11 +1385,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.gpisd.org/about-gpisd/campus-listings-and-map",
+        "yearCaution": "학군 공식 Campus Locator by Attendance Zone으로 주소별 배정 후보를 확인하세요. Fine Arts/Choice 캠퍼스는 일반 주소 배정과 다를 수 있습니다.",
+        "registryKey": "057910"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -1400,8 +1400,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -1418,11 +1418,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.hpisd.org/about/enrollment",
+        "yearCaution": "Dallas의 Highland Park ISD 공식 Enrollment 페이지에서 School Site Locator와 HPISD Boundary Map으로 주소를 확인하세요. Amarillo의 동명 Highland Park ISD와 혼동하지 마세요. 전학·증빙·학년별 배정은 학교에서 확인하세요.",
+        "registryKey": "057911"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -1433,8 +1433,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -1616,11 +1616,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.lancasterisd.org/page/attendance-zone-locator",
+        "yearCaution": "공식 Attendance Zone Locator에서 주소별 지정 초등학교를 확인하세요. 중·고등학교와 특수프로그램 배정은 별도 검증이 필요합니다.",
+        "registryKey": "057913"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -1631,8 +1631,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -1979,11 +1979,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.sunnyvaleisd.com/page/enrolling-in-sisd",
+        "yearCaution": "Sunnyvale ISD 공식 Enrolling 페이지는 학년별 네 캠퍼스와 학군 거주 확인용 지도를 안내합니다. SISD Attendance Zone 지도는 학군 경계이지 학교별 2026–27 배정 폴리곤은 아닙니다.",
+        "registryKey": "057919"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -1994,8 +1994,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -2276,11 +2276,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.aubreyisd.net/page/getting-started-at-aubrey-isd",
+        "yearCaution": "공식 Getting Started 안내와 2026–27 전학 정보로 이동하세요. 공개 중학교 경계 자료는 2025–26 승인본이며 현행 학년·주소별 구역 확인 또는 자동 Finder 검증은 별도 필요합니다.",
+        "registryKey": "061907"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -2291,8 +2291,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -2312,7 +2312,7 @@
         "status": "registered-official-source",
         "lookupType": "official-map",
         "officialUrl": "https://www.dentonisd.org/families/attendance-zones",
-        "yearCaution": "2026–27 학년별 공식 구역 지도입니다. 주소·학년 최종 확인은 교육청 School Locator에서 하세요.",
+        "yearCaution": "Denton ISD의 2026–27 공식 초·중·고 Attendance Zones를 이용하세요. Paloma Creek Elementary는 2026–27부터 기존 방식으로 학생을 받지 않고 Bell·Union Park·Sandbrock Ranch·Savannah 등으로 재배정되었습니다(구역별 확인 필수). 2028–29 Mia Price 고교 조정은 제안안으로 현행 배정이 아닙니다. 주소·전학 예외는 공식 조회로 확인하세요.",
         "registryKey": "061901"
       },
       "geometry": {
@@ -2342,11 +2342,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.krumisd.net/students-families/registration/enrollment",
+        "yearCaution": "공식 Enrollment 페이지에서 2026–27 학군 내/외 전학과 신규 등록을 안내합니다. 공개 주소검색기 및 현행 학교별 경계는 검증되지 않았으며, 주소·학년에 따른 학교는 해당 Registrar에 확인하세요.",
+        "registryKey": "061905"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -2357,8 +2357,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -2375,11 +2375,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-map",
+        "officialUrl": "https://www.ldisd.net/about-us/about-the-district/attendance-zones",
+        "yearCaution": "공식 Attendance Zones는 초등학교 세 곳의 구역 지도와 중·고등학교 학년별 단일 캠퍼스 정보를 제공합니다. 도면 적용 학년도와 개별 주소 배정은 학군에서 확인하세요. 이는 인증된 최신 GIS 폴리곤이 아닙니다.",
+        "registryKey": "061912"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -2390,8 +2390,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -2477,7 +2477,7 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.littleelmisd.net/for-parents/enrollment-registration/attendance-zones",
-        "yearCaution": "학군 공식 Interactive School Zone Finder에 주소를 입력하세요. 프로그램·학년별 예외를 확인하세요.",
+        "yearCaution": "학군 공식 Interactive School Zone Finder에서 주소를 검색하세요. 안내 페이지에 초등학교 및 Strike·Walker Middle School 구역 지도가 확인되지만, 이 자료만으로 고등학교 배정이나 2026–27 학교별 GIS의 연도를 확정할 수 없습니다. 학년·전학·프로그램 예외는 학교에 확인하세요.",
         "registryKey": "061914"
       },
       "geometry": {
@@ -2543,7 +2543,7 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.nisdtx.org/departments/facilities/attendance-boundaries",
-        "yearCaution": null,
+        "yearCaution": "2026–27 공식 School Zone Locator에서 School Year를 반드시 2026–27로 선택하세요. Romer Elementary·Barksdale Middle 신설 및 2026–27 승인 재배정이 적용됩니다. 일부 5·7·8학년 기존 재학생 잔류 예외가 있습니다. 2027–28 고교 조정은 별도 제안안으로 2026–27 배정선이 아닙니다. 대시보드에는 학교별 승인 GIS가 미탑재되어 있습니다.",
         "registryKey": "061911"
       },
       "geometry": {
@@ -2573,11 +2573,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.pilotpointisd.com/265282_3",
+        "yearCaution": "Pilot Point ISD 공식 사이트의 Getting Started → Registration Information에서 등록 절차를 확인하세요. 2026–27 학군 밖 전학은 별도이며 공개 주소별 학교 검색기는 확인되지 않았습니다.",
+        "registryKey": "061903"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -2588,8 +2588,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -2606,11 +2606,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.ponderisd.net/page/registration-information",
+        "yearCaution": "Ponder ISD 공식 홈페이지의 Registration 26–27 링크입니다. 페이지에서 개별 주소별 학교 배정 결과나 최신 학교별 경계는 확인되지 않았습니다. 학년 및 거주지 배정은 등록 담당자에게 문의하세요.",
+        "registryKey": "061906"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -2621,8 +2621,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -2639,11 +2639,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.sangerisd.net/studentsparents/enrollment/new-student-registration",
+        "yearCaution": "2026–27 공식 신규 등록 경로입니다. 학군에 공개 주소별 지정학교 자동 검색기가 확인된 것은 아닙니다. 초등·중등·고등학교와 학년별 배정은 학군 등록 담당자에게 확인하세요.",
+        "registryKey": "061908"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -2654,8 +2654,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -2738,11 +2738,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.avalonisd.net/apps/pages/index.jsp?pREC_ID=220809&type=d&uREC_ID=111233",
+        "yearCaution": "학군 공식 Q&A는 등록을 위해 교장에게 직접 문의할 것을 안내합니다. 공개 자동 배정검색기는 확인되지 않았습니다.",
+        "registryKey": "070901"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -2753,8 +2753,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -2771,11 +2771,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.ennis.k12.tx.us/o/eisd/page/new-to-ennis-isd",
+        "yearCaution": "공식 New to Ennis ISD 등록 안내입니다. 주소별 School Finder 작동 및 2026–27 배정 경계는 확인되지 않았으므로 등록 담당자에게 주소와 학년을 문의하세요.",
+        "registryKey": "070903"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -2786,8 +2786,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -2837,11 +2837,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.ferrisisd.org/departments/student-support-services/enrollment-registration",
+        "yearCaution": "2026–27 공식 Enrollment/Registration 안내입니다. 학군 내 거주증명과 학년별 등록을 확인하되, 이 등록 페이지가 주소별 학교 검색기는 아닙니다. 일반 지정학교와 학군 밖 전학은 별도 절차이므로 등록 담당자에게 확인하세요.",
+        "registryKey": "070905"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -2852,8 +2852,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -2870,11 +2870,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.italyisd.org/page/student-enrollment",
+        "yearCaution": "공식 학생 등록 안내 중 일부에 2025년 개시 날짜가 남아 있습니다. 2026–27 절차·배정 확인이 필요합니다.",
+        "registryKey": "070907"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -2885,8 +2885,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -2903,11 +2903,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.maypearlisd.org/students-families/enrollment-and-registration",
+        "yearCaution": "2026–27 ASCENDER 등록 및 엄격한 거주증빙. 학교 담당자의 등록 심사를 공개 주소별 학교 배정 검색기로 취급할 수 없습니다.",
+        "registryKey": "070915"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -2918,8 +2918,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -2936,11 +2936,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.midlothianisd.org/enrollment/find-my-school",
+        "yearCaution": "공식 Find My School에서 주소별 초·중·고 배정을 확인하세요. 신설 도로·신축 단지는 검색에 반영되지 않을 수 있어 경계 부근은 학군에 재확인하세요.",
+        "registryKey": "070908"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -2951,8 +2951,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -2969,11 +2969,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.milfordisd.org/",
+        "yearCaution": "교육청 홈페이지에서 해당 학군 ASCENDER Parent Portal로 이동합니다. 해당 링크는 학교별 주소검색기가 아닙니다.",
+        "registryKey": "070909"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -2984,8 +2984,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3002,11 +3002,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.palmer-isd.org/o/phs/page/back-2-school",
+        "yearCaution": "학교 공식 신규학생 등록 지침·거주증빙·교무실 연락처. 2026 재학생 등록 공지와 신규 절차를 구분하세요.",
+        "registryKey": "070910"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3017,8 +3017,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3035,11 +3035,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.redoakisd.org/district-85/roisd-attendance",
+        "yearCaution": "School Zone Locator는 주소별 초등학교 구역을 보여줍니다. 중·고등학교·경계 밖 주소·전학은 학군에서 별도 확인하세요.",
+        "registryKey": "070911"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3050,8 +3050,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3068,11 +3068,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.wisd.org/departments/transportation",
+        "yearCaution": "학군 Transportation의 Find Your School에서 공식 검색기로 이동하세요. 버스노선과 학교 배정은 다르며 주소·학년별 배정은 학군에서 확인하세요.",
+        "registryKey": "070912"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3083,8 +3083,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3101,11 +3101,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.blandisd.us/11759_4",
+        "yearCaution": "2026–27 학생 등록과 매년 거주증빙을 안내. 학군 외부 전학을 받지 않는다고 공지하며 주소검색은 별도 확인입니다.",
+        "registryKey": "116915"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3116,8 +3116,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3134,11 +3134,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.bolesisd.com/",
+        "yearCaution": "학군 홈페이지의 Enrollment/Registration은 학군별 ASCENDER 등록으로 연결됩니다. 이 페이지는 개별 주거지 배정 검색기가 아닙니다.",
+        "registryKey": "116916"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3149,8 +3149,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3167,11 +3167,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.caddomillsisd.org/page/26-27-student-enrollment-information",
+        "yearCaution": "2026–27 학군 공식 등록 안내의 Elementary School Zoning 검색으로 주소별 초등학교를 확인하세요. 중·고등학교 구역, 학년별 변경, 전학·특수교육 배정은 이 초등 검색만으로 확정할 수 없으며 학군에 별도 문의하세요.",
+        "registryKey": "116901"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3182,8 +3182,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3200,11 +3200,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.campbellisd.org/for-parents/prospective-parents",
+        "yearCaution": "공식 Prospective Parents에서 신규학생 등록과 학군 밖 전학 신청을 별도로 안내합니다. 현행 학교별 주소검색은 미확인입니다.",
+        "registryKey": "116910"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3215,8 +3215,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3233,11 +3233,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.celesteisd.org/",
+        "yearCaution": "공식 학군 홈페이지 Parents & Community 메뉴의 Parent Portal. 주소별 학교 자동배정 또는 현행 폴리곤 결과는 제공되지 않습니다.",
+        "registryKey": "116902"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3248,8 +3248,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3266,11 +3266,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.commerceisd.org/for-parents/back-to-school/student-online-registration",
+        "yearCaution": "Commerce ISD 공식 학생 등록 안내에는 CES PK–2, ACW 3–5, CMS 6–8, CHS 9–12 캠퍼스별 학년이 나옵니다. 학년별 캠퍼스 목록은 주소 배정 증명이 아니며 학군 경계와 전학 여부도 확인해야 합니다.",
+        "registryKey": "116903"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3281,8 +3281,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3299,11 +3299,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.greenvilleisd.com/page/student-services/",
+        "yearCaution": "학군 Student Services의 New Student Online Enrollment Registration에서 등록을 시작하세요. 등록 페이지는 주소별 출석구역 조회기가 아니며 초·중·고 최종 배정은 교육청에 별도로 문의하세요.",
+        "registryKey": "116905"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3314,8 +3314,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3332,11 +3332,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.loneoakisd.net/for-parents/enrollment-registration",
+        "yearCaution": "공식 신규·재학생 등록과 학군 밖 전학 서류 구분. 구역·학년에 따른 배정은 등록 담당자의 확인이 필요합니다.",
+        "registryKey": "116906"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3347,8 +3347,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3365,11 +3365,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.quinlanisd.net/apps/pages/index.jsp?pREC_ID=915702&type=d&uREC_ID=415959",
+        "yearCaution": "Quinlan ISD 공식 등록 및 2026–27 전학 안내입니다. Pre-K와 기존 학생은 절차가 다르며 ASCENDER 등록은 공개 주소별 배정 Finder가 아닙니다. 정확한 캠퍼스는 학군 담당자에게 확인하세요.",
+        "registryKey": "116908"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3380,8 +3380,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3398,11 +3398,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.wcisd.net/",
+        "yearCaution": "공식 홈페이지 Registration 및 Parent Portal 링크가 있지만 등록 상세 페이지가 서버 오류를 반환했습니다. 직접 배정 조회를 확인하지 못했습니다.",
+        "registryKey": "116909"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3413,8 +3413,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3431,11 +3431,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.alvaradoisd.net/about/registration",
+        "yearCaution": "2026–27 공식 Skyward 등록 안내입니다. 등록은 공개 주소별 배정 검색이 아닙니다. 캠퍼스별 출석구역 및 전학 예외는 구분되므로 학년과 주소별 학교는 학군 Registrar에 확인하세요.",
+        "registryKey": "126901"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3446,8 +3446,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3464,11 +3464,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.burlesonisd.net/families-students/enrollment-information",
+        "yearCaution": "공식 Enrollment의 BISD School Search에 주소를 입력해 Zoned 학교를 찾으세요. 초등 Choice 학교·별도 추첨 및 전학 신청은 일반 주소 배정과 다릅니다.",
+        "registryKey": "126902"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3479,8 +3479,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3497,11 +3497,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.c-isd.com/students-families",
+        "yearCaution": "학군 Students & Families의 Find My School Zone에서 주소별 학교 확인을 진행하세요. 학년도와 학년·전학 예외는 등록담당자에게 재확인하세요.",
+        "registryKey": "126903"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3512,8 +3512,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3530,11 +3530,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-map",
+        "officialUrl": "https://www.godleyisd.net/resources/attendance-zones",
+        "yearCaution": "공식 Attendance Zones에서 PK–5 초등학교는 세 구역이며 6학년·7–8학년·9–12학년은 각각 지정 캠퍼스로 안내됩니다. 초등 지도에는 2022–23 시작 기준이 표시되므로 2026–27 최신 경계와 주소 배정을 별도 확인하세요.",
+        "registryKey": "126911"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3545,8 +3545,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3563,11 +3563,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.gvisd.org/zebrafamilyconnection",
+        "yearCaution": "공식 Zebra Family Connection에서 신규 학생 등록 안내로 이동합니다. 학년별 실제 주소 배정은 캠퍼스 확인이 필요합니다.",
+        "registryKey": "126904"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3578,8 +3578,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3596,11 +3596,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.joshuaisd.org/our-district/attendance-zones",
+        "yearCaution": "공식 Attendance Zones의 Interactive School Zone Finder에서 주소별 학교를 찾으세요. 게시 지도와 실제 현행 학년·특별프로그램 배정은 학군에 재확인하세요.",
+        "registryKey": "126905"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3611,8 +3611,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3629,11 +3629,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.keeneisd.org/student-central/enrollment-and-registration",
+        "yearCaution": "Keene ISD 공식 Enrollment 페이지는 신규·기존 학생 등록을 안내합니다. 학군 밖 학생은 제한적 Open Enrollment 승인이 필요하며 등록은 주소별 학교검색이 아닙니다. 지정 캠퍼스는 Registrar에 확인하세요.",
+        "registryKey": "126906"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3644,8 +3644,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3662,11 +3662,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.rvisd.net/apps/pages/index.jsp?type=d&uREC_ID=413241",
+        "yearCaution": "2025–26 제목 아래 2026–27 등록과 거주증빙 안내가 혼재합니다. 과거 정보를 현재 학교 배정 근거로 사용하지 마세요.",
+        "registryKey": "126907"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3677,8 +3677,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3695,11 +3695,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.venusisd.net/en-US/enrollment",
+        "yearCaution": "2026–27 신규·재학생 등록과 거주증빙, 현재 비거주자 전학 불가. 홈페이지 등록은 개별 주소별 배정학교 Finder가 아닙니다.",
+        "registryKey": "126908"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3710,8 +3710,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3728,11 +3728,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.crandall-isd.net/attendancezone",
+        "yearCaution": "학군 Attendance Zone Finder에서 주소를 확인하세요. 성장에 따라 배정구역이 매년 재검토되므로 2026–27 적용 여부와 최신 변경사항을 확인하세요.",
+        "registryKey": "129901"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3743,8 +3743,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3794,11 +3794,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.kaufmanisd.net/page/kisd-school-zone-finder/",
+        "yearCaution": "학군 공식 KISD School Zone Finder에 주소를 입력해 학교 구역을 확인하세요. 학교별 학년 범위, 2026–27 현재 적용 여부, 예외·전학은 학군에 재확인하세요. Finder 경계는 대시보드 지도에 검증·탑재되지 않았습니다.",
+        "registryKey": "129903"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3809,8 +3809,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3827,11 +3827,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.kempisd.org/132520_3",
+        "yearCaution": "신규학생 공식 ASCENDER 등록 절차입니다. 거주지 제출 기능은 공개 학교 배정 Finder가 아닙니다. 학년별 캠퍼스와 실거주지 배정은 학군 등록 담당자에게 문의하세요.",
+        "registryKey": "129904"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3842,8 +3842,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3860,11 +3860,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.mabankisd.net/page/parentstudent.home",
+        "yearCaution": "2026–27 공식 Enrollment 안내입니다. 등록 페이지는 공개 주소별 학교 검색기가 아닙니다. 캠퍼스별 학년 및 거주지 배정은 학군 Registrar에 직접 확인하세요.",
+        "registryKey": "129905"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3875,8 +3875,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3893,11 +3893,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.scurry-rosser.com/documents/enrollment-and-registration/786030",
+        "yearCaution": "공식 등록 안내 문서와 26–27 전학 서식 제공. 공개 주소별 배정 결과를 검증한 것은 아닙니다.",
+        "registryKey": "129910"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3908,8 +3908,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3926,11 +3926,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.terrellisd.org/page/enrollment-and-registration",
+        "yearCaution": "공식 Enrollment and Registration 안내입니다. 주소별 배정 확인용 별도 Finder는 검증되지 않았으므로 등록 담당자에게 학년·주소와 학교 지정 여부를 문의하세요.",
+        "registryKey": "129906"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3941,8 +3941,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3959,11 +3959,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-map",
+        "officialUrl": "https://www.aledoisd.org/parents-students/new-and-returning-student-registration/registration-frequently-asked-questions",
+        "yearCaution": "공식 등록 FAQ에서 Attendance Zone Committee의 최종 초·중학교 경계 지도를 참조하세요. 게시 지도는 2024년 채택본으로 2026–27 적용 여부를 학군에 확인하세요. 자동 주소 Finder는 미확인입니다.",
+        "registryKey": "184907"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -3974,8 +3974,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -3992,11 +3992,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.brockisd.net/apps/pages/index.jsp?pREC_ID=1200231&termREC_ID=&type=d&uREC_ID=532370",
+        "yearCaution": "Brock ISD 2026–27 공식 Skyward 학생 등록입니다. TEA School District Locator는 학군 외곽 조회이지 학교별 지정학교 검색기가 아닙니다. 학년별 캠퍼스 및 학군 밖 전학 승인 여부를 확인하세요.",
+        "registryKey": "184909"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4007,8 +4007,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4058,11 +4058,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.garnerisd.net/registration",
+        "yearCaution": "공식 등록 페이지는 매년 거주증빙과 보호자 예외 서류를 확인합니다. 이는 공개 주소별 학교검색이 아닙니다.",
+        "registryKey": "184911"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4073,8 +4073,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4091,11 +4091,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.millsapisd.net/parents-students/registration/2026-2027-new-student-registration",
+        "yearCaution": "2026–27 공식 신규학생 등록과 거주증빙 절차. 학군 밖 전학은 별도 신청 대상입니다.",
+        "registryKey": "184904"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4106,8 +4106,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4124,11 +4124,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.peaster.net/parents-students",
+        "yearCaution": "Peaster ISD 공식 학부모 페이지는 ASCENDER 및 신규 Pre-K·Kindergarten 등록과 전학 안내로 연결됩니다. Pre-K·K 등록 안내를 모든 학년 배정으로 해석하지 말고 1–12학년 주소별 학교는 학군에 확인하세요.",
+        "registryKey": "184908"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4139,8 +4139,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4157,11 +4157,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.poolville.net/student-enrollment-and-transfers",
+        "yearCaution": "공식 학생 등록 안내 일부가 2025–26으로 표기되어 있습니다. 2026–27 적용 여부를 다시 확인해야 합니다.",
+        "registryKey": "184901"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4172,8 +4172,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4190,11 +4190,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.springtownisd.net/page/enrollment",
+        "yearCaution": "2026–27 공식 학생 등록 안내입니다. 주소별 지정학교 검색기는 이 페이지에서 확인되지 않았습니다. 배정 학교와 학년별 예외는 교육청 등록 담당자에게 확인하세요. 2027–28 신설 초등학교 계획을 2026–27 배정으로 간주하지 마세요.",
+        "registryKey": "184902"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4205,8 +4205,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4223,11 +4223,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.weatherfordisd.com/apps/pages/index.jsp?type=d&uREC_ID=236882",
+        "yearCaution": "공식 School Zone Finder에서 주소를 검색하세요. 초·중학교 구역과 학년도·전학 예외를 구분하여 학군에 확인하세요.",
+        "registryKey": "184903"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4238,8 +4238,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4289,11 +4289,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.rcisd.org/page/enroll",
+        "yearCaution": "공식 신규 등록 안내입니다. 2025–26 초등 경계 지도와 2026 중학교 신설·재조정 자료가 있어 구버전 배정선을 현행으로 사용하지 마세요. 최신 학년도·주소별 학교는 학군에 직접 확인하세요.",
+        "registryKey": "199902"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4304,8 +4304,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4355,11 +4355,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.aisd.net/district/about/school-directory",
+        "yearCaution": "2026–27 School Directory의 Search by Home Address에서 Zoned 학교를 확인하세요. Signature Program 등은 별도 신청·선발이며 주소 자동배정과 다릅니다.",
+        "registryKey": "220901"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4370,8 +4370,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4388,11 +4388,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.azleisd.net/page/attendance-zones-school-locator/",
+        "yearCaution": "2026–27 School Search에서 주소를 입력하세요. 변경된 초등 PK–5 및 주니어하이 6–8 학년 구역을 확인하세요.",
+        "registryKey": "220915"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4403,8 +4403,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4421,11 +4421,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.birdvilleschools.net/families",
+        "yearCaution": "학군 공식 가족 안내의 Boundary Locator에 집 주소를 입력하세요. 학군 밖 거주와 Open Enrollment 신청은 주소별 Zoned 학교와 별도로 처리됩니다.",
+        "registryKey": "220902"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4436,8 +4436,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4457,7 +4457,7 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.southlakecarroll.edu/district-information/district-departments/student-services/online-enrollment-portal",
-        "yearCaution": null,
+        "yearCaution": "2026–27 공식 Enrollment 안내에 따르면 Carroll Elementary의 Eubanks Intermediate·Dawson Middle 진학 경로 조정은 기존 4학년 이하 학생에게 적용됩니다. 기존 5·6·7학년은 종전 feeder 경로를 유지하며, 해당 학생의 예외·전학 및 실제 주소별 배정은 교육청에 확인하세요. Durham Intermediate 폐쇄와 5학년 초등 잔류·6–8학년 캠퍼스 재편은 별도의 2027–28 계획으로 2026–27 배정에 소급 적용하지 마세요. 현재 학년도 학교별 인증 GIS는 대시보드에 없습니다.",
         "registryKey": "220919"
       },
       "geometry": {
@@ -4487,11 +4487,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.castleberryisd.net/enrollnow/enrollnow",
+        "yearCaution": "학군 Register Now의 SchoolSearch에서 주소별 학교 배정구역을 검색하세요. Find on Map으로 경계를 볼 수도 있으나 현재 학년도와 학년·전학 예외는 등록 담당자에게 다시 확인하세요. 지도 도형은 대시보드에 수집·검증되지 않았습니다.",
+        "registryKey": "220917"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4502,8 +4502,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4520,11 +4520,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.crowleyisdtx.org/parents-students/enrollment-student-registration/attendance-zones",
+        "yearCaution": "공식 School Locator에서 주소를 입력하고 Boundaries에서 학년을 선택하세요. 9학년과 10–12학년 캠퍼스가 달라질 수 있어 진학 경로를 함께 확인하세요.",
+        "registryKey": "220912"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4535,8 +4535,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4553,11 +4553,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.emsisd.com/enroll/find-your-school-zone",
+        "yearCaution": "2026–27 School Zone Finder에서 주소와 초·중·고 배정을 확인하세요. 2026–27 중학교 경계 변경과 기존 7학년 grandfathered 선택/이전 신청 예외를 확인하세요.",
+        "registryKey": "220918"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4568,8 +4568,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4619,11 +4619,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.eisd.org/page/registration-for-new-returning-students",
+        "yearCaution": "교육청의 신규·재학생 등록 경로입니다. 일반 지정학교와 Open Enrollment·전학은 다르며, 주소별 School Finder가 확인되지 않아 교육청 등록 담당자에게 직접 확인하세요.",
+        "registryKey": "220904"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4634,8 +4634,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4685,11 +4685,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://enrollment.fwisd.org/new-to-fwisd",
+        "yearCaution": "2026–27 Enrollment의 School Site Locator에서 주소별 지정 학교를 확인하세요. Choice 프로그램과 선택 가능한 학교는 실제 주소 배정과 구분해야 하며 2026년 통합·폐교 변경도 확인하세요.",
+        "registryKey": "220905"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4700,8 +4700,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4721,7 +4721,7 @@
         "status": "registered-official-source",
         "lookupType": "official-map",
         "officialUrl": "https://www.gcisd.net/page/attendance-area-maps/",
-        "yearCaution": null,
+        "yearCaution": "GCISD는 2026–27부터 Dove Elementary와 Bransford Elementary를 통합해 일부 초등학교 배정을 변경했습니다. 공식 Attendance Area Maps의 초·중·고 지도를 참고하되 게시된 각 PDF의 현행 연도와 재배정 반영 여부는 개별 확인이 필요합니다. 경계 인근 주소는 교육청에 확인하세요. 주소별 자동 Finder 및 검증된 GIS 도형은 미확보입니다.",
         "registryKey": "220906"
       },
       "geometry": {
@@ -4787,7 +4787,7 @@
         "status": "registered-official-source",
         "lookupType": "finder-guidance",
         "officialUrl": "https://www.kellerisd.net/about-kisd/maps",
-        "yearCaution": null,
+        "yearCaution": "Keller ISD 공식 Maps의 Find Your Campuses/Feeder Pattern을 이용하세요. City of Keller ArcGIS는 초·중간·중·고 학교별 폴리곤을 제공하지만 SCHL_YEAR는 2018–19로 확인되어 2026–27 공식 배정선으로 표시할 수 없습니다. 초등 K–4와 5–12 경로 및 현행 주소·학년 배정은 학군 공식 조회로 확인하세요.",
         "registryKey": "220907"
       },
       "geometry": {
@@ -4817,11 +4817,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.kennedaleisd.net/registration/2026-2027/new-student-registration",
+        "yearCaution": "2026–27 공식 신규 등록 절차입니다. 학교가 신청 및 거주지를 검토하는 등록 절차는 공개 주소검색기가 아닙니다. 주소별 지정학교나 전학 예외는 해당 학교에 직접 확인하세요.",
+        "registryKey": "220914"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4832,8 +4832,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4850,11 +4850,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.lwisd.org/registration-process",
+        "yearCaution": "Lake Worth ISD 2026–27 공식 등록 안내입니다. 제출 거주지 서류는 학교 측이 검토하지만 공개 주소검색기는 아닙니다. 학군 밖 전학 및 특수 프로그램 예외와 실제 학년별 지정학교를 별도 확인하세요.",
+        "registryKey": "220910"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4865,8 +4865,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -4883,11 +4883,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.mansfieldisd.org/student-central/attendance-zones",
+        "yearCaution": "학군 공식 Attendance Zones의 Find My Bus로 주소별 학교를 확인하세요. 페이지에 2025–26 지도가 남아 있을 수 있으므로 2026–27 적용 여부를 확인하고 K–4 제한적 선택제와 구분하세요.",
+        "registryKey": "220908"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -4898,8 +4898,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -5081,11 +5081,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.wsisd.com/students-families/enrollment",
+        "yearCaution": "2026–27 공식 Enrollment의 Which School Will My Child Attend 및 School Site Locator로 주소를 조회하세요. Fine Arts·STEAM 선택, 전학·학군 외 Open Enrollment는 일반 배정과 다르며 최종 배정은 학교가 확인합니다.",
+        "registryKey": "220920"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -5096,8 +5096,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -5114,11 +5114,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.alvordisd.net/registration",
+        "yearCaution": "공식 등록 페이지에 2027–28 재학생 등록 일정도 함께 있습니다. 2026–27 실제 주소 배정으로 혼동하면 안 됩니다.",
+        "registryKey": "249901"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -5129,8 +5129,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -5147,11 +5147,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.boydisd.net/enrollments",
+        "yearCaution": "Boyd ISD 공식 등록·전출 및 ASCENDER Parent Portal 안내입니다. 주소별 학교 배정 Finder가 아니며, 거주지와 학년에 따른 실제 캠퍼스는 학군 PEIMS 담당자에게 확인해야 합니다.",
+        "registryKey": "249902"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -5162,8 +5162,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -5180,11 +5180,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.bridgeportisd.net/enrollment",
+        "yearCaution": "Bridgeport ISD 2026–27 공식 등록 안내입니다. 학군 밖 학생은 별도 전학 신청이 필요합니다. 학군 외곽 지도는 학교별 출석구역 폴리곤이 아니므로 학년별 지정학교는 Registrar에게 확인하세요.",
+        "registryKey": "249903"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -5195,8 +5195,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -5246,11 +5246,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "finder-guidance",
+        "officialUrl": "https://www.decaturisd.us/page/enrollment",
+        "yearCaution": "2026–27 공식 Enrollment에서 City of Decatur의 DISD Elementary School Attendance Zones 지도를 열고 주소를 검색하세요. 세 개 초등 경계만 해당하며 STEM Academy는 별도 지원, 중·고는 학교에 확인해야 합니다. 외부 GIS를 대시보드 경계로 복제하지 않았습니다.",
+        "registryKey": "249905"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -5261,8 +5261,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -5279,11 +5279,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.pisd.net/enrollment-registration",
+        "yearCaution": "2026–27 공식 등록과 거주증빙 안내. 학군 밖 전학에는 별도 승인, 주소별 학교검색기는 검증되지 않았습니다.",
+        "registryKey": "249906"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -5294,8 +5294,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     },
@@ -5312,11 +5312,11 @@
       ],
       "category": "public-isd",
       "parentGuidance": {
-        "status": "not-verified",
-        "lookupType": null,
-        "officialUrl": null,
-        "yearCaution": null,
-        "registryKey": null
+        "status": "registered-official-source",
+        "lookupType": "official-inquiry",
+        "officialUrl": "https://www.slidellisd.net/parents",
+        "yearCaution": "2026–27 공식 신규·재학생 등록과 거주증빙에 관한 안내입니다. 학교별 현행 GIS 또는 개별 주소 배정 검증은 별도로 필요합니다.",
+        "registryKey": "249908"
       },
       "geometry": {
         "status": "no-dashboard-school-polygons-configured",
@@ -5327,8 +5327,8 @@
         "confirmedCurrentYear": false,
         "referenceRun": null
       },
-      "missingReason": "official-parent-lookup-not-yet-verified",
-      "priority": "P0",
+      "missingReason": "official-parent-route-linked-but-campus-gis-not-ingested",
+      "priority": "P1",
       "specificCampusZoneReasonsAudited": false,
       "limitation": "No campus-by-campus polygon measurement in current source. Missing official GIS vs missing enrollment process must be investigated separately."
     }

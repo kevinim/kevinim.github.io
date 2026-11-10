@@ -1,0 +1,90 @@
+name: TX 16-PR integrated compatibility preflight (no deploy)
+# QA-only: isolated local dry merges; no Git push, branch changes, or deployment.
+# Includes latest 2026-27 campus lifecycle and main-data assertions from parent PR #158.
+on:
+  pull_request:
+    branches: [data/dfw-school-grade-year-quality-noncfb-20261109, main]
+    paths:
+      - '.github/workflows/tx-open-pr-compatibility-preflight.yml'
+      - '.github/workflows/dfw-noncfb-grade-year-source-qa.yml'
+      - '.github/workflows/dfw-parent-source-batch5-qa.yml'
+      - '.github/workflows/dfw-parent-source-batch6-qa.yml'
+      - 'district-registry.js'
+      - 'data/dfw-school-coverage-matrix-2026.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  no-write-merge-and-integrity:
+    name: Dry-merge 16 integration-target PR branches and test shared school/security controls
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Dry-merge exact approved queue, main first, with no push or deploy
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin '+refs/heads/*:refs/remotes/origin/*'
+          git config user.name "Read-only integration QA"
+          git config user.email "read-only-ci@users.noreply.github.com"
+          git checkout -B pr-integration origin/main
+          branches=(
+            qa/live-pages-desktop-mobile-preflight-20261109
+            security/neutral-builders-live-privacy-20261109
+            security/public-address-disclosure-20261109
+            feature/dfw-parent-guidance-top8-20261109
+            feature/dfw-parent-guidance-next12-20261109
+            feature/dfw-parent-guidance-next8-20261109
+            feature/dfw-parent-guidance-next8b-20261109
+            feature/dfw-parent-guidance-batch5-20261109
+            feature/dfw-parent-guidance-batch6-20261109
+            data/dfw-school-grade-year-quality-noncfb-20261109
+            feature/dfw-parent-guidance-remaining22-20261109
+            security/actions-immutable-readonly-20261109
+            feature/finder-derived-boundary-provenance-20261109
+            feature/cfb-evidence-backed-local-zone-cells-20261109
+            feat/reusable-finder-derived-boundary-engine-20261109
+            qa/mandatory-residential-school-release-gate-20261109
+          )
+          n=0
+          for branch in "${branches[@]}"; do
+            n=$((n+1))
+            echo "INTEGRATION_MERGE [$n/16] $branch"
+            if ! git merge --no-ff --no-edit "origin/$branch"; then
+              echo "::error::Conflict or invalid integration at step $n: $branch"
+              git diff --name-only --diff-filter=U || true
+              git status --short || true
+              exit 1
+            fi
+          done
+          echo "INTEGRATION_DRY_RUN_ALL_16_BRANCHES_MERGED"
+      - name: Deterministic DFW matrix and source/year/address security tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/build-dfw-school-coverage-matrix.cjs --check
+          node scripts/verify-main-data.mjs
+          node --test tests/dfw-school-coverage-matrix.test.cjs tests/dfw-parent-guidance-next12.test.cjs tests/dfw-parent-guidance-batch3.test.cjs tests/dfw-parent-guidance-batch4.test.cjs tests/dfw-parent-guidance-batch5.test.cjs tests/dfw-parent-guidance-batch6.test.cjs tests/dfw-parent-guidance-batch7.test.cjs tests/dfw-comprehensive-source-audit.test.cjs tests/dfw-noncfb-grade-year-source-quality.test.cjs tests/school-lifecycle-curriculum-2026.test.cjs tests/audit-school-provenance.test.cjs tests/audit-gis-upload-links.test.cjs tests/actions-immutable-permissions.test.cjs tests/no-legacy-source-builders.test.cjs tests/public-privacy-disclosure.test.cjs tests/finder-derived-estimate-engine.test.cjs tests/finder-derived-boundary-provenance.test.cjs tests/cfb-finder-derived-cells.test.cjs tests/residential-school-release-gate.test.cjs
+          node scripts/check-public-personalization.cjs .
+      - name: Mandatory residential release blocker remains fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if node scripts/verify-residential-school-release.cjs >/tmp/residential-gate.txt 2>&1; then
+            echo "::error::An unapproved real-residence school gate was incorrectly marked GO"
+            exit 1
+          fi
+          if ! grep -q '"status":"NO_GO"' /tmp/residential-gate.txt; then
+            echo "::error::Missing explicit NO_GO result"
+            cat /tmp/residential-gate.txt
+            exit 1
+          fi
+          echo "INTEGRATION_RELEASE_GATE_EXPECTED_NO_GO"

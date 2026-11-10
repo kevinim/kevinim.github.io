@@ -63,3 +63,6 @@ Unit: `tests/home-assignment-map.test.cjs` + `tests/dfw-home-automation-readines
 Browser: `scripts/test-home-assignment-map-browser.cjs` renders only a synthetic school polygon/marker in a local snapshot at 390px and 1366px; checks reset, source state and unsafe geocode failure. This does not certify any home's real assignment.
 
 This PR changes only address map UX, safe policy, audits, tests and documentation. Existing PR #148 is still a production NO-GO on real address-to-campus verification, so this PR remains Draft.
+
+## 2026-11-10 Track B integration constraints
+The latest main privacy/security releases, Dallas/Irving reference GIS and Allen UI fixes remain intact. Address-derived automatic marker highlighting, zone rendering and viewport focus require an explicit immutable `ConditionalSchoolRelease` verified district grant. Current grant count is zero: visitor addresses show an official Finder warning instead of unapproved assigned school polygons. Synthetic `HomeAssignmentMap.plan` fixtures are only future component tests, never enrollment certification.

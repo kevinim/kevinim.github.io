@@ -133,7 +133,7 @@ for(const id of ['femaHazardEnabled','femaHazardType','nfhlEnabled','txwrapWHPEn
  el(id).addEventListener('change',()=>queueMicrotask(updateHazardShortcut));
 }
 updateHazardShortcut();el('historicOverlay').onchange=e=>{state.showHistoric=e.target.checked;drawBoundary();drawHomeAssignmentMap()};el('referenceBoundaryOverlay').onchange=e=>{state.showOldZones=e.target.checked;drawBoundary();drawHomeAssignmentMap()};el('levels').onclick=e=>{const b=e.target.closest('button');if(!b)return;state.level=b.dataset.v;[...el('levels').children].forEach(x=>x.classList.toggle('active',x===b));drawSchools();drawList()};el('schoolSearch').oninput=e=>{state.schoolQuery=e.target.value.toLowerCase();drawList()};el('schoolSearchClear').onclick=()=>{el('schoolSearch').value='';state.schoolQuery='';drawList()};el('calcCommute').onclick=calcCommute;el('destination').onkeydown=e=>{if(e.key==='Enter')calcCommute()};el('destination').oninput=()=>{el('officeSelect').value=Object.keys(OFFICES).find(k=>OFFICES[k].toLowerCase()===el('destination').value.trim().toLowerCase())||'custom';state.times={};state.dest=null;drawCommute();if(routeGroup)routeGroup.clearLayers();if(map&&targetMarker){map.removeLayer(targetMarker);targetMarker=null}showSavedCommute();drawTable();if(typeof refreshHomeOffice==='function')refreshHomeOffice()};el('officeSelect').onchange=e=>{el('destination').value=OFFICES[e.target.value]||'';el('destination').oninput();if(e.target.value==='custom')el('destination').focus()};el('baseMap').onchange=e=>setBaseMap(e.target.value);
-loadSavedCommute();renderData();drawList();if(window.L){map=L.map('map',{zoomControl:true,preferCanvas:true}).setView([33.129,-96.785],11);setBaseMap('osm');zipGroup=L.featureGroup().addTo(map);schoolGroup=L.featureGroup().addTo(map);zoneGroup=L.featureGroup().addTo(map);homeZoneGroup=L.featureGroup().addTo(map);routeGroup=L.featureGroup().addTo(map);zipMarkers=L.featureGroup().addTo(map);areaLabels=L.layerGroup().addTo(map);window.createFemaHazardOverlay?.(map,document);window.healthcareOverlayController=window.initHealthcareMap?.(map,document);window.winterOverlayController=window.initWinterHazardMap?.(map,document);window.createNFHLFloodOverlay?.(map,document);window.createTxWrapWHPOverlay?.(map,document);window.createNoaaStormHistory?.(document);window.createCrimeCityMap?.(map,document);map.on('moveend',()=>{drawSchools();drawAreaLabels()});if(window.ResizeObserver)new ResizeObserver(()=>syncMapSize()).observe(map.getContainer());fetch('./county-scopes.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{countyData=data;drawZip();drawList()}).catch(e=>{console.error('카운티 비교자료 오류:',e);el('heatScope').value='all';state.heatScope='all';el('heatScope').disabled=true;el('heatScopeStatus').textContent='카운티 자료를 불러오지 못해 전체 범위로 비교합니다. 새로고침해 주세요.';drawZip()});fetch('./data/dfw-mena-ancestry-2024.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(obj=>{menaData=obj;drawDetail()}).catch(e=>console.error('중동·아랍계 조상 자료 오류:',e));fetch('./dfw-race-2024.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(obj=>{for(const d of DATA)Object.assign(d,obj.data[d.z]||{});drawZip();drawDetail();window.refreshCandidateComparisons?.()}).catch(e=>{console.error('인구 구성 자료 오류:',e);el('mapLoadStatus').textContent='인구 구성 자료를 불러오지 못했습니다. 새로고침해 주세요.'});fetch('./zcta-place-names.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{placeNames=data;for(const d of DATA)if(d.name.endsWith(' County')&&data[d.z])d.name=data[d.z];updatePlaceOptions();renderData();drawAreaLabels()}).catch(e=>console.error('지역명 자료를 불러오지 못했습니다:',e));loadZipShapes();Promise.all([loadBoundaryData(),loadSchools().then(loadRatings).then(loadExtra2026SchoolLocations)]).then(()=>{addFriscoBoundarySchools();addProsperCurrentSchools();window.schoolBoundaryAuditReady=true;renderSchoolBoundaryCoverageAudit()});setTimeout(()=>map.invalidateSize(),250)}else{el('map').innerHTML='<div style="padding:30px;color:#53647a">미리보기 또는 브라우저에서 지도 라이브러리 로딩에 실패했습니다. GitHub Pages 정식 주소를 이용하거나 브라우저 연결을 확인하세요. 아래 인구 비교표와 기본 학교 목록은 사용할 수 있습니다.</div>';el('mapLoadStatus').textContent='Leaflet 지도를 로드하지 못했습니다.';state.schools=FALLBACK_SCHOOLS.filter(s=>!isRetiredCampus(s));drawList();}}
+loadSavedCommute();renderData();drawList();if(window.L){map=L.map('map',{zoomControl:true,preferCanvas:true,zoomAnimation:false}).setView([33.129,-96.785],11);setBaseMap('osm');zipGroup=L.featureGroup().addTo(map);schoolGroup=L.featureGroup().addTo(map);zoneGroup=L.featureGroup().addTo(map);homeZoneGroup=L.featureGroup().addTo(map);routeGroup=L.featureGroup().addTo(map);zipMarkers=L.featureGroup().addTo(map);areaLabels=L.layerGroup().addTo(map);window.createFemaHazardOverlay?.(map,document);window.healthcareOverlayController=window.initHealthcareMap?.(map,document);window.winterOverlayController=window.initWinterHazardMap?.(map,document);window.createNFHLFloodOverlay?.(map,document);window.createTxWrapWHPOverlay?.(map,document);window.createNoaaStormHistory?.(document);window.createCrimeCityMap?.(map,document);map.on('moveend',()=>{drawSchools();drawAreaLabels()});if(window.ResizeObserver)new ResizeObserver(()=>syncMapSize()).observe(map.getContainer());fetch('./county-scopes.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{countyData=data;drawZip();drawList()}).catch(e=>{console.error('카운티 비교자료 오류:',e);el('heatScope').value='all';state.heatScope='all';el('heatScope').disabled=true;el('heatScopeStatus').textContent='카운티 자료를 불러오지 못해 전체 범위로 비교합니다. 새로고침해 주세요.';drawZip()});fetch('./data/dfw-mena-ancestry-2024.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(obj=>{menaData=obj;drawDetail()}).catch(e=>console.error('중동·아랍계 조상 자료 오류:',e));fetch('./dfw-race-2024.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(obj=>{for(const d of DATA)Object.assign(d,obj.data[d.z]||{});drawZip();drawDetail();window.refreshCandidateComparisons?.()}).catch(e=>{console.error('인구 구성 자료 오류:',e);el('mapLoadStatus').textContent='인구 구성 자료를 불러오지 못했습니다. 새로고침해 주세요.'});fetch('./zcta-place-names.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{placeNames=data;for(const d of DATA)if(d.name.endsWith(' County')&&data[d.z])d.name=data[d.z];updatePlaceOptions();renderData();drawAreaLabels()}).catch(e=>console.error('지역명 자료를 불러오지 못했습니다:',e));loadZipShapes();Promise.all([loadBoundaryData(),loadSchools().then(loadRatings).then(loadExtra2026SchoolLocations)]).then(()=>{addFriscoBoundarySchools();addProsperCurrentSchools();window.schoolBoundaryAuditReady=true;renderSchoolBoundaryCoverageAudit()});setTimeout(()=>map.invalidateSize(),250)}else{el('map').innerHTML='<div style="padding:30px;color:#53647a">미리보기 또는 브라우저에서 지도 라이브러리 로딩에 실패했습니다. GitHub Pages 정식 주소를 이용하거나 브라우저 연결을 확인하세요. 아래 인구 비교표와 기본 학교 목록은 사용할 수 있습니다.</div>';el('mapLoadStatus').textContent='Leaflet 지도를 로드하지 못했습니다.';state.schools=FALLBACK_SCHOOLS.filter(s=>!isRetiredCampus(s));drawList();}}
 
 function setBaseMap(choice, fallbackFrom=null){
  if(!map)return;
@@ -373,7 +373,7 @@ function syncMapSize(){
 }
 function drawSchools(){
  if(!map)return;
- const homeActive=typeof home!=='undefined'&&!!home;
+ const homeActive=typeof home!=='undefined'&&!!home&&window.ConditionalSchoolRelease?.decide?.(home.assignment)?.allowed===true;
  const legend=el('schoolLegend');
  if(legend){
   legend.classList.toggle('matching',homeActive);
@@ -396,8 +396,6 @@ function drawSchools(){
   (state.level==='all'||s.type===state.level)&&
   (state.ratingFilter!=='rated'||score(s.name,s.district)!==null));
  const visible=eligible.filter(s=>bounds.contains(s.ll));
- // Candidates in adjacent ZIPs must not disappear from the home map merely
- // because their campus is off-screen or omitted by a rating filter.
  const homeCandidates=homeActive?state.schools.filter(s=>s.ll&&s.type!=='other'&&
   (state.level==='all'||s.type===state.level)&&homeSchoolMatches(s)):[];
  const displayed=[...new Set([...visible,...homeCandidates])];
@@ -416,8 +414,6 @@ function drawSchools(){
   notice.textContent='학교 마커 '+displayed.length+'개 표시 · 등록 '+state.schools.length+'개 · 필터 적합 '+eligible.length+'개 · 화면 내 '+visible.length+'개 · ZIP '+state.zip+' · Zoom '+zoom+' · 지도 '+size.x+'×'+size.y+' · 학교 위치는 배정 확정 정보가 아닙니다.';
  }
 }
-// Draw residential school candidates into their own layer so school-click
-// polygons, ZIP polygons and home polygons can coexist without interference.
 function drawHomeAssignmentMap(){
  if(!map||!homeZoneGroup)return;
  homeZoneGroup.clearLayers();
@@ -425,6 +421,15 @@ function drawHomeAssignmentMap(){
  const status=el('homeMapAssignmentStatus');
  if(!selected){if(status)status.textContent='';return;}
  const assignment=selected.assignment;
+ // Do not promote source-backed reference GIS into residential enrollment.
+ if(window.ConditionalSchoolRelease?.decide?.(assignment)?.allowed!==true){
+  if(status){
+   status.textContent='주소별 자동 배정은 아직 인증되지 않았습니다. 학군 공식 Finder를 이용하세요. 지도 참조 경계는 학교 배정 확정이 아닙니다.';
+   status.dataset.evidence='conditional-hold';
+   status.dataset.visible='false';
+  }
+  return;
+ }
  const mode=assignment?.district?districtZoneDisplay(assignment.district,state.liveFinder):'historical';
  const plan=window.HomeAssignmentMap?.plan(assignment,mode);
  if(!plan){if(status)status.textContent='지도 학교 후보 표시 기능을 불러오지 못했습니다.';return;}
@@ -447,7 +452,8 @@ function drawHomeAssignmentMap(){
 // Run only upon an explicit address selection, never on a map move/async reload.
 function focusHomeAssignedSchools(){
  if(!map||typeof home==='undefined'||!home||!state.showSchools||
-    !home.geocodeQuality?.usableForSchoolCandidate)return;
+    !home.geocodeQuality?.usableForSchoolCandidate||
+    window.ConditionalSchoolRelease?.decide?.(home.assignment)?.allowed!==true)return;
  const points=state.schools.filter(s=>s.ll&&homeSchoolMatches(s)).map(s=>s.ll);
  if(!points.length||points.length>12)return;
  const all=[home.ll,...points];

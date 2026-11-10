@@ -1,0 +1,79 @@
+'use strict';
+// Public Denton ISD 2026-27 school-zone PDF references, NOT map polygons.
+(function(root){
+ const DISTRICT='061901',YEAR='2026-27';
+ const SOURCE='https://www.dentonisd.org/families/attendance-zones';
+ const LOCATOR='https://webquery-2-denton-tx.etstack.io/';
+ const REZONE='https://www.dentonisd.org/families/attendance-zones/attendance-boundary-modification-26-27';
+ const ALL=Object.freeze({"elementary":"https://resources.finalsite.net/images/v1777570580/dentonisdorg/t3wht3nvxuf01iatrebo/AllElementaryMap_26-27.pdf","middle":"https://resources.finalsite.net/images/v1777570133/dentonisdorg/q7tnltynklrfsfhmsisi/AllMiddleSchoolZoneMaps_26-27.pdf","high":"https://resources.finalsite.net/images/v1777570662/dentonisdorg/j5syiqjmelhlufew9q6a/AllHighSchoolZoneMaps_26-27.pdf"});
+ const ROWS=Object.freeze([{"id":"061901126","level":"elementary","name":"Adkins","url":"https://resources.finalsite.net/images/v1777569438/dentonisdorg/mwitotczhy2ioqie1sht/AdkinsES-ZoneMap_26-27.pdf"},{"id":"061901104","level":"elementary","name":"Alexander","url":"https://resources.finalsite.net/images/v1777569440/dentonisdorg/xuoz096r2a2v7mg2fatb/AlexanderES-ZoneMap_26-27.pdf"},{"id":"061901127","level":"elementary","name":"Bell","url":"https://resources.finalsite.net/images/v1777569438/dentonisdorg/ndkzdhtrirsfjw5ho0vv/BellES-ZoneMap_26-27.pdf"},{"id":"061901122","level":"elementary","name":"Blanton","url":"https://resources.finalsite.net/images/v1777569438/dentonisdorg/q7u8hyv8of2ydyfmcaii/BlantonES-ZoneMap_26-27.pdf"},{"id":"061901111","level":"elementary","name":"Borman","url":"https://resources.finalsite.net/images/v1777569438/dentonisdorg/brtzzgovdo4wlyrhjmiq/BormanES-ZoneMap_26-27.pdf"},{"id":"061901125","level":"elementary","name":"Cross Oaks","url":"https://resources.finalsite.net/images/v1777569438/dentonisdorg/h3rqxuksklqcbbmwaemg/CrossOakES-ZoneMap_26-27.pdf"},{"id":"061901115","level":"elementary","name":"EP Rayzor","url":"https://resources.finalsite.net/images/v1777569439/dentonisdorg/h1omwmmrywawcc3fnz3s/EPRayzor-ZoneMap_26-27.pdf"},{"id":"061901112","level":"elementary","name":"Evers Park","url":"https://resources.finalsite.net/images/v1777569438/dentonisdorg/jztdajxfyrdje2zsmukq/EversES-ZoneMap_26-27.pdf"},{"id":"061901118","level":"elementary","name":"Hawk","url":"https://resources.finalsite.net/images/v1777569439/dentonisdorg/eajujn7xhwuqcimpirn8/HawkES-ZoneMap_26-27.pdf"},{"id":"061901130","level":"elementary","name":"Hill","url":"https://resources.finalsite.net/images/v1777569439/dentonisdorg/lqtay6k6ym56kuyqgiwo/HillES-ZoneMap_26-27.pdf"},{"id":"061901105","level":"elementary","name":"Hodge","url":"https://resources.finalsite.net/images/v1777569439/dentonisdorg/uaupki53vdl64gfilug1/HodgeES-ZoneMap_26-27.pdf"},{"id":"061901102","level":"elementary","name":"Houston","url":"https://resources.finalsite.net/images/v1777569439/dentonisdorg/fudmbopvqcjxzuocdakg/HoustonES-ZoneMap_26-27.pdf"},{"id":"061901131","level":"elementary","name":"Martinez","url":"https://resources.finalsite.net/images/v1777569439/dentonisdorg/duy4xl0ijgbdjkequhea/MartinezES-ZoneMap_26-27.pdf"},{"id":"061901106","level":"elementary","name":"McNair","url":"https://resources.finalsite.net/images/v1777569440/dentonisdorg/zkm1kxyzbkeq4e97em9t/McNairES-ZoneMap_26-27.pdf"},{"id":"061901121","level":"elementary","name":"Nelson","url":"https://resources.finalsite.net/images/v1777569440/dentonisdorg/jhj8hn8p6nkqwj9sybgq/NelsonES-ZoneMap_26-27.pdf"},{"id":"061901107","level":"elementary","name":"Newton Rayzor","url":"https://resources.finalsite.net/images/v1777569440/dentonisdorg/gbdbba3hpupz0tfptstc/NRayzorES-ZoneMap_26-27.pdf"},{"id":"061901116","level":"elementary","name":"Pecan Creek","url":"https://resources.finalsite.net/images/v1777569440/dentonisdorg/aepngdkcdouzteombnil/PecanES-ZoneMap_26-27.pdf"},{"id":"061901117","level":"elementary","name":"Providence","url":"https://resources.finalsite.net/images/v1777569440/dentonisdorg/ikajgvstkg6szrh87d61/ProvidenceES-ZoneMap_26-27.pdf"},{"id":"061901132","level":"elementary","name":"Reeves","url":"https://resources.finalsite.net/images/v1777569440/dentonisdorg/ijeut1ula4kltquktaw5/ReevesES-ZoneMap_26-27.pdf"},{"id":"061901108","level":"elementary","name":"Rivera","url":"https://resources.finalsite.net/images/v1777569441/dentonisdorg/dygamwbhj9cblw3rerk1/RiveraES-ZoneMap_26-27.pdf"},{"id":"061901129","level":"elementary","name":"Sandbrock Ranch","url":"https://resources.finalsite.net/images/v1777569441/dentonisdorg/bimzz1dkxp1v3gom5h7m/SandbrockES-ZoneMap_26-27.pdf"},{"id":"061901119","level":"elementary","name":"Savannah","url":"https://resources.finalsite.net/images/v1777569441/dentonisdorg/yylfesoecmr57wao9snm/SavannahES-ZoneMap_26-27.pdf"},{"id":"061901109","level":"elementary","name":"Shultz","url":"https://resources.finalsite.net/images/v1777569441/dentonisdorg/qq4ewexdfumbtxtmkq9v/ShultzES-ZoneMap_26-27.pdf"},{"id":"061901123","level":"elementary","name":"Stephens","url":"https://resources.finalsite.net/images/v1777569441/dentonisdorg/hrapztmmnwkr3duylblt/StephensES-ZoneMap_26-27.pdf"},{"id":"061901128","level":"elementary","name":"Union Park","url":"https://resources.finalsite.net/images/v1777569441/dentonisdorg/aqa8lnzyhysbxc3dqe4c/UnionParkES-ZoneMap_26-27.pdf"},{"id":"061901113","level":"elementary","name":"WS Ryan","url":"https://resources.finalsite.net/images/v1777569441/dentonisdorg/jbmpw022nuacsimlo5oo/WSRyanES-ZoneMap_26-27.pdf"},{"id":"061901045","level":"middle","name":"Calhoun","url":"https://resources.finalsite.net/images/v1777570132/dentonisdorg/kiylcbnewpiqoxjbiofa/CalhounMS-ZoneMap_26-27.pdf"},{"id":"061901051","level":"middle","name":"Cheek","url":"https://resources.finalsite.net/images/v1777570133/dentonisdorg/rfrijzexq1igtdprrwnl/CheekMS-ZoneMap_26-27.pdf"},{"id":"061901041","level":"middle","name":"Crownover","url":"https://resources.finalsite.net/images/v1777570132/dentonisdorg/gefaatepikane75avd9g/CrownoverMS-ZoneMap_26-27.pdf"},{"id":"061901048","level":"middle","name":"Harpool","url":"https://resources.finalsite.net/images/v1777570132/dentonisdorg/kadmvykh4t1vbgjs4be9/HarpoolMS-ZoneMap_26-27.pdf"},{"id":"061901046","level":"middle","name":"McMath","url":"https://resources.finalsite.net/images/v1777570132/dentonisdorg/clfgldej7tvkrfdbml0q/McMathMS-ZoneMap_26-27.pdf"},{"id":"061901049","level":"middle","name":"Myers","url":"https://resources.finalsite.net/images/v1777570133/dentonisdorg/yv5bsr2cv8eghnfhbtdg/MyersMS-ZoneMap_26-27.pdf"},{"id":"061901047","level":"middle","name":"Navo","url":"https://resources.finalsite.net/images/v1777570133/dentonisdorg/tdekl8hl1hjslwqi2ayk/NavoMS-ZoneMap_26-27.pdf"},{"id":"061901050","level":"middle","name":"Rodriguez","url":"https://resources.finalsite.net/images/v1777570133/dentonisdorg/autmcffypq4bj4punjdj/RodriguezMS-ZoneMap_26-27.pdf"},{"id":"061901044","level":"middle","name":"Strickland","url":"https://resources.finalsite.net/images/v1777570133/dentonisdorg/gzmnbwrappcmvikua3ft/StricklandMS-ZoneMap_26-27.pdf"},{"id":"061901008","level":"high","name":"Braswell","url":"https://resources.finalsite.net/images/v1777570662/dentonisdorg/e6zgypxuc3lqfzs2fplr/BraswellHS-ZoneMap_26-27.pdf"},{"id":"061901003","level":"high","name":"Denton","url":"https://resources.finalsite.net/images/v1777570662/dentonisdorg/qftuyjz8fc8l3xgffkdt/DentonHS-ZoneMap_26-27.pdf"},{"id":"061901007","level":"high","name":"Guyer","url":"https://resources.finalsite.net/images/v1777570662/dentonisdorg/b3tvbbaekwehkpgomfwm/GuyerHS-ZoneMap_26-27.pdf"},{"id":"061901002","level":"high","name":"Ryan","url":"https://resources.finalsite.net/images/v1777570662/dentonisdorg/pm8wzzo5dyfhfdxc2gz2/RyanHS-ZoneMap_26-27.pdf"}].map(Object.freeze));
+ const index=new Map(ROWS.map(r=>[r.id,r]));
+ function validPdf(v){
+  return typeof v==='string'&&v.length<=280&&!/[\u0000-\u0020\\]/.test(v)&&
+  /^https:\/\/resources\.finalsite\.net\/images\/v\d+\/dentonisdorg\/[a-z0-9]+\/[A-Za-z0-9_-]+\.pdf$/.test(v);
+ }
+ function lookup(s,id){
+  if(s?.district!==DISTRICT||!['elementary','middle','high'].includes(s.type))return null;
+  // TEA ID + grade only; never infer by proximity, home address or fuzzy school names.
+  const row=typeof id==='string'&&/^061901\d{3}$/.test(id)?index.get(id):null;
+  const match=row?.level===s.type&&validPdf(row.url)?row:null;
+  const url=match?.url||ALL[s.type];if(!validPdf(url))return null;
+  return {id:match?.id||null,name:match?.name||null,url,
+    year:YEAR,status:'official-pdf-reference-not-GIS',polygonReady:false,assignmentVerified:false,
+    warning:id==='061901120'?
+    'Paloma Creek Elementary는 2026–27 일반 배정에서 제외되었습니다. 2025–26 배정선을 사용하지 마세요.':
+    '이것은 교육청의 공식 PDF 지도 참고자료이며 대시보드 내 학교별 GIS 폴리곤이 아닙니다. 실제 집 주소·학년별 배정은 공식 School Locator에서 확인하세요.'};
+ }
+ function append(note,s,id,doc){
+  if(!note||typeof note.appendChild!=='function')return false;
+  const item=lookup(s,id);if(!item)return false;
+  const d=doc||(typeof document!=='undefined'?document:null);if(!d)return false;
+  const group=d.createElement('div');group.className='source denton-zone-reference';
+  group.dataset.sourceType=item.status;group.dataset.schoolYear=item.year;
+  const title=d.createElement('strong');title.textContent='Denton ISD 2026–27 공식 PDF 경계 · 지도 폴리곤 미확보';
+  group.appendChild(title);
+  const warning=d.createElement('small');warning.className='source boundary-footnote';
+  warning.textContent=item.warning;group.appendChild(warning);
+  for(const [label,url] of [
+   [item.id?item.name+' 학교별 공식 PDF 경계':'교육청 학년별 전체 공식 PDF 경계',item.url],
+   ['Denton 공식 School Locator · 실제 주소별 배정',LOCATOR],
+   ['2026–27 공식 재배정 근거',REZONE]]){
+    const a=d.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';
+    a.className='cardlink';a.textContent=label;group.appendChild(a);
+  }
+  note.appendChild(group);return true;
+ }
+ function mount(doc){
+  const d=doc||(typeof document!=='undefined'?document:null);
+  const choice=d?.getElementById('dentonPdfCampusSelect');
+  const link=d?.getElementById('dentonPdfCampusLink');
+  if(!choice||!link||choice.dataset.ready==='true')return false;
+  choice.dataset.ready='true';
+  choice.replaceChildren();
+  const first=d.createElement('option');first.value='';first.textContent='학교를 선택하세요 (초등 26 · 중등 9 · 고등 4)';choice.appendChild(first);
+  for(const [level,label] of [['elementary','초등학교'],['middle','중학교'],['high','고등학교']]){
+   const group=d.createElement('optgroup');group.label=label;
+   for(const r of ROWS.filter(x=>x.level===level)){
+    const option=d.createElement('option');option.value=r.id;option.textContent=r.name;
+    group.appendChild(option);
+   }
+   choice.appendChild(group);
+  }
+  choice.addEventListener('change',()=>{
+   const r=index.get(choice.value);const item=r?lookup({district:DISTRICT,type:r.level},r.id):null;
+   if(!item){link.hidden=true;link.removeAttribute('href');link.textContent='';return}
+   link.href=item.url;link.hidden=false;
+   link.textContent='Denton '+YEAR+' · '+r.name+' 공식 경계 PDF 열기';
+  });
+  link.hidden=true;link.removeAttribute('href');return true;
+ }
+ const api=Object.freeze({DISTRICT,YEAR,SOURCE,LOCATOR,REZONE,ALL,ROWS,validPdf,lookup,append,mount});
+ if(typeof module==='object'&&module.exports)module.exports=api;
+ if(root){
+  root.DentonZonePdfReference=api;
+  if(typeof document!=='undefined'){
+   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>mount(document),{once:true});
+   else mount(document);
+  }
+ }
+})(typeof window!=='undefined'?window:null);

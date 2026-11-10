@@ -36,6 +36,29 @@ function expectedPublicHtml(source){
   '<input type="checkbox" id="oneHourOverlay" hidden disabled aria-hidden="true"><div class="source">사전 계산된 특정 회사 기준 통근 지도는 제공되지 않습니다. 위 목적지에 주소를 직접 입력하여 경로를 확인하세요.</div>');
  s=replaceOnce(s,'JPM 시간은 ZIP 대표점 기준이고 교통량은 반영하지 않습니다.',
   '통근 시간은 사용자가 선택한 목적지와 ZIP 대표점을 기준으로 계산하며 실시간 교통량은 반영하지 않습니다.');
+ s=replaceOnce(s,"비교함은 이 화면을 닫거나 새로고침하면 지워집니다. 주소 검색: © Esri.","비교함은 이 화면을 닫거나 새로고침하면 지워집니다. 주소 검색: © Esri. 외부 서비스의 접속 기록 및 보존 기간은 이 사이트에서 통제하지 않습니다. 사적인 정보나 비밀번호를 입력하지 마세요.");
+ s=replaceOnce(s,"<input id=\"destination\" value=\"\" placeholder=\"예: 5000 Legacy Dr, Plano, TX\" autocomplete=\"street-address\">","<input id=\"destination\" value=\"\" placeholder=\"예: 5000 Legacy Dr, Plano, TX\" autocomplete=\"street-address\"><p id=\"destinationPrivacy\" class=\"source\" role=\"note\">목적지 검색을 누르면 입력한 목적지가 OpenStreetMap Nominatim으로, 경로 계산 시 출발지·목적지 좌표가 OSRM으로 전송됩니다. 실제 주거지나 기밀 주소 대신 공개된 사업장·대표 위치를 사용하세요. 이 사이트는 입력값을 자체 서버에 영구 저장하도록 구성되지 않았으나, 외부 서비스의 로그 보존·삭제는 보장할 수 없습니다.</p>");
+ // The Conditional GO integration adds exactly one first-party, non-inline
+ // fail-closed policy script. All other HTML remains hash-pinned to baseline.
+ s=replaceOnce(s,'<script src="./school-zone-ui.js?v=1"></script>',
+  '<script src="./school-zone-ui.js?v=1"></script>\r\n<script src="./features/conditional-school-release.js?v=1"></script>');
+ // One separately reviewed Agent05 CSS link; no other HTML baseline differences are allowed.
+ s=replaceOnce(s,'<link rel="stylesheet" href="./features/theme-toggle.css?v=1">',
+  '<link rel="stylesheet" href="./features/theme-toggle.css?v=1"><link rel="stylesheet" href="./features/map-control-contrast.css?v=1"><link rel="stylesheet" href="./features/track-b-reference-warning.css?v=1">');
+ // Exactly this publisher source, privacy sentence and same-origin script.
+ s=replaceOnce(s,'https://geocode.arcgis.com https://nominatim.openstreetmap.org',
+  'https://geocode.arcgis.com https://iisd1.maps.arcgis.com https://services.arcgis.com https://nominatim.openstreetmap.org');
+ s=replaceOnce(s,'주소 검색: © Esri. 외부 서비스의',
+  '주소 검색: © Esri. Dallas 참고 GIS 버튼을 누르면 선택한 좌표만 Dallas ISD ArcGIS 원본 서비스에 전송하며 결과 도형은 현재 브라우저에서만 표시합니다. Irving 참고 GIS 버튼을 누르면 집 핀 좌표만 Irving ISD 연계 ArcGIS 서비스에 전송되며 이 사이트는 경계 결과를 저장하지 않습니다. 외부 서비스의');
+ s=replaceOnce(s,'<script src="./home-lookup-v2.js?v=15"></script>',
+  '<script src="./irving-official-spatial.js?v=1"></script><script src="./dallas-attendance-live.js?v=1"></script><script src="./home-lookup-v2.js?v=15"></script>');
+ s=replaceOnce(s,'<label class="check"><input type="checkbox" id="referenceBoundaryOverlay"> 과거 GIS 참고 경계선 표시</label></div>',
+  '<label class="check"><input type="checkbox" id="referenceBoundaryOverlay"> 과거 GIS 참고 경계선 표시</label></div><p class="reference-gis-global-warning" role="note"><strong>지도 경계는 학교 배정 확정 정보가 아닙니다.</strong> 연도가 오래되거나 현행성이 확인되지 않은 GIS는 참고용입니다. 입학·배정은 반드시 해당 학군의 공식 주소 검색기에서 확인하세요.</p>');
+ s=replaceOnce(s,"<h2>학교 배정구역 (자동 연결)</h2>\r\n","<h2>학교 배정구역 (자동 연결)</h2>\r\n<details id=\"dentonPdfZoneDirectory\" class=\"small-note\">\n <summary><strong>Denton ISD 2026–27 공식 학교별 PDF 경계 지도 39개</strong> · GIS와 배정 미인증</summary>\n <p class=\"source\" role=\"note\"><strong>주의 · 공식 PDF 참고 지도입니다.</strong> 학교별 원본 PDF는 공개돼 있으나 이 대시보드에 현행 학교별 GIS 도형이 연결됐다는 뜻이 아닙니다. 실제 거주지의 배정학교와 2026–27 예외는 공식 School Locator로 확인해야 합니다.</p>\n <label for=\"dentonPdfCampusSelect\">초등 26 · 중등 9 · 고등 4 학교별 공식 지도 선택</label>\n <select id=\"dentonPdfCampusSelect\" aria-label=\"Denton 학교별 공식 2026–27 PDF 지도\"></select>\n <a class=\"cardlink\" id=\"dentonPdfCampusLink\" hidden target=\"_blank\" rel=\"noopener noreferrer\"></a>\n <a class=\"cardlink\" href=\"https://webquery-2-denton-tx.etstack.io/\" target=\"_blank\" rel=\"noopener noreferrer\">Denton 공식 School Locator ↗</a>\n <a class=\"cardlink\" href=\"https://www.dentonisd.org/families/attendance-zones/attendance-boundary-modification-26-27\" target=\"_blank\" rel=\"noopener noreferrer\">2026–27 변경 안내 ↗</a>\n</details>\n");
+ s=replaceOnce(s,'<script src="./school-boundary-match.js?v=3"></script>',
+  '<script src="./school-boundary-match.js?v=3"></script>\n<script src="./denton-official-zone-references.js?v=1"></script>');
+ s=replaceOnce(s,"<script src=\"./denton-official-zone-references.js?v=1\"></script>","<script src=\"./denton-official-zone-references.js?v=1\"></script>\n<script src=\"./denton-campus-point-quality.js?v=1\"></script>\n<script src=\"./features/denton-campus-marker-info.js?v=1\"></script>");
+ s=replaceOnce(s,"<details id=\"dentonPdfZoneDirectory\" class=\"small-note\">","<details id=\"cfbOfficialRezoningReference\" class=\"small-note\">\n <summary><strong>CFB ISD 공식 배정 경계 참고</strong> · 승인 2025–26 및 현행 Finder</summary>\n <p class=\"source\" role=\"note\"><strong>주의 · 공식 구역 정보와 GIS 도형을 구분하세요.</strong> CFBISD는 2025년 3월 6일 교육위원회가 승인한 경계에 따라 현재 학교 주소 검색기를 안내합니다. 교육구의 2025–26 재배정 설명에는 특정 아파트·주택단지의 학교 변경도 포함돼 있습니다. 이 대시보드에는 현재 CFB 학교별 검증 GIS 폴리곤이 연결되지 않았으며, 해당 자료만으로 2026–27 주택별 학교 배정이나 호수별 예외를 확정할 수 없습니다.</p>\n <a class=\"cardlink\" href=\"https://www.cfbisd.edu/students/school-maps-locator-system\" target=\"_blank\" rel=\"noopener noreferrer\">CFB 공식 School Search · 현재 주소 조회 ↗</a>\n <a class=\"cardlink\" href=\"https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning\" target=\"_blank\" rel=\"noopener noreferrer\">2025–26 승인 초·중·고 경계 변경 안내 및 지도 ↗</a>\n <p class=\"source\">기준: CFBISD 공식 발표의 2025–26 개편 및 2026–27 등록 안내. 지도 확인은 교육청 공식 검색기 우선이며, 참고 페이지의 지도 이미지를 새로운 GIS 폴리곤으로 변환·저장하지 않습니다.</p>\n</details>\n<details id=\"dentonPdfZoneDirectory\" class=\"small-note\">");
  return s;
 }
 function expectedPublicJs(source){
@@ -54,6 +77,8 @@ function expectedPublicJs(source){
  s=replaceOnce(s,"['JPM 도로망 (교통 미반영)',Number.isFinite(d.jpmMinutes)?d.jpmMinutes+'분':'미확인'],",'');
  s=replaceOnce(s,"state.withinHour?(Number.isFinite(d.jpmMinutes)?(d.jpmMinutes<=60?'#2878ba':'#eef2f5'):'#aab5c0')",
   "state.withinHour?'#aab5c0'");
+ s=replaceOnce(s,"L.map(\'map\',{zoomControl:true,preferCanvas:true}).setView",
+  "L.map(\'map\',{zoomControl:true,preferCanvas:true,zoomAnimation:false}).setView");
  s=replaceOnce(s,"JPM 도로망: ${Number.isFinite(d.jpmMinutes)?d.jpmMinutes+'분':'미확인'}",
   '통근 시간: 목적지 검색 후 확인');
  s=s.replaceAll('JPM Plano 도착 · 도로망 추정','통근 지도 · 직접 경로 확인')
@@ -78,12 +103,18 @@ test('index changes limited to approved blank destination, hidden precomputed ma
  assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expectedPublicHtml(old).replace(/\r\n/g,'\n')),
   'Unexpected application HTML modification outside privacy removal');
  assert.equal(html.split(external).length,2);
+ const conditional='./features/conditional-school-release.js?v=1';
+ assert.equal(html.split(conditional).length,2,'conditional school policy is loaded exactly once');
+ assert.ok(html.indexOf('./school-zone-ui.js?v=1')<html.indexOf(conditional));
+ assert.ok(html.indexOf(conditional)<html.indexOf('./home-lookup-v2.js?v='));
  const scriptIndex=html.indexOf(external);
  assert.ok(html.indexOf('./plano-finder-live.js')<scriptIndex);
  assert.ok(html.indexOf('./features/commute/workplace-marker.js')>scriptIndex);
 });
 test('strict script CSP preserved exactly and personal office artifacts absent',()=>{
- assert.equal(newCsp,oldCsp,'Privacy removal must not weaken CSP or expand external origins');
+ const allowed=oldCsp.replace('https://geocode.arcgis.com https://nominatim.openstreetmap.org',
+  'https://geocode.arcgis.com https://iisd1.maps.arcgis.com https://services.arcgis.com https://nominatim.openstreetmap.org');
+ assert.equal(newCsp,allowed,'Irving ArcGIS exact origin is the only allowed new CSP endpoint');
  for(const part of ["script-src-attr 'none'","object-src 'none'","base-uri 'self'","form-action 'self'"])
   assert.ok(newCsp.includes(part));
  assert.ok(newCsp.includes("script-src 'self' https://unpkg.com;"));
@@ -104,7 +135,7 @@ test('HTML has external executable scripts only and no inline handlers',()=>{
 test('all school, region and risk modules preserved exactly once',()=>{
  for(const name of ['features/west-dfw/attach.js','features/area-assessment.js',
  'features/resilience/winter-map.js','school-boundary-match.js','home-lookup-v2.js',
- 'features/dfw-school-coverage-panel.js']){
+ 'features/dfw-school-coverage-panel.js','irving-official-spatial.js','dallas-attendance-live.js']){
   assert.equal(html.split(name).length,2,name);
  }
 });

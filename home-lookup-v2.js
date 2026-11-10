@@ -1,5 +1,6 @@
 'use strict';
 // Addresses and coordinates are held in memory only. Geocoding is triggered by submit.
+let irvingReferenceLayer=null,dallasReferenceLayer=null;
 let home=null,homeMarker=null,homeCandidates=[],homeRequest=null,homeRouteRequest=null,homeParcelRequest=null,homeOfficialRequest=null,homeVersion=0,homeRouteLayer=null,homeAutocomplete=null;
 
 function ringContains(point,ring){
@@ -76,6 +77,7 @@ function assignmentHtml(result){
  if(result.status==='conflict')return '<b>확인 필요 · 서로 다른 학군 자료가 겹칩니다.</b><br>경계나 아파트별 예외를 학군 공식 검색기에서 확인하세요.';
  if(result.status==='loading')return '학교 배정 자료를 불러오는 중입니다.';
  if(result.status==='error')return '학교 배정 자료를 불러오지 못했습니다. 새로고침하거나 학군 공식 검색기에서 확인하세요.';
+ if(result.status==='conditional-finder-only')return '<b>학교 자동 배정 미인증 · 공식 Finder 확인 필요</b><br><span class="source">현재 배포 범위에서는 집 주소에 대한 초·중·고 배정학교 또는 현행 경계를 자동 확정하지 않습니다. 지도상의 학교 위치·과거 구역·GIS 후보는 배정 근거가 아닙니다. 아래 공식 학군 검색기를 이용해 해당 주소와 학년을 확인하세요.</span>';
  if(result.status==='unavailable')return '자동 연결 자료가 없습니다. 학교가 없다는 뜻은 아닙니다. 아래 학군 공식 검색기에서 주소를 확인하세요.';
  if(result.district==='AISD')return '<b>확인 필요 · 앨런 공식 주소표 (학년도 미표기)</b><br>'+[[result.allen[2],'elementary','K–6'],[result.allen[3],'middle','7–8'],[result.allen[4],'freshman','9'],[result.allen[5],'high','10–12']].map(([n,type,g])=>escape(n+' · '+g)+' <b>'+escape(allenSchoolRating(n,type))+'</b>').join('<br>')+'<br><span class="source">학군 경계와 실제 배정, 건물·호수별 예외는 학군에 확인하세요.</span>';
  const frisco=result.district==='FISD',current=districtZoneDisplay(result.district,state.liveFinder)==='official',near=['boundary-review','finder-boundary-review'].includes(result.status);
@@ -95,7 +97,13 @@ function syncHomeClearVisibility(){
   const input=el('homeAddress'),button=el('homeClear');
   if(input&&button)button.hidden=!input.value.trim();
 }
+function clearIrvingReference(){
+ if(irvingReferenceLayer&&map)map.removeLayer(irvingReferenceLayer);
+ irvingReferenceLayer=null;
+}
+function clearDallasReference(){if(dallasReferenceLayer&&map)map.removeLayer(dallasReferenceLayer);dallasReferenceLayer=null;}
 function clearHome(){
+  clearIrvingReference();clearDallasReference();
   homeVersion++;homeRequest?.abort();homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;home=null;homeCandidates=[];
   if(map&&homeMarker)map.removeLayer(homeMarker);homeMarker=null;
   if(typeof homeZoneGroup!=='undefined'&&homeZoneGroup)homeZoneGroup.clearLayers();
@@ -121,8 +129,12 @@ function renderHome(){
   if(!home)return;
   const matches=homeZipMatches(home.ll),schools=homeFriscoMatches(home.ll);home.matches=schools;
   const zipText=matches.length?matches.map(d=>escape(d.z+' · '+d.name)).join(', '):'지도에 포함된 ZIP 경계를 확인하지 못했습니다.';
-  home.assignment=schoolAssignmentFor(home);const schoolText=assignmentHtml(home.assignment);
-  const official='<details'+(['unavailable','error','conflict','needs-address-verification','boundary-review','finder-boundary-review','feeder-review','apartment-split-review'].includes(home.assignment.status)?' open':'')+'><summary>학군별 공식 배정 확인</summary>'+Object.entries(OFFICIAL).map(([id,url])=>{const safe=window.TrustedLinkPolicy?.official(url);return safe?'<a class="cardlink" href="'+escape(safe)+'" target="_blank" rel="noopener noreferrer">'+escape(districtName(id,'ko')||id)+' ↗</a>':''}).join('')+'</details>';
+  // Conditional GO: historical reference GIS cannot authorize home assignment.
+  const rawSchoolCandidate=schoolAssignmentFor(home);
+  home.assignment=window.ConditionalSchoolRelease?.apply(rawSchoolCandidate)||
+    {status:'conditional-finder-only',releaseScope:'informational-only'};
+  const schoolText=assignmentHtml(home.assignment);
+  const official='<details'+(['unavailable','error','conflict','needs-address-verification','boundary-review','finder-boundary-review','feeder-review','apartment-split-review','conditional-finder-only'].includes(home.assignment.status)?' open':'')+'><summary>학군별 공식 배정 확인</summary>'+Object.entries(OFFICIAL).map(([id,url])=>{const safe=window.TrustedLinkPolicy?.official(url);return safe?'<a class="cardlink" href="'+escape(safe)+'" target="_blank" rel="noopener noreferrer">'+escape(districtName(id,'ko')||id)+' ↗</a>':''}).join('')+'</details>';
   const office=el('destination').value.trim();
   const parcel=home.parcel||{status:'idle'};
   const message=parcel.status==='idle'?'별도 필지 주소 대조를 실행할 수 있습니다.':parcel.status==='checking'?'Collin CAD 필지 확인 중…':parcel.reason||'필지 확인 불가';
@@ -155,21 +167,41 @@ async function checkHomeParcel(){
 
 function officialReviewPanelHtml(item){
  const a=item.assignment||{},prior=item.officialDraft||{},v=k=>escape(String(prior[k]||''));
- const district=prior.district||a.district||'';
- const districts=OFFICIAL_REVIEW_DISTRICTS.map(x=>'<option value="'+x+'"'+(x===district?' selected':'')+'>'+escape(districtName(x)||x)+'</option>').join('');
+ const district=prior.district||a.district||(item.dallasSpatial?.status==='ready'?'057905':item.irvingSpatial?.status==='ready'?'057912':'');
+ const districts=[...new Set([...OFFICIAL_REVIEW_DISTRICTS,'057912','057905'])].map(x=>'<option value="'+x+'"'+(x===district?' selected':'')+'>'+escape(x==='057905'?'Dallas ISD':districtName(x)||x)+'</option>').join('');
  const level=prior.gradeLevel||'';
  const grades=OFFICIAL_REVIEW_LEVELS.map(x=>'<option value="'+x+'"'+(x===level?' selected':'')+'>'+escape(({elementary:'초등',middle:'중등',freshman:'9학년',high:'고등',senior:'Senior High'})[x])+'</option>').join('');
  const year=prior.schoolYear||'';
  const labels={'missing-input':'학군·학년·학교 이름을 입력하세요.','year-not-confirmed':'2026–27 학년도임을 확인하지 못해 비교 결과를 최신 배정 검증으로 취급하지 않습니다.','no-candidate':'대시보드에서 비교할 배정 후보가 없습니다. 공식 결과를 우선 확인하세요.','district-disagrees':'입력한 학군과 지도상 후보 학군이 다릅니다. 정밀 주소와 ISD 경계를 확인하세요.','no-unique-candidate':'해당 학년의 학교 후보가 없거나 여러 개라 1:1 대조가 불가능합니다.','name-unrecognized':'학교 이름을 정규화하지 못했습니다. 정확한 학교명을 다시 확인하세요.','manually-reported-match':'입력하신 공식 검색 결과의 학교명과 대시보드 후보가 일치합니다. 사용자 입력 기반 대조일 뿐 독립적인 공식 조회 확인은 아닙니다.','manually-reported-mismatch':'입력하신 공식 검색 결과와 대시보드 후보가 다릅니다. 대시보드 배정 후보를 신뢰하지 말고 공식 학군에 확인하세요.'};
  const result=item.officialReview;
- let msg=result?(result.kind==='prosper'?result.message:labels[result.status]||'대조 결과 확인 필요'):'대조를 아직 실행하지 않았습니다. 공식 결과를 확인하고 직접 입력하세요.';
- const label=result?.kind==='prosper'?'Prosper 공개 API 조회 결과':'사용자가 입력한 공식 결과 대조';
+ let msg=result?(['prosper','irving','dallas'].includes(result.kind)?result.message:labels[result.status]||'대조 결과 확인 필요'):'대조를 아직 실행하지 않았습니다. 공식 결과를 확인하고 직접 입력하세요.';
+ const label=result?.kind==='prosper'?'Prosper 공개 API 조회 결과':result?.kind==='irving'?'Irving GIS 참고 경계와 사용자 입력 비교':result?.kind==='dallas'?'Dallas GIS 참고 경계와 사용자 입력 비교':'사용자가 입력한 공식 결과 대조';
  const officialUrl=district==='PISD'?PLANO_2026_27_EXPERIENCE:OFFICIAL[district]||null;
  const currentYearLink=['PISD','PROSPER','LISD'].includes(district);
  const safeOfficialUrl=window.TrustedLinkPolicy?.official(officialUrl); const officialLink=safeOfficialUrl?'<a class="cardlink" href="'+escape(safeOfficialUrl)+'" target="_blank" rel="noopener noreferrer">'+(currentYearLink?'2026–27 학군 검색기 열기':'학군 공식 주소 검색기 열기')+'</a>':'';
- const note=district==='LISD'?'Lewisville 아파트는 주소 대신 별도의 Find an Apartment 검색을 이용하세요.':district==='AISD'?'Allen 아파트 건물·호수 예외가 있으므로 학교 등록 담당자 확인이 필요합니다.':district==='PISD'?'Plano Jackson Elementary는 Coit Rd 동·서쪽에 따라 상급 학교가 달라집니다.':'검색기에 주소·학년을 입력한 뒤 나온 학교명을 복사하세요.';
+ const note=district==='057905'?'Dallas ISD 참고 경계와 공식 SchoolSite Locator의 학교명을 별도로 비교하세요. 최종 등록은 PowerSchool 주소별 배정에 따릅니다.':district==='057912'?'Irving 초등·중등·고등 참고 GIS 경계와 공식 School Locator 학교명을 비교할 수 있습니다. 공식 검색 결과는 사용자가 직접 입력하며 독립 검증은 아닙니다.':district==='LISD'?'Lewisville 아파트는 주소 대신 별도의 Find an Apartment 검색을 이용하세요.':district==='AISD'?'Allen 아파트 건물·호수 예외가 있으므로 학교 등록 담당자 확인이 필요합니다.':district==='PISD'?'Plano Jackson Elementary는 Coit Rd 동·서쪽에 따라 상급 학교가 달라집니다.':'검색기에 주소·학년을 입력한 뒤 나온 학교명을 복사하세요.';
  const showProsper=district==='PROSPER'&&['current','boundary-review'].includes(a.status);
- return '<div class="small-note" id="officialReviewPanel" style="margin-top:10px"><b>공식 학군 주소 조회 결과 교차검증</b>'+
+ const showIrving=district==='057912'||/\bIrving\s*,?\s*(?:TX|Texas)/i.test(item.address||'');
+ const irvingHref=showIrving?window.TrustedLinkPolicy?.official('https://iisd1.maps.arcgis.com/apps/instant/lookup/index.html?appid=f27bba7ee02141c58c8c9375431effa2'):null;
+ const officialCampusMaps=[
+  ['초등 공식 학교별 지도','https://www.irvingisd.net/departments-services/performance-outcomes-data/planning/current-campus-level-maps/elementary-school-boundary-map'],
+  ['중등 공식 학교별 지도','https://www.irvingisd.net/departments-services/performance-outcomes-data/planning/current-campus-level-maps/middle-school-boundary-map'],
+  ['고등 공식 학교별 지도','https://www.irvingisd.net/departments-services/performance-outcomes-data/planning/current-campus-level-maps/high-school-boundary-map']
+ ];
+ const campusMapLinks=showIrving?officialCampusMaps.map(([name,url])=>{
+  const safe=window.TrustedLinkPolicy?.official(url);
+  return safe?'<a class="cardlink" href="'+escape(safe)+'" target="_blank" rel="noopener noreferrer">'+escape(name)+'</a>':'';
+ }).join(' '):'';
+ const showDallas=district==='057905'||/\bDallas\s*,?\s*(?:TX|Texas)/i.test(item.address||'');
+ const dallasUrl=window.TrustedLinkPolicy?.official('https://www.dallasisd.org/departments/demographic-studies/find-your-school/schoolsite-locator-interactive-map');
+ const dallasMaps=window.TrustedLinkPolicy?.official('https://www.dallasisd.org/departments/demographic-studies/district-maps');
+ const dallas=item.dallasSpatial;
+ const dallasText=dallas?.status==='ready'?'Dallas ISD ArcGIS 참고 경계: 초등 '+dallas.names.elementary+' · 중등 '+dallas.names.middle+' · 고등 '+dallas.names.high+' (2026–27 배정 미인증).':dallas?.status==='error'?'Dallas GIS 확인 실패: '+dallas.reason+' · 공식 SchoolSite Locator에서 직접 확인하세요.':item.dallasChecking?'Dallas 공식 ArcGIS에서 참고 경계 확인 중…':'버튼을 누르면 선택한 좌표의 Dallas 초·중·고 참고 경계 3개를 일시적으로 표시합니다.';
+ const irving=item.irvingSpatial;
+ const irvingText=irving?.status==='ready'?'공식 Locator GIS 경계(학년도 확인 필요): 초등 '+irving.names.elementary+' · 중등 '+irving.names.middle+' · 고등 '+irving.names.high+' · 지도에 주황색 점선 참고 경계 표시.':irving?.status==='error'?'공식 원본 확인 실패: '+irving.reason+' · 공식 Locator에서 직접 확인하세요.':item.irvingChecking?'교육구 ArcGIS 원본 좌표 조회 중…':'클릭 시 집 핀 좌표를 Irving GIS 원본에 전송하고 이 화면에 초·중·고 참고 경계를 일시 표시합니다.';
+ const dallasWarning=showDallas?'<div class="reference-gis-warning" role="note"><strong>주의 · Dallas 참고 GIS이며 현재 배정학교가 아닙니다</strong><div>공식 ArcGIS의 187개 경계(초등 135·중등 30·고등 22)는 2026년 7월에 편집됐지만 현행 적용 학년도는 인증되지 않았습니다. 주황색 점선과 학교명은 참고용입니다. 2026–27 배정·등록은 Dallas ISD SchoolSite Locator와 PowerSchool 주소별 기록으로 확인하세요.</div></div>':'';
+ const referenceWarning=showIrving?'<div class="reference-gis-warning" role="note"><strong>주의 · 참고 GIS이며 현재 배정학교가 아닙니다</strong><div>Irving 초등 GIS 원본 2024–25, 중등 2025–26, 고등 현행 학년도 미인증. 지도에 표시되는 학교명과 주황색 점선은 참고용입니다. 2026–27 학교 배정·등록 자격은 공식 School Locator에서 주소와 학년별로 직접 확인하세요.</div></div>':'';
+ return '<div class="small-note" id="officialReviewPanel" style="margin-top:10px"><b>공식 학군 주소 조회 결과 교차검증</b>'+referenceWarning+dallasWarning+
  '<div class="source">'+escape(note)+' 자료는 현재 화면에서만 유지되며 서버에 저장하지 않습니다.</div>'+officialLink+
  '<div class="field"><label for="officialReviewDistrict">학군</label><select id="officialReviewDistrict"><option value="">학군 선택</option>'+districts+'</select></div>'+
  '<div class="field"><label for="officialReviewLevel">학년 구분</label><select id="officialReviewLevel"><option value="">학년 선택</option>'+grades+'</select></div>'+
@@ -177,7 +209,11 @@ function officialReviewPanelHtml(item){
  '<div class="field"><label for="officialReviewYear">공식 결과의 적용 학년도</label><select id="officialReviewYear"><option value="">학년도 미확인</option><option value="2026–27"'+(year==='2026–27'?' selected':'')+'>2026–27 확인</option><option value="older"'+(year==='older'?' selected':'')+'>이전 학년도·연도 불명</option></select></div>'+
  '<button type="button" class="mini-btn" id="officialManualCompare">입력한 결과와 비교</button>'+
  (showProsper?' <button type="button" class="mini-btn" id="officialProsperCheck"'+(item.officialChecking?' disabled':'')+'>Prosper 공식 좌표 조회</button>':'')+
- '<div class="source">Prosper 버튼을 누르면 집 핀 좌표가 학군이 연결한 Infofinder에 전송됩니다. 결과는 좌표의 학교 코드 비교이며 실제 주소·호수·등록 자격 확인은 아닙니다.</div>'+
+ (irvingHref?'<a class="cardlink" href="'+escape(irvingHref)+'" target="_blank" rel="noopener noreferrer">Irving 공식 School Locator 직접 열기 ↗</a>':'')+
+ (showIrving?'<div class="source">Irving ISD 공식 지도 원본: '+campusMapLinks+'</div>':'')+
+ (showDallas?'<div class="source">Dallas ISD 공식 자료: '+(dallasUrl?'<a class="cardlink" href="'+escape(dallasUrl)+'" target="_blank" rel="noopener noreferrer">SchoolSite Locator ↗</a>':'')+' '+(dallasMaps?'<a class="cardlink" href="'+escape(dallasMaps)+'" target="_blank" rel="noopener noreferrer">2026–27 공식 PDF 지도 ↗</a>':'')+'</div><button type="button" class="mini-btn" id="officialDallasCheck"'+(item.dallasChecking?' disabled':'')+'>Dallas 참고 GIS 경계 표시 (배정 미인증)</button><div id="dallasSpatialStatus" class="source" role="status">'+escape(dallasText)+'</div><div class="source">버튼 클릭 시 선택 좌표만 교육구 ArcGIS에 전송합니다. 원본 GIS의 학년도는 미확인 상태이며 대시보드에 저장하지 않습니다.</div>':'')+
+ (showIrving?' <button type="button" class="mini-btn" id="officialIrvingCheck"'+(item.irvingChecking?' disabled':'')+'>참고 GIS 경계 표시 (배정 미인증)</button><div class="source" id="irvingSpatialStatus" role="status">'+escape(irvingText)+'</div><div class="source">Irving 교육구 공식 Locator에서 현재 사용 중인 GIS를 조회하지만, 초등 2024–25·중등 2025–26 명칭의 원본이므로 2026–27 등록 배정 확정이 아닙니다. 외부 브라우저의 공식 School Locator에서 최종 확인하세요.</div>':'')+
+ (showProsper?'<div class="source">Prosper 버튼을 누르면 집 핀 좌표가 학군이 연결한 Infofinder에 전송됩니다. 결과는 좌표의 학교 코드 비교이며 실제 주소·호수·등록 자격 확인은 아닙니다.</div>':'')+
  '<div class="source" id="officialReviewResult" role="status"><b>'+escape(label)+'</b> · '+escape(msg)+'</div></div>';
 }
 function wireOfficialReviewPanel(item){
@@ -190,11 +226,73 @@ function wireOfficialReviewPanel(item){
   const status=get('officialReviewResult');if(status)status.textContent='입력 내용 변경됨 · 다시 비교 버튼을 눌러 확인하세요.';
  };
  for(const id of Object.values(fields))get(id)?.addEventListener('change',update);
+ get('officialReviewDistrict')?.addEventListener('change',()=>{if(home===item)renderHome()});
  get('officialReviewName')?.addEventListener('input',update);
  get('officialManualCompare')?.addEventListener('click',()=>{
   update();if(home!==item)return;
-  item.officialReview={kind:'manual',...compareManualSchoolResult(item.assignment,item.officialDraft)};
+  item.officialReview=item.irvingSpatial?.status==='ready'&&item.officialDraft.district==='057912'&&window.IrvingOfficialSpatial
+   ?window.IrvingOfficialSpatial.compareReportedSchool(item.irvingSpatial,item.officialDraft)
+   :item.dallasSpatial?.status==='ready'&&item.officialDraft.district==='057905'&&window.DallasAttendanceLive
+   ?window.DallasAttendanceLive.compareReportedSchool(item.dallasSpatial,item.officialDraft)
+   :{kind:'manual',...compareManualSchoolResult(item.assignment,item.officialDraft)};
   renderHome();
+ });
+ get('officialDallasCheck')?.addEventListener('click',async()=>{
+  if(home!==item)return;
+  if(!item.geocodeQuality?.usableForSchoolCandidate){
+   item.dallasSpatial={status:'error',reason:'주소 위치 정확도가 충분하지 않습니다.'};renderHome();return;
+  }
+  if(!window.DallasAttendanceLive){item.dallasSpatial={status:'error',reason:'참고 GIS 모듈을 불러오지 못했습니다.'};renderHome();return}
+  homeOfficialRequest?.abort();const ctrl=new AbortController();homeOfficialRequest=ctrl;
+  item.dallasChecking=true;item.dallasSpatial=null;clearDallasReference();renderHome();
+  try{
+   // Source-linked, on demand: only point coordinates, never the complete address.
+   const check=await window.DallasAttendanceLive.lookup([item.ll[1],item.ll[0]],ctrl.signal);
+   if(home!==item||ctrl.signal.aborted)return;
+   const colors={elementary:'#f59e0b',middle:'#fb923c',high:'#f97316'};
+   dallasReferenceLayer=L.featureGroup().addTo(map);
+   for(const feature of check.features){
+    const layer=L.geoJSON(feature,{style:{color:colors[feature.properties.gradeLevel],weight:3,
+     opacity:.86,dashArray:'7 5',fillOpacity:.035}}).addTo(dallasReferenceLayer);
+    layer.bindPopup('<div class="reference-gis-popup"><strong>Dallas 참고 GIS · 학교 배정 미인증</strong><div>'+escape(feature.properties.school)+'</div><div>원본 수정일: '+escape(feature.properties.sourceVintage||'미확인')+'</div><div>2026–27 배정학교 확정 정보가 아닙니다. 공식 SchoolSite Locator에서 확인하세요.</div></div>');
+   }
+   item.dallasSpatial={status:'ready',names:check.names,yearCertified:false};
+   if(dallasReferenceLayer.getBounds().isValid())
+    map.fitBounds(dallasReferenceLayer.getBounds(),{padding:[22,22],maxZoom:12});
+  }catch(err){
+   if(ctrl.signal.aborted||home!==item)return;
+   clearDallasReference();item.dallasSpatial={status:'error',reason:'정확한 초·중·고 참고 경계를 확인하지 못했습니다. 공식 지도 서비스 또는 SchoolSite Locator를 확인하세요.'};
+  }finally{
+   if(home===item&&!ctrl.signal.aborted){item.dallasChecking=false;homeOfficialRequest=null;renderHome()}
+  }
+ });
+ get('officialIrvingCheck')?.addEventListener('click',async()=>{
+  if(home!==item)return;
+  if(!item.geocodeQuality?.usableForSchoolCandidate){
+   item.irvingSpatial={status:'error',reason:'입력된 주소의 위치 정확도가 학교 배정 경계를 확인하기에 충분하지 않습니다'};renderHome();return;
+  }
+  if(!window.IrvingOfficialSpatial){item.irvingSpatial={status:'error',reason:'원본 조회 모듈이 로딩되지 않았습니다'};renderHome();return}
+  homeOfficialRequest?.abort();const ctrl=new AbortController();homeOfficialRequest=ctrl;
+  item.irvingChecking=true;item.irvingSpatial=null;clearIrvingReference();renderHome();
+  try{
+   // Only point coordinates are sent to the district-linked Esri GIS API, not
+   // the house address. All features remain ephemeral and historical-labelled.
+   const check=await window.IrvingOfficialSpatial.lookup([item.ll[1],item.ll[0]],ctrl.signal);
+   if(home!==item||ctrl.signal.aborted)return;
+   const colors={elementary:'#f59e0b',middle:'#fb923c',high:'#f97316'};
+   irvingReferenceLayer=L.layerGroup().addTo(map);
+   for(const feature of check.features){
+    const layer=L.geoJSON(feature,{style:{color:colors[feature.properties.gradeLevel],weight:3,
+     opacity:0.85,dashArray:'7 5',fillOpacity:0.04}}).addTo(irvingReferenceLayer);
+    layer.bindPopup('<div class="reference-gis-popup"><strong>참고 GIS · 학교 배정 미인증</strong><div>'+escape(feature.properties.school)+'</div><div>원본 학년도: '+escape(feature.properties.sourceVintage||'미확인')+'</div><div>2026–27 배정학교 확정 정보가 아닙니다. 공식 Locator에서 확인하세요.</div></div>');
+   }
+   item.irvingSpatial={status:'ready',names:check.names};
+  }catch(err){
+   if(ctrl.signal.aborted||home!==item)return;
+   clearIrvingReference();item.irvingSpatial={status:'error',reason:'좌표에 대응하는 3개 구역을 확인하지 못했거나 공식 원본이 변경됐습니다'};
+  }finally{
+   if(home===item&&!ctrl.signal.aborted){item.irvingChecking=false;homeOfficialRequest=null;renderHome()}
+  }
  });
  get('officialProsperCheck')?.addEventListener('click',async()=>{
   if(home!==item)return;
@@ -218,6 +316,7 @@ function wireOfficialReviewPanel(item){
 function refreshHomeOffice(){if(!home)return;homeVersion++;homeRouteRequest?.abort();if(homeRouteLayer)homeRouteLayer.clearLayers();renderHome()}
 function refreshHomeSchools(){if(home){homeVersion++;homeRouteRequest?.abort();renderHome();drawSchools()}}
 function useHomeCandidate(candidate){
+  clearIrvingReference();clearDallasReference();
   if(!map){el('homeStatus').textContent='지도가 아직 준비되지 않았습니다. 잠시 후 주소 검색을 다시 눌러 주세요.';return false}
   homeVersion++;homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;
   home={address:candidate.address,typedAddress:candidate.savedTypedAddress||el('homeAddress').value.trim(),ll:[candidate.location.y,candidate.location.x],geocodeQuality:candidate.savedGeocodeQuality||assessResidentialGeocode(el('homeAddress').value.trim(),candidate),parcel:candidate.savedParcel||{status:'idle'},officialReview:candidate.savedOfficialReview||null,officialDraft:candidate.savedOfficialDraft||null};

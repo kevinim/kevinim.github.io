@@ -4,14 +4,24 @@ on:
     branches: [main]
   push:
     branches: [main]
+permissions:
+  contents: read
+
 jobs:
   verify:
     runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
       - run: node scripts/verify-main-data.mjs
+      - name: Required security and privacy controls for every main-bound PR
+        run: |
+          node --test tests/actions-immutable-permissions.test.cjs tests/public-privacy-disclosure.test.cjs tests/no-legacy-source-builders.test.cjs tests/audit-runtime-privacy-assets.test.cjs
+          node scripts/audit-runtime-privacy-assets.cjs
+          node scripts/check-public-personalization.cjs .
+          node scripts/validate-environment-plan.cjs deploy/environment-plan.json planning
+          node scripts/verify-public-preview.cjs
