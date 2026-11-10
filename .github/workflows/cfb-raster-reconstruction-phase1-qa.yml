@@ -15,6 +15,7 @@ on:
       - 'index.html'
       - 'scripts/measure-cfb-raster-registration.cjs'
       - 'scripts/extract-cfb-approved-raster-pixels.py'
+      - 'scripts/build-cfb-draft-elementary-geojson.py'
       - 'scripts/recheck-cfb-public-finder-holdouts.cjs'
       - 'scripts/test-cfb-raster-atlas-browser.cjs'
       - 'tests/cfb-raster-atlas-and-georef.test.cjs'
@@ -95,15 +96,27 @@ jobs:
       - name: Install isolated open-source raster image tooling
         run: |
           python3 -m venv /tmp/cfb-approved-zone-qa
-          /tmp/cfb-approved-zone-qa/bin/pip install --disable-pip-version-check --no-cache-dir pillow numpy opencv-python-headless
+          /tmp/cfb-approved-zone-qa/bin/pip install --disable-pip-version-check --no-cache-dir pillow numpy opencv-python-headless shapely
       - name: Extract label-free image-pixel contours only
         run: /tmp/cfb-approved-zone-qa/bin/python scripts/extract-cfb-approved-raster-pixels.py
+      - name: Build rough georeferenced elementary school-point candidate contours (not releaseable)
+        run: /tmp/cfb-approved-zone-qa/bin/python scripts/build-cfb-draft-elementary-geojson.py
       - name: Store ephemeral UNVERIFIED source-color contours (not public website)
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: cfb-unlabelled-pixel-contours-NOT-GIS
           path: artifacts/cfb-reconstruction/pixel-*.json
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Upload nonproduction 2025-26 elementary candidate polygons separately
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cfb-elementary-draft-only-UNVERIFIED-NOT-LIVE
+          path: |
+            artifacts/cfb-reconstruction/cfb-elementary-draft-unverified.geojson
+            artifacts/cfb-reconstruction/cfb-elementary-draft-summary.json
           if-no-files-found: warn
           retention-days: 7
   public-finder-holdouts:
