@@ -469,14 +469,19 @@
     "043901201": {
       "year": 2026,
       "summary": {
-        "status": "official-report",
+        "status": "official-paired-campus",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043901201&lev=C&prgopt=reports/acct/summary.sas",
         "rating": "A",
         "score": 90,
         "studentAchievement": null,
         "schoolProgress": null,
         "closingTheGaps": null,
-        "closingTheGapsUnscaledComponent": null
+        "closingTheGapsUnscaledComponent": null,
+        "pairedWith": {
+          "type": "district",
+          "id": "043901",
+          "name": "ALLEN ISD"
+        }
       },
       "staar": {
         "status": "official-not-reported",
@@ -520,7 +525,8 @@
         "studentAchievement": null,
         "schoolProgress": null,
         "closingTheGaps": null,
-        "closingTheGapsUnscaledComponent": null
+        "closingTheGapsUnscaledComponent": null,
+        "accountabilityProgram": "Alternative Education Accountability"
       },
       "staar": {
         "status": "official-not-reported",
@@ -542,7 +548,8 @@
         "studentAchievement": null,
         "schoolProgress": null,
         "closingTheGaps": null,
-        "closingTheGapsUnscaledComponent": null
+        "closingTheGapsUnscaledComponent": null,
+        "accountabilityProgram": "Alternative Education Accountability"
       },
       "staar": {
         "status": "official-not-reported",
@@ -1107,14 +1114,19 @@
     "043907125": {
       "year": 2026,
       "summary": {
-        "status": "official-report",
+        "status": "official-paired-campus",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907125&lev=C&prgopt=reports/acct/summary.sas",
         "rating": "A",
         "score": 94,
         "studentAchievement": null,
         "schoolProgress": null,
         "closingTheGaps": null,
-        "closingTheGapsUnscaledComponent": null
+        "closingTheGapsUnscaledComponent": null,
+        "pairedWith": {
+          "type": "campus",
+          "id": "043907115",
+          "name": "ROY LEE WALKER EL"
+        }
       },
       "staar": {
         "status": "official-not-reported",
