@@ -1,0 +1,35 @@
+name: Independent TEA 2026 missingness classification QA
+
+on:
+  pull_request:
+    branches:
+      - main
+      - data/tea-2026-domain-staar-source-verified-20261111
+    paths:
+      - 'docs/TEA_2026_MISSINGNESS_INDEPENDENT_QA_20261111.md'
+      - 'tests/tea-2026-missingness-independent-qa.test.cjs'
+      - '.github/workflows/verify-tea-2026-missingness-qa.yml'
+      - 'data/tea-accountability-2026-verified-batch.json'
+      - 'data/tea-staar-meets-2026-verified-batch.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-missingness-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Verify independent TEA 2026 score and missingness invariants
+        run: |
+          node --check tests/tea-2026-missingness-independent-qa.test.cjs
+          node --test tests/tea-2026-missingness-independent-qa.test.cjs
+          node scripts/verify-tea-2026-extracts.cjs
