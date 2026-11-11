@@ -343,7 +343,7 @@
       :{
         rolloutPhase:cohort.phase,
         cohort:cohort.label,
-        evidenceStatus:(existing||historicalVerified)?'rating-and-demographics':'rating-only',
+        evidenceStatus:existing?'rating-and-demographics':'rating-only',
         ...(existing||{}),
         ...(historicalVerified?{demographics:historical}:{}),
         summary:hasScore
@@ -423,11 +423,11 @@
       return cell.status==='not-listed' && cell.count===undefined;
     });
   }
-  // PR #239 independently reconciles five fully public 2025–26 TEA PEIMS
+  // PR #239 independently reconciles six fully public 2025–26 TEA PEIMS
   // ethnicity distributions against the same TEA PEIMS gender grouping total.
   // No full percentages from unreviewed seven-cell sums.
   const AUDITED_PEIMS_TOTALS=Object.freeze({
-    '043901001':5127,'057912046':753,'057912123':756,
+    '043901001':5127,'057912046':753,'057912123':756,'220912002':3033,
     '061911001':2806,'061911007':2997
   });
   function auditedPeimsTotal(id,rows){
