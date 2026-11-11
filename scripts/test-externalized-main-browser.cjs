@@ -90,7 +90,8 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
     // Regional view must group rather than overplot hundreds of 27px icons;
     // every eligible campus remains represented in one clickable group.
     const clutter=await page.evaluate(()=>{
-      const before=map.getZoom();
+      const before=map.getZoom(),originalFilter=state.ratingFilter;
+      state.ratingFilter='all';
       map.stop();map.setView([33.095,-96.77],10,{animate:false});
       drawSchools();
       const layers=schoolGroup.getLayers();
@@ -104,6 +105,7 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
       const current=map.getZoom();
       if(head)head.fire('click');
       const clickedZoom=map.getZoom();
+      state.ratingFilter=originalFilter;
       map.stop();map.setZoom(before,{animate:false});drawSchools();
       return {eligible:expected.length,rendered:layers.length,represented:represented.length,
         unique:new Set(represented).size,clusters:clusters.length,
