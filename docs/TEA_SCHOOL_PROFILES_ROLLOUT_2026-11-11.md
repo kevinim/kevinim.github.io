@@ -17,6 +17,7 @@ The 2025–26 TEA PEIMS Student Enrollment Reports publish ethnicity by campus, 
 
 Verified student composition charts, school year **2024–25** (NOT 2026):
 - `061902118` STEM Academy at Hebron Valley Elementary — TEA 2025 School Report Card; N=424
+- `061902136` Castle Hills Elementary — TEA 2025 School Report Card hosted by Lewisville ISD (page 2); N=599; [official district-hosted source](https://castlehills.lisd.net/fs/resource-manager/view/1534674b-7abf-4949-b7e9-30f24d4e0de1). Campus percentages: Black 2.0, Hispanic 8.3, White 45.9, American Indian 0.2, Asian 35.9, Pacific Islander 0.2, Two or More 7.5. These are **2024–25**, not 2025–26 PEIMS.
 - `061902008` Hebron High School — TEA 2025 School Report Card; N=3,668
 - `043901001` Allen High School — 2024–25 TAPR via Allen ISD 2024–25 Annual Report; N=5,206
 - `043907002` McKinney High School — 2024–25 TAPR via McKinney ISD; N=2,668
