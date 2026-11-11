@@ -150,12 +150,16 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
         focusLayers:schoolFocusGroup.getLayers().length,
         markerLabel:document.querySelector('.selected-school-campus-tooltip')?.textContent||'',
         pin:!!document.querySelector('.selected-school-campus-pin'),
+        tooltipWidth:Math.round(document.querySelector('.selected-school-campus-tooltip')?.getBoundingClientRect().width||0),
+        tooltipWhitespace:getComputedStyle(document.querySelector('.selected-school-campus-tooltip')).whiteSpace,
         lat:center.lat,lng:center.lng,zoom:map.getZoom(),status:document.getElementById('schoolMapStatus')?.textContent||''};
     });
     assert.equal(focused.school,chosen.name,'Click selects exact school object');
     assert.equal(focused.pressed,chosen.sid,'List maintains selected emphasis');
     assert.ok(focused.focusLayers>=2&&focused.pin,'Selected campus has persistent map highlight');
     assert.ok(focused.markerLabel.includes(chosen.name),'Map explicitly labels selected campus');
+    assert.ok(focused.tooltipWidth>=150,'Selected campus tooltip must not collapse into vertical letters');
+    assert.equal(focused.tooltipWhitespace,'nowrap','School name stays on one line even on narrow screens');
     assert.ok(Math.abs(focused.lat-chosen.ll[0])<0.002&&Math.abs(focused.lng-chosen.ll[1])<0.002,
       'Map centers actual campus coordinates, not entire attendance polygon');
     assert.ok(focused.zoom>=14,'Campus is zoomed to local building');
