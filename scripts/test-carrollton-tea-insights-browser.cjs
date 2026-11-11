@@ -31,6 +31,21 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
         await page.goto(ROOT,{waitUntil:'domcontentloaded',timeout:90000});
         await page.waitForFunction(()=>typeof state!=='undefined'&&state.schools.length>1500&&state.ratingIndex?.size>100&&window.CarrolltonSchoolInsights?.count===18,
           null,{timeout:110000});
+        // UAT must show that every Allen/McKinney TEA campus can be selected
+        // from the existing directory; school markers/GIS are not required.
+        const campusDirectory=await page.evaluate(()=>{
+          const official=state.ratings.filter(r=>/^04390(?:1|7)\d{3}$/.test(r.id))
+            .map(r=>r.id).sort();
+          const selectable=new Set(state.schools.map(s=>scoreRecord(s.name,s.district)?.id)
+            .filter(id=>/^04390(?:1|7)\d{3}$/.test(id||'')));
+          return {official,selectable:[...selectable].sort(),
+            missing:official.filter(id=>!selectable.has(id))};
+        });
+        assert.equal(campusDirectory.official.length,56,'TEA 56-campus inventory is complete');
+        assert.deepEqual(campusDirectory.missing,[],
+          'all Allen/McKinney official campuses must be selectable by exact campus ID');
+        assert.deepEqual(campusDirectory.selectable,campusDirectory.official,
+          'no unrelated TEA campus may be substituted');
         const coverage=page.locator('#tea-data-progress');
         assert.equal(await coverage.count(),1,'single TEA progress disclosure beside school directory');
         await coverage.locator('summary').click();
