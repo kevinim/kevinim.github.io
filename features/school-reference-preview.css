@@ -1,0 +1,10 @@
+/* Opt-in school reference panel: always visually distinct from certified assignment. */
+.home-reference-control{margin:10px 0;padding:10px;border:1px dashed #c18d34;border-radius:9px;background:rgba(185,127,45,.08);color:var(--text,#dce7f2)}
+.home-reference-control .mini-btn{min-height:40px;white-space:normal;text-align:left}
+.school-reference-preview{padding:10px 0 0;overflow-wrap:anywhere;font-size:12px;line-height:1.6}
+.school-reference-warning{color:var(--text,#dce7f2);font-weight:650;margin:5px 0}
+.school-reference-source{opacity:.9}
+.school-reference-list{margin:7px 0;padding-left:22px;list-style:disc}
+.school-reference-list li{margin:4px 0}
+.school-reference-preview a{display:inline-block;min-height:35px;margin-top:8px}
+@media(max-width:720px){.home-reference-control{padding:10px 8px}.home-reference-control .mini-btn{width:100%}}
