@@ -3,7 +3,7 @@ on:
   pull_request:
     branches:
       - main
-      - 'fix/tea-display-evidence-and-peims-parity-20261111'
+      - 'fix/tea-display-qa-rebased-20261111'
     paths:
       - 'data/tea-accountability-2026-verified-batch.json'
       - 'data/tea-staar-meets-2026-verified-batch.json'
