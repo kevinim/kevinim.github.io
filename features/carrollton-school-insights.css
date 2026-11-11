@@ -64,3 +64,22 @@ html[data-theme="dark"] .tea-insights-provenance-summary{color:#c2d0e4}
  .tea-insights-fact-label{text-decoration:underline}
  .tea-insights-provenance-summary{color:CanvasText}
 }
+
+
+/* Selected school insight appears directly after the matching search result. */
+.school-group .tea-school-inline-preview{margin:3px 0 12px;padding:11px;border:1px solid #c5d8ed;border-radius:9px;background:#f5f8fe;min-width:0}
+.tea-school-inline-heading{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:5px;margin:5px 0 8px;font-size:11px;color:var(--ink,#15253c)}
+.tea-school-inline-heading strong{font-size:11px}
+.tea-school-inline-summary{font-size:11px;line-height:1.6;margin:5px 0 9px;color:var(--ink,#15253c)}
+.tea-school-inline-facts{margin:5px 0 9px}
+.tea-school-inline-facts .tea-insights-fact{padding:7px 9px}
+.tea-school-inline-stack{height:12px;border-radius:5px;background:#bdc8d7;display:flex;overflow:hidden}
+.tea-school-inline-stack>span{height:100%;flex:0 0 auto;border-right:1px solid rgba(255,255,255,.28)}
+.tea-school-inline-legend{font-size:10px;line-height:1.6;margin:7px 0 9px;color:var(--sub,#64748b)}
+.tea-school-inline-detail{padding:8px 11px;border-radius:7px;border:1px solid #8eabe1;background:#e5edfc;color:#1e3a8a;font-size:11px;font-weight:750;cursor:pointer;text-align:left}
+.tea-school-inline-detail:focus-visible{outline:3px solid #2563eb;outline-offset:2px}
+html[data-theme="dark"] .school-group .tea-school-inline-preview{background:#1d2c42;border-color:#567293}
+html[data-theme="dark"] .tea-school-inline-heading,html[data-theme="dark"] .tea-school-inline-summary{color:#edf4ff}
+html[data-theme="dark"] .tea-school-inline-legend{color:#c3d1e7}
+html[data-theme="dark"] .tea-school-inline-detail{background:#29476f;border-color:#6d98cd;color:#f0f7ff}
+@media(forced-colors:active){.school-group .tea-school-inline-preview,.tea-school-inline-detail{border-color:CanvasText;background:Canvas;color:CanvasText}}
