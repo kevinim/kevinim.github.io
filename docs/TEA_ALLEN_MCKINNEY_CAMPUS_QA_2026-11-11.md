@@ -1,32 +1,58 @@
-# Allen / McKinney TEA campus QA — 2026-11-11
-## Scope and verified result
-56 current dashboard campuses: Allen ISD 23 (TEA district 043901; dashboard may label AISD), McKinney ISD 33 (043907). Cross-joined 56 unique official 9-digit TEA Campus IDs to the live 2025–26 TEA PEIMS ethnicity-group public aggregate exports. Zero campus identity mismatches; original names are retained separately from existing dashboard labels.
+# Allen / McKinney TEA campus data — official 2026 intake
 
-- Original TEA CSV: [Allen ISD](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0) and [McKinney ISD](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0).
-- 342 published source rows: 240 exact category headcounts, 102 literal privacy-masked cells. Another 50 cells across the 56 × 7 grid are **unlisted** in the source, not zero. All 56 source campuses have at least one published ethnicity row.
-- Campuses with all seven categories published: 1; with at least one masked: 49; with at least one unlisted: 32.
-- Existing catalog rating: 52 A–F and 4 Not Rated. Ratings/scores were carried from repository inventory, and independently checked against official 2026 campus reports for **Allen High School `043901001` and McKinney High School `043907002` only**. All other catalog ratings remain catalog-only.
-- **Complete all-field profiles: 0/56; remaining partial: 56/56.** Two schools now independently source-audited for both 2026 domains and four STAAR Meets rates, including score-based noncausal strengths/challenges. The other 54 remain pending those academic components. The complete all-field criterion is not met because matching total enrollment / all seven released ethnicity percentages cannot be certified where source cells are masked or unlisted.
+## Status and readiness (2026-11-11)
 
-## Completeness and blockers
-- 2025–26 PEIMS public ethnicity-count rows joined: Allen 23/23; McKinney 33/33.
-- Full seven-category percentages are **not calculated**, because masked/omitted categories cannot be inferred and enrollment denominators have not been independently obtained from a matching official export.
-- 54 academic breakdown profiles remain **blocked on independently verified TEA 2026 campus component and STAAR exports**, including variable meanings and suppression codes. The two newly reviewed campuses have official 2026 summary and subject report URLs in the isolated JSON. Individual Not Rated is a distinct official catalog condition, not an F grade or automatic ingest failure.
-- This batch creates only one isolated dataset, one isolated test suite, one dedicated no-deploy GitHub Actions workflow and this evidence note. It does not alter school markers, assignments, GIS, UI, the shared data aggregate or AG01/AG02 core pipelines. It is **not a production release**.
+- **56/56 campuses** have official 2025–26 PEIMS ethnicity source rows, Allen ISD 23 and McKinney ISD 33.
+- **56/56 campuses** have their official 2026 campus accountability Summary and STAAR Performance pages inspected. The initial two high schools were previously checked; 54 additional reports were collected in this PR branch.
+- **52 schools receive an official A–F overall rating; 4 are Not Rated.** Official values agree with the existing dashboard catalog for all 56 campuses, without rating/score discrepancies.
+- **50/56 have published 2026 scaled Student Achievement, School Progress and Closing the Gaps scores PLUS at least one official STAAR All Students subject Meets percentage.** Allen 21, McKinney 29.
+- **50/56 have a generated score-only strengths/improvement summary.** These are within-school highs/lows among actually reported subjects, never an inferred reason for the grade.
+- Six cases with no individual academic breakdown: two official paired early-childhood schools and four officially Not Rated schools. No missing value is replaced with zero.
 
-## Independently source-verified 2026 academic profile samples
-Official 2026 campus reports (each includes exact 9-digit campus ID, year and TEA publisher):
+| Area | Source coverage | Important caveat |
+| --- | ---: | --- |
+| PEIMS ethnicity reports | 56/56 | Many cells privacy-masked or not listed |
+| TEA 2026 overall accountability Summary | 56/56 | 52 A–F, 4 Not Rated |
+| Three published 2026 scaled domain scores | 50/56 | 2 paired, 4 Not Rated |
+| Published STAAR All Students subject Meets percentages | 50/56 | School-specific subjects only; no missing=zero |
+| Noncausal scores-based strengths and improvement areas | 50/56 | Based solely on actual official rates |
+| Full seven-category demographic percentages | 0/56 | Do not back-calculate privacy-masked or unlisted cells |
 
-| Campus ID | 2026 overall | Scaled Student Achievement | Scaled School Progress | Scaled Closing the Gaps | STAAR Meets RLA | Math | Science | Social Studies | Score-grounded relative strengths / improvement |
-|---|---|---:|---:|---:|---:|---:|---:|---:|---|
-| 043901001 Allen HS | A 90 | 88 | 80 | 93 | 75% | 85% | 43% | 86% | Social Studies highest 86%; Science lowest 43% |
-| 043907002 McKinney HS | A 93 | 93 | 91 | 94 | 61% | 58% | 72% | 73% | Social Studies highest 73%; Mathematics lowest 58% |
+## Official sources and source-to-joined files
 
-Sources:
-- [Allen HS 2026 overall/domain report](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043901001&lev=C&prgopt=reports/acct/summary.sas) / [Allen HS 2026 STAAR report](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043901001&lev=C&prgopt=reports/acct/domain1a.sas)
-- [McKinney HS 2026 overall/domain report](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907002&lev=C&prgopt=reports/acct/summary.sas) / [McKinney HS 2026 STAAR report](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907002&lev=C&prgopt=reports/acct/domain1a.sas)
+- [54 newly fetched official campus academic report records](../data/tea-allen-mckinney-academics-2026-source.json)
+- [Joined 56-campus 2026 TEA/PEIMS dashboard-ready source dataset](../data/tea-allen-mckinney-campus-qa-2026.json)
+- [Texas Education Agency 2026 accountability reports](https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-accountability-rating-system)
+- [Official Allen 2025–26 PEIMS campus ethnicity CSV](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0)
+- [Official McKinney 2025–26 PEIMS campus ethnicity CSV](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0)
 
-**Interpretation safeguards:** domain values above are *scaled TEA domain scores*; Closing the Gaps report separately publishes unscaled component 81/85. STAAR percentages are **All Students, percent of tests Meets Grade Level or above**, not the percent of students or demographic-specific result. Highest/lowest is an intra-campus descriptive comparison, not causal evidence for the TEA grade or an inference about pupil groups.
+Official 2026 campus report URLs contain ccyy=2026, lev=C and the exact nine-digit Campus ID. The school-level report types are reports/acct/summary.sas and reports/acct/domain1a.sas. Source URLs are stored with every new school row. Closing the Gaps **scaled domain score** is distinct from its separately published **unscaled component**.
 
-## QA continuation
-Use existing AG01/AG02 source acquisition and normalizer once their 2026 official exports are available. Cross-check exact ID, TEA year, fields, FERPA masks and data provenance; add source-backed domains and subjects to a *new* isolated batch. Narrative strengths and improvement needs must be derived only from explicit scores and never offer causal explanations. Run `node --test tests/tea-allen-mckinney-campus-qa.test.cjs` and all repository CI checks before UAT acceptance; do not merge to main without release approval.
+STAAR Reading/Language Arts, Mathematics, Science and Social Studies values are **All Students, percent of tests at Meets Grade Level or above**. This is not a percentage of unique students, nor a subgroup ethnicity performance figure. Subjects not offered at a campus (such as Social Studies for many elementary schools) remain null. School strengths/improvements are descriptive comparisons only.
+
+### Official paired campus and Not Rated handling
+
+| Campus | Official 2026 report interpretation |
+| --- | --- |
+| 043901201 George J Anderson Early Childhood | A90 overall, paired with Allen ISD 043901; no separate campus domains/STAAR |
+| 043907125 Herman Lawson Early Childhood | A94 overall, paired with Roy Lee Walker EL 043907115; no separate campus domains/STAAR |
+| 043901003 Collin Co J J A E P | Not Rated, no campus domains/STAAR |
+| 043907005 Serenity High | Not Rated, Alternative Education Accountability; no campus domains/STAAR |
+| 043907006 County Residential Center | Not Rated, Alternative Education Accountability; no campus domains/STAAR |
+| 043907197 J J A E P | Not Rated, no campus domains/STAAR |
+
+The two paired school grades are **not independently earned campus STAAR results**. Do not copy paired district/school academic values into those records.
+
+## PEIMS privacy and data completeness
+
+Official 2025–26 campus ethnicity exports list 342 category entries: **240 published numeric counts and 102 privacy-suppressed counts such as less-than-N**. Of the 392 possible seven-category campus cells, 50 are unlisted. Exactly published data are preserved; suppressed and unlisted are distinct statuses and neither is zero. Matching same-year official total enrollment for full percentage calculation has not been imported; enrollment and percentage fields remain null.
+
+These demographic limitations must **not prevent rendering official academic profile values**. UI can show exact published counts with an explicit unavailable/suppressed label without displaying an invented full seven-category percentage distribution.
+
+## Release and technical constraints
+
+All modifications remain limited to isolated Allen/McKinney JSON files, one dedicated test, a no-deploy GitHub Actions workflow, and this documentation. This PR does not change shared AG01/AG02 pipeline files, school marker display, boundary polygons, GIS, address-to-school assignments, the shared data aggregate, or main.
+
+CI runs the standalone TEA checks and existing pipeline checks. The source-to-joined report parity, 9-digit Campus ID, official 2026 URL parameters, score ranges, paired campuses, unavailable data, and 2025–26 privacy masks are validated in the dedicated suite.
+
+**Next step:** consume this isolated data on a UAT dashboard via exact Campus IDs, display 50 fully published academic profiles plus clear paired/Not Rated states for the other six, then validate desktop/mobile/dark mode and regression. This branch has not been merged to main or deployed to production.
