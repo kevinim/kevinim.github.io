@@ -163,8 +163,8 @@
     const summary=textTag('p','tea-insights-summary',data.summary);
     panel.appendChild(summary);
     const facts=document.createElement('div');facts.className='tea-insights-facts';
-    [[data.evidenceStatus==='rating-only'?'확인된 평가':'강점',data.strength],
-      [data.evidenceStatus==='rating-only'?'추가 검증':'개선과제',data.challenge]].forEach(function(pair){
+    [[data.evidenceStatus==='rating-only'||data.evidenceStatus==='rating-and-demographics'?'확인된 평가':'강점',data.strength],
+      [data.evidenceStatus==='rating-only'||data.evidenceStatus==='rating-and-demographics'?'추가 검증':'개선과제',data.challenge]].forEach(function(pair){
       const p=document.createElement('p');
       p.appendChild(textTag('strong','',pair[0]+': '));
       p.appendChild(document.createTextNode(pair[1]));
