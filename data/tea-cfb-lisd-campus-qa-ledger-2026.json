@@ -1,0 +1,2892 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-11-11",
+  "scope": "CFB ISD and Lewisville ISD only",
+  "accountabilityYear": 2026,
+  "peimsSchoolYear": "2025-26",
+  "provenance": {
+    "inventory": "tea-ratings-2026.json (main snapshot)",
+    "peimsStaging": "PR #232 · data/tea-ethnicity-2025-26-priority.json; 92 exact ID joins crosschecked against main inventory, but individual original TEA export rows not independently re-verified in this QA",
+    "teAAccountabilityDownloads": "https://rptsvr1.tea.texas.gov/perfreport/account/acct_download?year=2026",
+    "teAPEIMSCFB": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=057903&_debug=0",
+    "teAPEIMSLewisville": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=061902&_debug=0",
+    "officialSTAARPortal": "https://txreports.emetric.net/"
+  },
+  "explanation": "Published count cells are not complete ethnicity percentages. All missing academic scores and enrollment denominators remain null, not zero. No new school narratives and no residential assignment inference.",
+  "summary": {
+    "targetCampuses": 92,
+    "districts": {
+      "CFB": 35,
+      "LISD": 57
+    },
+    "accountabilityRated": 88,
+    "accountabilityNotRated": 4,
+    "exactCampusIDJoinedInPR232": 92,
+    "peimsGroupCells": {
+      "published": 393,
+      "suppressed": 180,
+      "unlisted": 71
+    },
+    "peimsCompleteSevenGroupCampuses": 0,
+    "independentlyCrosscheckedPEIMSSourceRows": 0,
+    "independentlyVerifiedEnrollmentTotals": 0,
+    "independentlyVerified2026AcademicDomains": 0,
+    "independentlyVerified2026STAARSubjects": 0,
+    "newlyWrittenMetricBasedNarratives": 0,
+    "fullyVerifiedAcademicAndDemographicCampuses": 0
+  },
+  "campuses": {
+    "057903001": {
+      "campusName": "TURNER H S",
+      "district": "CFB",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903001&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903002": {
+      "campusName": "SMITH H S",
+      "district": "CFB",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903002&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903003": {
+      "campusName": "GRIMES EDUCATION CENTER",
+      "district": "CFB",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903003&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 2,
+        "suppressedGroupCells": 4,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903005": {
+      "campusName": "SALAZAR DISTRICT ALTERNATIVE EDUCATION PROGRAM",
+      "district": "CFB",
+      "accountabilityRating2026": "Not Rated",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903005&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 2,
+        "suppressedGroupCells": 3,
+        "unlistedGroupCells": 2,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903006": {
+      "campusName": "CREEKVIEW H S",
+      "district": "CFB",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903006&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903007": {
+      "campusName": "RANCHVIEW H S",
+      "district": "CFB",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903007&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903009": {
+      "campusName": "DALLAS COUNTY JJAEP CFB CAMPUS",
+      "district": "CFB",
+      "accountabilityRating2026": "Not Rated",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903009&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 0,
+        "suppressedGroupCells": 1,
+        "unlistedGroupCells": 6,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903010": {
+      "campusName": "EARLY COLLEGE H S",
+      "district": "CFB",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903010&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903041": {
+      "campusName": "FIELD MIDDLE",
+      "district": "CFB",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903041&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 3,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903042": {
+      "campusName": "PERRY MIDDLE",
+      "district": "CFB",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903042&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903045": {
+      "campusName": "BLALACK MIDDLE",
+      "district": "CFB",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903045&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 0,
+        "unlistedGroupCells": 2,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903046": {
+      "campusName": "POLK MIDDLE",
+      "district": "CFB",
+      "accountabilityRating2026": "F",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903046&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903047": {
+      "campusName": "BUSH MIDDLE",
+      "district": "CFB",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903047&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903102": {
+      "campusName": "CARROLLTON EL",
+      "district": "CFB",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903102&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 3,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 2,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903105": {
+      "campusName": "GOOD EL",
+      "district": "CFB",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903105&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903106": {
+      "campusName": "STARK EL",
+      "district": "CFB",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903106&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903109": {
+      "campusName": "FARMERS BRANCH EL",
+      "district": "CFB",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903109&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 3,
+        "suppressedGroupCells": 3,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903110": {
+      "campusName": "BLANTON EL",
+      "district": "CFB",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903110&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 0,
+        "unlistedGroupCells": 2,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903111": {
+      "campusName": "THOMPSON EL",
+      "district": "CFB",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903111&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 3,
+        "suppressedGroupCells": 3,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903112": {
+      "campusName": "COUNTRY PLACE EL",
+      "district": "CFB",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903112&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903113": {
+      "campusName": "DAVIS EL",
+      "district": "CFB",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903113&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903117": {
+      "campusName": "HUIE SPECIAL EDUC CTR",
+      "district": "CFB",
+      "accountabilityRating2026": "Not Rated",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903117&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 3,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 2,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903118": {
+      "campusName": "ROSEMEADE EL",
+      "district": "CFB",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903118&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903120": {
+      "campusName": "LAS COLINAS EL",
+      "district": "CFB",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903120&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903121": {
+      "campusName": "LANDRY EL",
+      "district": "CFB",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903121&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903122": {
+      "campusName": "KENT EL",
+      "district": "CFB",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903122&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903123": {
+      "campusName": "RIVERCHASE ELE",
+      "district": "CFB",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903123&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 0,
+        "unlistedGroupCells": 2,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903124": {
+      "campusName": "MCKAMY EL",
+      "district": "CFB",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903124&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903125": {
+      "campusName": "SHEFFIELD EL",
+      "district": "CFB",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903125&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 3,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 2,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903126": {
+      "campusName": "RAINWATER EL",
+      "district": "CFB",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903126&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903128": {
+      "campusName": "FREEMAN EL",
+      "district": "CFB",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903128&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903129": {
+      "campusName": "MCWHORTER EL",
+      "district": "CFB",
+      "accountabilityRating2026": "D",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903129&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 0,
+        "unlistedGroupCells": 2,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903131": {
+      "campusName": "BLAIR EL",
+      "district": "CFB",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903131&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 3,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903132": {
+      "campusName": "LA VILLITA EL",
+      "district": "CFB",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903132&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 6,
+        "suppressedGroupCells": 0,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "057903135": {
+      "campusName": "MCLAUGHLIN STRICKLAND EL",
+      "district": "CFB",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=057903135&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 3,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 2,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902001": {
+      "campusName": "LEWISVILLE H S",
+      "district": "LISD",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902001&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902002": {
+      "campusName": "MARCUS H S",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902002&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902004": {
+      "campusName": "THE COLONY H S",
+      "district": "LISD",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902004&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902005": {
+      "campusName": "LEARNING CTR",
+      "district": "LISD",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902005&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902007": {
+      "campusName": "DENTON CO J J A E P",
+      "district": "LISD",
+      "accountabilityRating2026": "Not Rated",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902007&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 0,
+        "suppressedGroupCells": 4,
+        "unlistedGroupCells": 3,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902008": {
+      "campusName": "HEBRON H S",
+      "district": "LISD",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902008&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902010": {
+      "campusName": "FLOWER MOUND H S",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902010&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902042": {
+      "campusName": "STEM ACADEMY AT HEDRICK MIDDLE",
+      "district": "LISD",
+      "accountabilityRating2026": "D",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902042&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902044": {
+      "campusName": "STEM ACADEMY AT GRIFFIN MIDDLE",
+      "district": "LISD",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902044&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902045": {
+      "campusName": "LAMAR MIDDLE",
+      "district": "LISD",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902045&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902046": {
+      "campusName": "LAKEVIEW MIDDLE",
+      "district": "LISD",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902046&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902047": {
+      "campusName": "ARBOR CREEK MIDDLE",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902047&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902048": {
+      "campusName": "STEM ACADEMY AT FORESTWOOD MIDDLE",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902048&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902049": {
+      "campusName": "BRIARHILL MIDDLE",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902049&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902050": {
+      "campusName": "DELAY MIDDLE",
+      "district": "LISD",
+      "accountabilityRating2026": "F",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902050&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 3,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902052": {
+      "campusName": "HUFFINES MIDDLE",
+      "district": "LISD",
+      "accountabilityRating2026": "D",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902052&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902053": {
+      "campusName": "MCKAMY MIDDLE",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902053&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902054": {
+      "campusName": "STEM ACADEMY AT CREEK VALLEY MIDDLE",
+      "district": "LISD",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902054&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902055": {
+      "campusName": "STEM ACADEMY AT CLAYTON DOWNING MIDDLE",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902055&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902056": {
+      "campusName": "MARSHALL DURHAM MIDDLE",
+      "district": "LISD",
+      "accountabilityRating2026": "D",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902056&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902058": {
+      "campusName": "SHADOW RIDGE MIDDLE",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902058&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902059": {
+      "campusName": "KILLIAN MIDDLE",
+      "district": "LISD",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902059&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902101": {
+      "campusName": "CENTRAL EL",
+      "district": "LISD",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902101&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 3,
+        "suppressedGroupCells": 4,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902104": {
+      "campusName": "LAKELAND EL",
+      "district": "LISD",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902104&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 0,
+        "unlistedGroupCells": 2,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902106": {
+      "campusName": "DEGAN EL",
+      "district": "LISD",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902106&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902107": {
+      "campusName": "CAMEY EL",
+      "district": "LISD",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902107&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902108": {
+      "campusName": "TIMBER CREEK EL",
+      "district": "LISD",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902108&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902109": {
+      "campusName": "PETERS COLONY EL",
+      "district": "LISD",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902109&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902112": {
+      "campusName": "FLOWER MOUND EL",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902112&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902113": {
+      "campusName": "INDIAN CREEK EL",
+      "district": "LISD",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902113&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902114": {
+      "campusName": "MCAULIFFE EL",
+      "district": "LISD",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902114&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902117": {
+      "campusName": "STEM ACADEMY AT DONALD EL",
+      "district": "LISD",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902117&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902118": {
+      "campusName": "STEM ACADEMY AT HEBRON VALLEY EL",
+      "district": "LISD",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902118&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902119": {
+      "campusName": "ETHRIDGE EL",
+      "district": "LISD",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902119&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902121": {
+      "campusName": "MORNINGSIDE EL",
+      "district": "LISD",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902121&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902122": {
+      "campusName": "HERITAGE EL",
+      "district": "LISD",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902122&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902123": {
+      "campusName": "OLD SETTLERS EL",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902123&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902124": {
+      "campusName": "PARKWAY EL",
+      "district": "LISD",
+      "accountabilityRating2026": "D",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902124&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902126": {
+      "campusName": "PRAIRIE TRAIL EL",
+      "district": "LISD",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902126&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902127": {
+      "campusName": "STEM ACADEMY AT VALLEY RIDGE EL",
+      "district": "LISD",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902127&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902128": {
+      "campusName": "FOREST VISTA EL",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902128&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902129": {
+      "campusName": "STEM ACADEMY AT BRIDLEWOOD EL",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902129&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902130": {
+      "campusName": "WELLINGTON EL",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902130&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902131": {
+      "campusName": "SOUTHRIDGE EL",
+      "district": "LISD",
+      "accountabilityRating2026": "D",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902131&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 0,
+        "unlistedGroupCells": 2,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902132": {
+      "campusName": "HOMESTEAD EL",
+      "district": "LISD",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902132&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 0,
+        "unlistedGroupCells": 2,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902133": {
+      "campusName": "BLUEBONNET EL",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902133&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902134": {
+      "campusName": "TOM HICKS EL",
+      "district": "LISD",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902134&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902135": {
+      "campusName": "LIBERTY EL",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902135&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902136": {
+      "campusName": "CASTLE HILLS EL",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902136&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 3,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902138": {
+      "campusName": "MARJORY VICKERY EL",
+      "district": "LISD",
+      "accountabilityRating2026": "D",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902138&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902139": {
+      "campusName": "ROCKBROOK EL",
+      "district": "LISD",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902139&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902140": {
+      "campusName": "COYOTE RIDGE EL",
+      "district": "LISD",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902140&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902141": {
+      "campusName": "LILLIE J JACKSON EARLY CHILDHOOD CENTER",
+      "district": "LISD",
+      "accountabilityRating2026": "B",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902141&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902142": {
+      "campusName": "INDEPENDENCE EL",
+      "district": "LISD",
+      "accountabilityRating2026": "C",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902142&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902143": {
+      "campusName": "LEWISVILLE EL",
+      "district": "LISD",
+      "accountabilityRating2026": "D",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902143&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902144": {
+      "campusName": "MILL STREET EL",
+      "district": "LISD",
+      "accountabilityRating2026": "D",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902144&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 4,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 1,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    },
+    "061902145": {
+      "campusName": "STEM ACADEMY AT MEMORIAL EL",
+      "district": "LISD",
+      "accountabilityRating2026": "A",
+      "officialProfile": "https://txschools.gov/?view=school&id=061902145&lng=en",
+      "academic2026": {
+        "status": "not-independently-verified",
+        "domainAndSubjectScores": {
+          "studentAchievement": null,
+          "schoolProgress": null,
+          "closingTheGaps": null,
+          "reading": null,
+          "mathematics": null,
+          "science": null,
+          "socialStudies": null
+        },
+        "officialComponentSourceRow": null,
+        "officialSTAARSourceRow": null,
+        "analysisGenerated": false
+      },
+      "peims2025_26": {
+        "idJoinToStagedPR232": "matched",
+        "publishedGroupCells": 5,
+        "suppressedGroupCells": 2,
+        "unlistedGroupCells": 0,
+        "studentEnrollmentTotal": null,
+        "enrollmentTotalSourceVerified": false,
+        "rawTEAExportCrosscheck": "pending"
+      },
+      "residenceAssignmentReviewed": false
+    }
+  }
+}
