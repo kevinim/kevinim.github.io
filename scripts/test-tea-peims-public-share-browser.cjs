@@ -81,6 +81,9 @@ fs.mkdirSync(OUT,{recursive:true});
        heading:addon.querySelector('h5')?.textContent||'',
        text:addon.textContent,
        rows:addon.querySelectorAll('.tea-public-share-legend li').length,
+       ordered:[...addon.querySelectorAll('.tea-public-share-legend li')].map(x=>({
+         key:x.dataset.group,status:x.dataset.status,text:x.textContent
+       })),
        originalRows:panel.querySelectorAll('.tea-peims-counts > .tea-insights-legend li').length,
        stack:!!stack,segments:stack?.childElementCount||0,
        aria:stack?.getAttribute('aria-label')||'',
@@ -93,6 +96,14 @@ fs.mkdirSync(OUT,{recursive:true});
     assert.ok(result,id+' missing add-on DOM');
     assert.equal(result.id,id);assert.equal(result.count,1);
     assert.equal(result.subtotal,knownSubtotal);
+    assert.deepEqual(result.ordered.map(x=>x.key),
+      CALC.rankPublishedRows(stats(REPORT.campuses[id]).rows).map(x=>x.key),
+      'published-only race categories must render descending by disclosed headcount');
+    assert.ok(result.text.includes('최다 공개 집단:'),'top disclosed group visibly identified');
+    assert.ok(result.ordered.filter(x=>x.status==='published').every(x=>x.text.includes('명')),
+      'published groups show actual count beside reference share');
+    assert.ok(result.ordered.filter(x=>x.status!=='published').every(x=>!/%/.test(x.text)),
+      'masked or not-listed groups must not display invented percentages');
     assert.equal(result.originalRows,7,'original 7-cell source list unchanged');
     assert.equal(result.rows,7);assert.equal(result.stack,true);
     assert.equal(result.published+result.suppressed+result.unlisted,7);
