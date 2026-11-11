@@ -1,0 +1,73 @@
+name: TEA regional school profile click and source QA
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - features/carrollton-school-insights.js
+      - features/carrollton-school-insights.css
+      - tests/carrollton-school-insights.test.cjs
+      - scripts/test-carrollton-tea-insights-browser.cjs
+      - .github/workflows/verify-tea-school-profiles.yml
+  push:
+    branches: [main]
+    paths:
+      - features/carrollton-school-insights.js
+      - features/carrollton-school-insights.css
+      - tests/carrollton-school-insights.test.cjs
+      - scripts/test-carrollton-tea-insights-browser.cjs
+      - .github/workflows/verify-tea-school-profiles.yml
+
+permissions:
+  contents: read
+
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Verify TEA campus IDs, data source years, masking and code syntax
+        run: |
+          node --check features/carrollton-school-insights.js
+          node --check scripts/test-carrollton-tea-insights-browser.cjs
+          node --test tests/carrollton-school-insights.test.cjs
+
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Install isolated free Playwright Chromium
+        run: |
+          mkdir -p tea-profile-browser-tmp
+          cd tea-profile-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve exact PR static files
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/tea-profile-qa-http.log 2>&1 &
+          sleep 2
+      - name: Compare school clicks and race legend for CFB/LISD/Allen/McKinney desktop and mobile
+        env:
+          NODE_PATH: ${{ github.workspace }}/tea-profile-browser-tmp/node_modules
+        run: node scripts/test-carrollton-tea-insights-browser.cjs
+      - name: Preserve local browser artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: tea-school-profiles-regional-browser
+          path: artifacts/carrollton-tea-insights/
+          if-no-files-found: warn
