@@ -22,6 +22,7 @@ jobs:
       - run: node scripts/audit-first-load-assets.cjs --check
       - run: node --test tests/first-render-css-bundle.test.cjs
       - run: node scripts/build-first-render-css.cjs --check
+      - run: node --test tests/school-grade-focus.test.cjs
       - name: Required security and privacy controls for every main-bound PR
         run: |
           node --test tests/actions-immutable-permissions.test.cjs tests/public-privacy-disclosure.test.cjs tests/no-legacy-source-builders.test.cjs tests/audit-runtime-privacy-assets.test.cjs
