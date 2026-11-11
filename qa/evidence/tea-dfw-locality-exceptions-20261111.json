@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-11-11",
+  "review": "Independent TEA Data Quality / Security QA",
+  "inventory": "tea-ratings-2026.json",
+  "scope": "Locality evidence exceptions only; not an exhaustive audit of all 2,282 campuses",
+  "administrativeDistrictId": "061806",
+  "administrativeCountyInCurrentInventory": "DENTON",
+  "administrativeDistrictCampusCountInInventory": 41,
+  "policy": {
+    "localityBasis": "verified physical campus location, never TEA districtCounty or six-digit district ID alone",
+    "assignmentBasis": "only official current district residential school finder or attendance-zone evidence can establish home address assignment",
+    "unknownLocality": "hold from DFW location-based recommendations until official address/coordinates are confirmed",
+    "unverifiedAssignment": "Never display assigned school from campus address, coordinates, TEA rating, or district county"
+  },
+  "campuses": {
+    "061806015": {
+      "officialName": "TEXASWORKS - SAN JUAN",
+      "officialDistrictName": "TEXAS WORKS",
+      "inventoryAdministrativeCounty": "DENTON",
+      "operatorAddress": "1202 E Business Hwy 83, San Juan, TX 78589",
+      "campusLocality": "out-of-dfw",
+      "sourceStatus": "verified-operator-location-and-TEA-id",
+      "sourceURLs": [
+        "https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-final-aea-campus-list-updated.pdf",
+        "https://texasworks.com/learning/landing-page-find-a-campus/"
+      ],
+      "notEvidenceOfAssignedSchool": true
+    },
+    "061806021": {
+      "officialName": "TEXASWORKS - MESQUITE",
+      "officialDistrictName": "TEXAS WORKS",
+      "inventoryAdministrativeCounty": "DENTON",
+      "operatorAddress": "3733 W Emporium Cir, Mesquite, TX 75150",
+      "campusLocality": "verified-dfw-location",
+      "sourceStatus": "verified-operator-location-and-TEA-id",
+      "sourceURLs": [
+        "https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-final-aea-campus-list-updated.pdf",
+        "https://texasworks.com/learning/landing-page-find-a-campus/"
+      ],
+      "notEvidenceOfAssignedSchool": true
+    }
+  },
+  "limitations": [
+    "Two location examples do not establish exact location or open/closed status for the other 39 TexasWorks campuses",
+    "TEA administrative district county is not the physical campus county for this statewide charter network",
+    "School being physically in DFW does not establish that a particular home address is assigned to it",
+    "Preserve official 2026 TEA score and PEIMS records; do not bulk-delete academic rows based on location classification"
+  ]
+}
