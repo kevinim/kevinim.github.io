@@ -174,6 +174,13 @@ def main():
                     "source":"rough E affine and optional ORB, NOT measured",
                     "pixelVerified":False}
             result["candidates"].append(entry)
+        result["autoPredictedInsideRaster"]={
+            level:sum(bool(x["pixelAutoPredictions"].get(level,{}).get("isInsideRaster"))
+                      for x in result["candidates"])
+            for level in ("elementary","middle","high")}
+        result["sampleRoadNamesForReview"]=[
+            {"streets":x["streetNames"],"latlon":x["latlon"]}
+            for x in result["candidates"][:6]]
         result["status"]="GROUND_COORDINATE_CANDIDATES_ONLY_NOT_GCP"
     except Exception as exc:
         result["status"]="NO_CANDIDATES_SOURCE_OR_GEOMETRY_FAILED"
