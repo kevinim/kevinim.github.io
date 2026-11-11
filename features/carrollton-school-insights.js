@@ -236,8 +236,13 @@
     FISD:'043905',PISD:'043910',PROSPER:'043912',
     '061901':'061901','057912':'057912','057916':'057916','057905':'057905'
   });
+  function peimsDistrictCode(district){
+    if(Object.hasOwn(PEIMS_DISTRICTS,district))return PEIMS_DISTRICTS[district];
+    return /^\d{6}$/.test(String(district||''))?String(district):null;
+  }
   function validPeimsSource(url,district){
-    if(typeof url!=='string'||!Object.hasOwn(PEIMS_DISTRICTS,district))return false;
+    const code=peimsDistrictCode(district);
+    if(typeof url!=='string'||!code)return false;
     let source;
     try{source=new URL(url);}catch{return false;}
     return source.origin==='https://rptsvr1.tea.texas.gov'&&
@@ -249,12 +254,12 @@
       source.searchParams.get('grouping')==='e'&&
       source.searchParams.get('format')==='c'&&
       source.searchParams.get('selsumm')==='ic'&&
-      source.searchParams.get('key')===PEIMS_DISTRICTS[district];
+      source.searchParams.get('key')===code;
   }
   function validPublishedCampus(id,entry) {
     if(!/^\d{9}$/.test(String(id||'')) || !entry || typeof entry!=='object')return false;
-    if(!Object.hasOwn(PEIMS_DISTRICTS,entry.district))return false;
-    if(!String(id).startsWith(PEIMS_DISTRICTS[entry.district]))return false;
+    const code=peimsDistrictCode(entry.district);
+    if(!code||!String(id).startsWith(code))return false;
     if(typeof entry.name!=='string'||entry.name.length<1||entry.name.length>200||!entry.counts)return false;
     const expected=RACES.map(function(row){return row[0];});
     const actual=Object.keys(entry.counts);
@@ -286,14 +291,16 @@
       .then(function(file){
         if(file.schemaVersion!==1||file.schoolYear!=='2025-26'||
            !file.campuses||typeof file.campuses!=='object'||!file.sources)return;
-        for(const district of Object.keys(PEIMS_DISTRICTS)){
-          if(!validPeimsSource(file.sources[district],district))return;
+        const sourceEntries=Object.entries(file.sources);
+        if(sourceEntries.length<11)return;
+        for(const [district,url] of sourceEntries){
+          if(!validPeimsSource(url,district))return;
         }
-        for(const district of Object.keys(PEIMS_DISTRICTS))
-          PUBLIC_PEIMS_SOURCES[district]=file.sources[district];
+        for(const [district,url] of sourceEntries)
+          PUBLIC_PEIMS_SOURCES[district]=url;
         let accepted=0;
         for(const [id,item] of Object.entries(file.campuses)){
-          if(!validPublishedCampus(id,item))continue;
+          if(!validPublishedCampus(id,item) || !PUBLIC_PEIMS_SOURCES[item.district])continue;
           PUBLIC_PEIMS_COUNTS[id]=item;accepted++;
         }
         if(accepted && typeof document!=='undefined'){
