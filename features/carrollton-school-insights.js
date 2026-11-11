@@ -76,6 +76,16 @@
   // enrollment (not district totals). Published in official district annual
   // reports; no inference from Census ZIP or residential demographics.
   const VERIFIED_TAPR = Object.freeze({
+    // 2025 TEA School Report Card hosted by Castle Hills Elementary (Lewisville ISD),
+    // page 2 student information. Campus percentages; NOT 2025-26 PEIMS.
+    '061902136':{
+      demographics:{
+        year:'2024–25',document:'2025 TEA School Report Card · Castle Hills Elementary',
+        enrollment:599,
+        src:'https://castlehills.lisd.net/fs/resource-manager/view/1534674b-7abf-4949-b7e9-30f24d4e0de1',
+        race:{black:2.0,hispanic:8.3,white:45.9,native:0.2,asian:35.9,pacific:0.2,multi:7.5}
+      }
+    },
     '043901001':{
       demographics:{
         year:'2024–25',document:'2025 TEA TAPR · Allen ISD Annual Report',
