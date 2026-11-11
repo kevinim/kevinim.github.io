@@ -64,7 +64,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
         assert.ok(progressText.includes('8 / 2,282'),'verified ethnicity must not be overstated');
         assert.ok(progressText.includes(PUBLISHED_IDS.size.toLocaleString('en-US')+' / 2,282'),'2025–26 partial enrollment count coverage must be explicit');
         assert.ok(progressText.includes('6 / 2,282'),'exactly six 2025–26 campus seven-category shares are published');
-        await coverage.locator('summary').click();
+        await page.locator('#tea-data-progress > summary').click();
         assert.equal(await coverage.evaluate(el=>el.open),false,'progress notes collapsed by default again');
         const results=[];
         for(const [id,label] of CASES){
