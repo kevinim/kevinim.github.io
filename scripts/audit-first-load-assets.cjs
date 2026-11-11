@@ -6,7 +6,7 @@ const path=require('node:path');
 
 function collectAssets(html){
   const scripts=[...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi)].map(m=>m[1]);
-  const styles=[...html.matchAll(/<link\b[^>]*rel=["']stylesheet["'][^>]*\bhref=["']([^"']+)["'][^>]*>/gi)].map(m=>m[1]);
+  const styles=[...html.matchAll(/<link\b[^>]*>/gi)].filter(m=>/\brel=["']stylesheet["']/i.test(m[0])).map(m=>m[0].match(/\bhref=["']([^"']+)["']/i)?.[1]).filter(Boolean);
   return {scripts,styles};
 }
 function siteFile(root,url){
