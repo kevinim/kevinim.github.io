@@ -5,7 +5,7 @@ const report=require('../data/tea-ethnicity-2025-26-priority.json');
 const inventory=require('../tea-ratings-2026.json').data;
 const insights=require('../features/carrollton-school-insights.js');
 const KEYS=['black','hispanic','white','native','asian','pacific','multi'];
-test('official 2025-26 ethnic enrollment records match 38 imported DFW districts',()=>{
+test('official TEA statewide 2025-26 campus ethnicity rows match all 2,282 DFW inventory IDs',()=>{
   const cohorts={CFB:35,LISD:57,AISD:23,'043907':33,FISD:76,PISD:69,PROSPER:32,
     '061901':46,'057912':35,'057916':51,'057905':237,
     '220905':134,'220901':74,'057909':66,'057914':51,'220908':48,'057803':45,
@@ -13,10 +13,11 @@ test('official 2025-26 ethnic enrollment records match 38 imported DFW districts
     '220918':32,'220902':31,'129902':24,'199901':23,'220912':23,
     '043914':22,'126902':20,'220906':20,'070912':18,'043911':16,
     '057922':16,'091906':16,'057907':14,'070908':13,'199902':13};
-  const expected=inventory.filter(r=>Object.hasOwn(cohorts,r.district));
-  assert.equal(expected.length,1644);
-  assert.equal(Object.keys(report.campuses).length,1644);
+  const expected=inventory;
+  assert.equal(expected.length,2282);
+  assert.equal(Object.keys(report.campuses).length,2282);
   assert.equal(Object.keys(report.sources).length,38);
+  assert.equal(insights.validPeimsStatewideSource(report.statewideSource),true);
   assert.equal(report.schoolYear,'2025-26');
   for(const record of expected){
     const data=report.campuses[record.id];
@@ -29,6 +30,27 @@ test('official 2025-26 ethnic enrollment records match 38 imported DFW districts
     assert.equal(Object.values(report.campuses).filter(c=>c.district===district).length,n);
     assert.equal(insights.validPeimsSource(report.sources[district],district),true);
   }
+});
+test('all 2,282 dashboard school records have an official 2025-26 source and no guessed shares',()=>{
+  let districtLinked=0,statewideLinked=0;
+  const known=new Set(inventory.map(r=>r.id));
+  for(const [id,record] of Object.entries(report.campuses)){
+    assert.equal(known.has(id),true,'unmatched campus ID must be rejected '+id);
+    const source=report.sources[record.district];
+    if(source){assert.equal(insights.validPeimsSource(source,record.district),true);districtLinked++}
+    else{assert.equal(insights.validPeimsStatewideSource(report.statewideSource),true);statewideLinked++}
+  }
+  assert.deepEqual({districtLinked,statewideLinked},{districtLinked:1644,statewideLinked:638});
+});
+test('statewide source is restricted to 2025-26 official TEA CSV and no district-key imputation',()=>{
+  const u=report.statewideSource;
+  assert.equal(insights.validPeimsStatewideSource(u),true);
+  assert.equal(insights.validPeimsStatewideSource(u.replace('selsumm=sc','selsumm=ic')),false);
+  assert.equal(insights.validPeimsStatewideSource(u.replace('loop=1','loop=2')),false);
+  assert.equal(insights.validPeimsStatewideSource(u.replace('endyear=26','endyear=25')),false);
+  assert.equal(insights.validPeimsStatewideSource(u.replace('grouping=e','grouping=g')),false);
+  assert.equal(insights.validPeimsStatewideSource(u.replace('rptsvr1.tea.texas.gov','rptsvr1.tea.texas.gov.evil.com')),false);
+  assert.equal(insights.validPeimsStatewideSource(u.replace('key=&','key=057903&')),false);
 });
 test('FERPA masking and source gaps never become guessed enrollment or percentages',()=>{
   let published=0,suppressed=0,unlisted=0,complete=0;
@@ -52,8 +74,8 @@ test('FERPA masking and source gaps never become guessed enrollment or percentag
       }
     }
   }
-  assert.deepEqual({published,suppressed,unlisted,complete},{published:6263,suppressed:3536,unlisted:1709,complete:6});
-  assert.equal(published+suppressed+unlisted,1644*7);
+  assert.deepEqual({published,suppressed,unlisted,complete},{published:8277,suppressed:5141,unlisted:2556,complete:6});
+  assert.equal(published+suppressed+unlisted,2282*7);
 });
 test('source evidence and selected-campus known values remain exact',()=>{
   assert.equal(report.sources.LISD.includes('key=061902'),true);
