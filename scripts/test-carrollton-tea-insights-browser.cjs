@@ -31,6 +31,16 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
         await page.goto(ROOT,{waitUntil:'domcontentloaded',timeout:90000});
         await page.waitForFunction(()=>typeof state!=='undefined'&&state.schools.length>1500&&state.ratingIndex?.size>100&&window.CarrolltonSchoolInsights?.count===18,
           null,{timeout:110000});
+        const coverage=page.locator('#tea-data-progress');
+        assert.equal(await coverage.count(),1,'single TEA progress disclosure beside school directory');
+        await coverage.locator('summary').click();
+        await page.waitForFunction(()=>document.querySelector('#tea-data-progress .tea-data-progress-content')
+          ?.textContent.includes('2,282'),null,{timeout:15000});
+        const progressText=await coverage.locator('.tea-data-progress-content').textContent();
+        assert.ok(progressText.includes('18 / 2,282'),'curated analysis still only 18, not implied complete');
+        assert.ok(progressText.includes('4 / 2,282'),'verified ethnicity must not be overstated');
+        await coverage.locator('summary').click();
+        assert.equal(await coverage.evaluate(el=>el.open),false,'progress notes collapsed by default again');
         const results=[];
         for(const [id,label] of CASES){
           const chosen=await page.evaluate(id=>{
