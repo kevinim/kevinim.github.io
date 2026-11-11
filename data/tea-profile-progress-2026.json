@@ -11,11 +11,11 @@
   "domainComponentsReviewed": 2,
   "subjectsReviewed": 2,
   "ethnicityReviewed": 8,
-  "public2025_26CampusCounts": 92,
-  "public2025_26PublishedCells": 393,
-  "public2025_26SuppressedCells": 180,
-  "public2025_26UnlistedCells": 71,
-  "public2025_26CompleteShares": 0,
+  "public2025_26CampusCounts": 293,
+  "public2025_26PublishedCells": 1260,
+  "public2025_26SuppressedCells": 546,
+  "public2025_26UnlistedCells": 245,
+  "public2025_26CompleteShares": 1,
   "imported2026Components": 0,
   "imported2025_26Ethnicity": 0,
   "cohorts": [
@@ -35,7 +35,7 @@
       "individualAnalysis": 0,
       "domainScores": 0,
       "ethnicity": 1,
-      "public2025_26CampusCounts": 0
+      "public2025_26CampusCounts": 23
     },
     {
       "name": "McKinney",
@@ -44,7 +44,7 @@
       "individualAnalysis": 0,
       "domainScores": 0,
       "ethnicity": 1,
-      "public2025_26CampusCounts": 0
+      "public2025_26CampusCounts": 33
     },
     {
       "name": "기타 DFW",
@@ -53,7 +53,7 @@
       "individualAnalysis": 0,
       "domainScores": 0,
       "ethnicity": 0,
-      "public2025_26CampusCounts": 0
+      "public2025_26CampusCounts": 145
     }
   ],
   "notes": [
