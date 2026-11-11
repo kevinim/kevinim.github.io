@@ -9,6 +9,9 @@ on:
       - 'data/tea-peims-2025-26-gender-parity-audit-1343.json'
       - 'tests/tea-peims-2025-26-gender-parity-audit.test.cjs'
       - 'docs/TEA_PEIMS_2025-26_GENDER_PARITY_AUDIT_1343.md'
+      - 'data/tea-peims-2025-26-statewide-parity-audit-2282.json'
+      - 'tests/tea-peims-2025-26-statewide-parity-audit.test.cjs'
+      - 'docs/TEA_PEIMS_2025-26_STATEWIDE_PARITY_AUDIT_2282.md'
   push:
     branches:
       - 'data/tea-peims-2025-26-enrollment-total-audit-20261111'
@@ -22,4 +25,4 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
-      - run: node --test tests/tea-peims-enrollment-total-audit-allen-mckinney.test.cjs tests/tea-peims-2025-26-gender-parity-audit.test.cjs
+      - run: node --test tests/tea-peims-enrollment-total-audit-allen-mckinney.test.cjs tests/tea-peims-2025-26-gender-parity-audit.test.cjs tests/tea-peims-2025-26-statewide-parity-audit.test.cjs
