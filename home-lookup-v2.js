@@ -183,8 +183,13 @@ function wireCompactHomeFinder(){
  });
 }
 
+// Preserve advanced tools across a same-home asynchronous redraw.
+// A new residence object is intentionally collapsed by default.
+let lastAdvancedPanelHome=null;
 function renderHome(){
   if(!home)return;
+  const preserveAdvancedOpen=lastAdvancedPanelHome===home&&el('homeAdvancedSchoolTools')?.open===true;
+  lastAdvancedPanelHome=home;
   const matches=homeZipMatches(home.ll),schools=homeFriscoMatches(home.ll);home.matches=schools;
   const zipText=matches.length?matches.map(d=>escape(d.z+' · '+d.name)).join(', '):'지도에 포함된 ZIP 경계를 확인하지 못했습니다.';
   // Conditional GO: historical reference GIS cannot authorize home assignment.
@@ -204,6 +209,7 @@ function renderHome(){
   // Explicit visibility is needed because older dashboard CSS can override native details styles.
   const advanced=el('homeAdvancedSchoolTools');
   if(advanced){
+   advanced.open=preserveAdvancedOpen;
    const syncAdvanced=()=>{for(const child of advanced.children)if(child.tagName!=='SUMMARY')child.style.display=advanced.open?'':'none'};
    advanced.addEventListener('toggle',syncAdvanced);syncAdvanced();
   }
