@@ -29,7 +29,7 @@ assert.equal(report.nonPublishable.length,0);
 assert.equal(report.newSensitive.length,0);
 const previewHtml=fs.readFileSync(path.join(base,'index.html'),'utf8');
 const previewCsp=verifyExternalCspIntegrity(previewHtml);
-assert.ok(previewHtml.includes('<script src="./dashboard-main.js?v=4"></script>'));
+assert.ok(previewHtml.includes('<script src="./dashboard-main.js?v=5"></script>'));
 assert.equal(/<script(?![^>]*src=)[^>]*>[\s\S]*?<\/script>/i.test(previewHtml),false,'No inline bootstrap may ship');
 assert.equal(previewCsp.policy.includes("script-src-attr 'none'"),true);
 const previewScriptCsp=previewCsp.policy.split(';').map(x=>x.trim()).find(x=>x.startsWith('script-src '));
