@@ -46,10 +46,13 @@ async function main(){
      {type:'Feature',properties:{school:'SYNTHETIC HIGH',gradeLevel:'high'},
       geometry:{type:'Polygon',coordinates:[[[-96.81,33],[-96.80,33],[-96.80,33.01],[-96.81,33]]] }}
     ]};
+    // Keep the synthetic source installed until the actual Chromium click.
+    // Asynchronous initial GIS loads can re-render this panel in the meantime.
+    window.__referenceOriginalAssignment=original;
     schoolAssignmentFor=()=>candidate;
     home={address:'SYNTHETIC TEST LOCATION',ll:[33.1,-96.8],
       geocodeQuality:{usableForSchoolCandidate:true},parcel:{status:'idle'}};
-    try{renderHome()}finally{schoolAssignmentFor=original}
+    renderHome();
     const box=document.getElementById('homeSchoolInfo');
     return {hasToggle:!!box.querySelector('#homeReferencePreviewToggle'),
       containsSchool:box.textContent.includes('SYNTHETIC HIGH'),
@@ -87,6 +90,8 @@ async function main(){
    assert.equal(shown.noAssignedMarker,true);
    assert.ok(shown.docWidth<=shown.clientWidth+2,'No horizontal overflow');
    await page.locator('#homeSchoolInfo').screenshot({path:path.join(folder,'reference-'+width+'.png')});
+   await page.evaluate(()=>{schoolAssignmentFor=window.__referenceOriginalAssignment;
+    delete window.__referenceOriginalAssignment;});
    const hardBlock=await page.evaluate(()=>{
     const original=schoolAssignmentFor;
     schoolAssignmentFor=()=>({status:'apartment-split-review',district:'AISD',exception:{note:'SYNTHETIC SPLIT'}});
