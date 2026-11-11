@@ -1,0 +1,23 @@
+/* Address-to-school official-result manual review, separate from zoning. */
+.home-manual-school-bridge{margin:12px 0;padding:10px;border:1px solid var(--line,#cad7e8);border-radius:9px;background:rgba(100,133,176,.07)}
+.home-manual-school-bridge[hidden],.home-manual-official-link[hidden]{display:none!important}
+.home-manual-school-note{margin:0 0 9px;font-size:11px;line-height:1.55;color:var(--ink,#223048)}
+.home-manual-school-details>summary{font-size:12px;font-weight:750;line-height:1.5;cursor:pointer}
+.home-manual-school-details>summary:focus-visible{outline:2px solid #2563eb;outline-offset:3px}
+.home-manual-school-content{padding:10px 1px 4px;display:grid;gap:9px}
+.home-manual-school-content>label,.home-manual-field>label{font-size:11px;display:block;font-weight:700;margin-bottom:4px}
+.home-manual-school-content select{width:100%;min-width:0;max-width:100%;padding:8px 9px;font-size:12px;background:var(--bg,#fff);border:1px solid var(--line,#cad7e8);color:var(--ink,#25344a);border-radius:7px}
+.home-manual-official-link{font-weight:700;font-size:11px;line-height:1.5;word-break:break-word}
+.home-manual-actions{display:flex;flex-wrap:wrap;gap:8px}
+.home-manual-school-cards{display:grid;gap:8px}
+.home-manual-school-card{display:flex;flex-wrap:wrap;align-items:center;gap:7px;background:rgba(81,117,173,.1);border:1px solid var(--line,#cad7e8);border-radius:8px;padding:9px;font-size:11px;line-height:1.4}
+.home-manual-school-card strong{flex:1 1 170px;font-size:11px}
+.home-manual-rating{font-weight:700;font-size:10px;color:var(--sub,#66748d)}
+.home-manual-school-card .mini-btn{flex:0 0 auto}
+html[data-theme="dark"] .home-manual-school-bridge{background:#1d2d44;border-color:#425776}
+html[data-theme="dark"] .home-manual-school-note{color:#dbe7f8}
+html[data-theme="dark"] .home-manual-school-card{background:#253753;border-color:#496181}
+html[data-theme="dark"] .home-manual-rating{color:#d1e0f3}
+html[data-theme="dark"] .home-manual-school-content select{background:#17253b;color:#eff6ff;border-color:#5e799d}
+@media(max-width:450px){.home-manual-school-bridge{padding:8px}.home-manual-school-card{display:grid;grid-template-columns:1fr}.home-manual-school-content{gap:8px}}
+@media(forced-colors:active){.home-manual-school-bridge,.home-manual-school-card,.home-manual-school-content select{border-color:CanvasText;background:Canvas;color:CanvasText}}
