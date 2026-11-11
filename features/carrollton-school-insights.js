@@ -228,6 +228,7 @@
   // Public, campus-level 2025-26 PEIMS grouped ethnicity counts. Some cells are
   // suppressed or not listed, so these are COUNTS only, never fabricated percentages.
   const PUBLIC_PEIMS_COUNTS=Object.create(null);
+  const PUBLIC_PEIMS_SOURCES=Object.create(null);
   let publicPeimsStarted=false;
   const PEIMS_SOURCE_PREFIX='https://rptsvr1.tea.texas.gov/cgi/sas/broker';
   function validPublishedCampus(id,entry) {
@@ -269,6 +270,7 @@
           if(typeof url!=='string'||!url.startsWith(PEIMS_SOURCE_PREFIX+'?')||
              !url.includes('key='+(district==='CFB'?'057903':'061902')))return;
         }
+        for(const district of ['CFB','LISD'])PUBLIC_PEIMS_SOURCES[district]=file.sources[district];
         let accepted=0;
         for(const [id,item] of Object.entries(file.campuses)){
           if(!validPublishedCampus(id,item))continue;
@@ -438,8 +440,8 @@
     if(data.domainsSource&&hasOfficialSource(data.domainsSource))notes.appendChild(makeLink('2026 TEA 영역별 점수 원문',data.domainsSource));
     if(published){
       notes.appendChild(textTag('p','tea-insights-meta','2025–26 인종별 학생 수: TEA PEIMS 공개 캠퍼스 집계 · 일부 항목 비공개/미표시.'));
-      notes.appendChild(makeLink('TEA 공식 2025–26 학교별 집계 원본',
-        'https://rptsvr1.tea.texas.gov/adhocrpt/adste.html'));
+      notes.appendChild(makeLink('TEA 공식 2025–26 학교별 집계 CSV',
+        PUBLIC_PEIMS_SOURCES[String(scoreRecord.district)]||'https://rptsvr1.tea.texas.gov/adhocrpt/adste.html'));
     }
     if(demo){
       notes.appendChild(textTag('p','tea-insights-meta','학생 인종 구성: '+demo.year+' · '+demo.document+' · 등록 학생 '+demo.enrollment.toLocaleString('en-US')+'명'));
