@@ -85,7 +85,21 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           assert.equal(chosen.exactCount,1,'one exact campus by TEA ID despite duplicate school names '+id);
           const card=page.locator('#schoolList button.school[data-sid="'+chosen.sid+'"]');
           assert.equal(await card.count(),1,'one and only one campus button by school index '+id);
-          await card.click();
+          // The live directory can be rebuilt while async campus records load,
+          // changing numeric data-sid indices during Playwright's scrolling.
+          // Re-resolve the immutable TEA ID and invoke the button's actual
+          // click handler atomically in the page to avoid a detached-node race.
+          const clicked=await page.evaluate(id=>{
+            const candidates=[...document.querySelectorAll('#schoolList button.school[data-sid]')];
+            const current=candidates.find(button=>{
+              const school=state.schools[Number(button.dataset.sid)];
+              return school && scoreRecord(school.name,school.district)?.id===id;
+            });
+            if(!current)return false;
+            current.click();
+            return true;
+          },id);
+          assert.equal(clicked,true,'school button missing at click time '+id);
           await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel')?.dataset.campus===id,id,{timeout:15000});
           await page.waitForFunction(()=>[...document.styleSheets].some(s=>(s.href||'').includes('carrollton-school-insights.css?v=4')),
             null,{timeout:15000});
