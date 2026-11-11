@@ -186,6 +186,127 @@
     }
     return added;
   }
+  // Official 2026 TEA campus accountability and 2025–26 STAAR, staged independently
+  // from school zones and demographics. Loaded only after school selection.
+  const ACADEMIC=Object.create(null);
+  let academicStarted=false;
+  let academicSources=null;
+  const DOMAIN_KEYS=[
+    ['studentAchievement','학업 성취','achievement'],
+    ['schoolProgress','학교 향상도','progress'],
+    ['closingTheGaps','학생 집단별 성과','gaps']
+  ];
+  const SUBJECT_KEYS=[
+    ['reading','독해'],['math','수학'],['science','과학'],['socialStudies','사회']
+  ];
+  function validAcademicUrl(raw,dataset){
+    try{
+      const u=new URL(raw);
+      return u.protocol==='https:'&&u.hostname==='rptsvr1.tea.texas.gov'&&
+        u.searchParams.get('ccyy')==='2026'&&u.searchParams.get('sumlev')==='C'&&
+        u.searchParams.get('dsname')===dataset&&
+        u.searchParams.get('prgopt')==='reports/acct/dd/dd_get_data.sas';
+    }catch{return false;}
+  }
+  function validOfficialMetric(row,domain){
+    if(!row||typeof row!=='object')return false;
+    if(row.status==='reported')return Number.isInteger(domain?row.score:row.value)&&
+      (domain?row.score:row.value)>=0&&(domain?row.score:row.value)<=100;
+    if(domain){
+      return ['not-rated','suppressed','unavailable'].includes(row.status)&&
+        row.score===null&&(row.status!=='not-rated'||row.rating==='Not Rated');
+    }
+    return ['suppressed','unavailable','not-in-source'].includes(row.status)&&row.value===null;
+  }
+  function installAcademicBatches(domain,staar){
+    if(!domain||!staar||domain.schemaVersion!==1||staar.schemaVersion!==1||
+       domain.accountabilityYear!==2026||staar.accountabilityYear!==2026||
+       domain.schoolYear!=='2025-26'||staar.schoolYear!=='2025-26'||
+       !validAcademicUrl(domain.source?.url,'RATE'))return 0;
+    for(const [key,dataset] of [
+      ['D1_STAAR1','D1_STAAR1'],['D1_STAAR2','D1_STAAR2'],['D1_STAAR3','D1_STAAR3']
+    ]){
+      if(!validAcademicUrl(staar.source?.groups?.[key]?.url,dataset))return 0;
+    }
+    const ids=Object.keys(domain.campuses||{});
+    if(ids.length!==2282 || Object.keys(staar.campuses||{}).length!==2282)return 0;
+    const next=Object.create(null);
+    for(const id of ids){
+      const a=domain.campuses[id],s=staar.campuses[id];
+      if(!/^\d{9}$/.test(id)||!a||!s||a.districtId!==id.slice(0,6)||
+         typeof a.officialCampusName!=='string'||!a.overall ||
+         !['A','B','C','D','F','Not Rated'].includes(a.overall.rating) ||
+         !(a.overall.score===null||(Number.isInteger(a.overall.score)&&a.overall.score>=0&&a.overall.score<=100)) ||
+         !DOMAIN_KEYS.every(function(p){return validOfficialMetric(a[p[0]],true);})||
+         !SUBJECT_KEYS.every(function(p){return validOfficialMetric(s[p[0]],false);}))return 0;
+      next[id]={accountability:a,staar:s};
+    }
+    // Transactional intake: malformed batch never partially replaces a known-good one.
+    for(const id of ids)ACADEMIC[id]=next[id];
+    academicSources={domain:domain.source.url,subjects:staar.source.groups.D1_STAAR1.url};
+    return ids.length;
+  }
+  function applyAcademicDetails(record,base){
+    const official=ACADEMIC[String(record.id)];
+    if(!official||!academicSources)return base;
+    const a=official.accountability,s=official.staar;
+    if(a.officialCampusName!==record.officialName||a.districtId!==String(record.id).slice(0,6)||
+       a.overall.rating!==record.rating||a.overall.score!==record.score)return base;
+    const added={...base};
+    added.academicDomainRows=DOMAIN_KEYS.map(function(tuple){
+      const cell=a[tuple[0]];
+      return {key:tuple[2],label:tuple[1],status:cell.status,score:cell.score,rating:cell.rating};
+    });
+    added.academicSubjectRows=SUBJECT_KEYS.map(function(tuple){
+      const cell=s[tuple[0]];
+      return {key:tuple[0],label:tuple[1],status:cell.status,value:cell.value};
+    });
+    added.domainsSource=academicSources.domain;
+    added.subjectsSource=academicSources.subjects;
+    const available=added.academicDomainRows.filter(function(v){return v.status==='reported';});
+    const subjects=added.academicSubjectRows.filter(function(v){return v.status==='reported';});
+    added.subjects=Object.fromEntries(subjects.map(function(v){
+      return [v.key==='socialStudies'?'social':v.key,v.value];
+    }));
+    if(available.length===3 && subjects.length>0 && record.rating!=='Not Rated'){
+      added.domains={achievement:a.studentAchievement.score,
+        progress:a.schoolProgress.score,gaps:a.closingTheGaps.score};
+      const rank=available.slice().sort(function(x,y){return y.score-x.score;});
+      added.evidenceStatus='reviewed';
+      added.strength=rank[0].label+' '+rank[0].score+'점 (3개 영역 중 가장 높음)';
+      added.challenge=rank[2].label+' '+rank[2].score+'점 (3개 영역 중 상대적으로 낮음)';
+      added.summary='2026 TEA 공식 영역별 환산점수 비교에서 '+rank[0].label+'가 가장 높고 '+
+        rank[2].label+'가 가장 낮습니다. 이 비교는 종합등급의 원인 분석이 아닙니다.';
+    }else{
+      delete added.domains;
+      added.evidenceStatus=added.demographics?'rating-and-demographics':'rating-only';
+      added.strength=['A','B','C','D','F'].includes(record.rating)?
+        '확인된 공식 종합 등급: '+record.rating+' · '+record.score+'점':'공식 종합 평가로 판단 불가';
+      added.challenge='영역별 미평가·미공개 자료가 있어 강점·개선과제 판단 보류';
+      added.summary=record.rating==='Not Rated'?
+        '2026 TEA 종합평가는 미평가(Not Rated)입니다. 영역/과목별 미공개·미해당 항목은 0점이 아닙니다.':
+        '2026 TEA 영역별 일부 항목이 미평가 또는 미공개입니다. 공개 점수는 아래에 표시하되 강점·개선과제는 추정하지 않습니다.';
+    }
+    return added;
+  }
+  function loadAcademicBatches(){
+    if(academicStarted||!root||typeof root.fetch!=='function')return;
+    academicStarted=true;
+    Promise.all([
+      root.fetch('./data/tea-accountability-2026-verified-batch.json?v=1',{credentials:'same-origin'}),
+      root.fetch('./data/tea-staar-meets-2026-verified-batch.json?v=1',{credentials:'same-origin'})
+    ]).then(function(responses){
+      if(responses.some(function(r){return !r.ok;}))throw Error('Academic TEA data absent');
+      return Promise.all(responses.map(function(r){return r.json();}));
+    }).then(function(batch){
+      if(installAcademicBatches(batch[0],batch[1])!==2282)return;
+      if(typeof document!=='undefined'){
+        document.querySelectorAll('.tea-insights-panel').forEach(function(panel){panel.remove();});
+        document.querySelectorAll('.tea-school-inline-preview').forEach(function(panel){panel.remove();});
+        mount();
+      }
+    }).catch(function(){/* No inferred TEA scores when official batch unavailable. */});
+  }
   function getSchoolInsight(record) {
     if(!record || !/^\d{9}$/.test(String(record.id||''))) return null;
     const code=String(record.district||'');
@@ -222,7 +343,7 @@
         strength:hasScore?'확인된 공식 종합 등급: '+rating:'공식 종합 평가로 판단 불가',
         challenge:'개별 과목·성장·학생 집단별 성과 원문 확인 필요'
       };
-    return enrichFromOfficial(record,base);
+    return applyAcademicDetails(record,enrichFromOfficial(record,base));
   }
   function getRaceRows(id) {
     const d=ENRICHED[String(id)]?.demographics||
@@ -418,7 +539,22 @@
     });
     panel.appendChild(facts);
 
-    if(data.domains){
+    if(data.academicDomainRows){
+      const metrics=document.createElement('dl');metrics.className='tea-insights-domains';
+      metrics.setAttribute('aria-label','2026 TEA 공식 영역별 환산점수 및 미평가 상태');
+      data.academicDomainRows.forEach(function(v){
+        const item=document.createElement('div');
+        const label=v.status==='reported'?v.score+'점 ('+v.rating+')':
+          v.status==='not-rated'?'미평가 (Not Rated)':
+          v.status==='suppressed'?'비공개':'원본 미제공';
+        item.appendChild(textTag('dt','',v.label));
+        item.appendChild(textTag('dd','',label));
+        metrics.appendChild(item);
+      });
+      panel.appendChild(metrics);
+      panel.appendChild(textTag('p','tea-insights-meta',
+        '2026 TEA 영역별 환산점수입니다. 종합등급 원인을 직접 설명하는 원시 구성점수가 아닙니다.'));
+    }else if(data.domains){
       const metrics=document.createElement('dl');metrics.className='tea-insights-domains';
       [['학업 성취',data.domains.achievement],['학교 향상도',data.domains.progress],['집단별 목표',data.domains.gaps]].forEach(function(pair){
         const item=document.createElement('div');
@@ -430,7 +566,17 @@
     } else {
       panel.appendChild(textTag('p','tea-insights-empty','영역별 세부 성적 · 자료 확인 중'));
     }
-    if(data.subjects){
+    if(data.academicSubjectRows){
+      const subjects=document.createElement('p');subjects.className='tea-insights-subjects';
+      subjects.appendChild(textTag('strong','','2025–26 STAAR 전체 학생 · Meets 이상: '));
+      subjects.appendChild(document.createTextNode(data.academicSubjectRows.map(function(v){
+        const status=v.status==='reported'?v.value+'%':
+          v.status==='suppressed'?'비공개':
+          v.status==='not-in-source'?'학교 원본 행 없음':'수치 미제공/미해당 여부 확인';
+        return v.label+' '+status;
+      }).join(' · ')));
+      panel.appendChild(subjects);
+    }else if(data.subjects){
       const subjects=document.createElement('p');subjects.className='tea-insights-subjects';
       const labels={reading:'독해',math:'수학',science:'과학',social:'사회'};
       subjects.appendChild(textTag('strong','','STAAR 학년 수준 충족 이상: '));
@@ -517,9 +663,13 @@
     const notes=document.createElement('div');
     notes.className='tea-insights-provenance-body';
     notes.appendChild(textTag('p','tea-insights-meta','2026 TEA 종합 평가 · 적용 단계 '+data.rolloutPhase+' · '+data.cohort));
-    if(!data.domains) notes.appendChild(textTag('p','tea-insights-missing',
+    if(!data.domains&&!data.academicDomainRows) notes.appendChild(textTag('p','tea-insights-missing',
       '영역별 점수 및 과목별 성취도: 개별 TEA 원문 미연결. 종합점수만으로 과목별 강점이나 약점을 추정하지 않습니다.'));
+    if(data.academicDomainRows&&data.evidenceStatus!=='reviewed')
+      notes.appendChild(textTag('p','tea-insights-missing',
+        '이 학교는 영역별 미평가·수치 미제공 항목이 있습니다. 빈칸과 미평가는 0점 또는 F등급을 뜻하지 않습니다.'));
     if(data.domainsSource&&hasOfficialSource(data.domainsSource))notes.appendChild(makeLink('2026 TEA 영역별 점수 원문',data.domainsSource));
+    if(data.subjectsSource&&hasOfficialSource(data.subjectsSource))notes.appendChild(makeLink('2026 TEA STAAR 과목별 자료 원문',data.subjectsSource));
     if(published){
       notes.appendChild(textTag('p','tea-insights-meta','2025–26 인종별 학생 수: TEA PEIMS 공개 캠퍼스 집계 · 일부 항목 비공개/미표시.'));
       notes.appendChild(makeLink('TEA 공식 2025–26 학교별 집계 CSV',
@@ -651,7 +801,7 @@
     const host=document.getElementById('detailContent');
     if(!host || typeof state==='undefined') return;
     const school=state.selectedSchool;
-    if(school){loadVerifiedAggregates();loadPublishedPeimsCounts();}
+    if(school){loadVerifiedAggregates();loadPublishedPeimsCounts();loadAcademicBatches();}
     if(!school){
       mountInline(null,null);
       return;
@@ -699,8 +849,8 @@
           [
             ['2026 A–F 종합등급',info.accountabilityRatingPresent],
             ['학교별 기본 설명',info.profilePanelsConnected],
-            ['개별 강점·개선과제 분석',info.individualNarratives],
-            ['2026 영역별 평가점수',info.domainComponentsReviewed],
+            ['기존 수동 분석 초안 (검증 수준 별도)',info.individualNarratives],
+            ['기존 데이터에 통합된 2026 영역별 점수',info.domainComponentsReviewed],
             ['2025–26 공개 인종별 학생 수 (비공개 포함)',info.public2025_26CampusCounts],
             ['2025–26 일곱 인종 전체 비율 확인',info.public2025_26CompleteShares],
             ['과거 학년도 전체 인종 비율 확인',info.ethnicityReviewed]
@@ -712,6 +862,31 @@
           });
           content.appendChild(textTag('p','','미평가(Not Rated) '+info.notRated+'개 · 2025–26 공개 학생 수는 '+Number(info.public2025_26PublishedCells||0)+'개 분류에 연결되었습니다. '+Number(info.public2025_26SuppressedCells||0)+'개는 비공개, '+Number(info.public2025_26UnlistedCells||0)+'개는 원본 미표시입니다.'));
           content.appendChild(textTag('p','','종합등급 연결과 과목별 분석 완료는 다른 기준입니다. 개인정보 보호로 마스킹된 수치는 추정하지 않습니다.'));
+          // Data-stage coverage is separate from already deployed/historical progress.
+          root.fetch('./data/tea-2026-uat-progress.json?v=1',{credentials:'same-origin'})
+            .then(function(response){if(!response.ok)throw Error('Academic UAT unavailable');return response.json();})
+            .then(function(uat){
+              if(uat.schemaVersion!==1||uat.accountabilityYear!==2026||
+                 uat.schoolYear!=='2025-26'||uat.counts?.campuses!==count)return;
+              const c=uat.counts;
+              content.appendChild(textTag('p','tea-insights-meta',
+                'UAT 신규 2026 TEA 상세 원본 (아직 Production 미반영)'));
+              [
+                ['3개 영역 점수 모두 공개',c.domainAllReported],
+                ['3개 영역 및 공개 STAAR 과목으로 상대 비교 가능',c.detailedRelativeComparisonEligible],
+                ['STAAR 공개 과목 수치 하나 이상 존재',c.subjectAnyReported]
+              ].forEach(function(pair){
+                const n=pair[1];
+                if(Number.isInteger(n)&&n>=0&&n<=count)
+                  content.appendChild(textTag('p','',pair[0]+' '+
+                    n.toLocaleString('en-US')+' / '+count.toLocaleString('en-US')+' · '+ratio(n)));
+              });
+              content.appendChild(textTag('p','tea-insights-missing',
+                'STAAR 원본 행 미포함 '+c.staarSourceRowAbsent+'개 · Not Rated/비공개/미제공은 0점이 아닙니다. 학교 배정 경계와 별도 자료입니다.'));
+            }).catch(function(){
+              content.appendChild(textTag('p','tea-insights-missing','UAT 학업 성적 구축 현황을 불러올 수 없습니다.'));
+            });
+
         }).catch(function(){content.textContent='현재 진행률 파일을 불러올 수 없습니다. 학교별 공식 출처를 확인해 주세요.';});
     });
     list.insertAdjacentElement('afterend',details);
@@ -742,7 +917,8 @@
     enrichedCampusCount:function(){return Object.keys(ENRICHED).length;},
     validDomains:validDomains,validPublishedCampus:validPublishedCampus,
     validPeimsSource:validPeimsSource,validPeimsStatewideSource:validPeimsStatewideSource,
-    getPublishedCountRows:getPublishedCountRows,auditedPeimsTotal:auditedPeimsTotal
+    getPublishedCountRows:getPublishedCountRows,auditedPeimsTotal:auditedPeimsTotal,
+    installAcademicBatches:installAcademicBatches,validAcademicUrl:validAcademicUrl
   };
   if(typeof module!=='undefined' && module.exports)module.exports=api;
   if(root && typeof document!=='undefined'){
