@@ -105,10 +105,12 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
             notesCollapsed:!document.querySelector('.tea-insights-provenance:not(.tea-peims-counts)').open,
             warningOutsideNotes:!!document.getElementById('zoneNotice')&&!document.querySelector('.tea-insights-provenance:not(.tea-peims-counts)').contains(document.getElementById('zoneNotice')),
             domainCount:document.querySelectorAll('.tea-insights-domains dd').length,
+            domainText:document.querySelector('.tea-insights-domains')?.textContent||'',
+            subjectText:document.querySelector('.tea-insights-subjects')?.textContent||'',
             raceCount:document.querySelectorAll('.tea-insights-figure .tea-insights-legend li').length,
             peimsCountRows:document.querySelectorAll('#detailContent .tea-peims-counts li').length,
             peimsText:document.querySelector('#detailContent .tea-peims-counts')?.textContent||'',
-            missingRace:[...document.querySelectorAll('#detailContent .tea-insights-missing')].some(el=>el.textContent.includes('학생 인종·민족 구성')),
+            missingRace:[...document.querySelectorAll('#detailContent .tea-insights-empty')].some(el=>el.textContent.includes('전체 비율')||el.textContent.includes('공식 수치 확인 중')),
             missingDomain:[...document.querySelectorAll('#detailContent .tea-insights-missing')].some(el=>el.textContent.includes('영역별 점수')),
             link:[...document.querySelectorAll('.tea-insights-panel a')].map(a=>({label:a.textContent,url:a.href})),
             chart:document.querySelector('.tea-insights-stack')?.getAttribute('aria-label'),
@@ -130,9 +132,10 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           assert.equal(found.notesCollapsed,true,'technical footnotes are closed by default');
           assert.equal(found.warningOutsideNotes,true,'important school assignment warning remains visible');
           assert.ok(found.link.some(x=>x.url.startsWith('https://txschools.gov/')),'official campus source included');
-          const reviewed=['061902118','061902008'].includes(id);
           const raceVerified=['061902118','061902008','061902136','061902140','061902142','061902143','043901001','043907002'].includes(id);
-          assert.equal(found.domainCount,reviewed?3:0,'domain scores must not be invented '+id);
+          assert.equal(found.domainCount,3,'UAT official TEA domain score or missingness must be shown for all campus IDs '+id);
+          assert.ok(found.subjectText.includes('STAAR')&&found.subjectText.includes('사회'),
+            'official 2025–26 Reading/Math/Science/Social Studies labels and missingness visible '+id);
           if(raceVerified){
             assert.equal(found.years.length,2,'evaluation and ethnicity years displayed separately');
             assert.notEqual(found.years[0].text,found.years[1].text,'different vintages must remain distinct');
@@ -146,12 +149,14 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
             assert.equal(found.inlineChart,undefined,'unverified race cannot render in-list chart');
             assert.equal(found.missingRace,true);
           }
-          const currentPeims=PUBLISHED_IDS.has(id).some(prefix=>id.startsWith(prefix));
+          const currentPeims=PUBLISHED_IDS.has(id);
           assert.equal(found.peimsCountRows,currentPeims?7:0,'2025–26 source year and seven explicit privacy statuses '+id);
           if(currentPeims){
             assert.ok(found.peimsText.includes('2025–26'),'current-year PEIMS source labeled');
-            if(['043901001','057912046','061911001','220912002'].includes(id))assert.ok(found.peimsText.includes('7개 분류 공개'),
-              'Allen High is the one fully public seven-category campus');
+            if(['043901001','057912046','057912123','061911001','061911007'].includes(id))assert.ok(found.peimsText.includes('같은 원본 등록 인원 검증'),
+              'only independently same-source audited campuses may publish full percentages');
+            else if(id==='220912002')assert.ok(found.peimsText.includes('등록 인원 대조 대기'),
+              'new fully published records stay counts-only until same-source denominator QA');
             else assert.ok(found.peimsText.includes('비공개')||found.peimsText.includes('원본 미표시'),
               'masking or source omission remains visible');
           }
@@ -166,18 +171,26 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           if(id==='043910008')assert.ok(found.peimsText.includes('30명'),'Plano Academy HS current Asian count correct');
           if(id==='061911001'){
             assert.ok(found.peimsText.includes('102명'),'Northwest High published Asian count');
-            assert.ok(found.peimsText.includes('7개 분류 공개'),'Northwest High complete same-year count profile');
+            assert.ok(found.peimsText.includes('같은 원본 등록 인원 검증'),'Northwest High same-source reconciled profile');
           }
           if(id==='220905001')assert.ok(found.peimsText.includes('13명'),'Fort Worth school Asian count');
           if(id==='220916001')assert.ok(found.peimsText.includes('153명'),'HEB school Asian count');
           if(id==='220912002'){
             assert.ok(found.peimsText.includes('105명'),'North Crowley seven-group source Asian count');
-            assert.ok(found.peimsText.includes('3.5%'),'North Crowley fully public same-year Asian ratio');
+            assert.ok(!found.peimsText.includes('3.5%'),'North Crowley cannot display unaudited full shares');
           }
           if(id==='043914001')assert.ok(found.peimsText.includes('702명'),'Wylie High source Asian count');
           if(id==='220918001')assert.ok(found.peimsText.includes('131명'),'Boswell High source Asian count');
           if(id==='043901105')assert.ok(found.peimsText.includes('비공개'),'suppressed Asian count remains hidden');
-          if(!reviewed)assert.equal(found.missingDomain,true,'grade-only campus must show missing domain notice');
+          assert.equal(found.missingDomain,false,'official domain statuses are loaded, not falsely called unconnected '+id);
+          if(id==='043901001'){
+            assert.ok(found.domainText.includes('88점')&&found.subjectText.includes('사회 86%'),
+              'Allen High uses official 2026 domain scaled and Social Studies STAAR values');
+          }
+          if(id==='057912046'){
+            assert.ok(found.domainText.includes('62점')&&found.subjectText.includes('독해 34%'),
+              'Houston Middle official 2026 exact TEA scores');
+          }
           assert.deepEqual(found.csp,[],'CSP violation detected '+JSON.stringify(found.csp));
           if(width===390)assert.ok(found.scrollWidth<=width+5,'mobile horizontal overflow '+found.scrollWidth);
           if(id===CASES[0][0]){
