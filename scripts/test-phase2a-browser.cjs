@@ -22,6 +22,7 @@ const assert=require('node:assert/strict');
   assert.equal(noaaFetches,0,'NOAA historical source must not load during the initial dashboard render');
   assert.equal(await page.locator('#lisdApartmentSection').count(),0,'Unwanted Lewisville panel reappeared');
   assert.equal(await page.locator('#cfbFeederSection').count(),0,'Unwanted CFB feeder panel reappeared');
+  await page.locator('#auxiliaryDataDetails > summary').click();
   await page.locator('#phase2HazardPanel > summary').click();
   await page.locator('#femaHazardEnabled').check();
   await page.waitForFunction(()=>document.getElementById('femaHazardStatus')?.textContent?.includes('Census tract')&&
