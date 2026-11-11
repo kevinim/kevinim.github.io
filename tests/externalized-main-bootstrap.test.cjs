@@ -90,8 +90,8 @@ function expectedPublicJs(source){
 test('pre-existing dashboard remains byte-exact except approved personal commute removals',()=>{
  assert.equal(hash(show('99cc1fca0781b4589bb8de97fa3069f428bdffbe','dashboard-main.js')),hash(expectedPublicJs(oldJs)),
   'Pre-feature main must retain exactly the reviewed privacy cleanup');
- assert.equal(hash(js),hash(show('3909de14ac3a612c5b4a460167ceda656159158d','dashboard-main.js')),
-  'New feature bootstrap must be exactly the separately reviewed and browser-tested commit');
+ assert.equal(hash(js),hash(show('708d7c0f146052dd13f5aaf0d5a123a9e2a81cab','dashboard-main.js')),
+  'Campus focus, grade badge/filter and map bootstrap must match the exact reviewed source commit');
  const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
  const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);
  assert.ok(start>40000&&end>start+70000);
