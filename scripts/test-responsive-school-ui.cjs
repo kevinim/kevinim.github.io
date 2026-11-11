@@ -31,6 +31,8 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
         const grouped=['#levels','#ratingFilter','#schoolOverlay','#historicOverlay','#referenceBoundaryOverlay'];
         return {
           styleLinks:document.querySelectorAll('link[rel="stylesheet"]').length,
+          reviewedPeimsAddonLinks:[...document.querySelectorAll('link[rel="stylesheet"]')]
+            .filter(link=>link.getAttribute('href')==='./features/tea-peims-public-share-addon.css?v=1').length,
            renderBundleLoaded:[...document.styleSheets].some(sheet=>
              sheet.href&&sheet.href.includes('/features/first-render-ui.bundle.css')&&
              sheet.cssRules.length>20),
@@ -59,7 +61,9 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
         };
       });
       assert.ok(state.schoolControls.every(x=>x.inside),'All school settings should be grouped together at '+width);
-       assert.equal(state.styleLinks,10,'Six first-paint stylesheets should become one at '+width);
+       assert.equal(state.reviewedPeimsAddonLinks,1,'Exactly one reviewed PEIMS stylesheet at '+width);
+       assert.equal(state.styleLinks-state.reviewedPeimsAddonLinks,10,
+         'Six first-paint stylesheets should remain bundled at '+width);
        assert.equal(state.renderBundleLoaded,true,'Compiled CSS must load and contain rules at '+width);
        assert.equal(state.oldSourcesLinked,false,'No original CSS link should remain at '+width);
       assert.equal(state.privacyDisclosureClosed,true,'Detailed privacy notice must be closed by default at '+width);
