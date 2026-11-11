@@ -126,6 +126,13 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
   '<link rel="stylesheet" href="./features/first-fold-ux.css?v=1"><link rel="stylesheet" href="./features/school-reference-preview.css?v=1">');
  expected=replaceOnce(expected,'<script src="./features/conditional-school-release.js?v=1"></script>',
   '<script src="./features/conditional-school-release.js?v=1"></script>\n<script src="./features/school-reference-preview.js?v=1"></script>');
+ // Performance release: the six adjacent CSS links are replaced, in-place,
+ // by their exact ordered concatenation (separately checked in bundle QA).
+ const oldCss=['theme-toggle.css','map-control-contrast.css','track-b-reference-warning.css',
+  'commute/sourced-cost.css','first-fold-ux.css','school-reference-preview.css']
+  .map(name=>'<link rel="stylesheet" href="./features/'+name+'?v=1">').join('');
+ expected=replaceOnce(expected,oldCss,
+  '<link rel="stylesheet" href="./features/first-render-ui.bundle.css?v=1">');
  assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expected.replace(/\r\n/g,'\n')),
   'No HTML drift beyond reviewed mobile first-fold + privacy disclosure anchors');
  const originalPanel=show('b1a787eb6bd877318a1275a4a29225069782ece7','index.html')

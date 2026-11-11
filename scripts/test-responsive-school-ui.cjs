@@ -30,7 +30,13 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
         };
         const grouped=['#levels','#ratingFilter','#schoolOverlay','#historicOverlay','#referenceBoundaryOverlay'];
         return {
-          viewport:innerWidth,
+          styleLinks:document.querySelectorAll('link[rel="stylesheet"]').length,
+           renderBundleLoaded:[...document.styleSheets].some(sheet=>
+             sheet.href&&sheet.href.includes('/features/first-render-ui.bundle.css')&&
+             sheet.cssRules.length>20),
+           oldSourcesLinked:[...document.querySelectorAll('link[rel="stylesheet"]')]
+             .some(link=>/(?:theme-toggle|map-control-contrast|track-b-reference-warning|sourced-cost|first-fold-ux|school-reference-preview)\.css/.test(link.href)),
+           viewport:innerWidth,
           docScroll:document.documentElement.scrollWidth,
           bodyScroll:document.body.scrollWidth,
           schoolGroup:box('#schoolSettings'),
@@ -53,6 +59,9 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
         };
       });
       assert.ok(state.schoolControls.every(x=>x.inside),'All school settings should be grouped together at '+width);
+       assert.equal(state.styleLinks,10,'Six first-paint stylesheets should become one at '+width);
+       assert.equal(state.renderBundleLoaded,true,'Compiled CSS must load and contain rules at '+width);
+       assert.equal(state.oldSourcesLinked,false,'No original CSS link should remain at '+width);
       assert.equal(state.privacyDisclosureClosed,true,'Detailed privacy notice must be closed by default at '+width);
       if(width<=720){
         assert.ok(state.homeCard&&state.mapBox&&state.officeCard&&state.filterCard,
