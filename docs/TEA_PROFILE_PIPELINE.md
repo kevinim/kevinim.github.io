@@ -28,6 +28,23 @@ A new independently source-checked 2024–25 ethnicity profile is now staged for
 
 Source-verified same-year profiles have also been staged in PR #229 for `061902140` Coyote Ridge (N=478), `061902142` Independence (N=828), and `061902143` Lewisville Elementary (N=509). All seven official race/ethnicity shares and source links are recorded under the 9-digit campus IDs in `features/carrollton-school-insights.js`; source details appear in `docs/TEA_SCHOOL_PROFILES_ROLLOUT_2026-11-11.md`. Rounding tolerance is checked without inferring any masked count. With Castle Hills, these are four newly source-reviewed 2024–25 campus profiles beyond the four previously merged. **Staged verified ethnicity: 8/2,282 (0.35%), of which 6/92 (6.52%) are in the Carrollton CFB/Lewisville priority cohort. Current official 2025–26 PEIMS ethnicity imports remain 0/2,282.** Staged progress is not production coverage before PR checks and merge.
 
+## Official 2025–26 campus counts: CFB + Lewisville, partial but source-backed (Nov 11, 2026)
+
+A verified public **TEA PEIMS Student Enrollment Reports** batch is now staged in `data/tea-ethnicity-2025-26-priority.json` for **92/92 priority cohort campuses** (CFB ISD 35, Lewisville ISD 57; each joined to the existing exact 9-digit TEA campus ID in `tea-ratings-2026.json`).
+
+Official source export settings: school year 2025–26, **Selected Campus Totals using district number**, **Ethnicity**, CSV. Direct publisher report links (only published campus aggregates; not student-level records):
+
+- CFB ISD `057903`: https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=057903&_debug=0
+- Lewisville ISD `061902`: https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=061902&_debug=0
+
+**Verified input / coverage:** 92 campuses, 644 possible group-cells (seven categories per campus), **393 exact publicly reported count cells**, **180 TEA-suppressed cells** (e.g. `<10` or `<60`), and **71 category cells not listed** by the source. **Zero campuses have seven complete published ethnicity counts.** This distinction is important: 2025–26 *campus-count coverage* is 92/92 within this priority cohort (4.03% of the 2,282-campus inventory), while *complete seven-group percentages* from 2025–26 remain **0/92**. Historical 2024–25 source-verified percentage charts for eight campuses (after PR #230 merges) remain separate, clearly labeled.
+
+This is an intentional partial-data product, not a substitute for published full ethnic percentages. UI shows publicly released 2025–26 group-level student **counts** with every masked cell marked `비공개 (<N)` and absent cell marked `원본 미표시`. It never treats a mask/omission as zero, estimates an undisclosed ethnic count, or combines the 2025–26 counts with the previous school-year denominator to claim a percentage. Never subtract reported groups from other datasets' totals to reconstruct a suppressed count. Exact ratio calculations require seven independently published categories and a same-year enrollment denominator.
+
+The dashboard loads the aggregate JSON from the same origin only when inspecting a school and never sends user-entered residence addresses to TEA. Campus ID join, source vintage, seven-category completeness, privacy masks, browser/mobile and progress checks are gated in tests. Recheck redistribution rights and public-site attribution before Production merge.
+
+**Next:** obtain and validate analogous official campus-level PEIMS 2025–26 aggregates for Allen (23), McKinney (33), and remaining DFW districts; retain suppression statuses. For complete share charts, seek separately published TEA School Report Cards/TAPR for a matching school year rather than inferring any protected data.
+
 ## Importing an official verified batch
 
 The native TEA export may use different column names by report/year. Before ingestion, inspect TEA's associated data dictionary and explicitly transpose **aggregated campus rows only** into these normalized CSV headers. Do not assume any file's column names.
