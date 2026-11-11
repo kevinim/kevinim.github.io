@@ -5,14 +5,18 @@ const report=require('../data/tea-ethnicity-2025-26-priority.json');
 const inventory=require('../tea-ratings-2026.json').data;
 const insights=require('../features/carrollton-school-insights.js');
 const KEYS=['black','hispanic','white','native','asian','pacific','multi'];
-test('official 2025-26 ethnic enrollment records match all imported DFW districts',()=>{
+test('official 2025-26 ethnic enrollment records match 38 imported DFW districts',()=>{
   const cohorts={CFB:35,LISD:57,AISD:23,'043907':33,FISD:76,PISD:69,PROSPER:32,
     '061901':46,'057912':35,'057916':51,'057905':237,
     '220905':134,'220901':74,'057909':66,'057914':51,'220908':48,'057803':45,
-    '057848':44,'061806':41,'220907':40,'057910':37,'061911':37,'220916':32};
+    '057848':44,'061806':41,'220907':40,'057910':37,'061911':37,'220916':32,
+    '220918':32,'220902':31,'129902':24,'199901':23,'220912':23,
+    '043914':22,'126902':20,'220906':20,'070912':18,'043911':16,
+    '057922':16,'091906':16,'057907':14,'070908':13,'199902':13};
   const expected=inventory.filter(r=>Object.hasOwn(cohorts,r.district));
-  assert.equal(expected.length,1343);
-  assert.equal(Object.keys(report.campuses).length,1343);
+  assert.equal(expected.length,1644);
+  assert.equal(Object.keys(report.campuses).length,1644);
+  assert.equal(Object.keys(report.sources).length,38);
   assert.equal(report.schoolYear,'2025-26');
   for(const record of expected){
     const data=report.campuses[record.id];
@@ -48,8 +52,8 @@ test('FERPA masking and source gaps never become guessed enrollment or percentag
       }
     }
   }
-  assert.deepEqual({published,suppressed,unlisted,complete},{published:5024,suppressed:2915,unlisted:1462,complete:5});
-  assert.equal(published+suppressed+unlisted,1343*7);
+  assert.deepEqual({published,suppressed,unlisted,complete},{published:6263,suppressed:3536,unlisted:1709,complete:6});
+  assert.equal(published+suppressed+unlisted,1644*7);
 });
 test('source evidence and selected-campus known values remain exact',()=>{
   assert.equal(report.sources.LISD.includes('key=061902'),true);
@@ -84,6 +88,15 @@ test('source evidence and selected-campus known values remain exact',()=>{
   assert.equal(report.campuses['220901002'].counts.asian.count,79);
   assert.equal(report.campuses['220907001'].counts.asian.count,281);
   assert.equal(report.campuses['220916001'].counts.asian.count,153);
+  assert.equal(report.campuses['220918001'].counts.asian.count,131);
+  assert.equal(report.campuses['220902001'].counts.asian.count,155);
+  assert.equal(report.campuses['129902001'].counts.asian.count,62);
+  assert.equal(report.campuses['199901001'].counts.asian.count,148);
+  assert.equal(report.campuses['043914001'].counts.asian.count,702);
+  const crowley=report.campuses['220912002'].counts;
+  assert.equal(KEYS.every(k=>crowley[k].status==='published'),true);
+  assert.equal(KEYS.reduce((n,k)=>n+crowley[k].count,0),3033);
+  assert.equal(crowley.asian.count,105);
   for(const [id,total,asian] of [
     ['061911001',2806,102],
     ['061911007',2997,261]
