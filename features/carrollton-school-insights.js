@@ -179,6 +179,16 @@
     panel.appendChild(links);
     return panel;
   }
+  function ensureStyles() {
+    // Load only on first eligible school selection, not at initial paint.
+    // Preserve the dashboard's exactly ten first-render stylesheets.
+    if(document.querySelector('link[data-tea-carrollton-css]')) return;
+    const css=document.createElement('link');
+    css.rel='stylesheet';
+    css.href='./features/carrollton-school-insights.css?v=1';
+    css.dataset.teaCarrolltonCss='1';
+    document.head.appendChild(css);
+  }
   function mount() {
     const host=document.getElementById('detailContent');
     if(!host || typeof state==='undefined') return;
@@ -191,18 +201,12 @@
     host.querySelectorAll('.tea-insights-panel').forEach(function(el){el.remove();});
     const panel=render(rating);
     if(!panel)return;
+    ensureStyles();
     const separator=host.querySelector('hr.rule');
     if(separator)separator.insertAdjacentElement('afterend',panel);
     else host.appendChild(panel);
   }
   function boot() {
-    // Non-blocking feature stylesheet; preserve baseline first-render CSS budget.
-    if(!document.querySelector('link[data-tea-carrollton-css]')){
-      const css=document.createElement('link');
-      css.rel='stylesheet';css.href='./features/carrollton-school-insights.css?v=1';
-      css.dataset.teaCarrolltonCss='1';
-      document.head.appendChild(css);
-    }
     const host=document.getElementById('detailContent');
     if(!host || typeof MutationObserver==='undefined')return;
     const observer=new MutationObserver(mount);
