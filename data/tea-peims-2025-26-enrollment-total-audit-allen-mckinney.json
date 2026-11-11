@@ -1,0 +1,1142 @@
+{
+  "schemaVersion": 1,
+  "year": "2025-26",
+  "auditDate": "2026-11-11",
+  "publisher": "Texas Education Agency",
+  "description": "Independent enrollment-total and count-sum cross-check complementing existing TEA ethnicity source PRs; seven categories are not duplicated here.",
+  "policy": "Do not infer suppressed group values or unknown group percentages. Different TEA report products may use different publication cutoffs; the cause of mismatches is not established.",
+  "summary": {
+    "campuses": 56,
+    "allen": 23,
+    "mckinney": 33,
+    "ethnicityRows": 342,
+    "ethnicitySlots": 392,
+    "exactPublishedCells": 240,
+    "suppressedCells": 102,
+    "notListedCells": 50,
+    "officialEnrollmentPublished": 55,
+    "officialEnrollmentMissing": 1,
+    "totalDisagreements": 8,
+    "allSevenGroupsPublished": 1,
+    "fullyReconciledSevenGroupProfiles": 0
+  },
+  "campuses": {
+    "043901001": {
+      "campusName": "ALLEN H S",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 7,
+        "suppressed": 0,
+        "notListed": 0,
+        "knownPublishedGroupSum": 5127
+      },
+      "officialEnrollment": 5126,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901001&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "public-group-sum-exceeds-total",
+      "allSevenGroupsPublic": true,
+      "verifiedSevenGroupShares": false
+    },
+    "043901002": {
+      "campusName": "LOWERY FRESHMAN CENTER",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 1654
+      },
+      "officialEnrollment": 1667,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901002&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901003": {
+      "campusName": "COLLIN CO J J A E P",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 0,
+        "suppressed": 3,
+        "notListed": 4,
+        "knownPublishedGroupSum": 0
+      },
+      "officialEnrollment": 3,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2025-26-school-profile",
+        "url": "https://txschools.gov/?view=school&id=043901003&lng=en"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901042": {
+      "campusName": "W E PETE FORD MIDDLE",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 709
+      },
+      "officialEnrollment": 713,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901042&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901043": {
+      "campusName": "WALTER & LOIS CURTIS MIDDLE",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 1306
+      },
+      "officialEnrollment": 1318,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901043&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901044": {
+      "campusName": "ERECKSON MIDDLE",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 1189
+      },
+      "officialEnrollment": 1201,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901044&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901102": {
+      "campusName": "ALTON BOYD EL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 3,
+        "notListed": 0,
+        "knownPublishedGroupSum": 359
+      },
+      "officialEnrollment": 391,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901102&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901104": {
+      "campusName": "GENE M REED EL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 404
+      },
+      "officialEnrollment": 437,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901104&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901105": {
+      "campusName": "ALVIS C STORY EL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 444
+      },
+      "officialEnrollment": 485,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901105&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901106": {
+      "campusName": "MAX O VAUGHAN EL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 638
+      },
+      "officialEnrollment": 642,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901106&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901107": {
+      "campusName": "FLOSSIE FLOYD GREEN EL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 467
+      },
+      "officialEnrollment": 508,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901107&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901108": {
+      "campusName": "FRANCES E NORTON EL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 547
+      },
+      "officialEnrollment": 592,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901108&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901110": {
+      "campusName": "BOLIN EL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 539
+      },
+      "officialEnrollment": 542,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901110&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901111": {
+      "campusName": "KERR EL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 611
+      },
+      "officialEnrollment": 612,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901111&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901112": {
+      "campusName": "JAMES AND MARGIE MARION EL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 644
+      },
+      "officialEnrollment": 651,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901112&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901113": {
+      "campusName": "DR E T BOON EL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 722
+      },
+      "officialEnrollment": 764,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901113&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901114": {
+      "campusName": "CARLENA CHANDLER EL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 655
+      },
+      "officialEnrollment": 685,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901114&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901115": {
+      "campusName": "MARY EVANS EL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 515
+      },
+      "officialEnrollment": 560,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901115&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901116": {
+      "campusName": "DAVID AND LYNDA OLSON EL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 672
+      },
+      "officialEnrollment": 674,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901116&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901117": {
+      "campusName": "BEVERLY CHEATHAM EL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 6,
+        "suppressed": 0,
+        "notListed": 1,
+        "knownPublishedGroupSum": 696
+      },
+      "officialEnrollment": 696,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901117&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "known-sum-equals-total-with-masked-cells",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901118": {
+      "campusName": "LOIS LINDSEY EL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 770
+      },
+      "officialEnrollment": 780,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901118&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901119": {
+      "campusName": "JENNY PRESTON EL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 640
+      },
+      "officialEnrollment": 647,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043901119&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043901201": {
+      "campusName": "GEORGE J ANDERSON EARLY CHILDHOOD SCHOOL",
+      "districtId": "043901",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 389
+      },
+      "officialEnrollment": 398,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2025-26-school-profile",
+        "url": "https://txschools.gov/?view=school&id=043901201&lng=en"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907002": {
+      "campusName": "MCKINNEY H S",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 2511
+      },
+      "officialEnrollment": 2521,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907002&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907004": {
+      "campusName": "MCKINNEY NORTH H S",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 2540
+      },
+      "officialEnrollment": 2512,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907004&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "public-group-sum-exceeds-total",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907005": {
+      "campusName": "SERENITY HIGH",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 0,
+        "suppressed": 2,
+        "notListed": 5,
+        "knownPublishedGroupSum": 0
+      },
+      "officialEnrollment": 3,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2025-26-school-profile",
+        "url": "https://txschools.gov/?view=school&id=043907005&lng=en"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907006": {
+      "campusName": "COUNTY RESIDENTIAL CENTER",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 1,
+        "suppressed": 4,
+        "notListed": 2,
+        "knownPublishedGroupSum": 31
+      },
+      "officialEnrollment": null,
+      "officialEnrollmentEvidence": null,
+      "reconciliationStatus": "total-unavailable",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907007": {
+      "campusName": "MCKINNEY BOYD H S",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 2586
+      },
+      "officialEnrollment": 2592,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907007&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907041": {
+      "campusName": "FAUBION MIDDLE",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 1098
+      },
+      "officialEnrollment": 1100,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907041&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907043": {
+      "campusName": "DOWELL MIDDLE",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 929
+      },
+      "officialEnrollment": 975,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907043&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907044": {
+      "campusName": "SCOTT MORGAN JOHNSON MIDDLE",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 1298
+      },
+      "officialEnrollment": 1306,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907044&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907045": {
+      "campusName": "LEONARD EVANS JR MIDDLE",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 727
+      },
+      "officialEnrollment": 731,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907045&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907046": {
+      "campusName": "DR JACK COCKRILL MIDDLE",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 1102
+      },
+      "officialEnrollment": 1172,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907046&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907102": {
+      "campusName": "FINCH EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 314
+      },
+      "officialEnrollment": 319,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907102&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907104": {
+      "campusName": "WEBB EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 519
+      },
+      "officialEnrollment": 522,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907104&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907105": {
+      "campusName": "BURKS EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 401
+      },
+      "officialEnrollment": 382,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907105&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "public-group-sum-exceeds-total",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907107": {
+      "campusName": "CALDWELL EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 3,
+        "suppressed": 2,
+        "notListed": 2,
+        "knownPublishedGroupSum": 432
+      },
+      "officialEnrollment": 443,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907107&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907108": {
+      "campusName": "VALLEY CREEK EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 500
+      },
+      "officialEnrollment": 524,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907108&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907109": {
+      "campusName": "GLEN OAKS EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 0,
+        "notListed": 2,
+        "knownPublishedGroupSum": 474
+      },
+      "officialEnrollment": 472,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907109&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "public-group-sum-exceeds-total",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907111": {
+      "campusName": "SLAUGHTER EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 519
+      },
+      "officialEnrollment": 564,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907111&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907112": {
+      "campusName": "REUBEN JOHNSON EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 340
+      },
+      "officialEnrollment": 360,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907112&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907113": {
+      "campusName": "C T EDDINS EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 381
+      },
+      "officialEnrollment": 382,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907113&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907115": {
+      "campusName": "ROY LEE WALKER EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 366
+      },
+      "officialEnrollment": 387,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907115&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907116": {
+      "campusName": "EARL & LOTTIE WOLFORD EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 0,
+        "notListed": 2,
+        "knownPublishedGroupSum": 422
+      },
+      "officialEnrollment": 419,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907116&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "public-group-sum-exceeds-total",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907117": {
+      "campusName": "ARTHUR H MCNEIL EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 285
+      },
+      "officialEnrollment": 301,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907117&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907118": {
+      "campusName": "ALBERT & IOLA LEE DAVIS MALVERN EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 419
+      },
+      "officialEnrollment": 430,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907118&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907119": {
+      "campusName": "JOSE DE JESUS AND MARIA LUISA VEGA EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 0,
+        "notListed": 2,
+        "knownPublishedGroupSum": 467
+      },
+      "officialEnrollment": 467,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907119&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "known-sum-equals-total-with-masked-cells",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907120": {
+      "campusName": "DEAN AND MILDRED BENNETT EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 381
+      },
+      "officialEnrollment": 403,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907120&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907121": {
+      "campusName": "GARY AND BOBBYE JACK MINSHEW EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 407
+      },
+      "officialEnrollment": 445,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907121&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907122": {
+      "campusName": "J B WILMETH EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 0,
+        "notListed": 2,
+        "knownPublishedGroupSum": 441
+      },
+      "officialEnrollment": 440,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907122&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "public-group-sum-exceeds-total",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907123": {
+      "campusName": "JESSE MCGOWEN EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 4,
+        "suppressed": 2,
+        "notListed": 1,
+        "knownPublishedGroupSum": 508
+      },
+      "officialEnrollment": 562,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907123&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907124": {
+      "campusName": "NAOMI PRESS EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 732
+      },
+      "officialEnrollment": 733,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907124&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907125": {
+      "campusName": "HERMAN LAWSON EARLY CHILDHOOD SCHOOL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 559
+      },
+      "officialEnrollment": 505,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2025-26-school-profile",
+        "url": "https://txschools.gov/?view=school&id=043907125&lng=en"
+      },
+      "reconciliationStatus": "public-group-sum-exceeds-total",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907126": {
+      "campusName": "LIZZIE NELL CUNDIFF MCCLURE EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 2,
+        "notListed": 0,
+        "knownPublishedGroupSum": 773
+      },
+      "officialEnrollment": 781,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907126&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907127": {
+      "campusName": "RUTH AND HAROLD FRAZIER EL",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 5,
+        "suppressed": 0,
+        "notListed": 2,
+        "knownPublishedGroupSum": 809
+      },
+      "officialEnrollment": 807,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2026-campus-comparison-group",
+        "url": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=perfrept.perfmast.sas&ccyy=2026&id=043907127&lev=C&prgopt=reports/acct/comparison_group.sas"
+      },
+      "reconciliationStatus": "public-group-sum-exceeds-total",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    },
+    "043907197": {
+      "campusName": "J J A E P",
+      "districtId": "043907",
+      "schoolYear": "2025-26",
+      "ethnicitySourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+      "publishedCellSummary": {
+        "exactPublished": 0,
+        "suppressed": 2,
+        "notListed": 5,
+        "knownPublishedGroupSum": 0
+      },
+      "officialEnrollment": 6,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2025-26-school-profile",
+        "url": "https://txschools.gov/?view=school&id=043907197&lng=en"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
+      "allSevenGroupsPublic": false,
+      "verifiedSevenGroupShares": false
+    }
+  }
+}
