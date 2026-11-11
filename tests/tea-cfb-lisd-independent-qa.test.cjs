@@ -6,6 +6,8 @@ const path=require('node:path');
 const inventory=require('../tea-ratings-2026.json').data;
 const ledger=require('../data/tea-cfb-lisd-campus-qa-ledger-2026.json');
 const academic=require('../data/tea-cfb-lisd-academic-2026-verified-batch01.json');
+const academic2=require('../data/tea-cfb-lisd-academic-2026-verified-batch02.json');
+const allAcademic={...academic.campuses,...academic2.campuses};
 const listing=require('../data/tea-cfb-lisd-2026-official-campus-listing-92.json');
 const TARGET=new Set(['CFB','LISD']);
 const RACES=['black','hispanic','white','native','asian','pacific','multi'];
@@ -72,22 +74,25 @@ test('official 2026 district campus listings cover all 92 IDs with 87 published 
  check('061902144',51,66,52,69);
  check('061902141',null,null,null,null);
 });
-test('6 independently verified full 2026 academic records, 81 partial, 5 source-unavailable, 3 new analyses',()=>{
+test('9 independently verified full 2026 academic records, 78 partial, 5 source-unavailable, 6 new analyses',()=>{
  const d=ledger.summary;
  assert.equal(d.accountabilityRated,88);
  assert.equal(d.accountabilityNotRated,4);
  assert.equal(d.withOfficial2026AchievementAndGaps,87);
- assert.equal(d.withOfficial2026PartiallyCheckedDomains,81);
- assert.equal(d.withOfficial2026FullDomainAndSTAAR,6);
+ assert.equal(d.withOfficial2026PartiallyCheckedDomains,78);
+ assert.equal(d.withOfficial2026FullDomainAndSTAAR,9);
  assert.equal(d.withNoPublished2026Domains,5);
- assert.equal(d.independentlyVerified2026AcademicDomains,6);
- assert.equal(d.independentlyVerified2026STAARSubjects,6);
- assert.equal(d.newlyWrittenMetricBasedNarratives,3);
+ assert.equal(d.independentlyVerified2026AcademicDomains,9);
+ assert.equal(d.independentlyVerified2026STAARSubjects,9);
+ assert.equal(d.newlyWrittenMetricBasedNarratives,6);
  assert.equal(d.fullyVerifiedAcademicAndDemographicCampuses,0);
  assert.equal(academic.accountabilityYear,2026);
  assert.equal(academic.summary.CFB,1);
  assert.equal(academic.summary.LISD,5);
  assert.equal(academic.summary.newIndependentMetricAnalyses,3);
+ assert.equal(academic2.summary.newIndependentMetricAnalyses,3);
+ assert.equal(academic2.summary.newFullAcademicCampuses,3);
+ assert.deepEqual(Object.keys(academic2.campuses).sort(),['057903120','061902136','061902145']);
  assert.deepEqual(Object.keys(academic.campuses).sort(),['057903122','061902047','061902118','061902134','061902140','061902142']);
  let valid=0,partial=0,missing=0,narratives=0;
  for(const [id,campus] of Object.entries(ledger.campuses)){
@@ -95,7 +100,7 @@ test('6 independently verified full 2026 academic records, 81 partial, 5 source-
   assert.deepEqual(Object.keys(campus.academic2026.domainAndSubjectScores).sort(),ACADEMIC.slice().sort());
   const fields=campus.academic2026.domainAndSubjectScores;
   const listed=listing.campuses[id].publishedCategoryValues;
-  const full=academic.campuses[id];
+  const full=allAcademic[id];
   if(full){
    valid++;
    assert.equal(campus.academic2026.status,'independently-verified-official-2026-report');
@@ -124,7 +129,7 @@ test('6 independently verified full 2026 academic records, 81 partial, 5 source-
    assert.equal(campus.academic2026.analysisGenerated,false);
   }
  }
- assert.deepEqual({valid,partial,missing,narratives},{valid:6,partial:81,missing:5,narratives:3});
+ assert.deepEqual({valid,partial,missing,narratives},{valid:9,partial:78,missing:5,narratives:6});
 });
 test('official all-student subject counts and published percentages reconcile, no masking or PII inferred',()=>{
  const d=academic.campuses;
@@ -164,6 +169,35 @@ test('official all-student subject counts and published percentages reconcile, n
  assert.deepEqual(narratives.map(([id])=>id).sort(),['061902047','061902134','061902142']);
  for(const [id,v] of narratives){assert.equal(v.existingCuratedNarrative,false);assert.equal(v.newMetricAnalysis.causalExplanation,false);}
  assert.equal(/\\b(?:student_id|first_name|last_name|date_of_birth)\\b/i.test(JSON.stringify(academic)),false);
+});
+test('independent batch 02 preserves three additional 2026 TEA summary and STAAR test counts',()=>{
+ const expected={
+  '057903120':{overall:93,domains:[94,92,92],reading:[181,151,83],math:[182,136,75],science:[62,49,79]},
+  '061902136':{overall:93,domains:[94,89,92],reading:[327,268,82],math:[327,259,79],science:[93,52,56]},
+  '061902145':{overall:90,domains:[92,91,84],reading:[300,249,83],math:[300,202,67],science:[90,50,56]}
+ };
+ assert.equal(academic2.accountabilityYear,2026);
+ assert.deepEqual(Object.keys(academic2.campuses).sort(),Object.keys(expected).sort());
+ assert.equal(new Set([...Object.keys(academic.campuses),...Object.keys(academic2.campuses)]).size,9);
+ for(const [id,actual] of Object.entries(academic2.campuses)){
+  const x=expected[id];assert.equal(actual.overallRatingScore,x.overall);
+  assert.deepEqual(Object.values(actual.domainsScaledScores),x.domains);
+  assert.equal(actual.existingCuratedNarrative,false);
+  assert.equal(actual.newMetricAnalysis.causalExplanation,false);
+  assert.equal(actual.accountabilityYear,2026);
+  for(const url of [actual.officialSummaryReport,actual.officialSTAARReport]){
+    assert.ok(validTEA(url));assert.equal(new URL(url).searchParams.get('id'),id);
+    assert.equal(new URL(url).searchParams.get('ccyy'),'2026');
+  }
+  for(const k of ['reading','math','science']){
+    const metric=actual.subjectsMeetsGradeLevel[k];
+    assert.deepEqual([metric.totalTests,metric.meetsTests,metric.meetsPercentReported],x[k]);
+    assert.equal(Math.round(metric.meetsTests/metric.totalTests*100),metric.meetsPercentReported);
+  }
+  assert.equal(actual.subjectsMeetsGradeLevel.socialStudies.status,'not-applicable');
+  assert.equal(actual.subjectsMeetsGradeLevel.socialStudies.meetsPercentReported,null);
+  assert.equal(ledger.campuses[id].academic2026.sourceEvidenceFile,'data/tea-cfb-lisd-academic-2026-verified-batch02.json');
+ }
 });
 test('PR #232 campus joins were audited without republishing or guessing protected counts',()=>{
  const totals={published:0,suppressed:0,unlisted:0};let matched=0,complete=0;
