@@ -6,12 +6,19 @@
 .tea-public-share-warning{font-size:11.5px;line-height:1.6;color:#5a3410;background:#fff4da;border-left:3px solid #d08a0e;padding:8px 10px;margin:10px 0;border-radius:3px}
 .tea-public-share-stack{display:flex;width:100%;height:18px;overflow:hidden;border-radius:5px;background:#cbd5e1;margin:10px 0}
 .tea-public-share-segment{display:block;height:100%;flex:0 0 auto;min-width:0;border-right:1px solid rgba(0,0,0,.2)}
-.tea-public-share-legend{list-style:none;margin:10px 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px}
-.tea-public-share-legend li{font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:baseline;overflow-wrap:anywhere}
+.tea-public-share-legend{list-style:none;margin:8px 0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:6px;max-width:600px}
+.tea-public-share-legend li{font-size:11.5px;line-height:1.5;display:flex;gap:7px;align-items:center;overflow-wrap:anywhere;min-width:0}
+.tea-public-share-ranking-label{font-size:11px;font-weight:700;color:#374c63;margin:9px 0 4px}
+.tea-public-share-rank,.tea-public-share-rank-muted{display:inline-flex;flex:0 0 22px;width:22px;justify-content:center;align-items:center;border-radius:4px;font-weight:800;min-height:20px}
+.tea-public-share-rank{background:#dbeafe;color:#123e71}
+.tea-public-share-rank-muted{color:#6b7280}
 .tea-public-share-dot{display:inline-block;vertical-align:middle;flex:0 0 10px;width:10px;height:10px;border-radius:3px}
 .tea-public-share-footnote{font-size:10.5px;color:#5a6270;line-height:1.6;margin:9px 0 0}
 html[data-theme="dark"] .tea-public-share-addon{border-color:#557698;background:#162b43;color:#eff7ff}
 html[data-theme="dark"] .tea-public-share-warning{color:#fbe5b1;background:#332b1d;border-left-color:#f3b64b}
 html[data-theme="dark"] .tea-public-share-footnote{color:#bdcbdc}
+html[data-theme="dark"] .tea-public-share-ranking-label{color:#c7d8e9}
+html[data-theme="dark"] .tea-public-share-rank{background:#214566;color:#e5f2ff}
+html[data-theme="dark"] .tea-public-share-rank-muted{color:#a3b2c6}
 @media(max-width:500px){.tea-public-share-addon{padding:10px}.tea-public-share-legend{grid-template-columns:1fr}.tea-public-share-warning{font-size:11px}}
 @media(forced-colors:active){.tea-public-share-addon,.tea-public-share-warning{border:1px solid CanvasText;background:Canvas;color:CanvasText}}
