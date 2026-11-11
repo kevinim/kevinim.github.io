@@ -33,7 +33,10 @@ const CASES=[
   ['220916001','Bell High School'],
   ['220912002','North Crowley High School'],
   ['043914001','Wylie High School'],
-  ['220918001','Boswell High School']
+  ['220918001','Boswell High School'],
+  ['057904001','Cedar Hill High School'],
+  ['061914001','Little Elm High School'],
+  ['184907001','Aledo High School']
 ];
 fs.mkdirSync(ARTIFACTS,{recursive:true});
 (async()=>{
@@ -60,6 +63,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
         assert.ok(progressText.includes('18 / 2,282'),'curated analysis still only 18, not implied complete');
         assert.ok(progressText.includes('8 / 2,282'),'verified ethnicity must not be overstated');
         assert.ok(progressText.includes(PUBLISHED_IDS.size.toLocaleString('en-US')+' / 2,282'),'2025–26 partial enrollment count coverage must be explicit');
+        assert.ok(progressText.includes('6 / 2,282'),'exactly six 2025–26 campus seven-category shares are published');
         await coverage.locator('summary').click();
         assert.equal(await coverage.evaluate(el=>el.open),false,'progress notes collapsed by default again');
         const results=[];
@@ -176,6 +180,12 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           }
           if(id==='043914001')assert.ok(found.peimsText.includes('702명'),'Wylie High source Asian count');
           if(id==='220918001')assert.ok(found.peimsText.includes('131명'),'Boswell High source Asian count');
+          if(id==='057904001'){
+            assert.ok(found.peimsText.includes('15명'),'Cedar Hill HS statewide Asian count');
+            assert.ok(found.link.some(x=>x.url.includes('selsumm=sc')),'statewide TEA provenance directly linked');
+          }
+          if(id==='061914001')assert.ok(found.peimsText.includes('106명'),'Little Elm statewide Asian count');
+          if(id==='184907001')assert.ok(found.peimsText.includes('비공개 (<20)'),'Aledo source Asian count stays masked');
           if(id==='043901105')assert.ok(found.peimsText.includes('비공개'),'suppressed Asian count remains hidden');
           if(!reviewed)assert.equal(found.missingDomain,true,'grade-only campus must show missing domain notice');
           assert.deepEqual(found.csp,[],'CSP violation detected '+JSON.stringify(found.csp));
