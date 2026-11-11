@@ -59,10 +59,16 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/school-zone-ui-browser-tmp/node_modules
         run: node scripts/test-school-zone-fallback-browser.cjs
+      - name: Browser QA for Carrollton TEA insight charts and school card selections
+        env:
+          NODE_PATH: ${{ github.workspace }}/school-zone-ui-browser-tmp/node_modules
+        run: node scripts/test-carrollton-tea-insights-browser.cjs
       - name: Preserve campus-only QA evidence and screenshots
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: school-zone-ui-browser-samples
-          path: artifacts/school-zone-fallback/
+          path: |
+            artifacts/school-zone-fallback/
+            artifacts/carrollton-tea-insights/
           if-no-files-found: warn
