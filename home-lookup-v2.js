@@ -196,13 +196,21 @@ function renderHome(){
   const rawSchoolCandidate=schoolAssignmentFor(home);
   home.assignment=window.ConditionalSchoolRelease?.apply(rawSchoolCandidate)||
     {status:'conditional-finder-only',releaseScope:'informational-only'};
+  // Reference-only research is separately opt-in, cannot set home.assignment,
+  // cannot provide polygons/highlights, and is hidden if release policy is missing.
+  const referencePlan=window.ConditionalSchoolRelease&&window.SchoolReferencePreview?.plan(
+    rawSchoolCandidate,DISTRICT_REGISTRY,window.TrustedLinkPolicy?.official);
+  const referenceControl=referencePlan?.kind==='reference-only'
+   ?'<div class="home-reference-control"><button id="homeReferencePreviewToggle" class="mini-btn" type="button" aria-controls="homeReferencePreviewResult" aria-expanded="'+(home.referencePreviewRequested?'true':'false')+'">GIS 참고 후보 직접 보기 · 실제 배정 미인증</button><div id="homeReferencePreviewResult" role="status" aria-live="polite"></div></div>'
+   :'';
+
   const schoolText=['conditional-finder-only','unavailable'].includes(home.assignment.status)?'<b>학교 자동 배정 미인증 · 공식 Finder 확인 필요</b>':assignmentHtml(home.assignment);
   const official=compactHomeFinderHtml(home.address,rawSchoolCandidate);
   const office=el('destination').value.trim();
   const parcel=home.parcel||{status:'idle'};
   const message=parcel.status==='idle'?'별도 필지 주소 대조를 실행할 수 있습니다.':parcel.status==='checking'?'Collin CAD 필지 확인 중…':parcel.reason||'필지 확인 불가';
   const parcelPanel='<div class="small-note" style="margin-top:10px"><b>Collin CAD 필지 주소 대조 (학교 배정과 별개)</b><div class="source" role="status">'+escape(message)+(parcel.parcelAddress?' · 조회된 필지: '+escape(parcel.parcelAddress):'')+'</div><button class="mini-btn" type="button" id="parcelCheck"'+(parcel.status==='checking'?' disabled':'')+'>필지 주소 대조</button><div class="source">버튼을 누르면 집 핀의 좌표를 Collin CAD에 전송합니다. 필지 일치가 초·중·고 배정을 의미하지 않습니다.</div></div>';
-  el('homeSchoolInfo').innerHTML='<hr class="rule"><h2>주소별 학교 확인</h2><div class="source">'+escape(home.address)+'</div><p>'+schoolText+'</p>'+official+
+  el('homeSchoolInfo').innerHTML='<hr class="rule"><h2>주소별 학교 확인</h2><div class="source">'+escape(home.address)+'</div><p>'+schoolText+'</p>'+official+referenceControl+
    '<details id="homeAdvancedSchoolTools" style="margin-top:12px"><summary>추가 검증 도구</summary>'+
    '<div id="homeMapAssignmentStatus" class="small-note home-map-assignment-status" role="status" aria-live="polite"></div>'+parcelPanel+officialReviewPanelHtml(home)+'</details>';
   // Preserve optional controls without exposing a large panel in the collapsed view.
@@ -214,6 +222,21 @@ function renderHome(){
    advanced.addEventListener('toggle',syncAdvanced);syncAdvanced();
   }
   wireCompactHomeFinder();
+  const referenceButton=el('homeReferencePreviewToggle');
+  const referenceTarget=el('homeReferencePreviewResult');
+  if(referenceButton&&referenceTarget){
+   const showReference=()=>{
+    if(!home?.referencePreviewRequested)return;
+    window.SchoolReferencePreview.render(referenceTarget,referencePlan);
+    referenceButton.setAttribute('aria-expanded','true');
+   };
+   referenceButton.addEventListener('click',()=>{
+    if(!home||home.referencePreviewRequested)return;
+    home.referencePreviewRequested=true;
+    showReference();
+   });
+   showReference();
+  }
   wireOfficialReviewPanel(home);
   const parcelButton=el('parcelCheck');if(parcelButton)parcelButton.onclick=checkHomeParcel;
   el('homeResult').innerHTML=office?'<div class="home-actions"><button type="button" class="mini-btn" id="homeRoute">집에서 운전시간 계산</button> <a class="cardlink" href="'+escape(homeDirections(false))+'" target="_blank" rel="noopener">집 → 회사 Google ↗</a> <a class="cardlink" href="'+escape(homeDirections(true))+'" target="_blank" rel="noopener">회사 → 집 ↗</a><div id="homeRouteStatus" class="source" role="status">집 주소 기준 · 교통량 미반영</div></div>':'목적지를 입력하세요.';

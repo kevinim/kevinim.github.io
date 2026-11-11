@@ -21,6 +21,6 @@ test('AG01-05 source evidence, isolation and original Allen modules survive',()=
  const bridge=load('features/cfb-official-bridge.js');
  assert.match(bridge,/CFBZoneOverlay\?\.showForSchool/);
  assert.match(bridge,/CFBZoneOverlay\?\.reset/);
- for(const p of ['./allen-lookup.js?v=5','./school-assignment.js?v=6','./features/conditional-school-release.js?v=1','./home-lookup-v2.js?v=17'])assert.equal(count(p),1,p);
+ for(const p of ['./allen-lookup.js?v=5','./school-assignment.js?v=6','./features/conditional-school-release.js?v=1','./home-lookup-v2.js?v=18'])assert.equal(count(p),1,p);
  assert.match(html,/frame-src https:\/\/app\.guidek12\.com/);
 });
