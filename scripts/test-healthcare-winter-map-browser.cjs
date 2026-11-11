@@ -31,6 +31,18 @@ mkdirSync(folder,{recursive:true});
     await page.locator('.hospital-map-pin').first().click();
     await page.waitForSelector('.healthcare-popup',{timeout:15000});
     assert.ok((await page.locator('.healthcare-popup').innerText()).includes('CMS 응급서비스'));
+    await page.locator('#hospitalCity').selectOption('__nearby__');
+    await page.waitForFunction(()=>document.querySelectorAll('#hospitalList .extra-hospital').length===8 &&
+      document.querySelector('#hospitalList')?.textContent?.includes('직선거리 순'),null,{timeout:45000});
+    const nearby=await page.locator('#hospitalList').innerText();
+    assert.match(nearby,/직선거리 약/);
+    assert.match(nearby,/ZIP 대표점 기준/);
+    assert.match(nearby,/실제 운전시간/);
+    assert.equal(await page.locator('#hospitalList .extra-hospital').count(),8);
+    const allMapped=await page.locator('.hospital-map-pin').count();
+    assert.ok(allMapped>smaller&&allMapped<=83,'nearby list must not accidentally hide city-independent map coverage');
+    await page.locator('#hospitalCity').selectOption('PLANO');
+    assert.equal(await page.locator('.hospital-map-pin').count(),smaller,'city mode must restore prior hospital map filter');
     await page.locator('#healthcareMapQuickToggle').click();
     assert.equal(await page.locator('.hospital-map-pin').count(),0);
     await page.locator('#winterMapQuickToggle').click();
