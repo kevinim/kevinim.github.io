@@ -663,6 +663,182 @@
         "science": 65,
         "socialStudies": 44
       }
+    },
+    "043907046": {
+      "year": 2026,
+      "summary": {
+        "status": "official-report",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907046&lev=C&prgopt=reports/acct/summary.sas",
+        "rating": "A",
+        "score": 92,
+        "studentAchievement": 92,
+        "schoolProgress": 87,
+        "closingTheGaps": 92,
+        "closingTheGapsUnscaledComponent": 78
+      },
+      "staar": {
+        "status": "official-report",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907046&lev=C&prgopt=reports/acct/domain1a.sas",
+        "metric": "All Students — percent of tests at Meets Grade Level standard or above",
+        "reading": 73,
+        "math": 68,
+        "science": 76,
+        "socialStudies": 53
+      }
+    },
+    "043907102": {
+      "year": 2026,
+      "summary": {
+        "status": "official-report",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907102&lev=C&prgopt=reports/acct/summary.sas",
+        "rating": "D",
+        "score": 66,
+        "studentAchievement": 59,
+        "schoolProgress": 65,
+        "closingTheGaps": 68,
+        "closingTheGapsUnscaledComponent": 30
+      },
+      "staar": {
+        "status": "official-report",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907102&lev=C&prgopt=reports/acct/domain1a.sas",
+        "metric": "All Students — percent of tests at Meets Grade Level standard or above",
+        "reading": 41,
+        "math": 22,
+        "science": 26,
+        "socialStudies": null
+      }
+    },
+    "043907104": {
+      "year": 2026,
+      "summary": {
+        "status": "official-report",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907104&lev=C&prgopt=reports/acct/summary.sas",
+        "rating": "F",
+        "score": 57,
+        "studentAchievement": 60,
+        "schoolProgress": 57,
+        "closingTheGaps": 51,
+        "closingTheGapsUnscaledComponent": 8
+      },
+      "staar": {
+        "status": "official-report",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907104&lev=C&prgopt=reports/acct/domain1a.sas",
+        "metric": "All Students — percent of tests at Meets Grade Level standard or above",
+        "reading": 41,
+        "math": 28,
+        "science": 22,
+        "socialStudies": null
+      }
+    },
+    "043907105": {
+      "year": 2026,
+      "summary": {
+        "status": "official-report",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907105&lev=C&prgopt=reports/acct/summary.sas",
+        "rating": "C",
+        "score": 75,
+        "studentAchievement": 71,
+        "schoolProgress": 76,
+        "closingTheGaps": 71,
+        "closingTheGapsUnscaledComponent": 36
+      },
+      "staar": {
+        "status": "official-report",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907105&lev=C&prgopt=reports/acct/domain1a.sas",
+        "metric": "All Students — percent of tests at Meets Grade Level standard or above",
+        "reading": 56,
+        "math": 34,
+        "science": 11,
+        "socialStudies": null
+      }
+    },
+    "043907107": {
+      "year": 2026,
+      "summary": {
+        "status": "official-report",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907107&lev=C&prgopt=reports/acct/summary.sas",
+        "rating": "D",
+        "score": 69,
+        "studentAchievement": 65,
+        "schoolProgress": 71,
+        "closingTheGaps": 69,
+        "closingTheGapsUnscaledComponent": 31
+      },
+      "staar": {
+        "status": "official-report",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907107&lev=C&prgopt=reports/acct/domain1a.sas",
+        "metric": "All Students — percent of tests at Meets Grade Level standard or above",
+        "reading": 46,
+        "math": 35,
+        "science": 12,
+        "socialStudies": null
+      }
+    },
+    "043907108": {
+      "year": 2026,
+      "summary": {
+        "status": "official-report",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907108&lev=C&prgopt=reports/acct/summary.sas",
+        "rating": "B",
+        "score": 80,
+        "studentAchievement": 82,
+        "schoolProgress": 73,
+        "closingTheGaps": 76,
+        "closingTheGapsUnscaledComponent": 50
+      },
+      "staar": {
+        "status": "official-report",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907108&lev=C&prgopt=reports/acct/domain1a.sas",
+        "metric": "All Students — percent of tests at Meets Grade Level standard or above",
+        "reading": 63,
+        "math": 52,
+        "science": 45,
+        "socialStudies": null
+      }
+    },
+    "043907109": {
+      "year": 2026,
+      "summary": {
+        "status": "official-report",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907109&lev=C&prgopt=reports/acct/summary.sas",
+        "rating": "B",
+        "score": 89,
+        "studentAchievement": 92,
+        "schoolProgress": 86,
+        "closingTheGaps": 82,
+        "closingTheGapsUnscaledComponent": 63
+      },
+      "staar": {
+        "status": "official-report",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907109&lev=C&prgopt=reports/acct/domain1a.sas",
+        "metric": "All Students — percent of tests at Meets Grade Level standard or above",
+        "reading": 81,
+        "math": 63,
+        "science": 55,
+        "socialStudies": null
+      }
+    },
+    "043907111": {
+      "year": 2026,
+      "summary": {
+        "status": "official-report",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907111&lev=C&prgopt=reports/acct/summary.sas",
+        "rating": "C",
+        "score": 73,
+        "studentAchievement": 75,
+        "schoolProgress": 70,
+        "closingTheGaps": 68,
+        "closingTheGapsUnscaledComponent": 30
+      },
+      "staar": {
+        "status": "official-report",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907111&lev=C&prgopt=reports/acct/domain1a.sas",
+        "metric": "All Students — percent of tests at Meets Grade Level standard or above",
+        "reading": 51,
+        "math": 49,
+        "science": 38,
+        "socialStudies": null
+      }
     }
   }
 }
