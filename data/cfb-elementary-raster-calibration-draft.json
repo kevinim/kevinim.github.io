@@ -1,0 +1,222 @@
+{
+  "schemaVersion": 1,
+  "district": "CFB",
+  "level": "elementary",
+  "sourceSchoolYear": "2025-26",
+  "rasterManifest": "./data/cfb-approved-zone-raster-reference-2026.json",
+  "rasterPixelSize": [
+    505,
+    609
+  ],
+  "georefMethod": "draft_affine_control_points_screenshot_estimates",
+  "provenance": "Rough pixel coordinates read from official public school zone image, paired with school building NCES 2024-25 point coordinates keyed by TEA campus ID. Not authoritative attendance zone data.",
+  "controlPoints": [
+    {
+      "school": "ROSEMEADE EL",
+      "campusId": "057903118",
+      "pixel": [
+        273,
+        53
+      ],
+      "latlon": [
+        33.007375,
+        -96.905648
+      ],
+      "pixelConfidence": "rough-visual",
+      "campusLocationYear": "2024-25"
+    },
+    {
+      "school": "DAVIS EL",
+      "campusId": "057903113",
+      "pixel": [
+        331,
+        56
+      ],
+      "latlon": [
+        33.005598,
+        -96.890381
+      ],
+      "pixelConfidence": "rough-visual",
+      "campusLocationYear": "2024-25"
+    },
+    {
+      "school": "SHEFFIELD EL",
+      "campusId": "057903125",
+      "pixel": [
+        408,
+        78
+      ],
+      "latlon": [
+        33.001567,
+        -96.863576
+      ],
+      "pixelConfidence": "rough-visual",
+      "campusLocationYear": "2024-25"
+    },
+    {
+      "school": "MCWHORTER EL",
+      "campusId": "057903129",
+      "pixel": [
+        469,
+        90
+      ],
+      "latlon": [
+        33.000162,
+        -96.850451
+      ],
+      "pixelConfidence": "rough-visual",
+      "campusLocationYear": "2024-25"
+    },
+    {
+      "school": "KENT EL",
+      "campusId": "057903122",
+      "pixel": [
+        220,
+        120
+      ],
+      "latlon": [
+        32.999456,
+        -96.921438
+      ],
+      "pixelConfidence": "rough-visual",
+      "campusLocationYear": "2024-25"
+    },
+    {
+      "school": "RAINWATER EL",
+      "campusId": "057903126",
+      "pixel": [
+        284,
+        105
+      ],
+      "latlon": [
+        32.997971,
+        -96.905261
+      ],
+      "pixelConfidence": "rough-visual",
+      "campusLocationYear": "2024-25"
+    },
+    {
+      "school": "THOMPSON EL",
+      "campusId": "057903111",
+      "pixel": [
+        355,
+        115
+      ],
+      "latlon": [
+        32.99517,
+        -96.880269
+      ],
+      "pixelConfidence": "rough-visual",
+      "campusLocationYear": "2024-25"
+    },
+    {
+      "school": "BLANTON EL",
+      "campusId": "057903110",
+      "pixel": [
+        343,
+        158
+      ],
+      "latlon": [
+        32.983733,
+        -96.885485
+      ],
+      "pixelConfidence": "rough-visual",
+      "campusLocationYear": "2024-25"
+    },
+    {
+      "school": "GOOD EL",
+      "campusId": "057903105",
+      "pixel": [
+        269,
+        207
+      ],
+      "latlon": [
+        32.970763,
+        -96.908658
+      ],
+      "pixelConfidence": "rough-visual",
+      "campusLocationYear": "2024-25"
+    },
+    {
+      "school": "CARROLLTON EL",
+      "campusId": "057903102",
+      "pixel": [
+        317,
+        253
+      ],
+      "latlon": [
+        32.956574,
+        -96.89425
+      ],
+      "pixelConfidence": "rough-visual",
+      "campusLocationYear": "2024-25"
+    },
+    {
+      "school": "FARMERS BRANCH EL",
+      "campusId": "057903109",
+      "pixel": [
+        332,
+        353
+      ],
+      "latlon": [
+        32.928473,
+        -96.888243
+      ],
+      "pixelConfidence": "rough-visual",
+      "campusLocationYear": "2024-25"
+    },
+    {
+      "school": "LANDRY EL",
+      "campusId": "057903121",
+      "pixel": [
+        119,
+        353
+      ],
+      "latlon": [
+        32.930994,
+        -96.948022
+      ],
+      "pixelConfidence": "rough-visual",
+      "campusLocationYear": "2024-25"
+    },
+    {
+      "school": "LAS COLINAS EL",
+      "campusId": "057903120",
+      "pixel": [
+        37,
+        428
+      ],
+      "latlon": [
+        32.915553,
+        -96.977673
+      ],
+      "pixelConfidence": "rough-visual",
+      "campusLocationYear": "2024-25"
+    },
+    {
+      "school": "LA VILLITA EL",
+      "campusId": "057903132",
+      "pixel": [
+        197,
+        469
+      ],
+      "latlon": [
+        32.902979,
+        -96.936873
+      ],
+      "pixelConfidence": "rough-visual",
+      "campusLocationYear": "2024-25"
+    }
+  ],
+  "verifiedPixelAnchors": 0,
+  "independentlyVerifiedCurrentZonePolygons": 0,
+  "residenceLevelFinderMatches": 0,
+  "status": "draft-calibration-only",
+  "publishable": false,
+  "notes": [
+    "These are approximate school symbol centers, not official coordinate control points.",
+    "School site point may not coincide with printed map symbol position, especially label offsets.",
+    "No georeferenced overlay, polygon extraction or automatic residence assignment should be enabled until pixel anchors are visually validated, fit residual is measured and Finder holdouts agree.",
+    "Atlas shows the original images without warping; this file is QA-only."
+  ]
+}

@@ -1,0 +1,18 @@
+/* CFB 2025-26 official raster maps: informational, not a certified map overlay. */
+.cfb-atlas{border:1px solid var(--line,#68748a);border-radius:9px;padding:10px;margin:12px 0;min-width:0}
+.cfb-atlas>summary{font-weight:750;cursor:pointer;line-height:1.5}
+.cfb-atlas-inner{padding-top:9px;min-width:0}
+.cfb-atlas-bands{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.cfb-atlas-bands button[aria-pressed="true"]{border:2px solid #55b7cf;outline-offset:2px}
+.cfb-atlas-image-wrap{max-width:100%;overflow:hidden;display:grid;gap:8px;justify-items:start;margin:9px 0}
+.cfb-atlas-raster{display:block;width:auto;height:auto;max-width:100%;max-height:75vh;object-fit:contain;background:#f8fafc;border-radius:7px;border:1px solid #8693a9}
+.cfb-atlas-caution{color:var(--ink,#e2e8f0);font-size:12px;border-left:3px solid #b88a3b;padding:8px 10px;margin:10px 0;background:rgba(179,136,63,.09)}
+.cfb-atlas-areas{margin:12px 0;display:grid;gap:7px}
+.cfb-atlas-areas label{font-size:13px;font-weight:750}
+.cfb-atlas-areas select{width:100%;min-height:37px;max-width:100%;border:1px solid var(--line,#7b899e);border-radius:7px;background:var(--bg,#1a2739);color:var(--ink,#e2e8f0);padding:7px}
+.cfb-atlas-area-result{font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.cfb-atlas-area-result p{margin:4px 0}
+.cfb-atlas-evidence>summary{font-size:12px;cursor:pointer}
+.cfb-atlas-evidence-list{overflow-wrap:anywhere}
+.cfb-atlas-sources{display:flex;gap:12px;flex-wrap:wrap;margin-top:11px}
+@media(max-width:720px){.cfb-atlas{padding:8px}.cfb-atlas-bands .mini-btn{min-height:38px}}
