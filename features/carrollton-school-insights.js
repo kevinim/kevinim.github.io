@@ -899,7 +899,7 @@
                 return (ia<0?999:ia)-(ib<0?999:ib) || a.districtId.localeCompare(b.districtId);
               });
               ordered.forEach(function(d){
-                if(!/^\\d{6}$/.test(d.districtId)||!Number.isInteger(d.campuses)||d.campuses<1)return;
+                if(!/^\d{6}$/.test(d.districtId)||!Number.isInteger(d.campuses)||d.campuses<1)return;
                 districtList.appendChild(textTag('p','',
                   d.name+' · 전체 '+d.campuses+
                   ' · 3영역 '+d.domainAllReported+
