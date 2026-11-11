@@ -233,7 +233,8 @@
   const PEIMS_SOURCE_PREFIX='https://rptsvr1.tea.texas.gov/cgi/sas/broker';
   const PEIMS_DISTRICTS=Object.freeze({
     CFB:'057903',LISD:'061902',AISD:'043901','043907':'043907',
-    FISD:'043905',PISD:'043910'
+    FISD:'043905',PISD:'043910',PROSPER:'043912',
+    '061901':'061901','057912':'057912','057916':'057916','057905':'057905'
   });
   function validPeimsSource(url,district){
     if(typeof url!=='string'||!Object.hasOwn(PEIMS_DISTRICTS,district))return false;
