@@ -329,17 +329,27 @@ function drawAreaLabels(){
   areaLabels.clearLayers();
   if(!state.showZip)return;
   const bounds=map.getBounds(),size=map.getSize(),occupied=[];
-  const candidates=DATA.filter(d=>state.polys[d.z]&&bounds.contains(d.ll)).sort((a,b)=>(b.z===state.zip)-(a.z===state.zip));
-  for(const d of candidates){
-    const name=placeNames[d.z]||(!d.name.endsWith(' County')?d.name:'');
-    const label=name?displayPlace(name):'';if(!label)continue;
-    const width=Math.min(190,Math.max(70,label.length*7+16)),height=23,p=map.latLngToContainerPoint(d.ll);
-    const rect={left:p.x-width/2-4,right:p.x+width/2+4,top:p.y-height/2-4,bottom:p.y+height/2+4};
+  // Use only visible ZIP representative points; no school or zone layers change.
+  const visible=DATA.filter(d=>state.polys[d.z]&&bounds.contains(d.ll));
+  const candidates=window.AreaLabelHierarchy
+    ? window.AreaLabelHierarchy.buildCandidates(visible,placeNames,map.getZoom(),state.zip)
+    : visible.map(d=>({name:placeNames[d.z]||d.name,zip:d.z,level:'zip',ll:d.ll,selected:d.z===state.zip}));
+  for(const candidate of candidates){
+    const suffix=candidate.zip?' · '+candidate.zip:'';
+    const raw=candidate.name.endsWith(suffix)&&suffix
+      ?candidate.name.slice(0,-suffix.length):candidate.name;
+    const label=displayPlace(raw)+(suffix&&candidate.name.endsWith(suffix)?suffix:'');
+    if(!label)continue;
+    const width=Math.min(190,Math.max(70,label.length*7+16)),height=25;
+    const p=map.latLngToContainerPoint(candidate.ll);
+    const rect={left:p.x-width/2-5,right:p.x+width/2+5,top:p.y-height/2-5,bottom:p.y+height/2+5};
     if(rect.left<0||rect.right>size.x||rect.top<0||rect.bottom>size.y)continue;
     if(occupied.some(r=>rect.left<r.right&&rect.right>r.left&&rect.top<r.bottom&&rect.bottom>r.top))continue;
     occupied.push(rect);
-    const icon=L.divIcon({className:'area-label'+(d.z===state.zip?' selected':''),html:'<span>'+escape(label)+'</span>',iconSize:[width,height],iconAnchor:[width/2,height/2]});
-    L.marker(d.ll,{icon,interactive:false,keyboard:false,zIndexOffset:d.z===state.zip?3000:2000}).addTo(areaLabels);
+    const icon=L.divIcon({className:'area-label '+candidate.level+(candidate.selected?' selected':''),
+      html:'<span>'+escape(label)+'</span>',iconSize:[width,height],iconAnchor:[width/2,height/2]});
+    L.marker(candidate.ll,{icon,interactive:false,keyboard:false,
+      zIndexOffset:candidate.selected?3000:2000}).addTo(areaLabels);
   }
 }
 function schoolType(s){const a=(s||'').toLowerCase().replace(/\bh\s+s\b/g,'high').replace(/\bm\s+s\b/g,'middle');if(/elementary|\bel\b|primary|kindergarten|\bk-5\b|\bk-6\b/.test(a))return'elementary';if(/middle|intermediate|junior high|\bms\b/.test(a))return'middle';if(/high|senior|freshman|\bhs\b/.test(a))return'high';return null}
