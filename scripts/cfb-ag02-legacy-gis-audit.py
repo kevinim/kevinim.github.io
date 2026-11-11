@@ -58,6 +58,7 @@ def main():
     if not district_geom.is_valid:
         raise ValueError("district geometry invalid")
     project = Transformer.from_crs("EPSG:4326", "EPSG:32614", always_xy=True).transform
+    inverse_project = Transformer.from_crs("EPSG:32614", "EPSG:4326", always_xy=True).transform
     district_metric = transform(project, district_geom)
     outer_area_sqkm = district_metric.area / 1e6
     summary = {
@@ -109,6 +110,18 @@ def main():
             row["totalFetchedMultiDistrict"] = len(features)
             row["geojsonSha256"] = source_hash
             candidates = [f for f in features if f.get("properties", {}).get("SCHOOLDISTRICT") == CFB]
+            others = [f for f in features if f.get("properties", {}).get("SCHOOLDISTRICT") != CFB]
+            other_inside = []
+            for f in others:
+                try:
+                    g = shape(f["geometry"])
+                    if not g.is_valid or g.is_empty:
+                        continue
+                    intersected = transform(project, g).intersection(district_metric)
+                    if not intersected.is_empty and intersected.area > 100:
+                        other_inside.append(intersected)
+                except (ValueError, TypeError):
+                    continue
             row["cfbFeatureCount"] = len(candidates)
             row["cfbSchoolNames"] = sorted(set(str(f.get("properties", {}).get("SchoolName"))
                                             for f in candidates))
@@ -135,10 +148,26 @@ def main():
             if polygons:
                 merged = unary_union(polygons)
                 covered = merged.intersection(district_metric)
+                remaining = district_metric.difference(covered)
                 row["inside2025DistrictCoveredPct"] = round(100 * covered.area/district_metric.area, 2)
-                row["inside2025DistrictGapSqKm"] = round(district_metric.difference(covered).area/1e6, 3)
+                row["inside2025DistrictGapSqKm"] = round(remaining.area/1e6, 3)
                 row["inside2025DistrictOvercountSqKm"] = round(
                     max(sum(p.area for p in polygons) - merged.area, 0)/1e6, 3)
+                if other_inside:
+                    all_covered = unary_union([covered, *other_inside]).intersection(district_metric)
+                    row["allOtherDistrictsFeaturesTouchingCFB"] = len(other_inside)
+                    row["includingNonCFBLabelledZonesCoveragePct"] = round(
+                        100 * all_covered.area/district_metric.area, 2)
+                    row["otherDistrictsFillPreviousGapSqKm"] = round(
+                        max(all_covered.area-covered.area, 0)/1e6, 3)
+                remaining_pieces = list(remaining.geoms) if hasattr(remaining, "geoms") else [remaining]
+                largest = sorted((g for g in remaining_pieces if g.area > 1000),
+                                 key=lambda g: g.area, reverse=True)[:8]
+                row["largestMissingLegacyAreas"] = [{
+                    "areaSqKm": round(g.area/1e6, 3),
+                    "centerLonLat": [round(v, 5) for v in
+                                    transform(inverse_project, g.centroid).coords[0]]
+                } for g in largest]
             row["status"] = "HISTORICAL_VECTORS_AVAILABLE_NOT_CURRENT_YEAR"
             (OUTPUT / f"{grade}-2020-historical-CFB-NOT-LIVE.geojson").write_text(
                 json.dumps({"type": "FeatureCollection",
