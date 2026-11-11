@@ -8,6 +8,7 @@ on:
     paths:
       - 'docs/TEA_2026_MISSINGNESS_INDEPENDENT_QA_20261111.md'
       - 'tests/tea-2026-missingness-independent-qa.test.cjs'
+      - 'data/tea-2026-staar-missing-row-qa-exceptions.json'
       - '.github/workflows/verify-tea-2026-missingness-qa.yml'
       - 'data/tea-accountability-2026-verified-batch.json'
       - 'data/tea-staar-meets-2026-verified-batch.json'
