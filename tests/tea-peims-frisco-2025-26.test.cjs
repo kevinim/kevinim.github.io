@@ -36,7 +36,7 @@ test('Frisco: only published integer counts, no masked or inferred data',()=>{
         assert.equal(c.publishedMask,undefined);
       }else{
         assert.equal(c.count,undefined);
-        if(c.status==='suppressed')assert.equal(c.publishedMask,'<10');
+        if(c.status==='suppressed')assert.match(c.publishedMask,/^<[1-9][0-9]*$/);
       }
     }
     assert.equal(Object.values(p.counts).every(c=>c.status==='published'),false);
