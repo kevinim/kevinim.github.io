@@ -330,13 +330,22 @@
       Object.keys(curated.subjects).some(function(k){
         return typeof curated.subjects[k]==='number' && Number.isFinite(curated.subjects[k]);
       });
+    // Independently verified historical campus ethnicity is safe to display even
+    // when an unsourced academic narrative is intentionally suppressed.
+    const historical=curated?.demographics;
+    const historicalVerified=!!historical && historical.year==='2024–25' &&
+      Number.isInteger(historical.enrollment) && historical.enrollment>0 &&
+      checkRace(historical.race) && typeof historical.src==='string' &&
+      /^https:\/\/(?:resources\.finalsite\.net|rptsvr1\.tea\.texas\.gov|files-backend\.assets\.thrillshare\.com)\//.test(historical.src);
+
     const base=reviewedCurated
       ?{...curated,rolloutPhase:cohort.phase,cohort:cohort.label}
       :{
         rolloutPhase:cohort.phase,
         cohort:cohort.label,
-        evidenceStatus:existing?'rating-and-demographics':'rating-only',
+        evidenceStatus:(existing||historicalVerified)?'rating-and-demographics':'rating-only',
         ...(existing||{}),
+        ...(historicalVerified?{demographics:historical}:{}),
         summary:hasScore
           ?'2026 TEA 종합 평가는 '+rating+'입니다. 과목별 성취도·학생 성장·집단별 목표는 공식 세부 자료를 대조한 후 분석합니다.'
           :'2026 TEA 종합 평가가 미부여되었거나 확인되지 않았습니다. 이것만으로 학업 성과를 좋거나 나쁘다고 평가하지 않습니다.',
