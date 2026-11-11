@@ -108,7 +108,8 @@
       const stats=computePublishedShare(sourceRows);
       if(!stats||!stats.hasHidden)continue; // Original seven-group and audited denominator behavior remains unchanged.
       if(typeof insights.auditedPeimsTotal==='function'&&insights.auditedPeimsTotal(id,sourceRows)!==null)continue;
-      // Keep existing .tea-peims-counts li query contracts unchanged for #247/#249.\n      peims.insertAdjacentElement('afterend',buildView(id,stats));
+      // Keep existing .tea-peims-counts li query contracts unchanged for #247/#249.
+      peims.insertAdjacentElement('afterend',buildView(id,stats));
     }
   }
   function boot(){
