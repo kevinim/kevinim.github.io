@@ -24,3 +24,14 @@
   .main>.section{order:5;width:100%;min-width:0}
   #homePrivacy{font-size:11px;line-height:1.45}
 }
+
+/* Explicit school-list selection: distinct from attendance boundaries. */
+#schoolList button.school.school-map-selected{outline:3px solid #facc15;outline-offset:-3px;border-radius:8px}
+#schoolList button.school.school-map-selected:focus-visible{outline:3px solid #facc15;outline-offset:2px}
+.selected-school-campus-pin{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;box-sizing:border-box;
+  background:#facc15;border:3px solid #202c41;color:#152238;font-size:11px;font-weight:900;line-height:1;
+  box-shadow:0 0 0 4px rgba(250,204,21,.37),0 4px 12px rgba(0,0,0,.35)}
+.leaflet-tooltip.selected-school-campus-tooltip{max-width:min(300px,75vw);white-space:normal;overflow-wrap:anywhere;
+  padding:7px 10px;border:2px solid #facc15;border-radius:7px;background:#162338;color:#fff;
+  font-size:12px;font-weight:800;box-shadow:0 3px 14px rgba(0,0,0,.35)}
+.leaflet-tooltip-top.selected-school-campus-tooltip:before{border-top-color:#facc15}
