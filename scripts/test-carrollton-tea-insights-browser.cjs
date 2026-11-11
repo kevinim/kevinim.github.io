@@ -43,7 +43,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
         const progressText=await coverage.locator('.tea-data-progress-content').textContent();
         assert.ok(progressText.includes('18 / 2,282'),'curated analysis still only 18, not implied complete');
         assert.ok(progressText.includes('8 / 2,282'),'verified ethnicity must not be overstated');
-        assert.ok(progressText.includes('92 / 2,282'),'2025–26 partial enrollment count coverage must be explicit');
+        assert.ok(progressText.includes('293 / 2,282'),'2025–26 partial enrollment count coverage must be explicit');
         await coverage.locator('summary').click();
         assert.equal(await coverage.evaluate(el=>el.open),false,'progress notes collapsed by default again');
         const results=[];
@@ -69,7 +69,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel')?.dataset.campus===id,id,{timeout:15000});
           await page.waitForFunction(()=>[...document.styleSheets].some(s=>(s.href||'').includes('carrollton-school-insights.css?v=4')),
             null,{timeout:15000});
-          if(id.startsWith('061902')||id.startsWith('057903')){
+          if(['061902','057903','043901','043907','043905','043910'].some(prefix=>id.startsWith(prefix))){
             await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel[data-campus="'+id+'"] .tea-peims-counts')!==null,id,{timeout:15000});
           }
           const found=await page.evaluate(()=>({
@@ -130,7 +130,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
             assert.equal(found.inlineChart,undefined,'unverified race cannot render in-list chart');
             assert.equal(found.missingRace,true);
           }
-          const currentPeims=id.startsWith('061902')||id.startsWith('057903');
+          const currentPeims=['061902','057903','043901','043907','043905','043910'].some(prefix=>id.startsWith(prefix));
           assert.equal(found.peimsCountRows,currentPeims?7:0,'2025–26 source year and seven explicit privacy statuses '+id);
           if(currentPeims){
             assert.ok(found.peimsText.includes('2025–26'),'current-year PEIMS source labeled');
@@ -138,6 +138,12 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           }
           if(id==='061902118')assert.ok(found.peimsText.includes('246명'),'actual TEA Asian enrollment count is used');
           if(id==='061902136')assert.ok(found.peimsText.includes('251명'),'actual Castle Hills Asian enrollment count is used');
+          if(id==='043901001'){
+            assert.ok(found.peimsText.includes('1,426명'),'Allen High 2025–26 Asian students correctly published');
+            assert.ok(found.peimsText.includes('27.8%'),'fully published seven-category Allen 2025–26 ratio correctly computed');
+          }
+          if(id==='043907002')assert.ok(found.peimsText.includes('135명'),'McKinney High 2025–26 Asian count correct');
+          if(id==='043901105')assert.ok(found.peimsText.includes('비공개'),'suppressed Asian count remains hidden');
           if(!reviewed)assert.equal(found.missingDomain,true,'grade-only campus must show missing domain notice');
           assert.deepEqual(found.csp,[],'CSP violation detected '+JSON.stringify(found.csp));
           if(width===390)assert.ok(found.scrollWidth<=width+5,'mobile horizontal overflow '+found.scrollWidth);
