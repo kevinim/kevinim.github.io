@@ -162,3 +162,36 @@ test('corrupt, cross-district, stale, privacy-reconstructed and spoofed-report s
     official:'https://evil.example/?view=school&id=043901001'}),null);
   assert.equal(insights.getSchoolInsight({...lookup.get('043901001'),score:98}).publicPeims,undefined);
 });
+
+
+test('every one of the 56 campuses renders accessible published/masked PEIMS rows without inventing missing academic domains',()=>{
+  assert.equal(insights.applyAllenMcKinneyBatch(official),56);
+  const prev=global.document;
+  global.document=docStub();
+  try{
+    let rendered=0,withDomains=0,withoutDomains=0,withFullChart=0;
+    for(const id of allIds){
+      const record=lookup.get(id);
+      assert.ok(record,'catalog missing campus '+id);
+      const panel=insights.render(record);
+      assert.ok(panel && panel.dataset.campus===id,'school click profile missing '+id);
+      assert.equal(findClass(panel,'tea-insights-public-races').length,1,'published/masked ethnicity table missing '+id);
+      const rows=findClass(panel,'tea-insights-public-races')[0].children;
+      assert.equal(rows.length,7,'all seven TEA ethnicity labels must be shown '+id);
+      assert.match(panel.textContent,/PEIMS 2025–26/);
+      assert.match(panel.textContent,/자료 출처/);
+      const hasDomains=official.campuses[id].domains.status==='official-verified';
+      assert.equal(findClass(panel,'tea-insights-domains').length,hasDomains?1:0,id+' scaled academic fields');
+      if(hasDomains)withDomains++;else withoutDomains++;
+      if(findClass(panel,'tea-insights-stack').length)withFullChart++;
+      if(official.campuses[id].peims.percentages===null)
+        assert.equal(findClass(panel,'tea-insights-stack').length,0,id+' cannot show a complete 100% chart');
+      rendered++;
+    }
+    assert.deepEqual({rendered,withDomains,withoutDomains,withFullChart},
+      {rendered:56,withDomains:50,withoutDomains:6,withFullChart:1});
+  }finally{
+    if(prev===undefined)delete global.document;
+    else global.document=prev;
+  }
+});
