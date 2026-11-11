@@ -14,10 +14,11 @@
     },
     "accountabilityCatalog": "tea-ratings-2026.json",
     "componentPortal": "https://rptsvr1.tea.texas.gov/perfreport/account/acct_download?year=2026",
-    "academic2026SourceRows": "data/tea-allen-mckinney-academics-2026-source.json"
+    "academic2026SourceRows": "data/tea-allen-mckinney-academics-2026-source.json",
+    "peimsEnrollmentTotals": "data/tea-allen-mckinney-enrollment-2025-26-source.json"
   },
-  "provenance": "Official TEA 2025-26 PEIMS published ethnicity categories and official TEA 2026 Campus Accountability Summary and STAAR Performance for all 56 campus IDs. Published exact cells and rates are retained; unavailable/suppressed components remain null. Official A-F ratings unchanged against existing inventory.",
-  "privacyPolicy": "Published exact counts are preserved; <N suppressions and unlisted cells are unavailable, never zero, never back-calculated. Percentages and total enrollments withheld when not independently published. No student-level data.",
+  "provenance": "Official TEA 2025-26 PEIMS published ethnicity categories and official TEA 2026 Campus Accountability Summary and STAAR Performance for all 56 campus IDs. Published exact cells and rates are retained; unavailable/suppressed components remain null. Official A-F ratings unchanged against existing inventory. Separately published official TEA 2025-26 grade-group Campus Totals are the denominators of only the released ethnicity categories; suppressed denominators and categories remain unknown.",
+  "privacyPolicy": "Official 2025–26 grade-report Campus Totals are used as published denominators when available. Per-category percentages are computed only for exact publicly released ethnicity counts, and masked/unlisted cells remain null. Complete seven-category percentages are provided only if all seven exact counts and the official denominator are published. Never impute/derive any masked count.",
   "summary": {
     "scope": 56,
     "allen": 23,
@@ -31,7 +32,7 @@
     "campusesWithSuppressedCells": 49,
     "campusesWithUnlistedCells": 32,
     "existingCatalogNotRated": 4,
-    "fullyAuditedProfiles": 0,
+    "fullyAuditedProfiles": 1,
     "awaiting2026ComponentsAndStaar": 0,
     "newlyAcademicSourceVerified": 50,
     "official2026ReportsReviewed": 56,
@@ -41,7 +42,12 @@
     "official2026NotRated": 4,
     "official2026PairedCampuses": 2,
     "readyForUatAcademicProfiles": 50,
-    "official2026UnreportedAcademicComponents": 6
+    "official2026UnreportedAcademicComponents": 6,
+    "official2025_26CampusTotals": 56,
+    "published2025_26EnrollmentTotals": 53,
+    "suppressed2025_26EnrollmentTotals": 3,
+    "completeSevenCategoryPercentProfiles": 1,
+    "partialPublishedPercentProfiles": 52
   },
   "campuses": {
     "043901001": {
@@ -81,7 +87,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 5127,
         "counts": {
           "black": {
             "status": "published",
@@ -112,7 +118,28 @@
             "count": 263
           }
         },
-        "percentages": null
+        "percentages": {
+          "black": 13.6,
+          "hispanic": 15.7,
+          "white": 37.1,
+          "native": 0.5,
+          "asian": 27.8,
+          "pacific": 0.2,
+          "multi": 5.1
+        },
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 13.6,
+          "hispanic": 15.7,
+          "white": 37.1,
+          "native": 0.5,
+          "asian": 27.8,
+          "pacific": 0.2,
+          "multi": 5.1
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -164,7 +191,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 1667,
         "counts": {
           "black": {
             "status": "published",
@@ -195,7 +222,20 @@
             "count": 90
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 13.7,
+          "hispanic": 16.7,
+          "white": 34.8,
+          "native": null,
+          "asian": 28.6,
+          "pacific": null,
+          "multi": 5.4
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -274,7 +314,12 @@
             "publishedMask": "<10"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "suppressed",
+        "enrollmentMask": "<10",
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": null,
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "official-no-reportable-subject-data",
@@ -322,7 +367,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 713,
         "counts": {
           "black": {
             "status": "published",
@@ -353,7 +398,20 @@
             "count": 51
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 16.1,
+          "hispanic": 23.4,
+          "white": 37.4,
+          "native": null,
+          "asian": 15.3,
+          "pacific": null,
+          "multi": 7.2
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -405,7 +463,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 1318,
         "counts": {
           "black": {
             "status": "published",
@@ -436,7 +494,20 @@
             "count": 74
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 11,
+          "hispanic": 14.8,
+          "white": 34.3,
+          "native": null,
+          "asian": 33.4,
+          "pacific": null,
+          "multi": 5.6
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -488,7 +559,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 1201,
         "counts": {
           "black": {
             "status": "published",
@@ -519,7 +590,20 @@
             "count": 52
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 10.5,
+          "hispanic": 14.7,
+          "white": 31.2,
+          "native": null,
+          "asian": 38.2,
+          "pacific": null,
+          "multi": 4.3
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -571,7 +655,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 393,
         "counts": {
           "black": {
             "status": "published",
@@ -602,7 +686,20 @@
             "count": 36
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 31,
+          "hispanic": 25.4,
+          "white": 25.7,
+          "native": null,
+          "asian": null,
+          "pacific": null,
+          "multi": 9.2
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -654,7 +751,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 437,
         "counts": {
           "black": {
             "status": "published",
@@ -684,7 +781,20 @@
             "publishedMask": "<30"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 16.2,
+          "hispanic": 27.2,
+          "white": 40.5,
+          "native": null,
+          "asian": 8.5,
+          "pacific": null,
+          "multi": null
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -736,7 +846,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 486,
         "counts": {
           "black": {
             "status": "published",
@@ -766,7 +876,20 @@
             "count": 46
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 17.3,
+          "hispanic": 31.7,
+          "white": 32.9,
+          "native": null,
+          "asian": null,
+          "pacific": null,
+          "multi": 9.5
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -818,7 +941,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 643,
         "counts": {
           "black": {
             "status": "published",
@@ -849,7 +972,20 @@
             "count": 52
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 7.9,
+          "hispanic": 13.4,
+          "white": 36.1,
+          "native": null,
+          "asian": 33.7,
+          "pacific": null,
+          "multi": 8.1
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -901,7 +1037,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 508,
         "counts": {
           "black": {
             "status": "published",
@@ -931,7 +1067,20 @@
             "publishedMask": "<40"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 12.2,
+          "hispanic": 16.3,
+          "white": 41.7,
+          "native": null,
+          "asian": 21.7,
+          "pacific": null,
+          "multi": null
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -983,7 +1132,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 592,
         "counts": {
           "black": {
             "status": "suppressed",
@@ -1013,7 +1162,20 @@
             "count": 47
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": null,
+          "hispanic": 9.1,
+          "white": 36,
+          "native": null,
+          "asian": 39.4,
+          "pacific": null,
+          "multi": 7.9
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -1065,7 +1227,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 542,
         "counts": {
           "black": {
             "status": "published",
@@ -1096,7 +1258,20 @@
             "count": 34
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 15.7,
+          "hispanic": 13.8,
+          "white": 41,
+          "native": null,
+          "asian": 22.7,
+          "pacific": null,
+          "multi": 6.3
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -1148,7 +1323,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 613,
         "counts": {
           "black": {
             "status": "published",
@@ -1179,7 +1354,20 @@
             "count": 49
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 12.4,
+          "hispanic": 15,
+          "white": 23.5,
+          "native": null,
+          "asian": 40.8,
+          "pacific": null,
+          "multi": 8
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -1231,7 +1419,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 651,
         "counts": {
           "black": {
             "status": "published",
@@ -1262,7 +1450,20 @@
             "count": 45
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 14.7,
+          "hispanic": 15.2,
+          "white": 33.5,
+          "native": null,
+          "asian": 28.6,
+          "pacific": null,
+          "multi": 6.9
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -1314,7 +1515,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 765,
         "counts": {
           "black": {
             "status": "published",
@@ -1344,7 +1545,20 @@
             "publishedMask": "<40"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 6,
+          "hispanic": 9.8,
+          "white": 31.5,
+          "native": null,
+          "asian": 47.1,
+          "pacific": null,
+          "multi": null
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -1397,7 +1611,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 685,
         "counts": {
           "black": {
             "status": "published",
@@ -1427,7 +1641,20 @@
             "publishedMask": "<30"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 10.2,
+          "hispanic": 44.7,
+          "white": 25.3,
+          "native": null,
+          "asian": 15.5,
+          "pacific": null,
+          "multi": null
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -1479,7 +1706,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 560,
         "counts": {
           "black": {
             "status": "published",
@@ -1509,7 +1736,20 @@
             "publishedMask": "<40"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 7.3,
+          "hispanic": 10,
+          "white": 24.3,
+          "native": null,
+          "asian": 50.4,
+          "pacific": null,
+          "multi": null
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -1561,7 +1801,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 676,
         "counts": {
           "black": {
             "status": "published",
@@ -1592,7 +1832,20 @@
             "count": 65
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 10.1,
+          "hispanic": 18.8,
+          "white": 43.6,
+          "native": null,
+          "asian": 17.3,
+          "pacific": null,
+          "multi": 9.6
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -1644,7 +1897,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 696,
         "counts": {
           "black": {
             "status": "published",
@@ -1674,7 +1927,20 @@
             "count": 31
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 9.3,
+          "hispanic": 10.9,
+          "white": 26.7,
+          "native": 1.6,
+          "asian": 47,
+          "pacific": null,
+          "multi": 4.5
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -1726,7 +1992,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 780,
         "counts": {
           "black": {
             "status": "published",
@@ -1757,7 +2023,20 @@
             "count": 47
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 11.3,
+          "hispanic": 13.2,
+          "white": 18.2,
+          "native": null,
+          "asian": 50,
+          "pacific": null,
+          "multi": 6
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -1809,7 +2088,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 648,
         "counts": {
           "black": {
             "status": "published",
@@ -1840,7 +2119,20 @@
             "count": 38
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 10,
+          "hispanic": 10.5,
+          "white": 29.8,
+          "native": null,
+          "asian": 42.6,
+          "pacific": null,
+          "multi": 5.9
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -1897,7 +2189,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
-        "enrollment": null,
+        "enrollment": 413,
         "counts": {
           "black": {
             "status": "published",
@@ -1927,7 +2219,20 @@
             "publishedMask": "<20"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+        "partialPercentages": {
+          "black": 16.9,
+          "hispanic": 22.5,
+          "white": 22.5,
+          "native": null,
+          "asian": 32.2,
+          "pacific": null,
+          "multi": null
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "official-no-reportable-subject-data",
@@ -1974,7 +2279,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 2527,
         "counts": {
           "black": {
             "status": "published",
@@ -2005,7 +2310,20 @@
             "count": 100
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 18.2,
+          "hispanic": 34.3,
+          "white": 37.6,
+          "native": null,
+          "asian": 5.3,
+          "pacific": null,
+          "multi": 4
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -2057,7 +2375,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 2551,
         "counts": {
           "black": {
             "status": "published",
@@ -2088,7 +2406,20 @@
             "count": 140
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 22.5,
+          "hispanic": 24.9,
+          "white": 36.1,
+          "native": null,
+          "asian": 10.6,
+          "pacific": null,
+          "multi": 5.5
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -2167,7 +2498,12 @@
             "status": "not-listed"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "suppressed",
+        "enrollmentMask": "<10",
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": null,
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "official-no-reportable-subject-data",
@@ -2216,7 +2552,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 101,
         "counts": {
           "black": {
             "status": "published",
@@ -2245,7 +2581,20 @@
             "publishedMask": "<10"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 30.7,
+          "hispanic": null,
+          "white": null,
+          "native": null,
+          "asian": null,
+          "pacific": null,
+          "multi": null
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "official-no-reportable-subject-data",
@@ -2293,7 +2642,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 2595,
         "counts": {
           "black": {
             "status": "published",
@@ -2324,7 +2673,20 @@
             "count": 102
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 12.4,
+          "hispanic": 23.6,
+          "white": 51,
+          "native": null,
+          "asian": 8.7,
+          "pacific": null,
+          "multi": 3.9
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -2376,7 +2738,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 1100,
         "counts": {
           "black": {
             "status": "published",
@@ -2407,7 +2769,20 @@
             "count": 65
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 16.3,
+          "hispanic": 39.4,
+          "white": 35.3,
+          "native": null,
+          "asian": 3,
+          "pacific": null,
+          "multi": 5.9
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -2459,7 +2834,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 976,
         "counts": {
           "black": {
             "status": "published",
@@ -2489,7 +2864,20 @@
             "publishedMask": "<50"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 10.9,
+          "hispanic": 24.7,
+          "white": 54.2,
+          "native": null,
+          "asian": 5.4,
+          "pacific": null,
+          "multi": null
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -2541,7 +2929,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 1307,
         "counts": {
           "black": {
             "status": "published",
@@ -2572,7 +2960,20 @@
             "count": 99
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 27.2,
+          "hispanic": 29.9,
+          "white": 23.5,
+          "native": null,
+          "asian": 11.2,
+          "pacific": null,
+          "multi": 7.6
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -2624,7 +3025,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 731,
         "counts": {
           "black": {
             "status": "published",
@@ -2655,7 +3056,20 @@
             "count": 33
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 18.1,
+          "hispanic": 27.9,
+          "white": 43.2,
+          "native": null,
+          "asian": 5.7,
+          "pacific": null,
+          "multi": 4.5
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -2707,7 +3121,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 1173,
         "counts": {
           "black": {
             "status": "published",
@@ -2737,7 +3151,20 @@
             "publishedMask": "<70"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 13,
+          "hispanic": 18.9,
+          "white": 45.8,
+          "native": null,
+          "asian": 16.2,
+          "pacific": null,
+          "multi": null
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -2789,7 +3216,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 320,
         "counts": {
           "black": {
             "status": "published",
@@ -2819,7 +3246,20 @@
             "count": 13
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 22.2,
+          "hispanic": 50.3,
+          "white": 21.6,
+          "native": null,
+          "asian": null,
+          "pacific": null,
+          "multi": 4.1
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -2871,7 +3311,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 522,
         "counts": {
           "black": {
             "status": "published",
@@ -2902,7 +3342,20 @@
             "count": 24
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 23.2,
+          "hispanic": 45.4,
+          "white": 18.2,
+          "native": null,
+          "asian": 8,
+          "pacific": null,
+          "multi": 4.6
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -2954,7 +3407,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 403,
         "counts": {
           "black": {
             "status": "published",
@@ -2984,7 +3437,20 @@
             "count": 20
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 13.6,
+          "hispanic": 65.8,
+          "white": 15.1,
+          "native": null,
+          "asian": null,
+          "pacific": null,
+          "multi": 5
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -3036,7 +3502,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 443,
         "counts": {
           "black": {
             "status": "published",
@@ -3065,7 +3531,20 @@
             "publishedMask": "<10"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 3.4,
+          "hispanic": 81,
+          "white": 13.1,
+          "native": null,
+          "asian": null,
+          "pacific": null,
+          "multi": null
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -3117,7 +3596,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 524,
         "counts": {
           "black": {
             "status": "published",
@@ -3147,7 +3626,20 @@
             "count": 40
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 20.6,
+          "hispanic": 16.6,
+          "white": 50.6,
+          "native": null,
+          "asian": null,
+          "pacific": null,
+          "multi": 7.6
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -3199,7 +3691,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 474,
         "counts": {
           "black": {
             "status": "published",
@@ -3228,7 +3720,20 @@
             "count": 40
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 5.3,
+          "hispanic": 14.3,
+          "white": 66.9,
+          "native": null,
+          "asian": 5.1,
+          "pacific": null,
+          "multi": 8.4
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -3280,7 +3785,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 564,
         "counts": {
           "black": {
             "status": "published",
@@ -3310,7 +3815,20 @@
             "count": 40
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 20.6,
+          "hispanic": 39.7,
+          "white": 24.6,
+          "native": null,
+          "asian": null,
+          "pacific": null,
+          "multi": 7.1
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -3362,7 +3880,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 361,
         "counts": {
           "black": {
             "status": "published",
@@ -3392,7 +3910,20 @@
             "publishedMask": "<30"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 11.6,
+          "hispanic": 19.1,
+          "white": 52.6,
+          "native": null,
+          "asian": 10.8,
+          "pacific": null,
+          "multi": null
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -3444,7 +3975,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 383,
         "counts": {
           "black": {
             "status": "published",
@@ -3475,7 +4006,20 @@
             "count": 31
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 6.5,
+          "hispanic": 18.3,
+          "white": 61.1,
+          "native": null,
+          "asian": 5.5,
+          "pacific": null,
+          "multi": 8.1
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -3527,7 +4071,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 388,
         "counts": {
           "black": {
             "status": "suppressed",
@@ -3557,7 +4101,20 @@
             "count": 51
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": null,
+          "hispanic": 16.2,
+          "white": 56.2,
+          "native": null,
+          "asian": 8.8,
+          "pacific": null,
+          "multi": 13.1
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -3609,7 +4166,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 422,
         "counts": {
           "black": {
             "status": "published",
@@ -3638,7 +4195,20 @@
             "count": 39
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 12.8,
+          "hispanic": 16.8,
+          "white": 54.3,
+          "native": null,
+          "asian": 6.9,
+          "pacific": null,
+          "multi": 9.2
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -3690,7 +4260,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 302,
         "counts": {
           "black": {
             "status": "published",
@@ -3720,7 +4290,20 @@
             "count": 32
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 30.1,
+          "hispanic": 21.5,
+          "white": 32.1,
+          "native": null,
+          "asian": null,
+          "pacific": null,
+          "multi": 10.6
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -3772,7 +4355,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 430,
         "counts": {
           "black": {
             "status": "published",
@@ -3802,7 +4385,20 @@
             "count": 29
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 23.5,
+          "hispanic": 54,
+          "white": 13.3,
+          "native": null,
+          "asian": null,
+          "pacific": null,
+          "multi": 6.7
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -3854,7 +4450,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 467,
         "counts": {
           "black": {
             "status": "published",
@@ -3883,7 +4479,20 @@
             "count": 27
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 19.3,
+          "hispanic": 51.6,
+          "white": 19.5,
+          "native": null,
+          "asian": 3.9,
+          "pacific": null,
+          "multi": 5.8
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -3935,7 +4544,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 409,
         "counts": {
           "black": {
             "status": "published",
@@ -3965,7 +4574,20 @@
             "publishedMask": "<30"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 7.6,
+          "hispanic": 17.8,
+          "white": 55.3,
+          "native": null,
+          "asian": 12.5,
+          "pacific": null,
+          "multi": null
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -4017,7 +4639,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 446,
         "counts": {
           "black": {
             "status": "published",
@@ -4047,7 +4669,20 @@
             "publishedMask": "<40"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 20.4,
+          "hispanic": 20.4,
+          "white": 34.5,
+          "native": null,
+          "asian": 15.9,
+          "pacific": null,
+          "multi": null
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -4099,7 +4734,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 441,
         "counts": {
           "black": {
             "status": "published",
@@ -4128,7 +4763,20 @@
             "count": 44
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 12.2,
+          "hispanic": 10.2,
+          "white": 52.8,
+          "native": null,
+          "asian": 14.7,
+          "pacific": null,
+          "multi": 10
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -4180,7 +4828,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 563,
         "counts": {
           "black": {
             "status": "published",
@@ -4210,7 +4858,20 @@
             "publishedMask": "<60"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 20.1,
+          "hispanic": 24,
+          "white": 33.4,
+          "native": null,
+          "asian": 12.8,
+          "pacific": null,
+          "multi": null
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -4262,7 +4923,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 736,
         "counts": {
           "black": {
             "status": "published",
@@ -4293,7 +4954,20 @@
             "count": 52
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 35.5,
+          "hispanic": 17.3,
+          "white": 21.9,
+          "native": null,
+          "asian": 17.8,
+          "pacific": null,
+          "multi": 7.1
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -4350,7 +5024,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 562,
         "counts": {
           "black": {
             "status": "published",
@@ -4381,7 +5055,20 @@
             "count": 30
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 24.4,
+          "hispanic": 43.8,
+          "white": 15.5,
+          "native": null,
+          "asian": 10.5,
+          "pacific": null,
+          "multi": 5.3
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "official-no-reportable-subject-data",
@@ -4429,7 +5116,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 782,
         "counts": {
           "black": {
             "status": "published",
@@ -4460,7 +5147,20 @@
             "count": 52
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 13.2,
+          "hispanic": 10.9,
+          "white": 38.1,
+          "native": null,
+          "asian": 30.1,
+          "pacific": null,
+          "multi": 6.6
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -4512,7 +5212,7 @@
         "schoolYear": "2025-26",
         "status": "partial-official-aggregate",
         "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
-        "enrollment": null,
+        "enrollment": 809,
         "counts": {
           "black": {
             "status": "published",
@@ -4541,7 +5241,20 @@
             "count": 74
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "published",
+        "enrollmentMask": null,
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": {
+          "black": 14.2,
+          "hispanic": 15.2,
+          "white": 43.8,
+          "native": null,
+          "asian": 17.7,
+          "pacific": null,
+          "multi": 9.1
+        },
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "score-backed-noncausal",
@@ -4619,7 +5332,12 @@
             "status": "not-listed"
           }
         },
-        "percentages": null
+        "percentages": null,
+        "enrollmentStatus": "suppressed",
+        "enrollmentMask": "<10",
+        "enrollmentSource": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0",
+        "partialPercentages": null,
+        "percentageBasis": "2025-26 official public ethnicity cell count divided by official 2025-26 Campus Total; all masked/unlisted categories stay null."
       },
       "analysis": {
         "status": "official-no-reportable-subject-data",
