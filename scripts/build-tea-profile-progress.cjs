@@ -4,6 +4,7 @@ const path=require('node:path');
 const records=require('../tea-ratings-2026.json').data;
 const insights=require('../features/carrollton-school-insights.js');
 const enrichment=require('../data/tea-campus-enrichment-2026.json');
+const publicPeims=require('../data/tea-ethnicity-2025-26-priority.json');
 const DEST=path.join(__dirname,'../data/tea-profile-progress-2026.json');
 function makeProgress(asOf){
   const entries=records.map(record=>{
@@ -19,6 +20,13 @@ function makeProgress(asOf){
       hasRace:!!validRace,
       curated:!!insights.getRecord(record.id)};
   });
+  const included=new Set(records.map(r=>r.id));
+  const validPeims=Object.entries(publicPeims.campuses).filter(([id,v])=>
+    included.has(id)&&insights.validPublishedCampus(id,v));
+  const statuses=validPeims.flatMap(([,v])=>Object.values(v.counts).map(c=>c.status));
+  const publishedCells=statuses.filter(s=>s==='published').length;
+  const suppressedCells=statuses.filter(s=>s==='suppressed').length;
+  const unlistedCells=statuses.filter(s=>s==='not-listed').length;
   const total=entries.length;
   const byPriority=[
     {label:'Carrollton · CFB/Lewisville',codes:['CFB','LISD']},
@@ -31,7 +39,8 @@ function makeProgress(asOf){
     return {name:group.label,campuses:selected.length,profiles:selected.filter(x=>x.base).length,
       individualAnalysis:selected.filter(x=>x.curated).length,
       domainScores:selected.filter(x=>x.hasDomain).length,
-      ethnicity:selected.filter(x=>x.hasRace).length};
+      ethnicity:selected.filter(x=>x.hasRace).length,
+      public2025_26CampusCounts:selected.filter(x=>validPeims.some(([id])=>id===x.record.id)).length};
   });
   return {
     asOf,
@@ -46,13 +55,19 @@ function makeProgress(asOf){
     domainComponentsReviewed:entries.filter(x=>x.hasDomain).length,
     subjectsReviewed:entries.filter(x=>x.hasSubject).length,
     ethnicityReviewed:entries.filter(x=>x.hasRace).length,
+    public2025_26CampusCounts:validPeims.length,
+    public2025_26PublishedCells:publishedCells,
+    public2025_26SuppressedCells:suppressedCells,
+    public2025_26UnlistedCells:unlistedCells,
+    public2025_26CompleteShares:validPeims.filter(([,v])=>Object.values(v.counts).every(c=>c.status==='published')).length,
     imported2026Components:entries.filter(x=>insights.validDomains(x.imported.domains)).length,
     imported2025_26Ethnicity:entries.filter(x=>x.imported.demographics?.year?.replace('-','–')==='2025–26').length,
     cohorts:byPriority,
     notes:[
       'Basic profile means official overall grade and exact campus ID; it is NOT complete domain analysis.',
       'Student race/ethnicity is context, not a school quality indicator.',
-      'Suppressed TEA PEIMS counts are unavailable, not zero; no ZIP or district values are imputed.'
+      'Suppressed TEA PEIMS counts are unavailable, not zero; no ZIP or district values are imputed.',
+      '2025-26 public race counts include FERPA suppressed and omitted cells; count coverage is not complete seven-race percentage coverage.'
     ]
   };
 }
