@@ -2,7 +2,7 @@
 
 ## Status and readiness (2026-11-11)
 
-- **56/56 campuses** have official 2025–26 PEIMS ethnicity source rows, Allen ISD 23 and McKinney ISD 33.
+- **56/56 campuses** have official 2025–26 PEIMS ethnicity source rows, Allen ISD 23 and McKinney ISD 33. Separate official grade-group Campus Total reports provide **53 exact published enrollment denominators** and **3 privacy-suppressed totals**.
 - **56/56 campuses** have their official 2026 campus accountability Summary and STAAR Performance pages inspected. The initial two high schools were previously checked; 54 additional reports were collected in this PR branch.
 - **52 schools receive an official A–F overall rating; 4 are Not Rated.** Official values agree with the existing dashboard catalog for all 56 campuses, without rating/score discrepancies.
 - **50/56 have published 2026 scaled Student Achievement, School Progress and Closing the Gaps scores PLUS at least one official STAAR All Students subject Meets percentage.** Allen 21, McKinney 29.
@@ -16,13 +16,16 @@
 | Three published 2026 scaled domain scores | 50/56 | 2 paired, 4 Not Rated |
 | Published STAAR All Students subject Meets percentages | 50/56 | School-specific subjects only; no missing=zero |
 | Noncausal scores-based strengths and improvement areas | 50/56 | Based solely on actual official rates |
-| Full seven-category demographic percentages | 0/56 | Do not back-calculate privacy-masked or unlisted cells |
+| Official 2025–26 Campus Total enrollment denominators | 53/56 published; 3 masked | Independently published grade-group Campus Total, not a derived total |
+| Public exact-category ethnicity percentage fields | 53/56 with at least one displayed percentage | Only count / official denominator; hidden categories stay null |
+| Full seven-category demographic percentages | 1/56 | Only Allen HS has all seven exact published categories and matching official total |
 
 ## Official sources and source-to-joined files
 
 - [54 newly fetched official campus academic report records](../data/tea-allen-mckinney-academics-2026-source.json)
 - [Joined 56-campus 2026 TEA/PEIMS dashboard-ready source dataset](../data/tea-allen-mckinney-campus-qa-2026.json)
 - [Texas Education Agency 2026 accountability reports](https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-accountability-rating-system)
+- [Official PEIMS 2025–26 campus enrollment totals from grade-group reports](../data/tea-allen-mckinney-enrollment-2025-26-source.json)
 - [Official Allen 2025–26 PEIMS campus ethnicity CSV](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0)
 - [Official McKinney 2025–26 PEIMS campus ethnicity CSV](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0)
 
@@ -45,13 +48,13 @@ The two paired school grades are **not independently earned campus STAAR results
 
 ## PEIMS privacy and data completeness
 
-Official 2025–26 campus ethnicity exports list 342 category entries: **240 published numeric counts and 102 privacy-suppressed counts such as less-than-N**. Of the 392 possible seven-category campus cells, 50 are unlisted. Exactly published data are preserved; suppressed and unlisted are distinct statuses and neither is zero. Matching same-year official total enrollment for full percentage calculation has not been imported; enrollment and percentage fields remain null.
+Official 2025–26 campus ethnicity exports list 342 category entries: **240 published numeric counts and 102 privacy-suppressed counts such as less-than-N**. Of the 392 possible seven-category campus cells, 50 are unlisted. Exactly published data are preserved; suppressed and unlisted are distinct statuses and neither is zero. The separate official 2025–26 grade-group Campus Total reports show exact enrollment totals for 53 campuses and a literal privacy mask for 3 campuses (043901003, 043907005, 043907197). For the 53 published denominators, individual percentages are calculated **only** for categories already disclosed as exact counts, rounded to one decimal. Masked or unlisted category percentages remain null; complete all-seven-category percentages are available for Allen HS (043901001) only. No subtraction or back-calculation is performed to reveal hidden counts.
 
 These demographic limitations must **not prevent rendering official academic profile values**. UI can show exact published counts with an explicit unavailable/suppressed label without displaying an invented full seven-category percentage distribution.
 
 ## Release and technical constraints
 
-All modifications remain limited to isolated Allen/McKinney JSON files, one dedicated test, a no-deploy GitHub Actions workflow, and this documentation. This PR does not change shared AG01/AG02 pipeline files, school marker display, boundary polygons, GIS, address-to-school assignments, the shared data aggregate, or main.
+All modifications remain limited to isolated Allen/McKinney JSON source and normalized files, one dedicated test, a no-deploy GitHub Actions workflow, and this documentation. This PR does not change shared AG01/AG02 pipeline files, school marker display, boundary polygons, GIS, address-to-school assignments, the shared data aggregate, or main.
 
 CI runs the standalone TEA checks and existing pipeline checks. The source-to-joined report parity, 9-digit Campus ID, official 2026 URL parameters, score ranges, paired campuses, unavailable data, and 2025–26 privacy masks are validated in the dedicated suite.
 
