@@ -283,32 +283,132 @@
     if(document.querySelector('link[data-tea-carrollton-css]')) return;
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='./features/carrollton-school-insights.css?v=2';
+    css.href='./features/carrollton-school-insights.css?v=3';
     css.dataset.teaCarrolltonCss='1';
     document.head.appendChild(css);
+  }
+  // A school list is below the main map and detail column, so selecting a school
+  // must show its useful insight in place instead of requiring users to scroll
+  // upward and discover the detail panel on their own.
+  function mountInline(school, rating) {
+    const list=document.getElementById('schoolList');
+    if(!list)return;
+    const old=list.querySelector('.tea-school-inline-preview');
+    if(!school){if(old)old.remove();return;}
+    const selected=[...list.querySelectorAll('button.school[data-sid]')].find(function(button){
+      return Number.isInteger(Number(button.dataset.sid)) &&
+        state.schools[Number(button.dataset.sid)]===school;
+    });
+    if(!selected){if(old)old.remove();return;}
+    const id=String(rating?.id||'unlinked');
+    if(old && old.dataset.campus===id && old.previousElementSibling===selected)return;
+    if(old)old.remove();
+
+    const data=getSchoolInsight(rating);
+    const preview=document.createElement('section');
+    preview.className='tea-school-inline-preview';
+    preview.dataset.campus=id;
+    preview.setAttribute('aria-label','선택한 학교 평가 미리보기');
+    const heading=document.createElement('div');heading.className='tea-school-inline-heading';
+    heading.appendChild(textTag('strong','','선택한 학교 분석'));
+    heading.appendChild(textTag('small','tea-insights-vintage','TEA 2026'));
+    preview.appendChild(heading);
+    if(data){
+      preview.appendChild(textTag('p','tea-school-inline-summary',data.summary));
+      const isRatingOnly=['rating-only','rating-and-demographics'].includes(data.evidenceStatus);
+      const facts=document.createElement('div');facts.className='tea-insights-facts tea-school-inline-facts';
+      [
+        {kind:isRatingOnly?'confirmed':'positive',title:isRatingOnly?'확인된 평가':'강점',value:data.strength},
+        {kind:isRatingOnly?'pending':'improve',title:isRatingOnly?'추가 검증':'개선과제',value:data.challenge}
+      ].forEach(function(fact){
+        const item=document.createElement('div');
+        item.className='tea-insights-fact tea-insights-fact--'+fact.kind;
+        item.appendChild(textTag('strong','tea-insights-fact-label',fact.title));
+        item.appendChild(textTag('span','tea-insights-fact-text',fact.value));
+        facts.appendChild(item);
+      });
+      preview.appendChild(facts);
+      const rows=getRaceRows(id);
+      if(rows){
+        const demographicHeading=document.createElement('div');
+        demographicHeading.className='tea-school-inline-heading';
+        demographicHeading.appendChild(textTag('strong','','학생 인종·민족 구성'));
+        demographicHeading.appendChild(textTag('small','tea-insights-vintage',data.demographics.year));
+        preview.appendChild(demographicHeading);
+        const stack=document.createElement('div');stack.className='tea-school-inline-stack';
+        stack.setAttribute('role','img');
+        stack.setAttribute('aria-label',rows.map(r=>r.label+' '+r.pct.toFixed(1)+'%').join(', '));
+        rows.forEach(function(row){
+          if(row.pct<=0)return;
+          const segment=document.createElement('span');
+          segment.style.width=row.pct+'%';segment.style.backgroundColor=row.color;
+          segment.title=row.label+' '+row.pct.toFixed(1)+'%';
+          stack.appendChild(segment);
+        });
+        preview.appendChild(stack);
+        const legend=document.createElement('p');legend.className='tea-school-inline-legend';
+        legend.textContent=rows.map(r=>r.label+' '+r.pct.toFixed(1)+'%').join(' · ');
+        preview.appendChild(legend);
+      }else{
+        preview.appendChild(textTag('p','tea-insights-empty','학생 인종 구성 · 공식 원문 확인 중'));
+      }
+    }else{
+      preview.appendChild(textTag('p','tea-insights-empty',
+        '이 학교의 상세 분석은 아직 연결되지 않았습니다. 현재 CFB·Lewisville·Allen·McKinney 학군부터 확대 중입니다.'));
+    }
+    const more=document.createElement('button');
+    more.type='button';more.className='tea-school-inline-detail';
+    more.textContent='상단 상세정보 · 학교 배정 안내 보기';
+    more.addEventListener('click',function(){
+      const detail=document.getElementById('detailContent');
+      if(detail)detail.scrollIntoView({block:'start',behavior:'auto'});
+      detail?.focus({preventScroll:true});
+    });
+    preview.appendChild(more);
+    selected.insertAdjacentElement('afterend',preview);
+    // Scroll only the list container to reveal the selected card and preview.
+    // Do not unexpectedly move the map or the rest of the dashboard.
+    const listRect=list.getBoundingClientRect();
+    const selectedRect=selected.getBoundingClientRect();
+    if(listRect.height>0 && selectedRect.height>0)
+      list.scrollTop+=selectedRect.top-listRect.top-8;
   }
   function mount() {
     const host=document.getElementById('detailContent');
     if(!host || typeof state==='undefined') return;
     const school=state.selectedSchool;
-    if(!school || typeof scoreRecord!=='function')return;
+    if(!school){
+      mountInline(null,null);
+      return;
+    }
+    if(typeof scoreRecord!=='function')return;
     const rating=scoreRecord(school.name,school.district);
     const id=String(rating?.id||'');
-    if(!getSchoolInsight(rating))return;
-    if(host.querySelector('.tea-insights-panel[data-campus="'+id+'"]'))return;
-    host.querySelectorAll('.tea-insights-panel').forEach(function(el){el.remove();});
-    const panel=render(rating);
-    if(!panel)return;
-    ensureStyles();
-    const separator=host.querySelector('hr.rule');
-    if(separator)separator.insertAdjacentElement('afterend',panel);
-    else host.appendChild(panel);
+    if(getSchoolInsight(rating) && !host.querySelector('.tea-insights-panel[data-campus="'+id+'"]')){
+      const panel=render(rating);
+      if(panel){
+        ensureStyles();
+        const separator=host.querySelector('hr.rule');
+        if(separator)separator.insertAdjacentElement('afterend',panel);
+        else host.appendChild(panel);
+      }
+    }
+    if(!document.querySelector('link[data-tea-carrollton-css]'))ensureStyles();
+    mountInline(school,rating);
   }
   function boot() {
     const host=document.getElementById('detailContent');
     if(!host || typeof MutationObserver==='undefined')return;
+    const search=document.getElementById('schoolSearch');
+    if(search)search.placeholder='학교 이름 검색 (주변 학교·배정학교 검색 아님)';
     const observer=new MutationObserver(mount);
     observer.observe(host,{childList:true});
+    // Filters can rebuild the list without changing the selected-school detail.
+    const list=document.getElementById('schoolList');
+    if(list){
+      const listObserver=new MutationObserver(mount);
+      listObserver.observe(list,{childList:true,subtree:true});
+    }
     mount();
   }
   const api={
