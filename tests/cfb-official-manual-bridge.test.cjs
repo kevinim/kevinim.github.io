@@ -45,7 +45,7 @@ test('UI is an explicit, labeled user-selected bridge, not a claimed automatic s
  assert.match(html,/id="cfbManualElementary"/);
  assert.match(html,/id="cfbManualMiddle"/);
  assert.match(html,/id="cfbManualHigh"/);
- assert.match(html,/features\/cfb-official-bridge\.js\?v=1/);
+ assert.match(html,/features\/cfb-official-bridge\.js\?v=2/);
  assert.doesNotMatch(script,/fetch\(|XMLHttpRequest|\.postMessage\(|localStorage|sessionStorage|document\.querySelector\([^)]*iframe/);
  assert.doesNotMatch(script,/APPROVED_AUTO_DISTRICTS|home\.assignment\s*=|resolveAssignment\(/);
 });

@@ -1,0 +1,152 @@
+name: CFB official map reconstruction phase 1 - raster and controls QA (NO DEPLOY)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/cfb-approved-zone-raster-reference-2026.json'
+      - 'data/carrollton-three-isd-boundaries-2025.geojson'
+      - 'home-lookup-v2.js'
+      - 'features/cfb-district-jurisdiction.js'
+      - 'tests/cfb-district-jurisdiction.test.cjs'
+      - 'tests/compact-home-finder.test.cjs'
+      - 'data/cfb-elementary-raster-calibration-draft.json'
+      - 'features/cfb-approved-zone-atlas.js'
+      - 'features/cfb-approved-zone-atlas.css'
+      - 'index.html'
+      - 'scripts/measure-cfb-raster-registration.cjs'
+      - 'scripts/extract-cfb-approved-raster-pixels.py'
+      - 'scripts/build-cfb-draft-elementary-geojson.py'
+      - 'scripts/recheck-cfb-public-finder-holdouts.cjs'
+      - 'scripts/test-cfb-raster-atlas-browser.cjs'
+      - 'tests/cfb-raster-atlas-and-georef.test.cjs'
+      - 'tests/csp-network-allowlist.test.cjs'
+      - 'tests/externalized-main-bootstrap.test.cjs'
+      - '.github/workflows/cfb-raster-reconstruction-phase1-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    name: Exact official source, affine residual, no fake GIS, CSP regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - run: |
+          node --check features/cfb-approved-zone-atlas.js
+          node --check features/cfb-district-jurisdiction.js
+          node --check home-lookup-v2.js
+          node --check scripts/measure-cfb-raster-registration.cjs
+          node scripts/measure-cfb-raster-registration.cjs
+          node --test tests/cfb-raster-atlas-and-georef.test.cjs tests/csp-network-allowlist.test.cjs tests/cfb-official-rezoning-reference.test.cjs tests/conditional-school-release.test.cjs tests/cfb-district-jurisdiction.test.cjs tests/compact-home-finder.test.cjs
+          node --test tests/externalized-main-bootstrap.test.cjs
+      - name: Save measured georeference residuals (review-only)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cfb-affine-residuals-review-only
+          path: artifacts/cfb-reconstruction/elementary-affine-draft.json
+          if-no-files-found: warn
+          retention-days: 7
+  browser:
+    name: Mobile and desktop original raster atlas interactive QA
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Install isolated browser
+        run: |
+          mkdir -p cfb-atlas-browser-tmp
+          cd cfb-atlas-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Test opt-in reference atlas; real source URLs stubbed safely
+        env:
+          NODE_PATH: ${{ github.workspace }}/cfb-atlas-browser-tmp/node_modules
+        run: node scripts/test-cfb-raster-atlas-browser.cjs
+      - name: Upload screenshots of source atlas UI
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cfb-raster-atlas-mobile-desktop
+          path: artifacts/cfb-atlas-browser/
+          if-no-files-found: warn
+          retention-days: 7
+  experimental-pixel-tracing:
+    name: Exploratory unlabelled pixel contours E/M/H (never production GIS)
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Install isolated open-source raster image tooling
+        run: |
+          python3 -m venv /tmp/cfb-approved-zone-qa
+          /tmp/cfb-approved-zone-qa/bin/pip install --disable-pip-version-check --no-cache-dir pillow numpy opencv-python-headless shapely
+      - name: Extract label-free image-pixel contours only
+        run: /tmp/cfb-approved-zone-qa/bin/python scripts/extract-cfb-approved-raster-pixels.py
+      - name: Build rough georeferenced elementary school-point candidate contours (not releaseable)
+        run: /tmp/cfb-approved-zone-qa/bin/python scripts/build-cfb-draft-elementary-geojson.py
+      - name: Store ephemeral UNVERIFIED source-color contours (not public website)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cfb-unlabelled-pixel-contours-NOT-GIS
+          path: artifacts/cfb-reconstruction/pixel-*.json
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Upload nonproduction 2025-26 elementary candidate polygons separately
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cfb-elementary-draft-only-UNVERIFIED-NOT-LIVE
+          path: |
+            artifacts/cfb-reconstruction/cfb-elementary-draft-unverified.geojson
+            artifacts/cfb-reconstruction/cfb-elementary-draft-summary.json
+          if-no-files-found: warn
+          retention-days: 7
+  public-finder-holdouts:
+    name: Advisory official GuideK12 2 public-address native Finder recheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Install isolated Chromium
+        run: |
+          mkdir -p cfb-public-finder-probe-tmp
+          cd cfb-public-finder-probe-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Check ONLY two public, previously verified addresses
+        env:
+          NODE_PATH: ${{ github.workspace }}/cfb-public-finder-probe-tmp/node_modules
+        run: node scripts/recheck-cfb-public-finder-holdouts.cjs
+      - name: Save advisory official source comparison (0 GIS crosschecks)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cfb-public-finder-holdouts-RECHECK-NOT-GIS
+          path: artifacts/cfb-reconstruction/current-finder-public-address-recheck.json
+          if-no-files-found: warn
+          retention-days: 7

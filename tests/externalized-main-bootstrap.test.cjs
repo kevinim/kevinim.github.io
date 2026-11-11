@@ -114,8 +114,14 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
   '<div id="homePrivacy" class="source">'+brief+'</div><details id="homePrivacyDetails" class="home-privacy-disclosure"><summary>개인정보·외부 서비스 안내 자세히 보기</summary><div class="source">'+originalPrivacy+'</div></details>');
  expected=replaceOnce(expected,'<script src="./features/theme-toggle.js?v=2"></script>',
   '<link rel="stylesheet" href="./features/first-fold-ux.css?v=1"><script src="./features/theme-toggle.js?v=2"></script>');
- // Track A is stacked on B, and adds only a trusted first-party reference
- // module and its stylesheet. Residential release policy script stays before it.
+ // AG06 reviewed CFB atlas and manual overlay, preserving mobile first-fold/privacy.
+ expected=replaceOnce(expected,"img-src 'self' data: blob: https://unpkg.com",
+  "img-src 'self' data: blob: https://resources.finalsite.net https://unpkg.com");
+ expected=replaceOnce(expected,'<link rel="stylesheet" href="./features/cfb-official-inline.css?v=1">',
+  '<link rel="stylesheet" href="./features/cfb-official-inline.css?v=2">\n<link rel="stylesheet" href="./features/cfb-approved-zone-atlas.css?v=1">');
+ expected=replaceOnce(expected,'<script src="./features/cfb-official-bridge.js?v=1" defer></script></body></html>',
+  '<script src="./features/cfb-official-bridge.js?v=2" defer></script><script src="./features/cfb-zone-overlay.js?v=1" defer></script><script src="./features/cfb-approved-zone-atlas.js?v=1" defer></script><script src="./features/cfb-district-jurisdiction.js?v=1" defer></script></body></html>');
+ // Track A: retain the strict CFB atlas and bootstrap exact-byte baseline.
  expected=replaceOnce(expected,'<link rel="stylesheet" href="./features/first-fold-ux.css?v=1">',
   '<link rel="stylesheet" href="./features/first-fold-ux.css?v=1"><link rel="stylesheet" href="./features/school-reference-preview.css?v=1">');
  expected=replaceOnce(expected,'<script src="./features/conditional-school-release.js?v=1"></script>',
@@ -136,7 +142,9 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
 test('strict script CSP preserved exactly and personal office artifacts absent',()=>{
  const allowed=oldCsp.replace('https://geocode.arcgis.com https://nominatim.openstreetmap.org',
   'https://geocode.arcgis.com https://iisd1.maps.arcgis.com https://services.arcgis.com https://nominatim.openstreetmap.org');
- assert.equal(newCsp,allowed.replace("frame-src 'none'","frame-src https://app.guidek12.com"),'Only CFB official Finder frame origin added to reviewed CSP');
+ const atlasCsp=allowed.replace("frame-src 'none'","frame-src https://app.guidek12.com")
+  .replace("img-src 'self' data: blob: https://unpkg.com","img-src 'self' data: blob: https://resources.finalsite.net https://unpkg.com");
+ assert.equal(newCsp,atlasCsp,'CFB Finder and publisher image allowlist only, all mobile protections retained');
  for(const part of ["script-src-attr 'none'","object-src 'none'","base-uri 'self'","form-action 'self'"])
   assert.ok(newCsp.includes(part));
  assert.ok(newCsp.includes("script-src 'self' https://unpkg.com;"));

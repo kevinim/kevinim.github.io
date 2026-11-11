@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "district": "CFB",
+  "level": "middle",
+  "sourceSchoolYear": "2025-26",
+  "sourceManifest": "data/cfb-approved-zone-raster-reference-2026.json",
+  "rasterPixelSize": null,
+  "anchorProtocol": "Independent public road intersections or distinctive district-boundary corners; 8 verified fit GCP and 3 separate independently verified holdouts minimum.",
+  "verifiedFitGCP": 0,
+  "independentHoldoutGCP": 0,
+  "controlPoints": [],
+  "publicationStatus": "EMPTY_TEMPLATE_NOT_OFFICIAL_GIS",
+  "residentialAssignmentApproved": false
+}
