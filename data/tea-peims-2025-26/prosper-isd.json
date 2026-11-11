@@ -1,0 +1,1088 @@
+{
+  "schemaVersion": 1,
+  "district": "PROSPER ISD",
+  "districtCode": "PROSPER",
+  "teaDistrictId": "043912",
+  "schoolYear": "2025-26",
+  "sourcePublisher": "Texas Education Agency (TEA)",
+  "sourceReport": "PEIMS Student Enrollment Reports — Selected Campus Totals by District / Ethnicity (CSV)",
+  "sourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043912&_debug=0",
+  "stagingProvenance": {
+    "repositoryBranch": "feature/tea-peims-694-campus-20261111",
+    "independentRawCsvParity": "pending",
+    "releaseEligible": false
+  },
+  "note": "Public campus-level counts only. Source masks (<N) are kept verbatim, other absent categories remain not-listed; do not calculate missing values or assume any attendance-zone assignment.",
+  "cellStatusTotals": {
+    "published": 155,
+    "suppressed": 45,
+    "not-listed": 24
+  },
+  "completeSevenCategoryCampusIds": [],
+  "campuses": {
+    "043912001": {
+      "district": "PROSPER",
+      "name": "PROSPER H S",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "asian": {
+          "status": "published",
+          "count": 651
+        },
+        "black": {
+          "status": "published",
+          "count": 203
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 300
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 172
+        },
+        "white": {
+          "status": "published",
+          "count": 1261
+        }
+      }
+    },
+    "043912002": {
+      "district": "PROSPER",
+      "name": "COLLIN CO J J A E P",
+      "counts": {
+        "black": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "native": {
+          "status": "not-listed"
+        },
+        "asian": {
+          "status": "not-listed"
+        },
+        "hispanic": {
+          "status": "not-listed"
+        },
+        "pacific": {
+          "status": "not-listed"
+        },
+        "multi": {
+          "status": "not-listed"
+        },
+        "white": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912005": {
+      "district": "PROSPER",
+      "name": "ROCK HILL H S",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<30"
+        },
+        "asian": {
+          "status": "published",
+          "count": 1000
+        },
+        "black": {
+          "status": "published",
+          "count": 310
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 315
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 163
+        },
+        "white": {
+          "status": "published",
+          "count": 724
+        }
+      }
+    },
+    "043912006": {
+      "district": "PROSPER",
+      "name": "WALNUT GROVE H S",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 583
+        },
+        "black": {
+          "status": "published",
+          "count": 216
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 295
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<140"
+        },
+        "white": {
+          "status": "published",
+          "count": 1288
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912007": {
+      "district": "PROSPER",
+      "name": "RICHLAND H S",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 647
+        },
+        "black": {
+          "status": "published",
+          "count": 300
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 232
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 103
+        },
+        "white": {
+          "status": "published",
+          "count": 503
+        }
+      }
+    },
+    "043912041": {
+      "district": "PROSPER",
+      "name": "LORENE ROGERS MIDDLE",
+      "counts": {
+        "native": {
+          "status": "published",
+          "count": 12
+        },
+        "asian": {
+          "status": "published",
+          "count": 403
+        },
+        "black": {
+          "status": "published",
+          "count": 83
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 203
+        },
+        "multi": {
+          "status": "published",
+          "count": 98
+        },
+        "white": {
+          "status": "published",
+          "count": 792
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912042": {
+      "district": "PROSPER",
+      "name": "REYNOLDS MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "asian": {
+          "status": "published",
+          "count": 387
+        },
+        "black": {
+          "status": "published",
+          "count": 84
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 134
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 83
+        },
+        "white": {
+          "status": "published",
+          "count": 763
+        }
+      }
+    },
+    "043912043": {
+      "district": "PROSPER",
+      "name": "BILL HAYS MIDDLE",
+      "counts": {
+        "native": {
+          "status": "published",
+          "count": 10
+        },
+        "asian": {
+          "status": "published",
+          "count": 633
+        },
+        "black": {
+          "status": "published",
+          "count": 106
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 106
+        },
+        "multi": {
+          "status": "published",
+          "count": 69
+        },
+        "white": {
+          "status": "published",
+          "count": 221
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912044": {
+      "district": "PROSPER",
+      "name": "WILLIAM RUSHING MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 326
+        },
+        "black": {
+          "status": "published",
+          "count": 109
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 152
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 97
+        },
+        "white": {
+          "status": "published",
+          "count": 403
+        }
+      }
+    },
+    "043912045": {
+      "district": "PROSPER",
+      "name": "DANIEL L JONES MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 572
+        },
+        "black": {
+          "status": "published",
+          "count": 138
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 175
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<100"
+        },
+        "white": {
+          "status": "published",
+          "count": 486
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912046": {
+      "district": "PROSPER",
+      "name": "MOSELEY MIDDLE",
+      "counts": {
+        "native": {
+          "status": "published",
+          "count": 16
+        },
+        "asian": {
+          "status": "published",
+          "count": 761
+        },
+        "black": {
+          "status": "published",
+          "count": 162
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 130
+        },
+        "multi": {
+          "status": "published",
+          "count": 78
+        },
+        "white": {
+          "status": "published",
+          "count": 244
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912101": {
+      "district": "PROSPER",
+      "name": "R STEVE FOLSOM EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 110
+        },
+        "black": {
+          "status": "published",
+          "count": 58
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 307
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<60"
+        },
+        "white": {
+          "status": "published",
+          "count": 339
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912102": {
+      "district": "PROSPER",
+      "name": "JUDY RUCKER EL",
+      "counts": {
+        "asian": {
+          "status": "published",
+          "count": 39
+        },
+        "black": {
+          "status": "published",
+          "count": 29
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 39
+        },
+        "multi": {
+          "status": "published",
+          "count": 25
+        },
+        "white": {
+          "status": "published",
+          "count": 177
+        },
+        "native": {
+          "status": "not-listed"
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912103": {
+      "district": "PROSPER",
+      "name": "JOHN A BAKER EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 134
+        },
+        "black": {
+          "status": "published",
+          "count": 60
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 64
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<50"
+        },
+        "white": {
+          "status": "published",
+          "count": 241
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912104": {
+      "district": "PROSPER",
+      "name": "CYNTHIA A COCKRELL EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 251
+        },
+        "black": {
+          "status": "published",
+          "count": 39
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 46
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 42
+        },
+        "white": {
+          "status": "published",
+          "count": 366
+        }
+      }
+    },
+    "043912105": {
+      "district": "PROSPER",
+      "name": "LIGHT FARMS EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 244
+        },
+        "black": {
+          "status": "published",
+          "count": 34
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 113
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 63
+        },
+        "white": {
+          "status": "published",
+          "count": 580
+        }
+      }
+    },
+    "043912106": {
+      "district": "PROSPER",
+      "name": "WINDSONG RANCH EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 153
+        },
+        "black": {
+          "status": "published",
+          "count": 43
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 98
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 72
+        },
+        "white": {
+          "status": "published",
+          "count": 373
+        }
+      }
+    },
+    "043912107": {
+      "district": "PROSPER",
+      "name": "JIM AND BETTY HUGHES EL",
+      "counts": {
+        "native": {
+          "status": "published",
+          "count": 15
+        },
+        "asian": {
+          "status": "published",
+          "count": 405
+        },
+        "black": {
+          "status": "published",
+          "count": 69
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 61
+        },
+        "multi": {
+          "status": "published",
+          "count": 54
+        },
+        "white": {
+          "status": "published",
+          "count": 151
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912108": {
+      "district": "PROSPER",
+      "name": "RALPH AND MARY LYNN BOYER EL",
+      "counts": {
+        "native": {
+          "status": "published",
+          "count": 13
+        },
+        "asian": {
+          "status": "published",
+          "count": 344
+        },
+        "black": {
+          "status": "published",
+          "count": 77
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 70
+        },
+        "multi": {
+          "status": "published",
+          "count": 39
+        },
+        "white": {
+          "status": "published",
+          "count": 296
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912109": {
+      "district": "PROSPER",
+      "name": "JIM SPRADLEY EL",
+      "counts": {
+        "native": {
+          "status": "published",
+          "count": 12
+        },
+        "asian": {
+          "status": "published",
+          "count": 521
+        },
+        "black": {
+          "status": "published",
+          "count": 50
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 39
+        },
+        "multi": {
+          "status": "published",
+          "count": 34
+        },
+        "white": {
+          "status": "published",
+          "count": 97
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912110": {
+      "district": "PROSPER",
+      "name": "JACK AND JUNE FURR EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 324
+        },
+        "black": {
+          "status": "published",
+          "count": 92
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 83
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<50"
+        },
+        "white": {
+          "status": "published",
+          "count": 185
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912111": {
+      "district": "PROSPER",
+      "name": "CHUCK AND CINDY STUBER EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 374
+        },
+        "black": {
+          "status": "published",
+          "count": 123
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 111
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 71
+        },
+        "white": {
+          "status": "published",
+          "count": 258
+        }
+      }
+    },
+    "043912112": {
+      "district": "PROSPER",
+      "name": "SAM JOHNSON EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "asian": {
+          "status": "published",
+          "count": 297
+        },
+        "black": {
+          "status": "published",
+          "count": 64
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 75
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 51
+        },
+        "white": {
+          "status": "published",
+          "count": 319
+        }
+      }
+    },
+    "043912113": {
+      "district": "PROSPER",
+      "name": "MIKE AND JANIE REEVES EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 364
+        },
+        "black": {
+          "status": "published",
+          "count": 79
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 71
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<50"
+        },
+        "white": {
+          "status": "published",
+          "count": 252
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912114": {
+      "district": "PROSPER",
+      "name": "MRS JERRY BRYANT EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 454
+        },
+        "black": {
+          "status": "suppressed",
+          "publishedMask": "<70"
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 106
+        },
+        "multi": {
+          "status": "published",
+          "count": 70
+        },
+        "white": {
+          "status": "published",
+          "count": 267
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912115": {
+      "district": "PROSPER",
+      "name": "JOYCE HALL EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 378
+        },
+        "black": {
+          "status": "published",
+          "count": 52
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 48
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 39
+        },
+        "white": {
+          "status": "published",
+          "count": 218
+        }
+      }
+    },
+    "043912116": {
+      "district": "PROSPER",
+      "name": "LILYANA EL",
+      "counts": {
+        "native": {
+          "status": "published",
+          "count": 22
+        },
+        "asian": {
+          "status": "published",
+          "count": 527
+        },
+        "black": {
+          "status": "published",
+          "count": 64
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 45
+        },
+        "multi": {
+          "status": "published",
+          "count": 34
+        },
+        "white": {
+          "status": "published",
+          "count": 173
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912117": {
+      "district": "PROSPER",
+      "name": "DAN CHRISTIE EL",
+      "counts": {
+        "native": {
+          "status": "published",
+          "count": 25
+        },
+        "asian": {
+          "status": "published",
+          "count": 460
+        },
+        "black": {
+          "status": "published",
+          "count": 144
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 79
+        },
+        "multi": {
+          "status": "published",
+          "count": 47
+        },
+        "white": {
+          "status": "published",
+          "count": 112
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912118": {
+      "district": "PROSPER",
+      "name": "BETTY JACKSON EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 276
+        },
+        "black": {
+          "status": "published",
+          "count": 66
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 56
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<40"
+        },
+        "white": {
+          "status": "published",
+          "count": 107
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "043912119": {
+      "district": "PROSPER",
+      "name": "JANA L THOMSON EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 235
+        },
+        "black": {
+          "status": "published",
+          "count": 47
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 51
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 22
+        },
+        "white": {
+          "status": "published",
+          "count": 265
+        }
+      }
+    },
+    "043912120": {
+      "district": "PROSPER",
+      "name": "VIRGIE WITT SMOTHERMON EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<30"
+        },
+        "asian": {
+          "status": "published",
+          "count": 389
+        },
+        "black": {
+          "status": "published",
+          "count": 107
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 49
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 37
+        },
+        "white": {
+          "status": "published",
+          "count": 134
+        }
+      }
+    },
+    "043912165": {
+      "district": "PROSPER",
+      "name": "BRENDA CALHOUN EARLY CHILDHOOD SCHOOL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "asian": {
+          "status": "published",
+          "count": 477
+        },
+        "black": {
+          "status": "published",
+          "count": 58
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 68
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 30
+        },
+        "white": {
+          "status": "published",
+          "count": 94
+        }
+      }
+    }
+  }
+}
