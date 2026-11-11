@@ -111,8 +111,12 @@
   }
   function getSchoolInsight(record) {
     if(!record || !/^\d{9}$/.test(String(record.id||''))) return null;
-    const cohort=ROLLOUT[String(record.district||'')];
+    const code=String(record.district||'');
+    const cohort=ROLLOUT[code];
     if(!cohort)return null;
+    // Prevent accidental cross-district reuse of a TEA 9-digit campus ID.
+    const prefix={CFB:'057903',LISD:'061902',AISD:'043901','043907':'043907'}[code];
+    if(!String(record.id).startsWith(prefix))return null;
     const curated=getRecord(record.id);
     if(curated)return {...curated,rolloutPhase:cohort.phase,cohort:cohort.label};
     const evidence=VERIFIED_TAPR[String(record.id)]||null;
