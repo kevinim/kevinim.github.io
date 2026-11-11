@@ -9,6 +9,10 @@ const ARTIFACTS='artifacts/carrollton-tea-insights';
 const CASES=[
   ['061902118','STEM Academy at Hebron Valley Elementary'],
   ['061902008','Hebron High School'],
+  ['061902136','Castle Hills Elementary'],
+  ['061902140','Coyote Ridge Elementary'],
+  ['061902142','Independence Elementary'],
+  ['061902143','Lewisville Elementary'],
   ['057903102','Carrollton Elementary'],
   ['043901001','Allen High School'],
   ['043901105','Alvis C Story Elementary'],
@@ -38,7 +42,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           ?.textContent.includes('2,282'),null,{timeout:15000});
         const progressText=await coverage.locator('.tea-data-progress-content').textContent();
         assert.ok(progressText.includes('18 / 2,282'),'curated analysis still only 18, not implied complete');
-        assert.ok(progressText.includes('4 / 2,282'),'verified ethnicity must not be overstated');
+        assert.ok(progressText.includes('8 / 2,282'),'verified ethnicity must not be overstated');
         await coverage.locator('summary').click();
         assert.equal(await coverage.evaluate(el=>el.open),false,'progress notes collapsed by default again');
         const results=[];
@@ -100,7 +104,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           assert.equal(found.warningOutsideNotes,true,'important school assignment warning remains visible');
           assert.ok(found.link.some(x=>x.url.startsWith('https://txschools.gov/')),'official campus source included');
           const reviewed=['061902118','061902008'].includes(id);
-          const raceVerified=['061902118','061902008','043901001','043907002'].includes(id);
+          const raceVerified=['061902118','061902008','061902136','061902140','061902142','061902143','043901001','043907002'].includes(id);
           assert.equal(found.domainCount,reviewed?3:0,'domain scores must not be invented '+id);
           if(raceVerified){
             assert.equal(found.years.length,2,'evaluation and ethnicity years displayed separately');
