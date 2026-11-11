@@ -57,6 +57,13 @@ test('source evidence and selected-campus known values remain exact',()=>{
   assert.equal(report.campuses['061902136'].counts.hispanic.status,'suppressed');
   assert.equal(report.campuses['061902140'].counts.asian.count,151);
 });
+test('public aggregate is free from per-student identifiers and numeric percentage guesses',()=>{
+  const text=JSON.stringify(report);
+  for(const pattern of [/"student_id"\s*:/i,/"date_of_birth"\s*:/i,/"first_name"\s*:/i,/"last_name"\s*:/i,/"ethnicityPercentage"\s*:/i]){
+    assert.equal(pattern.test(text),false,'forbidden personal identifier or inferred percent');
+  }
+  assert.equal(report.policy.includes('Do not impute'),true);
+});
 test('invalid campus counts and suppressed count substitutions are rejected',()=>{
   const c=report.campuses['061902118'];
   assert.equal(insights.validPublishedCampus('061902118',{...c,counts:{...c.counts,multi:{status:'suppressed',publishedMask:'<50',count:25}}}),false);
