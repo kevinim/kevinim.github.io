@@ -203,7 +203,11 @@
     try{
       const u=new URL(raw);
       return u.protocol==='https:'&&u.hostname==='rptsvr1.tea.texas.gov'&&
+        (u.pathname==='/cgi/sas/broker/'||u.pathname==='/cgi/sas/broker')&&
+        u.searchParams.get('_service')==='marykay'&&
+        u.searchParams.get('_program')==='perfrept.perfmast.sas'&&
         u.searchParams.get('ccyy')==='2026'&&u.searchParams.get('sumlev')==='C'&&
+        u.searchParams.get('datafmt')==='C'&&
         u.searchParams.get('dsname')===dataset&&
         u.searchParams.get('prgopt')==='reports/acct/dd/dd_get_data.sas';
     }catch{return false;}
