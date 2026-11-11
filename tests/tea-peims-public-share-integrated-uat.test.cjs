@@ -88,9 +88,9 @@ test('standalone script hookup, minimal CSP-friendly DOM and school context rema
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  const js=fs.readFileSync(path.join(root,'features/tea-peims-public-share-addon.js'),'utf8');
  const css=fs.readFileSync(path.join(root,'features/tea-peims-public-share-addon.css'),'utf8');
- assert.equal(html.split('tea-peims-public-share-addon.js?v=1').length-1,1);
- assert.equal(html.split('tea-peims-public-share-addon.css?v=1').length-1,1);
- assert.ok(html.indexOf('carrollton-school-insights.js?v=4')<html.indexOf('tea-peims-public-share-addon.js?v=1'));
+ assert.equal(html.split('tea-peims-public-share-addon.js?v=2').length-1,1);
+ assert.equal(html.split('tea-peims-public-share-addon.css?v=2').length-1,1);
+ assert.ok(html.indexOf('carrollton-school-insights.js?v=4')<html.indexOf('tea-peims-public-share-addon.js?v=2'));
  assert.match(js,/getPublishedCountRows/);
  assert.match(js,/insertAdjacentElement\('afterend'/);
  assert.doesNotMatch(js,/innerHTML\s*=/);
