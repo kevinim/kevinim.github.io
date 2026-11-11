@@ -25,7 +25,7 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
     return route.abort();
    });
    let asset=0;
-   page.on('response',r=>{if(r.url().includes('/dashboard-main.js?v=4')&&r.status()===200)asset++});
+   page.on('response',r=>{if(r.url().includes('/dashboard-main.js?v=5')&&r.status()===200)asset++});
    try{
     await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});
     await page.waitForFunction(()=>typeof map!=='undefined'&&map&&typeof state!=='undefined'&&
@@ -61,6 +61,74 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
     await page.locator('#zipSelect').selectOption(next);
     assert.equal(await page.evaluate(()=>state.zip),next,'ZIP change event still works');
     await page.locator('#schoolScope').selectOption('all');
+    // Each letter filter applies to both the directory and the map. The map
+    // marker badge must expose its TEA letter, not the numeric rating score.
+    await page.waitForFunction(()=>state.ratingIndex?.size>0&&
+      state.schools.some(s=>s.ll&&scoreRecord(s.name,s.district)?.rating==='A'),
+      null,{timeout:40000});
+    for(const grade of ['A','B','C']){
+      await page.locator('#schoolGradeQuick button[data-grade="'+grade+'"]').click();
+      const filter=await page.evaluate(()=>{
+        const candidates=[...document.querySelectorAll('#schoolList button.school[data-sid]')];
+        const mapBadges=schoolGroup.getLayers().map(m=>m.getElement()?.querySelector('.school-map-grade-badge')?.textContent||'');
+        return {grade:state.ratingFilter,select:document.getElementById('ratingFilter').value,
+          schoolCount:candidates.length,allCorrect:candidates.every(b=>
+            scoreRecord(state.schools[Number(b.dataset.sid)].name,state.schools[Number(b.dataset.sid)].district)?.rating===state.ratingFilter),
+          badgesValid:mapBadges.every(b=>b===state.ratingFilter),
+          pressed:document.querySelector('#schoolGradeQuick button.active')?.dataset.grade};
+      });
+      assert.equal(filter.grade,grade,'Quick grade filter updates application state');
+      assert.equal(filter.select,grade,'Quick grade filter syncs dropdown');
+      assert.ok(filter.schoolCount>0,'Filtered campus list must contain '+grade+' schools');
+      assert.equal(filter.allCorrect,true,'Every filtered list school must have matching TEA grade');
+      assert.equal(filter.badgesValid,true,'All rendered map campus badges must match selected grade');
+      assert.equal(filter.pressed,grade,'Quick grade button remains active');
+    }
+    // A grade with no numeric score still belongs in grade-A.
+    const noScore=await page.evaluate(()=>{
+      const sample={name:'Synthetic Grade Only',district:'TEST'};
+      const k='TEST|'+canonical(sample.name);
+      const old=state.ratingIndex.get(k);state.ratingIndex.set(k,[{rating:'A',score:null}]);
+      state.ratingFilter='A';const result=schoolPassesRatingFilter(sample);
+      if(old)state.ratingIndex.set(k,old);else state.ratingIndex.delete(k);
+      return result;
+    });
+    assert.equal(noScore,true,'Letter grade must not require numeric score');
+    await page.locator('#schoolGradeQuick button[data-grade="A"]').click();
+    const chosen=await page.evaluate(()=>{
+      const button=[...document.querySelectorAll('#schoolList button.school[data-sid]')].find(b=>{
+        const s=state.schools[Number(b.dataset.sid)];
+        return Array.isArray(s?.ll)&&s.ll.length===2&&s.ll.every(Number.isFinite);
+      });
+      if(!button)return null;
+      const campus=state.schools[Number(button.dataset.sid)];
+      return {sid:button.dataset.sid,name:campus.name,ll:campus.ll};
+    });
+    assert.ok(chosen,'At least one TEA grade-A campus has a recorded marker coordinate');
+    await page.locator('#schoolList button.school[data-sid="'+chosen.sid+'"]').click();
+    const focused=await page.evaluate(()=>{
+      const s=state.selectedSchool,center=map.getCenter();
+      return {school:s?.name,pressed:document.querySelector('#schoolList button.school[aria-pressed="true"]')?.dataset.sid,
+        focusLayers:schoolFocusGroup.getLayers().length,
+        markerLabel:document.querySelector('.selected-school-campus-tooltip')?.textContent||'',
+        pin:!!document.querySelector('.selected-school-campus-pin'),
+        lat:center.lat,lng:center.lng,zoom:map.getZoom(),status:document.getElementById('schoolMapStatus')?.textContent||''};
+    });
+    assert.equal(focused.school,chosen.name,'Click selects exact school object');
+    assert.equal(focused.pressed,chosen.sid,'List maintains selected emphasis');
+    assert.ok(focused.focusLayers>=2&&focused.pin,'Selected campus has persistent map highlight');
+    assert.ok(focused.markerLabel.includes(chosen.name),'Map explicitly labels selected campus');
+    assert.ok(Math.abs(focused.lat-chosen.ll[0])<0.002&&Math.abs(focused.lng-chosen.ll[1])<0.002,
+      'Map centers actual campus coordinates, not entire attendance polygon');
+    assert.ok(focused.zoom>=14,'Campus is zoomed to local building');
+    await page.locator('#schoolGradeQuick button[data-grade="B"]').click();
+    const cleared=await page.evaluate(()=>({
+      school:state.selectedSchool?.name||null,focus:schoolFocusGroup.getLayers().length,
+      grade:state.ratingFilter}));
+    assert.deepEqual(cleared,{school:null,focus:0,grade:'B'},
+      'Filtering away the selected campus must also remove its highlighted pin');
+    await page.locator('#schoolGradeQuick button[data-grade="all"]').click();
+    assert.equal(await page.locator('#ratingFilter').inputValue(),'all');
     const school=page.locator('#schoolList button.school').first();
     await school.waitFor({timeout:25000});
     await school.click();
