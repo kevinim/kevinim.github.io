@@ -10,7 +10,7 @@
   "individualNarratives": 18,
   "domainComponentsReviewed": 2,
   "subjectsReviewed": 2,
-  "ethnicityReviewed": 4,
+  "ethnicityReviewed": 5,
   "imported2026Components": 0,
   "imported2025_26Ethnicity": 0,
   "cohorts": [
@@ -20,7 +20,7 @@
       "profiles": 92,
       "individualAnalysis": 18,
       "domainScores": 2,
-      "ethnicity": 2
+      "ethnicity": 3
     },
     {
       "name": "Allen",
