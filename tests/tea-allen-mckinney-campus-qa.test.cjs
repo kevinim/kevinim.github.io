@@ -31,21 +31,60 @@ test('2025-26 PEIMS official published, suppressed, unlisted cells are mutually 
  assert.equal(full,batch.summary.sevenPublishedCampuses);
  assert.equal(batch.summary.sourceCampuses,56);
 });
-test('ratings remain catalog-only and cannot be misrepresented as 2026 source-audited domains',()=>{
- const map=new Map(catalog.map(r=>[r.id,r]));
- let notRated=0;
+test('2026 official campus summary and STAAR source audits only apply to independently checked campuses',()=>{
+ const catalogMap=new Map(catalog.map(r=>[r.id,r]));
+ const verified=new Set(['043901001','043907002']);
+ let notRated=0,reviewed=0;
  for(const [id,c] of Object.entries(batch.campuses)){
-  const old=map.get(id);assert.ok(old);
+  const old=catalogMap.get(id);assert.ok(old);
   assert.equal(c.accountability.year,2026);
   assert.equal(c.accountability.rating,old.rating);
   assert.equal(c.accountability.score,old.score);
-  assert.equal(c.accountability.verification,'existing-catalog-not-independently-rechecked');
   if(c.accountability.rating==='Not Rated')notRated++;
-  assert.equal(c.domains.status,'source-not-yet-verified');assert.equal(c.staar.status,'source-not-yet-verified');
-  assert.equal(c.analysis.status,'awaiting-verified-component-and-staar-scores');
-  assert.deepEqual(c.analysis.strengths,[]);assert.deepEqual(c.analysis.improvementAreas,[]);
+  if(verified.has(id)){
+   reviewed++;
+   assert.equal(c.accountability.verification,'2026-official-campus-summary-source-crosschecked');
+   assert.equal(c.domains.status,'official-verified');
+   assert.equal(c.domains.year,2026);
+   assert.equal(c.domains.scoreType,'official-scaled-accountability-domain-scores');
+   assert.equal(c.staar.status,'official-verified');
+   assert.equal(c.staar.year,2026);
+   assert.equal(c.staar.metric,'All Students — percent of tests at Meets Grade Level standard or above');
+   assert.equal(c.analysis.status,'score-backed-noncausal');
+   for(const [subject,value] of Object.entries(c.staar)){
+    if(['reading','math','science','socialStudies'].includes(subject))assert.ok(Number.isInteger(value)&&value>=0&&value<=100);
+   }
+   for(const url of [c.accountability.source,c.domains.source,c.staar.source]){
+    const parsed=new URL(url);
+    assert.equal(parsed.hostname,'rptsvr1.tea.texas.gov');
+    assert.equal(parsed.searchParams.get('id'),id);
+    assert.equal(parsed.searchParams.get('ccyy'),'2026');
+   }
+  }else{
+   assert.equal(c.accountability.verification,'existing-catalog-not-independently-rechecked');
+   assert.equal(c.domains.status,'source-not-yet-verified');
+   assert.equal(c.staar.status,'source-not-yet-verified');
+   assert.equal(c.analysis.status,'awaiting-verified-component-and-staar-scores');
+   assert.deepEqual(c.analysis.strengths,[]);
+   assert.deepEqual(c.analysis.improvementAreas,[]);
+  }
  }
- assert.equal(notRated,4);assert.equal(batch.summary.fullyAuditedProfiles,0);
+ assert.equal(notRated,4);
+ assert.equal(reviewed,2);
+ assert.equal(batch.summary.newlyAcademicSourceVerified,2);
+ assert.equal(batch.summary.awaiting2026ComponentsAndStaar,54);
+ assert.equal(batch.summary.fullyAuditedProfiles,0);
+});
+test('crosschecked scaled domains and exact all-student Meets rates match official 2026 campus reports',()=>{
+ const a=batch.campuses['043901001'],m=batch.campuses['043907002'];
+ assert.deepEqual([a.domains.studentAchievement,a.domains.schoolProgress,a.domains.closingTheGaps,a.domains.closingTheGapsUnscaledComponent],[88,80,93,81]);
+ assert.deepEqual([a.staar.reading,a.staar.math,a.staar.science,a.staar.socialStudies],[75,85,43,86]);
+ assert.deepEqual([m.domains.studentAchievement,m.domains.schoolProgress,m.domains.closingTheGaps,m.domains.closingTheGapsUnscaledComponent],[93,91,94,85]);
+ assert.deepEqual([m.staar.reading,m.staar.math,m.staar.science,m.staar.socialStudies],[61,58,72,73]);
+ assert.match(a.analysis.strengths[0],/Social Studies: 86%/);
+ assert.match(a.analysis.improvementAreas[0],/Science: 43%/);
+ assert.match(m.analysis.strengths[0],/Social Studies: 73%/);
+ assert.match(m.analysis.improvementAreas[0],/Mathematics: 58%/);
 });
 test('source sentinel rows match the public TEA aggregate CSV',()=>{
  assert.equal(batch.campuses['043901001'].peims.counts.asian.count,1426);
