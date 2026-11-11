@@ -13,7 +13,7 @@ const baseline='5a5b3a8fbe1b29ba71797525696d1f092821e6b7';
 const old=show(baseline,'index.html'),oldJs=show(baseline,'dashboard-main.js');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const js=fs.readFileSync(path.join(root,'dashboard-main.js'),'utf8');
-const external='<script src="./features/map/area-label-hierarchy.js?v=1"></script><script src="./dashboard-main.js?v=7"></script>';
+const external='<script src="./features/map/area-label-hierarchy.js?v=1"></script><script src="./dashboard-main.js?v=6"></script>';
 const oldCsp=old.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
 const newCsp=html.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
 const hash=buf=>crypto.createHash('sha256').update(buf).digest('hex');
@@ -151,7 +151,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  // Approved #259 only adds these exact styles and the zoom-aware script before the bootstrap.
  const approvedLabelStyle=".area-label{pointer-events:none}.area-label span{display:block;text-align:center;white-space:nowrap;background:rgba(255,255,255,.94);border:1px solid #8194ae;border-radius:6px;padding:3px 6px;color:#172d4a;font-size:11px;font-weight:750;line-height:1.15;box-shadow:0 1px 4px #1b355044}.area-label.selected span{background:#173b78;border-color:#fff;color:white}\n.area-label.city span{font-size:12px;font-weight:850;padding:5px 9px;border-radius:8px;border-color:#59779b;box-shadow:0 2px 7px #1b355044}\n.area-label.region span{font-size:11px;font-weight:750;padding:4px 7px}\n.area-label.zip span{font-size:10px;font-weight:720;padding:3px 6px}\nhtml[data-theme=\"dark\"] .area-label:not(.selected) span{background:rgba(17,32,50,.96);color:#eaf2ff;border-color:#67819d;box-shadow:0 2px 7px #0008}\nhtml[data-theme=\"dark\"] .area-label.selected span{background:#2d5592;border-color:#b6d7ff;color:white}\r\n";
  const previousLabelStyle=".area-label{pointer-events:none}.area-label span{display:block;text-align:center;white-space:nowrap;background:rgba(255,255,255,.94);border:1px solid #8194ae;border-radius:6px;padding:3px 6px;color:#172d4a;font-size:11px;font-weight:750;line-height:1.15;box-shadow:0 1px 4px #1b355044}.area-label.selected span{background:#173b78;border-color:#fff;color:white}\r\n";
- const approvedLabelScript="<script src=\"./features/map/area-label-hierarchy.js?v=1\"></script><script src=\"./dashboard-main.js?v=7\"></script>";
+ const approvedLabelScript="<script src=\"./features/map/area-label-hierarchy.js?v=1\"></script><script src=\"./dashboard-main.js?v=6\"></script>";
  assert.equal(html.split(approvedLabelStyle).length,2,'Exact zoom label style added once');
  assert.equal(html.split(approvedLabelScript).length,2,'Exact zoom label runtime added once');
  const integrityHtml=html.replace(approvedLabelStyle,previousLabelStyle)
