@@ -134,7 +134,10 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           assert.equal(found.peimsCountRows,currentPeims?7:0,'2025–26 source year and seven explicit privacy statuses '+id);
           if(currentPeims){
             assert.ok(found.peimsText.includes('2025–26'),'current-year PEIMS source labeled');
-            assert.ok(found.peimsText.includes('비공개')||found.peimsText.includes('원본 미표시'),'masking remains visible');
+            if(id==='043901001')assert.ok(found.peimsText.includes('7개 분류 공개'),
+              'Allen High is the one fully public seven-category campus');
+            else assert.ok(found.peimsText.includes('비공개')||found.peimsText.includes('원본 미표시'),
+              'masking or source omission remains visible');
           }
           if(id==='061902118')assert.ok(found.peimsText.includes('246명'),'actual TEA Asian enrollment count is used');
           if(id==='061902136')assert.ok(found.peimsText.includes('251명'),'actual Castle Hills Asian enrollment count is used');
