@@ -1,7 +1,7 @@
 # CFB / Lewisville TEA 2026 campus independent QA — 2026-11-11
 
 ## Scope and rule
-This is a **separate evidence ledger and test suite**, not a dataset of newly verified 2026 academic component or STAAR scores. Only **CFB ISD 35** and **Lewisville ISD 57** TEA campus records are included. Existing 18 manually written school analyses, shared enrichment pipeline, GIS/address-to-school code, `main`, and PR #230/#232 data are not edited.
+This is a **separate evidence ledger and test suite**. Batch 01 now independently verifies six campuses' official 2026 domain and subject test metrics. This is **not** yet a complete 2025–26 demographic or source-verified full campus profile. Only **CFB ISD 35** and **Lewisville ISD 57** TEA campus records are included. Existing 18 manually written school analyses, shared enrichment pipeline, GIS/address-to-school code, `main`, and PR #230/#232 data are not edited.
 
 ## Independently rechecked on 2026-11-11
 
@@ -14,10 +14,10 @@ This is a **separate evidence ledger and test suite**, not a dataset of newly ve
 | 2025–26 PEIMS suppressed cells in #232 | 180 | 644 | Masked values remain unquantified |
 | 2025–26 PEIMS unlisted cells in #232 | 71 | 644 | Not equivalent to reported zero |
 | Source-independent original PEIMS row and total-enrollment verification | 0 | 92 | PR #232 normalized data used for join/status audit; original TEA CSV row-by-row check still pending |
-| Independently verified 2026 Student Achievement / School Progress / Closing the Gaps | 0 | 92 | `main` enrichment JSON has no verified 2026 campus entries |
-| Independently verified 2026 STAAR Reading / Math / Science / Social Studies | 0 | 92 | Original TEA source + variable mapping still required |
-| New evidence-based school strengths/improvement analyses | 0 | 92 | No narratives written without official component/subject data |
-| **Fully verified academic + demographic campuses** | **0** | **92** | **0%** — school-by-school metrics remain incomplete |
+| Independently verified 2026 Student Achievement / School Progress / Closing the Gaps | 6 | 92 | TEA campus HTML summary directly checked (6.52%), 86 still unverified |
+| Independently verified 2026 STAAR Reading / Math / Science / Social Studies | 6 | 92 | Official TEA campus STAAR 2026 All Students percent-of-tests checked (6.52%); social studies N/A for elementary; 86 not checked |
+| New evidence-based school strengths/improvement analyses | 3 | 92 | Independence, Tom Hicks and Arbor Creek only; no changes to 18 existing narratives |
+| **Fully verified academic + demographic campuses** | **0** | **92** | **0%** — 2025–26 PEIMS original campus enrollment totals are still unverified; race masking prevents full-share percentages |
 
 ## Verified source locations, not unverified numbers
 
@@ -31,7 +31,23 @@ This is a **separate evidence ledger and test suite**, not a dataset of newly ve
 
 ## Per-campus ledger
 
-`data/tea-cfb-lisd-campus-qa-ledger-2026.json` carries each of 92 exact campus IDs, official campus name, district, 2026 overall rating, original campus profile URL, per-campus **count of published/suppressed/unlisted group cells**, missing enrollment totals, and explicit null academic component/subject values. This is a point-in-time audit snapshot, **not** a production school profile input. No original PEIMS group counts are copied from #232 and no individual student records are accessed.
+`data/tea-cfb-lisd-campus-qa-ledger-2026.json` carries each of 92 exact campus IDs, official campus name, district, 2026 overall rating, original campus profile URL, per-campus **count of published/suppressed/unlisted group cells**, missing enrollment totals, and explicit null academic component/subject values. This is a QA audit snapshot, **not** a production school profile input. Six campuses are now marked independently verified for 2026 academic metrics only. Three new metric-only analyses are recorded separately in `data/tea-cfb-lisd-academic-2026-verified-batch01.json`. No original PEIMS group counts are copied from #232 and no individual student records are accessed.
+
+## Independently verified 2026 academic batch 01
+
+`data/tea-cfb-lisd-academic-2026-verified-batch01.json` preserves exact TEA 2026 campus summary and STAAR report URLs, three scaled academic domain scores, published All Students `Meets Grade Level or Above` test percentages, official meets/total test counts, and `not-applicable` where no Social Studies test is reported. These percentages describe **test results**, not the population of individual students or PEIMS ethnicity. Source records:
+
+| Campus ID | District | School | 2026 three scaled domain scores (Achievement / Progress / Gaps) | STAAR Meets tests % (RLA / Math / Science / Social) | New metric note? |
+| --- | --- | --- | --- | --- | --- |
+| `057903122` | CFB | Kent EL | 93 / 92 / 85 | 77 / 76 / 47 / N/A | No, existing curated narrative preserved |
+| `061902118` | LISD | Hebron Valley EL | 82 / 73 / 73 | 65 / 47 / 40 / N/A | No, existing curated narrative preserved |
+| `061902140` | LISD | Coyote Ridge EL | 73 / 78 / 72 | 57 / 42 / 31 / N/A | No, existing curated narrative preserved |
+| `061902142` | LISD | Independence EL | 76 / 70 / 70 | 56 / 45 / 34 / N/A | Yes, source-based subject comparison |
+| `061902134` | LISD | Tom Hicks EL | 92 / 86 / 83 | 83 / 68 / 51 / N/A | Yes, source-based subject comparison |
+| `061902047` | LISD | Arbor Creek Middle | 91 / 85 / 91 | 75 / 61 / 65 / 52 | Yes, source-based subject comparison |
+
+Official 2026 Summary and STAAR reports for every row use the same source pattern (9-digit TEA campus ID and `ccyy=2026`): `https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902142&lev=C&prgopt=reports%2Facct%2Fsummary.sas` and its `domain1a.sas` counterpart. All six summary/STAAR pages were independently read. **Academic data completeness 6/92 (6.52%), full academic-plus-verified PEIMS total still 0/92**.
+
 
 ## AG01 / AG02 handoff acceptance
 
@@ -43,4 +59,4 @@ This is a **separate evidence ledger and test suite**, not a dataset of newly ve
 
 ## Release gate
 
-**QA scaffolding only; academic-score publication is blocked until source values are independently verified.** This branch changes only a new QA ledger, independent test, and this document. PR stays **Draft**. Never merge or deploy to production without explicit authorization.
+**QA staging for six official 2026 academic source records; not production publication. The other 86 academic records and the 92 original PEIMS enrollment totals remain blocked until independently verified.** This branch changes only a new QA ledger, independent test, and this document. PR stays **Draft**. Never merge or deploy to production without explicit authorization.
