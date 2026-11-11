@@ -54,6 +54,7 @@
   }
   function refreshDistrictOptions(){
     if(!districtSelect)return;
+    districtSelect.replaceChildren(option('','학군 직접 선택 (주소 ZIP으로 자동 지정하지 않음)'));
     const codes=[...new Set(campusList().map(s=>s.district).filter(Boolean))];
     codes.sort((a,b)=> {
       const ai=PRIORITY.indexOf(a),bi=PRIORITY.indexOf(b);
