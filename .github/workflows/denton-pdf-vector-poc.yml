@@ -1,0 +1,81 @@
+name: Denton 2026-27 official PDF native vector GIS PoC (STAGING ONLY)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/denton-pdf-vector-poc.yml'
+      - 'docs/DENTON_2026_GEOPDF_TO_GEOJSON_POC.md'
+      - 'scripts/denton_*.py'
+      - 'scripts/verify_denton_geopdf_staging.py'
+      - 'tests/test_denton_*.py'
+  push:
+    branches: [poc/denton-2026-pdf-to-gis-20261109]
+  workflow_dispatch:
+concurrency:
+  group: denton-2026-pdf-vector-poc-${{ github.ref_name }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  inspect-official-pdfs:
+    name: Extract PDF-local vectors from high, middle, elementary aggregate maps
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install free pinned PyMuPDF
+        run: python -m pip install --disable-pip-version-check --no-cache-dir pymupdf==1.26.7 numpy==2.2.6 pyproj==3.7.2 shapely==2.1.2
+      - name: Synthetic path extraction and no-GeoJSON safety tests
+        run: python -m unittest discover -s tests -p 'test_denton_pdf_vector_poc.py' -v
+      - name: Test conservative 250m street-to-derived-boundary uncertainty guard (synthetic only)
+        run: python -m unittest discover -s tests -p 'test_denton_geopdf_edge_review.py' -v
+      - name: Download district-hosted official PDFs and inspect geometry
+        run: |
+          python -m py_compile scripts/denton_pdf_vector_poc.py
+          python scripts/denton_pdf_vector_poc.py --out artifacts/denton-pdf-vector-poc
+      - name: Inspect page-level GeoPDF Measure / Viewport metadata and district palette
+        run: |
+          python -m py_compile scripts/denton_pdf_geopdf_probe.py
+          python scripts/denton_pdf_geopdf_probe.py
+      - name: Inspect 13 original PDF zone fill rings for self-intersections and holes
+        run: |
+          python -m py_compile scripts/denton_pdf_polygon_topology_debug.py
+          python scripts/denton_pdf_polygon_topology_debug.py
+      - name: Derive spatially registered staging high and middle school zones from original GeoPDF
+        run: |
+          python -m py_compile scripts/denton_geopdf_to_geojson.py
+          python scripts/denton_geopdf_to_geojson.py --out artifacts/denton-geopdf-derived
+      - name: Inspect all 26 elementary PDF legend-color swatches and map source paths
+        run: |
+          python scripts/denton_elementary_pdf_legend_probe.py
+      - name: Independently validate all 39 school IDs, valid WGS84 geometry and same-grade topology
+        run: |
+          python -m py_compile scripts/verify_denton_geopdf_staging.py
+          python scripts/verify_denton_geopdf_staging.py
+      - name: Compare 3 public Census street coordinates to 9 live official Finder campus results
+        run: |
+          python -m py_compile scripts/denton_geopdf_census_holdout_qa.py
+          python scripts/denton_geopdf_census_holdout_qa.py
+      - name: Test exact public CAD parcel identity and fail-closed polygon match (synthetic)
+        run: python -m unittest discover -s tests -p 'test_denton_geopdf_public_parcel_qa.py' -v
+      - name: Limited no-owner-fields Denton County parcel-to-derived school zone review
+        run: |
+          python -m py_compile scripts/denton_geopdf_public_parcel_qa.py
+          python scripts/denton_geopdf_public_parcel_qa.py
+      - name: Enforce public-artifact restrictions before extracting official GeoPDF
+        run: python -m unittest discover -s tests -p 'test_denton_pdf_artifact_restrictions.py' -v
+      - name: Publish QA STATUS summaries only (NO GIS, PDFs, addresses or coordinates)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: denton-geo-review-status-no-polygons
+          path: |
+            artifacts/denton-geopdf-derived/staging-integrity-report.json
+            artifacts/denton-geopdf-derived/public-cad-parcel-check-STAGING.json
+          retention-days: 7
+          if-no-files-found: warn
