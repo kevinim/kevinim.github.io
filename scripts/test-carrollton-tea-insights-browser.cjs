@@ -144,7 +144,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           if(id===CASES[0][0]){
             await page.locator('.tea-insights-provenance:not(.tea-peims-counts) summary').click();
             assert.equal(await page.locator('.tea-insights-provenance:not(.tea-peims-counts)').evaluate(el=>el.open),true,'notes expand on click');
-            await page.locator('.tea-insights-provenance summary').click();
+            await page.locator('.tea-insights-provenance:not(.tea-peims-counts) summary').click();
             assert.equal(await page.locator('.tea-insights-provenance:not(.tea-peims-counts)').evaluate(el=>el.open),false,'notes collapse again');
           }
           results.push({school:label,...found});
