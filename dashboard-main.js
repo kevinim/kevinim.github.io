@@ -132,7 +132,21 @@ function metricRange(){const a=scopedZips().map(d=>d[state.metric]).filter(Numbe
 function shade(v){if(!Number.isFinite(v))return '#b8c2cc';const [mn,mx]=metricRange();if(mn===null)return '#b8c2cc';const t=mx===mn?.5:Math.max(0,Math.min(1,(v-mn)/(mx-mn)));const lo=[247,251,255],hi=[8,81,156];return '#'+lo.map((n,i)=>Math.round(n+(hi[i]-n)*t).toString(16).padStart(2,'0')).join('')}
 function drawHeatLegend(){const [min,max]=metricRange(),box=el('heatLegend');if(!box)return;if(state.withinHour){box.innerHTML='<b>통근 지도 · 직접 경로 확인</b><div>빨간 점선: 60분 도달선 · Valhalla/OSM</div><div class="heat-values"><span>파란색: 60분 이내</span><span>흰색: 60분 초과</span><span>회색: 미확인</span></div><div>2026-11-04 도로망 기반 추정 · 교통량 미반영 · 파란 ZIP은 대표점 기준, ZIP 일부만 도달선에 포함될 수 있음</div>';return;}box.innerHTML='<b>'+escape(metricLabel(state.metric))+'</b> · ZIP별 비교 <span style="color:#667892">(회색: 자료 없음)</span><div class="heat-scale" aria-hidden="true"></div><div class="heat-values"><span>낮음 '+(min===null?'미공개':niceMetric(min))+'</span><span>높음 '+(max===null?'미공개':niceMetric(max))+'</span></div><div>2020–2024 ACS 추정치 · '+escape(scopeDescription())+' · '+scopedZips().filter(d=>Number.isFinite(d[state.metric])).length+'개 ZIP 기준 · 범위 밖은 옅은 회색</div>'}
 
-function init(){DATA.forEach(d=>{let o=document.createElement('option');o.value=d.z;o.textContent=`${d.z} · ${d.name}`;el('zipSelect').appendChild(o)});el('zipSelect').value=state.zip;el('zipSelect').onchange=e=>selectZip(e.target.value);el('metric').onchange=e=>{state.metric=e.target.value;drawZip();drawDetail();drawTable()};el('heatScope').onchange=e=>{state.heatScope=e.target.value;drawZip()};el('schoolScope').onchange=()=>drawList();el('countyLanguage').onchange=()=>{updatePlaceOptions();renderData();drawZip();drawCommute();window.refreshCandidateComparisons?.()};el('compareTable').querySelector('thead').onclick=e=>{const b=e.target.closest('button[data-sort]');if(!b)return;const k=b.dataset.sort;tableSort.dir=tableSort.key===k?-tableSort.dir:1;tableSort.key=k;drawTable()};el('ratingFilter').onchange=e=>{state.ratingFilter=e.target.value;clearSelectedSchoolIfFiltered();drawSchools();drawList()};el('zipOverlay').onchange=e=>{state.showZip=e.target.checked;drawZip()};el('oneHourOverlay').onchange=e=>{state.withinHour=e.target.checked;drawZip();drawIsochrone();if(state.withinHour&&isochroneLayer)map.fitBounds(isochroneLayer.getBounds(),{padding:[20,20]})};el('schoolOverlay').onchange=e=>{state.showSchools=e.target.checked;drawSchools()};
+function init(){DATA.forEach(d=>{let o=document.createElement('option');o.value=d.z;o.textContent=`${d.z} · ${d.name}`;el('zipSelect').appendChild(o)});el('zipSelect').value=state.zip;el('zipSelect').onchange=e=>selectZip(e.target.value);el('metric').onchange=e=>{state.metric=e.target.value;drawZip();drawDetail();drawTable()};el('heatScope').onchange=e=>{state.heatScope=e.target.value;drawZip()};el('schoolScope').onchange=()=>drawList();el('countyLanguage').onchange=()=>{updatePlaceOptions();renderData();drawZip();drawCommute();window.refreshCandidateComparisons?.()};el('compareTable').querySelector('thead').onclick=e=>{const b=e.target.closest('button[data-sort]');if(!b)return;const k=b.dataset.sort;tableSort.dir=tableSort.key===k?-tableSort.dir:1;tableSort.key=k;drawTable()};el('ratingFilter').onchange=e=>{
+ state.ratingFilter=e.target.value;
+ for(const btn of document.querySelectorAll('#schoolGradeQuick button[data-grade]')){
+  const on=btn.dataset.grade===state.ratingFilter;
+  btn.classList.toggle('active',on);
+  btn.setAttribute('aria-pressed',String(on));
+ }
+ clearSelectedSchoolIfFiltered();drawSchools();drawList();
+};
+el('schoolGradeQuick').onclick=e=>{
+ const btn=e.target.closest('button[data-grade]');
+ if(!btn)return;
+ el('ratingFilter').value=btn.dataset.grade;
+ el('ratingFilter').dispatchEvent(new Event('change',{bubbles:true}));
+};el('zipOverlay').onchange=e=>{state.showZip=e.target.checked;drawZip()};el('oneHourOverlay').onchange=e=>{state.withinHour=e.target.checked;drawZip();drawIsochrone();if(state.withinHour&&isochroneLayer)map.fitBounds(isochroneLayer.getBounds(),{padding:[20,20]})};el('schoolOverlay').onchange=e=>{state.showSchools=e.target.checked;drawSchools()};
 // Map-level hazard chips: one tap shows that FEMA hazard; tapping the active
 // chip turns it off. Detailed settings stay in the collapsed side panel.
 const hazardChips=[...document.querySelectorAll('#hazardMapQuickToggle .hazard-chip')];
@@ -472,7 +486,7 @@ function drawSchools(){
   const letter=['A','B','C','D','F'].includes(rating)?rating:'';
   const badge=letter?'<small class="school-map-grade-badge grade-'+letter.toLowerCase()+'">'+letter+'</small>':'';
   const icon=L.divIcon({className:'',html:`<div class="mapmark ${cls}">${s.type==='elementary'?'초':s.type==='middle'?'중':'고'}${badge}</div>`,iconSize:[27,27],iconAnchor:[13,13]});
-  L.marker(s.ll,{icon,title:s.name}).addTo(schoolGroup).on('click',()=>schoolClicked(s));
+  L.marker(s.ll,{icon,title:s.name+(letter?' · TEA '+letter+'등급':'')}).addTo(schoolGroup).on('click',()=>schoolClicked(s));
  }
  if(notice){
   notice.textContent='학교 마커 '+displayed.length+'개 표시 · 등록 '+state.schools.length+'개 · 필터 적합 '+eligible.length+'개 · 화면 내 '+visible.length+'개 · ZIP '+state.zip+' · Zoom '+zoom+' · 지도 '+size.x+'×'+size.y+' · 학교 위치는 배정 확정 정보가 아닙니다.'+(state.selectedSchool?' · 선택: '+state.selectedSchool.name+(Array.isArray(state.selectedSchool.ll)?' (노란색 학교 위치 마커)':' (학교 좌표 미확인)'):'');
