@@ -51,7 +51,7 @@ test('rollout covers all 148 TEA records in CFB, Lewisville, Allen, McKinney',()
     const result=insights.getSchoolInsight(record);
     assert.ok(result?.summary && result?.strength && result?.challenge,record.id);
     assert.equal(result.rolloutPhase,insights.rolloutPhase(record.district));
-    if(!pilotIds.includes(record.id)&&!['043901001','043907002'].includes(record.id)){
+    if(!pilotIds.includes(record.id)&&!['061902136','043901001','043907002'].includes(record.id)){
       assert.equal(result.domains,undefined,'never invent domain metrics '+record.id);
       assert.equal(result.subjects,undefined,'never invent subject metrics '+record.id);
       assert.equal(result.demographics,undefined,'never invent race data '+record.id);
@@ -66,11 +66,12 @@ test('rollout covers all 148 TEA records in CFB, Lewisville, Allen, McKinney',()
   assert.equal(fallback.domains,undefined,'a bare TEA grade cannot fabricate domains');
   assert.equal(fallback.demographics,undefined,'a bare TEA grade cannot fabricate race data');
 });
-test('four campuses have individually source-linked ethnicity data',()=>{
-  assert.equal(insights.verifiedEthnicityCount,4);
+test('five campuses have individually source-linked ethnicity data',()=>{
+  assert.equal(insights.verifiedEthnicityCount,5);
   for(const [id,cohort,headCount] of [
     ['061902118','LISD',424],
     ['061902008','LISD',3668],
+    ['061902136','LISD',599],
     ['043901001','AISD',5206],
     ['043907002','043907',2668]
   ]){
@@ -83,6 +84,14 @@ test('four campuses have individually source-linked ethnicity data',()=>{
     assert.equal(insights.getRaceRows(id)?.length,7);
     assert.match(demo.src,/^https:\/\//);
   }
+});
+test('Castle Hills source-linked ethnicity is kept separate from current TEA grade',()=>{
+  const castle=insights.getSchoolInsight(source.data.find(r=>r.id==='061902136')).demographics;
+  assert.match(castle.src,/^https:\/\/castlehills\.lisd\.net\//);
+  assert.equal(castle.year,'2024–25','2025 SRC cannot be reported as 2025–26 enrollment');
+  assert.equal(castle.race.asian,35.9);
+  assert.equal(castle.race.white,45.9);
+  assert.equal(castle.race.hispanic,8.3);
 });
 test('Not Rated remains not-a-performance-judgment and absent data never maps to zero',()=>{
   const sample=source.data.find(x=>x.district==='043907'&&x.rating==='Not Rated');
@@ -113,7 +122,7 @@ test('all 2282 official campus records show basic facts, but only sourced data g
  }
  assert.equal(unrated,138);
  assert.equal(domain,2);
- assert.equal(race,4);
+ assert.equal(race,5);
  assert.ok(ratingOnly>2200);
  const valid=source.data.find(r=>r.district==='057905');
  assert.equal(insights.getSchoolInsight({...valid,id:'057905999'}),null,'campus ID must match official source URL');
