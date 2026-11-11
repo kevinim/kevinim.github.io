@@ -1,0 +1,17 @@
+/* UAT-only 2025–26 TEA public-count-subtotal shares, scoped to detail widget.
+   Does not change 2024–25 full demographic shares, maps, or shared components. */
+.tea-public-share-addon{margin-top:12px;padding:12px;border:1px solid #88a7c9;border-radius:9px;background:#edf5ff;color:#182b40;overflow-wrap:anywhere}
+.tea-public-share-title{font-size:13px;line-height:1.4;font-weight:750;margin:0 0 8px}
+.tea-public-share-summary{font-size:11px;line-height:1.5;font-weight:700;margin:5px 0}
+.tea-public-share-warning{font-size:11.5px;line-height:1.6;color:#5a3410;background:#fff4da;border-left:3px solid #d08a0e;padding:8px 10px;margin:10px 0;border-radius:3px}
+.tea-public-share-stack{display:flex;width:100%;height:18px;overflow:hidden;border-radius:5px;background:#cbd5e1;margin:10px 0}
+.tea-public-share-segment{display:block;height:100%;flex:0 0 auto;min-width:0;border-right:1px solid rgba(0,0,0,.2)}
+.tea-public-share-legend{list-style:none;margin:10px 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px}
+.tea-public-share-legend li{font-size:11px;line-height:1.5;display:flex;gap:7px;align-items:baseline;overflow-wrap:anywhere}
+.tea-public-share-dot{display:inline-block;vertical-align:middle;flex:0 0 10px;width:10px;height:10px;border-radius:3px}
+.tea-public-share-footnote{font-size:10.5px;color:#5a6270;line-height:1.6;margin:9px 0 0}
+html[data-theme="dark"] .tea-public-share-addon{border-color:#557698;background:#162b43;color:#eff7ff}
+html[data-theme="dark"] .tea-public-share-warning{color:#fbe5b1;background:#332b1d;border-left-color:#f3b64b}
+html[data-theme="dark"] .tea-public-share-footnote{color:#bdcbdc}
+@media(max-width:500px){.tea-public-share-addon{padding:10px}.tea-public-share-legend{grid-template-columns:1fr}.tea-public-share-warning{font-size:11px}}
+@media(forced-colors:active){.tea-public-share-addon,.tea-public-share-warning{border:1px solid CanvasText;background:Canvas;color:CanvasText}}
