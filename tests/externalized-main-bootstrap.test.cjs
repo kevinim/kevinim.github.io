@@ -184,10 +184,10 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  // Separately reviewed #256 PEIMS addon: only two same-origin assets may be
  // inserted; entire production HTML must match this exact immutable allowlist.
  approvedHtml=replaceOnce(approvedHtml,'</head><body>',
-  '<link rel="stylesheet" href="./features/tea-peims-public-share-addon.css?v=1">\n</head><body>');
+  '<link rel="stylesheet" href="./features/tea-peims-public-share-addon.css?v=2">\n</head><body>');
  approvedHtml=replaceOnce(approvedHtml,
   '<script src="./features/home-school-manual-bridge.js?v=1" defer></script></body></html>',
-  '<script src="./features/home-school-manual-bridge.js?v=1" defer></script><script src="./features/tea-peims-public-share-addon.js?v=1" defer></script></body></html>');
+  '<script src="./features/home-school-manual-bridge.js?v=1" defer></script><script src="./features/tea-peims-public-share-addon.js?v=2" defer></script></body></html>');
  assert.equal(hash(html),hash(approvedHtml),
   'Unreviewed HTML drift beyond approved workplace and PEIMS addon anchors');
  // Strip only previously released #262 zoom label additions from the
