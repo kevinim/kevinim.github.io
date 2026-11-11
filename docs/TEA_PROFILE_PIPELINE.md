@@ -135,6 +135,28 @@ The per-district exact publisher CSV URL for each of these new 15 sources is rec
 
 Ready-for-review UAT requires passing exact-head CI, school-ID/country source checks, FERPA, desktop/mobile school selection, XSS/CSP and map regressions. **No main/Production merge absent user authorization.**
 
+## 2026-11-11 source completion — statewide TEA PEIMS official campus ethnicity counts
+
+To avoid district-by-district gaps and repeatedly querying 181 district exports, the official Texas Education Agency (TEA) public **PEIMS Student Enrollment Reports** selection was rechecked: **2025–26 → Statewide Campus Totals (`selsumm=sc`) → Ethnicity → Comma-delimited (`format=c`) → first-step (`loop=1`)**.
+
+Official source URL (no API key, no user data): https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=sc&linespg=60&charsln=120&grouping=e&loop=1&key=&_debug=0
+
+The public report has **48,971 2025–26 campus/ethnicity aggregate rows** (approx. 6.04MB, excluding document footer). All remaining **638** exact 9-digit Campus IDs absent from previous 38-district snapshots were found and verified against the same official 2026 school inventory, without guessing name/ID or deduplicating away missing rows. No missing campus IDs remained.
+
+**Current source-verified UAT coverage: 2,282 / 2,282 campus IDs (100%).** This is **availability of a partial seven-group enrollment record**, NOT 100% complete ethnicity percentages. There are 2,282×7 = **15,974** possible campus-level group cells:
+- **8,277**: numeric official public student enrollment counts, copied exactly
+- **5,141**: explicitly FERPA-suppressed official counts (e.g., `<10`, `<50`) retained as nonnumeric masks
+- **2,556**: group not listed in the public campus report, represented as `not-listed`, never zero or inferred
+- **6** campuses have *all seven groups independently published*, enabling exact same-year percentage calculations (the earlier five plus North Crowley HS 220912002)
+- **2,276** campuses have at least one suppressed/omitted group and **must not** receive an exact seven-category percentage chart
+- **Eight** complete TEA 2024–25 campus ethnic percentage profiles remain separately sourced and labeled. 2024–25 charts are not backfilled into 2025–26 current-year percentages.
+
+The normalized source is `data/tea-ethnicity-2025-26-priority.json`. Its `sources` field preserves 38 individually visited district CSVs; its new `statewideSource` field references the single independently checked official statewide CSV for the remaining 638 campus IDs. The frontend validates **publisher origin, SAS report program, school year, `selsumm=sc`, `loop=1`, ethnicity grouping, CSV format and absence of a district filter** before showing statewide-only school count panels. Strict campus ID/district joins, seven-category completeness, privacy markers and source provenance are checked in Node and browser tests.
+
+The school detail panel dynamically loads the same-origin static aggregate file on school selection and shows all seven category rows, with explicit `비공개 (<N)` or `원본 미표시` labels and one-click official source. Even if an enrollment total from another data table could allow algebraic inference, **never infer or publish any suppressed value**. Race is school enrollment context, not a measure of school quality, home ZIP demographics, school attendance boundary or admission guarantee.
+
+**UAT release readiness gates:** exact-head all required GitHub Actions; 2,282/2,282 campus IDs; aggregate count/mask totals; no PII/hidden category inference; mobile/desktop school click from older district exports and new statewide sources; GIS/address-school/Allen marker regressions; responsive/dark mode; CSP/XSS/secret scan; no paid services. Production/main merging requires explicit user approval regardless of all-green CI.
+
 ## Importing an official verified batch
 
 The native TEA export may use different column names by report/year. Before ingestion, inspect TEA's associated data dictionary and explicitly transpose **aggregated campus rows only** into these normalized CSV headers. Do not assume any file's column names.
