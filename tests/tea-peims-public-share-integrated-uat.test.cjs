@@ -134,7 +134,9 @@ test('actual selected-school DOM add-on mounts once, hides protected group share
       getPublishedCountRows:()=>rows,auditedPeimsTotal:()=>audited
     }};
     class MutationObserver{constructor(cb){mutation=cb;}observe(){}}
-    vm.runInNewContext(source,{window,document,MutationObserver,Promise},{timeout:1000});
+    // GitHub-hosted runners can cold-start locale formatting slowly; keep the
+    // sandbox timeout bounded without changing any source or privacy assertions.
+    vm.runInNewContext(source,{window,document,MutationObserver,Promise},{timeout:10000});
     return {window,mutation,get:()=>({mounts,region:selected.addon,
       stack:selected.addon?.find('tea-public-share-stack'),
       list:selected.addon?.find('tea-public-share-legend')})};
