@@ -175,7 +175,7 @@
       facts.appendChild(p);
     });
     panel.appendChild(facts);
-    if(data.evidenceStatus==='rating-only'||data.evidenceStatus==='rating-and-demographics'){
+    if(!data.domains){
       panel.appendChild(textTag('p','tea-insights-missing','영역별 점수 및 과목별 성취도: 개별 TEA 원문 미연결. 종합점수만으로 과목별 강점이나 약점을 추정하지 않습니다.'));
     }
     if(data.domains){
