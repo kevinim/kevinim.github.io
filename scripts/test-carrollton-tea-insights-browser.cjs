@@ -164,10 +164,8 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           assert.equal(found.peimsCountRows,currentPeims?7:0,'2025–26 source year and seven explicit privacy statuses '+id);
           if(currentPeims){
             assert.ok(found.peimsText.includes('2025–26'),'current-year PEIMS source labeled');
-            if(['043901001','057912046','057912123','061911001','061911007'].includes(id))assert.ok(found.peimsText.includes('같은 원본 등록 인원 검증'),
-              'full race ratios require independent same-source enrollment parity');
-            else if(id==='220912002')assert.ok(found.peimsText.includes('등록 인원 대조 대기'),
-              'additional complete record has no independently audited denominator');
+            if(['043901001','057912046','057912123','061911001','061911007','220912002'].includes(id))assert.ok(found.peimsText.includes('같은 원본 등록 인원 검증'),
+              'all six complete-share campuses require independent same-source enrollment parity');
             else assert.ok(found.peimsText.includes('비공개')||found.peimsText.includes('원본 미표시'),
               'masking or source omission remains visible');
           }
