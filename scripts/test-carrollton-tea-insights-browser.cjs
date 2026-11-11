@@ -145,7 +145,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           assert.equal(found.peimsCountRows,currentPeims?7:0,'2025–26 source year and seven explicit privacy statuses '+id);
           if(currentPeims){
             assert.ok(found.peimsText.includes('2025–26'),'current-year PEIMS source labeled');
-            if(['043901001','057912046'].includes(id))assert.ok(found.peimsText.includes('7개 분류 공개'),
+            if(['043901001','057912046','061911001'].includes(id))assert.ok(found.peimsText.includes('7개 분류 공개'),
               'Allen High is the one fully public seven-category campus');
             else assert.ok(found.peimsText.includes('비공개')||found.peimsText.includes('원본 미표시'),
               'masking or source omission remains visible');
