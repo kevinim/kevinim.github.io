@@ -6,7 +6,7 @@ const catalog=require('../tea-ratings-2026.json').data;
 const categories=['black','hispanic','white','native','asian','pacific','multi'];
 const ids=Object.keys(batch.campuses);
 test('Allen 23 and McKinney 33 are exactly the current catalog ID set',()=>{
- const expected=catalog.filter(r=>/^04390(?:1|7)\\d{3}$/.test(r.id)).map(r=>r.id).sort();
+ const expected=catalog.filter(r=>/^04390(?:1|7)\d{3}$/.test(r.id)).map(r=>r.id).sort();
  assert.equal(ids.length,56);assert.deepEqual(ids,expected);
  assert.equal(ids.filter(id=>id.startsWith('043901')).length,23);
  assert.equal(ids.filter(id=>id.startsWith('043907')).length,33);
@@ -14,7 +14,7 @@ test('Allen 23 and McKinney 33 are exactly the current catalog ID set',()=>{
 test('2025-26 PEIMS official published, suppressed, unlisted cells are mutually exclusive',()=>{
  const tally={published:0,suppressed:0,'not-listed':0};let full=0;
  for(const [id,c] of Object.entries(batch.campuses)){
-  assert.match(id,/^\\d{9}$/);assert.equal(c.districtId,id.slice(0,6));
+  assert.match(id,/^\d{9}$/);assert.equal(c.districtId,id.slice(0,6));
   assert.equal(c.peims.schoolYear,'2025-26');assert.equal(c.peims.enrollment,null);
   assert.equal(c.peims.percentages,null);assert.equal(new URL(c.peims.source).hostname,'rptsvr1.tea.texas.gov');
   assert.deepEqual(Object.keys(c.peims.counts).sort(),[...categories].sort());
@@ -23,7 +23,7 @@ test('2025-26 PEIMS official published, suppressed, unlisted cells are mutually 
   for(const v of cells){
    assert.ok(Object.hasOwn(tally,v.status),'unknown state '+v.status);tally[v.status]++;
    if(v.status==='published'){assert.ok(Number.isSafeInteger(v.count)&&v.count>=0);assert.equal(v.publishedMask,undefined)}
-   if(v.status==='suppressed'){assert.match(v.publishedMask,/^<\\d+$/);assert.equal(v.count,undefined)}
+   if(v.status==='suppressed'){assert.match(v.publishedMask,/^<\d+$/);assert.equal(v.count,undefined)}
    if(v.status==='not-listed'){assert.equal(v.count,undefined);assert.equal(v.publishedMask,undefined)}
   }
  }
