@@ -10,7 +10,7 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
 (async()=>{
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  try{
-  for(const width of [390,1280]){
+  for(const width of [325,390,1280]){
    const page=await browser.newPage({viewport:{width,height:850}});
    const errors=[],external=[];
    page.on('pageerror',error=>errors.push(String(error)));
@@ -186,6 +186,6 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
     console.log('NOTE third-party test traffic blocked, count='+external.length);
    }finally{await page.close();}
   }
-  console.log('PASS offline staged main-bootstrap smoke, mobile + desktop. NOT a full school assignment test.');
+  console.log('PASS offline staged campus clustering and bootstrap smoke, 325/390/1280 viewports. NOT a school assignment test.');
  }finally{await browser.close();}
 })().catch(e=>{console.error('Bootstrap browser QA failed:',e.stack||String(e));process.exitCode=1});
