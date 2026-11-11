@@ -1,0 +1,97 @@
+name: TEA evidence-safe school panels and PEIMS percentage gate
+on:
+  pull_request:
+    branches:
+      - main
+      - 'feature/tea-peims-1500-campus-wave3-20261111'
+    paths:
+      - 'features/carrollton-school-insights.js'
+      - 'scripts/test-carrollton-tea-insights-browser.cjs'
+      - 'tests/tea-display-quality-guard.test.cjs'
+      - '.github/workflows/verify-tea-display-quality-guard.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: node --check features/carrollton-school-insights.js
+      - run: node --check scripts/test-carrollton-tea-insights-browser.cjs
+      - run: node --test tests/carrollton-school-insights.test.cjs tests/tea-peims-priority-campus.test.cjs tests/tea-display-quality-guard.test.cjs
+      - run: node scripts/build-tea-profile-progress.cjs --check
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Install free Playwright Chromium
+        run: |
+          mkdir -p tea-profile-browser-tmp
+          cd tea-profile-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve staged files
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/tea-display-guard-http.log 2>&1 &
+          sleep 2
+      - name: Verify 1280px desktop and 390px mobile school clicks
+        env:
+          NODE_PATH: ${{ github.workspace }}/tea-profile-browser-tmp/node_modules
+        run: node scripts/test-carrollton-tea-insights-browser.cjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: tea-display-quality-guard
+          path: artifacts/carrollton-tea-insights/
+          if-no-files-found: warn
+
+  diagnose-source:
+    name: Diagnose exact Node assertion (non-gate)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    outputs:
+      short: ${{ steps.inspect.outputs.short }}
+      failed: ${{ steps.inspect.outputs.failed }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - id: inspect
+        shell: bash
+        run: |
+          set +e
+          node --test tests/carrollton-school-insights.test.cjs tests/tea-peims-priority-campus.test.cjs tests/tea-display-quality-guard.test.cjs > /tmp/tea-node-test.txt 2>&1
+          rc=$?
+          echo "failed=$rc" >> "$GITHUB_OUTPUT"
+          first=$(grep -m1 -E 'not ok|AssertionError|ERR_ASSERTION|error:' /tmp/tea-node-test.txt | tr -cd '[:alnum:][:space:].,;:_-=' | cut -c1-100)
+          if [ -z "$first" ]; then first="No-Node-assertion-found"; fi
+          echo "short=$first" >> "$GITHUB_OUTPUT"
+          tail -n 65 /tmp/tea-node-test.txt
+          exit 0
+  diagnosis-verdict:
+    needs: diagnose-source
+    name: 'Node failure detail - ${{ needs.diagnose-source.outputs.short }}'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Preserve failure state
+        run: exit "${{ needs.diagnose-source.outputs.failed }}"

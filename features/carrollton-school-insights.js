@@ -48,7 +48,15 @@
         race:{black:16.7,hispanic:15.1,white:24.5,native:0.2,asian:36.8,pacific:0,multi:6.6}
       }
     },
-    '061902140': {summary:'독해 대비 수학·과학 성취가 낮아 과목 간 성과 차이를 줄이는 것이 과제입니다.',strength:'독해',challenge:'수학·과학'},
+    '061902140': {
+      summary:'독해 대비 수학·과학 성취가 낮아 과목 간 성과 차이를 줄이는 것이 과제입니다.',
+      strength:'독해',challenge:'수학·과학',
+      demographics:{
+        year:'2024–25',document:'2025 TEA School Report Card · Coyote Ridge Elementary',enrollment:478,
+        src:'https://resources.finalsite.net/images/v1767733001/lisdnet/lisdnet/xilennjkuzhmri1hlapt/coyoteridgerc.pdf',
+        race:{black:29.3,hispanic:17.8,white:15.9,native:1.3,asian:29.1,pacific:0.4,multi:6.3}
+      }
+    },
     '057903113': {summary:'독해의 일부 성과는 확인되지만 학업 성장과 과학 성취 개선이 시급합니다.',strength:'독해 기초 성취',challenge:'학업 성장·과학'},
     '061902047': {summary:'높은 학업 성취와 학생 집단별 목표 달성도가 강점이며 사회 과목은 추가 개선 여지가 있습니다.',strength:'학업 성취·집단별 목표',challenge:'사회 과목'},
     '057903042': {summary:'유사 학교 대비 상대 성과는 양호하지만 학생 성장 지표를 높일 필요가 있습니다.',strength:'유사 학교 대비 상대 성과',challenge:'학업 성장'},
@@ -76,6 +84,31 @@
   // enrollment (not district totals). Published in official district annual
   // reports; no inference from Census ZIP or residential demographics.
   const VERIFIED_TAPR = Object.freeze({
+    // 2025 TEA School Report Card hosted by Castle Hills Elementary (Lewisville ISD),
+    // page 2 student information. Campus percentages; NOT 2025-26 PEIMS.
+    '061902136':{
+      demographics:{
+        year:'2024–25',document:'2025 TEA School Report Card · Castle Hills Elementary',
+        enrollment:599,
+        src:'https://resources.finalsite.net/images/v1767735451/lisdnet/lisdnet/pbywuuw1lzfsjjftgn4m/castlehillsrc.pdf',
+        race:{black:2.0,hispanic:8.3,white:45.9,native:0.2,asian:35.9,pacific:0.2,multi:7.5}
+      }
+    },
+    // TEA 2025 School Report Card, 2024-25 campus enrollment; source checked 2026-11-11.
+    '061902142':{
+      demographics:{
+        year:'2024–25',document:'2025 TEA School Report Card · Independence Elementary',enrollment:828,
+        src:'https://rptsvr1.tea.texas.gov/cgi/sas/broker?_program=perfrept.perfmast.sas&_service=marykay&ccyy=2025&id=061902142&lev=C&prgopt=reports/src/src.sas',
+        race:{black:7.6,hispanic:55.7,white:7.7,native:0.1,asian:25.8,pacific:0.2,multi:2.8}
+      }
+    },
+    '061902143':{
+      demographics:{
+        year:'2024–25',document:'2025 TEA School Report Card · Lewisville Elementary',enrollment:509,
+        src:'https://resources.finalsite.net/images/v1767730334/lisdnet/lisdnet/v0na6prf22b4hdu3dmcl/lewisvillerc.pdf',
+        race:{black:19.4,hispanic:70.5,white:4.5,native:0,asian:1.6,pacific:0,multi:3.9}
+      }
+    },
     '043901001':{
       demographics:{
         year:'2024–25',document:'2025 TEA TAPR · Allen ISD Annual Report',
@@ -153,37 +186,173 @@
     }
     return added;
   }
+  // Official 2026 TEA campus accountability and 2025–26 STAAR, staged independently
+  // from school zones and demographics. Loaded only after school selection.
+  const ACADEMIC=Object.create(null);
+  let academicStarted=false;
+  let academicSources=null;
+  const DOMAIN_KEYS=[
+    ['studentAchievement','학업 성취','achievement'],
+    ['schoolProgress','학교 향상도','progress'],
+    ['closingTheGaps','학생 집단별 성과','gaps']
+  ];
+  const SUBJECT_KEYS=[
+    ['reading','독해'],['math','수학'],['science','과학'],['socialStudies','사회']
+  ];
+  function validAcademicUrl(raw,dataset){
+    try{
+      const u=new URL(raw);
+      return u.protocol==='https:'&&u.hostname==='rptsvr1.tea.texas.gov'&&
+        u.searchParams.get('ccyy')==='2026'&&u.searchParams.get('sumlev')==='C'&&
+        u.searchParams.get('dsname')===dataset&&
+        u.searchParams.get('prgopt')==='reports/acct/dd/dd_get_data.sas';
+    }catch{return false;}
+  }
+  function validOfficialMetric(row,domain){
+    if(!row||typeof row!=='object')return false;
+    if(row.status==='reported')return Number.isInteger(domain?row.score:row.value)&&
+      (domain?row.score:row.value)>=0&&(domain?row.score:row.value)<=100;
+    if(domain){
+      return ['not-rated','suppressed','unavailable'].includes(row.status)&&
+        row.score===null&&(row.status!=='not-rated'||row.rating==='Not Rated');
+    }
+    return ['suppressed','unavailable','not-in-source'].includes(row.status)&&row.value===null;
+  }
+  function installAcademicBatches(domain,staar){
+    if(!domain||!staar||domain.schemaVersion!==1||staar.schemaVersion!==1||
+       domain.accountabilityYear!==2026||staar.accountabilityYear!==2026||
+       domain.schoolYear!=='2025-26'||staar.schoolYear!=='2025-26'||
+       !validAcademicUrl(domain.source?.url,'RATE'))return 0;
+    for(const [key,dataset] of [
+      ['D1_STAAR1','D1_STAAR1'],['D1_STAAR2','D1_STAAR2'],['D1_STAAR3','D1_STAAR3']
+    ]){
+      if(!validAcademicUrl(staar.source?.groups?.[key]?.url,dataset))return 0;
+    }
+    const ids=Object.keys(domain.campuses||{});
+    if(ids.length!==2282 || Object.keys(staar.campuses||{}).length!==2282)return 0;
+    const next=Object.create(null);
+    for(const id of ids){
+      const a=domain.campuses[id],s=staar.campuses[id];
+      if(!/^\d{9}$/.test(id)||!a||!s||a.districtId!==id.slice(0,6)||
+         typeof a.officialCampusName!=='string'||!a.overall ||
+         !['A','B','C','D','F','Not Rated'].includes(a.overall.rating) ||
+         !(a.overall.score===null||(Number.isInteger(a.overall.score)&&a.overall.score>=0&&a.overall.score<=100)) ||
+         !DOMAIN_KEYS.every(function(p){return validOfficialMetric(a[p[0]],true);})||
+         !SUBJECT_KEYS.every(function(p){return validOfficialMetric(s[p[0]],false);}))return 0;
+      next[id]={accountability:a,staar:s};
+    }
+    // Transactional intake: malformed batch never partially replaces a known-good one.
+    for(const id of ids)ACADEMIC[id]=next[id];
+    academicSources={domain:domain.source.url,subjects:staar.source.groups.D1_STAAR1.url};
+    return ids.length;
+  }
+  function applyAcademicDetails(record,base){
+    const official=ACADEMIC[String(record.id)];
+    if(!official||!academicSources)return base;
+    const a=official.accountability,s=official.staar;
+    if(a.officialCampusName!==record.officialName||a.districtId!==String(record.id).slice(0,6)||
+       a.overall.rating!==record.rating||a.overall.score!==record.score)return base;
+    const added={...base};
+    added.academicDomainRows=DOMAIN_KEYS.map(function(tuple){
+      const cell=a[tuple[0]];
+      return {key:tuple[2],label:tuple[1],status:cell.status,score:cell.score,rating:cell.rating};
+    });
+    added.academicSubjectRows=SUBJECT_KEYS.map(function(tuple){
+      const cell=s[tuple[0]];
+      return {key:tuple[0],label:tuple[1],status:cell.status,value:cell.value};
+    });
+    added.domainsSource=academicSources.domain;
+    added.subjectsSource=academicSources.subjects;
+    const available=added.academicDomainRows.filter(function(v){return v.status==='reported';});
+    const subjects=added.academicSubjectRows.filter(function(v){return v.status==='reported';});
+    added.subjects=Object.fromEntries(subjects.map(function(v){
+      return [v.key==='socialStudies'?'social':v.key,v.value];
+    }));
+    if(available.length===3 && subjects.length>0 && record.rating!=='Not Rated'){
+      added.domains={achievement:a.studentAchievement.score,
+        progress:a.schoolProgress.score,gaps:a.closingTheGaps.score};
+      const rank=available.slice().sort(function(x,y){return y.score-x.score;});
+      added.evidenceStatus='reviewed';
+      added.strength=rank[0].label+' '+rank[0].score+'점 (3개 영역 중 가장 높음)';
+      added.challenge=rank[2].label+' '+rank[2].score+'점 (3개 영역 중 상대적으로 낮음)';
+      added.summary='2026 TEA 공식 영역별 환산점수 비교에서 '+rank[0].label+'가 가장 높고 '+
+        rank[2].label+'가 가장 낮습니다. 이 비교는 종합등급의 원인 분석이 아닙니다.';
+    }else{
+      delete added.domains;
+      added.evidenceStatus=added.demographics?'rating-and-demographics':'rating-only';
+      added.strength=['A','B','C','D','F'].includes(record.rating)?
+        '확인된 공식 종합 등급: '+record.rating+' · '+record.score+'점':'공식 종합 평가로 판단 불가';
+      added.challenge='영역별 미평가·미공개 자료가 있어 강점·개선과제 판단 보류';
+      added.summary=record.rating==='Not Rated'?
+        '2026 TEA 종합평가는 미평가(Not Rated)입니다. 영역/과목별 미공개·미해당 항목은 0점이 아닙니다.':
+        '2026 TEA 영역별 일부 항목이 미평가 또는 미공개입니다. 공개 점수는 아래에 표시하되 강점·개선과제는 추정하지 않습니다.';
+    }
+    return added;
+  }
+  function loadAcademicBatches(){
+    if(academicStarted||!root||typeof root.fetch!=='function')return;
+    academicStarted=true;
+    Promise.all([
+      root.fetch('./data/tea-accountability-2026-verified-batch.json?v=1',{credentials:'same-origin'}),
+      root.fetch('./data/tea-staar-meets-2026-verified-batch.json?v=1',{credentials:'same-origin'})
+    ]).then(function(responses){
+      if(responses.some(function(r){return !r.ok;}))throw Error('Academic TEA data absent');
+      return Promise.all(responses.map(function(r){return r.json();}));
+    }).then(function(batch){
+      if(installAcademicBatches(batch[0],batch[1])!==2282)return;
+      if(typeof document!=='undefined'){
+        document.querySelectorAll('.tea-insights-panel').forEach(function(panel){panel.remove();});
+        document.querySelectorAll('.tea-school-inline-preview').forEach(function(panel){panel.remove();});
+        mount();
+      }
+    }).catch(function(){/* No inferred TEA scores when official batch unavailable. */});
+  }
   function getSchoolInsight(record) {
     if(!record || !/^\d{9}$/.test(String(record.id||''))) return null;
     const code=String(record.district||'');
     const prefix=DISTRICT_IDS[code] || (/^\d{6}$/.test(code)?code:null);
     if(!prefix || !String(record.id).startsWith(prefix))return null;
-    if(typeof record.official!=='string')return null;
-    let officialUrl;
-    try{officialUrl=new URL(record.official);}catch{return null;}
-    if(officialUrl.protocol!=='https:' || officialUrl.hostname!=='txschools.gov' ||
-      officialUrl.searchParams.get('view')!=='school' ||
-      officialUrl.searchParams.get('id')!==String(record.id))return null;
+    // A valid-looking official link is insufficient: it MUST identify this exact TEA campus.
+    // URL parsing also rejects spoofed hosts, changed path and mismatched campus IDs.
+    let official;
+    try { official=new URL(record.official); } catch { return null; }
+    if(official.protocol!=='https:' || official.hostname!=='txschools.gov' ||
+       official.pathname!=='/' || official.searchParams.get('view')!=='school' ||
+       official.searchParams.get('id')!==String(record.id))return null;
     const cohort=ROLLOUT[code]||{phase:4,label:record.districtName||'DFW 학군 '+code};
     const curated=getRecord(record.id);
     const existing=VERIFIED_TAPR[String(record.id)]||null;
     const validGrade=['A','B','C','D','F'].includes(record.rating);
     const hasScore=validGrade && Number.isInteger(record.score) && record.score>=0 && record.score<=100;
     const rating=hasScore?record.rating+' · '+record.score+'점':record.rating==='Not Rated'?'미평가':'등급 정보 미확인';
-    const base=curated
+    const reviewedCurated=!!curated && curated.evidenceStatus==='reviewed' &&
+      validDomains(curated.domains) && curated.subjects &&
+      Object.keys(curated.subjects).some(function(k){
+        return typeof curated.subjects[k]==='number' && Number.isFinite(curated.subjects[k]);
+      });
+    // Independently verified historical campus ethnicity is safe to display even
+    // when an unsourced academic narrative is intentionally suppressed.
+    const historical=curated?.demographics;
+    const historicalVerified=!!historical && historical.year==='2024–25' &&
+      Number.isInteger(historical.enrollment) && historical.enrollment>0 &&
+      checkRace(historical.race) && typeof historical.src==='string' &&
+      /^https:\/\/(?:resources\.finalsite\.net|rptsvr1\.tea\.texas\.gov|files-backend\.assets\.thrillshare\.com)\//.test(historical.src);
+
+    const base=reviewedCurated
       ?{...curated,rolloutPhase:cohort.phase,cohort:cohort.label}
       :{
         rolloutPhase:cohort.phase,
         cohort:cohort.label,
         evidenceStatus:existing?'rating-and-demographics':'rating-only',
         ...(existing||{}),
+        ...(historicalVerified?{demographics:historical}:{}),
         summary:hasScore
           ?'2026 TEA 종합 평가는 '+rating+'입니다. 과목별 성취도·학생 성장·집단별 목표는 공식 세부 자료를 대조한 후 분석합니다.'
           :'2026 TEA 종합 평가가 미부여되었거나 확인되지 않았습니다. 이것만으로 학업 성과를 좋거나 나쁘다고 평가하지 않습니다.',
         strength:hasScore?'확인된 공식 종합 등급: '+rating:'공식 종합 평가로 판단 불가',
         challenge:'개별 과목·성장·학생 집단별 성과 원문 확인 필요'
       };
-    return enrichFromOfficial(record,base);
+    return applyAcademicDetails(record,enrichFromOfficial(record,base));
   }
   function getRaceRows(id) {
     const d=ENRICHED[String(id)]?.demographics||
@@ -191,6 +360,126 @@
     if (!d || !checkRace(d.race)) return null;
     return RACES.map(function(r){return {key:r[0],label:r[1],color:r[2],pct:d.race[r[0]]};});
   }
+  // Public, campus-level 2025-26 PEIMS grouped ethnicity counts. Some cells are
+  // suppressed or not listed, so these are COUNTS only, never fabricated percentages.
+  const PUBLIC_PEIMS_COUNTS=Object.create(null);
+  const PUBLIC_PEIMS_SOURCES=Object.create(null);
+  let publicPeimsStarted=false;
+  const PEIMS_SOURCE_PREFIX='https://rptsvr1.tea.texas.gov/cgi/sas/broker';
+  const PEIMS_DISTRICTS=Object.freeze({
+    CFB:'057903',LISD:'061902',AISD:'043901','043907':'043907',
+    FISD:'043905',PISD:'043910',PROSPER:'043912',
+    '061901':'061901','057912':'057912','057916':'057916','057905':'057905'
+  });
+  function peimsDistrictCode(district){
+    if(Object.hasOwn(PEIMS_DISTRICTS,district))return PEIMS_DISTRICTS[district];
+    return /^\d{6}$/.test(String(district||''))?String(district):null;
+  }
+  function validPeimsSource(url,district){
+    const code=peimsDistrictCode(district);
+    if(typeof url!=='string'||!code)return false;
+    let source;
+    try{source=new URL(url);}catch{return false;}
+    return source.origin==='https://rptsvr1.tea.texas.gov'&&
+      source.pathname==='/cgi/sas/broker'&&
+      source.searchParams.get('_program')==='adhoc.addispatch.sas'&&
+      source.searchParams.get('endyear')==='26'&&
+      source.searchParams.get('major')==='st'&&
+      source.searchParams.get('minor')==='e'&&
+      source.searchParams.get('grouping')==='e'&&
+      source.searchParams.get('format')==='c'&&
+      source.searchParams.get('selsumm')==='ic'&&
+      source.searchParams.get('key')===code;
+  }
+  // One official 2025–26 Statewide Campus Totals CSV also contains all cataloged
+  // DFW campuses; it is used where no district-specific source has been imported.
+  function validPeimsStatewideSource(url){
+    if(typeof url!=='string')return false;
+    let source;
+    try{source=new URL(url);}catch{return false;}
+    return source.origin==='https://rptsvr1.tea.texas.gov'&&
+      source.pathname==='/cgi/sas/broker'&&
+      source.searchParams.get('_program')==='adhoc.addispatch.sas'&&
+      source.searchParams.get('endyear')==='26'&&
+      source.searchParams.get('major')==='st'&&source.searchParams.get('minor')==='e'&&
+      source.searchParams.get('format')==='c'&&source.searchParams.get('grouping')==='e'&&
+      source.searchParams.get('selsumm')==='sc'&&
+      source.searchParams.get('loop')==='1'&&
+      (source.searchParams.get('key')||'')==='';
+  }
+  function validPublishedCampus(id,entry) {
+    if(!/^\d{9}$/.test(String(id||'')) || !entry || typeof entry!=='object')return false;
+    const code=peimsDistrictCode(entry.district);
+    if(!code||!String(id).startsWith(code))return false;
+    if(typeof entry.name!=='string'||entry.name.length<1||entry.name.length>200||!entry.counts)return false;
+    const expected=RACES.map(function(row){return row[0];});
+    const actual=Object.keys(entry.counts);
+    if(actual.length!==expected.length||actual.some(function(key){return !expected.includes(key);}))return false;
+    return expected.every(function(key){
+      const cell=entry.counts[key];
+      if(!cell || typeof cell!=='object')return false;
+      if(cell.status==='published')return Number.isSafeInteger(cell.count)&&cell.count>=0;
+      if(cell.status==='suppressed')return typeof cell.publishedMask==='string'&&/^(?:<\d+|-999|N\/A)$/.test(cell.publishedMask)&&cell.count===undefined;
+      return cell.status==='not-listed' && cell.count===undefined;
+    });
+  }
+  // PR #239 independently reconciles six fully public 2025–26 TEA PEIMS
+  // ethnicity distributions against the same TEA PEIMS gender grouping total.
+  // No full percentages from unreviewed seven-cell sums.
+  const AUDITED_PEIMS_TOTALS=Object.freeze({
+    '043901001':5127,'057912046':753,'057912123':756,'220912002':3033,
+    '061911001':2806,'061911007':2997
+  });
+  function auditedPeimsTotal(id,rows){
+    if(!Object.hasOwn(AUDITED_PEIMS_TOTALS,String(id)) ||
+       !Array.isArray(rows) || rows.length!==RACES.length ||
+       rows.some(function(x){return x.status!=='published'||!Number.isSafeInteger(x.count)||x.count<0;}))return null;
+    const sum=rows.reduce(function(a,x){return a+x.count;},0);
+    return sum>0&&sum===AUDITED_PEIMS_TOTALS[String(id)]?sum:null;
+  }
+  function getPublishedCountRows(id) {
+    const item=PUBLIC_PEIMS_COUNTS[String(id)];
+    if(!item)return null;
+    return RACES.map(function(row){
+      const cell=item.counts[row[0]];
+      return {key:row[0],label:row[1],status:cell.status,
+        count:cell.status==='published'?cell.count:null,
+        display:cell.status==='published'?cell.count.toLocaleString('en-US')+'명':
+          cell.status==='suppressed'?'비공개 ('+cell.publishedMask+')':'원본 미표시'};
+    });
+  }
+  function loadPublishedPeimsCounts() {
+    if(publicPeimsStarted||!root||typeof root.fetch!=='function')return;
+    publicPeimsStarted=true;
+    root.fetch('./data/tea-ethnicity-2025-26-priority.json?v=1',{credentials:'same-origin'})
+      .then(function(res){if(!res.ok)throw Error('PEIMS counts unavailable');return res.json();})
+      .then(function(file){
+        if(file.schemaVersion!==1||file.schoolYear!=='2025-26'||
+           !file.campuses||typeof file.campuses!=='object'||!file.sources)return;
+        const sourceEntries=Object.entries(file.sources);
+        if(sourceEntries.length<11)return;
+        for(const [district,url] of sourceEntries){
+          if(!validPeimsSource(url,district))return;
+        }
+        const statewide=file.statewideSource;
+        if(statewide && !validPeimsStatewideSource(statewide))return;
+        for(const [district,url] of sourceEntries)
+          PUBLIC_PEIMS_SOURCES[district]=url;
+        if(statewide)PUBLIC_PEIMS_SOURCES.__statewide=statewide;
+        let accepted=0;
+        for(const [id,item] of Object.entries(file.campuses)){
+          if(!validPublishedCampus(id,item) ||
+             !(PUBLIC_PEIMS_SOURCES[item.district]||PUBLIC_PEIMS_SOURCES.__statewide))continue;
+          PUBLIC_PEIMS_COUNTS[id]=item;accepted++;
+        }
+        if(accepted && typeof document!=='undefined'){
+          document.querySelectorAll('.tea-insights-panel').forEach(function(panel){panel.remove();});
+          document.querySelectorAll('.tea-school-inline-preview').forEach(function(panel){panel.remove();});
+          mount();
+        }
+      }).catch(function(){/* Offline or invalid data: no demographic inference. */});
+  }
+
   function loadVerifiedAggregates() {
     if(enrichmentStarted || !root || typeof root.fetch!=='function')return;
     enrichmentStarted=true;
@@ -259,7 +548,22 @@
     });
     panel.appendChild(facts);
 
-    if(data.domains){
+    if(data.academicDomainRows){
+      const metrics=document.createElement('dl');metrics.className='tea-insights-domains';
+      metrics.setAttribute('aria-label','2026 TEA 공식 영역별 환산점수 및 미평가 상태');
+      data.academicDomainRows.forEach(function(v){
+        const item=document.createElement('div');
+        const label=v.status==='reported'?v.score+'점 ('+v.rating+')':
+          v.status==='not-rated'?'미평가 (Not Rated)':
+          v.status==='suppressed'?'비공개':'원본 미제공';
+        item.appendChild(textTag('dt','',v.label));
+        item.appendChild(textTag('dd','',label));
+        metrics.appendChild(item);
+      });
+      panel.appendChild(metrics);
+      panel.appendChild(textTag('p','tea-insights-meta',
+        '2026 TEA 영역별 환산점수입니다. 종합등급 원인을 직접 설명하는 원시 구성점수가 아닙니다.'));
+    }else if(data.domains){
       const metrics=document.createElement('dl');metrics.className='tea-insights-domains';
       [['학업 성취',data.domains.achievement],['학교 향상도',data.domains.progress],['집단별 목표',data.domains.gaps]].forEach(function(pair){
         const item=document.createElement('div');
@@ -271,7 +575,17 @@
     } else {
       panel.appendChild(textTag('p','tea-insights-empty','영역별 세부 성적 · 자료 확인 중'));
     }
-    if(data.subjects){
+    if(data.academicSubjectRows){
+      const subjects=document.createElement('p');subjects.className='tea-insights-subjects';
+      subjects.appendChild(textTag('strong','','2025–26 STAAR 전체 학생 · Meets 이상: '));
+      subjects.appendChild(document.createTextNode(data.academicSubjectRows.map(function(v){
+        const status=v.status==='reported'?v.value+'%':
+          v.status==='suppressed'?'비공개':
+          v.status==='not-in-source'?'학교 원본 행 없음':'수치 미제공/미해당 여부 확인';
+        return v.label+' '+status;
+      }).join(' · ')));
+      panel.appendChild(subjects);
+    }else if(data.subjects){
       const subjects=document.createElement('p');subjects.className='tea-insights-subjects';
       const labels={reading:'독해',math:'수학',science:'과학',social:'사회'};
       subjects.appendChild(textTag('strong','','STAAR 학년 수준 충족 이상: '));
@@ -281,6 +595,37 @@
       panel.appendChild(subjects);
     }
 
+    const published=getPublishedCountRows(id);
+    if(published){
+      const sevenPublic=published.every(function(cell){return cell.status==='published';});
+      const auditedTotal=auditedPeimsTotal(id,published);
+      const complete=auditedTotal!==null;
+      const total=auditedTotal||0;
+      const current=document.createElement('details');
+      current.className='tea-insights-provenance tea-peims-counts';
+      current.open=true;
+      current.appendChild(textTag('summary','tea-insights-provenance-summary',
+        complete?'2025–26 PEIMS 인종별 인원 · 같은 원본 등록 인원 검증':
+          sevenPublic?'2025–26 PEIMS 인종별 인원 · 등록 인원 대조 대기':
+          '2025–26 PEIMS 인종별 인원 · 일부 비공개'));
+      const recentList=document.createElement('ul');
+      recentList.className='tea-insights-legend';
+      published.forEach(function(cell){
+        const percent=complete&&total>0?
+          ' ('+(100*cell.count/total).toFixed(1)+'%)':'';
+        recentList.appendChild(textTag('li','',cell.label+' · '+cell.display+percent));
+      });
+      current.appendChild(recentList);
+      current.appendChild(textTag('p','tea-insights-empty',complete&&total>0?
+        '2025–26 TEA PEIMS 인종별 7개 공개 수치를 동일 TEA PEIMS 성별 등록 인원 집계와 대조한 비율입니다. 다른 TEA 보고서의 등록 인원과 일치한다는 의미는 아닙니다.':
+        sevenPublic?'7개 인종 범주는 공개됐으나 독립 등록 인원 대조가 완료되지 않아 비율을 표시하지 않습니다.':
+        'TEA가 일부 학생 수를 비공개 또는 미표시하여 정확한 전체 인종 비율을 계산하지 않습니다.'));
+      if(complete&&id==='043901001'){
+        current.appendChild(textTag('p','tea-insights-missing',
+          '주의: Allen High는 같은 연도의 TEA PEIMS 5,127명과 별도 TEA 학교 프로필 5,126명이 일치하지 않습니다. 이 비율은 PEIMS 기준이며 다른 원본의 차이는 미해결입니다.'));
+      }
+      panel.appendChild(current);
+    }
     const demo=(data.demographics && checkRace(data.demographics.race))?data.demographics:null;
     if(demo){
       const demographicHeading=document.createElement('div');
@@ -313,7 +658,9 @@
       });
       figure.appendChild(list);panel.appendChild(figure);
     } else {
-      panel.appendChild(textTag('p','tea-insights-empty','학생 인종 구성 · 공식 수치 확인 중'));
+      panel.appendChild(textTag('p','tea-insights-empty',published?
+        '2025–26 PEIMS 공개 인원은 위에 표시됩니다. 7개 분류 전체 비율은 비공개 또는 등록 인원 대조 조건에 따라 별도로 제한됩니다.':
+        '학생 인종 구성 · 공식 수치 확인 중'));
     }
 
     // Keep detailed methodology, sources and missing-data explanations together.
@@ -325,9 +672,20 @@
     const notes=document.createElement('div');
     notes.className='tea-insights-provenance-body';
     notes.appendChild(textTag('p','tea-insights-meta','2026 TEA 종합 평가 · 적용 단계 '+data.rolloutPhase+' · '+data.cohort));
-    if(!data.domains) notes.appendChild(textTag('p','tea-insights-missing',
+    if(!data.domains&&!data.academicDomainRows) notes.appendChild(textTag('p','tea-insights-missing',
       '영역별 점수 및 과목별 성취도: 개별 TEA 원문 미연결. 종합점수만으로 과목별 강점이나 약점을 추정하지 않습니다.'));
+    if(data.academicDomainRows&&data.evidenceStatus!=='reviewed')
+      notes.appendChild(textTag('p','tea-insights-missing',
+        '이 학교는 영역별 미평가·수치 미제공 항목이 있습니다. 빈칸과 미평가는 0점 또는 F등급을 뜻하지 않습니다.'));
     if(data.domainsSource&&hasOfficialSource(data.domainsSource))notes.appendChild(makeLink('2026 TEA 영역별 점수 원문',data.domainsSource));
+    if(data.subjectsSource&&hasOfficialSource(data.subjectsSource))notes.appendChild(makeLink('2026 TEA STAAR 과목별 자료 원문',data.subjectsSource));
+    if(published){
+      notes.appendChild(textTag('p','tea-insights-meta','2025–26 인종별 학생 수: TEA PEIMS 공개 캠퍼스 집계 · 일부 항목 비공개/미표시.'));
+      notes.appendChild(makeLink('TEA 공식 2025–26 학교별 집계 CSV',
+        PUBLIC_PEIMS_SOURCES[String(scoreRecord.district)]||
+        PUBLIC_PEIMS_SOURCES.__statewide||
+        'https://rptsvr1.tea.texas.gov/adhocrpt/adste.html'));
+    }
     if(demo){
       notes.appendChild(textTag('p','tea-insights-meta','학생 인종 구성: '+demo.year+' · '+demo.document+' · 등록 학생 '+demo.enrollment.toLocaleString('en-US')+'명'));
       notes.appendChild(makeLink(demo.document+' 원문',demo.src));
@@ -452,7 +810,7 @@
     const host=document.getElementById('detailContent');
     if(!host || typeof state==='undefined') return;
     const school=state.selectedSchool;
-    if(school)loadVerifiedAggregates();
+    if(school){loadVerifiedAggregates();loadPublishedPeimsCounts();loadAcademicBatches();}
     if(!school){
       mountInline(null,null);
       return;
@@ -500,17 +858,94 @@
           [
             ['2026 A–F 종합등급',info.accountabilityRatingPresent],
             ['학교별 기본 설명',info.profilePanelsConnected],
-            ['개별 강점·개선과제 분석',info.individualNarratives],
-            ['2026 영역별 평가점수',info.domainComponentsReviewed],
-            ['학생 인종 구성',info.ethnicityReviewed]
+            ['기존 수동 분석 초안 (검증 수준 별도)',info.individualNarratives],
+            ['초기 수동 검증 영역별 점수 (별도 기록)',info.domainComponentsReviewed],
+            ['2025–26 공개 인종별 학생 수 (비공개 포함)',info.public2025_26CampusCounts],
+            ['2025–26 일곱 인종 전체 비율 확인',info.public2025_26CompleteShares],
+            ['과거 학년도 전체 인종 비율 확인',info.ethnicityReviewed]
           ].forEach(function(pair){
             const p=document.createElement('p');
             p.appendChild(textTag('strong','',pair[0]+' '+Number(pair[1]||0).toLocaleString('en-US')+' / '+count.toLocaleString('en-US')));
             p.appendChild(document.createTextNode(' · '+ratio(pair[1])));
             content.appendChild(p);
           });
-          content.appendChild(textTag('p','','미평가(Not Rated) '+info.notRated+'개 · 2025–26 공식 자료는 학교별 검증 후 갱신됩니다.'));
+          content.appendChild(textTag('p','','미평가(Not Rated) '+info.notRated+'개 · 2025–26 공개 학생 수는 '+Number(info.public2025_26PublishedCells||0)+'개 분류에 연결되었습니다. '+Number(info.public2025_26SuppressedCells||0)+'개는 비공개, '+Number(info.public2025_26UnlistedCells||0)+'개는 원본 미표시입니다.'));
           content.appendChild(textTag('p','','종합등급 연결과 과목별 분석 완료는 다른 기준입니다. 개인정보 보호로 마스킹된 수치는 추정하지 않습니다.'));
+          // Production integration coverage is authoritative once this shared release snapshot exists.
+          // Before integration, retain the legacy UAT preview without describing it as deployed.
+          const integrated=info.official2026;
+          if(integrated && integrated.accountabilityYear===2026 &&
+             integrated.schoolYear==='2025-26' && integrated.campuses===count){
+            content.appendChild(textTag('p','tea-insights-meta','2026 공식 영역 및 2025–26 STAAR 공개 점수 · 데이터 원본 기준'));
+            [
+              ['2026 학업 영역 1개 이상 공개',integrated.domainAnyReported],
+              ['2026 학업 영역 3개 모두 공개',integrated.domainAllReported],
+              ['2025–26 STAAR 과목 1개 이상 공개',integrated.staarAnyReported],
+              ['2025–26 STAAR 4개 과목 모두 공개',integrated.staarAllFourReported],
+              ['공개 점수의 상대 비교 가능 (등급 원인 아님)',integrated.scoreBasedComparisonEligible]
+            ].forEach(function(pair){
+              const value=pair[1];
+              if(Number.isInteger(value)&&value>=0&&value<=count)
+                content.appendChild(textTag('p','',pair[0]+' '+value.toLocaleString('en-US')+
+                  ' / '+count.toLocaleString('en-US')+' · '+ratio(value)));
+            });
+            content.appendChild(textTag('p','tea-insights-missing',
+              'STAAR 원본 행 미포함 '+integrated.staarSourceAbsent+
+              '개 · 미평가/비공개/원본 미제공은 0점이 아닙니다.'));
+            if(Array.isArray(integrated.byDistrict)&&integrated.byDistrict.length){
+              const districtDetails=document.createElement('details');
+              districtDetails.className='tea-data-progress-districts';
+              districtDetails.appendChild(textTag('summary','','학군별 수치 확인 ('+integrated.byDistrict.length+'개)'));
+              districtDetails.appendChild(textTag('p','tea-insights-missing',
+                '학군 행정코드 기준 현행 목록이며 학교의 실제 DFW 위치나 집 주소 배정을 의미하지 않습니다.'));
+              const districtList=document.createElement('div');
+              districtList.className='tea-data-progress-district-list';
+              districtList.style.maxHeight='280px';
+              districtList.style.overflowY='auto';
+              const priority=['057903','061902','043901','043907','043910','043905','043912','061901','057905','057912'];
+              const ordered=integrated.byDistrict.slice().sort(function(a,b){
+                const ia=priority.indexOf(a.districtId),ib=priority.indexOf(b.districtId);
+                return (ia<0?999:ia)-(ib<0?999:ib) || a.districtId.localeCompare(b.districtId);
+              });
+              ordered.forEach(function(d){
+                if(!/^\d{6}$/.test(d.districtId)||!Number.isInteger(d.campuses)||d.campuses<1)return;
+                districtList.appendChild(textTag('p','',
+                  d.name+' · 전체 '+d.campuses+
+                  ' · 3영역 '+d.domainAllReported+
+                  ' · STAAR 1개 이상 '+d.staarAnyReported+
+                  ' · PEIMS 공개 집계 '+d.public2025_26CountCampuses+
+                  ' · 7개 인종 비율 완비 '+d.fullRaceShareCampuses));
+              });
+              districtDetails.appendChild(districtList);
+              content.appendChild(districtDetails);
+            }
+          }else{
+          // Data-stage coverage is separate from already deployed/historical progress.
+          root.fetch('./data/tea-2026-uat-progress.json?v=1',{credentials:'same-origin'})
+            .then(function(response){if(!response.ok)throw Error('Academic UAT unavailable');return response.json();})
+            .then(function(uat){
+              if(uat.schemaVersion!==1||uat.accountabilityYear!==2026||
+                 uat.schoolYear!=='2025-26'||uat.counts?.campuses!==count)return;
+              const c=uat.counts;
+              content.appendChild(textTag('p','tea-insights-meta',
+                'UAT 신규 2026 TEA 상세 원본 (아직 Production 미반영)'));
+              [
+                ['3개 영역 점수 모두 공개',c.domainAllReported],
+                ['3개 영역 및 공개 STAAR 과목으로 상대 비교 가능',c.detailedRelativeComparisonEligible],
+                ['STAAR 공개 과목 수치 하나 이상 존재',c.subjectAnyReported]
+              ].forEach(function(pair){
+                const n=pair[1];
+                if(Number.isInteger(n)&&n>=0&&n<=count)
+                  content.appendChild(textTag('p','',pair[0]+' '+
+                    n.toLocaleString('en-US')+' / '+count.toLocaleString('en-US')+' · '+ratio(n)));
+              });
+              content.appendChild(textTag('p','tea-insights-missing',
+                'STAAR 원본 행 미포함 '+c.staarSourceRowAbsent+'개 · Not Rated/비공개/미제공은 0점이 아닙니다. 학교 배정 경계와 별도 자료입니다.'));
+            }).catch(function(){
+              content.appendChild(textTag('p','tea-insights-missing','UAT 학업 성적 구축 현황을 불러올 수 없습니다.'));
+            });
+          }
+
         }).catch(function(){content.textContent='현재 진행률 파일을 불러올 수 없습니다. 학교별 공식 출처를 확인해 주세요.';});
     });
     list.insertAdjacentElement('afterend',details);
@@ -539,7 +974,10 @@
     rolloutDistricts:Object.keys(ROLLOUT),
     rolloutPhase:function(district){return ROLLOUT[district]?.phase||4;},
     enrichedCampusCount:function(){return Object.keys(ENRICHED).length;},
-    validDomains:validDomains
+    validDomains:validDomains,validPublishedCampus:validPublishedCampus,
+    validPeimsSource:validPeimsSource,validPeimsStatewideSource:validPeimsStatewideSource,
+    getPublishedCountRows:getPublishedCountRows,auditedPeimsTotal:auditedPeimsTotal,
+    installAcademicBatches:installAcademicBatches,validAcademicUrl:validAcademicUrl
   };
   if(typeof module!=='undefined' && module.exports)module.exports=api;
   if(root && typeof document!=='undefined'){
