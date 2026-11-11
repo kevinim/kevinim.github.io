@@ -44,7 +44,7 @@ const {mkdirSync}=require('node:fs');
    await page.locator('#officeSelect').selectOption('saved:'+records[0].id);
    assert.equal(await page.locator('#destination').inputValue(),records[0].address,'Saved office selectable as destination');
    await page.reload({waitUntil:'domcontentloaded'});
-   await page.waitForSelector('#workplaceList .workplace-entry',{timeout:30000});
+   await page.waitForSelector('#workplaceList .workplace-entry',{state:'attached',timeout:30000});
    assert.equal(await page.locator('#officeSelect option[value^="saved:"]').count(),1,'Saved office survives reload on same browser');
    await page.locator('#workplacesPanel > summary').click();
    await page.locator('#workplaceList .workplace-entry-actions button').filter({hasText:'수정'}).click();
