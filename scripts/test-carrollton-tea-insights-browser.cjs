@@ -88,6 +88,13 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           if(PUBLISHED_IDS.has(id)){
             await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel[data-campus="'+id+'"] .tea-peims-counts')!==null,id,{timeout:15000});
           }
+          // Academic batches are lazy-loaded separately from PEIMS. Await the
+          // exact selected-campus domain and subject panels before assertions.
+          await page.waitForFunction(id=>{
+            const panel=document.querySelector('#detailContent .tea-insights-panel[data-campus="'+id+'"]');
+            return !!panel?.querySelector('.tea-insights-domains') &&
+              !!panel?.querySelector('.tea-insights-subjects');
+          },id,{timeout:25000});
           const found=await page.evaluate(()=>({
             inlineCampus:document.querySelector('#schoolList .tea-school-inline-preview')?.dataset.campus,
             inlineFacts:document.querySelectorAll('#schoolList .tea-school-inline-preview .tea-insights-fact').length,
