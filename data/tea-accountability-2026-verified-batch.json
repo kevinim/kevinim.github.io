@@ -33,24 +33,21 @@
     "domain": {
       "studentAchievement": {
         "reported": 2101,
-        "notRated": 0,
+        "notRated": 181,
         "suppressed": 0,
-        "unavailable": 0,
-        "not-rated": null
+        "unavailable": 0
       },
       "schoolProgress": {
         "reported": 2082,
-        "notRated": 0,
+        "notRated": 200,
         "suppressed": 0,
-        "unavailable": 0,
-        "not-rated": null
+        "unavailable": 0
       },
       "closingTheGaps": {
         "reported": 2063,
-        "notRated": 0,
+        "notRated": 219,
         "suppressed": 0,
-        "unavailable": 0,
-        "not-rated": null
+        "unavailable": 0
       }
     },
     "subjectRowsImported": 0
