@@ -5,6 +5,8 @@ const fs=require('node:fs');
 const path=require('node:path');
 const assert=require('node:assert/strict');
 const ROOT='http://127.0.0.1:8765/';
+const PUBLIC_PEIMS=require('../data/tea-ethnicity-2025-26-priority.json');
+const PUBLISHED_IDS=new Set(Object.keys(PUBLIC_PEIMS.campuses));
 const ARTIFACTS='artifacts/carrollton-tea-insights';
 const CASES=[
   ['061902118','STEM Academy at Hebron Valley Elementary'],
@@ -28,7 +30,10 @@ const CASES=[
   ['220905001','Carter-Riverside High School'],
   ['220901002','Sam Houston High School'],
   ['061911001','Northwest High School'],
-  ['220916001','Bell High School']
+  ['220916001','Bell High School'],
+  ['220912002','North Crowley High School'],
+  ['043914001','Wylie High School'],
+  ['220918001','Boswell High School']
 ];
 fs.mkdirSync(ARTIFACTS,{recursive:true});
 (async()=>{
@@ -54,7 +59,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
         const progressText=await coverage.locator('.tea-data-progress-content').textContent();
         assert.ok(progressText.includes('18 / 2,282'),'curated analysis still only 18, not implied complete');
         assert.ok(progressText.includes('8 / 2,282'),'verified ethnicity must not be overstated');
-        assert.ok(progressText.includes('1,343 / 2,282'),'2025–26 partial enrollment count coverage must be explicit');
+        assert.ok(progressText.includes(PUBLISHED_IDS.size.toLocaleString('en-US')+' / 2,282'),'2025–26 partial enrollment count coverage must be explicit');
         await coverage.locator('summary').click();
         assert.equal(await coverage.evaluate(el=>el.open),false,'progress notes collapsed by default again');
         const results=[];
@@ -80,7 +85,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel')?.dataset.campus===id,id,{timeout:15000});
           await page.waitForFunction(()=>[...document.styleSheets].some(s=>(s.href||'').includes('carrollton-school-insights.css?v=4')),
             null,{timeout:15000});
-          if(['061902','057903','043901','043907','043905','043910','043912','061901','057912','057916','057905','220905','220901','057909','057914','220908','057803','057848','061806','220907','057910','061911','220916'].some(prefix=>id.startsWith(prefix))){
+          if(PUBLISHED_IDS.has(id).some(prefix=>id.startsWith(prefix))){
             await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel[data-campus="'+id+'"] .tea-peims-counts')!==null,id,{timeout:15000});
           }
           const found=await page.evaluate(()=>({
@@ -141,11 +146,11 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
             assert.equal(found.inlineChart,undefined,'unverified race cannot render in-list chart');
             assert.equal(found.missingRace,true);
           }
-          const currentPeims=['061902','057903','043901','043907','043905','043910','043912','061901','057912','057916','057905','220905','220901','057909','057914','220908','057803','057848','061806','220907','057910','061911','220916'].some(prefix=>id.startsWith(prefix));
+          const currentPeims=PUBLISHED_IDS.has(id).some(prefix=>id.startsWith(prefix));
           assert.equal(found.peimsCountRows,currentPeims?7:0,'2025–26 source year and seven explicit privacy statuses '+id);
           if(currentPeims){
             assert.ok(found.peimsText.includes('2025–26'),'current-year PEIMS source labeled');
-            if(['043901001','057912046','061911001'].includes(id))assert.ok(found.peimsText.includes('7개 분류 공개'),
+            if(['043901001','057912046','061911001','220912002'].includes(id))assert.ok(found.peimsText.includes('7개 분류 공개'),
               'Allen High is the one fully public seven-category campus');
             else assert.ok(found.peimsText.includes('비공개')||found.peimsText.includes('원본 미표시'),
               'masking or source omission remains visible');
@@ -165,6 +170,12 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           }
           if(id==='220905001')assert.ok(found.peimsText.includes('13명'),'Fort Worth school Asian count');
           if(id==='220916001')assert.ok(found.peimsText.includes('153명'),'HEB school Asian count');
+          if(id==='220912002'){
+            assert.ok(found.peimsText.includes('105명'),'North Crowley seven-group source Asian count');
+            assert.ok(found.peimsText.includes('3.5%'),'North Crowley fully public same-year Asian ratio');
+          }
+          if(id==='043914001')assert.ok(found.peimsText.includes('702명'),'Wylie High source Asian count');
+          if(id==='220918001')assert.ok(found.peimsText.includes('131명'),'Boswell High source Asian count');
           if(id==='043901105')assert.ok(found.peimsText.includes('비공개'),'suppressed Asian count remains hidden');
           if(!reviewed)assert.equal(found.missingDomain,true,'grade-only campus must show missing domain notice');
           assert.deepEqual(found.csp,[],'CSP violation detected '+JSON.stringify(found.csp));
