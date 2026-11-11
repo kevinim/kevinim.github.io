@@ -31,7 +31,14 @@ function observedAssignedSchools(bodyText) {
 }
 async function selectNativeCandidate(page, fixture, result) {
   const addressField = page.locator('.address_input input[type="text"]').first();
-  await addressField.waitFor({state:'visible',timeout:25000});
+  try {
+    await addressField.waitFor({state:'visible',timeout:22000});
+  } catch (_) {
+    // GuideK12 SPA sometimes leaves a blank app shell on the initial load.
+    // Reload the same *public* browser page once; never use hidden APIs.
+    await page.reload({waitUntil:'domcontentloaded',timeout:45000});
+    await addressField.waitFor({state:'visible',timeout:22000});
+  }
   const candidates = page.locator('.address_input .search_result_container .search_result');
   const want = norm(fixture.candidateSelected);
   const search = async (typed,delay) => {
@@ -113,7 +120,7 @@ async function main() {
     // school-name mismatch. Continue to the next property regardless.
     for(let i=0;i<source.samples.length;i++) {
       let row = await oneCase(browser,source.samples[i],i);
-      if(row.state === 'WARNING' && row.exactNativeCandidateSelected) {
+      if(row.state === 'WARNING') {
         const firstDiagnostic = {
           cause: row.cause, phase: row.failurePhase, ...row.diagnostics
         };
