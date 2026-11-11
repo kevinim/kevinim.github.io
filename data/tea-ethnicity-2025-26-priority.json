@@ -1,0 +1,3071 @@
+{
+  "schemaVersion": 1,
+  "schoolYear": "2025-26",
+  "asOf": "2026-11-11",
+  "sourcePublisher": "Texas Education Agency (TEA)",
+  "sourceReport": "PEIMS Student Enrollment Reports — selected campus totals by district number, grouped by ethnicity",
+  "sources": {
+    "LISD": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=061902&_debug=0",
+    "CFB": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=057903&_debug=0"
+  },
+  "policy": "Only publicly reported campus-level counts; suppressed and unlisted cells remain unavailable. Do not impute/derive masked counts or calculate a complete 7-group ethnicity share.",
+  "campuses": {
+    "057903001": {
+      "district": "CFB",
+      "name": "TURNER H S",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 97
+        },
+        "black": {
+          "status": "published",
+          "count": 89
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 1497
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<30"
+        },
+        "white": {
+          "status": "published",
+          "count": 134
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903002": {
+      "district": "CFB",
+      "name": "SMITH H S",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 92
+        },
+        "black": {
+          "status": "published",
+          "count": 352
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 1176
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 45
+        },
+        "white": {
+          "status": "published",
+          "count": 111
+        }
+      }
+    },
+    "057903003": {
+      "district": "CFB",
+      "name": "GRIMES EDUCATION CENTER",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "black": {
+          "status": "published",
+          "count": 10
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 69
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "white": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903005": {
+      "district": "CFB",
+      "name": "SALAZAR DISTRICT ALTERNATIVE EDUCATION PROGRAM",
+      "counts": {
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "black": {
+          "status": "published",
+          "count": 20
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 28
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "white": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "native": {
+          "status": "not-listed"
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903006": {
+      "district": "CFB",
+      "name": "CREEKVIEW H S",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 172
+        },
+        "black": {
+          "status": "published",
+          "count": 180
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 941
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 70
+        },
+        "white": {
+          "status": "published",
+          "count": 258
+        }
+      }
+    },
+    "057903007": {
+      "district": "CFB",
+      "name": "RANCHVIEW H S",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 218
+        },
+        "black": {
+          "status": "published",
+          "count": 302
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 279
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 45
+        },
+        "white": {
+          "status": "published",
+          "count": 82
+        }
+      }
+    },
+    "057903009": {
+      "district": "CFB",
+      "name": "DALLAS COUNTY JJAEP CFB CAMPUS",
+      "counts": {
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "native": {
+          "status": "not-listed"
+        },
+        "asian": {
+          "status": "not-listed"
+        },
+        "black": {
+          "status": "not-listed"
+        },
+        "hispanic": {
+          "status": "not-listed"
+        },
+        "pacific": {
+          "status": "not-listed"
+        },
+        "white": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903010": {
+      "district": "CFB",
+      "name": "EARLY COLLEGE H S",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 22
+        },
+        "black": {
+          "status": "published",
+          "count": 30
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 263
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "white": {
+          "status": "published",
+          "count": 29
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903041": {
+      "district": "CFB",
+      "name": "FIELD MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "black": {
+          "status": "published",
+          "count": 49
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 696
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 14
+        },
+        "white": {
+          "status": "published",
+          "count": 68
+        }
+      }
+    },
+    "057903042": {
+      "district": "CFB",
+      "name": "PERRY MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 91
+        },
+        "black": {
+          "status": "published",
+          "count": 24
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 711
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "white": {
+          "status": "published",
+          "count": 54
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903045": {
+      "district": "CFB",
+      "name": "BLALACK MIDDLE",
+      "counts": {
+        "asian": {
+          "status": "published",
+          "count": 91
+        },
+        "black": {
+          "status": "published",
+          "count": 105
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 657
+        },
+        "multi": {
+          "status": "published",
+          "count": 54
+        },
+        "white": {
+          "status": "published",
+          "count": 216
+        },
+        "native": {
+          "status": "not-listed"
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903046": {
+      "district": "CFB",
+      "name": "POLK MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<30"
+        },
+        "black": {
+          "status": "published",
+          "count": 216
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 739
+        },
+        "multi": {
+          "status": "published",
+          "count": 38
+        },
+        "white": {
+          "status": "published",
+          "count": 76
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903047": {
+      "district": "CFB",
+      "name": "BUSH MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 113
+        },
+        "black": {
+          "status": "published",
+          "count": 278
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 174
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<40"
+        },
+        "white": {
+          "status": "published",
+          "count": 36
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903102": {
+      "district": "CFB",
+      "name": "CARROLLTON EL",
+      "counts": {
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "black": {
+          "status": "published",
+          "count": 20
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 634
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "white": {
+          "status": "published",
+          "count": 11
+        },
+        "native": {
+          "status": "not-listed"
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903105": {
+      "district": "CFB",
+      "name": "GOOD EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 125
+        },
+        "black": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 400
+        },
+        "multi": {
+          "status": "published",
+          "count": 23
+        },
+        "white": {
+          "status": "published",
+          "count": 42
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903106": {
+      "district": "CFB",
+      "name": "STARK EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 15
+        },
+        "black": {
+          "status": "published",
+          "count": 65
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 403
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 19
+        },
+        "white": {
+          "status": "published",
+          "count": 67
+        }
+      }
+    },
+    "057903109": {
+      "district": "CFB",
+      "name": "FARMERS BRANCH EL",
+      "counts": {
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "black": {
+          "status": "published",
+          "count": 19
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 471
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "white": {
+          "status": "published",
+          "count": 34
+        },
+        "native": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903110": {
+      "district": "CFB",
+      "name": "BLANTON EL",
+      "counts": {
+        "asian": {
+          "status": "published",
+          "count": 18
+        },
+        "black": {
+          "status": "published",
+          "count": 34
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 256
+        },
+        "multi": {
+          "status": "published",
+          "count": 13
+        },
+        "white": {
+          "status": "published",
+          "count": 44
+        },
+        "native": {
+          "status": "not-listed"
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903111": {
+      "district": "CFB",
+      "name": "THOMPSON EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "black": {
+          "status": "published",
+          "count": 27
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 460
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "white": {
+          "status": "published",
+          "count": 53
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903112": {
+      "district": "CFB",
+      "name": "COUNTRY PLACE EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "black": {
+          "status": "published",
+          "count": 44
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 165
+        },
+        "multi": {
+          "status": "published",
+          "count": 35
+        },
+        "white": {
+          "status": "published",
+          "count": 133
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903113": {
+      "district": "CFB",
+      "name": "DAVIS EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 28
+        },
+        "black": {
+          "status": "published",
+          "count": 27
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 352
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "white": {
+          "status": "published",
+          "count": 48
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903117": {
+      "district": "CFB",
+      "name": "HUIE SPECIAL EDUC CTR",
+      "counts": {
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "black": {
+          "status": "published",
+          "count": 15
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 49
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "white": {
+          "status": "published",
+          "count": 37
+        },
+        "native": {
+          "status": "not-listed"
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903118": {
+      "district": "CFB",
+      "name": "ROSEMEADE EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 61
+        },
+        "black": {
+          "status": "suppressed",
+          "publishedMask": "<40"
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 148
+        },
+        "multi": {
+          "status": "published",
+          "count": 35
+        },
+        "white": {
+          "status": "published",
+          "count": 108
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903120": {
+      "district": "CFB",
+      "name": "LAS COLINAS EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 236
+        },
+        "black": {
+          "status": "published",
+          "count": 70
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 72
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<30"
+        },
+        "white": {
+          "status": "published",
+          "count": 66
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903121": {
+      "district": "CFB",
+      "name": "LANDRY EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 111
+        },
+        "black": {
+          "status": "published",
+          "count": 175
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 93
+        },
+        "multi": {
+          "status": "published",
+          "count": 34
+        },
+        "white": {
+          "status": "suppressed",
+          "publishedMask": "<40"
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903122": {
+      "district": "CFB",
+      "name": "KENT EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 85
+        },
+        "black": {
+          "status": "published",
+          "count": 72
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 195
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 27
+        },
+        "white": {
+          "status": "published",
+          "count": 119
+        }
+      }
+    },
+    "057903123": {
+      "district": "CFB",
+      "name": "RIVERCHASE ELE",
+      "counts": {
+        "asian": {
+          "status": "published",
+          "count": 68
+        },
+        "black": {
+          "status": "published",
+          "count": 146
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 206
+        },
+        "multi": {
+          "status": "published",
+          "count": 18
+        },
+        "white": {
+          "status": "published",
+          "count": 26
+        },
+        "native": {
+          "status": "not-listed"
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903124": {
+      "district": "CFB",
+      "name": "MCKAMY EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "black": {
+          "status": "published",
+          "count": 113
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 318
+        },
+        "multi": {
+          "status": "published",
+          "count": 13
+        },
+        "white": {
+          "status": "published",
+          "count": 20
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903125": {
+      "district": "CFB",
+      "name": "SHEFFIELD EL",
+      "counts": {
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "black": {
+          "status": "published",
+          "count": 150
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 507
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "white": {
+          "status": "published",
+          "count": 27
+        },
+        "native": {
+          "status": "not-listed"
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903126": {
+      "district": "CFB",
+      "name": "RAINWATER EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 73
+        },
+        "black": {
+          "status": "published",
+          "count": 51
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 157
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<40"
+        },
+        "white": {
+          "status": "published",
+          "count": 102
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903128": {
+      "district": "CFB",
+      "name": "FREEMAN EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 393
+        },
+        "black": {
+          "status": "published",
+          "count": 97
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 68
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "white": {
+          "status": "published",
+          "count": 15
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903129": {
+      "district": "CFB",
+      "name": "MCWHORTER EL",
+      "counts": {
+        "asian": {
+          "status": "published",
+          "count": 11
+        },
+        "black": {
+          "status": "published",
+          "count": 150
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 494
+        },
+        "multi": {
+          "status": "published",
+          "count": 25
+        },
+        "white": {
+          "status": "published",
+          "count": 15
+        },
+        "native": {
+          "status": "not-listed"
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903131": {
+      "district": "CFB",
+      "name": "BLAIR EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "black": {
+          "status": "published",
+          "count": 48
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 523
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 12
+        },
+        "white": {
+          "status": "published",
+          "count": 32
+        }
+      }
+    },
+    "057903132": {
+      "district": "CFB",
+      "name": "LA VILLITA EL",
+      "counts": {
+        "native": {
+          "status": "published",
+          "count": 13
+        },
+        "asian": {
+          "status": "published",
+          "count": 473
+        },
+        "black": {
+          "status": "published",
+          "count": 120
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 128
+        },
+        "multi": {
+          "status": "published",
+          "count": 23
+        },
+        "white": {
+          "status": "published",
+          "count": 44
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "057903135": {
+      "district": "CFB",
+      "name": "MCLAUGHLIN STRICKLAND EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "black": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 690
+        },
+        "multi": {
+          "status": "published",
+          "count": 15
+        },
+        "white": {
+          "status": "published",
+          "count": 27
+        },
+        "asian": {
+          "status": "not-listed"
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902001": {
+      "district": "LISD",
+      "name": "LEWISVILLE H S",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "asian": {
+          "status": "published",
+          "count": 262
+        },
+        "black": {
+          "status": "published",
+          "count": 702
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 2287
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 119
+        },
+        "white": {
+          "status": "published",
+          "count": 381
+        }
+      }
+    },
+    "061902002": {
+      "district": "LISD",
+      "name": "MARCUS H S",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<30"
+        },
+        "asian": {
+          "status": "published",
+          "count": 313
+        },
+        "black": {
+          "status": "published",
+          "count": 143
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 553
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 134
+        },
+        "white": {
+          "status": "published",
+          "count": 1837
+        }
+      }
+    },
+    "061902004": {
+      "district": "LISD",
+      "name": "THE COLONY H S",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 142
+        },
+        "black": {
+          "status": "published",
+          "count": 281
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 697
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 92
+        },
+        "white": {
+          "status": "published",
+          "count": 505
+        }
+      }
+    },
+    "061902005": {
+      "district": "LISD",
+      "name": "LEARNING CTR",
+      "counts": {
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "black": {
+          "status": "published",
+          "count": 43
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 107
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 12
+        },
+        "white": {
+          "status": "published",
+          "count": 26
+        },
+        "native": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902007": {
+      "district": "LISD",
+      "name": "DENTON CO J J A E P",
+      "counts": {
+        "black": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "hispanic": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "white": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "native": {
+          "status": "not-listed"
+        },
+        "asian": {
+          "status": "not-listed"
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902008": {
+      "district": "LISD",
+      "name": "HEBRON H S",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 1137
+        },
+        "black": {
+          "status": "published",
+          "count": 544
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 783
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 187
+        },
+        "white": {
+          "status": "published",
+          "count": 963
+        }
+      }
+    },
+    "061902010": {
+      "district": "LISD",
+      "name": "FLOWER MOUND H S",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "asian": {
+          "status": "published",
+          "count": 1016
+        },
+        "black": {
+          "status": "published",
+          "count": 110
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 455
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 143
+        },
+        "white": {
+          "status": "published",
+          "count": 1657
+        }
+      }
+    },
+    "061902042": {
+      "district": "LISD",
+      "name": "STEM ACADEMY AT HEDRICK MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 98
+        },
+        "black": {
+          "status": "published",
+          "count": 69
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 560
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 21
+        },
+        "white": {
+          "status": "published",
+          "count": 91
+        }
+      }
+    },
+    "061902044": {
+      "district": "LISD",
+      "name": "STEM ACADEMY AT GRIFFIN MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 45
+        },
+        "black": {
+          "status": "published",
+          "count": 103
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 318
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 43
+        },
+        "white": {
+          "status": "published",
+          "count": 157
+        }
+      }
+    },
+    "061902045": {
+      "district": "LISD",
+      "name": "LAMAR MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 92
+        },
+        "black": {
+          "status": "published",
+          "count": 44
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 196
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<40"
+        },
+        "white": {
+          "status": "published",
+          "count": 300
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902046": {
+      "district": "LISD",
+      "name": "LAKEVIEW MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 14
+        },
+        "black": {
+          "status": "published",
+          "count": 33
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 146
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 27
+        },
+        "white": {
+          "status": "published",
+          "count": 109
+        }
+      }
+    },
+    "061902047": {
+      "district": "LISD",
+      "name": "ARBOR CREEK MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 157
+        },
+        "black": {
+          "status": "published",
+          "count": 111
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 251
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 76
+        },
+        "white": {
+          "status": "published",
+          "count": 343
+        }
+      }
+    },
+    "061902048": {
+      "district": "LISD",
+      "name": "STEM ACADEMY AT FORESTWOOD MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 145
+        },
+        "black": {
+          "status": "published",
+          "count": 34
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 175
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 55
+        },
+        "white": {
+          "status": "published",
+          "count": 488
+        }
+      }
+    },
+    "061902049": {
+      "district": "LISD",
+      "name": "BRIARHILL MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 59
+        },
+        "black": {
+          "status": "published",
+          "count": 26
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 149
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 42
+        },
+        "white": {
+          "status": "published",
+          "count": 548
+        }
+      }
+    },
+    "061902050": {
+      "district": "LISD",
+      "name": "DELAY MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "black": {
+          "status": "published",
+          "count": 69
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 486
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 18
+        },
+        "white": {
+          "status": "published",
+          "count": 41
+        }
+      }
+    },
+    "061902052": {
+      "district": "LISD",
+      "name": "HUFFINES MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 36
+        },
+        "black": {
+          "status": "published",
+          "count": 101
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 315
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 28
+        },
+        "white": {
+          "status": "published",
+          "count": 83
+        }
+      }
+    },
+    "061902053": {
+      "district": "LISD",
+      "name": "MCKAMY MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 246
+        },
+        "black": {
+          "status": "published",
+          "count": 17
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 83
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 38
+        },
+        "white": {
+          "status": "published",
+          "count": 348
+        }
+      }
+    },
+    "061902054": {
+      "district": "LISD",
+      "name": "STEM ACADEMY AT CREEK VALLEY MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 200
+        },
+        "black": {
+          "status": "published",
+          "count": 121
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 123
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<50"
+        },
+        "white": {
+          "status": "published",
+          "count": 111
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902055": {
+      "district": "LISD",
+      "name": "STEM ACADEMY AT CLAYTON DOWNING MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 99
+        },
+        "black": {
+          "status": "published",
+          "count": 20
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 85
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 29
+        },
+        "white": {
+          "status": "published",
+          "count": 366
+        }
+      }
+    },
+    "061902056": {
+      "district": "LISD",
+      "name": "MARSHALL DURHAM MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 71
+        },
+        "black": {
+          "status": "published",
+          "count": 239
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 285
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<30"
+        },
+        "white": {
+          "status": "published",
+          "count": 50
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902058": {
+      "district": "LISD",
+      "name": "SHADOW RIDGE MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 271
+        },
+        "black": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 84
+        },
+        "multi": {
+          "status": "published",
+          "count": 27
+        },
+        "white": {
+          "status": "published",
+          "count": 244
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902059": {
+      "district": "LISD",
+      "name": "KILLIAN MIDDLE",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 354
+        },
+        "black": {
+          "status": "published",
+          "count": 78
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 232
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 44
+        },
+        "white": {
+          "status": "published",
+          "count": 220
+        }
+      }
+    },
+    "061902101": {
+      "district": "LISD",
+      "name": "CENTRAL EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "black": {
+          "status": "published",
+          "count": 31
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 418
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 13
+        },
+        "white": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        }
+      }
+    },
+    "061902104": {
+      "district": "LISD",
+      "name": "LAKELAND EL",
+      "counts": {
+        "asian": {
+          "status": "published",
+          "count": 42
+        },
+        "black": {
+          "status": "published",
+          "count": 28
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 577
+        },
+        "multi": {
+          "status": "published",
+          "count": 18
+        },
+        "white": {
+          "status": "published",
+          "count": 32
+        },
+        "native": {
+          "status": "not-listed"
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902106": {
+      "district": "LISD",
+      "name": "DEGAN EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 60
+        },
+        "black": {
+          "status": "published",
+          "count": 102
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 138
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<40"
+        },
+        "white": {
+          "status": "published",
+          "count": 81
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902107": {
+      "district": "LISD",
+      "name": "CAMEY EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 29
+        },
+        "black": {
+          "status": "published",
+          "count": 88
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 163
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 18
+        },
+        "white": {
+          "status": "published",
+          "count": 117
+        }
+      }
+    },
+    "061902108": {
+      "district": "LISD",
+      "name": "TIMBER CREEK EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 54
+        },
+        "black": {
+          "status": "published",
+          "count": 35
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 89
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<30"
+        },
+        "white": {
+          "status": "published",
+          "count": 198
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902109": {
+      "district": "LISD",
+      "name": "PETERS COLONY EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "black": {
+          "status": "published",
+          "count": 49
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 438
+        },
+        "multi": {
+          "status": "published",
+          "count": 23
+        },
+        "white": {
+          "status": "published",
+          "count": 104
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902112": {
+      "district": "LISD",
+      "name": "FLOWER MOUND EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 93
+        },
+        "black": {
+          "status": "published",
+          "count": 20
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 89
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 49
+        },
+        "white": {
+          "status": "published",
+          "count": 239
+        }
+      }
+    },
+    "061902113": {
+      "district": "LISD",
+      "name": "INDIAN CREEK EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 134
+        },
+        "black": {
+          "status": "published",
+          "count": 126
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 124
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 22
+        },
+        "white": {
+          "status": "published",
+          "count": 148
+        }
+      }
+    },
+    "061902114": {
+      "district": "LISD",
+      "name": "MCAULIFFE EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 13
+        },
+        "black": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 91
+        },
+        "multi": {
+          "status": "published",
+          "count": 48
+        },
+        "white": {
+          "status": "published",
+          "count": 495
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902117": {
+      "district": "LISD",
+      "name": "STEM ACADEMY AT DONALD EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 99
+        },
+        "black": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 111
+        },
+        "multi": {
+          "status": "published",
+          "count": 42
+        },
+        "white": {
+          "status": "published",
+          "count": 333
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902118": {
+      "district": "LISD",
+      "name": "STEM ACADEMY AT HEBRON VALLEY EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 246
+        },
+        "black": {
+          "status": "published",
+          "count": 109
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 136
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<50"
+        },
+        "white": {
+          "status": "published",
+          "count": 184
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902119": {
+      "district": "LISD",
+      "name": "ETHRIDGE EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "black": {
+          "status": "published",
+          "count": 53
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 95
+        },
+        "multi": {
+          "status": "published",
+          "count": 31
+        },
+        "white": {
+          "status": "published",
+          "count": 146
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902121": {
+      "district": "LISD",
+      "name": "MORNINGSIDE EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<40"
+        },
+        "black": {
+          "status": "published",
+          "count": 47
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 118
+        },
+        "multi": {
+          "status": "published",
+          "count": 33
+        },
+        "white": {
+          "status": "published",
+          "count": 163
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902122": {
+      "district": "LISD",
+      "name": "HERITAGE EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 64
+        },
+        "black": {
+          "status": "published",
+          "count": 27
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 109
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 35
+        },
+        "white": {
+          "status": "published",
+          "count": 406
+        }
+      }
+    },
+    "061902123": {
+      "district": "LISD",
+      "name": "OLD SETTLERS EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 108
+        },
+        "black": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 69
+        },
+        "multi": {
+          "status": "published",
+          "count": 50
+        },
+        "white": {
+          "status": "published",
+          "count": 256
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902124": {
+      "district": "LISD",
+      "name": "PARKWAY EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 59
+        },
+        "black": {
+          "status": "published",
+          "count": 63
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 362
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 13
+        },
+        "white": {
+          "status": "published",
+          "count": 93
+        }
+      }
+    },
+    "061902126": {
+      "district": "LISD",
+      "name": "PRAIRIE TRAIL EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 50
+        },
+        "black": {
+          "status": "suppressed",
+          "publishedMask": "<30"
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 268
+        },
+        "multi": {
+          "status": "published",
+          "count": 38
+        },
+        "white": {
+          "status": "published",
+          "count": 267
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902127": {
+      "district": "LISD",
+      "name": "STEM ACADEMY AT VALLEY RIDGE EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 44
+        },
+        "black": {
+          "status": "published",
+          "count": 108
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 165
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 51
+        },
+        "white": {
+          "status": "published",
+          "count": 171
+        }
+      }
+    },
+    "061902128": {
+      "district": "LISD",
+      "name": "FOREST VISTA EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 157
+        },
+        "black": {
+          "status": "suppressed",
+          "publishedMask": "<40"
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 146
+        },
+        "multi": {
+          "status": "published",
+          "count": 42
+        },
+        "white": {
+          "status": "published",
+          "count": 340
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902129": {
+      "district": "LISD",
+      "name": "STEM ACADEMY AT BRIDLEWOOD EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 101
+        },
+        "black": {
+          "status": "published",
+          "count": 14
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 59
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 38
+        },
+        "white": {
+          "status": "published",
+          "count": 345
+        }
+      }
+    },
+    "061902130": {
+      "district": "LISD",
+      "name": "WELLINGTON EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 128
+        },
+        "black": {
+          "status": "published",
+          "count": 22
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 178
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 52
+        },
+        "white": {
+          "status": "published",
+          "count": 333
+        }
+      }
+    },
+    "061902131": {
+      "district": "LISD",
+      "name": "SOUTHRIDGE EL",
+      "counts": {
+        "asian": {
+          "status": "published",
+          "count": 42
+        },
+        "black": {
+          "status": "published",
+          "count": 149
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 449
+        },
+        "multi": {
+          "status": "published",
+          "count": 40
+        },
+        "white": {
+          "status": "published",
+          "count": 32
+        },
+        "native": {
+          "status": "not-listed"
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902132": {
+      "district": "LISD",
+      "name": "HOMESTEAD EL",
+      "counts": {
+        "asian": {
+          "status": "published",
+          "count": 80
+        },
+        "black": {
+          "status": "published",
+          "count": 60
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 128
+        },
+        "multi": {
+          "status": "published",
+          "count": 56
+        },
+        "white": {
+          "status": "published",
+          "count": 217
+        },
+        "native": {
+          "status": "not-listed"
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902133": {
+      "district": "LISD",
+      "name": "BLUEBONNET EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 315
+        },
+        "black": {
+          "status": "suppressed",
+          "publishedMask": "<30"
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 60
+        },
+        "multi": {
+          "status": "published",
+          "count": 36
+        },
+        "white": {
+          "status": "published",
+          "count": 182
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902134": {
+      "district": "LISD",
+      "name": "TOM HICKS EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 102
+        },
+        "black": {
+          "status": "published",
+          "count": 50
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 131
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 44
+        },
+        "white": {
+          "status": "published",
+          "count": 206
+        }
+      }
+    },
+    "061902135": {
+      "district": "LISD",
+      "name": "LIBERTY EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 162
+        },
+        "black": {
+          "status": "published",
+          "count": 20
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 57
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 38
+        },
+        "white": {
+          "status": "published",
+          "count": 276
+        }
+      }
+    },
+    "061902136": {
+      "district": "LISD",
+      "name": "CASTLE HILLS EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 251
+        },
+        "black": {
+          "status": "published",
+          "count": 16
+        },
+        "hispanic": {
+          "status": "suppressed",
+          "publishedMask": "<60"
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 49
+        },
+        "white": {
+          "status": "published",
+          "count": 255
+        }
+      }
+    },
+    "061902138": {
+      "district": "LISD",
+      "name": "MARJORY VICKERY EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 57
+        },
+        "black": {
+          "status": "published",
+          "count": 49
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 464
+        },
+        "multi": {
+          "status": "suppressed",
+          "publishedMask": "<20"
+        },
+        "white": {
+          "status": "published",
+          "count": 51
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902139": {
+      "district": "LISD",
+      "name": "ROCKBROOK EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<30"
+        },
+        "black": {
+          "status": "published",
+          "count": 350
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 123
+        },
+        "multi": {
+          "status": "published",
+          "count": 42
+        },
+        "white": {
+          "status": "published",
+          "count": 34
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902140": {
+      "district": "LISD",
+      "name": "COYOTE RIDGE EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 151
+        },
+        "black": {
+          "status": "published",
+          "count": 131
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 86
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 30
+        },
+        "white": {
+          "status": "published",
+          "count": 63
+        }
+      }
+    },
+    "061902141": {
+      "district": "LISD",
+      "name": "LILLIE J JACKSON EARLY CHILDHOOD CENTER",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 29
+        },
+        "black": {
+          "status": "published",
+          "count": 52
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 259
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 13
+        },
+        "white": {
+          "status": "published",
+          "count": 36
+        }
+      }
+    },
+    "061902142": {
+      "district": "LISD",
+      "name": "INDEPENDENCE EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 214
+        },
+        "black": {
+          "status": "published",
+          "count": 70
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 435
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 31
+        },
+        "white": {
+          "status": "published",
+          "count": 55
+        }
+      }
+    },
+    "061902143": {
+      "district": "LISD",
+      "name": "LEWISVILLE EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 16
+        },
+        "black": {
+          "status": "published",
+          "count": 88
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 338
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 12
+        },
+        "white": {
+          "status": "published",
+          "count": 19
+        }
+      }
+    },
+    "061902144": {
+      "district": "LISD",
+      "name": "MILL STREET EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "black": {
+          "status": "published",
+          "count": 73
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 472
+        },
+        "multi": {
+          "status": "published",
+          "count": 16
+        },
+        "white": {
+          "status": "published",
+          "count": 49
+        },
+        "pacific": {
+          "status": "not-listed"
+        }
+      }
+    },
+    "061902145": {
+      "district": "LISD",
+      "name": "STEM ACADEMY AT MEMORIAL EL",
+      "counts": {
+        "native": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "asian": {
+          "status": "published",
+          "count": 385
+        },
+        "black": {
+          "status": "published",
+          "count": 114
+        },
+        "hispanic": {
+          "status": "published",
+          "count": 108
+        },
+        "pacific": {
+          "status": "suppressed",
+          "publishedMask": "<10"
+        },
+        "multi": {
+          "status": "published",
+          "count": 68
+        },
+        "white": {
+          "status": "published",
+          "count": 125
+        }
+      }
+    }
+  }
+}
