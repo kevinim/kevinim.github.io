@@ -231,10 +231,29 @@
   const PUBLIC_PEIMS_SOURCES=Object.create(null);
   let publicPeimsStarted=false;
   const PEIMS_SOURCE_PREFIX='https://rptsvr1.tea.texas.gov/cgi/sas/broker';
+  const PEIMS_DISTRICTS=Object.freeze({
+    CFB:'057903',LISD:'061902',AISD:'043901','043907':'043907',
+    FISD:'043905',PISD:'043910'
+  });
+  function validPeimsSource(url,district){
+    if(typeof url!=='string'||!Object.hasOwn(PEIMS_DISTRICTS,district))return false;
+    let source;
+    try{source=new URL(url);}catch{return false;}
+    return source.origin==='https://rptsvr1.tea.texas.gov'&&
+      source.pathname==='/cgi/sas/broker'&&
+      source.searchParams.get('_program')==='adhoc.addispatch.sas'&&
+      source.searchParams.get('endyear')==='26'&&
+      source.searchParams.get('major')==='st'&&
+      source.searchParams.get('minor')==='e'&&
+      source.searchParams.get('grouping')==='e'&&
+      source.searchParams.get('format')==='c'&&
+      source.searchParams.get('selsumm')==='ic'&&
+      source.searchParams.get('key')===PEIMS_DISTRICTS[district];
+  }
   function validPublishedCampus(id,entry) {
     if(!/^\d{9}$/.test(String(id||'')) || !entry || typeof entry!=='object')return false;
-    if(!['CFB','LISD'].includes(entry.district))return false;
-    if(!String(id).startsWith(entry.district==='CFB'?'057903':'061902'))return false;
+    if(!Object.hasOwn(PEIMS_DISTRICTS,entry.district))return false;
+    if(!String(id).startsWith(PEIMS_DISTRICTS[entry.district]))return false;
     if(typeof entry.name!=='string'||entry.name.length<1||entry.name.length>200||!entry.counts)return false;
     const expected=RACES.map(function(row){return row[0];});
     const actual=Object.keys(entry.counts);
@@ -265,12 +284,11 @@
       .then(function(file){
         if(file.schemaVersion!==1||file.schoolYear!=='2025-26'||
            !file.campuses||typeof file.campuses!=='object'||!file.sources)return;
-        for(const district of ['CFB','LISD']){
-          const url=file.sources[district];
-          if(typeof url!=='string'||!url.startsWith(PEIMS_SOURCE_PREFIX+'?')||
-             !url.includes('key='+(district==='CFB'?'057903':'061902')))return;
+        for(const district of Object.keys(PEIMS_DISTRICTS)){
+          if(!validPeimsSource(file.sources[district],district))return;
         }
-        for(const district of ['CFB','LISD'])PUBLIC_PEIMS_SOURCES[district]=file.sources[district];
+        for(const district of Object.keys(PEIMS_DISTRICTS))
+          PUBLIC_PEIMS_SOURCES[district]=file.sources[district];
         let accepted=0;
         for(const [id,item] of Object.entries(file.campuses)){
           if(!validPublishedCampus(id,item))continue;
@@ -656,6 +674,7 @@
     rolloutPhase:function(district){return ROLLOUT[district]?.phase||4;},
     enrichedCampusCount:function(){return Object.keys(ENRICHED).length;},
     validDomains:validDomains,validPublishedCampus:validPublishedCampus,
+    validPeimsSource:validPeimsSource,
     getPublishedCountRows:getPublishedCountRows
   };
   if(typeof module!=='undefined' && module.exports)module.exports=api;
