@@ -196,6 +196,13 @@
     else host.appendChild(panel);
   }
   function boot() {
+    // Non-blocking feature stylesheet; preserve baseline first-render CSS budget.
+    if(!document.querySelector('link[data-tea-carrollton-css]')){
+      const css=document.createElement('link');
+      css.rel='stylesheet';css.href='./features/carrollton-school-insights.css?v=1';
+      css.dataset.teaCarrolltonCss='1';
+      document.head.appendChild(css);
+    }
     const host=document.getElementById('detailContent');
     if(!host || typeof MutationObserver==='undefined')return;
     const observer=new MutationObserver(mount);
