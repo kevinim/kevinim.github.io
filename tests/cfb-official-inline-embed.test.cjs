@@ -14,7 +14,7 @@ test('official source embedded only in one opt-in responsive panel',()=>{
  assert.equal(html.split('id="cfbLoadInlineFinder"').length-1,1);
  assert.match(html,/<section class="panel cfb-inline-panel"[^>]* hidden>/);
  assert.match(html,/<script src="\.\/features\/cfb-official-inline\.js\?v=1" defer><\/script>/);
- assert.match(html,/<link rel="stylesheet" href="\.\/features\/cfb-official-inline\.css\?v=1">/);
+ assert.match(html,/<link rel="stylesheet" href="\.\/features\/cfb-official-inline\.css\?v=2">/);
  assert.doesNotMatch(html,/<iframe\b/i,'No automatic third-party iframe load in page markup');
  assert.match(css,/\[hidden\]\{display:none!important\}/);
  assert.match(css,/@media\(max-width:720px\)/);

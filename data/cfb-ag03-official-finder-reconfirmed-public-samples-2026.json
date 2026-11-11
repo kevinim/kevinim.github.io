@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "district": "CFB",
+  "dateObserved": "2026-11-10",
+  "verdict": "OFFICIAL_FINDER_EXACT_NATIVE_CANDIDATE_RECONFIRMED_FOR_TWO_PUBLIC_BASE_ADDRESSES",
+  "districtPortal": "https://www.cfbisd.edu/students/school-maps-locator-system",
+  "finder": "https://app.guidek12.com/carrolltonfarmersbranchtx/school_search/current/",
+  "evidenceRun": "https://github.com/kevinim/kevinim.github.io/actions/runs/42894866573",
+  "evidenceArtifactName": "cfb-public-finder-holdouts-RECHECK-NOT-GIS",
+  "sourceFixture": "tests/cfb-official-resident-finder-verified-2026-11-07.json",
+  "method": "Headless Chromium selects exact native GuideK12 autocomplete candidate, then reads explicit Assigned school labels and compares each E/M/H label to the previously observed public fixture.",
+  "vendorUiYearPublished": null,
+  "sourceApprovedMapSchoolYear": "2025-26",
+  "current2026_27EquivalenceFromDistrictPortal": true,
+  "yearExplicitInsideFinderWidget": false,
+  "dataSourceClassification": "LIVE_OFFICIAL_VENDOR_UI_OBSERVATION_NOT_OFFICIAL_GIS_VECTOR_EXPORT",
+  "properties": [
+    {
+      "id": "PUBLIC-CFB-CAMPUS-1",
+      "assetType": "public-school-facility",
+      "address": "1600 S Josey Ln, Carrollton, TX 75006",
+      "candidateSelected": true,
+      "exactCandidateMatched": true,
+      "observedLabels": {
+        "elementary": "McLaughlin Strickland Elementary (K-5)",
+        "middle": "Perry Middle School (6-8)",
+        "high": "Turner High School (9-12)"
+      },
+      "allThreeGradesMatchPreviousObservation": true,
+      "individualUnitCovered": false,
+      "polygonCompared": false,
+      "status": "FINDER_UI_RECONFIRMED"
+    },
+    {
+      "id": "PUBLIC-CFB-COMPLEX-BASE-2",
+      "assetType": "public-apartment-complex-base",
+      "address": "1011 S Main St, Carrollton, TX 75006",
+      "candidateSelected": true,
+      "exactCandidateMatched": true,
+      "observedLabels": {
+        "elementary": "Carrollton Elementary (K-5)",
+        "middle": "Perry Middle School (6-8)",
+        "high": "Newman Smith High School (9-12)"
+      },
+      "allThreeGradesMatchPreviousObservation": true,
+      "individualUnitCovered": false,
+      "polygonCompared": false,
+      "status": "FINDER_UI_RECONFIRMED"
+    }
+  ],
+  "summary": {
+    "reconfirmedPublicBaseAddresses": 2,
+    "gradeLevelFinderObservationsReconfirmed": 6,
+    "liveFinderAddressObservationSuccessPercent": 100,
+    "certifiedGISPolygonHoldouts": 0,
+    "geometricallyCertifiedCampusZones": 0,
+    "independentAG02GeoreferencedPolygonsApproved": 0,
+    "validForAutomaticResidenceAssignment": false
+  },
+  "constraints": [
+    "These observations certify only reproducibility of actual public base-address Finder UI results; they do not certify raster-derived polygon geography.",
+    "An apartment base address may not cover unit-specific zoning exceptions.",
+    "Do not publish any address-specific results as general default CFB school assignment.",
+    "Finders may update; recheck before making a property decision.",
+    "Do not infer current year explicit inside widget when only parent CFB portal identifies approved March 2025 zones."
+  ]
+}

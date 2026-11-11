@@ -1,0 +1,99 @@
+name: CFB AG02 georeferencing research (NO DEPLOY)
+on:
+  push:
+    branches:
+      - ag02/cfb-georef-independent-qa-20261110
+  pull_request:
+    branches:
+      - feature/cfb-approved-zones-reference-atlas-20261110
+    paths:
+      - 'scripts/cfb-ag02-georeference-qa.py'
+      - 'scripts/cfb-ag02-legacy-gis-audit.py'
+      - 'scripts/cfb-ag02-map-overlay-qa.py'
+      - 'scripts/cfb-ag02-road-gcp-scout.py'
+      - 'scripts/cfb-ag02-road-overlay-qa.py'
+      - 'tests/cfb-ag02-georef.test.py'
+      - '.github/workflows/cfb-ag02-georeference-qa.yml'
+      - 'data/cfb-ag02-*-gcps.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  independent-research:
+    name: Geometry math, image match pilot, QA-only artifacts
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.11'
+      - name: Install free open-source image research dependencies
+        run: python -m pip install --disable-pip-version-check --no-cache-dir numpy pillow opencv-python-headless shapely pyproj
+      - name: Unit tests, true negative permission safeguards
+        run: python tests/cfb-ag02-georef.test.py -v
+      - name: Fetch exact official rasters and test E to M/H SIFT registration
+        run: python scripts/cfb-ag02-georeference-qa.py --fetch-images
+      - name: Audit newly discovered municipal E/M/H 2020 geometry and compare outer jurisdiction
+        run: python scripts/cfb-ag02-legacy-gis-audit.py
+      - name: Draw visually labelled 2025 source vs 2020 historic source overlays
+        run: python scripts/cfb-ag02-map-overlay-qa.py
+      - name: Save E/M/H historic boundary comparison image overlays (NOT certified GIS)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ag02-cfb-2020-vs-2025-raster-visual-review-NOT-LIVE
+          path: artifacts/cfb-ag02-raster-legacy-comparison/
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Find street intersection ground-point candidates via municipality GIS (not verified pixels)
+        run: python scripts/cfb-ag02-road-gcp-scout.py
+      - name: Render annotated original source rasters with numbered unverified road candidates
+        run: python scripts/cfb-ag02-road-overlay-qa.py
+      - name: Fail closed if historical or road source cannot be verified
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          base=Path('artifacts')
+          legacy=json.loads((base/'cfb-ag02-legacy-gis/legacy-2020-city-geojson-audit.json').read_text())
+          road=json.loads((base/'cfb-ag02-road-gcp-scout/municipal-road-intersection-UNVERIFIED-candidates.json').read_text())
+          visual=json.loads((base/'cfb-ag02-raster-legacy-comparison/summary.json').read_text())
+          assert legacy['official2025Zones'] is False and legacy['residenceAssignmentApproved'] is False
+          assert all(legacy['grades'][v]['status']=='HISTORICAL_VECTORS_AVAILABLE_NOT_CURRENT_YEAR' for v in ('elementary','middle','high'))
+          assert all(legacy['grades'][v]['sourceVintage']=='2020_LAST_EDIT_HISTORICAL_ONLY' for v in ('elementary','middle','high'))
+          assert road['status']=='GROUND_COORDINATE_CANDIDATES_ONLY_NOT_GCP', road.get('error')
+          assert len(road['candidates'])>=8
+          assert all((base/f'cfb-ag02-road-gcp-scout/{v}-2025-road-control-candidates-UNVERIFIED.png').exists()
+                     for v in ('elementary','middle','high'))
+          assert all(p['pixelVerified'] is False and p['groundVerified'] is False and
+                     p['eligibleForModelFit'] is False for p in road['candidates'])
+          assert all(visual['levels'][v]['status']=='VISUAL_REFERENCE_ONLY' for v in ('elementary','middle','high'))
+          print('AG02_RESEARCH_GATE PASS — historical 2020, ground candidates, visual QA; current school GIS certification remains 0')
+          PY
+      - name: Upload road reference coordinate suggestions, never approved GCPs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ag02-cfb-municipal-road-GCP-SUGGESTIONS-UNVERIFIED
+          path: artifacts/cfb-ag02-road-gcp-scout/
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Upload short-lived historical-city-GIS audit (strictly not current attendance)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ag02-cfb-HISTORICAL-2020-city-polygons-NOT-LIVE
+          path: artifacts/cfb-ag02-legacy-gis/
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Upload short-lived nonproduction georef diagnostics
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ag02-cfb-2025-26-rough-georef-QA-ONLY
+          path: artifacts/cfb-ag02-georef/
+          if-no-files-found: warn
+          retention-days: 7

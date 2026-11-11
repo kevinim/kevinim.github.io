@@ -1,0 +1,68 @@
+name: AG05 CFB GeoJSON reference UX QA (NO DEPLOY)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'features/cfb-zone-overlay.js'
+      - 'features/cfb-official-bridge.js'
+      - 'features/cfb-official-inline.css'
+      - 'tests/cfb-zone-overlay.test.cjs'
+      - 'tests/cfb-official-manual-bridge.test.cjs'
+      - 'tests/cfb-official-inline-embed.test.cjs'
+      - 'tests/externalized-main-bootstrap.test.cjs'
+      - 'scripts/test-cfb-zone-overlay-browser.cjs'
+      - '.github/workflows/ag05-cfb-zone-reference-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  policy:
+    name: Node unit, official provenance hold, legacy CFB and HTML baseline
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Syntax and isolated regression
+        run: |
+          node --check features/cfb-zone-overlay.js
+          node --check features/cfb-official-bridge.js
+          node --check scripts/test-cfb-zone-overlay-browser.cjs
+          node --test tests/cfb-zone-overlay.test.cjs tests/cfb-official-manual-bridge.test.cjs tests/cfb-official-inline-embed.test.cjs tests/compact-home-finder.test.cjs tests/home-assignment-map.test.cjs tests/conditional-school-release.test.cjs
+          node --test tests/externalized-main-bootstrap.test.cjs
+  browser:
+    name: Real Chromium 390/1366 synthetic CFB UX and marker QA
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Install isolated free Playwright Chromium
+        run: |
+          mkdir -p cfb-ag05-browser-tmp
+          cd cfb-ag05-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Test no auto-grade certification and opt-in display
+        env:
+          NODE_PATH: ${{ github.workspace }}/cfb-ag05-browser-tmp/node_modules
+        run: node scripts/test-cfb-zone-overlay-browser.cjs
+      - name: Archive screenshots only, no publish
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ag05-cfb-mobile-desktop-reference
+          path: artifacts/cfb-zone-overlay/*.png
+          if-no-files-found: warn
+          retention-days: 7

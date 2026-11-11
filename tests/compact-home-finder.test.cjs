@@ -78,3 +78,33 @@ test('home UI gates auto assignment and hides noisy parcel/manual tools behind d
  assert.match(source,/학군별 공식 배정 확인/);
  assert.match(source,/학교 자동 배정 미인증/);
 });
+
+test('official Texas school DISTRICT polygon safely overrides Carrollton ZIP routing, but not school assignment',()=>{
+ const a='123 Example Road, Carrollton, Texas, 75006';
+ ctx.home={address:a,ll:[33.06,-96.91],geocodeQuality:{usableForSchoolCandidate:true}};
+ ctx.window.CfbJurisdiction={lookup:()=>({status:'district-reference',district:'LISD',sourceYear:'2025-26',isSchoolAttendanceZone:false})};
+ try{
+  let model=ctx.compactHomeFinderModel(a,{status:'unavailable'});
+  assert.equal(model.likely,'LISD','True district boundary should outrank ZIP 75006 CFB guess');
+  assert.match(model.why,/학군 외곽 GIS 참고/);
+  assert.doesNotMatch(model.why,/배정학교 확정/);
+  ctx.window.CfbJurisdiction.lookup=()=>({status:'boundary-review',district:'LISD'});
+  model=ctx.compactHomeFinderModel(a,{status:'unavailable'});
+  assert.equal(model.likely,'','Near a publisher-simplified boundary, disable the default finder link');
+  ctx.home.geocodeQuality.usableForSchoolCandidate=false;
+  model=ctx.compactHomeFinderModel(a,{status:'unavailable'});
+  assert.equal(model.likely,'CFB','No high-quality coordinate: degrade to explicitly labeled city/ZIP only hint');
+ }finally{delete ctx.home;delete ctx.window.CfbJurisdiction}
+});
+
+test('async same-home rerenders preserve the advanced school panel but switching homes resets it',()=>{
+ const start=source.indexOf('let lastAdvancedPanelHome=null;');
+ const end=source.indexOf('async function checkHomeParcel()',start);
+ assert.ok(start>=0&&end>start,'advanced panel lifecycle is explicitly stateful');
+ const render=source.slice(start,end);
+ assert.match(render,/preserveAdvancedOpen=lastAdvancedPanelHome===home&&el\('homeAdvancedSchoolTools'\)\?\.open===true/);
+ assert.match(render,/lastAdvancedPanelHome=home/);
+ assert.match(render,/advanced\.open=preserveAdvancedOpen/);
+ assert.ok(render.indexOf('advanced.open=preserveAdvancedOpen')<render.indexOf('advanced.addEventListener(\'toggle\''),
+   'restored state must precede visibility synchronization');
+});

@@ -20,3 +20,14 @@
 .cfb-manual-card strong{display:block;font-size:12px;overflow-wrap:anywhere}
 .cfb-manual-campus{background:#9c2466!important;outline:2px solid #f7b4d8}
 @media(max-width:720px){.cfb-manual-grid{grid-template-columns:1fr}.cfb-manual-cards{grid-template-columns:1fr}}
+
+/* AG05 CFB reference-only overlay: separate from existing map and address UX. */
+.cfb-zone-reference{border-top:1px solid var(--line,#64748b);margin-top:12px;padding-top:12px;min-width:0}
+.cfb-zone-reference>strong{display:block;font-size:13px;margin-bottom:5px}
+.cfb-zone-legend{font-size:12px;line-height:1.5;overflow-wrap:anywhere;margin:5px 0 10px}
+.cfb-zone-optin{display:flex;align-items:flex-start;gap:9px;max-width:100%;font-size:12px;line-height:1.5;cursor:pointer}
+.cfb-zone-optin input{width:17px;height:17px;flex:none;accent-color:#bf7419;margin-top:1px}
+.cfb-zone-reference .source{overflow-wrap:anywhere;margin-top:8px}
+.cfb-zone-reference [data-state="draft-visible"]{border-left:3px dashed #df8e22;padding-left:8px}
+.cfb-zone-reference [data-state="verified"]{border-left:3px solid #16866b;padding-left:8px}
+@media(max-width:720px){.cfb-zone-reference{width:100%}.cfb-zone-optin{min-height:44px;padding:8px 0}}

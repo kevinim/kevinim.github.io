@@ -1,0 +1,130 @@
+name: AG06 CFB integrated QA (NO DEPLOY)
+on:
+  pull_request:
+    paths: ['index.html','features/cfb-*.js','features/cfb-*.css','scripts/cfb-*','tests/cfb-*','tests/externalized-main-bootstrap.test.cjs','.github/workflows/cfb-ag06-integration-review.yml']
+  push:
+    branches: ['integration/cfb-ag06-20261110']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  integration-node:
+    name: Provenance, policy, CSP, Allen and baseline checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with: {node-version: '24'}
+      - run: |
+          node --test tests/cfb-ag06-integration-policy.test.cjs tests/cfb-official-gis-acquisition.test.cjs tests/cfb-zone-overlay.test.cjs tests/cfb-official-manual-bridge.test.cjs tests/cfb-official-inline-embed.test.cjs tests/cfb-independent-finder-qa.test.cjs tests/cfb-ag03-finder-evidence-guard.test.cjs
+          node --test tests/externalized-main-bootstrap.test.cjs tests/compact-home-finder.test.cjs tests/conditional-school-release.test.cjs tests/home-assignment-map.test.cjs tests/csp-network-allowlist.test.cjs tests/cfb-district-jurisdiction.test.cjs tests/cfb-raster-atlas-and-georef.test.cjs
+          node scripts/check-cfb-official-gis-acquisition.cjs
+  topology-python:
+    name: AG02/03 synthetic geodesy and topology, no GIS promotion
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {persist-credentials: false}
+      - run: |
+          python3 -m venv /tmp/cfb-ag06-gis
+          /tmp/cfb-ag06-gis/bin/pip install --disable-pip-version-check --no-cache-dir numpy shapely opencv-python-headless pillow
+          /tmp/cfb-ag06-gis/bin/python tests/cfb-ag02-georef.test.py
+          /tmp/cfb-ag06-gis/bin/python -m unittest discover -s tests -p 'test_cfb_ag03_reconstruct.py' -v
+          /tmp/cfb-ag06-gis/bin/python -m unittest discover -s tests -p 'test_cfb_ag03_certification_review.py' -v
+          /tmp/cfb-ag06-gis/bin/python scripts/cfb-ag03-reconstruct.py
+          /tmp/cfb-ag06-gis/bin/python scripts/cfb-ag03-certification-review.py
+  chromium:
+    name: Real 390px/1366px Chromium marker, campus and atlas E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with: {node-version: '24'}
+      - name: Install free isolated browser
+        run: |
+          mkdir -p cfb-ag06-browser-tmp
+          cd cfb-ag06-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Both CFB feature browser suites against combined exact HEAD
+        env:
+          NODE_PATH: ${{ github.workspace }}/cfb-ag06-browser-tmp/node_modules
+        run: |
+          node scripts/test-cfb-zone-overlay-browser.cjs
+          node scripts/test-cfb-raster-atlas-browser.cjs
+      - name: Retain screenshots 7 days, never deploy
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ag06-cfb-integrated-reference-e2e
+          path: |
+            artifacts/cfb-zone-overlay/*.png
+            artifacts/cfb-atlas-browser/*.png
+          if-no-files-found: warn
+          retention-days: 7
+
+  core-security:
+    name: Main-equivalent privacy, public asset and deployment-free security QA
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with: {node-version: '24'}
+      - name: Existing main security and public-data contracts
+        run: |
+          node scripts/verify-main-data.mjs
+          node --test tests/actions-immutable-permissions.test.cjs tests/public-privacy-disclosure.test.cjs tests/no-legacy-source-builders.test.cjs tests/audit-runtime-privacy-assets.test.cjs
+          node scripts/audit-runtime-privacy-assets.cjs
+          node scripts/check-public-personalization.cjs .
+          node scripts/validate-environment-plan.cjs deploy/environment-plan.json planning
+          node scripts/verify-public-preview.cjs
+  regional-chromium:
+    name: Real Allen, Plano, school-zone and 18 other-ISD browser regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with: {node-version: '24'}
+      - name: Install Chromium in isolated free test directory
+        run: |
+          mkdir -p cfb-ag06-regional-browser-tmp
+          cd cfb-ag06-regional-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve exact integration PR locally (never publish)
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/ag06-local.log 2>&1 &
+          sleep 2
+      - name: Real browser Allen marker viewport, existing school zones, 18 districts and home policy
+        env:
+          NODE_PATH: ${{ github.workspace }}/cfb-ag06-regional-browser-tmp/node_modules
+        run: |
+          node scripts/test-map-viewport-sync-browser.cjs
+          node scripts/test-school-boundary-browser.cjs
+          node scripts/test-dfw-neighbor-finders-browser.cjs
+          node scripts/test-home-assignment-map-browser.cjs
+      - name: Seven-day non-public browser evidence, no deploy
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ag06-allen-regional-no-regression
+          path: |
+            artifacts/phase2a-browser/*.png
+            artifacts/phase2a-browser/*.json
+            artifacts/neighbor-school-finders/*.png
+            artifacts/neighbor-school-finders/*.json
+          if-no-files-found: warn
+          retention-days: 7
