@@ -50,6 +50,8 @@ jobs:
           retention-days: 7
       - name: Find street intersection ground-point candidates via municipality GIS (not verified pixels)
         run: python scripts/cfb-ag02-road-gcp-scout.py
+      - name: Render annotated original source rasters with numbered unverified road candidates
+        run: python scripts/cfb-ag02-road-overlay-qa.py
       - name: Fail closed if historical or road source cannot be verified
         run: |
           python - <<'PY'
@@ -71,8 +73,6 @@ jobs:
           assert all(visual['levels'][v]['status']=='VISUAL_REFERENCE_ONLY' for v in ('elementary','middle','high'))
           print('AG02_RESEARCH_GATE PASS — historical 2020, ground candidates, visual QA; current school GIS certification remains 0')
           PY
-      - name: Render annotated original source rasters with numbered unverified road candidates
-        run: python scripts/cfb-ag02-road-overlay-qa.py
       - name: Upload road reference coordinate suggestions, never approved GCPs
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
