@@ -28,7 +28,7 @@ test('public preview external sanitized script compiles with zero inline executi
  const inline=[...safe.html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
    .filter(x=>!/\bsrc=/.test(x[1])&&x[2].trim());
  assert.equal(inline.length,0);
- assert.ok(safe.html.includes('<script src="./dashboard-main.js?v=6"></script>'));
+ assert.ok(safe.html.includes('<script src="./dashboard-main.js?v=7"></script>'));
  new vm.Script(safe.js);
 });
 test('public preview explains third-party disclosure without promising no logs',()=>{

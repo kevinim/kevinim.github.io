@@ -67,13 +67,13 @@ const test = (name, fn) => {
 
 const inlineScripts = [mainBootstrap];
 test('external main application bootstrap compiles with no inline HTML execution',()=>{
- assert.ok(pageHtml.includes('<script src="./dashboard-main.js?v=6"></script>'));
+ assert.ok(pageHtml.includes('<script src="./dashboard-main.js?v=7"></script>'));
  assert.equal([...pageHtml.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].filter(x=>!/\bsrc\s*=/.test(x[1])&&x[2].trim()).length,0);
  new Script(mainBootstrap,{filename:'dashboard-main.js'});
 });
 
 test('all main application JS modules compile', () => {
-  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','school-boundary-match.js','phase2a-fema-hazards.js','phase2a-nfhl-flood.js','txwrap-wildfire-potential.js','noaa-storm-history.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
+  for (const name of ['rating-context.js','school-identity.js','school-assignment.js','home-lookup-v2.js','allen-lookup.js','candidate-compare.js','school-lifecycle.js','geocode-quality.js','school-zone-risk.js','school-boundary-match.js','phase2a-fema-hazards.js','phase2a-nfhl-flood.js','txwrap-wildfire-potential.js','noaa-storm-history.js','collin-parcel-check.js','official-school-review.js','texas-address-suggest.js','features/commute/workplace-destinations.js','allen-apartment-exceptions.js','plano-finder-live.js']) {
     new Script(readText(name), {filename:name});
     assert.ok(html.includes('./' + name), name + ' not loaded');
   }
