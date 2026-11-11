@@ -56,7 +56,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           null,{timeout:110000});
         const coverage=page.locator('#tea-data-progress');
         assert.equal(await coverage.count(),1,'single TEA progress disclosure beside school directory');
-        await coverage.locator('summary').click();
+        await page.locator('#tea-data-progress > summary').click();
         await page.waitForFunction(()=>document.querySelector('#tea-data-progress .tea-data-progress-content')
           ?.textContent.includes('2,282'),null,{timeout:15000});
         const progressText=await coverage.locator('.tea-data-progress-content').textContent();
