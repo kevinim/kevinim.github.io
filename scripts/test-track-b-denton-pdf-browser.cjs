@@ -35,6 +35,7 @@ async function main(){
    assert.equal(count.rows,39);
    // The module supplies official source references regardless of NCES marker status. Verify the honest
    // official-source directory UI instead of injecting synthetic markers.
+   await page.locator('#schoolDataDetails > summary').click();
    await page.locator('#dentonPdfZoneDirectory summary').click();
    await page.locator('#dentonPdfCampusSelect').selectOption('061901127');
    const result=await page.evaluate(()=>{
