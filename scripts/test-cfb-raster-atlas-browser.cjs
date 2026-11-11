@@ -40,6 +40,7 @@ async function main(){
    await atlas.waitFor({state:'attached',timeout:45000});
    assert.equal(remoteImages,0,'No official raster should be fetched on initial page render');
    assert.equal(await atlas.isVisible(),false,'Atlas should be within the opt-in CFB panel');
+   await page.locator('#schoolDataDetails > summary').click();
    await page.locator('#cfbOfficialRezoningReference > summary').click();
    await page.locator('#cfbOpenInlineFinder').click();
    assert.equal(await atlas.isVisible(),true);
