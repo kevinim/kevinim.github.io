@@ -11,6 +11,7 @@ on:
       - 'scripts/cfb-ag02-legacy-gis-audit.py'
       - 'scripts/cfb-ag02-map-overlay-qa.py'
       - 'scripts/cfb-ag02-road-gcp-scout.py'
+      - 'scripts/cfb-ag02-road-overlay-qa.py'
       - 'tests/cfb-ag02-georef.test.py'
       - '.github/workflows/cfb-ag02-georeference-qa.yml'
       - 'data/cfb-ag02-*-gcps.json'
@@ -63,11 +64,15 @@ jobs:
           assert all(legacy['grades'][v]['sourceVintage']=='2020_LAST_EDIT_HISTORICAL_ONLY' for v in ('elementary','middle','high'))
           assert road['status']=='GROUND_COORDINATE_CANDIDATES_ONLY_NOT_GCP', road.get('error')
           assert len(road['candidates'])>=8
+          assert all((base/f'cfb-ag02-road-gcp-scout/{v}-2025-road-control-candidates-UNVERIFIED.png').exists()
+                     for v in ('elementary','middle','high'))
           assert all(p['pixelVerified'] is False and p['groundVerified'] is False and
                      p['eligibleForModelFit'] is False for p in road['candidates'])
           assert all(visual['levels'][v]['status']=='VISUAL_REFERENCE_ONLY' for v in ('elementary','middle','high'))
           print('AG02_RESEARCH_GATE PASS — historical 2020, ground candidates, visual QA; current school GIS certification remains 0')
           PY
+      - name: Render annotated original source rasters with numbered unverified road candidates
+        run: python scripts/cfb-ag02-road-overlay-qa.py
       - name: Upload road reference coordinate suggestions, never approved GCPs
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
