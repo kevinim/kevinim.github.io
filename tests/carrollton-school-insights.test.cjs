@@ -90,7 +90,7 @@ test('eight campuses have individually source-linked ethnicity data',()=>{
 });
 test('Castle Hills source-linked ethnicity is kept separate from current TEA grade',()=>{
   const castle=insights.getSchoolInsight(source.data.find(r=>r.id==='061902136')).demographics;
-  assert.match(castle.src,/^https:\/\/castlehills\.lisd\.net\//);
+  assert.match(castle.src,/^https:\/\/resources\.finalsite\.net\//);
   assert.equal(castle.year,'2024–25','2025 SRC cannot be reported as 2025–26 enrollment');
   assert.equal(castle.race.asian,35.9);
   assert.equal(castle.race.white,45.9);
