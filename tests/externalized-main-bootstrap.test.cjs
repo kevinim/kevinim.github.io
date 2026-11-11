@@ -151,7 +151,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
   '<script src="./dashboard-main.js?v=6"></script>');
  // Authorize only the reviewed commute assets and the exact updated privacy notice.
  expected=replaceOnce(expected,'<link rel="stylesheet" href="./features/dashboard-extras.css?v=3">',
-  '<link rel="stylesheet" href="./features/dashboard-extras.css?v=3"><link rel="stylesheet" href="./features/commute/workplace-destinations.css?v=1">');
+  '<link rel="stylesheet" href="./features/dashboard-extras.css?v=4">');
  expected=replaceOnce(expected,'<script src="./texas-address-suggest.js?v=1"></script>',
   '<script src="./texas-address-suggest.js?v=2"></script>');
  expected=replaceOnce(expected,'<script src="./dashboard-main.js?v=6"></script>',

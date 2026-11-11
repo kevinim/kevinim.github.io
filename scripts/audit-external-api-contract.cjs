@@ -31,7 +31,7 @@ function auditProviderContract(files) {
   if (errors.length) return { errors, warnings, coverage: null };
 
   const main = get('index.html')+'\n'+get('dashboard-main.js');
-  if(!get('index.html').includes('<script src="./dashboard-main.js?v=6"></script>'))errors.push('main external bootstrap tag missing');
+  if(!get('index.html').includes('<script src="./dashboard-main.js?v=7"></script>'))errors.push('main external bootstrap tag missing');
   const archivedHtml = get('reviewed.html');
   const archivedBootstrap = get('features/reviewed-bootstrap.js');
   const archived = archivedHtml+'\n'+archivedBootstrap;
