@@ -9202,5 +9202,6 @@
       "genderSourceStatus": "both-public",
       "raceShareStatus": "partial-counts-only"
     }
-  }
+  },
+  "scopeCaveat": "These 2,282 are exactly the current dashboard inventory, not a geographically verified list of schools physically located in DFW. E.g. statewide TexasWorks campus 061806015 is outside DFW. Never infer proximity, school boundaries, or residential assignment from the inventory/districtCounty label."
 }
