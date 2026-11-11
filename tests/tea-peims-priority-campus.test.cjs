@@ -5,11 +5,14 @@ const report=require('../data/tea-ethnicity-2025-26-priority.json');
 const inventory=require('../tea-ratings-2026.json').data;
 const insights=require('../features/carrollton-school-insights.js');
 const KEYS=['black','hispanic','white','native','asian','pacific','multi'];
-test('official 2025-26 campus ethnicity roster matches eleven DFW priority ISDs',()=>{
-  const cohorts={CFB:35,LISD:57,AISD:23,'043907':33,FISD:76,PISD:69,PROSPER:32,'061901':46,'057912':35,'057916':51,'057905':237};
+test('official 2025-26 ethnic enrollment records match all imported DFW districts',()=>{
+  const cohorts={CFB:35,LISD:57,AISD:23,'043907':33,FISD:76,PISD:69,PROSPER:32,
+    '061901':46,'057912':35,'057916':51,'057905':237,
+    '220905':134,'220901':74,'057909':66,'057914':51,'220908':48,'057803':45,
+    '057848':44,'061806':41,'220907':40,'057910':37,'061911':37,'220916':32};
   const expected=inventory.filter(r=>Object.hasOwn(cohorts,r.district));
-  assert.equal(expected.length,694);
-  assert.equal(Object.keys(report.campuses).length,694);
+  assert.equal(expected.length,1343);
+  assert.equal(Object.keys(report.campuses).length,1343);
   assert.equal(report.schoolYear,'2025-26');
   for(const record of expected){
     const data=report.campuses[record.id];
@@ -45,8 +48,8 @@ test('FERPA masking and source gaps never become guessed enrollment or percentag
       }
     }
   }
-  assert.deepEqual({published,suppressed,unlisted,complete},{published:2677,suppressed:1508,unlisted:673,complete:3});
-  assert.equal(published+suppressed+unlisted,694*7);
+  assert.deepEqual({published,suppressed,unlisted,complete},{published:5024,suppressed:2915,unlisted:1462,complete:5});
+  assert.equal(published+suppressed+unlisted,1343*7);
 });
 test('source evidence and selected-campus known values remain exact',()=>{
   assert.equal(report.sources.LISD.includes('key=061902'),true);
@@ -77,6 +80,19 @@ test('source evidence and selected-campus known values remain exact',()=>{
   assert.equal(report.campuses['043912118'].counts.asian.count,276);
   assert.equal(report.campuses['057916002'].district,'057916');
   assert.equal(report.campuses['057905001'].district,'057905');
+  assert.equal(report.campuses['220905001'].counts.asian.count,13);
+  assert.equal(report.campuses['220901002'].counts.asian.count,79);
+  assert.equal(report.campuses['220907001'].counts.asian.count,281);
+  assert.equal(report.campuses['220916001'].counts.asian.count,153);
+  for(const [id,total,asian] of [
+    ['061911001',2806,102],
+    ['061911007',2997,261]
+  ]){
+    const groups=report.campuses[id].counts;
+    assert.ok(KEYS.every(k=>groups[k].status==='published'));
+    assert.equal(KEYS.reduce((n,k)=>n+groups[k].count,0),total);
+    assert.equal(groups.asian.count,asian);
+  }
 });
 test('public aggregate is free from per-student identifiers and numeric percentage guesses',()=>{
   const text=JSON.stringify(report);
