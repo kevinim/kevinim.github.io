@@ -90,3 +90,18 @@ html[data-theme="dark"] .tea-school-inline-detail{background:#29476f;border-colo
 .tea-data-progress-content{padding:7px 0 2px}
 .tea-data-progress-content p{font-size:10.5px;line-height:1.5;margin:6px 0}
 html[data-theme="dark"] .tea-data-progress{border-color:#51647f}
+
+/* Official TEA 2025–26 public campus breakdown. Null, masked and unlisted are
+   intentionally shown as text, never as a zero-width inferred chart slice. */
+.tea-insights-public-races{list-style:none;margin:10px 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.tea-insights-public-races li{min-width:0;display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;padding:7px 8px;border:1px solid var(--line,#dce5f2);border-radius:7px;background:rgba(125,148,182,.08);font-size:10.5px;line-height:1.5}
+.tea-insights-public-race-name{display:inline-flex;gap:6px;align-items:baseline;min-width:0}
+.tea-insights-public-race-value{font-weight:750;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tea-insights-privacy-note{font-size:10px;line-height:1.55;color:var(--sub,#64748b);margin:8px 0 0}
+.tea-insights-public-races--compact{grid-template-columns:repeat(2,minmax(0,1fr));margin:7px 0}
+.tea-insights-public-races--compact li{padding:5px 6px}
+html[data-theme="dark"] .tea-insights-public-races li{background:#22344c;border-color:#50647e;color:#e6f0ff}
+html[data-theme="dark"] .tea-insights-privacy-note{color:#c6d5e8}
+@media(max-width:420px){.tea-insights-public-races{grid-template-columns:1fr}.tea-insights-public-races--compact{grid-template-columns:1fr 1fr}}
+@media(max-width:340px){.tea-insights-public-races--compact{grid-template-columns:1fr}}
+@media(forced-colors:active){.tea-insights-public-races li{border-color:CanvasText;background:Canvas;color:CanvasText}}
