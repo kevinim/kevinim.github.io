@@ -42,7 +42,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           const card=page.locator('#schoolList button.school[data-sid]');
           assert.equal(await card.count(),1,'one and only one exact campus listing '+id);
           await card.click();
-          await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel')?.dataset.campus===id,null,{timeout:15000},id);
+          await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel')?.dataset.campus===id,id,{timeout:15000});
           const found=await page.evaluate(()=>({
             id:document.querySelector('.tea-insights-panel')?.dataset.campus,
             summary:document.querySelector('.tea-insights-summary')?.textContent,
