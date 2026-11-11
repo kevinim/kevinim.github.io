@@ -40,7 +40,7 @@
 
   function buildCandidates(visibleRecords, places, zoom, selectedZip) {
     const records = (visibleRecords || []).filter(valid);
-    if (zoom <= 10) {
+    if (zoom <= 11) {
       const groups = new Map();
       for (const r of records) {
         const city = cityFor(r, places);
