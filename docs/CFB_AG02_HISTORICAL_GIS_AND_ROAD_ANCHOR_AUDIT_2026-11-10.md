@@ -43,6 +43,8 @@ AG02 renders all three PNGs in ephemeral CI artifacts only. The E outline is pro
 
 The public \`StreetCenterlines/FeatureServer/0\` is Carrollton municipal streets, last edited July 7, **2022**. The first actual run retrieved **2,252** arterial/collector segments, extracted **180** intersections where distinct named routes meet, and selected **32** spatially separated potential public control points. Source GIS street names, object IDs and ground lat/lon were retained, with approximate projected E/M/H raster pixel positions **only as suggestions**.
 
+All **32** have initial automated pixel predictions inside each E/M/H image, which confirms only that the rough transform maps them into image frames; it does NOT show the intersection is actually located at those pixels. The separate `scripts/cfb-ag02-road-overlay-qa.py` generates three numbered annotated publisher rasters (one per grade), with yellow markers and a road-name index for direct landmark-by-landmark visual validation. These images remain in seven-day CI research artifacts, not the live website.
+
 These 32 are **ground coordinate candidates**, not approved ground controls: no roadway intersection has yet had its correct 2025 raster pixel independently reviewed. \`pixelVerified=false\`, \`groundVerified=false\`, \`eligibleForModelFit=false\` on each item. No record is a known 2026–27 attendance point. This process does not query any home addresses, student details or commercial geocoder.
 
 ### Reproduce using free tooling
