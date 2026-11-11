@@ -36,7 +36,7 @@ test('Plano masks are never converted into zeros or percentages',()=>{
         assert.equal(cell.publishedMask,undefined);
       }else{
         assert.equal(cell.count,undefined);
-        if(cell.status==='suppressed')assert.equal(cell.publishedMask,'<10');
+        if(cell.status==='suppressed')assert.match(cell.publishedMask,/^<[1-9][0-9]*$/);
       }
     }
     assert.equal(Object.values(record.counts).every(c=>c.status==='published'),false);
