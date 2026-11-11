@@ -91,7 +91,7 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  assert.equal(hash(show('99cc1fca0781b4589bb8de97fa3069f428bdffbe','dashboard-main.js')),hash(expectedPublicJs(oldJs)),
   'Pre-feature main must retain exactly the reviewed privacy cleanup');
  const mapLabelBaseJs=show('55ae28393a91766a7197041b138c260bf625309c','dashboard-main.js');
- const areaFn=/function drawAreaLabels\\(\\)\\{[\\s\\S]*?(?=function schoolType\\(s\\)\\{)/;
+ const areaFn=/function drawAreaLabels\(\)\{[\s\S]*?(?=function schoolType\(s\)\{)/;
  const integratedFn=js.match(areaFn)?.[0],previousFn=mapLabelBaseJs.match(areaFn)?.[0];
  assert.ok(integratedFn&&previousFn,'Map labels remain a single scoped function');
  assert.ok(integratedFn.includes('AreaLabelHierarchy.buildCandidates'),'Verified zoom-aware labels are used');
