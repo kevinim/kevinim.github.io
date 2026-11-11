@@ -43,6 +43,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
         const progressText=await coverage.locator('.tea-data-progress-content').textContent();
         assert.ok(progressText.includes('18 / 2,282'),'curated analysis still only 18, not implied complete');
         assert.ok(progressText.includes('8 / 2,282'),'verified ethnicity must not be overstated');
+        assert.ok(progressText.includes('92 / 2,282'),'2025–26 partial enrollment count coverage must be explicit');
         await coverage.locator('summary').click();
         assert.equal(await coverage.evaluate(el=>el.open),false,'progress notes collapsed by default again');
         const results=[];
@@ -68,6 +69,9 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel')?.dataset.campus===id,id,{timeout:15000});
           await page.waitForFunction(()=>[...document.styleSheets].some(s=>(s.href||'').includes('carrollton-school-insights.css?v=4')),
             null,{timeout:15000});
+          if(id.startsWith('061902')||id.startsWith('057903')){
+            await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel[data-campus="'+id+'"] .tea-peims-counts')!==null,id,{timeout:15000});
+          }
           const found=await page.evaluate(()=>({
             inlineCampus:document.querySelector('#schoolList .tea-school-inline-preview')?.dataset.campus,
             inlineFacts:document.querySelectorAll('#schoolList .tea-school-inline-preview .tea-insights-fact').length,
@@ -82,10 +86,12 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
               text:x.textContent,size:parseFloat(getComputedStyle(x).fontSize)
             })),
             titleSize:parseFloat(getComputedStyle(document.querySelector('.tea-insights-title')).fontSize),
-            notesCollapsed:!document.querySelector('.tea-insights-provenance').open,
-            warningOutsideNotes:!!document.getElementById('zoneNotice')&&!document.querySelector('.tea-insights-provenance').contains(document.getElementById('zoneNotice')),
+            notesCollapsed:!document.querySelector('.tea-insights-provenance:not(.tea-peims-counts)').open,
+            warningOutsideNotes:!!document.getElementById('zoneNotice')&&!document.querySelector('.tea-insights-provenance:not(.tea-peims-counts)').contains(document.getElementById('zoneNotice')),
             domainCount:document.querySelectorAll('.tea-insights-domains dd').length,
-            raceCount:document.querySelectorAll('.tea-insights-legend li').length,
+            raceCount:document.querySelectorAll('.tea-insights-figure .tea-insights-legend li').length,
+            peimsCountRows:document.querySelectorAll('#detailContent .tea-peims-counts li').length,
+            peimsText:document.querySelector('#detailContent .tea-peims-counts')?.textContent||'',
             missingRace:[...document.querySelectorAll('#detailContent .tea-insights-missing')].some(el=>el.textContent.includes('학생 인종·민족 구성')),
             missingDomain:[...document.querySelectorAll('#detailContent .tea-insights-missing')].some(el=>el.textContent.includes('영역별 점수')),
             link:[...document.querySelectorAll('.tea-insights-panel a')].map(a=>({label:a.textContent,url:a.href})),
@@ -124,14 +130,22 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
             assert.equal(found.inlineChart,undefined,'unverified race cannot render in-list chart');
             assert.equal(found.missingRace,true);
           }
+          const currentPeims=id.startsWith('061902')||id.startsWith('057903');
+          assert.equal(found.peimsCountRows,currentPeims?7:0,'2025–26 source year and seven explicit privacy statuses '+id);
+          if(currentPeims){
+            assert.ok(found.peimsText.includes('2025–26'),'current-year PEIMS source labeled');
+            assert.ok(found.peimsText.includes('비공개')||found.peimsText.includes('원본 미표시'),'masking remains visible');
+          }
+          if(id==='061902118')assert.ok(found.peimsText.includes('246명'),'actual TEA Asian enrollment count is used');
+          if(id==='061902136')assert.ok(found.peimsText.includes('251명'),'actual Castle Hills Asian enrollment count is used');
           if(!reviewed)assert.equal(found.missingDomain,true,'grade-only campus must show missing domain notice');
           assert.deepEqual(found.csp,[],'CSP violation detected '+JSON.stringify(found.csp));
           if(width===390)assert.ok(found.scrollWidth<=width+5,'mobile horizontal overflow '+found.scrollWidth);
           if(id===CASES[0][0]){
+            await page.locator('.tea-insights-provenance:not(.tea-peims-counts) summary').click();
+            assert.equal(await page.locator('.tea-insights-provenance:not(.tea-peims-counts)').evaluate(el=>el.open),true,'notes expand on click');
             await page.locator('.tea-insights-provenance summary').click();
-            assert.equal(await page.locator('.tea-insights-provenance').evaluate(el=>el.open),true,'notes expand on click');
-            await page.locator('.tea-insights-provenance summary').click();
-            assert.equal(await page.locator('.tea-insights-provenance').evaluate(el=>el.open),false,'notes collapse again');
+            assert.equal(await page.locator('.tea-insights-provenance:not(.tea-peims-counts)').evaluate(el=>el.open),false,'notes collapse again');
           }
           results.push({school:label,...found});
           if(id==='061902118')await page.screenshot({path:path.join(ARTIFACTS,'campus-'+width+'.png'),fullPage:true,timeout:40000});
