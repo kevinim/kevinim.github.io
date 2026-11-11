@@ -60,3 +60,38 @@ jobs:
           name: tea-display-quality-guard
           path: artifacts/carrollton-tea-insights/
           if-no-files-found: warn
+
+  diagnose-source:
+    name: Diagnose exact Node assertion (non-gate)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    outputs:
+      short: ${{ steps.inspect.outputs.short }}
+      failed: ${{ steps.inspect.outputs.failed }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - id: inspect
+        shell: bash
+        run: |
+          set +e
+          node --test tests/carrollton-school-insights.test.cjs tests/tea-peims-priority-campus.test.cjs tests/tea-display-quality-guard.test.cjs > /tmp/tea-node-test.txt 2>&1
+          rc=$?
+          echo "failed=$rc" >> "$GITHUB_OUTPUT"
+          first=$(grep -m1 -E 'not ok|AssertionError|ERR_ASSERTION|error:' /tmp/tea-node-test.txt | tr -cd '[:alnum:][:space:].,;:_-=' | cut -c1-100)
+          if [ -z "$first" ]; then first="No-Node-assertion-found"; fi
+          echo "short=$first" >> "$GITHUB_OUTPUT"
+          tail -n 65 /tmp/tea-node-test.txt
+          exit 0
+  diagnosis-verdict:
+    needs: diagnose-source
+    name: 'Node failure detail - ${{ needs.diagnose-source.outputs.short }}'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Preserve failure state
+        run: exit "${{ needs.diagnose-source.outputs.failed }}"
