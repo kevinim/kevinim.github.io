@@ -1,7 +1,7 @@
 # CFB / Lewisville TEA 2026 campus independent QA — 2026-11-11
 
 ## Scope and rule
-This is a **separate evidence ledger and test suite**. Batch 01 now independently verifies six campuses' official 2026 domain and subject test metrics. This is **not** yet a complete 2025–26 demographic or source-verified full campus profile. Only **CFB ISD 35** and **Lewisville ISD 57** TEA campus records are included. Existing 18 manually written school analyses, shared enrichment pipeline, GIS/address-to-school code, `main`, and PR #230/#232 data are not edited.
+This is a **separate evidence ledger and test suite**. Batches 01 and 02 now independently verify nine campuses' official 2026 domain and subject test metrics. This is **not** yet a complete 2025–26 demographic or source-verified full campus profile. Only **CFB ISD 35** and **Lewisville ISD 57** TEA campus records are included. Existing 18 manually written school analyses, shared enrichment pipeline, GIS/address-to-school code, `main`, and PR #230/#232 data are not edited.
 
 ## Independently rechecked on 2026-11-11
 
@@ -15,9 +15,9 @@ This is a **separate evidence ledger and test suite**. Batch 01 now independentl
 | 2025–26 PEIMS unlisted cells in #232 | 71 | 644 | Not equivalent to reported zero |
 | Source-independent original PEIMS row and total-enrollment verification | 0 | 92 | PR #232 normalized data used for join/status audit; original TEA CSV row-by-row check still pending |
 | Official 2026 Student Achievement + Closing the Gaps scaled values | 87 | 92 | Two TEA district-wide 2026 Campus Listings directly reviewed (94.57%); 5 have no published values |
-| Full 2026 three scaled domains + STAAR test-subject values | 6 | 92 | Item-by-item TEA 2026 Summary and STAAR school reports checked (6.52%); 81 have only partial domain data and 5 have no published domain data |
-| Independently verified 2026 STAAR Reading / Math / Science / Social Studies | 6 | 92 | Official TEA 2026 all-student test percentages; social studies N/A for elementary; remaining 86 subject sets not source checked |
-| New evidence-based school strengths/improvement analyses | 3 | 92 | Independence, Tom Hicks and Arbor Creek only; no changes to 18 existing narratives |
+| Full 2026 three scaled domains + STAAR test-subject values | 9 | 92 | Item-by-item TEA 2026 Summary and STAAR school reports checked (9.78%); 78 have only partial domain data and 5 have no published domain data |
+| Independently verified 2026 STAAR Reading / Math / Science / Social Studies | 9 | 92 | Official TEA 2026 all-student test percentages; social studies N/A for elementary; remaining 83 subject sets not source checked |
+| New evidence-based school strengths/improvement analyses | 6 | 92 | Three in batch 01 (Independence, Tom Hicks, Arbor Creek), three in batch 02 (Castle Hills, Las Colinas, STEM Memorial); 18 existing narratives untouched |
 | **Fully verified academic + demographic campuses** | **0** | **92** | **0%** — 2025–26 PEIMS original campus enrollment totals are still unverified; race masking prevents full-share percentages |
 
 ## Verified source locations, not unverified numbers
@@ -32,7 +32,7 @@ This is a **separate evidence ledger and test suite**. Batch 01 now independentl
 
 ## Per-campus ledger
 
-`data/tea-cfb-lisd-campus-qa-ledger-2026.json` carries each of 92 exact campus IDs, official campus name, district, 2026 overall rating, original campus profile URL, per-campus **count of published/suppressed/unlisted group cells**, missing enrollment totals, and explicit null academic component/subject values. This is a QA audit snapshot, **not** a production school profile input. 87 campuses carry official Student Achievement + Closing the Gaps values and separate Academic Growth/Relative Performance scores; six also carry individually confirmed three domains and STAAR subject measures. Three new metric-only analyses are recorded separately in `data/tea-cfb-lisd-academic-2026-verified-batch01.json`. No original PEIMS group counts are copied from #232 and no individual student records are accessed.
+`data/tea-cfb-lisd-campus-qa-ledger-2026.json` carries each of 92 exact campus IDs, official campus name, district, 2026 overall rating, original campus profile URL, per-campus **count of published/suppressed/unlisted group cells**, missing enrollment totals, and explicit null academic component/subject values. This is a QA audit snapshot, **not** a production school profile input. 87 campuses carry official Student Achievement + Closing the Gaps values and separate Academic Growth/Relative Performance scores; nine also carry individually confirmed three domains and STAAR subject measures. Six new metric-only analyses are recorded separately in `data/tea-cfb-lisd-academic-2026-verified-batch01.json` and `data/tea-cfb-lisd-academic-2026-verified-batch02.json`. No original PEIMS group counts are copied from #232 and no individual student records are accessed.
 
 ## Independently verified 2026 academic batch 01
 
@@ -47,7 +47,7 @@ This is a **separate evidence ledger and test suite**. Batch 01 now independentl
 | `061902134` | LISD | Tom Hicks EL | 92 / 86 / 83 | 83 / 68 / 51 / N/A | Yes, source-based subject comparison |
 | `061902047` | LISD | Arbor Creek Middle | 91 / 85 / 91 | 75 / 61 / 65 / 52 | Yes, source-based subject comparison |
 
-Official 2026 Summary and STAAR reports for every row use the same source pattern (9-digit TEA campus ID and `ccyy=2026`): `https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902142&lev=C&prgopt=reports%2Facct%2Fsummary.sas` and its `domain1a.sas` counterpart. All six summary/STAAR pages were independently read. **Academic data completeness 6/92 (6.52%), full academic-plus-verified PEIMS total still 0/92**.
+Official 2026 Summary and STAAR reports for every row use the same source pattern (9-digit TEA campus ID and `ccyy=2026`): `https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902142&lev=C&prgopt=reports%2Facct%2Fsummary.sas` and its `domain1a.sas` counterpart. All six summary/STAAR pages were independently read. **Batches 01+02 combined academic completeness 9/92 (9.78%), full academic-plus-verified PEIMS total still 0/92**.
 
 
 ## AG01 / AG02 handoff acceptance
@@ -60,7 +60,7 @@ Official 2026 Summary and STAAR reports for every row use the same source patter
 
 ## Release gate
 
-**QA staging for 87 official 2026 campus-listing partial domain rows and six independently verified full academic subject records; not production publication. The other 86 subject records and 92 original 2025–26 PEIMS enrollment totals remain blocked until independently verified.** This branch changes only a new QA ledger, independent test, and this document. PR stays **Draft**. Never merge or deploy to production without explicit authorization.
+**QA staging for 87 official 2026 campus-listing partial domain rows and nine independently verified full academic subject records; not production publication. The other 83 subject records and 92 original 2025–26 PEIMS enrollment totals remain blocked until independently verified.** This branch changes only independent cohort QA data batches, the QA ledger, an isolated test and read-only CI, and this document. PR stays **Draft**. Never merge or deploy to production without explicit authorization.
 
 ## District-wide official TEA Campus Listings — 92 IDs, 87 published domain fragments
 
@@ -71,6 +71,20 @@ The two official TEA 2026 *A–F Accountability Campus Listing* reports were ind
 
 **Coverage:** 92/92 exact campus IDs with 2026 rows; 87/92 with Student Achievement and Closing the Gaps values (94.57%), remaining **five unavailable: four Not Rated** (CFB `057903005`, `057903009`, `057903117`; LISD `061902007`) **plus one paired Lewisville early-childhood campus** (`061902141`) with B overall but no separately rated domains. This paired-school result must never be conflated with Not Rated overall. There are zero discrepancies between official listing overall scores and main inventory.
 
-The two district listings **do not** publish a separate single *School Progress* scaled-score column; they provide its Academic Growth and Relative Performance components. Those two metrics are stored independently, with no fabricated combined School Progress score. For six campuses, that combined value was independently verified from the campus-specific Summary reports (listed in academic batch 01). For the remaining 81 with source-published domain fragments, School Progress combined and STAAR test subject rates stay null.
+The two district listings **do not** publish a separate single *School Progress* scaled-score column; they provide its Academic Growth and Relative Performance components. Those two metrics are stored independently, with no fabricated combined School Progress score. For nine campuses, that combined value was independently verified from the campus-specific Summary reports (academic batches 01 and 02). For the remaining 78 with source-published domain fragments, School Progress combined and STAAR test subject rates stay null.
 
 The `Students` column on the accountability report is 2026 accountability membership and **must not be relabeled** as TEA PEIMS 2025–26 ethnicity-group total enrollment. The 2025–26 PEIMS source row and denominator remain separately pending. This QA's internal ID, grade and numeric sanity checks do not prove every manually transcribed source number in the 92 rows; external raw download/extraction and source-to-staging parity is a further QA hardening gate before Production.
+
+## Additional source-verified academic batch 02 (2026)
+
+`data/tea-cfb-lisd-academic-2026-verified-batch02.json` adds three distinct campuses, each independently checked against two official September 2026 TEA campus reports: `Overall Summary` and `STAAR Performance`. All test rates are official percent of **tests**, not student-count percentages. Existing 18 pilot analyses remain untouched.
+
+| Campus | TEA Campus ID | 2026 scaled Achievement / Progress / Gaps | STAAR All Students Meets RLA / Math / Science |
+| --- | --- | --- | --- |
+| Castle Hills Elementary | `061902136` | 94 / 89 / 92 | 82 / 79 / 56 |
+| Las Colinas Elementary | `057903120` | 94 / 92 / 92 | 83 / 75 / 79 |
+| STEM Academy at Memorial Elementary | `061902145` | 92 / 91 / 84 | 83 / 67 / 56 |
+
+Official TEA 2026 Summary source examples: https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902136&lev=C&prgopt=reports%2Facct%2Fsummary.sas and matching `domain1a.sas` STAAR source links, with each per-campus source preserved inside the batch. Published `meetsTests` / `totalTests` figures reconcile with the shown whole-percent rates. All three elementary schools have no Social Studies test reported (N/A, not 0%). The independent QA test now enforces both batches' distinct IDs and numeric source-transcription parity.
+
+**Latest verified state: 92 exact campus IDs; 87 have published Student Achievement / Closing the Gaps; nine have full three domains plus STAAR subject rates (9.78%); 78 are academic-partial; five have no publishable academic domain figures. Academic + independently verified PEIMS student enrollment total: 0/92.**
