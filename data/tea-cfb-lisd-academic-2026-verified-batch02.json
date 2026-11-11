@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "accountabilityYear": 2026,
+  "verifiedAsOf": "2026-11-11",
+  "scope": "Only CFB 35 and Lewisville 57; three newly independently verified schools not in batch01",
+  "sourcePublisher": "Texas Education Agency",
+  "sourceType": "Public 2026 Campus Accountability Overall Summary and Campus STAAR Performance",
+  "metricDefinition": "Meets Grade Level or Above, All Students Percent of Tests; separate 2026 scaled domain scores",
+  "privacy": "Public campus aggregates only; suppressed ethnicity cells never back-solved.",
+  "summary": {
+    "targetCampuses": 92,
+    "newFullAcademicCampuses": 3,
+    "CFB": 1,
+    "LISD": 2,
+    "newIndependentMetricAnalyses": 3,
+    "sourceRowsVerified": 3,
+    "fullyVerifiedAcademicAndPEIMS": 0
+  },
+  "campuses": {
+    "061902136": {
+      "campusName": "CASTLE HILLS EL",
+      "district": "LISD",
+      "accountabilityYear": 2026,
+      "overallRatingScore": 93,
+      "officialSummaryReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902136&lev=C&prgopt=reports%2Facct%2Fsummary.sas",
+      "officialSTAARReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902136&lev=C&prgopt=reports%2Facct%2Fdomain1a.sas",
+      "domainsScaledScores": {
+        "studentAchievement": 94,
+        "schoolProgress": 89,
+        "closingTheGaps": 92
+      },
+      "staarPerformanceComponentScore": 74,
+      "subjectsMeetsGradeLevel": {
+        "reading": {
+          "status": "published",
+          "totalTests": 327,
+          "meetsTests": 268,
+          "meetsPercentReported": 82
+        },
+        "math": {
+          "status": "published",
+          "totalTests": 327,
+          "meetsTests": 259,
+          "meetsPercentReported": 79
+        },
+        "science": {
+          "status": "published",
+          "totalTests": 93,
+          "meetsTests": 52,
+          "meetsPercentReported": 56
+        },
+        "socialStudies": {
+          "status": "not-applicable",
+          "totalTests": null,
+          "meetsTests": null,
+          "meetsPercentReported": null
+        }
+      },
+      "officialDataStatus": "TEA-2026-published-summary-and-STAAR-checked",
+      "existingCuratedNarrative": false,
+      "newMetricAnalysis": {
+        "strength": "독해 Meets 82%, Student Achievement 94점과 Closing the Gaps 92점",
+        "improvement": "과학 Meets 56%로 독해 대비 26%p 낮고 School Progress 89점은 Student Achievement 94점보다 5점 낮음",
+        "sourceYear": 2026,
+        "causalExplanation": false
+      },
+      "note": "2026 STAAR All Students Percent of Tests meeting grade level, not headcount or PEIMS enrollment."
+    },
+    "057903120": {
+      "campusName": "LAS COLINAS EL",
+      "district": "CFB",
+      "accountabilityYear": 2026,
+      "overallRatingScore": 93,
+      "officialSummaryReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903120&lev=C&prgopt=reports%2Facct%2Fsummary.sas",
+      "officialSTAARReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903120&lev=C&prgopt=reports%2Facct%2Fdomain1a.sas",
+      "domainsScaledScores": {
+        "studentAchievement": 94,
+        "schoolProgress": 92,
+        "closingTheGaps": 92
+      },
+      "staarPerformanceComponentScore": 74,
+      "subjectsMeetsGradeLevel": {
+        "reading": {
+          "status": "published",
+          "totalTests": 181,
+          "meetsTests": 151,
+          "meetsPercentReported": 83
+        },
+        "math": {
+          "status": "published",
+          "totalTests": 182,
+          "meetsTests": 136,
+          "meetsPercentReported": 75
+        },
+        "science": {
+          "status": "published",
+          "totalTests": 62,
+          "meetsTests": 49,
+          "meetsPercentReported": 79
+        },
+        "socialStudies": {
+          "status": "not-applicable",
+          "totalTests": null,
+          "meetsTests": null,
+          "meetsPercentReported": null
+        }
+      },
+      "officialDataStatus": "TEA-2026-published-summary-and-STAAR-checked",
+      "existingCuratedNarrative": false,
+      "newMetricAnalysis": {
+        "strength": "Student Achievement 94점, 독해 Meets 83%",
+        "improvement": "수학 Meets 75%로 독해 대비 8%p 낮음",
+        "sourceYear": 2026,
+        "causalExplanation": false
+      },
+      "note": "2026 STAAR All Students Percent of Tests meeting grade level, not headcount or PEIMS enrollment."
+    },
+    "061902145": {
+      "campusName": "STEM ACADEMY AT MEMORIAL EL",
+      "district": "LISD",
+      "accountabilityYear": 2026,
+      "overallRatingScore": 90,
+      "officialSummaryReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902145&lev=C&prgopt=reports%2Facct%2Fsummary.sas",
+      "officialSTAARReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902145&lev=C&prgopt=reports%2Facct%2Fdomain1a.sas",
+      "domainsScaledScores": {
+        "studentAchievement": 92,
+        "schoolProgress": 91,
+        "closingTheGaps": 84
+      },
+      "staarPerformanceComponentScore": 69,
+      "subjectsMeetsGradeLevel": {
+        "reading": {
+          "status": "published",
+          "totalTests": 300,
+          "meetsTests": 249,
+          "meetsPercentReported": 83
+        },
+        "math": {
+          "status": "published",
+          "totalTests": 300,
+          "meetsTests": 202,
+          "meetsPercentReported": 67
+        },
+        "science": {
+          "status": "published",
+          "totalTests": 90,
+          "meetsTests": 50,
+          "meetsPercentReported": 56
+        },
+        "socialStudies": {
+          "status": "not-applicable",
+          "totalTests": null,
+          "meetsTests": null,
+          "meetsPercentReported": null
+        }
+      },
+      "officialDataStatus": "TEA-2026-published-summary-and-STAAR-checked",
+      "existingCuratedNarrative": false,
+      "newMetricAnalysis": {
+        "strength": "Student Achievement 92점과 독해 Meets 83%",
+        "improvement": "과학 Meets 56%로 독해 대비 27%p 낮고 Closing the Gaps 84점은 Student Achievement 대비 8점 낮음",
+        "sourceYear": 2026,
+        "causalExplanation": false
+      },
+      "note": "2026 STAAR All Students Percent of Tests meeting grade level, not headcount or PEIMS enrollment."
+    }
+  }
+}
