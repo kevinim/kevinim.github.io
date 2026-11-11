@@ -12,7 +12,7 @@
     "independentRawCsvParity": "pending",
     "releaseEligible": false
   },
-  "note": "Only publicly released campus-level ethnicity group counts. Suppressed (<10) and not-listed cells have no numeric value; complete seven-category percentages must not be calculated. Attendance zoning is separate.",
+  "note": "Public campus-level race/ethnicity group counts only. Suppressed source markers (<N) are retained verbatim, regardless of threshold. Not-listed cells remain absent. No inferred counts, complete seven-category percentages, or residence assignment claims.",
   "cellStatusTotals": {
     "published": 341,
     "suppressed": 132,
