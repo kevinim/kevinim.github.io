@@ -61,11 +61,22 @@
   }
   const covered=new Set(features.map(f=>f.properties.gradeLevel));
   const missing=['elementary','middle','high'].filter(level=>!covered.has(level)&&!(level==='high'&&covered.has('senior'))).map(l=>LEVEL[l]);
+  const notices=[];
+  // Frisco's own 2026–27 locator warns that *new* students inside Nelson's
+  // attendance zone may be assigned to Wester because Nelson is at capacity.
+  // Reference names must never conceal that enrollment-specific exception.
+  if(raw.district==='FISD'&&candidates.some(c=>/\bnelson\b/i.test(c.school)))
+   notices.push('Frisco ISD 2026–27 예외: Nelson 구역 신규 등록 학생은 Wester Middle School 배정 대상입니다. 기존 재학생·전입 조건은 교육청에 확인하세요.');
+  // McKinney official transfer/grandfather decisions affect individual
+  // placements even when 2026–27 zoned-campus geometry is current.
+  if(raw.district==='043907')
+   notices.push('McKinney ISD: 기존 학생의 전학·잔류(grandfathering) 승인에 따라 실제 등록 학교가 경계 후보와 달라질 수 있습니다.');
   return Object.freeze({
    kind:'reference-only',district:raw.district,source:cfg.source,year:cfg.year,
    officialUrl:safeUrl,
    candidates:Object.freeze(candidates),
    missing:Object.freeze(missing),
+   notices:Object.freeze(notices),
    warning:'GIS 위치 참고 후보이며 실제 주소별 배정학교가 아닙니다. 배정·전학·학년·아파트 예외는 공식 Finder에서 확인하세요.'
   });
  }
@@ -95,6 +106,7 @@
   }
   wrap.appendChild(list);
   if(model.missing.length)wrap.appendChild(node('p','school-reference-warning','표시 불완전: '+model.missing.join('·')+' 자료 미확인'));
+  for(const note of model.notices||[])wrap.appendChild(node('p','school-reference-warning',note));
   wrap.appendChild(node('p','school-reference-warning',model.warning));
   const link=node('a','cardlink','공식 학교배정 확인하기');
   link.setAttribute('href',model.officialUrl);
