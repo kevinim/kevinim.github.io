@@ -32,7 +32,7 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
         return {
           styleLinks:document.querySelectorAll('link[rel="stylesheet"]').length,
           reviewedPeimsAddonLinks:[...document.querySelectorAll('link[rel="stylesheet"]')]
-            .filter(link=>link.getAttribute('href')==='./features/tea-peims-public-share-addon.css?v=1').length,
+            .filter(link=>link.getAttribute('href')==='./features/tea-peims-public-share-addon.css?v=2').length,
            renderBundleLoaded:[...document.styleSheets].some(sheet=>
              sheet.href&&sheet.href.includes('/features/first-render-ui.bundle.css')&&
              sheet.cssRules.length>20),

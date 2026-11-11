@@ -59,6 +59,28 @@ test('Hebron Valley official published subgroup numbers use 675-known-only denom
   assert.equal(p.pacific,null);assert.equal(p.native,null);assert.equal(p.multi,null);
   assert.equal(v.wholeCampusPercentage,false);
 });
+test('largest-to-smallest published-only ranking is deterministic and never ranks masked populations',()=>{
+  const original=calc.computePublishedShare(normalize(data.campuses['061902118']));
+  const input=[...original.rows].reverse();
+  const ranked=calc.rankPublishedRows(input);
+  assert.deepEqual(ranked.filter(x=>x.status==='published').map(x=>x.key),
+    ['asian','white','hispanic','black']);
+  assert.deepEqual(ranked.slice(0,4).map(x=>x.count),[246,184,136,109]);
+  assert.ok(ranked.slice(4).every(x=>x.status!=='published'&&x.count===null&&x.percent===null));
+  assert.deepEqual(input.map(x=>x.key),[...original.rows].reverse().map(x=>x.key),
+    'render ranking must not change the canonical source rows');
+  assert.deepEqual(original.rows.map(x=>x.key),KEYS,'the data API preserves canonical TEA categories');
+  const synthetic=[
+    {key:'multi',status:'not-listed',count:null,percent:null},
+    {key:'white',status:'published',count:12,percent:60},
+    {key:'native',status:'suppressed',count:null,percent:null},
+    {key:'asian',status:'published',count:12,percent:40},
+    {key:'black',status:'published',count:0,percent:0}
+  ];
+  assert.deepEqual(calc.rankPublishedRows(synthetic).map(x=>x.key),
+    ['white','asian','black','native','multi'],
+    'ties preserve input order; suppressed and unlisted remain last, not zero');
+});
 test('malformed groups, conflicting counts and single published group fail closed',()=>{
  const base=normalize(data.campuses['061902118']);
  assert.equal(calc.computePublishedShare([...base.slice(0,6),base[5]]),null);
@@ -88,9 +110,9 @@ test('standalone script hookup, minimal CSP-friendly DOM and school context rema
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  const js=fs.readFileSync(path.join(root,'features/tea-peims-public-share-addon.js'),'utf8');
  const css=fs.readFileSync(path.join(root,'features/tea-peims-public-share-addon.css'),'utf8');
- assert.equal(html.split('tea-peims-public-share-addon.js?v=1').length-1,1);
- assert.equal(html.split('tea-peims-public-share-addon.css?v=1').length-1,1);
- assert.ok(html.indexOf('carrollton-school-insights.js?v=4')<html.indexOf('tea-peims-public-share-addon.js?v=1'));
+ assert.equal(html.split('tea-peims-public-share-addon.js?v=2').length-1,1);
+ assert.equal(html.split('tea-peims-public-share-addon.css?v=2').length-1,1);
+ assert.ok(html.indexOf('carrollton-school-insights.js?v=4')<html.indexOf('tea-peims-public-share-addon.js?v=2'));
  assert.match(js,/getPublishedCountRows/);
  assert.match(js,/insertAdjacentElement\('afterend'/);
  assert.doesNotMatch(js,/innerHTML\s*=/);
@@ -147,7 +169,10 @@ test('actual selected-school DOM add-on mounts once, hides protected group share
   assert.equal(masked.get().stack?.children.length,4);
   assert.equal(masked.get().list?.children.length,7);
   assert.ok(masked.get().region.textContent.includes('학교 전체 인종 구성 비율과 다릅니다'));
-  assert.ok(masked.get().region.textContent.includes('비공개 (비율 없음)'));
+  assert.ok(masked.get().region.textContent.includes('비공개 (인원·비율 없음)'));
+  assert.deepEqual(masked.get().list.children.slice(0,4).map(x=>x.dataset.group),
+    ['asian','white','hispanic','black'],'ranked legend must list largest disclosed counts first');
+  assert.ok(masked.get().region.textContent.includes('최다 공개 집단: 아시아계 246명'));
   masked.mutation();await Promise.resolve();await Promise.resolve();
   assert.equal(masked.get().mounts,1,'MutationObserver must not duplicate widget');
   const noData=simulate('057903009',normalize(data.campuses['057903009']),null);
