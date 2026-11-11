@@ -179,10 +179,11 @@
    const id=editing||('w'+Date.now().toString(36)+Math.random().toString(36).slice(2,8));
    const next=editing?records.map(r=>r.id===editing?{id,name,address}:r):[...records,{id,name,address}];
    if(!saveRecords(storage,next)){notice('브라우저 저장이 차단되었습니다. 직장이 등록되지 않았습니다.');return}
+   const wasEditing=Boolean(editing);
    records=normalizeRecords(next);resetForm();renderOptions(choiceId(id));renderList();
    const saved=records.find(r=>r.id===id);
    if(saved)activate(saved);
-   notice('이 브라우저에 직장을 '+(editing?'변경':'등록')+'했습니다.');
+   notice('이 브라우저에 직장을 '+(wasEditing?'변경':'등록')+'했습니다.');
   });
   renderOptions();renderList();
  }
