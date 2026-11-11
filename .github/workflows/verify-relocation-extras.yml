@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: '22'
       - name: Verify icon, preserved controls and cost math
-        run: node --test scripts/test-integrated-features.cjs
+        run: node --test scripts/test-integrated-features.cjs tests/workplace-destinations.test.cjs
       - name: Validate official Census, DSHS and winter NRI map datasets
         run: node --test scripts/test-healthcare-winter-map.cjs
       - name: Install Chromium into isolated temporary folder
@@ -43,6 +43,10 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/integration-browser-tmp/node_modules
         run: node scripts/test-integrated-features-browser.cjs
+      - name: Verify destination autocomplete and browser-local workplace CRUD
+        env:
+          NODE_PATH: ${{ github.workspace }}/integration-browser-tmp/node_modules
+        run: node scripts/test-workplace-profiles-browser.cjs
       - name: Verify hospital markers, official winter polygons and school overlays
         env:
           NODE_PATH: ${{ github.workspace }}/integration-browser-tmp/node_modules
