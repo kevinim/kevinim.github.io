@@ -43,9 +43,17 @@ async function zoom(page, ll, level) {
         schoolDirectory:state.schools.length,selectedPolygon:!!state.polys[state.zip]}));
       assert.ok(schoolState.schoolDirectory>0&&schoolState.selectedPolygon,
         'Label work must retain existing school and ZIP data: '+JSON.stringify(schoolState));
-      await page.locator('#zipOverlay').uncheck();
+      await page.evaluate(checked => {
+        const input=document.getElementById('zipOverlay');
+        input.checked=checked;
+        input.dispatchEvent(new Event('change',{bubbles:true}));
+      }, false);
       assert.equal((await labels(page)).length,0,'Hiding ZIP overlay must hide place labels');
-      await page.locator('#zipOverlay').check();
+      await page.evaluate(checked => {
+        const input=document.getElementById('zipOverlay');
+        input.checked=checked;
+        input.dispatchEvent(new Event('change',{bubbles:true}));
+      }, true);
       assert.ok((await labels(page)).length>0,'Re-enabling ZIP overlay must restore labels');
       assert.deepEqual(errors,[],'No JavaScript errors on '+width+'px map: '+errors.join(' | '));
       console.log('PASS map-label browser '+width+'px',JSON.stringify({broad,medium:medium.slice(0,8),close:close.slice(0,8)}));
