@@ -30,10 +30,14 @@ async function run(){
    await page.waitForFunction(()=>typeof state!=='undefined'&&state.zip==='75013'&&
     schoolGroup.getLayers().length>0,null,{timeout:30000});
    const allen=await page.evaluate(()=>{
-    const shown=new Set(schoolGroup.getLayers().map(x=>x.options?.title));
+    const layers=schoolGroup.getLayers();
+    const represented=layers.flatMap(x=>x.options?.schoolMembers||[]);
+    // Before rollout Pages may still serve the previous one-marker-per-school
+    // code, while preview/after rollout uses member-preserving clusters.
+    const oldSchoolTitles=new Set(layers.map(x=>x.options?.title));
     const inside=state.schools.filter(s=>s.district==='AISD'&&s.ll&&
      ['elementary','middle','high'].includes(s.type)&&map.getBounds().contains(s.ll));
-    return {inside:inside.length,drawn:inside.filter(s=>shown.has(s.name)).length};
+    return {inside:inside.length,drawn:inside.filter(s=>represented.includes(s)||oldSchoolTitles.has(s.name)).length};
    });
    assert.ok(allen.inside>0,'No Allen campus in selected ZIP bounds');
    assert.equal(allen.drawn,allen.inside,'Allen visible school markers regressed');

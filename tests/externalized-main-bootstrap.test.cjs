@@ -13,7 +13,7 @@ const baseline='5a5b3a8fbe1b29ba71797525696d1f092821e6b7';
 const old=show(baseline,'index.html'),oldJs=show(baseline,'dashboard-main.js');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const js=fs.readFileSync(path.join(root,'dashboard-main.js'),'utf8');
-const external='<script src="./dashboard-main.js?v=5"></script>';
+const external='<script src="./dashboard-main.js?v=6"></script>';
 const oldCsp=old.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
 const newCsp=html.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
 const hash=buf=>crypto.createHash('sha256').update(buf).digest('hex');
@@ -90,8 +90,8 @@ function expectedPublicJs(source){
 test('pre-existing dashboard remains byte-exact except approved personal commute removals',()=>{
  assert.equal(hash(show('99cc1fca0781b4589bb8de97fa3069f428bdffbe','dashboard-main.js')),hash(expectedPublicJs(oldJs)),
   'Pre-feature main must retain exactly the reviewed privacy cleanup');
- assert.equal(hash(js),hash(show('7da763eb0bd870d35482a90f0de79dffde5559ba','dashboard-main.js')),
-  'Campus focus, grade badge/filter and map bootstrap must match the exact reviewed source commit');
+ assert.equal(hash(js),hash(show('c7abd55d1fff6748b45c72d51d801cbe16335b17','dashboard-main.js')),
+  'Decluttered school marker clusters must match the exact reviewed source commit');
  const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
  const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);
  assert.ok(start>40000&&end>start+70000);
@@ -132,11 +132,11 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
   'commute/sourced-cost.css','first-fold-ux.css','school-reference-preview.css']
   .map(name=>'<link rel="stylesheet" href="./features/'+name+'?v=1">').join('');
  expected=replaceOnce(expected,oldCss,
-  '<link rel="stylesheet" href="./features/first-render-ui.bundle.css?v=2">');
+  '<link rel="stylesheet" href="./features/first-render-ui.bundle.css?v=3">');
  // Exact, explicitly reviewed school campus/grade UI anchors only.
  expected=replaceOnce(expected,"<label>2026 TEA 학교 점수</label><select id=\"ratingFilter\"><option value=\"all\">전체 (점수 미확인 포함)</option><option value=\"rated\">점수 확인된 학교만</option></select>","<label for=\"ratingFilter\">2026 TEA 학교 등급</label><select id=\"ratingFilter\" aria-label=\"지도와 목록 학교 등급 필터\"><option value=\"all\">전체 학교 (등급 없는 학교 포함)</option><option value=\"A\">A등급만</option><option value=\"B\">B등급만</option><option value=\"C\">C등급만</option><option value=\"D\">D등급만</option><option value=\"F\">F등급만</option><option value=\"rated\">점수 확인된 학교만</option><option value=\"unrated\">미평가 (Not Rated)</option><option value=\"unlinked\">TEA 등급 미연결</option></select><div class=\"school-grade-quick\" id=\"schoolGradeQuick\" role=\"group\" aria-label=\"학교 등급 빠른 필터\"><button type=\"button\" data-grade=\"all\" class=\"active\" aria-pressed=\"true\">전체</button><button type=\"button\" data-grade=\"A\" aria-pressed=\"false\">A</button><button type=\"button\" data-grade=\"B\" aria-pressed=\"false\">B</button><button type=\"button\" data-grade=\"C\" aria-pressed=\"false\">C</button></div><div class=\"source\">TEA 2026 문자 등급 기준으로 학교 목록과 지도 마커를 함께 필터링합니다. 점수 숫자는 고려하지 않습니다. 등급 미연결과 공식 미평가는 구별합니다.</div>");
  expected=replaceOnce(expected,'<script src="./dashboard-main.js?v=4"></script>',
-  '<script src="./dashboard-main.js?v=5"></script>');
+  '<script src="./dashboard-main.js?v=6"></script>');
  assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expected.replace(/\r\n/g,'\n')),
   'No HTML drift beyond reviewed mobile first-fold + privacy disclosure anchors');
  const originalPanel=show('b1a787eb6bd877318a1275a4a29225069782ece7','index.html')

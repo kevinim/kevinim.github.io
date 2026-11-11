@@ -24,11 +24,12 @@ const audit=()=>{
  const rect=c.getBoundingClientRect();
  const onScreen=schoolGroup.getLayers().filter(l=>{const e=l.getElement?.();if(!e)return false;const r=e.getBoundingClientRect();
   return r.width>0&&r.left<rect.right&&r.right>rect.left&&r.top<rect.bottom&&r.bottom>rect.top});
- const onScreenNames=new Set(onScreen.map(l=>l.options.title));
+ const represented=onScreen.flatMap(l=>l.options.schoolMembers||[]);
  const ctr=map.getCenter(),sel=state.polys[state.zip];
  return {zip:state.zip,zoom:map.getZoom(),leafletSize:[s.x,s.y],containerSize:[w,h],
   center:[+ctr.lat.toFixed(4),+ctr.lng.toFixed(4)],selectedZipVisible:!!sel&&trueBounds.intersects(sel.getBounds()),
-  expected:expected.length,onScreen:onScreen.length,missing:expected.filter(x=>!onScreenNames.has(x.name)).map(x=>x.name).slice(0,5),
+  expected:expected.length,onScreen:onScreen.length,represented:represented.length,
+  missing:expected.filter(x=>!represented.includes(x)).map(x=>x.name).slice(0,5),
   expectedByDistrict:expected.reduce((a,x)=>(a[x.district]=(a[x.district]||0)+1,a),{}),
   status:document.getElementById('schoolMapStatus').textContent};
 };
@@ -37,7 +38,8 @@ function checkView(r,label,{district,allowEmpty=false}={}){
  assert.deepEqual(r.leafletSize,r.containerSize,'Leaflet cached size must equal real container size. '+msg);
  assert.ok(r.containerSize[0]>0&&r.containerSize[1]>0,'Map container must be laid out. '+msg);
  assert.deepEqual(r.missing,[],'Every school inside the visible map must have an on-screen marker. '+msg);
- assert.equal(r.onScreen,r.expected,'On-screen marker count must match visible eligible schools. '+msg);
+ assert.equal(r.represented,r.expected,'All visible campuses must be represented by point or cluster. '+msg);
+ assert.ok(r.expected===0||r.onScreen>0,'School cluster or point must be on-screen. '+msg);
  if(!allowEmpty)assert.ok(r.expected>0,'Visible map must contain schools. '+msg);
  if(district)assert.ok((r.expectedByDistrict[district]||0)>0,district+' campuses must be on screen. '+msg);
  assert.ok(!r.status.includes('복구'),'Recovery fallback must not be needed. '+msg);
@@ -105,7 +107,7 @@ async function settle(page){await page.waitForTimeout(450)}
   // Level and rating filters change the marker set consistently.
   await page.locator('#levels button[data-v="high"]').click();await settle(page);
   const high=await page.evaluate(audit);checkView(high,'high-school filter',{allowEmpty:true});
-  assert.ok(await page.evaluate(()=>schoolGroup.getLayers().every(l=>/>고</.test(l.getElement()?.innerHTML||''))),'High filter must show only 고 markers');
+  assert.ok(await page.evaluate(()=>schoolGroup.getLayers().every(l=>(l.options.schoolMembers||[]).every(s=>s.type==='high'))),'High filter must represent only high schools');
   await page.locator('#levels button[data-v="all"]').click();await settle(page);
   if(await page.locator('#ratingFilter').count()){
    const opts=await page.locator('#ratingFilter option').evaluateAll(o=>o.map(x=>x.value));
@@ -122,6 +124,8 @@ async function settle(page){await page.waitForTimeout(450)}
   checkView(await page.evaluate(audit),'container shrunk',{allowEmpty:true});
   await page.evaluate(()=>{document.getElementById('map').style.height=''});await settle(page);
   checkView(await page.evaluate(audit),'container restored',{district:'AISD'});
+  // Expand to local zoom so the click targets an actual campus, not a cluster.
+  await page.evaluate(()=>{map.stop();map.setZoom(14,{animate:false});drawSchools()});await settle(page);
   // Clicking a school marker still shows its attendance boundary.
   const before=await page.evaluate(()=>zoneGroup.getLayers().length);
   const clicked=await page.evaluate(()=>{const l=schoolGroup.getLayers().find(l=>{const s=state.schools.find(x=>x.name===l.options.title);return s&&s.district==='AISD'});if(!l)return null;l.fire('click');return l.options.title});

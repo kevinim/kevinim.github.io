@@ -10,7 +10,7 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
 (async()=>{
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  try{
-  for(const width of [390,1280]){
+  for(const width of [325,390,1280]){
    const page=await browser.newPage({viewport:{width,height:850}});
    const errors=[],external=[];
    page.on('pageerror',error=>errors.push(String(error)));
@@ -25,7 +25,7 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
     return route.abort();
    });
    let asset=0;
-   page.on('response',r=>{if(r.url().includes('/dashboard-main.js?v=5')&&r.status()===200)asset++});
+   page.on('response',r=>{if(r.url().includes('/dashboard-main.js?v=6')&&r.status()===200)asset++});
    try{
     await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});
     await page.waitForFunction(()=>typeof map!=='undefined'&&map&&typeof state!=='undefined'&&
@@ -70,11 +70,14 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
       await page.locator('#schoolGradeQuick button[data-grade="'+grade+'"]').click();
       const filter=await page.evaluate(()=>{
         const candidates=[...document.querySelectorAll('#schoolList button.school[data-sid]')];
-        const mapBadges=schoolGroup.getLayers().map(m=>m.getElement()?.querySelector('.school-map-grade-badge')?.textContent||'');
+        const layers=schoolGroup.getLayers();
+        const mapBadges=layers.map(m=>m.getElement()?.querySelector('.school-map-grade-badge')?.textContent||'').filter(Boolean);
+        const mapRepresented=layers.every(m=>(m.options.schoolMembers||[]).every(s=>
+          scoreRecord(s.name,s.district)?.rating===state.ratingFilter));
         return {grade:state.ratingFilter,select:document.getElementById('ratingFilter').value,
           schoolCount:candidates.length,allCorrect:candidates.every(b=>
             scoreRecord(state.schools[Number(b.dataset.sid)].name,state.schools[Number(b.dataset.sid)].district)?.rating===state.ratingFilter),
-          badgesValid:mapBadges.every(b=>b===state.ratingFilter),
+          badgesValid:mapBadges.every(b=>b===state.ratingFilter)&&mapRepresented,
           pressed:document.querySelector('#schoolGradeQuick button.active')?.dataset.grade};
       });
       assert.equal(filter.grade,grade,'Quick grade filter updates application state');
@@ -83,6 +86,41 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
       assert.equal(filter.allCorrect,true,'Every filtered list school must have matching TEA grade');
       assert.equal(filter.badgesValid,true,'All rendered map campus badges must match selected grade');
       assert.equal(filter.pressed,grade,'Quick grade button remains active');
+    }
+    // Regional view must group rather than overplot hundreds of 27px icons;
+    // every eligible campus remains represented in one clickable group.
+    const clutter=await page.evaluate(()=>{
+      const before=map.getZoom(),originalFilter=state.ratingFilter;
+      state.ratingFilter='all';
+      map.stop();map.setView([33.095,-96.77],10,{animate:false});
+      drawSchools();
+      const layers=schoolGroup.getLayers();
+      const represented=layers.flatMap(l=>l.options.schoolMembers||[]);
+      const clusters=layers.filter(l=>l.options.schoolMembers?.length>1);
+      const counts=layers.map(l=>l.options.schoolMembers?.length||0);
+      const expected=state.schools.filter(s=>s.ll&&s.type!=='other'&&
+        (state.level==='all'||s.type===state.level)&&schoolPassesRatingFilter(s)&&
+        map.getBounds().contains(s.ll));
+      const head=clusters[0];
+      const current=map.getZoom();
+      if(head)head.fire('click');
+      const clickedZoom=map.getZoom();
+      state.ratingFilter=originalFilter;
+      map.stop();map.setZoom(before,{animate:false});drawSchools();
+      return {eligible:expected.length,rendered:layers.length,represented:represented.length,
+        unique:new Set(represented).size,clusters:clusters.length,
+        clickZoom:clickedZoom,originalZoom:current,
+        bad:new Set(expected.filter(s=>!represented.includes(s))).size,
+        allClustersClickable:clusters.every(l=>l.listens('click'))};
+    });
+    if(clutter.eligible>45){
+      assert.ok(clutter.clusters>0,'Regional school markers should have visible count clusters');
+      assert.ok(clutter.rendered<clutter.represented,'Clustering must reduce cluttered pin count');
+      assert.equal(clutter.represented,clutter.eligible,'Every school remains represented in cluster mode');
+      assert.equal(clutter.unique,clutter.eligible,'No school is duplicated or silently removed');
+      assert.equal(clutter.bad,0,'No missing campus');
+      assert.ok(clutter.clickZoom>clutter.originalZoom,'Cluster click should zoom into schools');
+      assert.equal(clutter.allClustersClickable,true);
     }
     // A grade with no numeric score still belongs in grade-A.
     const noScore=await page.evaluate(()=>{
@@ -112,12 +150,16 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
         focusLayers:schoolFocusGroup.getLayers().length,
         markerLabel:document.querySelector('.selected-school-campus-tooltip')?.textContent||'',
         pin:!!document.querySelector('.selected-school-campus-pin'),
+        tooltipWidth:Math.round(document.querySelector('.selected-school-campus-tooltip')?.getBoundingClientRect().width||0),
+        tooltipWhitespace:getComputedStyle(document.querySelector('.selected-school-campus-tooltip')).whiteSpace,
         lat:center.lat,lng:center.lng,zoom:map.getZoom(),status:document.getElementById('schoolMapStatus')?.textContent||''};
     });
     assert.equal(focused.school,chosen.name,'Click selects exact school object');
     assert.equal(focused.pressed,chosen.sid,'List maintains selected emphasis');
     assert.ok(focused.focusLayers>=2&&focused.pin,'Selected campus has persistent map highlight');
     assert.ok(focused.markerLabel.includes(chosen.name),'Map explicitly labels selected campus');
+    assert.ok(focused.tooltipWidth>=150,'Selected campus tooltip must not collapse into vertical letters');
+    assert.equal(focused.tooltipWhitespace,'nowrap','School name stays on one line even on narrow screens');
     assert.ok(Math.abs(focused.lat-chosen.ll[0])<0.002&&Math.abs(focused.lng-chosen.ll[1])<0.002,
       'Map centers actual campus coordinates, not entire attendance polygon');
     assert.ok(focused.zoom>=14,'Campus is zoomed to local building');
@@ -144,6 +186,6 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
     console.log('NOTE third-party test traffic blocked, count='+external.length);
    }finally{await page.close();}
   }
-  console.log('PASS offline staged main-bootstrap smoke, mobile + desktop. NOT a full school assignment test.');
+  console.log('PASS offline staged campus clustering and bootstrap smoke, 325/390/1280 viewports. NOT a school assignment test.');
  }finally{await browser.close();}
 })().catch(e=>{console.error('Bootstrap browser QA failed:',e.stack||String(e));process.exitCode=1});

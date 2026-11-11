@@ -146,7 +146,7 @@ mkdirSync(out,{recursive:true});
      (state.level==='all'||s.type===state.level)&&
      (state.ratingFilter!=='rated'||score(s.name,s.district)!==null));
     const layers=schoolGroup.getLayers();
-    const names=new Set(layers.map(l=>l.options.title));
+    const represented=layers.flatMap(l=>l.options.schoolMembers||[]);
     const viewport=map.getContainer().getBoundingClientRect();
     const visibleDom=layers.filter(l=>{
      const elem=l.getElement?.();
@@ -156,16 +156,17 @@ mkdirSync(out,{recursive:true});
      return style.visibility!=='hidden'&&style.display!=='none'&&r.width>0&&r.height>0&&
       r.left<viewport.right&&r.right>viewport.left&&r.top<viewport.bottom&&r.bottom>viewport.top;
     });
-    return {zoom:z,actualZoom:map.getZoom(),expected:expected.length,shown:expected.filter(s=>names.has(s.name)).length,eligible:allEligible.length,
+    return {zoom:z,actualZoom:map.getZoom(),expected:expected.length,shown:expected.filter(s=>represented.includes(s)).length,eligible:allEligible.length,represented:represented.length,
      totalMarkers:layers.length,visibleInViewport:visibleDom.length,
      status:document.getElementById('schoolMapStatus').textContent};
    },zoom);
-   assert.equal(check.totalMarkers,check.eligible,'No school may be silently omitted at zoom '+zoom+': '+JSON.stringify(check));
+   assert.equal(check.represented,check.eligible,'All schools must be represented by point or cluster at zoom '+zoom+': '+JSON.stringify(check));
+   assert.ok(check.totalMarkers>0&&check.totalMarkers<=check.eligible,'Visible campus groups or points required at zoom '+zoom+': '+JSON.stringify(check));
    assert.equal(check.actualZoom,zoom,'Map zoom must settle to requested level: '+JSON.stringify(check));
    assert.ok(check.expected>=10,'Expected more than 10 Allen campuses at zoom '+zoom+': '+JSON.stringify(check));
    assert.equal(check.shown,check.expected,'Allen markers must all render automatically at zoom '+zoom+': '+JSON.stringify(check));
-   assert.ok(check.visibleInViewport>=check.expected,
-    'Allen Leaflet markers must be visible in the rendered map, not only in data at zoom '+zoom+': '+JSON.stringify(check));
+   assert.ok(check.visibleInViewport>0,
+    'Allen school groups or point markers must be visible in the rendered map at zoom '+zoom+': '+JSON.stringify(check));
    allenZoomAudits.push(check);
   }
   // Guardrail: a marker can exist in Leaflet yet be visually absent because
@@ -180,20 +181,23 @@ mkdirSync(out,{recursive:true});
      const eligible=state.schools.filter(s=>s.ll&&s.type!=='other'&&map.getBounds().contains(s.ll));
      const layers=schoolGroup.getLayers();
      const actual=layers.map(l=>{
-      const node=l.getElement();const mark=node?.querySelector('.mapmark');
+      const node=l.getElement();
+      const mark=node?.querySelector('.mapmark,.school-cluster-bubble');
       const outer=node?getComputedStyle(node):null;
       const inner=mark?getComputedStyle(mark):null;
       const opacity=(outer?Number(outer.opacity):0)*(inner?Number(inner.opacity):0);
-      return {name:l.options.title,opacity,hidden:!node||!mark||outer.display==='none'||outer.visibility==='hidden'||inner.display==='none'||inner.visibility==='hidden'};
+      return {members:l.options.schoolMembers||[],opacity,
+       hidden:!node||!mark||outer.display==='none'||outer.visibility==='hidden'||
+        inner.display==='none'||inner.visibility==='hidden'};
      });
-     const expectedNames=eligible.map(s=>s.name);
-     const actualNames=actual.map(x=>x.name);
+     const represented=actual.flatMap(x=>x.members);
      return {zip,zoom,eligible:eligible.length,rendered:layers.length,
-      missing:expectedNames.filter(n=>!actualNames.includes(n)),
+      represented:represented.length,missing:eligible.filter(x=>!represented.includes(x)).map(x=>x.name),
       lowOpacity:actual.filter(x=>x.hidden||!Number.isFinite(x.opacity)||x.opacity<0.9),
       byDistrict:Object.fromEntries(['AISD','PISD','FISD','PROSPER'].map(d=>[d,eligible.filter(s=>s.district===d).length]))};
     },{zip,zoom});
-    assert.equal(result.rendered,result.eligible,'Marker count regression: '+JSON.stringify(result));
+    assert.equal(result.represented,result.eligible,'Cluster coverage regression: '+JSON.stringify(result));
+    assert.ok(result.rendered>0&&result.rendered<=result.eligible,'No visible school groups: '+JSON.stringify(result));
     assert.deepEqual(result.missing,[],'Missing school marker: '+JSON.stringify(result));
     assert.deepEqual(result.lowOpacity,[],'Visually hidden/dimmed school marker: '+JSON.stringify(result));
     visibilityAudit.push(result);
@@ -210,9 +214,9 @@ mkdirSync(out,{recursive:true});
   await page.waitForTimeout(1200);
   const realAllen=await page.evaluate(()=>{
    const visible=state.schools.filter(s=>s.district==='AISD'&&s.ll&&s.type!=='other'&&map.getBounds().contains(s.ll)&&(state.level==='all'||s.type===state.level)&&(state.ratingFilter!=='rated'||score(s.name,s.district)!==null));
-   const names=schoolGroup.getLayers().map(l=>l.options.title);
+   const represented=schoolGroup.getLayers().flatMap(l=>l.options.schoolMembers||[]);
    return {zip:state.zip,zoom:map.getZoom(),bounds:map.getBounds().toBBoxString(),schools:state.schools.length,
-    allenInViewport:visible.length,allenRendered:visible.filter(s=>names.includes(s.name)).length,
+    allenInViewport:visible.length,allenRendered:visible.filter(s=>represented.includes(s)).length,
     markers:schoolGroup.getLayers().length,notice:document.getElementById('schoolMapStatus').textContent};
   });
   assert.equal(realAllen.zip,'75013','UI must select Allen ZIP');
