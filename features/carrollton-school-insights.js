@@ -862,6 +862,55 @@
           });
           content.appendChild(textTag('p','','미평가(Not Rated) '+info.notRated+'개 · 2025–26 공개 학생 수는 '+Number(info.public2025_26PublishedCells||0)+'개 분류에 연결되었습니다. '+Number(info.public2025_26SuppressedCells||0)+'개는 비공개, '+Number(info.public2025_26UnlistedCells||0)+'개는 원본 미표시입니다.'));
           content.appendChild(textTag('p','','종합등급 연결과 과목별 분석 완료는 다른 기준입니다. 개인정보 보호로 마스킹된 수치는 추정하지 않습니다.'));
+          // Production integration coverage is authoritative once this shared release snapshot exists.
+          // Before integration, retain the legacy UAT preview without describing it as deployed.
+          const integrated=info.official2026;
+          if(integrated && integrated.accountabilityYear===2026 &&
+             integrated.schoolYear==='2025-26' && integrated.campuses===count){
+            content.appendChild(textTag('p','tea-insights-meta','2026 공식 영역 및 2025–26 STAAR 공개 점수 · 데이터 원본 기준'));
+            [
+              ['2026 학업 영역 1개 이상 공개',integrated.domainAnyReported],
+              ['2026 학업 영역 3개 모두 공개',integrated.domainAllReported],
+              ['2025–26 STAAR 과목 1개 이상 공개',integrated.staarAnyReported],
+              ['2025–26 STAAR 4개 과목 모두 공개',integrated.staarAllFourReported],
+              ['공개 점수의 상대 비교 가능 (등급 원인 아님)',integrated.scoreBasedComparisonEligible]
+            ].forEach(function(pair){
+              const value=pair[1];
+              if(Number.isInteger(value)&&value>=0&&value<=count)
+                content.appendChild(textTag('p','',pair[0]+' '+value.toLocaleString('en-US')+
+                  ' / '+count.toLocaleString('en-US')+' · '+ratio(value)));
+            });
+            content.appendChild(textTag('p','tea-insights-missing',
+              'STAAR 원본 행 미포함 '+integrated.staarSourceAbsent+
+              '개 · 미평가/비공개/원본 미제공은 0점이 아닙니다.'));
+            if(Array.isArray(integrated.byDistrict)&&integrated.byDistrict.length){
+              const districtDetails=document.createElement('details');
+              districtDetails.className='tea-data-progress-districts';
+              districtDetails.appendChild(textTag('summary','','학군별 수치 확인 ('+integrated.byDistrict.length+'개)'));
+              districtDetails.appendChild(textTag('p','tea-insights-missing',
+                '학군 행정코드 기준 현행 목록이며 학교의 실제 DFW 위치나 집 주소 배정을 의미하지 않습니다.'));
+              const districtList=document.createElement('div');
+              districtList.className='tea-data-progress-district-list';
+              districtList.style.maxHeight='280px';
+              districtList.style.overflowY='auto';
+              const priority=['057903','061902','043901','043907','043910','043905','043912','061901','057905','057912'];
+              const ordered=integrated.byDistrict.slice().sort(function(a,b){
+                const ia=priority.indexOf(a.districtId),ib=priority.indexOf(b.districtId);
+                return (ia<0?999:ia)-(ib<0?999:ib) || a.districtId.localeCompare(b.districtId);
+              });
+              ordered.forEach(function(d){
+                if(!/^\\d{6}$/.test(d.districtId)||!Number.isInteger(d.campuses)||d.campuses<1)return;
+                districtList.appendChild(textTag('p','',
+                  d.name+' · 전체 '+d.campuses+
+                  ' · 3영역 '+d.domainAllReported+
+                  ' · STAAR 1개 이상 '+d.staarAnyReported+
+                  ' · PEIMS 공개 집계 '+d.public2025_26CountCampuses+
+                  ' · 7개 인종 비율 완비 '+d.fullRaceShareCampuses));
+              });
+              districtDetails.appendChild(districtList);
+              content.appendChild(districtDetails);
+            }
+          }else{
           // Data-stage coverage is separate from already deployed/historical progress.
           root.fetch('./data/tea-2026-uat-progress.json?v=1',{credentials:'same-origin'})
             .then(function(response){if(!response.ok)throw Error('Academic UAT unavailable');return response.json();})
@@ -886,6 +935,7 @@
             }).catch(function(){
               content.appendChild(textTag('p','tea-insights-missing','UAT 학업 성적 구축 현황을 불러올 수 없습니다.'));
             });
+          }
 
         }).catch(function(){content.textContent='현재 진행률 파일을 불러올 수 없습니다. 학교별 공식 출처를 확인해 주세요.';});
     });
