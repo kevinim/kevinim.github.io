@@ -348,6 +348,7 @@
       .forEach(function(el){el.remove();});
     document.getElementById('schoolList')?.querySelectorAll('.tea-school-inline-preview')
       .forEach(function(el){el.remove();});
+    updateAllenMcKinneyProgress();
     mount();
   }
   function loadAllenMcKinneyBatch(rating){
@@ -728,6 +729,25 @@
     if(!document.querySelector('link[data-tea-carrollton-css]'))ensureStyles();
     mountInline(school,rating);
   }
+  function updateAllenMcKinneyProgress(){
+    if(typeof document==='undefined')return;
+    const section=document.getElementById('tea-data-progress');
+    if(!section?.open)return;
+    const content=section.querySelector('.tea-data-progress-content');
+    if(!content || content.querySelector('.tea-am-progress'))return;
+    const rows=Object.values(ALLEN_MCKINNEY);
+    if(rows.length!==56)return;
+    const academic=rows.filter(c=>c.domains.status==='official-verified' &&
+      c.staar.status==='official-verified').length;
+    const enrolled=rows.filter(c=>c.peims.enrollmentStatus==='published').length;
+    const extra=document.createElement('p');
+    extra.className='tea-am-progress';
+    extra.appendChild(textTag('strong','',
+      'Allen·McKinney 신규 2026 TEA 영역·STAAR '+academic+' / 56개 · 2025–26 학생 수 공개 '+enrolled+' / 56개'));
+    extra.appendChild(document.createTextNode(
+      ' · 위 전체 캠퍼스 진행률은 별도 생성된 기존 스냅샷으로 이번 신규 데이터가 합산되지 않았습니다. 인종별 비공개 수치는 추정하지 않습니다.'));
+    content.appendChild(extra);
+  }
   function installCoveragePanel(){
     const list=document.getElementById('schoolList');
     if(!list || document.getElementById('tea-data-progress'))return;
@@ -742,7 +762,10 @@
     details.appendChild(content);
     let started=false;
     details.addEventListener('toggle',function(){
-      if(!details.open||started)return;
+      if(!details.open)return;
+      loadAllenMcKinneyBatch({id:'043901001'});
+      updateAllenMcKinneyProgress();
+      if(started)return;
       started=true;
       if(!root||typeof root.fetch!=='function')return;
       root.fetch('./data/tea-profile-progress-2026.json?v=1',{credentials:'same-origin'})
@@ -767,6 +790,7 @@
           });
           content.appendChild(textTag('p','','미평가(Not Rated) '+info.notRated+'개 · 2025–26 공식 자료는 학교별 검증 후 갱신됩니다.'));
           content.appendChild(textTag('p','','종합등급 연결과 과목별 분석 완료는 다른 기준입니다. 개인정보 보호로 마스킹된 수치는 추정하지 않습니다.'));
+          updateAllenMcKinneyProgress();
         }).catch(function(){content.textContent='현재 진행률 파일을 불러올 수 없습니다. 학교별 공식 출처를 확인해 주세요.';});
     });
     list.insertAdjacentElement('afterend',details);
