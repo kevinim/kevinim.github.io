@@ -102,6 +102,7 @@ async function verify(browser,width){
 
   if(width===1366){
    // Only enable locally bundled NRI data. Do not depend on FEMA's separate remote NFHL service.
+   if(await page.locator('#auxiliaryDataDetails').count())await page.locator('#auxiliaryDataDetails > summary').click();
    const panel=page.locator('#phase2HazardPanel');
    if(!(await panel.evaluate(node=>node.open)))await page.locator('#phase2HazardPanel > summary').click();
    await page.locator('#femaHazardEnabled').check();
