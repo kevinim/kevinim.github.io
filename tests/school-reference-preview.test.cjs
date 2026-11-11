@@ -44,6 +44,18 @@ test('incomplete grade coverage noted; malformed, duplicate and excess features 
  assert.equal(plan({...candidate(),features:[{...school(),geometry:{type:'Point',coordinates:[0,0]}}]}).kind,'unavailable');
  assert.equal(plan({...candidate(),features:[school('INVALID')]}).kind,'unavailable');
 });
+test('explicit stale or unconfirmed school feature year cannot be elevated by district registry',()=>{
+ for(const props of [
+  {schoolYear:'2025–26'}, {sourceVintage:'2024-25'}, {current:false}, {sourceYearConfirmed:false}
+ ]){
+  const fake=school(),old={...fake,properties:{...fake.properties,...props}};
+  assert.equal(plan({...candidate(),features:[old]}).kind,'unavailable',
+   'Stale feature must fail: '+JSON.stringify(props));
+ }
+ const valid=school();
+ valid.properties.schoolYear='2026–27';
+ assert.equal(plan({...candidate(),features:[valid]}).kind,'reference-only');
+});
 test('reject missing, spoofed, or non-allowlisted source link',()=>{
  assert.equal(preview.plan(candidate(),DISTRICT_REGISTRY,()=>null).kind,'unavailable');
  assert.equal(preview.plan(candidate(),{FISD:{...DISTRICT_REGISTRY.FISD,official:'https://evil.example/'}},safe.official).kind,'unavailable');
