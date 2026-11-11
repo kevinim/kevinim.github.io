@@ -47,15 +47,19 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           assert.equal(await card.count(),1,'one and only one exact campus listing '+id);
           await card.click();
           await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel')?.dataset.campus===id,id,{timeout:15000});
-          await page.waitForFunction(()=>[...document.styleSheets].some(s=>(s.href||'').includes('carrollton-school-insights.css?v=2')),
+          await page.waitForFunction(()=>[...document.styleSheets].some(s=>(s.href||'').includes('carrollton-school-insights.css?v=3')),
             null,{timeout:15000});
           const found=await page.evaluate(()=>({
+            inlineCampus:document.querySelector('#schoolList .tea-school-inline-preview')?.dataset.campus,
+            inlineFacts:document.querySelectorAll('#schoolList .tea-school-inline-preview .tea-insights-fact').length,
+            inlineChart:document.querySelector('#schoolList .tea-school-inline-stack')?.getAttribute('aria-label'),
+            searchPlaceholder:document.getElementById('schoolSearch')?.placeholder,
             id:document.querySelector('.tea-insights-panel')?.dataset.campus,
             summary:document.querySelector('.tea-insights-summary')?.textContent,
-            factLabels:[...document.querySelectorAll('.tea-insights-fact-label')].map(x=>x.textContent),
-            factTones:[...document.querySelectorAll('.tea-insights-fact')].map(x=>x.className),
-            factColors:[...document.querySelectorAll('.tea-insights-fact')].map(x=>getComputedStyle(x).color),
-            years:[...document.querySelectorAll('.tea-insights-vintage')].map(x=>({
+            factLabels:[...document.querySelectorAll('#detailContent .tea-insights-fact-label')].map(x=>x.textContent),
+            factTones:[...document.querySelectorAll('#detailContent .tea-insights-fact')].map(x=>x.className),
+            factColors:[...document.querySelectorAll('#detailContent .tea-insights-fact')].map(x=>getComputedStyle(x).color),
+            years:[...document.querySelectorAll('#detailContent .tea-insights-vintage')].map(x=>({
               text:x.textContent,size:parseFloat(getComputedStyle(x).fontSize)
             })),
             titleSize:parseFloat(getComputedStyle(document.querySelector('.tea-insights-title')).fontSize),
@@ -63,8 +67,8 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
             warningOutsideNotes:!!document.getElementById('zoneNotice')&&!document.querySelector('.tea-insights-provenance').contains(document.getElementById('zoneNotice')),
             domainCount:document.querySelectorAll('.tea-insights-domains dd').length,
             raceCount:document.querySelectorAll('.tea-insights-legend li').length,
-            missingRace:[...document.querySelectorAll('.tea-insights-missing')].some(el=>el.textContent.includes('학생 인종·민족 구성')),
-            missingDomain:[...document.querySelectorAll('.tea-insights-missing')].some(el=>el.textContent.includes('영역별 점수')),
+            missingRace:[...document.querySelectorAll('#detailContent .tea-insights-missing')].some(el=>el.textContent.includes('학생 인종·민족 구성')),
+            missingDomain:[...document.querySelectorAll('#detailContent .tea-insights-missing')].some(el=>el.textContent.includes('영역별 점수')),
             link:[...document.querySelectorAll('.tea-insights-panel a')].map(a=>({label:a.textContent,url:a.href})),
             chart:document.querySelector('.tea-insights-stack')?.getAttribute('aria-label'),
             selected:!!state.selectedSchool,
@@ -76,6 +80,9 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           assert.equal(found.id,id,'correct school joins to exact TEA ID');
           assert.ok(found.summary.length>20,'Korean insight summary visible');
           assert.ok(found.selected,'existing campus selection intact');
+          assert.equal(found.inlineCampus,id,'selected school preview inserted next to its search result');
+          assert.equal(found.inlineFacts,2,'inline profile shows strength and improvement labels');
+          assert.ok(found.searchPlaceholder.includes('학교 이름 검색'),'search tells the user it only matches names');
           assert.equal(found.factLabels.length,2,'both evidence fields shown');
           assert.notEqual(found.factColors[0],found.factColors[1],'strong point and improvement must use different text colors');
           assert.ok(found.years[0]?.text.includes('2026')&&found.years[0].size<found.titleSize,'evaluation year is a small label');
@@ -90,10 +97,12 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
             assert.notEqual(found.years[0].text,found.years[1].text,'different vintages must remain distinct');
             assert.ok(found.years[1].size<found.titleSize,'demographic year is a small label');
             assert.equal(found.raceCount,7,'seven verified demographic groups for '+id);
+            assert.ok(found.inlineChart?.includes('아시아계'),'in-list chart must show verified race distribution');
             assert.equal(found.missingRace,false);
             assert.ok(found.chart?.includes('아시아계'),'chart needs accessible ethnic names and shares');
           }else{
             assert.equal(found.raceCount,0,'unknown student ethnicity must remain absent for '+id);
+            assert.equal(found.inlineChart,undefined,'unverified race cannot render in-list chart');
             assert.equal(found.missingRace,true);
           }
           if(!reviewed)assert.equal(found.missingDomain,true,'grade-only campus must show missing domain notice');
