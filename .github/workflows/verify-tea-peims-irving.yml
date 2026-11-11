@@ -1,0 +1,25 @@
+name: TEA Irving 2025-26 PEIMS district QA
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/tea-peims-2025-26/irving-isd.json'
+      - 'tests/tea-peims-irving-2025-26.test.cjs'
+      - '.github/workflows/verify-tea-peims-irving.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Validate Irving campus aggregate identities and privacy masks
+        run: node --test tests/tea-peims-irving-2025-26.test.cjs
