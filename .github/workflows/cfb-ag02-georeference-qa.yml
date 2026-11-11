@@ -10,6 +10,7 @@ on:
       - 'scripts/cfb-ag02-georeference-qa.py'
       - 'scripts/cfb-ag02-legacy-gis-audit.py'
       - 'scripts/cfb-ag02-map-overlay-qa.py'
+      - 'scripts/cfb-ag02-road-gcp-scout.py'
       - 'tests/cfb-ag02-georef.test.py'
       - '.github/workflows/cfb-ag02-georeference-qa.yml'
       - 'data/cfb-ag02-*-gcps.json'
@@ -44,6 +45,16 @@ jobs:
         with:
           name: ag02-cfb-2020-vs-2025-raster-visual-review-NOT-LIVE
           path: artifacts/cfb-ag02-raster-legacy-comparison/
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Find street intersection ground-point candidates via municipality GIS (not verified pixels)
+        run: python scripts/cfb-ag02-road-gcp-scout.py
+      - name: Upload road reference coordinate suggestions, never approved GCPs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ag02-cfb-municipal-road-GCP-SUGGESTIONS-UNVERIFIED
+          path: artifacts/cfb-ag02-road-gcp-scout/
           if-no-files-found: warn
           retention-days: 7
       - name: Upload short-lived historical-city-GIS audit (strictly not current attendance)
