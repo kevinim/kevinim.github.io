@@ -850,7 +850,7 @@
             ['2026 A–F 종합등급',info.accountabilityRatingPresent],
             ['학교별 기본 설명',info.profilePanelsConnected],
             ['기존 수동 분석 초안 (검증 수준 별도)',info.individualNarratives],
-            ['기존 데이터에 통합된 2026 영역별 점수',info.domainComponentsReviewed],
+            ['초기 수동 검증 영역별 점수 (별도 기록)',info.domainComponentsReviewed],
             ['2025–26 공개 인종별 학생 수 (비공개 포함)',info.public2025_26CampusCounts],
             ['2025–26 일곱 인종 전체 비율 확인',info.public2025_26CompleteShares],
             ['과거 학년도 전체 인종 비율 확인',info.ethnicityReviewed]
