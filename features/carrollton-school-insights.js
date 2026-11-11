@@ -158,7 +158,12 @@
     const code=String(record.district||'');
     const prefix=DISTRICT_IDS[code] || (/^\d{6}$/.test(code)?code:null);
     if(!prefix || !String(record.id).startsWith(prefix))return null;
-    if(!record.official || !/^https:\/\/txschools\.gov\/\?view=school&id=\d{9}/.test(record.official))return null;
+    if(typeof record.official!=='string')return null;
+    let officialUrl;
+    try{officialUrl=new URL(record.official);}catch{return null;}
+    if(officialUrl.protocol!=='https:' || officialUrl.hostname!=='txschools.gov' ||
+      officialUrl.searchParams.get('view')!=='school' ||
+      officialUrl.searchParams.get('id')!==String(record.id))return null;
     const cohort=ROLLOUT[code]||{phase:4,label:record.districtName||'DFW 학군 '+code};
     const curated=getRecord(record.id);
     const existing=VERIFIED_TAPR[String(record.id)]||null;
