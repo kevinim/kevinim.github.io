@@ -214,9 +214,9 @@ mkdirSync(out,{recursive:true});
   await page.waitForTimeout(1200);
   const realAllen=await page.evaluate(()=>{
    const visible=state.schools.filter(s=>s.district==='AISD'&&s.ll&&s.type!=='other'&&map.getBounds().contains(s.ll)&&(state.level==='all'||s.type===state.level)&&(state.ratingFilter!=='rated'||score(s.name,s.district)!==null));
-   const names=schoolGroup.getLayers().map(l=>l.options.title);
+   const represented=schoolGroup.getLayers().flatMap(l=>l.options.schoolMembers||[]);
    return {zip:state.zip,zoom:map.getZoom(),bounds:map.getBounds().toBBoxString(),schools:state.schools.length,
-    allenInViewport:visible.length,allenRendered:visible.filter(s=>names.includes(s.name)).length,
+    allenInViewport:visible.length,allenRendered:visible.filter(s=>represented.includes(s)).length,
     markers:schoolGroup.getLayers().length,notice:document.getElementById('schoolMapStatus').textContent};
   });
   assert.equal(realAllen.zip,'75013','UI must select Allen ZIP');
