@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "district": "CFB",
+  "sourceSchoolYear": "2025-26",
+  "rosterStatus": "RESEARCH_CANDIDATES_NOT_VERIFIED_AGAINST_EACH_PRINTED_RASTER_LABEL",
+  "sourcePage": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning",
+  "identificationSource": "Texas Education Agency 2026 preliminary campus record; identity aid only, not current-year attendance geometry",
+  "elementary": [
+    "Blair Elementary",
+    "Blanton Elementary",
+    "Carrollton Elementary",
+    "Country Place Elementary",
+    "Davis Elementary",
+    "Farmers Branch Elementary",
+    "Freeman Elementary",
+    "Good Elementary",
+    "Kent Elementary",
+    "Landry Elementary",
+    "Las Colinas Elementary",
+    "La Villita Elementary",
+    "McKamy Elementary",
+    "McLaughlin Strickland Elementary",
+    "McWhorter Elementary",
+    "Rainwater Elementary",
+    "Riverchase Elementary",
+    "Rosemeade Elementary",
+    "Sheffield Elementary",
+    "Stark Elementary",
+    "Thompson Elementary"
+  ],
+  "middle": [
+    "Barbara Bush Middle School",
+    "Blalack Middle School",
+    "Field Middle School",
+    "Perry Middle School",
+    "Polk Middle School"
+  ],
+  "high": [
+    "Creekview High School",
+    "Newman Smith High School",
+    "R. L. Turner High School",
+    "Ranchview High School"
+  ],
+  "excludedClosed2025": [
+    "Central Elementary",
+    "Furneaux Elementary",
+    "McCoy Elementary",
+    "Long Middle School"
+  ],
+  "excludedNonGeographicPrograms": [
+    "Early College High School"
+  ],
+  "notes": [
+    "Do not infer attendance zones from TEA campus addresses, school point containment or neighborhood descriptions.",
+    "Campus list is a QA checklist; compare school labels manually against each exact 2025–26 approved raster before deeming it complete.",
+    "Closed-school entries must not be mapped as default current attendance zones."
+  ]
+}

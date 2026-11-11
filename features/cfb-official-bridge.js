@@ -40,7 +40,10 @@
   }
  }
  function status(message){const el=byId('cfbManualStatus');if(el)el.textContent=message}
+ function showZone(s){if(typeof window!=='undefined')window.CFBZoneOverlay?.showForSchool?.(s)}
+ function clearZone(){if(typeof window!=='undefined')window.CFBZoneOverlay?.reset?.()}
  function reset(){
+  clearZone();
   clearMarkers();
   for(const [,id] of LEVELS){const el=byId(id);if(el)el.value=''}
   const cards=byId('cfbManualSchoolCards');cards?.replaceChildren();
@@ -71,7 +74,7 @@
    const button=document.createElement('button');button.type='button';button.className='mini-btn';
    button.textContent='학교 위치 보기';
    button.addEventListener('click',()=>{
-    if(typeof schoolClicked==='function')schoolClicked(s);
+    if(typeof schoolClicked==='function'){schoolClicked(s);showZone(s)}
     else status('학교 지도를 아직 불러오지 못했습니다.');
    });
    card.append(title,detail,button);cards?.appendChild(card);
@@ -85,11 +88,12 @@
     const tooltip=document.createElement('span');
     tooltip.textContent=s.name+' · 사용자 확인 참고';
     L.marker(ll,{title:s.name,icon}).addTo(markerLayer)
-      .bindTooltip(tooltip).on('click',()=>{if(typeof schoolClicked==='function')schoolClicked(s)});
+      .bindTooltip(tooltip).on('click',()=>{if(typeof schoolClicked==='function'){schoolClicked(s);showZone(s)}});
    }
    if(locations.length>1)map.fitBounds(L.latLngBounds(locations.map(x=>x.ll)),{padding:[35,35],maxZoom:13});
    else map.setView(locations[0].ll,13);
   }
+  if(selections.length===1)showZone(selections[0].school);else clearZone();
   status('학교 '+selections.length+'곳을 기존 TEA 목록에 연결했습니다. 이것은 사용자가 직접 선택한 정보이며 주소별 배정 자동 검증이나 현행 배정 폴리곤을 의미하지 않습니다.');
  }
  function init(){

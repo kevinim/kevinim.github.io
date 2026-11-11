@@ -109,6 +109,10 @@ test('main index equals previous live release plus exactly the CFB atlas source 
   '<link rel="stylesheet" href="./features/cfb-official-inline.css?v=1">\n<link rel="stylesheet" href="./features/cfb-approved-zone-atlas.css?v=1">');
  expected=replaceOnce(expected,'<script src="./features/cfb-official-bridge.js?v=1" defer></script></body></html>',
   '<script src="./features/cfb-official-bridge.js?v=1" defer></script><script src="./features/cfb-approved-zone-atlas.js?v=1" defer></script><script src="./features/cfb-district-jurisdiction.js?v=1" defer></script></body></html>');
+ // AG06: preserve #208 byte-pinned baseline with only reviewed AG05 deltas.
+ expected=replaceOnce(expected,'./features/cfb-official-inline.css?v=1','./features/cfb-official-inline.css?v=2');
+ expected=replaceOnce(expected,'./features/cfb-official-bridge.js?v=1" defer></script>',
+  './features/cfb-official-bridge.js?v=2" defer></script><script src="./features/cfb-zone-overlay.js?v=1" defer></script>');
  assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expected.replace(/\r\n/g,'\n')),
   'Only one exact publisher image host and two first-party atlas imports are allowed');
  assert.equal(html.split(external).length,2);

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "district": "CFB",
+  "sourceSchoolYear": "2025-26",
+  "status": "NO_INDEPENDENT_MANUAL_RASTER_LABELS_VERIFIED",
+  "elementary": {},
+  "middle": {},
+  "high": {},
+  "guidance": "Each entry key is pixel contour index and must include teaCampusId, reviewStatus=human_label_read_unverified_zone, evidence (source image position/printed label). This identifies a research candidate only, never certifies a boundary or Finder assignment.",
+  "finderGeometryHoldoutPasses": 0
+}
