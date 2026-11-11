@@ -9,7 +9,11 @@ const ARTIFACTS='artifacts/carrollton-tea-insights';
 const CASES=[
   ['061902118','STEM Academy at Hebron Valley Elementary'],
   ['061902008','Hebron High School'],
-  ['057903102','Carrollton Elementary']
+  ['057903102','Carrollton Elementary'],
+  ['043901001','Allen High School'],
+  ['043901105','Alvis C Story Elementary'],
+  ['043907002','McKinney High School'],
+  ['043907043','Dowell Middle School']
 ];
 fs.mkdirSync(ARTIFACTS,{recursive:true});
 (async()=>{
@@ -48,7 +52,8 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
             summary:document.querySelector('.tea-insights-summary')?.textContent,
             domainCount:document.querySelectorAll('.tea-insights-domains dd').length,
             raceCount:document.querySelectorAll('.tea-insights-legend li').length,
-            missing:!!document.querySelector('.tea-insights-missing'),
+            missingRace:[...document.querySelectorAll('.tea-insights-missing')].some(el=>el.textContent.includes('학생 인종·민족 구성')),
+            missingDomain:[...document.querySelectorAll('.tea-insights-missing')].some(el=>el.textContent.includes('영역별 점수')),
             link:[...document.querySelectorAll('.tea-insights-panel a')].map(a=>({label:a.textContent,url:a.href})),
             chart:document.querySelector('.tea-insights-stack')?.getAttribute('aria-label'),
             selected:!!state.selectedSchool,
@@ -61,15 +66,18 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           assert.ok(found.summary.length>20,'Korean insight summary visible');
           assert.ok(found.selected,'existing campus selection intact');
           assert.ok(found.link.some(x=>x.url.startsWith('https://txschools.gov/')),'official campus source included');
-          if(id==='057903102'){
-            assert.equal(found.raceCount,0,'unverified race must remain absent');
-            assert.equal(found.missing,true,'unverified race must have clear missing label');
-          }else{
-            assert.equal(found.domainCount,3,'verified 2026 score components');
-            assert.equal(found.raceCount,7,'all seven demographic categories with numeric labels');
-            assert.equal(found.missing,false);
+          const reviewed=['061902118','061902008'].includes(id);
+          const raceVerified=['061902118','061902008','043901001','043907002'].includes(id);
+          assert.equal(found.domainCount,reviewed?3:0,'domain scores must not be invented '+id);
+          if(raceVerified){
+            assert.equal(found.raceCount,7,'seven verified demographic groups for '+id);
+            assert.equal(found.missingRace,false);
             assert.ok(found.chart?.includes('아시아계'),'chart needs accessible ethnic names and shares');
+          }else{
+            assert.equal(found.raceCount,0,'unknown student ethnicity must remain absent for '+id);
+            assert.equal(found.missingRace,true);
           }
+          if(!reviewed)assert.equal(found.missingDomain,true,'grade-only campus must show missing domain notice');
           assert.deepEqual(found.csp,[],'CSP violation detected '+JSON.stringify(found.csp));
           if(width===390)assert.ok(found.scrollWidth<=width+5,'mobile horizontal overflow '+found.scrollWidth);
           results.push({school:label,...found});
