@@ -15,7 +15,7 @@ const assert=require('node:assert/strict');
       });
       try{
         await page.goto('http://127.0.0.1:8765/',{waitUntil:'domcontentloaded',timeout:90000});
-        await page.waitForFunction(()=>typeof state!=='undefined'&&state.schools.length>1500&&window.HomeSchoolManualBridge,{timeout:110000});
+        await page.waitForFunction(()=>typeof state!=='undefined'&&state.schools.length>1500&&window.HomeSchoolManualBridge,null,{timeout:110000});
         const hint=await page.evaluate(()=>compactHomeFinderModel('123 Synthetic Drive, Carrollton, TX 75007',{status:'unavailable'}));
         assert.equal(hint.likely,'','75007 alone must not preselect wrong school district');
         await page.evaluate(()=>{
