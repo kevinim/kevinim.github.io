@@ -73,9 +73,49 @@ The 2,282 dashboard inventory contains **41 TexasWorks campuses** under district
 - **PASS**: exact 2,282 campus join; official source null and NR statuses; all 110 STAAR missing-source rows distinguished from privacy-masked values; official pairing/AEA/membership cross-check counts.
 - **CONDITIONAL GO for UAT source-only presentation**: show numeric TEA results as published, with explicit `Not Rated`, `Not Applicable / no tested grades`, `suppressed`, and `source unavailable` notices. Paired campus grades must be marked as linked rather than own-campus test performance.
 - **NO-GO for interpreting all missing values as broken extraction**, inventing scores, treating `-1`/null as 0, extrapolating STAAR grades, or using a charter's HQ county to determine a campus's DFW membership.
-- **Outstanding:** independently determine **38 positive-enrollment no-STAAR-row** cases and **5 no-tested-grade campuses not appearing in pairing XLSX**, inspect direct TEA AEA/pairing/exemption details, obtain official physical addresses to deduplicate/exclude confirmed non-DFW schools, and retest corrected DFW-only denominators.
+- **Outstanding (after second-pass investigation):** 24 positive-enrollment/JJAEP-or-DAEP cases have rule-supported home-campus attribution, while **14 positive-enrollment campuses** (3 official AEA plus 11 other specialized settings) remain without an exact individual missing-STAAR-row explanation; the five grade-3–12-zero unpaired campuses now have verified 2026 grade spans and lawful pairing-scope classifications. Still verify campus-specific reasons for 14 and physical DFW locations / corrected denominators.
 - **Governance:** PR #244 remains Draft, no `main` merge, no Production deploy, no shared source batch or GIS edits. Re-run cross-source official register comparison after any TEA refresh and before treating this QA report as release-ready.
 
 ## Reproducibility boundaries
 
-This report captures the *observed* source crosswalk and its source URLs. The adjacent automated test validates the immutable #244 campus keys, `not-rated`/missing-source tallies, status semantics and spot-checks. It does **not** claim to parse the externally hosted TEA XLSX files in CI; pairings/membership evidence must be separately refreshed and verified if upstream sources change.
+This report captures the *observed* source crosswalk and its source URLs, including the subsequent direct-campus drilldown and 43-ID structured exceptions register. The adjacent automated test validates the immutable #244 campus keys, `not-rated`/missing-source tallies, status semantics and spot-checks. It does **not** claim to parse the externally hosted TEA XLSX files in CI; pairings/membership evidence must be separately refreshed and verified if upstream sources change.
+
+## Second pass — five unpaired campuses and 38 positive-enrollment cases
+
+Cross-referenced `data/tea-2026-staar-missing-row-qa-exceptions.json` against **TEA's 2026 A–F Accountability Campus Listing** (September 2026 update), the exact ID-keyed sources above, and 2026 manual Chapter 7, pp. 83–85.
+
+### 2026 direct campus report evidence for the five zero-tested-grade / unpaired schools
+
+| TEA ID | Campus | 2026 grades | Total enrollment | Official report pairing | Rating | Verified reason for lack of campus-local STAAR score |
+| --- | --- | --- | ---: | --- | --- | --- |
+| `129902116` | FORNEY ISD — EARLY CHILDHOOD CENTER | EE–EE | 78 | No | Not Rated | EE-only, below PK–12 accountability pairing scope |
+| `043908106` | MELISSA RIDGE EDUCATION CENTER | EE–EE | 22 | No | Not Rated | EE-only; **2025 grade span EE–PK and paired A/92, but 2026 grade span became EE–EE and Not Rated** |
+| `057905302` | CALLIER CENTER PRE-SCHOOL DEAF (0–5) | EE–EE | 61 | No | Not Rated | EE-only preschool, not STAAR-tested |
+| `220802101` | ARLINGTON CLASSICS ACADEMY — ARKANSAS CAMPUS | KG–02 | 493 | No | Not Rated | No STAAR-tested grade; **open-enrollment charter campus** exception from pairing with another campus |
+| `057833001` | EDUCATION CENTER INTERNATIONAL ACADEMY 1 | KG–01 | 37 | No | Not Rated | No STAAR-tested grade; **charter campus** exception from pairing with another campus. The campus had STAAR-result-based scores in 2025, but serves KG–01 in 2026; do not backfill 2025 data |
+
+**Official, directly observed 2026 A–F campus listings** (precise year and ID in each URL):
+- [Forney ISD, campus 129902116](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&domain=3&id=129902&lev=D&prgopt=reports/acct/ca.sas).
+- [Melissa ISD, campus 043908106](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043908&lev=D&prgopt=reports/acct/ca.sas).
+- [Dallas ISD, campus 057905302](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057905069&lev=C&prgopt=reports/acct/ca.sas).
+- [Arlington Classics, campus 220802101](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&domain=3&id=220802&lev=D&prgopt=reports/acct/ca.sas).
+- [Education Center International Academy 1, campus 057833001](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057833001&lev=C&prgopt=reports/acct/ca.sas).
+- [TEA 2026 Accountability Manual, Chapter 7 pairing and student attribution](https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-accountability-manual-full-8.pdf): PK–12 without tested grades are ordinarily paired, **charter campuses and registered AECs are not paired with another campus**; EE-only campus is below stated PK–12 pairing scope; JJAEP/DAEP data go to the home campus.
+
+**Do not flag those five as extraction failures or invent test scores.** The missing **campus-owned** STAAR results reflect no eligible tested grade. The TEA report explains the observed unpaired status; its individual `Not Rated` decision reason is not separately encoded in the CSV. Distinguish absence from suppression.
+
+### Positive grade-3–12 membership, still no STAAR source row: 38
+
+| Official evidence class | Campus count | What 2026 rule supports | What remains unknown |
+| --- | ---: | --- | --- |
+| JJAEP, official name explicitly denotes juvenile justice program | **19** | JJAEP not rated; student attendance and performance attributable to home campus | No separate campus-specific absent-row cause code |
+| DAEP, official name denotes disciplinary alternative education program | **5** | DAEP not rated; student attendance and performance attributable to home campus | No separate campus-specific absent-row cause code |
+| Registered AEA school in 2026 final list | **3** | Program classification confirmed | Why no own-campus STAAR row despite positive 3–12 membership |
+| Other nontraditional/specialized campus (incl. special education, treatment, alternative, etc.) | **11** | Official enrollment and Not Rated confirmed | Exact reporting/exemption/assessment reason, whether per-campus/eligible tests were given |
+| **Total** | **38** | **24 with rule-supported attribution; 14 require individual evidence** | Do not impute or suppress invented values |
+
+All **38** have official **positive grade-3–12 membership** and official **overall Not Rated**, and lack an entire STAAR source row for all four subjects. **22** have fewer than 10 students in grade-3–12 membership; this is a potential minimum-size signal, **not** proof of why an entire source row is absent.
+
+Special caution: TEA 2026 Chapter 7 says **special education campuses with assessed students are rated on their student performance**, with no special blanket exemption. Therefore do not automatically classify `HUIE SPECIAL EDUC CTR`, `LESTER DAVIS`, or other specialized campuses as "exempt" just from names. The 14 unresolved require specific official evidence before final classification. **AEA registration is not equivalent to JJAEP/DAEP and does not alone justify omission.**
+
+These are **QA classifications**, not substitute values. The protected source batches in PR #244 remain unchanged.
