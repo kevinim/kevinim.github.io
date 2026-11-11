@@ -64,6 +64,22 @@ An additional **201** exact-campus-ID official TEA public PEIMS ethnicity-count 
 
 Display rules: show all seven categories as student counts with explicit `비공개 (<N)` or `원본 미표시` for non-public values; current-year percentages are allowed only when all seven categories are public in the *same* campus report. Preserve existing historical charts/links with their original year. Verify updated progress snapshot and desktop/mobile school selection for Allen and McKinney on the exact PR head. **UAT only; no production merge without explicit approval.**
 
+## Immediate second expansion · five additional 2025–26 districts (2026-11-11)
+
+An additional **401** exact-campus-ID official TEA PEIMS campus aggregate ethnicity-count profiles were extracted from publisher CSVs and matched against the existing 2026 TEA district/campus inventory. The 2025–26 public count dataset now contains **694 / 2,282 DFW campuses (30.41%)** across **11 district cohorts**. No student-level records, address, DOB, names, or unreleased ethnicity counts were collected.
+
+| TEA district | District | Added campuses | Official published CSV |
+|---|---|---:|---|
+| 043912 | Prosper ISD | 32 | [TEA 2025–26 ethnicity by campus](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043912&_debug=0) |
+| 061901 | Denton ISD | 46 | [TEA 2025–26 ethnicity by campus](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=061901&_debug=0) |
+| 057912 | Irving ISD | 35 | [TEA 2025–26 ethnicity by campus](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=057912&_debug=0) |
+| 057916 | Richardson ISD | 51 | [TEA 2025–26 ethnicity by campus](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=057916&_debug=0) |
+| 057905 | Dallas ISD | 237 | [TEA 2025–26 ethnicity by campus](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=057905&_debug=0) |
+
+**Actual consolidated coverage:** 694 campuses × seven TEA ethnicity categories = 4,858 possible public campus-group cells: **2,677 exact published student counts, 1,508 suppressed masks and 673 source-omitted groups**. Three campuses have all seven group counts independently published, allowing same-year percentages without filling missing data: Allen High School (043901001, enrollment 5,127, Asian 1,426 / 27.8%), Irving Houston Middle (057912046, 753 students, Asian 49 / 6.5%) and Irving Jackie Mae Townsell Elementary (057912123, 756 students, Asian 69 / 9.1%). **All other 691 profiles remain partial 2025–26 counts; they are not complete race-share charts.** The earlier eight 2024–25 complete profiles are separate source vintages.
+
+Display and QA controls: a current-year row showing count, suppression mask or absence for each of seven categories; calculate ratios exclusively for those three fully public campuses. Unit tests validate every campus/district ID against official TEA inventory and source URL year, all 4,858 count/mask cells, no PII and no inferred values. Browser QA covers one or more actual school selections in each priority region (desktop/mobile), checks link, rendering and no GIS or CSP regression. Stage in UAT/PR; do not merge Production without explicit sign-off.
+
 ## Importing an official verified batch
 
 The native TEA export may use different column names by report/year. Before ingestion, inspect TEA's associated data dictionary and explicitly transpose **aggregated campus rows only** into these normalized CSV headers. Do not assume any file's column names.
