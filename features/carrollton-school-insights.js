@@ -72,6 +72,27 @@
     '057903001': {summary:'유사 학교 대비 성과는 양호하나 수학과 학업 성장, 집단별 성과 격차가 개선 과제입니다.',strength:'유사 학교 대비 상대 성과',challenge:'수학·성장·집단별 성과'}
   });
 
+  // TEA 2024-25 TAPR ethnic distribution, exact campus ID and campus
+  // enrollment (not district totals). Published in official district annual
+  // reports; no inference from Census ZIP or residential demographics.
+  const VERIFIED_TAPR = Object.freeze({
+    '043901001':{
+      demographics:{
+        year:'2024–25',document:'2025 TEA TAPR · Allen ISD Annual Report',
+        enrollment:5206,
+        src:'https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/3952/Aisd/477407cb-fac7-4496-85c5-ae62698918e0/Allen-ISD-Annual-Report-2024-2025.pdf?disposition=inline',
+        race:{black:14.1,hispanic:15.0,white:39.0,native:0.5,asian:25.8,pacific:0.2,multi:5.3}
+      }
+    },
+    '043907002':{
+      demographics:{
+        year:'2024–25',document:'2025 TEA TAPR · McKinney ISD',
+        enrollment:2668,
+        src:'https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/4789/Misd/7b91c301-1d06-4b03-bd95-c08341bc2ccc/MHS-TAPR_043907002-%281%29.pdf?disposition=inline',
+        race:{black:19.2,hispanic:34.9,white:36.6,native:0.5,asian:4.9,pacific:0.1,multi:3.9}
+      }
+    }
+  });
   function escapeHtml(value) {
     return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
       return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
@@ -94,13 +115,15 @@
     if(!cohort)return null;
     const curated=getRecord(record.id);
     if(curated)return {...curated,rolloutPhase:cohort.phase,cohort:cohort.label};
+    const evidence=VERIFIED_TAPR[String(record.id)]||null;
     const validGrade=['A','B','C','D','F'].includes(record.rating);
     const hasScore=validGrade && Number.isInteger(record.score) && record.score>=0 && record.score<=100;
     const rating=hasScore?record.rating+' · '+record.score+'점':record.rating==='Not Rated'?'미평가':'등급 정보 미확인';
     return {
       rolloutPhase:cohort.phase,
       cohort:cohort.label,
-      evidenceStatus:'rating-only',
+      evidenceStatus:evidence?'rating-and-demographics':'rating-only',
+      ...(evidence||{}),
       summary:hasScore
         ?'2026 TEA 종합 평가는 '+rating+'입니다. 과목별 성취도·학생 성장·집단별 목표는 공식 세부 자료를 대조한 후 분석합니다.'
         :'2026 TEA 종합 평가가 미부여되었거나 확인되지 않았습니다. 이것만으로 학업 성과를 좋거나 나쁘다고 평가하지 않습니다.',
@@ -109,7 +132,7 @@
     };
   }
   function getRaceRows(id) {
-    const d=getRecord(id)?.demographics;
+    const d=(getRecord(id)||VERIFIED_TAPR[String(id)])?.demographics;
     if (!d || !checkRace(d.race)) return null;
     return RACES.map(function(r){return {key:r[0],label:r[1],color:r[2],pct:d.race[r[0]]};});
   }
@@ -148,7 +171,7 @@
       facts.appendChild(p);
     });
     panel.appendChild(facts);
-    if(data.evidenceStatus==='rating-only'){
+    if(data.evidenceStatus==='rating-only'||data.evidenceStatus==='rating-and-demographics'){
       panel.appendChild(textTag('p','tea-insights-missing','영역별 점수 및 과목별 성취도: 개별 TEA 원문 미연결. 종합점수만으로 과목별 강점이나 약점을 추정하지 않습니다.'));
     }
     if(data.domains){
@@ -197,7 +220,7 @@
         list.appendChild(li);
       });
       figure.appendChild(list);panel.appendChild(figure);
-      panel.appendChild(makeLink('TEA 2025 School Report Card 원문',demo.src));
+      panel.appendChild(makeLink(demo.document+' 원문',demo.src));
       panel.appendChild(textTag('p','tea-insights-meta','위 비율은 학교 등록 학생 기준입니다. ZIP 주민 인구구성이나 학군 배정 보장 자료가 아닙니다. 반올림으로 합계가 100%와 다를 수 있습니다.'));
     } else {
       panel.appendChild(textTag('p','tea-insights-missing','학생 인종·민족 구성: 개별 TEA 자료 대조 중 · 미확인 수치는 표시하지 않습니다.'));
@@ -205,8 +228,8 @@
     }
     panel.appendChild(textTag('p','tea-insights-meta',data.evidenceStatus==='reviewed'
       ?'평가 수치와 학생 구성 자료를 분리해 표시합니다. 한 줄 평은 TEA 공식 의견이 아닌 데이터 기반 해석입니다.'
-      :data.evidenceStatus==='rating-only'
-        ?'자동 생성된 종합등급 요약이며, 과목별 강점·개선과제는 아직 분석하지 않았습니다. 학교별 자료가 확보되면 추가합니다.'
+      :data.evidenceStatus==='rating-only'||data.evidenceStatus==='rating-and-demographics'
+        ?'2026 종합등급 기반 자동 요약입니다. 과목별 강점·개선과제는 아직 분석하지 않았습니다. 학생 인종 구성은 다른 학년도 자료입니다.'
         :'시범 해석: 세부 과목별 수치의 개별 TEA 원문 대조 전입니다. 공식 종합 등급과 구분하여 참고하세요.'));
     const links=document.createElement('div');links.className='tea-insights-links';
     links.appendChild(makeLink('2026 TEA 평가 자료',RATINGS_URL));
@@ -252,6 +275,8 @@
   const api={
     getRecord:getRecord,getSchoolInsight:getSchoolInsight,getRaceRows:getRaceRows,
     checkRace:checkRace,render:render,count:Object.keys(CAMPUS).length,
+    verifiedEthnicityCount:Object.keys(VERIFIED_TAPR).length+
+      Object.values(CAMPUS).filter(function(c){return !!c.demographics;}).length,
     rolloutDistricts:Object.keys(ROLLOUT),
     rolloutPhase:function(district){return ROLLOUT[district]?.phase||null;}
   };
