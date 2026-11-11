@@ -436,7 +436,7 @@
       return {key:row[0],label:row[1],status:cell.status,
         count:cell.status==='published'?cell.count:null,
         display:cell.status==='published'?cell.count.toLocaleString('en-US')+'명':
-          cell.status==='suppressed'?'비공개 ('+cell.publishedMask+')':'원본 미표시'};
+          cell.status==='suppressed'?'비공개 (TEA 마스킹)':'원본 미표시'};
     });
   }
   function loadPublishedPeimsCounts() {
