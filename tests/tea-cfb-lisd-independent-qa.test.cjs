@@ -6,6 +6,7 @@ const path=require('node:path');
 const inventory=require('../tea-ratings-2026.json').data;
 const ledger=require('../data/tea-cfb-lisd-campus-qa-ledger-2026.json');
 const academic=require('../data/tea-cfb-lisd-academic-2026-verified-batch01.json');
+const listing=require('../data/tea-cfb-lisd-2026-official-campus-listing-92.json');
 const TARGET=new Set(['CFB','LISD']);
 const RACES=['black','hispanic','white','native','asian','pacific','multi'];
 const ACADEMIC=['studentAchievement','schoolProgress','closingTheGaps','reading','math','science','socialStudies'];
@@ -33,15 +34,52 @@ test('CFB 35 + Lewisville 57 campus IDs match current inventory exactly',()=>{
   assert.equal(id.slice(0,6),row.district==='CFB'?'057903':'061902');
  }
 });
-test('six official 2026 campus domain and STAAR reports are exact-ID linked; 86 remain missing',()=>{
+test('official 2026 district campus listings cover all 92 IDs with 87 published academic scores',()=>{
+ assert.equal(listing.year,2026);
+ assert.equal(listing.metrics.target,92);
+ assert.equal(listing.metrics.rows,92);
+ assert.equal(listing.metrics.withAchievement,87);
+ assert.equal(listing.metrics.withGaps,87);
+ assert.equal(listing.metrics.explicitNotRated,4);
+ assert.equal(listing.metrics.mainRatingScoreDiscrepancies,0);
+ assert.deepEqual(Object.keys(listing.campuses).sort(),records.map(x=>x.id).sort());
+ const snapshot=new Map(records.map(v=>[v.id,v]));
+ let present=0,unrated=0,paired=0;
+ for(const [id,row] of Object.entries(listing.campuses)){
+  assert.equal(row.district,snapshot.get(id).district);
+  assert.equal(row.overallScore,snapshot.get(id).score);
+  assert.equal(row.schoolProgressScaled,null,'do not synthesize an unpublished combined score');
+  assert.ok(validTEA(row.officialDistrictCampusListing));
+  assert.equal(new URL(row.officialDistrictCampusListing).searchParams.get('ccyy'),'2026');
+  assert.equal(new URL(row.officialDistrictCampusListing).searchParams.get('prgopt'),'reports/acct/ca.sas');
+  const x=row.publishedCategoryValues;
+  for(const val of Object.values(x))assert.ok(val===null||(Number.isInteger(val)&&val>=0&&val<=100));
+  if(x.studentAchievementScaled!==null){
+    present++;
+    assert.ok(x.closingTheGapsScaled!==null);
+    assert.equal(ledger.campuses[id].academic2026.listingStudentAchievement,x.studentAchievementScaled);
+    assert.equal(ledger.campuses[id].academic2026.listingClosingTheGaps,x.closingTheGapsScaled);
+  }else if(row.overallScore===null)unrated++;
+  else paired++;
+ }
+ assert.deepEqual({present,unrated,paired},{present:87,unrated:4,paired:1});
+ const check=(id,achievement,growth,relative,gaps)=>assert.deepEqual(
+ Object.values(listing.campuses[id].publishedCategoryValues),
+ [achievement,growth,relative,gaps]);
+ check('057903120',94,92,88,92);
+ check('057903046',60,57,60,45);
+ check('061902136',94,89,79,92);
+ check('061902144',51,66,52,69);
+ check('061902141',null,null,null,null);
+});
+test('6 independently verified full 2026 academic records, 81 partial, 5 source-unavailable, 3 new analyses',()=>{
  const d=ledger.summary;
- const all=ledger.campuses;
- const audited=academic.campuses;
- const ids=Object.keys(audited).sort();
  assert.equal(d.accountabilityRated,88);
  assert.equal(d.accountabilityNotRated,4);
- assert.equal(ids.length,6);
- assert.deepEqual(ids,['057903122','061902047','061902118','061902134','061902140','061902142']);
+ assert.equal(d.withOfficial2026AchievementAndGaps,87);
+ assert.equal(d.withOfficial2026PartiallyCheckedDomains,81);
+ assert.equal(d.withOfficial2026FullDomainAndSTAAR,6);
+ assert.equal(d.withNoPublished2026Domains,5);
  assert.equal(d.independentlyVerified2026AcademicDomains,6);
  assert.equal(d.independentlyVerified2026STAARSubjects,6);
  assert.equal(d.newlyWrittenMetricBasedNarratives,3);
@@ -50,36 +88,43 @@ test('six official 2026 campus domain and STAAR reports are exact-ID linked; 86 
  assert.equal(academic.summary.CFB,1);
  assert.equal(academic.summary.LISD,5);
  assert.equal(academic.summary.newIndependentMetricAnalyses,3);
- assert.ok(validTEA(ledger.provenance.teAAccountabilityDownloads));
- let valid=0,missing=0,narratives=0;
- for(const [id,campus] of Object.entries(all)){
+ assert.deepEqual(Object.keys(academic.campuses).sort(),['057903122','061902047','061902118','061902134','061902140','061902142']);
+ let valid=0,partial=0,missing=0,narratives=0;
+ for(const [id,campus] of Object.entries(ledger.campuses)){
   assert.equal(campus.residenceAssignmentReviewed,false);
   assert.deepEqual(Object.keys(campus.academic2026.domainAndSubjectScores).sort(),ACADEMIC.slice().sort());
-  if(!Object.hasOwn(audited,id)){
-    missing++;
-    assert.equal(campus.academic2026.status,'not-independently-verified');
-    for(const value of Object.values(campus.academic2026.domainAndSubjectScores))assert.equal(value,null,'no grade-to-domain inference');
-    assert.equal(campus.academic2026.officialComponentSourceRow,null);
-    assert.equal(campus.academic2026.officialSTAARSourceRow,null);
-    assert.equal(campus.academic2026.analysisGenerated,false);
-    continue;
+  const fields=campus.academic2026.domainAndSubjectScores;
+  const listed=listing.campuses[id].publishedCategoryValues;
+  const full=academic.campuses[id];
+  if(full){
+   valid++;
+   assert.equal(campus.academic2026.status,'independently-verified-official-2026-report');
+   assert.equal(campus.district,full.district);
+   assert.equal(campus.campusName,full.campusName);
+   assert.equal(campus.academic2026.officialComponentSourceRow,full.officialSummaryReport);
+   assert.equal(campus.academic2026.officialSTAARSourceRow,full.officialSTAARReport);
+   for(const [field,sourceValue] of Object.entries(full.domainsScaledScores))assert.equal(fields[field],sourceValue);
+   for(const subject of ['reading','math','science','socialStudies'])assert.equal(fields[subject],full.subjectsMeetsGradeLevel[subject].meetsPercentReported);
+   assert.equal(campus.academic2026.analysisGenerated,!!full.newMetricAnalysis);
+   if(full.newMetricAnalysis)narratives++;
+  }else if(listed.studentAchievementScaled!==null){
+   partial++;
+   assert.equal(campus.academic2026.status,'official-district-listing-partial');
+   assert.equal(fields.studentAchievement,listed.studentAchievementScaled);
+   assert.equal(fields.closingTheGaps,listed.closingTheGapsScaled);
+   assert.equal(campus.academic2026.officialComponentSourceRow,listing.campuses[id].officialDistrictCampusListing);
+   assert.equal(campus.academic2026.officialSTAARSourceRow,null);
+   for(const v of ['schoolProgress','reading','math','science','socialStudies'])assert.equal(fields[v],null);
+   assert.equal(campus.academic2026.analysisGenerated,false);
+  }else{
+   missing++;
+   assert.ok(campus.academic2026.status.startsWith('TEA-'));
+   assert.ok(Object.values(fields).every(v=>v===null));
+   assert.equal(campus.academic2026.officialSTAARSourceRow,null);
+   assert.equal(campus.academic2026.analysisGenerated,false);
   }
-  valid++;
-  const verified=audited[id];
-  const scores=campus.academic2026.domainAndSubjectScores;
-  assert.equal(campus.academic2026.status,'independently-verified-official-2026-report');
-  assert.equal(campus.district,verified.district);
-  assert.equal(campus.campusName,verified.campusName);
-  assert.equal(campus.academic2026.officialComponentSourceRow,verified.officialSummaryReport);
-  assert.equal(campus.academic2026.officialSTAARSourceRow,verified.officialSTAARReport);
-  for(const [field,sourceValue] of Object.entries(verified.domainsScaledScores))assert.equal(scores[field],sourceValue);
-  for(const [sourceField,ledgerField] of Object.entries({reading:'reading',math:'math',science:'science',socialStudies:'socialStudies'})){
-    assert.equal(scores[ledgerField],verified.subjectsMeetsGradeLevel[sourceField].meetsPercentReported);
-  }
-  assert.equal(campus.academic2026.analysisGenerated,!!verified.newMetricAnalysis);
-  if(verified.newMetricAnalysis)narratives++;
  }
- assert.equal(valid,6);assert.equal(missing,86);assert.equal(narratives,3);
+ assert.deepEqual({valid,partial,missing,narratives},{valid:6,partial:81,missing:5,narratives:3});
 });
 test('official all-student subject counts and published percentages reconcile, no masking or PII inferred',()=>{
  const d=academic.campuses;
