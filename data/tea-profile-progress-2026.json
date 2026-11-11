@@ -11,6 +11,11 @@
   "domainComponentsReviewed": 2,
   "subjectsReviewed": 2,
   "ethnicityReviewed": 8,
+  "public2025_26CampusCounts": 92,
+  "public2025_26PublishedCells": 393,
+  "public2025_26SuppressedCells": 180,
+  "public2025_26UnlistedCells": 71,
+  "public2025_26CompleteShares": 0,
   "imported2026Components": 0,
   "imported2025_26Ethnicity": 0,
   "cohorts": [
@@ -20,7 +25,8 @@
       "profiles": 92,
       "individualAnalysis": 18,
       "domainScores": 2,
-      "ethnicity": 6
+      "ethnicity": 6,
+      "public2025_26CampusCounts": 92
     },
     {
       "name": "Allen",
@@ -28,7 +34,8 @@
       "profiles": 23,
       "individualAnalysis": 0,
       "domainScores": 0,
-      "ethnicity": 1
+      "ethnicity": 1,
+      "public2025_26CampusCounts": 0
     },
     {
       "name": "McKinney",
@@ -36,7 +43,8 @@
       "profiles": 33,
       "individualAnalysis": 0,
       "domainScores": 0,
-      "ethnicity": 1
+      "ethnicity": 1,
+      "public2025_26CampusCounts": 0
     },
     {
       "name": "기타 DFW",
@@ -44,12 +52,14 @@
       "profiles": 2134,
       "individualAnalysis": 0,
       "domainScores": 0,
-      "ethnicity": 0
+      "ethnicity": 0,
+      "public2025_26CampusCounts": 0
     }
   ],
   "notes": [
     "Basic profile means official overall grade and exact campus ID; it is NOT complete domain analysis.",
     "Student race/ethnicity is context, not a school quality indicator.",
-    "Suppressed TEA PEIMS counts are unavailable, not zero; no ZIP or district values are imputed."
+    "Suppressed TEA PEIMS counts are unavailable, not zero; no ZIP or district values are imputed.",
+    "2025-26 public race counts include FERPA suppressed and omitted cells; count coverage is not complete seven-race percentage coverage."
   ]
 }
