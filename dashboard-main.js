@@ -486,7 +486,7 @@ function drawSchools(){
   const letter=['A','B','C','D','F'].includes(rating)?rating:'';
   const badge=letter?'<small class="school-map-grade-badge grade-'+letter.toLowerCase()+'">'+letter+'</small>':'';
   const icon=L.divIcon({className:'',html:`<div class="mapmark ${cls}">${s.type==='elementary'?'초':s.type==='middle'?'중':'고'}${badge}</div>`,iconSize:[27,27],iconAnchor:[13,13]});
-  L.marker(s.ll,{icon,title:s.name+(letter?' · TEA '+letter+'등급':'')}).addTo(schoolGroup).on('click',()=>schoolClicked(s));
+  L.marker(s.ll,{icon,title:s.name}).addTo(schoolGroup).on('click',()=>schoolClicked(s));
  }
  if(notice){
   notice.textContent='학교 마커 '+displayed.length+'개 표시 · 등록 '+state.schools.length+'개 · 필터 적합 '+eligible.length+'개 · 화면 내 '+visible.length+'개 · ZIP '+state.zip+' · Zoom '+zoom+' · 지도 '+size.x+'×'+size.y+' · 학교 위치는 배정 확정 정보가 아닙니다.'+(state.selectedSchool?' · 선택: '+state.selectedSchool.name+(Array.isArray(state.selectedSchool.ll)?' (노란색 학교 위치 마커)':' (학교 좌표 미확인)'):'');
