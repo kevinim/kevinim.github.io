@@ -37,5 +37,5 @@ test('manual references cannot bypass existing school assignment certification',
  assert.match(source,/자동 배정학교 정보가 아니라/);
  assert.match(source,/공식 Finder에서 확인한/);
  assert.match(source,/schoolClicked\(school,true\)/);
- assert.match(source,/if\(!current\)/);
+ assert.match(source,/panel\.hidden=!current/);
 });
