@@ -90,7 +90,7 @@
       demographics:{
         year:'2024–25',document:'2025 TEA School Report Card · Castle Hills Elementary',
         enrollment:599,
-        src:'https://castlehills.lisd.net/fs/resource-manager/view/1534674b-7abf-4949-b7e9-30f24d4e0de1',
+        src:'https://resources.finalsite.net/images/v1767735451/lisdnet/lisdnet/pbywuuw1lzfsjjftgn4m/castlehillsrc.pdf',
         race:{black:2.0,hispanic:8.3,white:45.9,native:0.2,asian:35.9,pacific:0.2,multi:7.5}
       }
     },
