@@ -1,0 +1,486 @@
+{
+  "schemaVersion": 1,
+  "accountabilityYear": 2026,
+  "asOf": "2026-11-11",
+  "purpose": "QA-only exception register; do not use to impute scores or replace official TEA data",
+  "source": {
+    "accountability": "data/tea-accountability-2026-verified-batch.json",
+    "staar": "data/tea-staar-meets-2026-verified-batch.json",
+    "officialCampusListing": "https://rptsvr1.tea.texas.gov/perfreport/account/2026/index.html",
+    "membership": "https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-campus-3-12-enrollment-list.xlsx",
+    "pairings": "https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-campus-pairings-final.xlsx",
+    "aea": "https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-final-aea-campus-list-updated.pdf",
+    "rules": "https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-accountability-manual-full-8.pdf"
+  },
+  "totals": {
+    "staARowAbsent": 110,
+    "overallRatedWithOwnDomainNotRated": 67,
+    "zeroTestedGradeButNoPairing": 5,
+    "positiveGrade3to12ButNoRow": 38,
+    "positiveByEvidenceClass": {
+      "jjaep": 19,
+      "daep": 5,
+      "aea-registered": 3,
+      "other-review": 11
+    }
+  },
+  "caveats": [
+    "The 67 rated, officially paired campuses are not repeated in this register.",
+    "Official membership is a grade 3–12 headcount, not tested-student count; no result is inferred from enrollment.",
+    "JJAEP and DAEP are supported by TEA rule and official names, but no per-campus missing-source reason code was provided.",
+    "AEA designation alone does not prove why a campus STAAR row is absent.",
+    "Other-review schools, including special education, must not be auto-excluded: special education campuses can receive ratings under TEA rules.",
+    "Campus overall Not Rated is distinct from suppressed (-1), unavailable and not-in-source STAAR outcomes.",
+    "EE-only campuses are not schools serving PK through grade 12. Charter campuses have their own pairing exceptions.",
+    "Do not treat this QA register as a complete DFW geography census; physical campus address verification remains pending."
+  ],
+  "zeroGradeUnpaired": [
+    {
+      "campusId": "043908106",
+      "campusName": "MELISSA RIDGE EDUCATION CENTER",
+      "totalEnrollment": 22,
+      "grades3to12": 0,
+      "gradeSpan": "EE - EE",
+      "officialPaired": false,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "ee-only",
+      "notes": "Melissa ISD / only EE; 2025 was EE–PK and paired, 2026 now EE–EE and unpaired",
+      "officialCampusReportUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043908&lev=D&prgopt=reports/acct/ca.sas"
+    },
+    {
+      "campusId": "057833001",
+      "campusName": "EDUCATION CENTER INTERNATIONAL ACADEMY 1",
+      "totalEnrollment": 37,
+      "grades3to12": 0,
+      "gradeSpan": "KG - 01",
+      "officialPaired": false,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "charter-no-pair",
+      "notes": "Charter campus; 2026 KG–01 vs 2025 school with tested grade cohort; manual charter pairing exclusion",
+      "officialCampusReportUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057833001&lev=C&prgopt=reports/acct/ca.sas"
+    },
+    {
+      "campusId": "057905302",
+      "campusName": "CALLIER CENTER PRE-SCHOOL DEAF (0-5)",
+      "totalEnrollment": 61,
+      "grades3to12": 0,
+      "gradeSpan": "EE - EE",
+      "officialPaired": false,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "ee-only",
+      "notes": "Dallas ISD / early education for deaf preschoolers, EE-only",
+      "officialCampusReportUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057905069&lev=C&prgopt=reports/acct/ca.sas"
+    },
+    {
+      "campusId": "129902116",
+      "campusName": "EARLY CHILDHOOD CENTER",
+      "totalEnrollment": 78,
+      "grades3to12": 0,
+      "gradeSpan": "EE - EE",
+      "officialPaired": false,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "ee-only",
+      "notes": "Forney ISD / only EE, outside PK–12 pairing requirement",
+      "officialCampusReportUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&domain=3&id=129902&lev=D&prgopt=reports/acct/ca.sas"
+    },
+    {
+      "campusId": "220802101",
+      "campusName": "ARLINGTON CLASSICS ACADEMY - ARKANSAS CAMPUS",
+      "totalEnrollment": 493,
+      "grades3to12": 0,
+      "gradeSpan": "KG - 02",
+      "officialPaired": false,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "charter-no-pair",
+      "notes": "Charter campus; manual states charter campuses are not paired with another campus",
+      "officialCampusReportUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&domain=3&id=220802&lev=D&prgopt=reports/acct/ca.sas"
+    }
+  ],
+  "positiveGradeNoSTAAR": [
+    {
+      "campusId": "043901003",
+      "campusName": "COLLIN CO J J A E P",
+      "grades3to12": 3,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "043911002",
+      "campusName": "COLLIN CO J J A E P",
+      "grades3to12": 3,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "043912002",
+      "campusName": "COLLIN CO J J A E P",
+      "grades3to12": 1,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "049905002",
+      "campusName": "DAEP",
+      "grades3to12": 10,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "daep",
+      "regulatoryBasis": "2026 manual DAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "057903005",
+      "campusName": "SALAZAR DISTRICT ALTERNATIVE EDUCATION PROGRAM",
+      "grades3to12": 50,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "daep",
+      "regulatoryBasis": "2026 manual DAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "057903009",
+      "campusName": "DALLAS COUNTY JJAEP CFB CAMPUS",
+      "grades3to12": 1,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "057903117",
+      "campusName": "HUIE SPECIAL EDUC CTR",
+      "grades3to12": 54,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "other-review",
+      "regulatoryBasis": null,
+      "specificMissingRowReasonConfirmed": null
+    },
+    {
+      "campusId": "057905011",
+      "campusName": "BARBARA M MANNS MIDDLE DAEP",
+      "grades3to12": 109,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "daep",
+      "regulatoryBasis": "2026 manual DAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "057905096",
+      "campusName": "JUVENILE JUSTICE AEP",
+      "grades3to12": 6,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "057905241",
+      "campusName": "ELEMENTARY' DISCIPLINARY ALTERNATIVE EDUCATION PRG",
+      "grades3to12": 8,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "daep",
+      "regulatoryBasis": "2026 manual DAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "057906008",
+      "campusName": "DESOTO ALTERNATIVE EDUCATION CENTER (DAEP)",
+      "grades3to12": 17,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "daep",
+      "regulatoryBasis": "2026 manual DAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "057909007",
+      "campusName": "P A S S LEARNING CTR",
+      "grades3to12": 14,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "other-review",
+      "regulatoryBasis": null,
+      "specificMissingRowReasonConfirmed": null
+    },
+    {
+      "campusId": "057912007",
+      "campusName": "DALLAS CO SCHOOL FOR ACCELERATED LRNG",
+      "grades3to12": 3,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "other-review",
+      "regulatoryBasis": null,
+      "specificMissingRowReasonConfirmed": null
+    },
+    {
+      "campusId": "057916008",
+      "campusName": "P A S S LEARNING CTR",
+      "grades3to12": 11,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "other-review",
+      "regulatoryBasis": null,
+      "specificMissingRowReasonConfirmed": null
+    },
+    {
+      "campusId": "061901005",
+      "campusName": "LESTER DAVIS",
+      "grades3to12": 85,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "other-review",
+      "regulatoryBasis": null,
+      "specificMissingRowReasonConfirmed": null
+    },
+    {
+      "campusId": "061901006",
+      "campusName": "DENTON CO J J A E P",
+      "grades3to12": 14,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "061902007",
+      "campusName": "DENTON CO J J A E P",
+      "grades3to12": 12,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "061906002",
+      "campusName": "DENTON CO J J A E P",
+      "grades3to12": 1,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "061907002",
+      "campusName": "DENTON CO J J A E P",
+      "grades3to12": 2,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "061911005",
+      "campusName": "DENTON CO J J A E P",
+      "grades3to12": 1,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "061911008",
+      "campusName": "TARRANT COUNTY JJAEP",
+      "grades3to12": 2,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "061911012",
+      "campusName": "LEGACY LEARNING CENTER",
+      "grades3to12": 51,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "other-review",
+      "regulatoryBasis": null,
+      "specificMissingRowReasonConfirmed": null
+    },
+    {
+      "campusId": "091914005",
+      "campusName": "GRAYSON COUNTY JJAEP",
+      "grades3to12": 1,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "116905004",
+      "campusName": "GREENVILLE ALTERNATIVE EDUCATIONAL PROGRAM",
+      "grades3to12": 34,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "other-review",
+      "regulatoryBasis": null,
+      "specificMissingRowReasonConfirmed": null
+    },
+    {
+      "campusId": "126902005",
+      "campusName": "TARRANT COUNTY J J A E P",
+      "grades3to12": 1,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "126903004",
+      "campusName": "J J A E P",
+      "grades3to12": 1,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "220904002",
+      "campusName": "TARRANT COUNTY JJAEP SCHOOL",
+      "grades3to12": 1,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "220905019",
+      "campusName": "METRO OPPORTUNITY",
+      "grades3to12": 48,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "other-review",
+      "regulatoryBasis": null,
+      "specificMissingRowReasonConfirmed": null
+    },
+    {
+      "campusId": "220905035",
+      "campusName": "TRANSITION CTR",
+      "grades3to12": 122,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "aea-registered",
+      "regulatoryBasis": null,
+      "specificMissingRowReasonConfirmed": null
+    },
+    {
+      "campusId": "220905210",
+      "campusName": "CHILDREN'S MEDICAL CTR",
+      "grades3to12": 31,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "other-review",
+      "regulatoryBasis": null,
+      "specificMissingRowReasonConfirmed": null
+    },
+    {
+      "campusId": "220905211",
+      "campusName": "WOMEN'S HAVEN",
+      "grades3to12": 2,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "other-review",
+      "regulatoryBasis": null,
+      "specificMissingRowReasonConfirmed": null
+    },
+    {
+      "campusId": "220905212",
+      "campusName": "BRIDGE ASSOC",
+      "grades3to12": 7,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "aea-registered",
+      "regulatoryBasis": null,
+      "specificMissingRowReasonConfirmed": null
+    },
+    {
+      "campusId": "220905242",
+      "campusName": "TARRANT YOUTH RECOVERY",
+      "grades3to12": 10,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "aea-registered",
+      "regulatoryBasis": null,
+      "specificMissingRowReasonConfirmed": null
+    },
+    {
+      "campusId": "220905252",
+      "campusName": "INSIGHTS LEARNING CENTER",
+      "grades3to12": 2,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "other-review",
+      "regulatoryBasis": null,
+      "specificMissingRowReasonConfirmed": null
+    },
+    {
+      "campusId": "220908304",
+      "campusName": "TARRANT CO J J A E P",
+      "grades3to12": 4,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "220916007",
+      "campusName": "TARRANT CO J J A E P",
+      "grades3to12": 2,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "220918007",
+      "campusName": "TARRANT CO J J A E P",
+      "grades3to12": 4,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    },
+    {
+      "campusId": "220920004",
+      "campusName": "TARRANT CO J J A E P",
+      "grades3to12": 1,
+      "officialOverallRating": "Not Rated",
+      "missingSTAARAllFour": true,
+      "classification": "jjaep",
+      "regulatoryBasis": "2026 manual JJAEP results attributed to home campus",
+      "specificMissingRowReasonConfirmed": "rule-consistent, but no per-campus code"
+    }
+  ]
+}
