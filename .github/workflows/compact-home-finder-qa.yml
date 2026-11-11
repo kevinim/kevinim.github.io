@@ -8,6 +8,10 @@ on:
       - 'tests/compact-home-finder.test.cjs'
       - 'scripts/test-compact-home-finder-browser.cjs'
       - 'tests/conditional-school-release.test.cjs'
+      - 'features/school-reference-preview.js'
+      - 'features/school-reference-preview.css'
+      - 'tests/school-reference-preview.test.cjs'
+      - 'scripts/test-school-reference-preview-browser.cjs'
       - 'scripts/verify-main-data.mjs'
       - 'scripts/test-integrated-features.cjs'
       - 'tests/externalized-main-bootstrap.test.cjs'
@@ -30,7 +34,7 @@ jobs:
           node-version: '24'
       - run: |
           node --check home-lookup-v2.js
-          node --test tests/compact-home-finder.test.cjs tests/conditional-school-release.test.cjs tests/track-b-reference-gis.test.cjs
+          node --test tests/compact-home-finder.test.cjs tests/conditional-school-release.test.cjs tests/track-b-reference-gis.test.cjs tests/school-reference-preview.test.cjs
           node --test tests/externalized-main-bootstrap.test.cjs
   browser:
     name: Real 390/1366px Chromium compact Finder test (synthetic only)
@@ -53,12 +57,16 @@ jobs:
       - name: Browser E2E with synthetic Carrollton address
         env:
           NODE_PATH: ${{ github.workspace }}/compact-home-browser-tmp/node_modules
-        run: node scripts/test-compact-home-finder-browser.cjs
+        run: |
+          node scripts/test-compact-home-finder-browser.cjs
+          node scripts/test-school-reference-preview-browser.cjs
       - name: Save UI screenshots
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: compact-school-finder-mobile-desktop
-          path: artifacts/compact-home-finder/*.png
+          path: |
+            artifacts/compact-home-finder/*.png
+            artifacts/school-reference-preview/*.png
           if-no-files-found: warn
           retention-days: 7
