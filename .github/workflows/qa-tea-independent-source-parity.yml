@@ -1,0 +1,28 @@
+name: Independent TEA PEIMS raw-parity verifier (offline no deploy)
+on:
+  pull_request:
+    paths:
+      - 'qa/tea-peims-raw-parity.cjs'
+      - 'qa/evidence/tea-peims-raw-parity-20261111.json'
+      - 'tests/qa-tea-peims-raw-parity.test.cjs'
+      - '.github/workflows/qa-tea-independent-source-parity.yml'
+      - 'docs/QA_TEA_INDEPENDENT_CSV_PARITY_2026-11-11.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    name: Independent offline schema and FERPA gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Set up Node 22
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22'
+      - name: Syntax validate independent QA runner
+        run: node --check qa/tea-peims-raw-parity.cjs
+      - name: Run independent offline parity fixture tests
+        run: node --test tests/qa-tea-peims-raw-parity.test.cjs
