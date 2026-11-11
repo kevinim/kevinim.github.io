@@ -49,7 +49,19 @@ fs.mkdirSync(OUT,{recursive:true});
     },id);
     assert.ok(chosen,'campus not selectable '+id);
     assert.equal(chosen.count,1,'exact school click ID match '+id);
-    await page.locator('#schoolList button.school[data-sid="'+chosen.sid+'"]').click();
+    // Numeric data-sid can change when async school inventory redraws.
+    // Re-resolve the immutable TEA Campus ID and activate the actual button
+    // handler within one browser event loop turn (same #264 QA protection).
+    const clicked=await page.evaluate(id=>{
+     const current=[...document.querySelectorAll('#schoolList button.school[data-sid]')].find(button=>{
+      const school=state.schools[Number(button.dataset.sid)];
+      return school && scoreRecord(school.name,school.district)?.id===id;
+     });
+     if(!current)return false;
+     current.click();
+     return true;
+    },id);
+    assert.equal(clicked,true,'campus button detached or absent '+id);
     await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel')?.dataset.campus===id,id,{timeout:30000});
     await page.waitForFunction(id=>!!document.querySelector('#detailContent .tea-insights-panel[data-campus="'+id+'"] .tea-peims-counts'),id,{timeout:60000});
    }
