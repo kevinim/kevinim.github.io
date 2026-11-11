@@ -1,0 +1,48 @@
+name: Zoom-aware map place labels
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'dashboard-main.js'
+      - 'index.html'
+      - 'features/map/**'
+      - 'tests/map-area-label-hierarchy.test.cjs'
+      - 'scripts/test-area-label-browser.cjs'
+      - '.github/workflows/verify-area-label-hierarchy.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'dashboard-main.js'
+      - 'index.html'
+      - 'features/map/**'
+      - 'tests/map-area-label-hierarchy.test.cjs'
+      - 'scripts/test-area-label-browser.cjs'
+      - '.github/workflows/verify-area-label-hierarchy.yml'
+permissions:
+  contents: read
+jobs:
+  map-label-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - run: node --check dashboard-main.js
+      - run: node --check features/map/area-label-hierarchy.js
+      - run: node --test tests/map-area-label-hierarchy.test.cjs tests/school-grade-focus.test.cjs
+      - name: Isolated Playwright Chromium (public GitHub-hosted runner)
+        run: |
+          mkdir -p map-label-browser-tmp
+          cd map-label-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve PR dashboard
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/area-label-browser.log 2>&1 &
+          sleep 2
+      - name: Verify actual desktop/mobile map labels
+        env:
+          NODE_PATH: ${{ github.workspace }}/map-label-browser-tmp/node_modules
+        run: node scripts/test-area-label-browser.cjs
