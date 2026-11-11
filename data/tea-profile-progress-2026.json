@@ -11,11 +11,11 @@
   "domainComponentsReviewed": 2,
   "subjectsReviewed": 2,
   "ethnicityReviewed": 8,
-  "public2025_26CampusCounts": 694,
-  "public2025_26PublishedCells": 2677,
-  "public2025_26SuppressedCells": 1508,
-  "public2025_26UnlistedCells": 673,
-  "public2025_26CompleteShares": 3,
+  "public2025_26CampusCounts": 1343,
+  "public2025_26PublishedCells": 5024,
+  "public2025_26SuppressedCells": 2915,
+  "public2025_26UnlistedCells": 1462,
+  "public2025_26CompleteShares": 5,
   "imported2026Components": 0,
   "imported2025_26Ethnicity": 0,
   "cohorts": [
@@ -53,7 +53,7 @@
       "individualAnalysis": 0,
       "domainScores": 0,
       "ethnicity": 0,
-      "public2025_26CampusCounts": 546
+      "public2025_26CampusCounts": 1195
     }
   ],
   "notes": [
