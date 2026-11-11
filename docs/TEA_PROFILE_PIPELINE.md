@@ -20,6 +20,10 @@ Priority: Carrollton (CFB + Lewisville, 92), Allen (23), McKinney (33), remainin
 
 **Never use** the "PEIMS Student Demographic Listing" at the individual-student level. It includes names/IDs/DOB and must not be fetched, published or loaded into this project. Only public aggregate data.
 
+## Incremental official source verification — Castle Hills (2026-11-11)
+
+A new independently source-checked 2024–25 ethnicity profile is now staged for Castle Hills Elementary (`061902136`, Lewisville ISD). The district-hosted **2025 TEA School Report Card**, [pages 1–2](https://castlehills.lisd.net/fs/resource-manager/view/1534674b-7abf-4949-b7e9-30f24d4e0de1), identifies **599** total students and the seven campus-level race/ethnicity shares (Black 2.0%; Hispanic 8.3%; White 45.9%; American Indian 0.2%; Asian 35.9%; Pacific Islander 0.2%; two or more races 7.5%). They sum to 100.0%. The source year is **2024–25**, while the current dashboard accountability grade is TEA 2026; do not conflate the two. This adds one verified historical student-composition profile; **no 2025–26 PEIMS campus records have yet been imported**. If source years disagree on total enrollment, preserve each source's vintage and do not overwrite with a mixed-year count.
+
 ## Importing an official verified batch
 
 The native TEA export may use different column names by report/year. Before ingestion, inspect TEA's associated data dictionary and explicitly transpose **aggregated campus rows only** into these normalized CSV headers. Do not assume any file's column names.
