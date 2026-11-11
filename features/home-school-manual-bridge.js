@@ -52,6 +52,19 @@
     if(clean){link.href=clean;link.textContent='선택 학군 공식 주소 검색기 열기';}
     else link.removeAttribute('href');
   }
+  function refreshDistrictOptions(){
+    if(!districtSelect)return;
+    const codes=[...new Set(campusList().map(s=>s.district).filter(Boolean))];
+    codes.sort((a,b)=> {
+      const ai=PRIORITY.indexOf(a),bi=PRIORITY.indexOf(b);
+      if(ai>=0||bi>=0)return (ai<0?999:ai)-(bi<0?999:bi);
+      return a.localeCompare(b);
+    });
+    for(const code of codes){
+      const info=typeof DISTRICT_REGISTRY!=='undefined'?DISTRICT_REGISTRY[code]:null;
+      districtSelect.appendChild(option(code,info?.ko?info.ko+' ('+code+')':code));
+    }
+  }
   function fillSchools(){
     const schools=campusList(),code=districtSelect.value;
     for(const [level,label] of LEVELS){
@@ -70,7 +83,6 @@
   }
   function reset(){
     districtSelect.value='';
-    for(const [,level] of LEVELS){} // avoid persisting previous selections
     for(const [level] of LEVELS)selects[level].value='';
     cards.replaceChildren();
     status.textContent='자동 배정학교 정보가 아니라 사용자가 공식 조회 후 직접 선택한 참고 목록입니다.';
@@ -115,8 +127,14 @@
     if(!panel)return;
     const current=activeHomeObject();
     panel.hidden=!current;
+    if(current && !document.querySelector('link[data-home-school-bridge-css]')){
+      const css=document.createElement('link');css.rel='stylesheet';
+      css.href='./features/home-school-manual-bridge.css?v=1';
+      css.dataset.homeSchoolBridgeCss='1';document.head.appendChild(css);
+    }
     if(current!==activeHome){
       activeHome=current;
+      if(current)refreshDistrictOptions();
       reset();
     }
   }
@@ -140,16 +158,7 @@
     districtSelect=document.createElement('select');districtSelect.id='homeManualDistrict';
     districtSelect.setAttribute('aria-label','공식 결과를 확인한 학군 선택');
     districtSelect.appendChild(option('','학군 직접 선택 (주소 ZIP으로 자동 지정하지 않음)'));
-    const codes=[...new Set(campusList().map(s=>s.district).filter(Boolean))];
-    codes.sort((a,b)=> {
-      const ai=PRIORITY.indexOf(a),bi=PRIORITY.indexOf(b);
-      if(ai>=0||bi>=0)return (ai<0?999:ai)-(bi<0?999:bi);
-      return a.localeCompare(b);
-    });
-    for(const code of codes){
-      const info=typeof DISTRICT_REGISTRY!=='undefined'?DISTRICT_REGISTRY[code]:null;
-      districtSelect.appendChild(option(code,info?.ko?info.ko+' ('+code+')':code));
-    }
+    refreshDistrictOptions();
     districtSelect.addEventListener('change',function(){
       fillSchools();cards.replaceChildren();
       status.textContent='선택한 학군의 공식 결과를 확인한 후 학교를 선택하세요.';
