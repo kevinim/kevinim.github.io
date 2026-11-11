@@ -452,7 +452,7 @@ function drawSchools(){
  const legend=el('schoolLegend');
  if(legend){
   legend.classList.toggle('matching',homeActive);
-  legend.innerHTML=homeActive?'<span>집 주소 배정 후보</span><span>그 외 학교 · 배정 미확인</span>':'<span>초등</span><span>중등</span><span>고등</span>';
+  legend.innerHTML=homeActive?'<span>집 주소 배정 후보</span><span>그 외 학교 · 배정 미확인</span>':'<span>초등</span><span>중등</span><span>고등</span><span>숫자 그룹을 누르면 확대</span>';
  }
  schoolGroup.clearLayers();
  const notice=el('schoolMapStatus'),zoom=map.getZoom();
@@ -480,16 +480,47 @@ function drawSchools(){
   if(notice)notice.textContent='지도가 아직 화면에 배치되지 않아 학교 마커를 계산하지 않았습니다. 지도가 보이면 자동으로 다시 표시합니다.';
   return;
  }
- for(const s of displayed){
+ // Zoom-dependent grid clustering preserves every eligible school in a
+ // represented cluster, instead of hundreds of overlapping full-size pins.
+ const clusterMode=zoom<=12&&displayed.length>45;
+ const compactMode=!clusterMode&&zoom<=13&&displayed.length>45;
+ const groups=[];
+ if(clusterMode){
+  const cells=new Map(),cellSize=zoom<=10?75:60;
+  for(const s of displayed){
+   const p=map.latLngToContainerPoint(s.ll);
+   const key=Math.floor(p.x/cellSize)+':'+Math.floor(p.y/cellSize);
+   if(!cells.has(key))cells.set(key,[]);
+   cells.get(key).push(s);
+  }
+  for(const members of cells.values())groups.push(members);
+ }else for(const s of displayed)groups.push([s]);
+ for(const members of groups){
+  if(clusterMode&&members.length>1){
+   const schoolBounds=L.latLngBounds(members.map(s=>s.ll)),center=schoolBounds.getCenter();
+   const icon=L.divIcon({className:'school-cluster-marker',
+    html:'<span class="school-cluster-bubble" aria-hidden="true">'+members.length+'</span>',
+    iconSize:[40,40],iconAnchor:[20,20]});
+   L.marker(center,{icon,keyboard:true,
+    title:members.length+'개 학교 · 눌러서 확대',schoolMembers:members}).addTo(schoolGroup).on('click',()=>{
+     map.stop();map.setView(center,Math.min(16,zoom+2),{animate:false});
+    });
+   continue;
+  }
+  const s=members[0];
   const cls=homeActive?(homeSchoolMatches(s)?'home-match':'nearby'):s.type;
   const rating=scoreRecord(s.name,s.district)?.rating;
   const letter=['A','B','C','D','F'].includes(rating)?rating:'';
-  const badge=letter?'<small class="school-map-grade-badge grade-'+letter.toLowerCase()+'">'+letter+'</small>':'';
-  const icon=L.divIcon({className:'',html:`<div class="mapmark ${cls}">${s.type==='elementary'?'초':s.type==='middle'?'중':'고'}${badge}</div>`,iconSize:[27,27],iconAnchor:[13,13]});
-  L.marker(s.ll,{icon,title:s.name}).addTo(schoolGroup).on('click',()=>schoolClicked(s));
+  const compact=clusterMode||compactMode;
+  const badge=!compact&&letter?'<small class="school-map-grade-badge grade-'+letter.toLowerCase()+'">'+letter+'</small>':'';
+  const glyph=compact?'':s.type==='elementary'?'초':s.type==='middle'?'중':'고';
+  const diameter=compact?14:27,anchor=Math.floor(diameter/2);
+  const icon=L.divIcon({className:'',html:`<div class="mapmark ${cls}${compact?' mapmark-compact':''}">${glyph}${badge}</div>`,
+   iconSize:[diameter,diameter],iconAnchor:[anchor,anchor]});
+  L.marker(s.ll,{icon,title:s.name,schoolMembers:members}).addTo(schoolGroup).on('click',()=>schoolClicked(s));
  }
  if(notice){
-  notice.textContent='학교 마커 '+displayed.length+'개 표시 · 등록 '+state.schools.length+'개 · 필터 적합 '+eligible.length+'개 · 화면 내 '+visible.length+'개 · ZIP '+state.zip+' · Zoom '+zoom+' · 지도 '+size.x+'×'+size.y+' · 학교 위치는 배정 확정 정보가 아닙니다.'+(state.selectedSchool?' · 선택: '+state.selectedSchool.name+(Array.isArray(state.selectedSchool.ll)?' (노란색 학교 위치 마커)':' (학교 좌표 미확인)'):'');
+  notice.textContent=(clusterMode?'학교 '+displayed.length+'개를 '+groups.length+'개 위치 그룹으로 표시 · 숫자를 눌러 확대 · ':compactMode?'학교 '+displayed.length+'개를 작은 점으로 표시 · 확대하면 등급 배지 · ':'학교 마커 '+displayed.length+'개 표시 · ')+'등록 '+state.schools.length+'개 · 필터 적합 '+eligible.length+'개 · 화면 내 '+visible.length+'개 · ZIP '+state.zip+' · Zoom '+zoom+' · 지도 '+size.x+'×'+size.y+' · 학교 위치는 배정 확정 정보가 아닙니다.'+(state.selectedSchool?' · 선택: '+state.selectedSchool.name+(Array.isArray(state.selectedSchool.ll)?' (노란색 학교 위치 마커)':' (학교 좌표 미확인)'):'');
  }
 }
 function drawHomeAssignmentMap(){
