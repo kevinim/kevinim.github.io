@@ -3,6 +3,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const batch = require('../data/tea-allen-mckinney-campus-qa-2026.json');
 const source = require('../data/tea-allen-mckinney-academics-2026-source.json');
+const enrollmentSource = require('../data/tea-allen-mckinney-enrollment-2025-26-source.json');
 const catalog = require('../tea-ratings-2026.json').data;
 const categories = ['black', 'hispanic', 'white', 'native', 'asian', 'pacific', 'multi'];
 const subjects = ['reading', 'math', 'science', 'socialStudies'];
@@ -39,8 +40,11 @@ test('2025–26 PEIMS privacy masks and absent categories remain unavailable, no
     assert.match(id, /^\d{9}$/);
     assert.equal(c.districtId, id.slice(0, 6));
     assert.equal(c.peims.schoolYear, '2025-26');
-    assert.equal(c.peims.enrollment, null);
-    assert.equal(c.peims.percentages, null);
+    const totalRow = enrollmentSource.rows[id];
+    assert.ok(totalRow);
+    assert.equal(c.peims.enrollment, totalRow.status === 'published' ? totalRow.count : null);
+    assert.equal(c.peims.enrollmentStatus, totalRow.status);
+    if (totalRow.status === 'suppressed') assert.equal(c.peims.percentages, null);
     assert.equal(new URL(c.peims.source).hostname, 'rptsvr1.tea.texas.gov');
     assert.deepEqual(Object.keys(c.peims.counts).sort(), [...categories].sort());
     const cells = Object.values(c.peims.counts);
@@ -120,7 +124,7 @@ test('2026 official published ratings agree with catalog; 50 academic data profi
   assert.equal(batch.summary.newlyAcademicSourceVerified, 50);
   assert.equal(batch.summary.readyForUatAcademicProfiles, 50);
   assert.equal(batch.summary.awaiting2026ComponentsAndStaar, 0);
-  assert.equal(batch.summary.fullyAuditedProfiles, 0);
+  assert.equal(batch.summary.fullyAuditedProfiles, 1);
   assert.equal(batch.summary.official2026UnreportedAcademicComponents, 6);
 });
 
@@ -186,4 +190,68 @@ test('official campus report sentinel values and source-backed, noncausal analys
       assert.ok(c.analysis.improvementAreas.every(s => s.includes('% Meets')));
     }
   }
+});
+
+
+test('2025–26 official Campus Total denominators yield only published category percentages', () => {
+  const ids = Object.keys(enrollmentSource.rows).sort();
+  assert.deepEqual(ids, campusIds);
+  assert.equal(enrollmentSource.schoolYear, '2025-26');
+  const suppressed = [], complete = [];
+  let partial = 0;
+  for (const id of campusIds) {
+    const row = enrollmentSource.rows[id];
+    const c = batch.campuses[id];
+    const u = new URL(row.source);
+    assert.equal(u.hostname, 'rptsvr1.tea.texas.gov');
+    assert.equal(u.searchParams.get('endyear'), '26');
+    assert.equal(u.searchParams.get('key'), id.slice(0,6));
+    assert.equal(u.searchParams.get('grouping'), 'g');
+    assert.equal(u.searchParams.get('selsumm'), 'ic');
+    assert.equal(row.schoolYear, '2025-26');
+    assert.equal(c.peims.enrollmentSource, row.source);
+    if (row.status === 'suppressed') {
+      suppressed.push(id);
+      assert.match(row.publishedMask, /^<\d+$/);
+      assert.equal(c.peims.enrollment, null);
+      assert.equal(c.peims.enrollmentMask, row.publishedMask);
+      assert.equal(c.peims.partialPercentages, null);
+      assert.equal(c.peims.percentages, null);
+      continue;
+    }
+    assert.equal(row.status, 'published');
+    assert.ok(Number.isInteger(row.count) && row.count > 0);
+    assert.equal(c.peims.enrollment, row.count);
+    assert.equal(c.peims.enrollmentMask, null);
+    let known = 0;
+    let allPublished = true;
+    for (const category of categories) {
+      const cell = c.peims.counts[category];
+      const pct = c.peims.partialPercentages[category];
+      if (cell.status === 'published') {
+        known += cell.count;
+        assert.equal(pct, Math.round(cell.count * 1000 / row.count) / 10);
+      } else {
+        allPublished = false;
+        assert.equal(pct, null, id + ' ' + category + ' cannot disclose a masked share');
+      }
+    }
+    assert.ok(known <= row.count);
+    if (allPublished) {
+      assert.equal(known, row.count);
+      assert.deepEqual(c.peims.percentages, c.peims.partialPercentages);
+      complete.push(id);
+    } else {
+      assert.equal(c.peims.percentages, null);
+      partial++;
+    }
+  }
+  assert.deepEqual(suppressed, ['043901003','043907005','043907197']);
+  assert.deepEqual(complete, ['043901001']);
+  assert.equal(partial, 52);
+  assert.equal(batch.summary.published2025_26EnrollmentTotals, 53);
+  assert.equal(batch.summary.suppressed2025_26EnrollmentTotals, 3);
+  assert.equal(batch.summary.completeSevenCategoryPercentProfiles, 1);
+  assert.equal(batch.summary.partialPublishedPercentProfiles, 52);
+  assert.equal(batch.summary.fullyAuditedProfiles, 1);
 });
