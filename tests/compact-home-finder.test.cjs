@@ -35,6 +35,18 @@ test('Carrollton 75010 prioritizes LISD link as a navigation hint, not certified
  assert.equal(r.why,'도시·ZIP 기준 첫 확인 후보');
  assert.equal(model('123 Example Road, Carrollton, TX 75006',{status:'unavailable'}).likely,'CFB');
 });
+test('ambiguous Carrollton 75007 does not silently pick CFB for LISD households',()=>{
+ const hint=model('123 Synthetic Drive, Carrollton, TX 75007',{status:'unavailable'});
+ assert.equal(hint.likely,'');
+ assert.deepEqual(Array.from(hint.near),['CFB','LISD','057905']);
+ assert.match(hint.why,/학군을 선택|학군이 다를/);
+ const html=ctx.compactHomeFinderHtml('123 Synthetic Drive, Carrollton, TX 75007',{status:'unavailable'});
+ assert.match(html,/<option value="" selected>학군 선택<\/option>/);
+ assert.match(html,/id="homeFinderLaunch"[^>]*hidden/);
+ const supported=model('123 Synthetic Drive, Carrollton, TX 75007',{status:'finder-current',district:'LISD'});
+ assert.equal(supported.likely,'LISD');
+});
+
 test('single validated GIS district overrides city hint; conflicts never choose an ISD',()=>{
  assert.equal(model('123 Example Road, Carrollton, TX 75010',{status:'finder-current',district:'CFB'}).likely,'CFB');
  const r=model('123 Example Road, Carrollton, TX 75010',{status:'conflict',matches:[{district:'LISD'},{district:'CFB'}]});
