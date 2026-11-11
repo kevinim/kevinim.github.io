@@ -17,7 +17,7 @@ const zips = [
 const places = {'75093':'Plano','75024':'Plano','75025':'Plano','75035':'Frisco','75034':'Frisco','75057':'Lewisville','75067':'Lewisville','76247':'Northlake'};
 
 test('broad zoom renders only one label for each canonical city', () => {
-  for (const zoom of [7,9,10]) {
+  for (const zoom of [7,9,10,11]) {
     const labels = buildCandidates(zips, places, zoom, '75093');
     assert.deepEqual(labels.map(x=>x.name).sort(), ['Plano','Frisco','Lewisville','Northlake'].sort());
     assert.equal(labels.filter(x=>x.name==='Plano').length, 1);
@@ -28,7 +28,7 @@ test('broad zoom renders only one label for each canonical city', () => {
   }
 });
 test('middle zoom exposes existing directional ZIP descriptions without making up others', () => {
-  const labels = buildCandidates(zips, places, 11, '75093');
+  const labels = buildCandidates(zips, places, 12, '75093');
   assert.equal(labels.find(x=>x.zip==='75093').name, 'West Plano');
   assert.equal(labels.find(x=>x.zip==='75024').name, 'NW Plano');
   assert.equal(labels.find(x=>x.zip==='75035').name, 'East Frisco');
