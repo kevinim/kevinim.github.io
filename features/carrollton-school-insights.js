@@ -393,14 +393,22 @@
         else host.appendChild(panel);
       }
     }
-    if(rating && !document.querySelector('link[data-tea-carrollton-css]'))ensureStyles();
+    if(!document.querySelector('link[data-tea-carrollton-css]'))ensureStyles();
     mountInline(school,rating);
   }
   function boot() {
     const host=document.getElementById('detailContent');
     if(!host || typeof MutationObserver==='undefined')return;
+    const search=document.getElementById('schoolSearch');
+    if(search)search.placeholder='학교 이름 검색 (주변 학교·배정학교 검색 아님)';
     const observer=new MutationObserver(mount);
     observer.observe(host,{childList:true});
+    // Filters can rebuild the list without changing the selected-school detail.
+    const list=document.getElementById('schoolList');
+    if(list){
+      const listObserver=new MutationObserver(mount);
+      listObserver.observe(list,{childList:true,subtree:true});
+    }
     mount();
   }
   const api={
