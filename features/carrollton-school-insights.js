@@ -204,8 +204,6 @@
     const validGrade=['A','B','C','D','F'].includes(record.rating);
     const hasScore=validGrade && Number.isInteger(record.score) && record.score>=0 && record.score<=100;
     const rating=hasScore?record.rating+' · '+record.score+'점':record.rating==='Not Rated'?'미평가':'등급 정보 미확인';
-    // Do not present unsourced draft narratives as independently reviewed strengths.
-    // Only the two pilot records with verified numeric domains/subjects are reviewed.
     const reviewedCurated=!!curated && curated.evidenceStatus==='reviewed' &&
       validDomains(curated.domains) && curated.subjects &&
       Object.keys(curated.subjects).some(function(k){
@@ -263,6 +261,22 @@
       source.searchParams.get('selsumm')==='ic'&&
       source.searchParams.get('key')===code;
   }
+  // One official 2025–26 Statewide Campus Totals CSV also contains all cataloged
+  // DFW campuses; it is used where no district-specific source has been imported.
+  function validPeimsStatewideSource(url){
+    if(typeof url!=='string')return false;
+    let source;
+    try{source=new URL(url);}catch{return false;}
+    return source.origin==='https://rptsvr1.tea.texas.gov'&&
+      source.pathname==='/cgi/sas/broker'&&
+      source.searchParams.get('_program')==='adhoc.addispatch.sas'&&
+      source.searchParams.get('endyear')==='26'&&
+      source.searchParams.get('major')==='st'&&source.searchParams.get('minor')==='e'&&
+      source.searchParams.get('format')==='c'&&source.searchParams.get('grouping')==='e'&&
+      source.searchParams.get('selsumm')==='sc'&&
+      source.searchParams.get('loop')==='1'&&
+      (source.searchParams.get('key')||'')==='';
+  }
   function validPublishedCampus(id,entry) {
     if(!/^\d{9}$/.test(String(id||'')) || !entry || typeof entry!=='object')return false;
     const code=peimsDistrictCode(entry.district);
@@ -279,10 +293,9 @@
       return cell.status==='not-listed' && cell.count===undefined;
     });
   }
-  // TEA PEIMS ethnicity grouping reconciled against the *same* 2025–26
-  // TEA gender-grouping total in independent source audit PR #239 (23 ISDs).
-  // A seven-cell sum alone is NOT enough evidence to publish percentages.
-  // Campus IDs not in this independently audited snapshot stay counts-only.
+  // PR #239 independently reconciles five fully public 2025–26 TEA PEIMS
+  // ethnicity distributions against the same TEA PEIMS gender grouping total.
+  // No full percentages from unreviewed seven-cell sums.
   const AUDITED_PEIMS_TOTALS=Object.freeze({
     '043901001':5127,'057912046':753,'057912123':756,
     '061911001':2806,'061911007':2997
@@ -318,11 +331,15 @@
         for(const [district,url] of sourceEntries){
           if(!validPeimsSource(url,district))return;
         }
+        const statewide=file.statewideSource;
+        if(statewide && !validPeimsStatewideSource(statewide))return;
         for(const [district,url] of sourceEntries)
           PUBLIC_PEIMS_SOURCES[district]=url;
+        if(statewide)PUBLIC_PEIMS_SOURCES.__statewide=statewide;
         let accepted=0;
         for(const [id,item] of Object.entries(file.campuses)){
-          if(!validPublishedCampus(id,item) || !PUBLIC_PEIMS_SOURCES[item.district])continue;
+          if(!validPublishedCampus(id,item) ||
+             !(PUBLIC_PEIMS_SOURCES[item.district]||PUBLIC_PEIMS_SOURCES.__statewide))continue;
           PUBLIC_PEIMS_COUNTS[id]=item;accepted++;
         }
         if(accepted && typeof document!=='undefined'){
@@ -506,7 +523,9 @@
     if(published){
       notes.appendChild(textTag('p','tea-insights-meta','2025–26 인종별 학생 수: TEA PEIMS 공개 캠퍼스 집계 · 일부 항목 비공개/미표시.'));
       notes.appendChild(makeLink('TEA 공식 2025–26 학교별 집계 CSV',
-        PUBLIC_PEIMS_SOURCES[String(scoreRecord.district)]||'https://rptsvr1.tea.texas.gov/adhocrpt/adste.html'));
+        PUBLIC_PEIMS_SOURCES[String(scoreRecord.district)]||
+        PUBLIC_PEIMS_SOURCES.__statewide||
+        'https://rptsvr1.tea.texas.gov/adhocrpt/adste.html'));
     }
     if(demo){
       notes.appendChild(textTag('p','tea-insights-meta','학생 인종 구성: '+demo.year+' · '+demo.document+' · 등록 학생 '+demo.enrollment.toLocaleString('en-US')+'명'));
@@ -682,8 +701,9 @@
             ['학교별 기본 설명',info.profilePanelsConnected],
             ['개별 강점·개선과제 분석',info.individualNarratives],
             ['2026 영역별 평가점수',info.domainComponentsReviewed],
-            ['2025–26 공개 인종별 학생 수 (부분 자료)',info.public2025_26CampusCounts],
-            ['검증된 전체 인종 비율 (2024–25 포함)',info.ethnicityReviewed]
+            ['2025–26 공개 인종별 학생 수 (비공개 포함)',info.public2025_26CampusCounts],
+            ['2025–26 일곱 인종 전체 비율 확인',info.public2025_26CompleteShares],
+            ['과거 학년도 전체 인종 비율 확인',info.ethnicityReviewed]
           ].forEach(function(pair){
             const p=document.createElement('p');
             p.appendChild(textTag('strong','',pair[0]+' '+Number(pair[1]||0).toLocaleString('en-US')+' / '+count.toLocaleString('en-US')));
@@ -721,7 +741,7 @@
     rolloutPhase:function(district){return ROLLOUT[district]?.phase||4;},
     enrichedCampusCount:function(){return Object.keys(ENRICHED).length;},
     validDomains:validDomains,validPublishedCampus:validPublishedCampus,
-    validPeimsSource:validPeimsSource,
+    validPeimsSource:validPeimsSource,validPeimsStatewideSource:validPeimsStatewideSource,
     getPublishedCountRows:getPublishedCountRows,auditedPeimsTotal:auditedPeimsTotal
   };
   if(typeof module!=='undefined' && module.exports)module.exports=api;
