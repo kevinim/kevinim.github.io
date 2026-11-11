@@ -231,7 +231,7 @@
   let publicPeimsStarted=false;
   const PEIMS_SOURCE_PREFIX='https://rptsvr1.tea.texas.gov/cgi/sas/broker';
   function validPublishedCampus(id,entry) {
-    if(!/^\\d{9}$/.test(String(id||'')) || !entry || typeof entry!=='object')return false;
+    if(!/^\d{9}$/.test(String(id||'')) || !entry || typeof entry!=='object')return false;
     if(!['CFB','LISD'].includes(entry.district))return false;
     if(!String(id).startsWith(entry.district==='CFB'?'057903':'061902'))return false;
     if(typeof entry.name!=='string'||entry.name.length<1||entry.name.length>200||!entry.counts)return false;
@@ -242,7 +242,7 @@
       const cell=entry.counts[key];
       if(!cell || typeof cell!=='object')return false;
       if(cell.status==='published')return Number.isSafeInteger(cell.count)&&cell.count>=0;
-      if(cell.status==='suppressed')return typeof cell.publishedMask==='string'&&/^(?:<\\d+|-999|N\\/A)$/.test(cell.publishedMask)&&cell.count===undefined;
+      if(cell.status==='suppressed')return typeof cell.publishedMask==='string'&&/^(?:<\d+|-999|N\/A)$/.test(cell.publishedMask)&&cell.count===undefined;
       return cell.status==='not-listed' && cell.count===undefined;
     });
   }
