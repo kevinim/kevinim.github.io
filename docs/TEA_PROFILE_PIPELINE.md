@@ -45,6 +45,25 @@ The dashboard loads the aggregate JSON from the same origin only when inspecting
 
 **Next:** obtain and validate analogous official campus-level PEIMS 2025–26 aggregates for Allen (23), McKinney (33), and remaining DFW districts; retain suppression statuses. For complete share charts, seek separately published TEA School Report Cards/TAPR for a matching school year rather than inferring any protected data.
 
+## Immediate expansion · 2025–26 official Allen, McKinney, Frisco and Plano enrollment (2026-11-11)
+
+An additional **201** exact-campus-ID official TEA public PEIMS ethnicity-count profiles were retrieved and validated *now*, using the same 2025–26 selected-campus district CSV contract. The same-origin data file `data/tea-ethnicity-2025-26-priority.json` now contains **293 of 2,282 DFW-area campuses (12.84%)**, across six districts:
+
+| TEA district code | District | 2025–26 schools linked | Official campus aggregate CSV |
+|---|---|---:|---|
+| 057903 | Carrollton-Farmers Branch | 35 | Existing CFB link above |
+| 061902 | Lewisville | 57 | Existing Lewisville link above |
+| 043901 | Allen ISD | 23 | [TEA public CSV](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0) |
+| 043907 | McKinney ISD | 33 | [TEA public CSV](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0) |
+| 043905 | Frisco ISD | 76 | [TEA public CSV](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043905&_debug=0) |
+| 043910 | Plano ISD | 69 | [TEA public CSV](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043910&_debug=0) |
+
+**Verified dataset totals:** 293 school IDs, 2,051 possible cells, **1,260 exact public counts, 546 TEA-suppressed cells and 245 unlisted cells**. Every ID joins a TEA 2026 inventory campus in its same district; no individual student records are retrieved or stored. Six-group / seven-group percentages are never inferred where any ethnicity is suppressed or omitted.
+
+**One current-year exception:** Allen High School (`043901001`) has all seven group counts published for 2025–26. Their sum is 5,127 students and its 1,426 Asian students are **27.8%** of the full seven publicly reported categories. Display this 2025–26 percentage only for this complete-data campus. Its separately sourced 2024–25 historical profile is still a distinct year (5,206 students), not mixed into any calculation. No other current-year campus has seven complete published categories in this six-district batch.
+
+Display rules: show all seven categories as student counts with explicit `비공개 (<N)` or `원본 미표시` for non-public values; current-year percentages are allowed only when all seven categories are public in the *same* campus report. Preserve existing historical charts/links with their original year. Verify updated progress snapshot and desktop/mobile school selection for Allen and McKinney on the exact PR head. **UAT only; no production merge without explicit approval.**
+
 ## Importing an official verified batch
 
 The native TEA export may use different column names by report/year. Before ingestion, inspect TEA's associated data dictionary and explicitly transpose **aggregated campus rows only** into these normalized CSV headers. Do not assume any file's column names.
