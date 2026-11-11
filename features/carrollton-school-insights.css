@@ -60,7 +60,7 @@ html[data-theme="dark"] .tea-insights-empty,
 html[data-theme="dark"] .tea-insights-provenance-summary{color:#c2d0e4}
 @media(prefers-reduced-motion:reduce){.tea-insights-panel *{scroll-behavior:auto}}
 @media(forced-colors:active){
- .tea-insights-fact{border-color:CanvasText;color:Canvas;background:Canvas}
+ .tea-insights-fact{border-color:CanvasText;color:CanvasText;background:Canvas}
  .tea-insights-fact-label{text-decoration:underline}
  .tea-insights-provenance-summary{color:CanvasText}
 }
