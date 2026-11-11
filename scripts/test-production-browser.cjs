@@ -61,7 +61,7 @@ mkdirSync(dir,{recursive:true});
   await page.locator('#nfhlEnabled').check();
   // A broad NFHL request must be refused, regardless of previous school zoom.
   await page.waitForFunction(()=>document.getElementById('nfhlStatus')?.textContent?.includes('줌 14'),null,{timeout:15000});
-  await page.evaluate(()=>map.setView([32.778,-96.813],15));
+  await page.evaluate(()=>{map.setView([32.778,-96.813],15);});
   let liveNFHL=false, count=0;
   result.nfhlObservations=[];
   // The remote FEMA map service can be intermittently unavailable even if
