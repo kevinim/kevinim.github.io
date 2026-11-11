@@ -19,10 +19,15 @@
   This is direct official Finder UI evidence, not reconstructed polygon proof.
 - Existing #208 current Finder browser observation: **2 public properties**,
   elementary **2/2**, middle **2/2**, high **2/2** (six grade results).
-- AG 04 has now added a **separately implemented real Chromium Finder verifier**
-  (`scripts/cfb-independent-live-finder.cjs`), wired to free PR CI.
-  Its fresh independent run should be interpreted from that job's evidence,
-  not assumed successful until the live job has completed.
+- AG 04 **independently reverified both** known public test properties using
+  separately implemented real Chromium Finder QA in successful run
+  **#42928190021** at 2026-11-11 00:03 UTC (Nov 10 US Eastern):
+  exact native autocomplete **2/2**, Finder match **2/2**,
+  elementary **2/2**, middle **2/2**, high **2/2**, with zero mismatches
+  and zero current-case warnings. The first two independent runs each
+  had transient third-party UI timeouts; a single bounded reload/retry
+  makes those states explicit instead of calling them a school mismatch.
+  Run logs/artifacts are redacted and contain no property addresses.
 - **Independent school-zone geometry comparisons: 0**, because AG03 polygons
   are unverified. Geometry PASS **0**, FAIL **0**, and boundary-adjacent failure
   list **not yet measurable**. Geometry accuracy is **undefined**.
@@ -159,3 +164,21 @@ contains `TWO_EXISTING_PUBLIC_FINDER_FIXTURES_RECONFIRMED`, `found:2`,
 test is distinct from PR #208's previous code and reads no private API.
 This correction does **not** imply that apartment unit assignments or any
 E/M/H zone polygon have been certified.
+
+## AG04 independent live QA final evidence
+
+- [Successful AG04 real Chromium run 42928190021](https://github.com/kevinim/kevinim.github.io/actions/runs/42928190021)
+- Independent result: **2/2 exact native address selections, 2/2 known
+  public-property Finder school lists reverified**. Grade outcomes:
+  E **2 PASS, 0 FAIL, 0 WARNING**; M **2/0/0**; H **2/0/0**.
+- Earlier independent runs had third-party page-rendering / Assigned school
+  timeouts rather than name mismatches. Latest run succeeded without retry:
+  each sample had `attemptCount=1`.
+- Latest observed success is against previously published *public* samples,
+  not a boundary-adjacent cross-year polygon accuracy estimate. The empty
+  geometry verification denominator remains **0**.
+- AG03 draft [PR #212](https://github.com/kevinim/kevinim.github.io/pull/212)
+  real reconstruction log [run 42927736700](https://github.com/kevinim/kevinim.github.io/actions/runs/42927736700):
+  elementary **33 draft fragments, 0 named/verified zones**;
+  middle **0 draft geographic fragments** and high **0**, due absent AG02
+  calibration. No per-school PIP certification possible with these artifacts.
