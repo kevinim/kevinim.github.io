@@ -1,0 +1,27 @@
+/* Carrollton TEA school detail pilot: independent of map/assignment layers. */
+.tea-insights-panel{margin:16px 0;padding:13px;border:1px solid var(--line,#dce5f2);border-radius:10px;background:rgba(122,150,193,.08);min-width:0}
+.tea-insights-panel .tea-insights-title{font-size:13px;margin:0 0 5px;font-weight:800;line-height:1.45}
+.tea-insights-panel .tea-insights-subtitle{font-size:12px;margin:14px 0 4px;font-weight:750}
+.tea-insights-panel .tea-insights-meta{font-size:10px;line-height:1.5;color:var(--sub,#64748b);margin:5px 0}
+.tea-insights-panel .tea-insights-summary{font-weight:700;font-size:12px;line-height:1.6;margin:12px 0}
+.tea-insights-facts{display:grid;gap:7px;margin:10px 0}
+.tea-insights-facts p{margin:0;font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+.tea-insights-facts strong{font-weight:800}
+.tea-insights-domains{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:13px 0}
+.tea-insights-domains>div{padding:7px 4px;text-align:center;border-radius:7px;border:1px solid var(--line,#dce5f2);background:rgba(128,153,184,.11)}
+.tea-insights-domains dt{font-size:10px;line-height:1.3;color:var(--sub,#64748b)}
+.tea-insights-domains dd{margin:3px 0 0;font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+.tea-insights-subjects{font-size:10.5px;line-height:1.6;overflow-wrap:anywhere}
+.tea-insights-figure{margin:8px 0 10px}
+.tea-insights-stack{width:100%;height:15px;display:flex;overflow:hidden;border-radius:6px;background:#bdc8d7}
+.tea-insights-segment{height:100%;display:block;flex:0 0 auto}
+.tea-insights-segment+.tea-insights-segment{border-left:1px solid rgba(255,255,255,.4)}
+.tea-insights-legend{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));list-style:none;margin:9px 0 4px;padding:0;gap:7px 8px}
+.tea-insights-legend li{display:flex;align-items:baseline;gap:5px;font-size:10px;line-height:1.4;min-width:0;overflow-wrap:anywhere}
+.tea-insights-swatch{width:9px;height:9px;display:inline-block;flex:none;border-radius:2px}
+.tea-insights-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+.tea-insights-link{display:inline-block;font-size:10.5px;font-weight:700;text-decoration:underline;text-underline-offset:2px;overflow-wrap:anywhere}
+.tea-insights-link:focus-visible{outline:2px solid #6495ed;outline-offset:3px}
+.tea-insights-missing{font-size:11px;line-height:1.5;margin:12px 0 5px;color:var(--sub,#64748b)}
+@media(max-width:420px){.tea-insights-panel{padding:10px}.tea-insights-legend{grid-template-columns:1fr 1fr}}
+@media(forced-colors:active){.tea-insights-segment{border:1px solid CanvasText}.tea-insights-swatch{border:1px solid CanvasText}}
