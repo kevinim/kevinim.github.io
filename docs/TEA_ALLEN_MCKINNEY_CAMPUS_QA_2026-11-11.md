@@ -58,4 +58,23 @@ All modifications remain limited to isolated Allen/McKinney JSON source and norm
 
 CI runs the standalone TEA checks and existing pipeline checks. The source-to-joined report parity, 9-digit Campus ID, official 2026 URL parameters, score ranges, paired campuses, unavailable data, and 2025–26 privacy masks are validated in the dedicated suite.
 
-**Next step:** consume this isolated data on a UAT dashboard via exact Campus IDs, display 50 fully published academic profiles plus clear paired/Not Rated states for the other six, then validate desktop/mobile/dark mode and regression. This branch has not been merged to main or deployed to production.
+## Dashboard UI integration in this branch
+
+The existing school-click module, features/carrollton-school-insights.js, now lazy-loads the isolated combined dataset on selecting an Allen or McKinney school. It rejects incomplete snapshots, invalid 2026 TEA campus/report URLs and 2025–26 PEIMS masking violations. School record joins use only the exact existing 9-digit campus ID; no school assignment, ZIP, geocoder, map marker, boundary or district official Finder logic was changed.
+
+- Existing detailContent school panel displays 2026 scaled domains and reported All Students STAAR percentages.
+- Selected school list item shows the inline school profile, academic strengths and improvement focus.
+- Published demographic headcounts and safe 2025–26 partial percentages appear for all 53 campuses with publicly released denominators. Null percentages for masked/unlisted cells are labeled "비공개"/"미제공".
+- Allen High School (all seven categories published) has a fully valid seven-group chart. Other partial campuses **do not show a misleading 100% race chart**, but do show seven individually labeled public/masked/unlisted rows.
+- Two official paired schools show their overall grade alongside "연계 평가 / 개별 성적 미제공"; four Not Rated campuses are not converted to F/zero.
+- Official TEA source links, current school year, school enrollment denominators and limitations are shown.
+- The preexisting CFB/Lewisville 2024–25 profiles, address assignment/zone warnings, GIS overlays and non-target DFW campuses remain unchanged.
+- Cache-busted school insight JS/CSS assets ensure browsers load the new version.
+
+UAT checks:
+1. tests/allen-mckinney-tea-ui.test.cjs covers exact join, 50/6 reporting status, 53 published enrollment denominators, seven category labels and privacy handling, malicious URL rejection and lightweight DOM rendering.
+2. tests/tea-allen-mckinney-campus-qa.test.cjs verifies full official TEA report provenance.
+3. scripts/test-carrollton-tea-insights-browser.cjs covers 1280px desktop and 390px mobile school clicks with CFB/LISD regression as well as Allen/McKinney 2025–26 public/partial composition, with screenshot artifacts.
+4. Dedicated non-deploy GitHub Actions and full repository PR workflows are required to pass at final head.
+
+**Release:** Source + UI is implemented in PR #237 and intended for UAT review. The branch has not been merged to main and is not a Production deployment.
