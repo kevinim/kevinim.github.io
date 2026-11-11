@@ -56,7 +56,7 @@ mkdirSync(dir,{recursive:true});
   assert.equal(await page.locator('#zipOverlay').isChecked(),true);
   // The preceding Frisco school click can zoom live Pages to >=14. Explicitly
   // restore a broad viewport before testing the mandatory wide-area NFHL gate.
-  await page.evaluate(()=>map.setView([33.02,-96.82],10,{animate:false}));
+  await page.evaluate(()=>{map.setView([33.02,-96.82],10,{animate:false});});
   await page.waitForFunction(()=>map.getZoom()<=11,null,{timeout:12000});
   await page.locator('#nfhlEnabled').check();
   // A broad NFHL request must be refused, regardless of previous school zoom.
