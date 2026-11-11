@@ -1,0 +1,26 @@
+/* First-fold UX: non-destructive, mobile-only visual ordering.
+   Existing IDs, form interactions, school release policy, and map sources stay intact. */
+.home-privacy-disclosure{margin:6px 0 10px;border:1px solid var(--border,#cbd5e1);border-radius:8px;padding:6px 10px}
+.home-privacy-disclosure>summary{cursor:pointer;font-size:12px;font-weight:650;line-height:1.45}
+.home-privacy-disclosure>.source{margin:8px 0 3px;line-height:1.55}
+.home-privacy-disclosure>summary:focus-visible{outline:2px solid #7fa4ef;outline-offset:3px}
+@media(max-width:720px){
+  /* Use CSS order rather than DOM reparenting to keep all existing event listeners. */
+  .shell{display:flex;flex-direction:column}
+  .shell>.heading{order:1}
+  .shell>.kpis{order:2}
+  .shell>.controls-grid{display:contents}
+  .shell>.controls-grid>.home-controls{order:3;width:100%;height:auto}
+  .shell>.main{order:4;display:flex;flex-direction:column;gap:12px;min-width:0}
+  .shell>.candidate-panel{order:5;width:100%}
+  .shell>.controls-grid>.office-controls{order:6;width:100%;height:auto}
+  .shell>.footer{order:7}
+  /* .mapcol is display:contents in the existing mobile layout. Order real boxes. */
+  .main>.mapcol{display:contents}
+  .main>.mapcol>.mapbox{order:1;width:100%;min-width:0}
+  .main>.mapcol>.zip-insights{order:2;width:100%;min-width:0}
+  .main>.detail{order:3;width:100%;min-width:0}
+  .main>.filter-panel{order:4;width:100%;min-width:0}
+  .main>.section{order:5;width:100%;min-width:0}
+  #homePrivacy{font-size:11px;line-height:1.45}
+}
