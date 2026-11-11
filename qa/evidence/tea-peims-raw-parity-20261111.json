@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "role": "Independent TEA Data Quality / Security QA Lead",
+  "auditDate": "2026-11-11",
+  "schoolYear": "2025-26",
+  "auditedPR": 238,
+  "auditedHeadSha": "794309314de540d06166b41c602bf546a48994d8",
+  "source": "TEA PEIMS Student Enrollment Reports — publicly aggregated selected campus totals, grouped by Ethnicity, 2025-26, CSV",
+  "method": "Independent live official CSV fetch, exact row-by-row campus ID / category / count / original <N mask comparison against staged PR head; missing original rows must remain not-listed; duplicate category and invalid raw shapes rejected.",
+  "verifiedCampuses": 371,
+  "verifiedSourceRows": 2290,
+  "discrepancies": 0,
+  "cohorts": [
+    {
+      "alias": "CFB",
+      "districtId": "057903",
+      "campuses": 35,
+      "sourceRows": 203,
+      "csvFilename": "CFB.csv",
+      "sourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=057903&_debug=0"
+    },
+    {
+      "alias": "LISD",
+      "districtId": "061902",
+      "campuses": 57,
+      "sourceRows": 370,
+      "csvFilename": "LISD.csv",
+      "sourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=061902&_debug=0"
+    },
+    {
+      "alias": "AISD",
+      "districtId": "043901",
+      "campuses": 23,
+      "sourceRows": 148,
+      "csvFilename": "AISD.csv",
+      "sourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0"
+    },
+    {
+      "alias": "043907",
+      "districtId": "043907",
+      "campuses": 33,
+      "sourceRows": 194,
+      "csvFilename": "043907.csv",
+      "sourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0"
+    },
+    {
+      "alias": "FISD",
+      "districtId": "043905",
+      "campuses": 76,
+      "sourceRows": 473,
+      "csvFilename": "FISD.csv",
+      "sourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043905&_debug=0"
+    },
+    {
+      "alias": "PISD",
+      "districtId": "043910",
+      "campuses": 69,
+      "sourceRows": 418,
+      "csvFilename": "PISD.csv",
+      "sourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043910&_debug=0"
+    },
+    {
+      "alias": "PROSPER",
+      "districtId": "043912",
+      "campuses": 32,
+      "sourceRows": 200,
+      "csvFilename": "PROSPER.csv",
+      "sourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043912&_debug=0"
+    },
+    {
+      "alias": "061901",
+      "districtId": "061901",
+      "campuses": 46,
+      "sourceRows": 284,
+      "csvFilename": "061901.csv",
+      "sourceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=061901&_debug=0"
+    }
+  ],
+  "limitations": [
+    "Evidence is tied to immutable PR #238 SHA; later branches may change those values and need rerun",
+    "No row-level original CSV copies are committed; the offline script permits a reproducible rerun with separately downloaded public aggregates",
+    "This does not independently reconcile campus enrollment denominators, current-year full race percentages, TEA academic domain scores, STAAR rows, new/closed campuses, browser UX or residential attendance assignments",
+    "323 additional campus identities in #238 (Irving, Richardson, Dallas) and later #245 source cohorts were not covered in this audit; no PASS claimed for them",
+    "Only public campus aggregate values; never collect individual-student records, private addresses, or infer suppressed cell counts"
+  ]
+}

@@ -1,0 +1,25 @@
+name: Independent TEA campus locality exception QA (no deploy)
+on:
+  pull_request:
+    paths:
+      - 'qa/tea-campus-locality-evidence.cjs'
+      - 'qa/evidence/tea-dfw-locality-exceptions-20261111.json'
+      - 'tests/qa-tea-campus-locality.test.cjs'
+      - '.github/workflows/qa-tea-campus-locality.yml'
+      - 'docs/QA_TEA_DFW_CAMPUS_LOCALITY_20261111.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-locality-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+      - run: node --check qa/tea-campus-locality-evidence.cjs
+      - run: node --test tests/qa-tea-campus-locality.test.cjs
