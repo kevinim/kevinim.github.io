@@ -1,0 +1,3796 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-11-11",
+  "schoolYear": "2025-26",
+  "accountabilityYear": 2026,
+  "scope": [
+    "043901",
+    "043907"
+  ],
+  "sources": {
+    "peims": {
+      "ALLEN": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+      "MCKINNEY": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0"
+    },
+    "accountabilityCatalog": "tea-ratings-2026.json",
+    "componentPortal": "https://rptsvr1.tea.texas.gov/perfreport/account/acct_download?year=2026"
+  },
+  "provenance": "Official TEA Student Enrollment Reports CSV, by district ID, grouped ethnicity; campus score/rating carried over from existing repository inventory but NOT independently crosschecked in this batch.",
+  "privacyPolicy": "Published exact counts are preserved; <N suppressions and unlisted cells are unavailable, never zero, never back-calculated. Percentages and total enrollments withheld when not independently published. No student-level data.",
+  "summary": {
+    "scope": 56,
+    "allen": 23,
+    "mckinney": 33,
+    "sourceCampuses": 56,
+    "publishedCells": 240,
+    "suppressedCells": 102,
+    "notListedCells": 50,
+    "sevenPublishedCampuses": 1,
+    "partiallyPublishedCampuses": 55,
+    "campusesWithSuppressedCells": 49,
+    "campusesWithUnlistedCells": 32,
+    "existingCatalogNotRated": 4,
+    "fullyAuditedProfiles": 0,
+    "awaiting2026ComponentsAndStaar": 56
+  },
+  "campuses": {
+    "043901001": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "Allen High School",
+      "sourceCampusName": "ALLEN H S",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 90,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901001&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 699
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 803
+          },
+          "white": {
+            "status": "published",
+            "count": 1900
+          },
+          "native": {
+            "status": "published",
+            "count": 25
+          },
+          "asian": {
+            "status": "published",
+            "count": 1426
+          },
+          "pacific": {
+            "status": "published",
+            "count": 11
+          },
+          "multi": {
+            "status": "published",
+            "count": 263
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901002": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "Lowery Freshman Center",
+      "sourceCampusName": "LOWERY FRESHMAN CENTER",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 94,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901002&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 228
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 279
+          },
+          "white": {
+            "status": "published",
+            "count": 580
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 477
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 90
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901003": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "COLLIN CO J J A E P",
+      "sourceCampusName": "COLLIN CO J J A E P",
+      "accountability": {
+        "year": 2026,
+        "rating": "Not Rated",
+        "score": null,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901003&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "hispanic": {
+            "status": "not-listed"
+          },
+          "white": {
+            "status": "not-listed"
+          },
+          "native": {
+            "status": "not-listed"
+          },
+          "asian": {
+            "status": "not-listed"
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901042": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "W E Pete Ford Middle School",
+      "sourceCampusName": "W E PETE FORD MIDDLE",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 91,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901042&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 115
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 167
+          },
+          "white": {
+            "status": "published",
+            "count": 267
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 109
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 51
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901043": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "Walter & Lois Curtis Middle School",
+      "sourceCampusName": "WALTER & LOIS CURTIS MIDDLE",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 94,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901043&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 145
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 195
+          },
+          "white": {
+            "status": "published",
+            "count": 452
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 440
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 74
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901044": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "Ereckson Middle School",
+      "sourceCampusName": "ERECKSON MIDDLE",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 94,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901044&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 126
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 177
+          },
+          "white": {
+            "status": "published",
+            "count": 375
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 459
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 52
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901102": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "ALTON BOYD EL",
+      "sourceCampusName": "ALTON BOYD EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 86,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901102&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 122
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 100
+          },
+          "white": {
+            "status": "published",
+            "count": 101
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "suppressed",
+            "publishedMask": "<40"
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 36
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901104": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "GENE M REED EL",
+      "sourceCampusName": "GENE M REED EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 81,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901104&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 71
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 119
+          },
+          "white": {
+            "status": "published",
+            "count": 177
+          },
+          "native": {
+            "status": "not-listed"
+          },
+          "asian": {
+            "status": "published",
+            "count": 37
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "suppressed",
+            "publishedMask": "<30"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901105": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "ALVIS C STORY EL",
+      "sourceCampusName": "ALVIS C STORY EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "C",
+        "score": 70,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901105&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 84
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 154
+          },
+          "white": {
+            "status": "published",
+            "count": 160
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "suppressed",
+            "publishedMask": "<50"
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "published",
+            "count": 46
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901106": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "MAX O VAUGHAN EL",
+      "sourceCampusName": "MAX O VAUGHAN EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 89,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901106&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 51
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 86
+          },
+          "white": {
+            "status": "published",
+            "count": 232
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 217
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 52
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901107": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "Flossie Floyd Green Elementary School",
+      "sourceCampusName": "FLOSSIE FLOYD GREEN EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 90,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901107&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 62
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 83
+          },
+          "white": {
+            "status": "published",
+            "count": 212
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 110
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "suppressed",
+            "publishedMask": "<40"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901108": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "Frances E Norton Elementary School",
+      "sourceCampusName": "FRANCES E NORTON EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 93,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901108&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "suppressed",
+            "publishedMask": "<50"
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 54
+          },
+          "white": {
+            "status": "published",
+            "count": 213
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 233
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "published",
+            "count": 47
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901110": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "BOLIN EL",
+      "sourceCampusName": "BOLIN EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 88,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901110&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 85
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 75
+          },
+          "white": {
+            "status": "published",
+            "count": 222
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 123
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 34
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901111": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "Kerr Elementary School",
+      "sourceCampusName": "KERR EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 90,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901111&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 76
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 92
+          },
+          "white": {
+            "status": "published",
+            "count": 144
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 250
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 49
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901112": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "JAMES AND MARGIE MARION EL",
+      "sourceCampusName": "JAMES AND MARGIE MARION EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 87,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901112&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 96
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 99
+          },
+          "white": {
+            "status": "published",
+            "count": 218
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 186
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 45
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901113": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "Dr. E T Boon Elementary School",
+      "sourceCampusName": "DR E T BOON EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 93,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901113&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 46
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 75
+          },
+          "white": {
+            "status": "published",
+            "count": 241
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 360
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "suppressed",
+            "publishedMask": "<40"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901114": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "CARLENA CHANDLER EL",
+      "sourceCampusName": "CARLENA CHANDLER EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 87,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901114&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 70
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 306
+          },
+          "white": {
+            "status": "published",
+            "count": 173
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 106
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "suppressed",
+            "publishedMask": "<30"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901115": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "Mary Evans Elementary School",
+      "sourceCampusName": "MARY EVANS EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 94,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901115&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 41
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 56
+          },
+          "white": {
+            "status": "published",
+            "count": 136
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 282
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "suppressed",
+            "publishedMask": "<40"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901116": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "DAVID AND LYNDA OLSON EL",
+      "sourceCampusName": "DAVID AND LYNDA OLSON EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 89,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901116&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 68
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 127
+          },
+          "white": {
+            "status": "published",
+            "count": 295
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 117
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 65
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901117": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "Beverly Cheatham Elementary School",
+      "sourceCampusName": "BEVERLY CHEATHAM EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 93,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901117&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 65
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 76
+          },
+          "white": {
+            "status": "published",
+            "count": 186
+          },
+          "native": {
+            "status": "published",
+            "count": 11
+          },
+          "asian": {
+            "status": "published",
+            "count": 327
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "published",
+            "count": 31
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901118": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "Lois Lindsey Elementary School",
+      "sourceCampusName": "LOIS LINDSEY EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 91,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901118&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 88
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 103
+          },
+          "white": {
+            "status": "published",
+            "count": 142
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 390
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 47
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901119": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "Jenny Preston Elementary School",
+      "sourceCampusName": "JENNY PRESTON EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 93,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901119&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 65
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 68
+          },
+          "white": {
+            "status": "published",
+            "count": 193
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 276
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 38
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043901201": {
+      "district": "ALLEN",
+      "districtId": "043901",
+      "name": "George J Anderson Early Childhood School",
+      "sourceCampusName": "GEORGE J ANDERSON EARLY CHILDHOOD SCHOOL",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 90,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043901201&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 70
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 93
+          },
+          "white": {
+            "status": "published",
+            "count": 93
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 133
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "suppressed",
+            "publishedMask": "<20"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907002": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "MCKINNEY H S",
+      "sourceCampusName": "MCKINNEY H S",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 93,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907002&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 459
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 866
+          },
+          "white": {
+            "status": "published",
+            "count": 951
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<20"
+          },
+          "asian": {
+            "status": "published",
+            "count": 135
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 100
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907004": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "MCKINNEY NORTH H S",
+      "sourceCampusName": "MCKINNEY NORTH H S",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 94,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907004&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 573
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 634
+          },
+          "white": {
+            "status": "published",
+            "count": 922
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 271
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 140
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907005": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "SERENITY HIGH",
+      "sourceCampusName": "SERENITY HIGH",
+      "accountability": {
+        "year": 2026,
+        "rating": "Not Rated",
+        "score": null,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907005&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "hispanic": {
+            "status": "not-listed"
+          },
+          "white": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "native": {
+            "status": "not-listed"
+          },
+          "asian": {
+            "status": "not-listed"
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "not-listed"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907006": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "COUNTY RESIDENTIAL CENTER",
+      "sourceCampusName": "COUNTY RESIDENTIAL CENTER",
+      "accountability": {
+        "year": 2026,
+        "rating": "Not Rated",
+        "score": null,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907006&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 31
+          },
+          "hispanic": {
+            "status": "suppressed",
+            "publishedMask": "<40"
+          },
+          "white": {
+            "status": "suppressed",
+            "publishedMask": "<40"
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "not-listed"
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907007": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "MCKINNEY BOYD H S",
+      "sourceCampusName": "MCKINNEY BOYD H S",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 94,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907007&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 321
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 612
+          },
+          "white": {
+            "status": "published",
+            "count": 1324
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 227
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 102
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907041": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "FAUBION MIDDLE",
+      "sourceCampusName": "FAUBION MIDDLE",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 89,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907041&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 179
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 433
+          },
+          "white": {
+            "status": "published",
+            "count": 388
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 33
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 65
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907043": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "DOWELL MIDDLE",
+      "sourceCampusName": "DOWELL MIDDLE",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 90,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907043&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 106
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 241
+          },
+          "white": {
+            "status": "published",
+            "count": 529
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 53
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "suppressed",
+            "publishedMask": "<50"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907044": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "SCOTT MORGAN JOHNSON MIDDLE",
+      "sourceCampusName": "SCOTT MORGAN JOHNSON MIDDLE",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 87,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907044&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 355
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 391
+          },
+          "white": {
+            "status": "published",
+            "count": 307
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 146
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 99
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907045": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "LEONARD EVANS JR MIDDLE",
+      "sourceCampusName": "LEONARD EVANS JR MIDDLE",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 83,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907045&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 132
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 204
+          },
+          "white": {
+            "status": "published",
+            "count": 316
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 42
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 33
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907046": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "DR JACK COCKRILL MIDDLE",
+      "sourceCampusName": "DR JACK COCKRILL MIDDLE",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 92,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907046&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 153
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 222
+          },
+          "white": {
+            "status": "published",
+            "count": 537
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 190
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "suppressed",
+            "publishedMask": "<70"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907102": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "FINCH EL",
+      "sourceCampusName": "FINCH EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "D",
+        "score": 66,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907102&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 71
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 161
+          },
+          "white": {
+            "status": "published",
+            "count": 69
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "published",
+            "count": 13
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907104": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "WEBB EL",
+      "sourceCampusName": "WEBB EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "F",
+        "score": 57,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907104&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 121
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 237
+          },
+          "white": {
+            "status": "published",
+            "count": 95
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 42
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 24
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907105": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "BURKS EL",
+      "sourceCampusName": "BURKS EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "C",
+        "score": 75,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907105&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 55
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 265
+          },
+          "white": {
+            "status": "published",
+            "count": 61
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "published",
+            "count": 20
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907107": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "CALDWELL EL",
+      "sourceCampusName": "CALDWELL EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "D",
+        "score": 69,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907107&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 15
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 359
+          },
+          "white": {
+            "status": "published",
+            "count": 58
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "not-listed"
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907108": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "VALLEY CREEK EL",
+      "sourceCampusName": "VALLEY CREEK EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 80,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907108&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 108
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 87
+          },
+          "white": {
+            "status": "published",
+            "count": 265
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "suppressed",
+            "publishedMask": "<30"
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "published",
+            "count": 40
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907109": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "GLEN OAKS EL",
+      "sourceCampusName": "GLEN OAKS EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 89,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907109&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 25
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 68
+          },
+          "white": {
+            "status": "published",
+            "count": 317
+          },
+          "native": {
+            "status": "not-listed"
+          },
+          "asian": {
+            "status": "published",
+            "count": 24
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "published",
+            "count": 40
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907111": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "SLAUGHTER EL",
+      "sourceCampusName": "SLAUGHTER EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "C",
+        "score": 73,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907111&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 116
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 224
+          },
+          "white": {
+            "status": "published",
+            "count": 139
+          },
+          "native": {
+            "status": "not-listed"
+          },
+          "asian": {
+            "status": "suppressed",
+            "publishedMask": "<50"
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 40
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907112": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "REUBEN JOHNSON EL",
+      "sourceCampusName": "REUBEN JOHNSON EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "C",
+        "score": 77,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907112&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 42
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 69
+          },
+          "white": {
+            "status": "published",
+            "count": 190
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 39
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "suppressed",
+            "publishedMask": "<30"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907113": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "C T EDDINS EL",
+      "sourceCampusName": "C T EDDINS EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 91,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907113&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 25
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 70
+          },
+          "white": {
+            "status": "published",
+            "count": 234
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 21
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 31
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907115": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "ROY LEE WALKER EL",
+      "sourceCampusName": "ROY LEE WALKER EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 94,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907115&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "suppressed",
+            "publishedMask": "<30"
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 63
+          },
+          "white": {
+            "status": "published",
+            "count": 218
+          },
+          "native": {
+            "status": "not-listed"
+          },
+          "asian": {
+            "status": "published",
+            "count": 34
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 51
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907116": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "EARL & LOTTIE WOLFORD EL",
+      "sourceCampusName": "EARL & LOTTIE WOLFORD EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 92,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907116&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 54
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 71
+          },
+          "white": {
+            "status": "published",
+            "count": 229
+          },
+          "native": {
+            "status": "not-listed"
+          },
+          "asian": {
+            "status": "published",
+            "count": 29
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "published",
+            "count": 39
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907117": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "ARTHUR H MCNEIL EL",
+      "sourceCampusName": "ARTHUR H MCNEIL EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "C",
+        "score": 71,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907117&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 91
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 65
+          },
+          "white": {
+            "status": "published",
+            "count": 97
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "suppressed",
+            "publishedMask": "<20"
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "published",
+            "count": 32
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907118": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "ALBERT & IOLA LEE DAVIS MALVERN EL",
+      "sourceCampusName": "ALBERT & IOLA LEE DAVIS MALVERN EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "C",
+        "score": 70,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907118&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 101
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 232
+          },
+          "white": {
+            "status": "published",
+            "count": 57
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "suppressed",
+            "publishedMask": "<20"
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "published",
+            "count": 29
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907119": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "JOSE DE JESUS AND MARIA LUISA VEGA EL",
+      "sourceCampusName": "JOSE DE JESUS AND MARIA LUISA VEGA EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "D",
+        "score": 69,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907119&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 90
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 241
+          },
+          "white": {
+            "status": "published",
+            "count": 91
+          },
+          "native": {
+            "status": "not-listed"
+          },
+          "asian": {
+            "status": "published",
+            "count": 18
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "published",
+            "count": 27
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907120": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "DEAN AND MILDRED BENNETT EL",
+      "sourceCampusName": "DEAN AND MILDRED BENNETT EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 87,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907120&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 31
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 73
+          },
+          "white": {
+            "status": "published",
+            "count": 226
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 51
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "suppressed",
+            "publishedMask": "<30"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907121": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "GARY AND BOBBYE JACK MINSHEW EL",
+      "sourceCampusName": "GARY AND BOBBYE JACK MINSHEW EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 83,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907121&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 91
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 91
+          },
+          "white": {
+            "status": "published",
+            "count": 154
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 71
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "suppressed",
+            "publishedMask": "<40"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907122": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "J B WILMETH EL",
+      "sourceCampusName": "J B WILMETH EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 87,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907122&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 54
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 45
+          },
+          "white": {
+            "status": "published",
+            "count": 233
+          },
+          "native": {
+            "status": "not-listed"
+          },
+          "asian": {
+            "status": "published",
+            "count": 65
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "published",
+            "count": 44
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907123": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "JESSE MCGOWEN EL",
+      "sourceCampusName": "JESSE MCGOWEN EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "C",
+        "score": 74,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907123&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 113
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 135
+          },
+          "white": {
+            "status": "published",
+            "count": 188
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 72
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "suppressed",
+            "publishedMask": "<60"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907124": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "NAOMI PRESS EL",
+      "sourceCampusName": "NAOMI PRESS EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "D",
+        "score": 68,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907124&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 261
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 127
+          },
+          "white": {
+            "status": "published",
+            "count": 161
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 131
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 52
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907125": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "HERMAN LAWSON EARLY CHILDHOOD SCHOOL",
+      "sourceCampusName": "HERMAN LAWSON EARLY CHILDHOOD SCHOOL",
+      "accountability": {
+        "year": 2026,
+        "rating": "A",
+        "score": 94,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907125&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 137
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 246
+          },
+          "white": {
+            "status": "published",
+            "count": 87
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 59
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 30
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907126": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "LIZZIE NELL CUNDIFF MCCLURE EL",
+      "sourceCampusName": "LIZZIE NELL CUNDIFF MCCLURE EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 82,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907126&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 103
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 85
+          },
+          "white": {
+            "status": "published",
+            "count": 298
+          },
+          "native": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "asian": {
+            "status": "published",
+            "count": 235
+          },
+          "pacific": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "multi": {
+            "status": "published",
+            "count": 52
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907127": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "RUTH AND HAROLD FRAZIER EL",
+      "sourceCampusName": "RUTH AND HAROLD FRAZIER EL",
+      "accountability": {
+        "year": 2026,
+        "rating": "B",
+        "score": 81,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907127&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "published",
+            "count": 115
+          },
+          "hispanic": {
+            "status": "published",
+            "count": 123
+          },
+          "white": {
+            "status": "published",
+            "count": 354
+          },
+          "native": {
+            "status": "not-listed"
+          },
+          "asian": {
+            "status": "published",
+            "count": 143
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "published",
+            "count": 74
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    },
+    "043907197": {
+      "district": "MCKINNEY",
+      "districtId": "043907",
+      "name": "J J A E P",
+      "sourceCampusName": "J J A E P",
+      "accountability": {
+        "year": 2026,
+        "rating": "Not Rated",
+        "score": null,
+        "verification": "existing-catalog-not-independently-rechecked",
+        "source": "https://txschools.gov/?view=school&id=043907197&lng=en"
+      },
+      "domains": {
+        "status": "source-not-yet-verified",
+        "studentAchievement": null,
+        "schoolProgress": null,
+        "closingTheGaps": null
+      },
+      "staar": {
+        "status": "source-not-yet-verified",
+        "reading": null,
+        "math": null,
+        "science": null,
+        "socialStudies": null
+      },
+      "peims": {
+        "schoolYear": "2025-26",
+        "status": "partial-official-aggregate",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0",
+        "enrollment": null,
+        "counts": {
+          "black": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "hispanic": {
+            "status": "suppressed",
+            "publishedMask": "<10"
+          },
+          "white": {
+            "status": "not-listed"
+          },
+          "native": {
+            "status": "not-listed"
+          },
+          "asian": {
+            "status": "not-listed"
+          },
+          "pacific": {
+            "status": "not-listed"
+          },
+          "multi": {
+            "status": "not-listed"
+          }
+        },
+        "percentages": null
+      },
+      "analysis": {
+        "status": "awaiting-verified-component-and-staar-scores",
+        "strengths": [],
+        "improvementAreas": []
+      }
+    }
+  }
+}
