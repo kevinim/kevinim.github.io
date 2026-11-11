@@ -85,7 +85,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel')?.dataset.campus===id,id,{timeout:15000});
           await page.waitForFunction(()=>[...document.styleSheets].some(s=>(s.href||'').includes('carrollton-school-insights.css?v=4')),
             null,{timeout:15000});
-          if(PUBLISHED_IDS.has(id).some(prefix=>id.startsWith(prefix))){
+          if(PUBLISHED_IDS.has(id)){
             await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel[data-campus="'+id+'"] .tea-peims-counts')!==null,id,{timeout:15000});
           }
           const found=await page.evaluate(()=>({
