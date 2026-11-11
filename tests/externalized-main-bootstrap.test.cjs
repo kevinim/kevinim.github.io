@@ -92,12 +92,25 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
   'Pre-feature main must retain exactly the reviewed privacy cleanup');
  const mapLabelBaseJs=show('55ae28393a91766a7197041b138c260bf625309c','dashboard-main.js');
  const areaFn=/function drawAreaLabels\(\)\{[\s\S]*?(?=function schoolType\(s\)\{)/;
- const integratedFn=js.match(areaFn)?.[0],previousFn=mapLabelBaseJs.match(areaFn)?.[0];
+ const reviewedMainJs=show('76c891ff7514d5eb56f3bc10e6cc577267c75b55','dashboard-main.js');
+ const integratedFn=reviewedMainJs.match(areaFn)?.[0],previousFn=mapLabelBaseJs.match(areaFn)?.[0];
  assert.ok(integratedFn&&previousFn,'Map labels remain a single scoped function');
  assert.ok(integratedFn.includes('AreaLabelHierarchy.buildCandidates'),'Verified zoom-aware labels are used');
  assert.ok(integratedFn.includes('escape(label)'),'Map label output must be HTML escaped');
- assert.equal(hash(js.replace(integratedFn,previousFn)),hash(mapLabelBaseJs),
-  'Only the scoped map-area label function may differ from reviewed #258 main');
+ assert.equal(hash(reviewedMainJs.replace(integratedFn,previousFn)),hash(mapLabelBaseJs),
+  'Already released zoom labels are the sole scoped delta from reviewed #258 JS');
+ // Whitelist only three user-approved destination event-handler changes on
+ // immutable, verified #262 main. All other JS bytes remain hash-pinned.
+ let approved=reviewedMainJs;
+ approved=replaceOnce(approved,"if(e.key==='Enter')calcCommute()",
+  "if(e.key==='Enter'&&!e.defaultPrevented&&el('destinationSuggestions')?.hidden!==false)calcCommute()");
+ approved=replaceOnce(approved,
+  "Object.keys(OFFICES).find(k=>OFFICES[k].toLowerCase()===el('destination').value.trim().toLowerCase())",
+  "(window.WorkplaceDestinations?.findByAddress(el('destination').value)?.id&&('saved:'+window.WorkplaceDestinations.findByAddress(el('destination').value).id))||Object.keys(OFFICES).find(k=>OFFICES[k].toLowerCase()===el('destination').value.trim().toLowerCase())");
+ approved=replaceOnce(approved,"el('destination').value=OFFICES[e.target.value]||''",
+  "el('destination').value=OFFICES[e.target.value]||window.WorkplaceDestinations?.addressForChoice(e.target.value)||''");
+ assert.equal(hash(js),hash(approved),
+  'Unreviewed dashboard JS change beyond three approved workplace handlers');
  const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
  const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);
  assert.ok(start>40000&&end>start+70000);
@@ -154,7 +167,25 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  const approvedLabelScript="<script src=\"./features/map/area-label-hierarchy.js?v=1\"></script><script src=\"./dashboard-main.js?v=6\"></script>";
  assert.equal(html.split(approvedLabelStyle).length,2,'Exact zoom label style added once');
  assert.equal(html.split(approvedLabelScript).length,2,'Exact zoom label runtime added once');
- const integrityHtml=html.replace(approvedLabelStyle,previousLabelStyle)
+ // The workplace release changes exactly four reviewed HTML anchors; do
+ // not accept arbitrary diff or regenerate hashes from untrusted actual HTML.
+ const reviewedMainHtml=show('76c891ff7514d5eb56f3bc10e6cc577267c75b55','index.html');
+ let approvedHtml=reviewedMainHtml;
+ approvedHtml=replaceOnce(approvedHtml,'./features/dashboard-extras.css?v=3',
+  './features/dashboard-extras.css?v=4');
+ approvedHtml=replaceOnce(approvedHtml,'./texas-address-suggest.js?v=1',
+  './texas-address-suggest.js?v=2');
+ approvedHtml=replaceOnce(approvedHtml,
+  '<script src="./home-lookup-v2.js?v=18"></script><script src="./allen-lookup.js?v=5"></script>',
+  '<script src="./home-lookup-v2.js?v=18"></script><script src="./features/commute/workplace-destinations.js?v=1"></script><script src="./allen-lookup.js?v=5"></script>');
+ const priorPrivacy='<p id="destinationPrivacy" class="source" role="note">목적지 검색을 누르면 입력한 목적지가 OpenStreetMap Nominatim으로, 경로 계산 시 출발지·목적지 좌표가 OSRM으로 전송됩니다. 실제 주거지나 기밀 주소 대신 공개된 사업장·대표 위치를 사용하세요. 이 사이트는 입력값을 자체 서버에 영구 저장하도록 구성되지 않았으나, 외부 서비스의 로그 보존·삭제는 보장할 수 없습니다.</p>';
+ const approvedPrivacy='<p id="destinationPrivacy" class="source" role="note">목적지 자동완성 중 입력한 일부 주소는 Esri로, 경로 계산을 누르면 목적지 전체 주소가 OpenStreetMap Nominatim으로, 출발지·목적지 좌표가 OSRM으로 전송됩니다. 실제 주거지나 기밀 주소 대신 공개된 사업장·대표 위치를 사용하세요. 직장 등록을 누르면 이름·주소가 이 브라우저 로컬 저장소에만 저장되며 공개 저장소나 서버에는 저장되지 않습니다. 외부 서비스의 로그 보존·삭제는 보장할 수 없습니다.</p>';
+ approvedHtml=replaceOnce(approvedHtml,priorPrivacy,approvedPrivacy);
+ assert.equal(hash(html),hash(approvedHtml),
+  'Unreviewed HTML drift beyond four approved workplace additions');
+ // Strip only previously released #262 zoom label additions from the
+ // immutable baseline; the existing #258 content SHA remains enforced.
+ const integrityHtml=reviewedMainHtml.replace(approvedLabelStyle,previousLabelStyle)
   .replace(approvedLabelScript,"<script src=\"./dashboard-main.js?v=6\"></script>");
  const actualHtmlHash=hash(integrityHtml.replace(/\r\n/g,'\n'));
  const baselineHtmlHash=hash(expected.replace(/\r\n/g,'\n'));
