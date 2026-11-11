@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-11-11",
+  "stage": "UAT only; not deployed to production",
+  "inventory": "tea-ratings-2026.json",
+  "accountabilityYear": 2026,
+  "schoolYear": "2025-26",
+  "originPullRequest": 244,
+  "sources": [
+    "data/tea-accountability-2026-verified-batch.json",
+    "data/tea-staar-meets-2026-verified-batch.json"
+  ],
+  "counts": {
+    "campuses": 2282,
+    "domainAllReported": 2063,
+    "domainAnyReported": 2101,
+    "subjectAnyReported": 2105,
+    "detailedRelativeComparisonEligible": 2060,
+    "overallNotRated": 138,
+    "staarSourceRowAbsent": 110
+  },
+  "note": "Domain scores are TEA scaled scores. Source-masked, Not Rated, blank and absent STAAR rows do not imply zero; school assignment is independent."
+}
