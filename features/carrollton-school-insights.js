@@ -225,6 +225,63 @@
     if (!d || !checkRace(d.race)) return null;
     return RACES.map(function(r){return {key:r[0],label:r[1],color:r[2],pct:d.race[r[0]]};});
   }
+  // Public, campus-level 2025-26 PEIMS grouped ethnicity counts. Some cells are
+  // suppressed or not listed, so these are COUNTS only, never fabricated percentages.
+  const PUBLIC_PEIMS_COUNTS=Object.create(null);
+  let publicPeimsStarted=false;
+  const PEIMS_SOURCE_PREFIX='https://rptsvr1.tea.texas.gov/cgi/sas/broker';
+  function validPublishedCampus(id,entry) {
+    if(!/^\\d{9}$/.test(String(id||'')) || !entry || typeof entry!=='object')return false;
+    if(!['CFB','LISD'].includes(entry.district))return false;
+    if(!String(id).startsWith(entry.district==='CFB'?'057903':'061902'))return false;
+    if(typeof entry.name!=='string'||entry.name.length<1||entry.name.length>200||!entry.counts)return false;
+    const expected=RACES.map(function(row){return row[0];});
+    const actual=Object.keys(entry.counts);
+    if(actual.length!==expected.length||actual.some(function(key){return !expected.includes(key);}))return false;
+    return expected.every(function(key){
+      const cell=entry.counts[key];
+      if(!cell || typeof cell!=='object')return false;
+      if(cell.status==='published')return Number.isSafeInteger(cell.count)&&cell.count>=0;
+      if(cell.status==='suppressed')return typeof cell.publishedMask==='string'&&/^(?:<\\d+|-999|N\\/A)$/.test(cell.publishedMask)&&cell.count===undefined;
+      return cell.status==='not-listed' && cell.count===undefined;
+    });
+  }
+  function getPublishedCountRows(id) {
+    const item=PUBLIC_PEIMS_COUNTS[String(id)];
+    if(!item)return null;
+    return RACES.map(function(row){
+      const cell=item.counts[row[0]];
+      return {key:row[0],label:row[1],status:cell.status,
+        display:cell.status==='published'?cell.count.toLocaleString('en-US')+'명':
+          cell.status==='suppressed'?'비공개 ('+cell.publishedMask+')':'원본 미표시'};
+    });
+  }
+  function loadPublishedPeimsCounts() {
+    if(publicPeimsStarted||!root||typeof root.fetch!=='function')return;
+    publicPeimsStarted=true;
+    root.fetch('./data/tea-ethnicity-2025-26-priority.json?v=1',{credentials:'same-origin'})
+      .then(function(res){if(!res.ok)throw Error('PEIMS counts unavailable');return res.json();})
+      .then(function(file){
+        if(file.schemaVersion!==1||file.schoolYear!=='2025-26'||
+           !file.campuses||typeof file.campuses!=='object'||!file.sources)return;
+        for(const district of ['CFB','LISD']){
+          const url=file.sources[district];
+          if(typeof url!=='string'||!url.startsWith(PEIMS_SOURCE_PREFIX+'?')||
+             !url.includes('key='+(district==='CFB'?'057903':'061902')))return;
+        }
+        let accepted=0;
+        for(const [id,item] of Object.entries(file.campuses)){
+          if(!validPublishedCampus(id,item))continue;
+          PUBLIC_PEIMS_COUNTS[id]=item;accepted++;
+        }
+        if(accepted && typeof document!=='undefined'){
+          document.querySelectorAll('.tea-insights-panel').forEach(function(panel){panel.remove();});
+          document.querySelectorAll('.tea-school-inline-preview').forEach(function(panel){panel.remove();});
+          mount();
+        }
+      }).catch(function(){/* Offline or invalid data: no demographic inference. */});
+  }
+
   function loadVerifiedAggregates() {
     if(enrichmentStarted || !root || typeof root.fetch!=='function')return;
     enrichmentStarted=true;
@@ -315,6 +372,23 @@
       panel.appendChild(subjects);
     }
 
+    const published=getPublishedCountRows(id);
+    if(published){
+      const current=document.createElement('details');
+      current.className='tea-insights-provenance tea-peims-counts';
+      current.open=true;
+      current.appendChild(textTag('summary','tea-insights-provenance-summary',
+        '2025–26 공식 학생 인종별 인원 · 일부 비공개'));
+      const recentList=document.createElement('ul');
+      recentList.className='tea-insights-legend';
+      published.forEach(function(cell){
+        recentList.appendChild(textTag('li','',cell.label+' · '+cell.display));
+      });
+      current.appendChild(recentList);
+      current.appendChild(textTag('p','tea-insights-empty',
+        'TEA가 일부 학생 수를 비공개 또는 미표시하여 정확한 전체 인종 비율을 계산하지 않습니다.'));
+      panel.appendChild(current);
+    }
     const demo=(data.demographics && checkRace(data.demographics.race))?data.demographics:null;
     if(demo){
       const demographicHeading=document.createElement('div');
@@ -362,6 +436,11 @@
     if(!data.domains) notes.appendChild(textTag('p','tea-insights-missing',
       '영역별 점수 및 과목별 성취도: 개별 TEA 원문 미연결. 종합점수만으로 과목별 강점이나 약점을 추정하지 않습니다.'));
     if(data.domainsSource&&hasOfficialSource(data.domainsSource))notes.appendChild(makeLink('2026 TEA 영역별 점수 원문',data.domainsSource));
+    if(published){
+      notes.appendChild(textTag('p','tea-insights-meta','2025–26 인종별 학생 수: TEA PEIMS 공개 캠퍼스 집계 · 일부 항목 비공개/미표시.'));
+      notes.appendChild(makeLink('TEA 공식 2025–26 학교별 집계 원본',
+        'https://rptsvr1.tea.texas.gov/adhocrpt/adste.html'));
+    }
     if(demo){
       notes.appendChild(textTag('p','tea-insights-meta','학생 인종 구성: '+demo.year+' · '+demo.document+' · 등록 학생 '+demo.enrollment.toLocaleString('en-US')+'명'));
       notes.appendChild(makeLink(demo.document+' 원문',demo.src));
@@ -486,7 +565,7 @@
     const host=document.getElementById('detailContent');
     if(!host || typeof state==='undefined') return;
     const school=state.selectedSchool;
-    if(school)loadVerifiedAggregates();
+    if(school){loadVerifiedAggregates();loadPublishedPeimsCounts();}
     if(!school){
       mountInline(null,null);
       return;
@@ -573,7 +652,8 @@
     rolloutDistricts:Object.keys(ROLLOUT),
     rolloutPhase:function(district){return ROLLOUT[district]?.phase||4;},
     enrichedCampusCount:function(){return Object.keys(ENRICHED).length;},
-    validDomains:validDomains
+    validDomains:validDomains,validPublishedCampus:validPublishedCampus,
+    getPublishedCountRows:getPublishedCountRows
   };
   if(typeof module!=='undefined' && module.exports)module.exports=api;
   if(root && typeof document!=='undefined'){
