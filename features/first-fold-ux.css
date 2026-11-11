@@ -31,7 +31,7 @@
 .selected-school-campus-pin{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;box-sizing:border-box;
   background:#facc15;border:3px solid #202c41;color:#152238;font-size:11px;font-weight:900;line-height:1;
   box-shadow:0 0 0 4px rgba(250,204,21,.37),0 4px 12px rgba(0,0,0,.35)}
-.leaflet-tooltip.selected-school-campus-tooltip{max-width:min(300px,75vw);white-space:normal;overflow-wrap:anywhere;
+.leaflet-tooltip.selected-school-campus-tooltip{width:max-content;min-width:150px;max-width:min(280px,calc(100vw - 48px));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   padding:7px 10px;border:2px solid #facc15;border-radius:7px;background:#162338;color:#fff;
   font-size:12px;font-weight:800;box-shadow:0 3px 14px rgba(0,0,0,.35)}
 .leaflet-tooltip-top.selected-school-campus-tooltip:before{border-top-color:#facc15}
@@ -52,3 +52,15 @@
 .school-map-grade-badge.grade-c{background:#946000}
 .school-map-grade-badge.grade-d{background:#8b4422}
 .school-map-grade-badge.grade-f{background:#9e2234}
+
+/* At regional zoom one readable cluster replaces many overlapping school pins. */
+.school-cluster-marker{background:transparent;border:0}
+.school-cluster-bubble{display:grid;place-items:center;box-sizing:border-box;
+ width:40px;height:40px;border-radius:50%;border:3px solid #fff;
+ color:#fff;background:#253a58;box-shadow:0 2px 10px rgba(12,27,52,.43);
+ font-size:13px;font-weight:850;line-height:1;font-variant-numeric:tabular-nums}
+.school-cluster-marker:hover .school-cluster-bubble,
+.school-cluster-marker:focus-visible .school-cluster-bubble{background:#315a87;outline:3px solid #facc15;outline-offset:2px}
+.mapmark.mapmark-compact{width:14px;height:14px;box-sizing:border-box;font-size:0;
+ border:1.5px solid #fff;box-shadow:0 1px 4px rgba(13,30,55,.32)}
+.leaflet-tooltip.selected-school-campus-tooltip span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
