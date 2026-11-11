@@ -80,6 +80,31 @@ An additional **401** exact-campus-ID official TEA PEIMS campus aggregate ethnic
 
 Display and QA controls: a current-year row showing count, suppression mask or absence for each of seven categories; calculate ratios exclusively for those three fully public campuses. Unit tests validate every campus/district ID against official TEA inventory and source URL year, all 4,858 count/mask cells, no PII and no inferred values. Browser QA covers one or more actual school selections in each priority region (desktop/mobile), checks link, rendering and no GIS or CSP regression. Stage in UAT/PR; do not merge Production without explicit sign-off.
 
+## 2026-11-11 immediate Wave 3 — twelve additional DFW districts (official public aggregates)
+
+From official 2025–26 TEA PEIMS selected **campus totals by district number**, grouping **Ethnicity**, this batch adds **649** exact 9-digit campus IDs over previous UAT PR #238. All 12 source exports have all of their 649 existing 2026 inventory campuses represented and matched; no duplicates or wrong-district IDs. These are **public campus aggregates only**.
+
+| District code | School district | School count |
+|---|---|---:|
+| 220905 | Fort Worth ISD | 134 |
+| 220901 | Arlington ISD | 74 |
+| 057909 | Garland ISD | 66 |
+| 057914 | Mesquite ISD | 51 |
+| 220908 | Mansfield ISD | 48 |
+| 057803 | Uplift Education | 45 |
+| 057848 | International Leadership of Texas | 44 |
+| 061806 | Texas Works | 41 |
+| 220907 | Keller ISD | 40 |
+| 057910 | Grand Prairie ISD | 37 |
+| 061911 | Northwest ISD | 37 |
+| 220916 | Hurst-Euless-Bedford ISD | 32 |
+
+**Consolidated staged 2025–26 current-year campus count coverage: 1,343 / 2,282 = 58.85% across 23 source exports.** Every ethnicity has a three-way source status, no imputation: **5,024 exact publicly reported student counts, 2,915 TEA-suppressed cells, and 1,462 source-unlisted cells**, across 9,401 possible campus/group cells. Five campuses have seven fully published groups and can have exact same-year percentages: Allen H S (043901001), Irving Houston Middle (057912046), Irving Jackie Mae Townsell EL (057912123), Northwest H S (061911001) and Byron Nelson H S (061911007). The remaining 1,338 current-year campus records are partial only and **must not** receive fabricated full shares. Separately, eight 2024–25 historic source-verified charts remain correctly labeled with their prior year.
+
+All official CSV source URLs are retained by district code under `sources` in `data/tea-ethnicity-2025-26-priority.json`. Example original Fort Worth export: https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=220905&_debug=0
+
+**QA required:** source URL contract + campus ID/district exact join + race keys/masking + full-data ratio authorization only if all seven counts public; browser desktop/mobile, privacy/security, GIS/markers. Production deploy remains blocked until explicit user release approval, even if all PR actions pass.
+
 ## Importing an official verified batch
 
 The native TEA export may use different column names by report/year. Before ingestion, inspect TEA's associated data dictionary and explicitly transpose **aggregated campus rows only** into these normalized CSV headers. Do not assume any file's column names.
