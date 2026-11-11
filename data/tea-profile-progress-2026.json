@@ -1,0 +1,28 @@
+{
+  "asOf": "2026-11-11",
+  "scope": "Current dashboard TEA campus inventory, NOT every Texas school",
+  "inventoryFile": "tea-ratings-2026.json",
+  "totalCampuses": 2282,
+  "distinctDistricts": 181,
+  "accountabilityRatingPresent": 2144,
+  "notRated": 138,
+  "profilePanelsConnected": 148,
+  "individualNarratives": 18,
+  "domainComponentsReviewed": 2,
+  "subjectsReviewed": 2,
+  "ethnicityReviewed": 4,
+  "imported2026Components": 0,
+  "imported2025_26Ethnicity": 0,
+  "priorityOrder": [
+    "CFB",
+    "LISD",
+    "AISD",
+    "043907",
+    "remaining DFW"
+  ],
+  "notes": [
+    "Ratings are already recorded in the source inventory; standalone full profiles cover 148/2282.",
+    "Race/ethnicity is informative enrollment context, never a quality ranking.",
+    "Official PEIMS data may suppress small cells. Suppression means unavailable, not zero."
+  ]
+}
