@@ -186,7 +186,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           if(id==='220916001')assert.ok(found.peimsText.includes('153명'),'HEB school Asian count');
           if(id==='220912002'){
             assert.ok(found.peimsText.includes('105명'),'North Crowley seven-group source Asian count');
-            assert.ok(!found.peimsText.includes('3.5%'),'North Crowley unverified ratio must remain suppressed');
+            assert.ok(found.peimsText.includes('3.5%'),'North Crowley independently reconciled 105 / 3,033 students must show 3.5%');
           }
           if(id==='043914001')assert.ok(found.peimsText.includes('702명'),'Wylie High source Asian count');
           if(id==='220918001')assert.ok(found.peimsText.includes('131명'),'Boswell High source Asian count');
