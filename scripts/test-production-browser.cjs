@@ -47,14 +47,21 @@ mkdirSync(dir,{recursive:true});
   assert.ok((await page.locator('#zoneNotice').innerText()).includes('Isbell 세부 학년 주의'));
   result.checks.push('Live Frisco school click draws official K-4 polygon with grade exception');
 
+  // Live pre-deploy Pages lacks this #258 wrapper; expand only when present.
+  if(await page.locator('#auxiliaryDataDetails').count())
+   await page.locator('#auxiliaryDataDetails > summary').click();
   await page.locator('#phase2HazardPanel > summary').click();
   await page.locator('#nfhlFloodPanel > summary').click();
   assert.equal(await page.locator('#nfhlEnabled').isChecked(),false);
   assert.equal(await page.locator('#zipOverlay').isChecked(),true);
+  // The preceding Frisco school click can zoom live Pages to >=14. Explicitly
+  // restore a broad viewport before testing the mandatory wide-area NFHL gate.
+  await page.evaluate(()=>{map.setView([33.02,-96.82],10,{animate:false});});
+  await page.waitForFunction(()=>map.getZoom()<=11,null,{timeout:12000});
   await page.locator('#nfhlEnabled').check();
-  // At the broad default zoom, NFHL must refuse to fetch a huge geographic slice.
-  assert.ok((await page.locator('#nfhlStatus').innerText()).includes('줌 14'));
-  await page.evaluate(()=>map.setView([32.778,-96.813],15));
+  // A broad NFHL request must be refused, regardless of previous school zoom.
+  await page.waitForFunction(()=>document.getElementById('nfhlStatus')?.textContent?.includes('줌 14'),null,{timeout:15000});
+  await page.evaluate(()=>{map.setView([32.778,-96.813],15);});
   let liveNFHL=false, count=0;
   result.nfhlObservations=[];
   // The remote FEMA map service can be intermittently unavailable even if

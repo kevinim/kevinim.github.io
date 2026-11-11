@@ -29,6 +29,7 @@ async function main(){
    const errors=[];page.on('pageerror',e=>errors.push(String(e)));
    const target=liveBase||'http://127.0.0.1:'+server.address().port+'/';
    await page.goto(target,{waitUntil:'domcontentloaded',timeout:80000});
+   if(await page.locator('#schoolDataDetails').count())await page.locator('#schoolDataDetails > summary').click();
    const source=page.locator('#cfbOfficialRezoningReference');
    await source.locator('summary').click();
    assert.equal(await page.locator('#cfbOfficialFinderPanel').isVisible(),false);

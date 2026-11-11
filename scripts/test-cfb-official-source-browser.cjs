@@ -18,6 +18,7 @@ async function run(){
    const page=await browser.newPage({viewport:{width,height:850}});
    const pageErrors=[];page.on('pageerror',e=>pageErrors.push(String(e)));
    await page.goto('http://127.0.0.1:'+server.address().port+'/',{waitUntil:'domcontentloaded',timeout:80000});
+   await page.locator('#schoolDataDetails > summary').click();
    const box=page.locator('#cfbOfficialRezoningReference');
    await box.locator('summary').click();
    const result=await page.evaluate(()=>{
