@@ -830,8 +830,8 @@
           [
             ['2026 A–F 종합등급',info.accountabilityRatingPresent],
             ['학교별 기본 설명',info.profilePanelsConnected],
-            ['개별 강점·개선과제 분석',info.individualNarratives],
-            ['2026 영역별 평가점수',info.domainComponentsReviewed],
+            ['기존 수동 분석 초안 (검증 수준 별도)',info.individualNarratives],
+            ['기존 데이터에 통합된 2026 영역별 점수',info.domainComponentsReviewed],
             ['2025–26 공개 인종별 학생 수 (부분 자료)',info.public2025_26CampusCounts],
             ['검증된 전체 인종 비율 (2024–25 포함)',info.ethnicityReviewed]
           ].forEach(function(pair){
@@ -842,6 +842,30 @@
           });
           content.appendChild(textTag('p','','미평가(Not Rated) '+info.notRated+'개 · 2025–26 공개 학생 수는 '+Number(info.public2025_26PublishedCells||0)+'개 분류에 연결되었습니다. '+Number(info.public2025_26SuppressedCells||0)+'개는 비공개, '+Number(info.public2025_26UnlistedCells||0)+'개는 원본 미표시입니다.'));
           content.appendChild(textTag('p','','종합등급 연결과 과목별 분석 완료는 다른 기준입니다. 개인정보 보호로 마스킹된 수치는 추정하지 않습니다.'));
+          // Data-stage coverage is separate from already deployed/historical progress.
+          root.fetch('./data/tea-2026-uat-progress.json?v=1',{credentials:'same-origin'})
+            .then(function(response){if(!response.ok)throw Error('Academic UAT unavailable');return response.json();})
+            .then(function(uat){
+              if(uat.schemaVersion!==1||uat.accountabilityYear!==2026||
+                 uat.schoolYear!=='2025-26'||uat.counts?.campuses!==count)return;
+              const c=uat.counts;
+              content.appendChild(textTag('p','tea-insights-meta',
+                'UAT 신규 2026 TEA 상세 원본 (아직 Production 미반영)'));
+              [
+                ['3개 영역 점수 모두 공개',c.domainAllReported],
+                ['3개 영역 및 공개 STAAR 과목으로 상대 비교 가능',c.detailedRelativeComparisonEligible],
+                ['STAAR 공개 과목 수치 하나 이상 존재',c.subjectAnyReported]
+              ].forEach(function(pair){
+                const n=pair[1];
+                if(Number.isInteger(n)&&n>=0&&n<=count)
+                  content.appendChild(textTag('p','',pair[0]+' '+
+                    n.toLocaleString('en-US')+' / '+count.toLocaleString('en-US')+' · '+ratio(n)));
+              });
+              content.appendChild(textTag('p','tea-insights-missing',
+                'STAAR 원본 행 미포함 '+c.staarSourceRowAbsent+'개 · Not Rated/비공개/미제공은 0점이 아닙니다. 학교 배정 경계와 별도 자료입니다.'));
+            }).catch(function(){
+              content.appendChild(textTag('p','tea-insights-missing','UAT 학업 성적 구축 현황을 불러올 수 없습니다.'));
+            });
         }).catch(function(){content.textContent='현재 진행률 파일을 불러올 수 없습니다. 학교별 공식 출처를 확인해 주세요.';});
     });
     list.insertAdjacentElement('afterend',details);
