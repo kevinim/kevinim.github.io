@@ -48,7 +48,15 @@
         race:{black:16.7,hispanic:15.1,white:24.5,native:0.2,asian:36.8,pacific:0,multi:6.6}
       }
     },
-    '061902140': {summary:'독해 대비 수학·과학 성취가 낮아 과목 간 성과 차이를 줄이는 것이 과제입니다.',strength:'독해',challenge:'수학·과학'},
+    '061902140': {
+      summary:'독해 대비 수학·과학 성취가 낮아 과목 간 성과 차이를 줄이는 것이 과제입니다.',
+      strength:'독해',challenge:'수학·과학',
+      demographics:{
+        year:'2024–25',document:'2025 TEA School Report Card · Coyote Ridge Elementary',enrollment:478,
+        src:'https://resources.finalsite.net/images/v1767733001/lisdnet/lisdnet/xilennjkuzhmri1hlapt/coyoteridgerc.pdf',
+        race:{black:29.3,hispanic:17.8,white:15.9,native:1.3,asian:29.1,pacific:0.4,multi:6.3}
+      }
+    },
     '057903113': {summary:'독해의 일부 성과는 확인되지만 학업 성장과 과학 성취 개선이 시급합니다.',strength:'독해 기초 성취',challenge:'학업 성장·과학'},
     '061902047': {summary:'높은 학업 성취와 학생 집단별 목표 달성도가 강점이며 사회 과목은 추가 개선 여지가 있습니다.',strength:'학업 성취·집단별 목표',challenge:'사회 과목'},
     '057903042': {summary:'유사 학교 대비 상대 성과는 양호하지만 학생 성장 지표를 높일 필요가 있습니다.',strength:'유사 학교 대비 상대 성과',challenge:'학업 성장'},
@@ -84,6 +92,21 @@
         enrollment:599,
         src:'https://castlehills.lisd.net/fs/resource-manager/view/1534674b-7abf-4949-b7e9-30f24d4e0de1',
         race:{black:2.0,hispanic:8.3,white:45.9,native:0.2,asian:35.9,pacific:0.2,multi:7.5}
+      }
+    },
+    // TEA 2025 School Report Card, 2024-25 campus enrollment; source checked 2026-11-11.
+    '061902142':{
+      demographics:{
+        year:'2024–25',document:'2025 TEA School Report Card · Independence Elementary',enrollment:828,
+        src:'https://rptsvr1.tea.texas.gov/cgi/sas/broker?_program=perfrept.perfmast.sas&_service=marykay&ccyy=2025&id=061902142&lev=C&prgopt=reports/src/src.sas',
+        race:{black:7.6,hispanic:55.7,white:7.7,native:0.1,asian:25.8,pacific:0.2,multi:2.8}
+      }
+    },
+    '061902143':{
+      demographics:{
+        year:'2024–25',document:'2025 TEA School Report Card · Lewisville Elementary',enrollment:509,
+        src:'https://resources.finalsite.net/images/v1767730334/lisdnet/lisdnet/v0na6prf22b4hdu3dmcl/lewisvillerc.pdf',
+        race:{black:19.4,hispanic:70.5,white:4.5,native:0,asian:1.6,pacific:0,multi:3.9}
       }
     },
     '043901001':{
