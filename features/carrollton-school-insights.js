@@ -191,7 +191,13 @@
     const code=String(record.district||'');
     const prefix=DISTRICT_IDS[code] || (/^\d{6}$/.test(code)?code:null);
     if(!prefix || !String(record.id).startsWith(prefix))return null;
-    if(!record.official || !/^https:\/\/txschools\.gov\/\?view=school&id=\d{9}/.test(record.official))return null;
+    // A valid-looking official link is insufficient: it MUST identify this exact TEA campus.
+    // URL parsing also rejects spoofed hosts, changed path and mismatched campus IDs.
+    let official;
+    try { official=new URL(record.official); } catch { return null; }
+    if(official.protocol!=='https:' || official.hostname!=='txschools.gov' ||
+       official.pathname!=='/' || official.searchParams.get('view')!=='school' ||
+       official.searchParams.get('id')!==String(record.id))return null;
     const cohort=ROLLOUT[code]||{phase:4,label:record.districtName||'DFW 학군 '+code};
     const curated=getRecord(record.id);
     const existing=VERIFIED_TAPR[String(record.id)]||null;
