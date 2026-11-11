@@ -53,9 +53,9 @@
           "schoolProgress": null,
           "closingTheGaps": 69,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -92,9 +92,9 @@
           "schoolProgress": null,
           "closingTheGaps": 76,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -131,9 +131,9 @@
           "schoolProgress": null,
           "closingTheGaps": 82,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -170,9 +170,9 @@
           "schoolProgress": null,
           "closingTheGaps": null,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": null,
         "officialSTAARSourceRow": null,
@@ -208,9 +208,9 @@
           "schoolProgress": null,
           "closingTheGaps": 94,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -247,9 +247,9 @@
           "schoolProgress": null,
           "closingTheGaps": 82,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -286,9 +286,9 @@
           "schoolProgress": null,
           "closingTheGaps": null,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": null,
         "officialSTAARSourceRow": null,
@@ -324,9 +324,9 @@
           "schoolProgress": null,
           "closingTheGaps": 100,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -363,9 +363,9 @@
           "schoolProgress": null,
           "closingTheGaps": 77,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -402,9 +402,9 @@
           "schoolProgress": null,
           "closingTheGaps": 74,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -441,9 +441,9 @@
           "schoolProgress": null,
           "closingTheGaps": 77,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -480,9 +480,9 @@
           "schoolProgress": null,
           "closingTheGaps": 45,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -519,9 +519,9 @@
           "schoolProgress": null,
           "closingTheGaps": 64,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -558,9 +558,9 @@
           "schoolProgress": null,
           "closingTheGaps": 86,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -597,9 +597,9 @@
           "schoolProgress": null,
           "closingTheGaps": 86,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -636,9 +636,9 @@
           "schoolProgress": null,
           "closingTheGaps": 74,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -675,9 +675,9 @@
           "schoolProgress": null,
           "closingTheGaps": 88,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -714,9 +714,9 @@
           "schoolProgress": null,
           "closingTheGaps": 75,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -753,9 +753,9 @@
           "schoolProgress": null,
           "closingTheGaps": 70,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -792,9 +792,9 @@
           "schoolProgress": null,
           "closingTheGaps": 77,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -831,9 +831,9 @@
           "schoolProgress": null,
           "closingTheGaps": 73,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -870,9 +870,9 @@
           "schoolProgress": null,
           "closingTheGaps": null,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": null,
         "officialSTAARSourceRow": null,
@@ -908,9 +908,9 @@
           "schoolProgress": null,
           "closingTheGaps": 77,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -947,9 +947,9 @@
           "schoolProgress": null,
           "closingTheGaps": 92,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -986,9 +986,9 @@
           "schoolProgress": null,
           "closingTheGaps": 87,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1065,9 +1065,9 @@
           "schoolProgress": null,
           "closingTheGaps": 79,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1104,9 +1104,9 @@
           "schoolProgress": null,
           "closingTheGaps": 78,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1143,9 +1143,9 @@
           "schoolProgress": null,
           "closingTheGaps": 70,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1182,9 +1182,9 @@
           "schoolProgress": null,
           "closingTheGaps": 90,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1221,9 +1221,9 @@
           "schoolProgress": null,
           "closingTheGaps": 82,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1260,9 +1260,9 @@
           "schoolProgress": null,
           "closingTheGaps": 71,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1299,9 +1299,9 @@
           "schoolProgress": null,
           "closingTheGaps": 90,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1338,9 +1338,9 @@
           "schoolProgress": null,
           "closingTheGaps": 78,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1377,9 +1377,9 @@
           "schoolProgress": null,
           "closingTheGaps": 71,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1416,9 +1416,9 @@
           "schoolProgress": null,
           "closingTheGaps": 81,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1455,9 +1455,9 @@
           "schoolProgress": null,
           "closingTheGaps": 92,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1494,9 +1494,9 @@
           "schoolProgress": null,
           "closingTheGaps": 79,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1533,9 +1533,9 @@
           "schoolProgress": null,
           "closingTheGaps": 78,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1572,9 +1572,9 @@
           "schoolProgress": null,
           "closingTheGaps": null,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": null,
         "officialSTAARSourceRow": null,
@@ -1610,9 +1610,9 @@
           "schoolProgress": null,
           "closingTheGaps": 92,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1649,9 +1649,9 @@
           "schoolProgress": null,
           "closingTheGaps": 94,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1688,9 +1688,9 @@
           "schoolProgress": null,
           "closingTheGaps": 67,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1727,9 +1727,9 @@
           "schoolProgress": null,
           "closingTheGaps": 72,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1766,9 +1766,9 @@
           "schoolProgress": null,
           "closingTheGaps": 79,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1805,9 +1805,9 @@
           "schoolProgress": null,
           "closingTheGaps": 72,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1884,9 +1884,9 @@
           "schoolProgress": null,
           "closingTheGaps": 83,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1923,9 +1923,9 @@
           "schoolProgress": null,
           "closingTheGaps": 88,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -1962,9 +1962,9 @@
           "schoolProgress": null,
           "closingTheGaps": 62,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2001,9 +2001,9 @@
           "schoolProgress": null,
           "closingTheGaps": 61,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2040,9 +2040,9 @@
           "schoolProgress": null,
           "closingTheGaps": 93,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2079,9 +2079,9 @@
           "schoolProgress": null,
           "closingTheGaps": 71,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2118,9 +2118,9 @@
           "schoolProgress": null,
           "closingTheGaps": 86,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2157,9 +2157,9 @@
           "schoolProgress": null,
           "closingTheGaps": 72,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2196,9 +2196,9 @@
           "schoolProgress": null,
           "closingTheGaps": 88,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2235,9 +2235,9 @@
           "schoolProgress": null,
           "closingTheGaps": 75,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2274,9 +2274,9 @@
           "schoolProgress": null,
           "closingTheGaps": 72,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2313,9 +2313,9 @@
           "schoolProgress": null,
           "closingTheGaps": 69,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2352,9 +2352,9 @@
           "schoolProgress": null,
           "closingTheGaps": 77,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2391,9 +2391,9 @@
           "schoolProgress": null,
           "closingTheGaps": 75,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2430,9 +2430,9 @@
           "schoolProgress": null,
           "closingTheGaps": 80,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2469,9 +2469,9 @@
           "schoolProgress": null,
           "closingTheGaps": 76,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2508,9 +2508,9 @@
           "schoolProgress": null,
           "closingTheGaps": 92,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2547,9 +2547,9 @@
           "schoolProgress": null,
           "closingTheGaps": 77,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2586,9 +2586,9 @@
           "schoolProgress": null,
           "closingTheGaps": 81,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2625,9 +2625,9 @@
           "schoolProgress": null,
           "closingTheGaps": 79,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2704,9 +2704,9 @@
           "schoolProgress": null,
           "closingTheGaps": 75,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2743,9 +2743,9 @@
           "schoolProgress": null,
           "closingTheGaps": 77,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2782,9 +2782,9 @@
           "schoolProgress": null,
           "closingTheGaps": 78,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2821,9 +2821,9 @@
           "schoolProgress": null,
           "closingTheGaps": 97,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2860,9 +2860,9 @@
           "schoolProgress": null,
           "closingTheGaps": 60,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2899,9 +2899,9 @@
           "schoolProgress": null,
           "closingTheGaps": 87,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2938,9 +2938,9 @@
           "schoolProgress": null,
           "closingTheGaps": 68,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -2977,9 +2977,9 @@
           "schoolProgress": null,
           "closingTheGaps": 92,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -3016,9 +3016,9 @@
           "schoolProgress": null,
           "closingTheGaps": 86,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -3055,9 +3055,9 @@
           "schoolProgress": null,
           "closingTheGaps": 88,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -3094,9 +3094,9 @@
           "schoolProgress": null,
           "closingTheGaps": 69,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -3133,9 +3133,9 @@
           "schoolProgress": null,
           "closingTheGaps": 75,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -3172,9 +3172,9 @@
           "schoolProgress": null,
           "closingTheGaps": 96,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -3251,9 +3251,9 @@
           "schoolProgress": null,
           "closingTheGaps": 90,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -3290,9 +3290,9 @@
           "schoolProgress": null,
           "closingTheGaps": 92,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -3329,9 +3329,9 @@
           "schoolProgress": null,
           "closingTheGaps": 67,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -3368,9 +3368,9 @@
           "schoolProgress": null,
           "closingTheGaps": 84,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -3447,9 +3447,9 @@
           "schoolProgress": null,
           "closingTheGaps": null,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": null,
         "officialSTAARSourceRow": null,
@@ -3525,9 +3525,9 @@
           "schoolProgress": null,
           "closingTheGaps": 72,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -3564,9 +3564,9 @@
           "schoolProgress": null,
           "closingTheGaps": 69,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
@@ -3603,9 +3603,9 @@
           "schoolProgress": null,
           "closingTheGaps": 84,
           "reading": null,
-          "mathematics": null,
           "science": null,
-          "socialStudies": null
+          "socialStudies": null,
+          "math": null
         },
         "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
