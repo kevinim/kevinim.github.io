@@ -452,7 +452,7 @@
     });
     target.appendChild(list);
     target.appendChild(textTag('p','tea-insights-privacy-note',
-      '비공개·미제공 인원은 0명이 아니며 비율을 역산하지 않습니다. 표시된 비율만 TEA 공식 총학생 수를 분모로 계산했습니다.'));
+      p.percentages?'모든 7개 범주가 공개된 자료입니다. 각 비율은 공식 총학생 수 기준입니다.':'비공개·미제공 인원은 0명이 아니며 비율을 역산하지 않습니다. 표시된 비율만 TEA 공식 총학생 수를 분모로 계산했습니다.'));
     return true;
   }
   function makeLink(label,url) {
@@ -482,7 +482,7 @@
     const facts=document.createElement('div');facts.className='tea-insights-facts';
     const items=[
       {kind:ratingOnly?'confirmed':'positive',label:ratingOnly?'확인된 평가':'강점',text:data.strength,symbol:ratingOnly?'●':'+'},
-      {kind:ratingOnly?'pending':'improve',label:ratingOnly?'추가 검증':'개선과제',text:data.challenge,symbol:ratingOnly?'…':'△'}
+      {kind:ratingOnly?'pending':'improve',label:ratingOnly?(data.officialAcademicStatus?'제공 상태':'추가 검증'):'개선과제',text:data.challenge,symbol:ratingOnly?'…':'△'}
     ];
     items.forEach(function(info){
       const item=document.createElement('div');
@@ -504,7 +504,11 @@
       });
       panel.appendChild(metrics);
     } else {
-      panel.appendChild(textTag('p','tea-insights-empty','영역별 세부 성적 · 자료 확인 중'));
+      panel.appendChild(textTag('p','tea-insights-empty',data.officialAcademicStatus==='paired'
+        ?'연계 평가 캠퍼스 · 개별 영역별 점수 미제공'
+        :data.officialAcademicStatus==='not-rated'
+          ?'TEA Not Rated · 개별 영역별 점수 미제공'
+          :'영역별 세부 성적 · 자료 확인 중'));
     }
     if(data.subjects){
       const subjects=document.createElement('p');subjects.className='tea-insights-subjects';
@@ -590,7 +594,7 @@
     notes.appendChild(textTag('p','tea-insights-meta',data.evidenceStatus==='reviewed'
       ?'한 줄 평과 강점·개선과제는 TEA 공식 의견이 아닌 데이터 기반 해석입니다.'
       :ratingOnly
-        ?'2026 종합등급 기반 자동 요약입니다. 과목별 강점·개선과제는 아직 분석하지 않았습니다.'
+        ?(data.officialAcademicStatus?'TEA 공식 보고서상 이 캠퍼스의 자체 성적이 제공되지 않습니다. 추가 분석 미완료가 아닙니다.':'2026 종합등급 기반 자동 요약입니다. 과목별 강점·개선과제는 아직 분석하지 않았습니다.')
         :'시범 해석: 세부 과목별 수치의 개별 TEA 원문 대조 전입니다. 공식 종합 등급과 구분하여 참고하세요.'));
     const links=document.createElement('div');links.className='tea-insights-links';
     links.appendChild(makeLink('2026 TEA 평가 자료',RATINGS_URL));
@@ -643,7 +647,7 @@
       const facts=document.createElement('div');facts.className='tea-insights-facts tea-school-inline-facts';
       [
         {kind:isRatingOnly?'confirmed':'positive',title:isRatingOnly?'확인된 평가':'강점',value:data.strength},
-        {kind:isRatingOnly?'pending':'improve',title:isRatingOnly?'추가 검증':'개선과제',value:data.challenge}
+        {kind:isRatingOnly?'pending':'improve',title:isRatingOnly?(data.officialAcademicStatus?'제공 상태':'추가 검증'):'개선과제',value:data.challenge}
       ].forEach(function(fact){
         const item=document.createElement('div');
         item.className='tea-insights-fact tea-insights-fact--'+fact.kind;
