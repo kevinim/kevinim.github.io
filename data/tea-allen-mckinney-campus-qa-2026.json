@@ -15,7 +15,7 @@
     "accountabilityCatalog": "tea-ratings-2026.json",
     "componentPortal": "https://rptsvr1.tea.texas.gov/perfreport/account/acct_download?year=2026"
   },
-  "provenance": "Official TEA Student Enrollment Reports CSV, by district ID, grouped ethnicity; campus score/rating carried over from existing repository inventory but NOT independently crosschecked in this batch.",
+  "provenance": "Official TEA Student Enrollment Reports CSV, by district ID, grouped ethnicity; campus score/rating carried over from existing repository inventory but NOT independently crosschecked in this batch. Independent official 2026 campus Summary and STAAR Performance pages source-crosschecked for Allen HS and McKinney HS; all remaining detailed scores explicitly unverified.",
   "privacyPolicy": "Published exact counts are preserved; <N suppressions and unlisted cells are unavailable, never zero, never back-calculated. Percentages and total enrollments withheld when not independently published. No student-level data.",
   "summary": {
     "scope": 56,
@@ -31,7 +31,8 @@
     "campusesWithUnlistedCells": 32,
     "existingCatalogNotRated": 4,
     "fullyAuditedProfiles": 0,
-    "awaiting2026ComponentsAndStaar": 56
+    "awaiting2026ComponentsAndStaar": 54,
+    "newlyAcademicSourceVerified": 2
   },
   "campuses": {
     "043901001": {
@@ -43,21 +44,29 @@
         "year": 2026,
         "rating": "A",
         "score": 90,
-        "verification": "existing-catalog-not-independently-rechecked",
-        "source": "https://txschools.gov/?view=school&id=043901001&lng=en"
+        "verification": "2026-official-campus-summary-source-crosschecked",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043901001&lev=C&prgopt=reports/acct/summary.sas"
       },
       "domains": {
-        "status": "source-not-yet-verified",
-        "studentAchievement": null,
-        "schoolProgress": null,
-        "closingTheGaps": null
+        "status": "official-verified",
+        "year": 2026,
+        "scoreType": "official-scaled-accountability-domain-scores",
+        "studentAchievement": 88,
+        "schoolProgress": 80,
+        "closingTheGaps": 93,
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043901001&lev=C&prgopt=reports/acct/summary.sas",
+        "notes": "The Closing the Gaps unscaled component is separately preserved; do not substitute it for scaled domain score.",
+        "closingTheGapsUnscaledComponent": 81
       },
       "staar": {
-        "status": "source-not-yet-verified",
-        "reading": null,
-        "math": null,
-        "science": null,
-        "socialStudies": null
+        "status": "official-verified",
+        "year": 2026,
+        "metric": "All Students — percent of tests at Meets Grade Level standard or above",
+        "reading": 75,
+        "math": 85,
+        "science": 43,
+        "socialStudies": 86,
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043901001&lev=C&prgopt=reports/acct/domain1a.sas"
       },
       "peims": {
         "schoolYear": "2025-26",
@@ -97,9 +106,15 @@
         "percentages": null
       },
       "analysis": {
-        "status": "awaiting-verified-component-and-staar-scores",
-        "strengths": [],
-        "improvementAreas": []
+        "status": "score-backed-noncausal",
+        "year": 2026,
+        "method": "Compare only the four published All Students STAAR Meets percentages within the campus. No causal explanations or student demographic quality judgement.",
+        "strengths": [
+          "Social Studies: 86% Meets (four-subject highest)"
+        ],
+        "improvementAreas": [
+          "Science: 43% Meets (four-subject lowest)"
+        ]
       }
     },
     "043901002": {
@@ -1594,21 +1609,29 @@
         "year": 2026,
         "rating": "A",
         "score": 93,
-        "verification": "existing-catalog-not-independently-rechecked",
-        "source": "https://txschools.gov/?view=school&id=043907002&lng=en"
+        "verification": "2026-official-campus-summary-source-crosschecked",
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907002&lev=C&prgopt=reports/acct/summary.sas"
       },
       "domains": {
-        "status": "source-not-yet-verified",
-        "studentAchievement": null,
-        "schoolProgress": null,
-        "closingTheGaps": null
+        "status": "official-verified",
+        "year": 2026,
+        "scoreType": "official-scaled-accountability-domain-scores",
+        "studentAchievement": 93,
+        "schoolProgress": 91,
+        "closingTheGaps": 94,
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907002&lev=C&prgopt=reports/acct/summary.sas",
+        "notes": "The Closing the Gaps unscaled component is separately preserved; do not substitute it for scaled domain score.",
+        "closingTheGapsUnscaledComponent": 85
       },
       "staar": {
-        "status": "source-not-yet-verified",
-        "reading": null,
-        "math": null,
-        "science": null,
-        "socialStudies": null
+        "status": "official-verified",
+        "year": 2026,
+        "metric": "All Students — percent of tests at Meets Grade Level standard or above",
+        "reading": 61,
+        "math": 58,
+        "science": 72,
+        "socialStudies": 73,
+        "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043907002&lev=C&prgopt=reports/acct/domain1a.sas"
       },
       "peims": {
         "schoolYear": "2025-26",
@@ -1648,9 +1671,15 @@
         "percentages": null
       },
       "analysis": {
-        "status": "awaiting-verified-component-and-staar-scores",
-        "strengths": [],
-        "improvementAreas": []
+        "status": "score-backed-noncausal",
+        "year": 2026,
+        "method": "Compare only the four published All Students STAAR Meets percentages within the campus. No causal explanations or student demographic quality judgement.",
+        "strengths": [
+          "Social Studies: 73% Meets (four-subject highest)"
+        ],
+        "improvementAreas": [
+          "Mathematics: 58% Meets (four-subject lowest)"
+        ]
       }
     },
     "043907004": {
