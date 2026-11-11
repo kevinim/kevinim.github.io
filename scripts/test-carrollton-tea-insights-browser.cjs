@@ -47,9 +47,20 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           assert.equal(await card.count(),1,'one and only one exact campus listing '+id);
           await card.click();
           await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel')?.dataset.campus===id,id,{timeout:15000});
+          await page.waitForFunction(()=>[...document.styleSheets].some(s=>(s.href||'').includes('carrollton-school-insights.css?v=2')),
+            null,{timeout:15000});
           const found=await page.evaluate(()=>({
             id:document.querySelector('.tea-insights-panel')?.dataset.campus,
             summary:document.querySelector('.tea-insights-summary')?.textContent,
+            factLabels:[...document.querySelectorAll('.tea-insights-fact-label')].map(x=>x.textContent),
+            factTones:[...document.querySelectorAll('.tea-insights-fact')].map(x=>x.className),
+            factColors:[...document.querySelectorAll('.tea-insights-fact')].map(x=>getComputedStyle(x).color),
+            years:[...document.querySelectorAll('.tea-insights-vintage')].map(x=>({
+              text:x.textContent,size:parseFloat(getComputedStyle(x).fontSize)
+            })),
+            titleSize:parseFloat(getComputedStyle(document.querySelector('.tea-insights-title')).fontSize),
+            notesCollapsed:!document.querySelector('.tea-insights-provenance').open,
+            warningOutsideNotes:!!document.getElementById('zoneNotice')&&!document.querySelector('.tea-insights-provenance').contains(document.getElementById('zoneNotice')),
             domainCount:document.querySelectorAll('.tea-insights-domains dd').length,
             raceCount:document.querySelectorAll('.tea-insights-legend li').length,
             missingRace:[...document.querySelectorAll('.tea-insights-missing')].some(el=>el.textContent.includes('학생 인종·민족 구성')),
@@ -65,11 +76,19 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           assert.equal(found.id,id,'correct school joins to exact TEA ID');
           assert.ok(found.summary.length>20,'Korean insight summary visible');
           assert.ok(found.selected,'existing campus selection intact');
+          assert.equal(found.factLabels.length,2,'both evidence fields shown');
+          assert.notEqual(found.factColors[0],found.factColors[1],'strong point and improvement must use different text colors');
+          assert.ok(found.years[0]?.text.includes('2026')&&found.years[0].size<found.titleSize,'evaluation year is a small label');
+          assert.equal(found.notesCollapsed,true,'technical footnotes are closed by default');
+          assert.equal(found.warningOutsideNotes,true,'important school assignment warning remains visible');
           assert.ok(found.link.some(x=>x.url.startsWith('https://txschools.gov/')),'official campus source included');
           const reviewed=['061902118','061902008'].includes(id);
           const raceVerified=['061902118','061902008','043901001','043907002'].includes(id);
           assert.equal(found.domainCount,reviewed?3:0,'domain scores must not be invented '+id);
           if(raceVerified){
+            assert.equal(found.years.length,2,'evaluation and ethnicity years displayed separately');
+            assert.notEqual(found.years[0].text,found.years[1].text,'different vintages must remain distinct');
+            assert.ok(found.years[1].size<found.titleSize,'demographic year is a small label');
             assert.equal(found.raceCount,7,'seven verified demographic groups for '+id);
             assert.equal(found.missingRace,false);
             assert.ok(found.chart?.includes('아시아계'),'chart needs accessible ethnic names and shares');
@@ -80,6 +99,12 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           if(!reviewed)assert.equal(found.missingDomain,true,'grade-only campus must show missing domain notice');
           assert.deepEqual(found.csp,[],'CSP violation detected '+JSON.stringify(found.csp));
           if(width===390)assert.ok(found.scrollWidth<=width+5,'mobile horizontal overflow '+found.scrollWidth);
+          if(id===CASES[0][0]){
+            await page.locator('.tea-insights-provenance summary').click();
+            assert.equal(await page.locator('.tea-insights-provenance').evaluate(el=>el.open),true,'notes expand on click');
+            await page.locator('.tea-insights-provenance summary').click();
+            assert.equal(await page.locator('.tea-insights-provenance').evaluate(el=>el.open),false,'notes collapse again');
+          }
           results.push({school:label,...found});
           if(id==='061902118')await page.screenshot({path:path.join(ARTIFACTS,'campus-'+width+'.png'),fullPage:true,timeout:40000});
         }

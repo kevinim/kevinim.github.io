@@ -25,3 +25,42 @@
 .tea-insights-missing{font-size:11px;line-height:1.5;margin:12px 0 5px;color:var(--sub,#64748b)}
 @media(max-width:420px){.tea-insights-panel{padding:10px}.tea-insights-legend{grid-template-columns:1fr 1fr}}
 @media(forced-colors:active){.tea-insights-segment{border:1px solid CanvasText}.tea-insights-swatch{border:1px solid CanvasText}}
+
+
+/* School profile visual hierarchy: data first, provenance disclosed on demand. */
+.tea-insights-heading{display:flex;gap:6px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
+.tea-insights-panel .tea-insights-heading .tea-insights-title,
+.tea-insights-panel .tea-insights-heading .tea-insights-subtitle{margin:0}
+.tea-insights-panel .tea-insights-vintage{font-size:9px;line-height:1.35;letter-spacing:0;color:var(--sub,#64748b);opacity:.9;font-weight:550;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tea-insights-demographic-heading{margin:14px 0 4px}
+.tea-insights-enrollment{font-size:10.5px;color:var(--sub,#64748b);margin:0}
+.tea-insights-facts{gap:8px}
+.tea-insights-fact{display:grid;gap:4px;padding:9px 10px;border-radius:8px;border:1px solid transparent;font-size:11px;line-height:1.55}
+.tea-insights-fact-label{font-size:11px;font-weight:800}
+.tea-insights-fact-text{font-size:11.5px;font-weight:650;overflow-wrap:anywhere}
+.tea-insights-fact--positive{background:#eaf8f0;border-color:#b6e0c6;color:#14532d}
+.tea-insights-fact--improve{background:#fff3e7;border-color:#f5c99e;color:#9a3412}
+.tea-insights-fact--confirmed{background:#eef4ff;border-color:#c5d8fb;color:#1e40af}
+.tea-insights-fact--pending{background:#f4f5f7;border-color:#d7dce5;color:#475569}
+.tea-insights-empty{font-size:10.5px;line-height:1.5;color:var(--sub,#64748b);margin:8px 0}
+.tea-insights-provenance{margin-top:14px;border-top:1px solid var(--line,#dce5f2);padding-top:8px}
+.tea-insights-provenance-summary{font-size:11px;font-weight:750;color:var(--sub,#64748b);cursor:pointer;line-height:1.6;list-style-position:inside;padding:6px 1px}
+.tea-insights-provenance-summary:hover{text-decoration:underline;text-underline-offset:2px}
+.tea-insights-provenance-summary:focus-visible{outline:2px solid #3b82f6;outline-offset:3px;border-radius:3px}
+.tea-insights-provenance-body{padding:4px 2px 10px;display:grid;gap:7px}
+.tea-insights-provenance-body p{margin:0}
+.tea-insights-provenance-body .tea-insights-links{margin-top:0;gap:7px 10px}
+html[data-theme="dark"] .tea-insights-fact--positive{background:#143c2d;border-color:#326d4b;color:#bbf7d0}
+html[data-theme="dark"] .tea-insights-fact--improve{background:#432817;border-color:#946339;color:#fed7aa}
+html[data-theme="dark"] .tea-insights-fact--confirmed{background:#1e3458;border-color:#42659c;color:#bfdbfe}
+html[data-theme="dark"] .tea-insights-fact--pending{background:#293447;border-color:#516078;color:#e2e8f0}
+html[data-theme="dark"] .tea-insights-vintage,
+html[data-theme="dark"] .tea-insights-enrollment,
+html[data-theme="dark"] .tea-insights-empty,
+html[data-theme="dark"] .tea-insights-provenance-summary{color:#c2d0e4}
+@media(prefers-reduced-motion:reduce){.tea-insights-panel *{scroll-behavior:auto}}
+@media(forced-colors:active){
+ .tea-insights-fact{border-color:CanvasText;color:CanvasText;background:Canvas}
+ .tea-insights-fact-label{text-decoration:underline}
+ .tea-insights-provenance-summary{color:CanvasText}
+}

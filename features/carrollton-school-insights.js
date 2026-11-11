@@ -160,24 +160,31 @@
     panel.className='tea-insights-panel';
     panel.dataset.campus=id;
     panel.setAttribute('aria-label','학교 평가 및 학생 구성');
-    const title=textTag('h4','tea-insights-title','학교 평가 · 강점 · 학생 구성');
-    panel.appendChild(title);
-    panel.appendChild(textTag('p','tea-insights-meta','적용 단계 '+data.rolloutPhase+' · '+data.cohort));
-    panel.appendChild(textTag('p','tea-insights-meta','2026 TEA 종합 평가 · 학생 인종 구성은 별도 학년도'));
-    const summary=textTag('p','tea-insights-summary',data.summary);
-    panel.appendChild(summary);
+
+    const heading=document.createElement('div');
+    heading.className='tea-insights-heading';
+    heading.appendChild(textTag('h4','tea-insights-title','학교 평가 · 강점 · 학생 구성'));
+    heading.appendChild(textTag('small','tea-insights-vintage','TEA 2026'));
+    panel.appendChild(heading);
+    panel.appendChild(textTag('p','tea-insights-summary',data.summary));
+
+    // A rating-only summary is evidence, NOT a measured strength or weakness.
+    const ratingOnly=['rating-only','rating-and-demographics'].includes(data.evidenceStatus);
     const facts=document.createElement('div');facts.className='tea-insights-facts';
-    [[data.evidenceStatus==='rating-only'||data.evidenceStatus==='rating-and-demographics'?'확인된 평가':'강점',data.strength],
-      [data.evidenceStatus==='rating-only'||data.evidenceStatus==='rating-and-demographics'?'추가 검증':'개선과제',data.challenge]].forEach(function(pair){
-      const p=document.createElement('p');
-      p.appendChild(textTag('strong','',pair[0]+': '));
-      p.appendChild(document.createTextNode(pair[1]));
-      facts.appendChild(p);
+    const items=[
+      {kind:ratingOnly?'confirmed':'positive',label:ratingOnly?'확인된 평가':'강점',text:data.strength,symbol:ratingOnly?'●':'+'},
+      {kind:ratingOnly?'pending':'improve',label:ratingOnly?'추가 검증':'개선과제',text:data.challenge,symbol:ratingOnly?'…':'△'}
+    ];
+    items.forEach(function(info){
+      const item=document.createElement('div');
+      item.className='tea-insights-fact tea-insights-fact--'+info.kind;
+      const title=textTag('strong','tea-insights-fact-label',info.symbol+' '+info.label);
+      item.appendChild(title);
+      item.appendChild(textTag('span','tea-insights-fact-text',info.text));
+      facts.appendChild(item);
     });
     panel.appendChild(facts);
-    if(!data.domains){
-      panel.appendChild(textTag('p','tea-insights-missing','영역별 점수 및 과목별 성취도: 개별 TEA 원문 미연결. 종합점수만으로 과목별 강점이나 약점을 추정하지 않습니다.'));
-    }
+
     if(data.domains){
       const metrics=document.createElement('dl');metrics.className='tea-insights-domains';
       [['학업 성취',data.domains.achievement],['학교 향상도',data.domains.progress],['집단별 목표',data.domains.gaps]].forEach(function(pair){
@@ -187,6 +194,8 @@
         metrics.appendChild(item);
       });
       panel.appendChild(metrics);
+    } else {
+      panel.appendChild(textTag('p','tea-insights-empty','영역별 세부 성적 · 자료 확인 중'));
     }
     if(data.subjects){
       const subjects=document.createElement('p');subjects.className='tea-insights-subjects';
@@ -197,10 +206,15 @@
       ));
       panel.appendChild(subjects);
     }
-    if(data.demographics && checkRace(data.demographics.race)){
-      const demo=data.demographics;
-      panel.appendChild(textTag('h5','tea-insights-subtitle','학생 인종·민족 구성'));
-      panel.appendChild(textTag('p','tea-insights-meta',demo.year+' · TEA 학교 리포트카드 · 학생 '+demo.enrollment.toLocaleString('en-US')+'명'));
+
+    const demo=(data.demographics && checkRace(data.demographics.race))?data.demographics:null;
+    if(demo){
+      const demographicHeading=document.createElement('div');
+      demographicHeading.className='tea-insights-heading tea-insights-demographic-heading';
+      demographicHeading.appendChild(textTag('h5','tea-insights-subtitle','학생 인종·민족 구성'));
+      demographicHeading.appendChild(textTag('small','tea-insights-vintage',demo.year));
+      panel.appendChild(demographicHeading);
+      panel.appendChild(textTag('p','tea-insights-enrollment','등록 학생 '+demo.enrollment.toLocaleString('en-US')+'명'));
       const figure=document.createElement('figure');figure.className='tea-insights-figure';
       const chart=document.createElement('div');chart.className='tea-insights-stack';
       const rows=getRaceRows(id);
@@ -208,10 +222,10 @@
       chart.setAttribute('aria-label',rows.map(function(r){return r.label+' '+r.pct.toFixed(1)+'%';}).join(', '));
       rows.forEach(function(r){
         if(r.pct===0) return;
-        const s=document.createElement('span');s.className='tea-insights-segment';
-        s.style.width=r.pct+'%';s.style.backgroundColor=r.color;
-        s.title=r.label+' '+r.pct.toFixed(1)+'%';
-        chart.appendChild(s);
+        const segment=document.createElement('span');segment.className='tea-insights-segment';
+        segment.style.width=r.pct+'%';segment.style.backgroundColor=r.color;
+        segment.title=r.label+' '+r.pct.toFixed(1)+'%';
+        chart.appendChild(segment);
       });
       figure.appendChild(chart);
       const list=document.createElement('ul');list.className='tea-insights-legend';
@@ -224,22 +238,43 @@
         list.appendChild(li);
       });
       figure.appendChild(list);panel.appendChild(figure);
-      panel.appendChild(makeLink(demo.document+' 원문',demo.src));
-      panel.appendChild(textTag('p','tea-insights-meta','위 비율은 학교 등록 학생 기준입니다. ZIP 주민 인구구성이나 학군 배정 보장 자료가 아닙니다. 반올림으로 합계가 100%와 다를 수 있습니다.'));
     } else {
-      panel.appendChild(textTag('p','tea-insights-missing','학생 인종·민족 구성: 개별 TEA 자료 대조 중 · 미확인 수치는 표시하지 않습니다.'));
-      panel.appendChild(makeLink('학교별 TAPR 확인',TAPR_URL));
+      panel.appendChild(textTag('p','tea-insights-empty','학생 인종 구성 · 공식 수치 확인 중'));
     }
-    panel.appendChild(textTag('p','tea-insights-meta',data.evidenceStatus==='reviewed'
-      ?'평가 수치와 학생 구성 자료를 분리해 표시합니다. 한 줄 평은 TEA 공식 의견이 아닌 데이터 기반 해석입니다.'
-      :data.evidenceStatus==='rating-only'||data.evidenceStatus==='rating-and-demographics'
-        ?'2026 종합등급 기반 자동 요약입니다. 과목별 강점·개선과제는 아직 분석하지 않았습니다. 학생 인종 구성은 다른 학년도 자료입니다.'
+
+    // Keep detailed methodology, sources and missing-data explanations together.
+    // The existing immediate warning about address-to-school assignment is
+    // rendered outside this widget in dashboard-main.js and remains visible.
+    const details=document.createElement('details');
+    details.className='tea-insights-provenance';
+    details.appendChild(textTag('summary','tea-insights-provenance-summary','자료 출처 · 기준 · 유의사항'));
+    const notes=document.createElement('div');
+    notes.className='tea-insights-provenance-body';
+    notes.appendChild(textTag('p','tea-insights-meta','2026 TEA 종합 평가 · 적용 단계 '+data.rolloutPhase+' · '+data.cohort));
+    if(!data.domains) notes.appendChild(textTag('p','tea-insights-missing',
+      '영역별 점수 및 과목별 성취도: 개별 TEA 원문 미연결. 종합점수만으로 과목별 강점이나 약점을 추정하지 않습니다.'));
+    if(demo){
+      notes.appendChild(textTag('p','tea-insights-meta','학생 인종 구성: '+demo.year+' · '+demo.document+' · 등록 학생 '+demo.enrollment.toLocaleString('en-US')+'명'));
+      notes.appendChild(makeLink(demo.document+' 원문',demo.src));
+      notes.appendChild(textTag('p','tea-insights-meta',
+        '학생 인종 비율은 학교 재학생 기준이며 ZIP 거주자 구성이나 주소별 학교 배정을 나타내지 않습니다. 반올림으로 합계가 100%와 다를 수 있습니다.'));
+    } else {
+      notes.appendChild(textTag('p','tea-insights-missing',
+        '학생 인종·민족 구성: 개별 TEA 자료 대조 중 · 미확인 수치는 표시하지 않습니다.'));
+      notes.appendChild(makeLink('학교별 TAPR 확인',TAPR_URL));
+    }
+    notes.appendChild(textTag('p','tea-insights-meta',data.evidenceStatus==='reviewed'
+      ?'한 줄 평과 강점·개선과제는 TEA 공식 의견이 아닌 데이터 기반 해석입니다.'
+      :ratingOnly
+        ?'2026 종합등급 기반 자동 요약입니다. 과목별 강점·개선과제는 아직 분석하지 않았습니다.'
         :'시범 해석: 세부 과목별 수치의 개별 TEA 원문 대조 전입니다. 공식 종합 등급과 구분하여 참고하세요.'));
     const links=document.createElement('div');links.className='tea-insights-links';
     links.appendChild(makeLink('2026 TEA 평가 자료',RATINGS_URL));
     links.appendChild(makeLink('TEA 캠퍼스 원문',scoreRecord.official && /^https:\/\/txschools\.gov\//.test(scoreRecord.official)
       ? scoreRecord.official : 'https://txschools.gov/'));
-    panel.appendChild(links);
+    notes.appendChild(links);
+    details.appendChild(notes);
+    panel.appendChild(details);
     return panel;
   }
   function ensureStyles() {
@@ -248,7 +283,7 @@
     if(document.querySelector('link[data-tea-carrollton-css]')) return;
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='./features/carrollton-school-insights.css?v=1';
+    css.href='./features/carrollton-school-insights.css?v=2';
     css.dataset.teaCarrolltonCss='1';
     document.head.appendChild(css);
   }
