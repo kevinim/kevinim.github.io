@@ -272,6 +272,7 @@
     return RACES.map(function(row){
       const cell=item.counts[row[0]];
       return {key:row[0],label:row[1],status:cell.status,
+        count:cell.status==='published'?cell.count:null,
         display:cell.status==='published'?cell.count.toLocaleString('en-US')+'명':
           cell.status==='suppressed'?'비공개 ('+cell.publishedMask+')':'원본 미표시'};
     });
@@ -394,18 +395,24 @@
 
     const published=getPublishedCountRows(id);
     if(published){
+      const complete=published.every(function(cell){return cell.status==='published';});
+      const total=complete?published.reduce(function(n,cell){return n+cell.count;},0):0;
       const current=document.createElement('details');
       current.className='tea-insights-provenance tea-peims-counts';
       current.open=true;
       current.appendChild(textTag('summary','tea-insights-provenance-summary',
-        '2025–26 공식 학생 인종별 인원 · 일부 비공개'));
+        complete?'2025–26 공식 학생 인종별 인원 · 7개 분류 공개':
+          '2025–26 공식 학생 인종별 인원 · 일부 비공개'));
       const recentList=document.createElement('ul');
       recentList.className='tea-insights-legend';
       published.forEach(function(cell){
-        recentList.appendChild(textTag('li','',cell.label+' · '+cell.display));
+        const percent=complete&&total>0?
+          ' ('+(100*cell.count/total).toFixed(1)+'%)':'';
+        recentList.appendChild(textTag('li','',cell.label+' · '+cell.display+percent));
       });
       current.appendChild(recentList);
-      current.appendChild(textTag('p','tea-insights-empty',
+      current.appendChild(textTag('p','tea-insights-empty',complete&&total>0?
+        '2025–26 공식 집계에서 7개 인종 분류가 모두 공개되어 동일 학년도 인원 합계를 기준으로 비율을 계산했습니다.':
         'TEA가 일부 학생 수를 비공개 또는 미표시하여 정확한 전체 인종 비율을 계산하지 않습니다.'));
       panel.appendChild(current);
     }
