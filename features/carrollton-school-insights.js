@@ -476,6 +476,25 @@
     heading.appendChild(textTag('h4','tea-insights-title','학교 평가 · 강점 · 학생 구성'));
     heading.appendChild(textTag('small','tea-insights-vintage','TEA 2026'));
     panel.appendChild(heading);
+    if(/^04390(?:1|7)\d{3}$/.test(id) && !ALLEN_MCKINNEY[id] && officialBatchStarted){
+      const status=textTag('p','tea-insights-fetch-status',
+        officialBatchError?'TEA 공식 세부 자료 파일을 불러오지 못했습니다. 기존 종합평가만 표시합니다.':
+          '2026 TEA 공식 세부 자료를 불러오는 중입니다.');
+      status.setAttribute('role','status');
+      panel.appendChild(status);
+      if(officialBatchError){
+        const retry=textTag('button','mini-btn tea-insights-retry','다시 불러오기');
+        retry.type='button';
+        retry.addEventListener('click',function(){
+          officialBatchStarted=false;
+          officialBatchError=false;
+          loadAllenMcKinneyBatch(scoreRecord);
+          status.textContent='2026 TEA 공식 세부 자료를 다시 불러오는 중입니다.';
+          retry.disabled=true;
+        });
+        panel.appendChild(retry);
+      }
+    }
     panel.appendChild(textTag('p','tea-insights-summary',data.summary));
 
     // A rating-only summary is evidence, NOT a measured strength or weakness.
