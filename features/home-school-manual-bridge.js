@@ -5,14 +5,14 @@
  * User selects campuses after viewing the district's official locator.
  */
 (function(root,factory){
-  const api=factory();
+  const api=factory(root);
   if(typeof module==='object'&&module.exports)module.exports=api;
   if(root&&typeof document!=='undefined'){
     root.HomeSchoolManualBridge=api;
     if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',api.init,{once:true});
     else api.init();
   }
-})(typeof window!=='undefined'?window:null,function(){
+})(typeof window!=='undefined'?window:null,function(root){
   const LEVELS=[
     ['elementary','초등학교'],
     ['middle','중학교'],
