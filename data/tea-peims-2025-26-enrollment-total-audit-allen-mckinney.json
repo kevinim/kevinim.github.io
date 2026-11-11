@@ -14,8 +14,8 @@
     "exactPublishedCells": 240,
     "suppressedCells": 102,
     "notListedCells": 50,
-    "officialEnrollmentPublished": 55,
-    "officialEnrollmentMissing": 1,
+    "officialEnrollmentPublished": 56,
+    "officialEnrollmentMissing": 0,
     "totalDisagreements": 8,
     "allSevenGroupsPublished": 1,
     "fullyReconciledSevenGroupProfiles": 0
@@ -552,9 +552,12 @@
         "notListed": 2,
         "knownPublishedGroupSum": 31
       },
-      "officialEnrollment": null,
-      "officialEnrollmentEvidence": null,
-      "reconciliationStatus": "total-unavailable",
+      "officialEnrollment": 101,
+      "officialEnrollmentEvidence": {
+        "sourceType": "TEA-2025-26-school-profile",
+        "url": "https://txschools.gov/?view=school&id=043907006&lng=en"
+      },
+      "reconciliationStatus": "published-cells-within-total-incomplete",
       "allSevenGroupsPublic": false,
       "verifiedSevenGroupShares": false
     },
