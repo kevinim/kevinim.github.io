@@ -10,7 +10,12 @@
   "individualNarratives": 18,
   "domainComponentsReviewed": 2,
   "subjectsReviewed": 2,
-  "ethnicityReviewed": 4,
+  "ethnicityReviewed": 8,
+  "public2025_26CampusCounts": 2282,
+  "public2025_26PublishedCells": 8277,
+  "public2025_26SuppressedCells": 5141,
+  "public2025_26UnlistedCells": 2556,
+  "public2025_26CompleteShares": 6,
   "imported2026Components": 0,
   "imported2025_26Ethnicity": 0,
   "cohorts": [
@@ -20,7 +25,8 @@
       "profiles": 92,
       "individualAnalysis": 18,
       "domainScores": 2,
-      "ethnicity": 2
+      "ethnicity": 6,
+      "public2025_26CampusCounts": 92
     },
     {
       "name": "Allen",
@@ -28,7 +34,8 @@
       "profiles": 23,
       "individualAnalysis": 0,
       "domainScores": 0,
-      "ethnicity": 1
+      "ethnicity": 1,
+      "public2025_26CampusCounts": 23
     },
     {
       "name": "McKinney",
@@ -36,7 +43,8 @@
       "profiles": 33,
       "individualAnalysis": 0,
       "domainScores": 0,
-      "ethnicity": 1
+      "ethnicity": 1,
+      "public2025_26CampusCounts": 33
     },
     {
       "name": "기타 DFW",
@@ -44,12 +52,1662 @@
       "profiles": 2134,
       "individualAnalysis": 0,
       "domainScores": 0,
-      "ethnicity": 0
+      "ethnicity": 0,
+      "public2025_26CampusCounts": 2134
     }
   ],
   "notes": [
     "Basic profile means official overall grade and exact campus ID; it is NOT complete domain analysis.",
     "Student race/ethnicity is context, not a school quality indicator.",
-    "Suppressed TEA PEIMS counts are unavailable, not zero; no ZIP or district values are imputed."
-  ]
+    "Suppressed TEA PEIMS counts are unavailable, not zero; no ZIP or district values are imputed.",
+    "2025-26 public race counts include FERPA suppressed and omitted cells; count coverage is not complete seven-race percentage coverage.",
+    "Source complete for all inventory campus IDs using 2025-26 statewide aggregate; this is partial ethnicity COUNT coverage, not seven-race distribution completeness."
+  ],
+  "official2026": {
+    "accountabilityYear": 2026,
+    "schoolYear": "2025-26",
+    "sourceAccountability": "data/tea-accountability-2026-verified-batch.json",
+    "sourceStaar": "data/tea-staar-meets-2026-verified-batch.json",
+    "campuses": 2282,
+    "domainAnyReported": 2101,
+    "domainAllReported": 2063,
+    "staarAnyReported": 2105,
+    "staarAllFourReported": 814,
+    "scoreBasedComparisonEligible": 2060,
+    "staarSourceAbsent": 110,
+    "public2025_26CountCampuses": 2282,
+    "fullRaceShareCampuses": 6,
+    "byDistrict": [
+      {
+        "districtId": "043801",
+        "name": "IMAGINE INTERNATIONAL ACADEMY OF NORTH TEXAS",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "043802",
+        "name": "IMAGINE LONE STAR INTERNATIONAL ACADEMY",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "043901",
+        "name": "ALLEN ISD",
+        "campuses": 23,
+        "domainAllReported": 21,
+        "staarAnyReported": 21,
+        "public2025_26CountCampuses": 23,
+        "fullRaceShareCampuses": 1
+      },
+      {
+        "districtId": "043902",
+        "name": "ANNA ISD",
+        "campuses": 10,
+        "domainAllReported": 8,
+        "staarAnyReported": 9,
+        "public2025_26CountCampuses": 10,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "043903",
+        "name": "CELINA ISD",
+        "campuses": 8,
+        "domainAllReported": 7,
+        "staarAnyReported": 7,
+        "public2025_26CountCampuses": 8,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "043904",
+        "name": "FARMERSVILLE ISD",
+        "campuses": 4,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 4,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "043905",
+        "name": "FRISCO ISD",
+        "campuses": 76,
+        "domainAllReported": 74,
+        "staarAnyReported": 74,
+        "public2025_26CountCampuses": 76,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "043907",
+        "name": "MCKINNEY ISD",
+        "campuses": 33,
+        "domainAllReported": 29,
+        "staarAnyReported": 29,
+        "public2025_26CountCampuses": 33,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "043908",
+        "name": "MELISSA ISD",
+        "campuses": 9,
+        "domainAllReported": 8,
+        "staarAnyReported": 8,
+        "public2025_26CountCampuses": 9,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "043910",
+        "name": "PLANO ISD",
+        "campuses": 69,
+        "domainAllReported": 63,
+        "staarAnyReported": 63,
+        "public2025_26CountCampuses": 69,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "043911",
+        "name": "PRINCETON ISD",
+        "campuses": 16,
+        "domainAllReported": 13,
+        "staarAnyReported": 13,
+        "public2025_26CountCampuses": 16,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "043912",
+        "name": "PROSPER ISD",
+        "campuses": 32,
+        "domainAllReported": 30,
+        "staarAnyReported": 30,
+        "public2025_26CountCampuses": 32,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "043914",
+        "name": "WYLIE ISD",
+        "campuses": 22,
+        "domainAllReported": 19,
+        "staarAnyReported": 20,
+        "public2025_26CountCampuses": 22,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "043917",
+        "name": "BLUE RIDGE ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "043918",
+        "name": "COMMUNITY ISD",
+        "campuses": 9,
+        "domainAllReported": 8,
+        "staarAnyReported": 8,
+        "public2025_26CountCampuses": 9,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "043919",
+        "name": "LOVEJOY ISD",
+        "campuses": 6,
+        "domainAllReported": 5,
+        "staarAnyReported": 5,
+        "public2025_26CountCampuses": 6,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "049901",
+        "name": "GAINESVILLE ISD",
+        "campuses": 5,
+        "domainAllReported": 4,
+        "staarAnyReported": 4,
+        "public2025_26CountCampuses": 5,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "049902",
+        "name": "MUENSTER ISD",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "049903",
+        "name": "VALLEY VIEW ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "049905",
+        "name": "CALLISBURG ISD",
+        "campuses": 4,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 4,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "049906",
+        "name": "ERA ISD",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "049907",
+        "name": "LINDSAY ISD",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "049908",
+        "name": "WALNUT BEND ISD",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "049909",
+        "name": "SIVELLS BEND ISD",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057802",
+        "name": "PEGASUS SCHOOL OF LIBERAL ARTS AND SCIENCES",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057803",
+        "name": "UPLIFT EDUCATION",
+        "campuses": 45,
+        "domainAllReported": 45,
+        "staarAnyReported": 45,
+        "public2025_26CountCampuses": 45,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057804",
+        "name": "TEXANS CAN ACADEMIES",
+        "campuses": 11,
+        "domainAllReported": 11,
+        "staarAnyReported": 11,
+        "public2025_26CountCampuses": 11,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057806",
+        "name": "ADVANTAGE ACADEMY",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057807",
+        "name": "LIFE SCHOOL",
+        "campuses": 7,
+        "domainAllReported": 7,
+        "staarAnyReported": 7,
+        "public2025_26CountCampuses": 7,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057808",
+        "name": "UNIVERSAL ACADEMY",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057809",
+        "name": "NOVA ACADEMY",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057813",
+        "name": "TRINITY BASIN PREPARATORY",
+        "campuses": 8,
+        "domainAllReported": 8,
+        "staarAnyReported": 8,
+        "public2025_26CountCampuses": 8,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057814",
+        "name": "ACADEMY FOR ACADEMIC EXCELLENCE",
+        "campuses": 4,
+        "domainAllReported": 0,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 4,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057819",
+        "name": "JEAN MASSIEU ACADEMY",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057827",
+        "name": "NOVA ACADEMY SOUTHEAST",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057828",
+        "name": "WINFREE ACADEMY CHARTER SCHOOLS",
+        "campuses": 6,
+        "domainAllReported": 6,
+        "staarAnyReported": 6,
+        "public2025_26CountCampuses": 6,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057829",
+        "name": "A+ ACADEMY",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057830",
+        "name": "INSPIRED VISION ACADEMY",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057831",
+        "name": "GATEWAY CHARTER ACADEMY",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057833",
+        "name": "EDUCATION CENTER INTERNATIONAL ACADEMY",
+        "campuses": 2,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057834",
+        "name": "EVOLUTION ACADEMY CHARTER SCHOOL",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057835",
+        "name": "GOLDEN RULE CHARTER SCHOOL",
+        "campuses": 5,
+        "domainAllReported": 5,
+        "staarAnyReported": 5,
+        "public2025_26CountCampuses": 5,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057836",
+        "name": "ST ANTHONY SCHOOL",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057839",
+        "name": "LA ACADEMIA DE ESTRELLAS",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057841",
+        "name": "CITYSCAPE SCHOOLS",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057844",
+        "name": "MANARA ACADEMY",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057845",
+        "name": "UME PREPARATORY ACADEMY",
+        "campuses": 4,
+        "domainAllReported": 4,
+        "staarAnyReported": 4,
+        "public2025_26CountCampuses": 4,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057846",
+        "name": "LEGACY PREPARATORY",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057847",
+        "name": "VILLAGE TECH SCHOOLS",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057848",
+        "name": "INTERNATIONAL LEADERSHIP OF TEXAS (ILTEXAS)",
+        "campuses": 44,
+        "domainAllReported": 44,
+        "staarAnyReported": 44,
+        "public2025_26CountCampuses": 44,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057850",
+        "name": "PIONEER TECHNOLOGY & ARTS ACADEMY",
+        "campuses": 6,
+        "domainAllReported": 6,
+        "staarAnyReported": 6,
+        "public2025_26CountCampuses": 6,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057851",
+        "name": "BRIDGEWAY PREPARATORY ACADEMY",
+        "campuses": 1,
+        "domainAllReported": 0,
+        "staarAnyReported": 0,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057903",
+        "name": "CARROLLTON-FARMERS BRANCH ISD",
+        "campuses": 35,
+        "domainAllReported": 32,
+        "staarAnyReported": 32,
+        "public2025_26CountCampuses": 35,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057904",
+        "name": "CEDAR HILL ISD",
+        "campuses": 11,
+        "domainAllReported": 11,
+        "staarAnyReported": 11,
+        "public2025_26CountCampuses": 11,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057905",
+        "name": "DALLAS ISD",
+        "campuses": 237,
+        "domainAllReported": 226,
+        "staarAnyReported": 226,
+        "public2025_26CountCampuses": 237,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057906",
+        "name": "DESOTO ISD",
+        "campuses": 11,
+        "domainAllReported": 7,
+        "staarAnyReported": 7,
+        "public2025_26CountCampuses": 11,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057907",
+        "name": "DUNCANVILLE ISD",
+        "campuses": 14,
+        "domainAllReported": 14,
+        "staarAnyReported": 14,
+        "public2025_26CountCampuses": 14,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057909",
+        "name": "GARLAND ISD",
+        "campuses": 66,
+        "domainAllReported": 62,
+        "staarAnyReported": 62,
+        "public2025_26CountCampuses": 66,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057910",
+        "name": "GRAND PRAIRIE ISD",
+        "campuses": 37,
+        "domainAllReported": 34,
+        "staarAnyReported": 34,
+        "public2025_26CountCampuses": 37,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057911",
+        "name": "HIGHLAND PARK ISD",
+        "campuses": 8,
+        "domainAllReported": 8,
+        "staarAnyReported": 8,
+        "public2025_26CountCampuses": 8,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057912",
+        "name": "IRVING ISD",
+        "campuses": 35,
+        "domainAllReported": 31,
+        "staarAnyReported": 31,
+        "public2025_26CountCampuses": 35,
+        "fullRaceShareCampuses": 2
+      },
+      {
+        "districtId": "057913",
+        "name": "LANCASTER ISD",
+        "campuses": 10,
+        "domainAllReported": 9,
+        "staarAnyReported": 9,
+        "public2025_26CountCampuses": 10,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057914",
+        "name": "MESQUITE ISD",
+        "campuses": 51,
+        "domainAllReported": 50,
+        "staarAnyReported": 50,
+        "public2025_26CountCampuses": 51,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057916",
+        "name": "RICHARDSON ISD",
+        "campuses": 51,
+        "domainAllReported": 48,
+        "staarAnyReported": 48,
+        "public2025_26CountCampuses": 51,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057919",
+        "name": "SUNNYVALE ISD",
+        "campuses": 4,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 4,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "057922",
+        "name": "COPPELL ISD",
+        "campuses": 16,
+        "domainAllReported": 15,
+        "staarAnyReported": 15,
+        "public2025_26CountCampuses": 16,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "061802",
+        "name": "NORTH TEXAS COLLEGIATE ACADEMY",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "061804",
+        "name": "LEADERSHIP PREP SCHOOL",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "061805",
+        "name": "TRIVIUM ACADEMY",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "061806",
+        "name": "TEXAS WORKS",
+        "campuses": 41,
+        "domainAllReported": 1,
+        "staarAnyReported": 22,
+        "public2025_26CountCampuses": 41,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "061901",
+        "name": "DENTON ISD",
+        "campuses": 46,
+        "domainAllReported": 40,
+        "staarAnyReported": 42,
+        "public2025_26CountCampuses": 46,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "061902",
+        "name": "LEWISVILLE ISD",
+        "campuses": 57,
+        "domainAllReported": 55,
+        "staarAnyReported": 55,
+        "public2025_26CountCampuses": 57,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "061903",
+        "name": "PILOT POINT ISD",
+        "campuses": 5,
+        "domainAllReported": 3,
+        "staarAnyReported": 4,
+        "public2025_26CountCampuses": 5,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "061905",
+        "name": "KRUM ISD",
+        "campuses": 5,
+        "domainAllReported": 5,
+        "staarAnyReported": 5,
+        "public2025_26CountCampuses": 5,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "061906",
+        "name": "PONDER ISD",
+        "campuses": 4,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 4,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "061907",
+        "name": "AUBREY ISD",
+        "campuses": 8,
+        "domainAllReported": 7,
+        "staarAnyReported": 7,
+        "public2025_26CountCampuses": 8,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "061908",
+        "name": "SANGER ISD",
+        "campuses": 6,
+        "domainAllReported": 4,
+        "staarAnyReported": 4,
+        "public2025_26CountCampuses": 6,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "061910",
+        "name": "ARGYLE ISD",
+        "campuses": 7,
+        "domainAllReported": 7,
+        "staarAnyReported": 7,
+        "public2025_26CountCampuses": 7,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "061911",
+        "name": "NORTHWEST ISD",
+        "campuses": 37,
+        "domainAllReported": 34,
+        "staarAnyReported": 34,
+        "public2025_26CountCampuses": 37,
+        "fullRaceShareCampuses": 2
+      },
+      {
+        "districtId": "061912",
+        "name": "LAKE DALLAS ISD",
+        "campuses": 5,
+        "domainAllReported": 5,
+        "staarAnyReported": 5,
+        "public2025_26CountCampuses": 5,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "061914",
+        "name": "LITTLE ELM ISD",
+        "campuses": 12,
+        "domainAllReported": 10,
+        "staarAnyReported": 10,
+        "public2025_26CountCampuses": 12,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "070801",
+        "name": "FAITH FAMILY ACADEMY",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "070901",
+        "name": "AVALON ISD",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "070903",
+        "name": "ENNIS ISD",
+        "campuses": 12,
+        "domainAllReported": 9,
+        "staarAnyReported": 9,
+        "public2025_26CountCampuses": 12,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "070905",
+        "name": "FERRIS ISD",
+        "campuses": 6,
+        "domainAllReported": 4,
+        "staarAnyReported": 4,
+        "public2025_26CountCampuses": 6,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "070907",
+        "name": "ITALY ISD",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "070908",
+        "name": "MIDLOTHIAN ISD",
+        "campuses": 13,
+        "domainAllReported": 13,
+        "staarAnyReported": 13,
+        "public2025_26CountCampuses": 13,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "070909",
+        "name": "MILFORD ISD",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "070910",
+        "name": "PALMER ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "070911",
+        "name": "RED OAK ISD",
+        "campuses": 9,
+        "domainAllReported": 8,
+        "staarAnyReported": 8,
+        "public2025_26CountCampuses": 9,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "070912",
+        "name": "WAXAHACHIE ISD",
+        "campuses": 18,
+        "domainAllReported": 15,
+        "staarAnyReported": 16,
+        "public2025_26CountCampuses": 18,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "070915",
+        "name": "MAYPEARL ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "074903",
+        "name": "BONHAM ISD",
+        "campuses": 5,
+        "domainAllReported": 4,
+        "staarAnyReported": 4,
+        "public2025_26CountCampuses": 5,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "074904",
+        "name": "DODD CITY ISD",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "074905",
+        "name": "ECTOR ISD",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "074907",
+        "name": "HONEY GROVE ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "074909",
+        "name": "LEONARD ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "074911",
+        "name": "SAVOY ISD",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "074912",
+        "name": "TRENTON ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "074917",
+        "name": "SAM RAYBURN ISD",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "091901",
+        "name": "BELLS ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "091902",
+        "name": "COLLINSVILLE ISD",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "091903",
+        "name": "DENISON ISD",
+        "campuses": 9,
+        "domainAllReported": 8,
+        "staarAnyReported": 8,
+        "public2025_26CountCampuses": 9,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "091905",
+        "name": "HOWE ISD",
+        "campuses": 4,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 4,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "091906",
+        "name": "SHERMAN ISD",
+        "campuses": 16,
+        "domainAllReported": 10,
+        "staarAnyReported": 12,
+        "public2025_26CountCampuses": 16,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "091907",
+        "name": "TIOGA ISD",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "091908",
+        "name": "VAN ALSTYNE ISD",
+        "campuses": 5,
+        "domainAllReported": 5,
+        "staarAnyReported": 5,
+        "public2025_26CountCampuses": 5,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "091909",
+        "name": "WHITESBORO ISD",
+        "campuses": 4,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 4,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "091910",
+        "name": "WHITEWRIGHT ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "091913",
+        "name": "POTTSBORO ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "091914",
+        "name": "S AND S CISD",
+        "campuses": 4,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 4,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "091917",
+        "name": "GUNTER ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "091918",
+        "name": "TOM BEAN ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "116901",
+        "name": "CADDO MILLS ISD",
+        "campuses": 6,
+        "domainAllReported": 6,
+        "staarAnyReported": 6,
+        "public2025_26CountCampuses": 6,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "116902",
+        "name": "CELESTE ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "116903",
+        "name": "COMMERCE ISD",
+        "campuses": 4,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 4,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "116905",
+        "name": "GREENVILLE ISD",
+        "campuses": 10,
+        "domainAllReported": 8,
+        "staarAnyReported": 8,
+        "public2025_26CountCampuses": 10,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "116906",
+        "name": "LONE OAK ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "116908",
+        "name": "QUINLAN ISD",
+        "campuses": 4,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 4,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "116909",
+        "name": "WOLFE CITY ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "116910",
+        "name": "CAMPBELL ISD",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "116915",
+        "name": "BLAND ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "116916",
+        "name": "BOLES ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "126901",
+        "name": "ALVARADO ISD",
+        "campuses": 5,
+        "domainAllReported": 5,
+        "staarAnyReported": 5,
+        "public2025_26CountCampuses": 5,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "126902",
+        "name": "BURLESON ISD",
+        "campuses": 20,
+        "domainAllReported": 18,
+        "staarAnyReported": 18,
+        "public2025_26CountCampuses": 20,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "126903",
+        "name": "CLEBURNE ISD",
+        "campuses": 12,
+        "domainAllReported": 10,
+        "staarAnyReported": 11,
+        "public2025_26CountCampuses": 12,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "126904",
+        "name": "GRANDVIEW ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "126905",
+        "name": "JOSHUA ISD",
+        "campuses": 10,
+        "domainAllReported": 9,
+        "staarAnyReported": 10,
+        "public2025_26CountCampuses": 10,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "126906",
+        "name": "KEENE ISD",
+        "campuses": 4,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 4,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "126907",
+        "name": "RIO VISTA ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "126908",
+        "name": "VENUS ISD",
+        "campuses": 4,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 4,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "126911",
+        "name": "GODLEY ISD",
+        "campuses": 5,
+        "domainAllReported": 5,
+        "staarAnyReported": 5,
+        "public2025_26CountCampuses": 5,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "129901",
+        "name": "CRANDALL ISD",
+        "campuses": 9,
+        "domainAllReported": 9,
+        "staarAnyReported": 9,
+        "public2025_26CountCampuses": 9,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "129902",
+        "name": "FORNEY ISD",
+        "campuses": 24,
+        "domainAllReported": 23,
+        "staarAnyReported": 23,
+        "public2025_26CountCampuses": 24,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "129903",
+        "name": "KAUFMAN ISD",
+        "campuses": 7,
+        "domainAllReported": 5,
+        "staarAnyReported": 6,
+        "public2025_26CountCampuses": 7,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "129904",
+        "name": "KEMP ISD",
+        "campuses": 6,
+        "domainAllReported": 4,
+        "staarAnyReported": 5,
+        "public2025_26CountCampuses": 6,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "129905",
+        "name": "MABANK ISD",
+        "campuses": 6,
+        "domainAllReported": 6,
+        "staarAnyReported": 6,
+        "public2025_26CountCampuses": 6,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "129906",
+        "name": "TERRELL ISD",
+        "campuses": 9,
+        "domainAllReported": 6,
+        "staarAnyReported": 7,
+        "public2025_26CountCampuses": 9,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "129910",
+        "name": "SCURRY-ROSSER ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "184801",
+        "name": "CROSSTIMBERS ACADEMY",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "184901",
+        "name": "POOLVILLE ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "184902",
+        "name": "SPRINGTOWN ISD",
+        "campuses": 8,
+        "domainAllReported": 6,
+        "staarAnyReported": 7,
+        "public2025_26CountCampuses": 8,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "184903",
+        "name": "WEATHERFORD ISD",
+        "campuses": 12,
+        "domainAllReported": 10,
+        "staarAnyReported": 11,
+        "public2025_26CountCampuses": 12,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "184904",
+        "name": "MILLSAP ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "184907",
+        "name": "ALEDO ISD",
+        "campuses": 12,
+        "domainAllReported": 11,
+        "staarAnyReported": 11,
+        "public2025_26CountCampuses": 12,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "184908",
+        "name": "PEASTER ISD",
+        "campuses": 5,
+        "domainAllReported": 4,
+        "staarAnyReported": 4,
+        "public2025_26CountCampuses": 5,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "184909",
+        "name": "BROCK ISD",
+        "campuses": 5,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 5,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "184911",
+        "name": "GARNER ISD",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "199901",
+        "name": "ROCKWALL ISD",
+        "campuses": 23,
+        "domainAllReported": 22,
+        "staarAnyReported": 23,
+        "public2025_26CountCampuses": 23,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "199902",
+        "name": "ROYSE CITY ISD",
+        "campuses": 13,
+        "domainAllReported": 11,
+        "staarAnyReported": 11,
+        "public2025_26CountCampuses": 13,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220801",
+        "name": "TREETOPS SCHOOL INTERNATIONAL",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220802",
+        "name": "ARLINGTON CLASSICS ACADEMY",
+        "campuses": 3,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220809",
+        "name": "FORT WORTH ACADEMY OF FINE ARTS",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220810",
+        "name": "WESTLAKE ACADEMY CHARTER SCHOOL",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220811",
+        "name": "EAST FORT WORTH MONTESSORI ACADEMY",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220814",
+        "name": "TEXAS SCHOOL OF THE ARTS",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220817",
+        "name": "NEWMAN INTERNATIONAL ACADEMY OF ARLINGTON",
+        "campuses": 5,
+        "domainAllReported": 5,
+        "staarAnyReported": 5,
+        "public2025_26CountCampuses": 5,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220822",
+        "name": "NEW HEIGHTS",
+        "campuses": 2,
+        "domainAllReported": 2,
+        "staarAnyReported": 2,
+        "public2025_26CountCampuses": 2,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220901",
+        "name": "ARLINGTON ISD",
+        "campuses": 74,
+        "domainAllReported": 71,
+        "staarAnyReported": 71,
+        "public2025_26CountCampuses": 74,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220902",
+        "name": "BIRDVILLE ISD",
+        "campuses": 31,
+        "domainAllReported": 31,
+        "staarAnyReported": 31,
+        "public2025_26CountCampuses": 31,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220904",
+        "name": "EVERMAN ISD",
+        "campuses": 11,
+        "domainAllReported": 9,
+        "staarAnyReported": 9,
+        "public2025_26CountCampuses": 11,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220905",
+        "name": "FORT WORTH ISD",
+        "campuses": 134,
+        "domainAllReported": 121,
+        "staarAnyReported": 121,
+        "public2025_26CountCampuses": 134,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220906",
+        "name": "GRAPEVINE-COLLEYVILLE ISD",
+        "campuses": 20,
+        "domainAllReported": 20,
+        "staarAnyReported": 20,
+        "public2025_26CountCampuses": 20,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220907",
+        "name": "KELLER ISD",
+        "campuses": 40,
+        "domainAllReported": 38,
+        "staarAnyReported": 39,
+        "public2025_26CountCampuses": 40,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220908",
+        "name": "MANSFIELD ISD",
+        "campuses": 48,
+        "domainAllReported": 46,
+        "staarAnyReported": 46,
+        "public2025_26CountCampuses": 48,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220910",
+        "name": "LAKE WORTH ISD",
+        "campuses": 5,
+        "domainAllReported": 5,
+        "staarAnyReported": 5,
+        "public2025_26CountCampuses": 5,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220912",
+        "name": "CROWLEY ISD",
+        "campuses": 23,
+        "domainAllReported": 23,
+        "staarAnyReported": 23,
+        "public2025_26CountCampuses": 23,
+        "fullRaceShareCampuses": 1
+      },
+      {
+        "districtId": "220914",
+        "name": "KENNEDALE ISD",
+        "campuses": 5,
+        "domainAllReported": 4,
+        "staarAnyReported": 4,
+        "public2025_26CountCampuses": 5,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220915",
+        "name": "AZLE ISD",
+        "campuses": 12,
+        "domainAllReported": 11,
+        "staarAnyReported": 12,
+        "public2025_26CountCampuses": 12,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220916",
+        "name": "HURST-EULESS-BEDFORD ISD",
+        "campuses": 32,
+        "domainAllReported": 29,
+        "staarAnyReported": 30,
+        "public2025_26CountCampuses": 32,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220917",
+        "name": "CASTLEBERRY ISD",
+        "campuses": 7,
+        "domainAllReported": 5,
+        "staarAnyReported": 6,
+        "public2025_26CountCampuses": 7,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220918",
+        "name": "EAGLE MT-SAGINAW ISD",
+        "campuses": 32,
+        "domainAllReported": 29,
+        "staarAnyReported": 29,
+        "public2025_26CountCampuses": 32,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220919",
+        "name": "CARROLL ISD",
+        "campuses": 11,
+        "domainAllReported": 11,
+        "staarAnyReported": 11,
+        "public2025_26CountCampuses": 11,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "220920",
+        "name": "WHITE SETTLEMENT ISD",
+        "campuses": 8,
+        "domainAllReported": 6,
+        "staarAnyReported": 6,
+        "public2025_26CountCampuses": 8,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "249901",
+        "name": "ALVORD ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "249902",
+        "name": "BOYD ISD",
+        "campuses": 5,
+        "domainAllReported": 4,
+        "staarAnyReported": 4,
+        "public2025_26CountCampuses": 5,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "249903",
+        "name": "BRIDGEPORT ISD",
+        "campuses": 4,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 4,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "249904",
+        "name": "CHICO ISD",
+        "campuses": 3,
+        "domainAllReported": 3,
+        "staarAnyReported": 3,
+        "public2025_26CountCampuses": 3,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "249905",
+        "name": "DECATUR ISD",
+        "campuses": 6,
+        "domainAllReported": 6,
+        "staarAnyReported": 6,
+        "public2025_26CountCampuses": 6,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "249906",
+        "name": "PARADISE ISD",
+        "campuses": 4,
+        "domainAllReported": 4,
+        "staarAnyReported": 4,
+        "public2025_26CountCampuses": 4,
+        "fullRaceShareCampuses": 0
+      },
+      {
+        "districtId": "249908",
+        "name": "SLIDELL ISD",
+        "campuses": 1,
+        "domainAllReported": 1,
+        "staarAnyReported": 1,
+        "public2025_26CountCampuses": 1,
+        "fullRaceShareCampuses": 0
+      }
+    ],
+    "caveat": "Reported source scores are not universal QA or deployment approval. Not Rated, suppressed, not-in-source and unavailable are never zero; school address is not home assignment; partial PEIMS counts do not define full-campus ethnicity percentages."
+  }
 }

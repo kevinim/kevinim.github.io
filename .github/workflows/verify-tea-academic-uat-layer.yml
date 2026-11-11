@@ -1,0 +1,60 @@
+name: TEA 2026 academic UAT integration - source status and school click
+on:
+  pull_request:
+    branches:
+      - main
+      - 'fix/tea-display-qa-rebased-20261111'
+    paths:
+      - 'data/tea-accountability-2026-verified-batch.json'
+      - 'data/tea-staar-meets-2026-verified-batch.json'
+      - 'features/carrollton-school-insights.js'
+      - 'tests/tea-academic-uat-panel.test.cjs'
+      - 'tests/tea-2026-official-extracts.test.cjs'
+      - 'scripts/verify-tea-2026-extracts.cjs'
+      - '.github/workflows/verify-tea-academic-uat-layer.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  data-and-privacy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: node --check features/carrollton-school-insights.js
+      - run: node scripts/verify-tea-2026-extracts.cjs
+      - run: node scripts/build-tea-academic-uat-progress.cjs --check
+      - run: node --test tests/tea-2026-official-extracts.test.cjs tests/tea-academic-uat-panel.test.cjs tests/tea-display-quality-guard.test.cjs tests/carrollton-school-insights.test.cjs
+      - run: node scripts/build-tea-profile-progress.cjs --check
+  mobile-and-desktop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Install isolated free Playwright
+        run: |
+          mkdir -p tea-profile-browser-tmp
+          cd tea-profile-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve exact staged data
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/tea-2026-academic-http.log 2>&1 &
+          sleep 2
+      - name: School-click + TEA data panels 1280px and 390px
+        env:
+          NODE_PATH: ${{ github.workspace }}/tea-profile-browser-tmp/node_modules
+        run: node scripts/test-carrollton-tea-insights-browser.cjs

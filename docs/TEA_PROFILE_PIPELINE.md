@@ -20,6 +20,143 @@ Priority: Carrollton (CFB + Lewisville, 92), Allen (23), McKinney (33), remainin
 
 **Never use** the "PEIMS Student Demographic Listing" at the individual-student level. It includes names/IDs/DOB and must not be fetched, published or loaded into this project. Only public aggregate data.
 
+## Incremental official source verification — Castle Hills (2026-11-11)
+
+A new independently source-checked 2024–25 ethnicity profile is now staged for Castle Hills Elementary (`061902136`, Lewisville ISD). The district-hosted **2025 TEA School Report Card**, [pages 1–2](https://resources.finalsite.net/images/v1767735451/lisdnet/lisdnet/pbywuuw1lzfsjjftgn4m/castlehillsrc.pdf), identifies **599** total students and the seven campus-level race/ethnicity shares (Black 2.0%; Hispanic 8.3%; White 45.9%; American Indian 0.2%; Asian 35.9%; Pacific Islander 0.2%; two or more races 7.5%). They sum to 100.0%. The source year is **2024–25**, while the current dashboard accountability grade is TEA 2026; do not conflate the two. This adds one verified historical student-composition profile; **no 2025–26 PEIMS campus records have yet been imported**. If source years disagree on total enrollment, preserve each source's vintage and do not overwrite with a mixed-year count.
+
+## Additional 2024–25 Lewisville campus source checks — 2026-11-11
+
+Source-verified same-year profiles have also been staged in PR #229 for `061902140` Coyote Ridge (N=478), `061902142` Independence (N=828), and `061902143` Lewisville Elementary (N=509). All seven official race/ethnicity shares and source links are recorded under the 9-digit campus IDs in `features/carrollton-school-insights.js`; source details appear in `docs/TEA_SCHOOL_PROFILES_ROLLOUT_2026-11-11.md`. Rounding tolerance is checked without inferring any masked count. With Castle Hills, these are four newly source-reviewed 2024–25 campus profiles beyond the four previously merged. **Staged verified ethnicity: 8/2,282 (0.35%), of which 6/92 (6.52%) are in the Carrollton CFB/Lewisville priority cohort. Current official 2025–26 PEIMS ethnicity imports remain 0/2,282.** Staged progress is not production coverage before PR checks and merge.
+
+## Official 2025–26 campus counts: CFB + Lewisville, partial but source-backed (Nov 11, 2026)
+
+A verified public **TEA PEIMS Student Enrollment Reports** batch is now staged in `data/tea-ethnicity-2025-26-priority.json` for **92/92 priority cohort campuses** (CFB ISD 35, Lewisville ISD 57; each joined to the existing exact 9-digit TEA campus ID in `tea-ratings-2026.json`).
+
+Official source export settings: school year 2025–26, **Selected Campus Totals using district number**, **Ethnicity**, CSV. Direct publisher report links (only published campus aggregates; not student-level records):
+
+- CFB ISD `057903`: https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=057903&_debug=0
+- Lewisville ISD `061902`: https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=061902&_debug=0
+
+**Verified input / coverage:** 92 campuses, 644 possible group-cells (seven categories per campus), **393 exact publicly reported count cells**, **180 TEA-suppressed cells** (e.g. `<10` or `<60`), and **71 category cells not listed** by the source. **Zero campuses have seven complete published ethnicity counts.** This distinction is important: 2025–26 *campus-count coverage* is 92/92 within this priority cohort (4.03% of the 2,282-campus inventory), while *complete seven-group percentages* from 2025–26 remain **0/92**. Historical 2024–25 source-verified percentage charts for eight campuses (after PR #230 merges) remain separate, clearly labeled.
+
+This is an intentional partial-data product, not a substitute for published full ethnic percentages. UI shows publicly released 2025–26 group-level student **counts** with every masked cell marked `비공개 (<N)` and absent cell marked `원본 미표시`. It never treats a mask/omission as zero, estimates an undisclosed ethnic count, or combines the 2025–26 counts with the previous school-year denominator to claim a percentage. Never subtract reported groups from other datasets' totals to reconstruct a suppressed count. Exact ratio calculations require seven independently published categories and a same-year enrollment denominator.
+
+The dashboard loads the aggregate JSON from the same origin only when inspecting a school and never sends user-entered residence addresses to TEA. Campus ID join, source vintage, seven-category completeness, privacy masks, browser/mobile and progress checks are gated in tests. Recheck redistribution rights and public-site attribution before Production merge.
+
+**Next:** obtain and validate analogous official campus-level PEIMS 2025–26 aggregates for Allen (23), McKinney (33), and remaining DFW districts; retain suppression statuses. For complete share charts, seek separately published TEA School Report Cards/TAPR for a matching school year rather than inferring any protected data.
+
+## Immediate expansion · 2025–26 official Allen, McKinney, Frisco and Plano enrollment (2026-11-11)
+
+An additional **201** exact-campus-ID official TEA public PEIMS ethnicity-count profiles were retrieved and validated *now*, using the same 2025–26 selected-campus district CSV contract. The same-origin data file `data/tea-ethnicity-2025-26-priority.json` now contains **293 of 2,282 DFW-area campuses (12.84%)**, across six districts:
+
+| TEA district code | District | 2025–26 schools linked | Official campus aggregate CSV |
+|---|---|---:|---|
+| 057903 | Carrollton-Farmers Branch | 35 | Existing CFB link above |
+| 061902 | Lewisville | 57 | Existing Lewisville link above |
+| 043901 | Allen ISD | 23 | [TEA public CSV](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043901&_debug=0) |
+| 043907 | McKinney ISD | 33 | [TEA public CSV](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043907&_debug=0) |
+| 043905 | Frisco ISD | 76 | [TEA public CSV](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043905&_debug=0) |
+| 043910 | Plano ISD | 69 | [TEA public CSV](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043910&_debug=0) |
+
+**Verified dataset totals:** 293 school IDs, 2,051 possible cells, **1,260 exact public counts, 546 TEA-suppressed cells and 245 unlisted cells**. Every ID joins a TEA 2026 inventory campus in its same district; no individual student records are retrieved or stored. Six-group / seven-group percentages are never inferred where any ethnicity is suppressed or omitted.
+
+**One current-year exception:** Allen High School (`043901001`) has all seven group counts published for 2025–26. Their sum is 5,127 students and its 1,426 Asian students are **27.8%** of the full seven publicly reported categories. Display this 2025–26 percentage only for this complete-data campus. Its separately sourced 2024–25 historical profile is still a distinct year (5,206 students), not mixed into any calculation. No other current-year campus has seven complete published categories in this six-district batch.
+
+Display rules: show all seven categories as student counts with explicit `비공개 (<N)` or `원본 미표시` for non-public values; current-year percentages are allowed only when all seven categories are public in the *same* campus report. Preserve existing historical charts/links with their original year. Verify updated progress snapshot and desktop/mobile school selection for Allen and McKinney on the exact PR head. **UAT only; no production merge without explicit approval.**
+
+## Immediate second expansion · five additional 2025–26 districts (2026-11-11)
+
+An additional **401** exact-campus-ID official TEA PEIMS campus aggregate ethnicity-count profiles were extracted from publisher CSVs and matched against the existing 2026 TEA district/campus inventory. The 2025–26 public count dataset now contains **694 / 2,282 DFW campuses (30.41%)** across **11 district cohorts**. No student-level records, address, DOB, names, or unreleased ethnicity counts were collected.
+
+| TEA district | District | Added campuses | Official published CSV |
+|---|---|---:|---|
+| 043912 | Prosper ISD | 32 | [TEA 2025–26 ethnicity by campus](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043912&_debug=0) |
+| 061901 | Denton ISD | 46 | [TEA 2025–26 ethnicity by campus](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=061901&_debug=0) |
+| 057912 | Irving ISD | 35 | [TEA 2025–26 ethnicity by campus](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=057912&_debug=0) |
+| 057916 | Richardson ISD | 51 | [TEA 2025–26 ethnicity by campus](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=057916&_debug=0) |
+| 057905 | Dallas ISD | 237 | [TEA 2025–26 ethnicity by campus](https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=057905&_debug=0) |
+
+**Actual consolidated coverage:** 694 campuses × seven TEA ethnicity categories = 4,858 possible public campus-group cells: **2,677 exact published student counts, 1,508 suppressed masks and 673 source-omitted groups**. Three campuses have all seven group counts independently published, allowing same-year percentages without filling missing data: Allen High School (043901001, enrollment 5,127, Asian 1,426 / 27.8%), Irving Houston Middle (057912046, 753 students, Asian 49 / 6.5%) and Irving Jackie Mae Townsell Elementary (057912123, 756 students, Asian 69 / 9.1%). **All other 691 profiles remain partial 2025–26 counts; they are not complete race-share charts.** The earlier eight 2024–25 complete profiles are separate source vintages.
+
+Display and QA controls: a current-year row showing count, suppression mask or absence for each of seven categories; calculate ratios exclusively for those three fully public campuses. Unit tests validate every campus/district ID against official TEA inventory and source URL year, all 4,858 count/mask cells, no PII and no inferred values. Browser QA covers one or more actual school selections in each priority region (desktop/mobile), checks link, rendering and no GIS or CSP regression. Stage in UAT/PR; do not merge Production without explicit sign-off.
+
+## 2026-11-11 immediate Wave 3 — twelve additional DFW districts (official public aggregates)
+
+From official 2025–26 TEA PEIMS selected **campus totals by district number**, grouping **Ethnicity**, this batch adds **649** exact 9-digit campus IDs over previous UAT PR #238. All 12 source exports have all of their 649 existing 2026 inventory campuses represented and matched; no duplicates or wrong-district IDs. These are **public campus aggregates only**.
+
+| District code | School district | School count |
+|---|---|---:|
+| 220905 | Fort Worth ISD | 134 |
+| 220901 | Arlington ISD | 74 |
+| 057909 | Garland ISD | 66 |
+| 057914 | Mesquite ISD | 51 |
+| 220908 | Mansfield ISD | 48 |
+| 057803 | Uplift Education | 45 |
+| 057848 | International Leadership of Texas | 44 |
+| 061806 | Texas Works | 41 |
+| 220907 | Keller ISD | 40 |
+| 057910 | Grand Prairie ISD | 37 |
+| 061911 | Northwest ISD | 37 |
+| 220916 | Hurst-Euless-Bedford ISD | 32 |
+
+**Consolidated staged 2025–26 current-year campus count coverage: 1,343 / 2,282 = 58.85% across 23 source exports.** Every ethnicity has a three-way source status, no imputation: **5,024 exact publicly reported student counts, 2,915 TEA-suppressed cells, and 1,462 source-unlisted cells**, across 9,401 possible campus/group cells. Five campuses have seven fully published groups and can have exact same-year percentages: Allen H S (043901001), Irving Houston Middle (057912046), Irving Jackie Mae Townsell EL (057912123), Northwest H S (061911001) and Byron Nelson H S (061911007). The remaining 1,338 current-year campus records are partial only and **must not** receive fabricated full shares. Separately, eight 2024–25 historic source-verified charts remain correctly labeled with their prior year.
+
+All official CSV source URLs are retained by district code under `sources` in `data/tea-ethnicity-2025-26-priority.json`. Example original Fort Worth export: https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=220905&_debug=0
+
+**QA required:** source URL contract + campus ID/district exact join + race keys/masking + full-data ratio authorization only if all seven counts public; browser desktop/mobile, privacy/security, GIS/markers. Production deploy remains blocked until explicit user release approval, even if all PR actions pass.
+
+## Wave 4A · 2025–26 official PEIMS ethnicity count expansion — 2026-11-11
+
+Using the public Texas Education Agency 2025–26 **Selected Campus Totals using district number → Ethnicity → CSV** report, this batch added **301 existing TEA inventory campuses in 15 additional districts** on top of the source-verified 1,343-campus wave:
+
+| TEA district code | District | New exact campus-ID matches |
+|---|---|---:|
+| 220918 | Eagle Mountain–Saginaw ISD | 32 |
+| 220902 | Birdville ISD | 31 |
+| 129902 | Forney ISD | 24 |
+| 199901 | Rockwall ISD | 23 |
+| 220912 | Crowley ISD | 23 |
+| 043914 | Wylie ISD | 22 |
+| 126902 | Burleson ISD | 20 |
+| 220906 | Grapevine–Colleyville ISD | 20 |
+| 070912 | Waxahachie ISD | 18 |
+| 043911 | Princeton ISD | 16 |
+| 057922 | Coppell ISD | 16 |
+| 091906 | Sherman ISD | 16 |
+| 057907 | Duncanville ISD | 14 |
+| 070908 | Midlothian ISD | 13 |
+| 199902 | Royse City ISD | 13 |
+
+**Staged cumulative coverage: 1,644 / 2,282 schools (72.04%) across 38 publisher-validated district exports.** Across 11,508 possible school/race cells: **6,263 exact public counts; 3,536 TEA-masked cells; 1,709 TEA-unlisted cells.** Source masking/omission never means zero or permits derivation; the data are not individual-student records.
+
+Six current-year schools have all seven official categories published: the prior five plus **North Crowley High School (220912002), with 3,033 students and 105 Asian students (3.5%)**. School panels show current-year percentages only for fully public seven-category profiles; previous 2024–25 percentage charts remain clearly separate. In Crowley ISD, the public TEA CSV also contains campus ID `220912012`, which is absent from this dashboard's official 2026 TEA inventory; it is deliberately not imported or included in 1,644 verified joins. The CFB/Carrollton address→school assignment and GIS data are unaffected.
+
+The per-district exact publisher CSV URL for each of these new 15 sources is recorded in `data/tea-ethnicity-2025-26-priority.json:sources` and validated by the strict TEA-host/year/grouping/district contract. Example source for Wylie: https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043914&_debug=0
+
+Ready-for-review UAT requires passing exact-head CI, school-ID/country source checks, FERPA, desktop/mobile school selection, XSS/CSP and map regressions. **No main/Production merge absent user authorization.**
+
+## 2026-11-11 source completion — statewide TEA PEIMS official campus ethnicity counts
+
+To avoid district-by-district gaps and repeatedly querying 181 district exports, the official Texas Education Agency (TEA) public **PEIMS Student Enrollment Reports** selection was rechecked: **2025–26 → Statewide Campus Totals (`selsumm=sc`) → Ethnicity → Comma-delimited (`format=c`) → first-step (`loop=1`)**.
+
+Official source URL (no API key, no user data): https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=sc&linespg=60&charsln=120&grouping=e&loop=1&key=&_debug=0
+
+The public report has **48,971 2025–26 campus/ethnicity aggregate rows** (approx. 6.04MB, excluding document footer). All remaining **638** exact 9-digit Campus IDs absent from previous 38-district snapshots were found and verified against the same official 2026 school inventory, without guessing name/ID or deduplicating away missing rows. No missing campus IDs remained.
+
+**Current source-verified UAT coverage: 2,282 / 2,282 campus IDs (100%).** This is **availability of a partial seven-group enrollment record**, NOT 100% complete ethnicity percentages. There are 2,282×7 = **15,974** possible campus-level group cells:
+- **8,277**: numeric official public student enrollment counts, copied exactly
+- **5,141**: explicitly FERPA-suppressed official counts (e.g., `<10`, `<50`) retained as nonnumeric masks
+- **2,556**: group not listed in the public campus report, represented as `not-listed`, never zero or inferred
+- **6** campuses have *all seven groups independently published*, enabling exact same-year percentage calculations (the earlier five plus North Crowley HS 220912002)
+- **2,276** campuses have at least one suppressed/omitted group and **must not** receive an exact seven-category percentage chart
+- **Eight** complete TEA 2024–25 campus ethnic percentage profiles remain separately sourced and labeled. 2024–25 charts are not backfilled into 2025–26 current-year percentages.
+
+The normalized source is `data/tea-ethnicity-2025-26-priority.json`. Its `sources` field preserves 38 individually visited district CSVs; its new `statewideSource` field references the single independently checked official statewide CSV for the remaining 638 campus IDs. The frontend validates **publisher origin, SAS report program, school year, `selsumm=sc`, `loop=1`, ethnicity grouping, CSV format and absence of a district filter** before showing statewide-only school count panels. Strict campus ID/district joins, seven-category completeness, privacy markers and source provenance are checked in Node and browser tests.
+
+The school detail panel dynamically loads the same-origin static aggregate file on school selection and shows all seven category rows, with explicit `비공개 (<N)` or `원본 미표시` labels and one-click official source. Even if an enrollment total from another data table could allow algebraic inference, **never infer or publish any suppressed value**. Race is school enrollment context, not a measure of school quality, home ZIP demographics, school attendance boundary or admission guarantee.
+
+**UAT release readiness gates:** exact-head all required GitHub Actions; 2,282/2,282 campus IDs; aggregate count/mask totals; no PII/hidden category inference; mobile/desktop school click from older district exports and new statewide sources; GIS/address-school/Allen marker regressions; responsive/dark mode; CSP/XSS/secret scan; no paid services. Production/main merging requires explicit user approval regardless of all-green CI.
+
 ## Importing an official verified batch
 
 The native TEA export may use different column names by report/year. Before ingestion, inspect TEA's associated data dictionary and explicitly transpose **aggregated campus rows only** into these normalized CSV headers. Do not assume any file's column names.

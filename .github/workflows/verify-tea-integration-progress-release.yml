@@ -1,0 +1,21 @@
+name: TEA release integration profile progress (NO DEPLOY)
+on:
+  pull_request:
+    paths:
+      - 'scripts/build-tea-profile-progress.cjs'
+      - 'data/tea-profile-progress-2026.json'
+      - 'tests/tea-integration-progress-release.test.cjs'
+      - '.github/workflows/verify-tea-integration-progress-release.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: node scripts/build-tea-profile-progress.cjs --check
+      - run: node --test tests/tea-integration-progress-release.test.cjs tests/tea-peims-priority-campus.test.cjs tests/tea-2026-official-extracts.test.cjs
