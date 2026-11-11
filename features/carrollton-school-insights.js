@@ -9,6 +9,15 @@
 (function (root) {
   const TAPR_URL = 'https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/texas-academic-performance-reports';
   const RATINGS_URL = 'https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-accountability-rating-system';
+  // Explicit rollout order. Campus-level TEA IDs stay authoritative.
+  // CFB/LISD include campuses outside Carrollton; these are district cohorts,
+  // never assertions about city limits or address-to-school assignment.
+  const ROLLOUT = Object.freeze({
+    CFB:{phase:1,label:'Carrollton-Farmers Branch ISD'},
+    LISD:{phase:1,label:'Lewisville ISD (Carrollton 포함)'},
+    AISD:{phase:2,label:'Allen ISD'},
+    '043907':{phase:3,label:'McKinney ISD'}
+  });
   const RACES = [
     ['black', '흑인', '#5f9bd1'],
     ['hispanic', '히스패닉', '#f59e0b'],
@@ -79,6 +88,26 @@
     if (!/^\d{9}$/.test(String(id||''))) return null;
     return CAMPUS[String(id)] || null;
   }
+  function getSchoolInsight(record) {
+    if(!record || !/^\d{9}$/.test(String(record.id||''))) return null;
+    const cohort=ROLLOUT[String(record.district||'')];
+    if(!cohort)return null;
+    const curated=getRecord(record.id);
+    if(curated)return {...curated,rolloutPhase:cohort.phase,cohort:cohort.label};
+    const validGrade=['A','B','C','D','F'].includes(record.rating);
+    const hasScore=validGrade && Number.isInteger(record.score) && record.score>=0 && record.score<=100;
+    const rating=hasScore?record.rating+' · '+record.score+'점':record.rating==='Not Rated'?'미평가':'등급 정보 미확인';
+    return {
+      rolloutPhase:cohort.phase,
+      cohort:cohort.label,
+      evidenceStatus:'rating-only',
+      summary:hasScore
+        ?'2026 TEA 종합 평가는 '+rating+'입니다. 과목별 성취도·학생 성장·집단별 목표는 공식 세부 자료를 대조한 후 분석합니다.'
+        :'2026 TEA 종합 평가가 미부여되었거나 확인되지 않았습니다. 이것만으로 학업 성과를 좋거나 나쁘다고 평가하지 않습니다.',
+      strength:hasScore?'확인된 공식 종합 등급: '+rating:'공식 종합 평가로 판단 불가',
+      challenge:'개별 과목·성장·학생 집단별 성과 원문 확인 필요'
+    };
+  }
   function getRaceRows(id) {
     const d=getRecord(id)?.demographics;
     if (!d || !checkRace(d.race)) return null;
@@ -98,25 +127,30 @@
   function render(scoreRecord) {
     if(!scoreRecord) return null;
     const id=String(scoreRecord.id||'');
-    const data=getRecord(id);
-    if(!data || !['CFB','LISD'].includes(scoreRecord.district)) return null;
+    const data=getSchoolInsight(scoreRecord);
+    if(!data) return null;
     const panel=document.createElement('section');
     panel.className='tea-insights-panel';
     panel.dataset.campus=id;
     panel.setAttribute('aria-label','학교 평가 및 학생 구성');
     const title=textTag('h4','tea-insights-title','학교 평가 · 강점 · 학생 구성');
     panel.appendChild(title);
-    panel.appendChild(textTag('p','tea-insights-meta','2026 TEA 평가 · 학생 인종 구성은 별도 학년도'));
+    panel.appendChild(textTag('p','tea-insights-meta','적용 단계 '+data.rolloutPhase+' · '+data.cohort));
+    panel.appendChild(textTag('p','tea-insights-meta','2026 TEA 종합 평가 · 학생 인종 구성은 별도 학년도'));
     const summary=textTag('p','tea-insights-summary',data.summary);
     panel.appendChild(summary);
     const facts=document.createElement('div');facts.className='tea-insights-facts';
-    [['강점',data.strength],['개선과제',data.challenge]].forEach(function(pair){
+    [[data.evidenceStatus==='rating-only'?'확인된 평가':'강점',data.strength],
+      [data.evidenceStatus==='rating-only'?'추가 검증':'개선과제',data.challenge]].forEach(function(pair){
       const p=document.createElement('p');
       p.appendChild(textTag('strong','',pair[0]+': '));
       p.appendChild(document.createTextNode(pair[1]));
       facts.appendChild(p);
     });
     panel.appendChild(facts);
+    if(data.evidenceStatus==='rating-only'){
+      panel.appendChild(textTag('p','tea-insights-missing','영역별 점수 및 과목별 성취도: 개별 TEA 원문 미연결. 종합점수만으로 과목별 강점이나 약점을 추정하지 않습니다.'));
+    }
     if(data.domains){
       const metrics=document.createElement('dl');metrics.className='tea-insights-domains';
       [['학업 성취',data.domains.achievement],['학교 향상도',data.domains.progress],['집단별 목표',data.domains.gaps]].forEach(function(pair){
@@ -171,7 +205,9 @@
     }
     panel.appendChild(textTag('p','tea-insights-meta',data.evidenceStatus==='reviewed'
       ?'평가 수치와 학생 구성 자료를 분리해 표시합니다. 한 줄 평은 TEA 공식 의견이 아닌 데이터 기반 해석입니다.'
-      :'시범 해석: 세부 과목별 수치의 개별 TEA 원문 대조 전입니다. 공식 종합 등급과 구분하여 참고하세요.'));
+      :data.evidenceStatus==='rating-only'
+        ?'자동 생성된 종합등급 요약이며, 과목별 강점·개선과제는 아직 분석하지 않았습니다. 학교별 자료가 확보되면 추가합니다.'
+        :'시범 해석: 세부 과목별 수치의 개별 TEA 원문 대조 전입니다. 공식 종합 등급과 구분하여 참고하세요.'));
     const links=document.createElement('div');links.className='tea-insights-links';
     links.appendChild(makeLink('2026 TEA 평가 자료',RATINGS_URL));
     links.appendChild(makeLink('TEA 캠퍼스 원문',scoreRecord.official && /^https:\/\/txschools\.gov\//.test(scoreRecord.official)
@@ -196,7 +232,7 @@
     if(!school || typeof scoreRecord!=='function')return;
     const rating=scoreRecord(school.name,school.district);
     const id=String(rating?.id||'');
-    if(!getRecord(id))return;
+    if(!getSchoolInsight(rating))return;
     if(host.querySelector('.tea-insights-panel[data-campus="'+id+'"]'))return;
     host.querySelectorAll('.tea-insights-panel').forEach(function(el){el.remove();});
     const panel=render(rating);
@@ -213,7 +249,12 @@
     observer.observe(host,{childList:true});
     mount();
   }
-  const api={getRecord:getRecord,getRaceRows:getRaceRows,checkRace:checkRace,render:render,count:Object.keys(CAMPUS).length};
+  const api={
+    getRecord:getRecord,getSchoolInsight:getSchoolInsight,getRaceRows:getRaceRows,
+    checkRace:checkRace,render:render,count:Object.keys(CAMPUS).length,
+    rolloutDistricts:Object.keys(ROLLOUT),
+    rolloutPhase:function(district){return ROLLOUT[district]?.phase||null;}
+  };
   if(typeof module!=='undefined' && module.exports)module.exports=api;
   if(root && typeof document!=='undefined'){
     root.CarrolltonSchoolInsights=api;
