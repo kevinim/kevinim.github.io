@@ -47,7 +47,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           assert.equal(await card.count(),1,'one and only one exact campus listing '+id);
           await card.click();
           await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel')?.dataset.campus===id,id,{timeout:15000});
-          await page.waitForFunction(()=>[...document.styleSheets].some(s=>(s.href||'').includes('carrollton-school-insights.css?v=3')),
+          await page.waitForFunction(()=>[...document.styleSheets].some(s=>(s.href||'').includes('carrollton-school-insights.css?v=4')),
             null,{timeout:15000});
           const found=await page.evaluate(()=>({
             inlineCampus:document.querySelector('#schoolList .tea-school-inline-preview')?.dataset.campus,
