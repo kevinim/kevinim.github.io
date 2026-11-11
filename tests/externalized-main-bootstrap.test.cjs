@@ -108,7 +108,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  // protected CFB index baseline. Every other byte must still match.
  const originalPrivacy=expected.match(/<div id="homePrivacy" class="source">([\s\S]*?)<\/div>/)?.[1];
  assert.ok(originalPrivacy&&originalPrivacy.includes('Collin CAD'),'Reviewed baseline privacy disclosure');
- const brief='자동완성·주소 검색은 Esri, 경로 계산은 OSRM, 필지 대조는 Collin CAD, 지도 링크는 Google에 정보를 전송합니다. 외부 서비스의 접속 기록 및 보존 기간은 이 사이트에서 통제하지 않습니다. 사적인 정보나 비밀번호를 입력하지 마세요.';
+ const brief='자동완성·주소 검색은 Esri, 도로망 경로 계산은 OSRM에 전송됩니다. 필지 대조 시 집 핀 좌표가 Collin CAD에, Dallas 참고 GIS 조회 시 선택한 좌표가 Dallas ISD ArcGIS에, Irving 참고 GIS 조회 시 집 핀 좌표가 Irving ISD ArcGIS에 전송됩니다. Google Maps 링크는 위치·목적지를 Google에 전송합니다. 외부 서비스의 접속 기록 및 보존 기간은 이 사이트에서 통제하지 않습니다. 사적인 정보나 비밀번호를 입력하지 마세요.';
  expected=replaceOnce(expected,
   '<div id="homePrivacy" class="source">'+originalPrivacy+'</div>',
   '<div id="homePrivacy" class="source">'+brief+'</div><details id="homePrivacyDetails" class="home-privacy-disclosure"><summary>개인정보·외부 서비스 안내 자세히 보기</summary><div class="source">'+originalPrivacy+'</div></details>');
