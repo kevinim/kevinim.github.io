@@ -36,6 +36,7 @@ function filterTexasStreetSuggestions(raw,max=5) {
 // The user's typed prefix is transmitted to Esri only after a 320ms debounce.
 function attachTexasAddressSuggestions(input,list,onSelect) {
  let timer=null,controller=null,sequence=0,items=[],active=-1,selected=null;
+ const optionIdPrefix=input.id==='homeAddress'?'homeSuggestion':(input.id||'texasAddress')+'Suggestion';
  const clearItems=()=>{
   items=[];active=-1;list.replaceChildren();list.hidden=true;
   input.setAttribute('aria-expanded','false');
@@ -52,7 +53,7 @@ function attachTexasAddressSuggestions(input,list,onSelect) {
    list.children[i].classList.toggle('active',selectedOption);
    list.children[i].setAttribute('aria-selected',String(selectedOption));
   }
-  if(active>=0)input.setAttribute('aria-activedescendant','homeSuggestion-'+active);
+  if(active>=0)input.setAttribute('aria-activedescendant',optionIdPrefix+'-'+active);
   else input.removeAttribute('aria-activedescendant');
  };
  const choose=i=>{
@@ -65,7 +66,7 @@ function attachTexasAddressSuggestions(input,list,onSelect) {
   items=matches;active=-1;list.replaceChildren();
   for(let i=0;i<items.length;i++){
    const item=items[i],button=document.createElement('button');
-   button.id='homeSuggestion-'+i;button.type='button';button.className='home-suggestion-item';
+   button.id=optionIdPrefix+'-'+i;button.type='button';button.className='home-suggestion-item';
    button.setAttribute('role','option');button.setAttribute('aria-selected','false');
    button.textContent=item.text;button.addEventListener('pointerdown',e=>e.preventDefault());
    button.addEventListener('click',()=>choose(i));list.appendChild(button);
