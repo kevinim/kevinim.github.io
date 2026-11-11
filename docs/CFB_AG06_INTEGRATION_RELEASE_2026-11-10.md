@@ -1,6 +1,6 @@
 # AG06 CFB integration review — 2026-11-10
 
-This is a stacked integration on Draft #208 head `6b4296c3b532011cf958f77cafc184e96ffc938c`, **not a main merge, release or deploy**.
+This release candidate now targets `main` directly, combining the reviewed CFB atlas PR #208 head `6b4296c3b532011cf958f77cafc184e96ffc938c` and AG01–05. Before merging, CI must re-run against the current main base `e9c5738ed16acaaa8058f9f49cbdceb50fe0d0ef`. This document records the proposed scope; it does not itself authorize unsupported auto-assignment.
 
 ## Input PRs (source copied at recorded heads)
 
@@ -36,3 +36,12 @@ This is a stacked integration on Draft #208 head `6b4296c3b532011cf958f77cafc184
 
 - Run `.github/workflows/cfb-ag06-integration-review.yml` on exact head: Node provenance/policy/CSP/regression, Python GCP/topology synthetic tests, real Chromium 390/1366 campus/atlas E2E. Do not claim GREEN until checked.
 - Remains: public-record GIS/license response, 8+ independently measured fit points per grade plus distinct holdouts, year/vintage check, opposite-side public Finder properties in split zones, 2 text conflicts, mobile screenshot review and Allen/other-ISD browser smoke on integrated head.
+
+## Owner-authorized current GitHub Pages release (2026-11-10 US Eastern)
+The owner explicitly requested deployment and closure of completed PRs. This approval pertains only to the existing https://kevinim.github.io/ Pages site and the safe reference/manual Finder scope, **not** a future separate Cloudflare Public Production environment, school GIS certification or data redistribution rights.
+
+Pre-release GitHub Pages main SHA: `e9c5738ed16acaaa8058f9f49cbdceb50fe0d0ef`.
+
+Release order: rerun all `main` PR CI after this doc commit; merge this reviewed integration PR only if required checks and AG06 jobs are green; confirm GitHub Pages build/deployment and actual live site; then close superseded #208/#209/#210/#211/#212/#213 with individual pointers to the integrated commit. Leave unrelated #187, #214, #215 and #218 open.
+
+Rollback: revert the main release merge commit via a separate PR to restore previous public assets; do not force push. Live postdeployment smoke must observe campus marker, official finder, district vs campus warning, CSP, address privacy and unapproved auto-assignment disabled. 
