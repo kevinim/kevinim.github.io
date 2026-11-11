@@ -403,6 +403,58 @@
     el.textContent=text;
     return el;
   }
+  function appendPublicPeims(target,id,compact){
+    const p=ALLEN_MCKINNEY[String(id)]?.peims,rows=publicPeimsRows(id);
+    if(!p || !rows)return false;
+    const heading=document.createElement('div');
+    heading.className=compact?'tea-school-inline-heading':'tea-insights-heading tea-insights-demographic-heading';
+    heading.appendChild(textTag(compact?'strong':'h5',compact?'':'tea-insights-subtitle','학생 인종·민족 구성'));
+    heading.appendChild(textTag('small','tea-insights-vintage','PEIMS 2025–26'));
+    target.appendChild(heading);
+    const total=p.enrollmentStatus==='published'
+      ?'총학생 수 '+p.enrollment.toLocaleString('en-US')+'명 (TEA 공식)'
+      :'총학생 수 비공개 (TEA 공식)';
+    target.appendChild(textTag('p',compact?'tea-school-inline-legend':'tea-insights-enrollment',total));
+    if(p.percentages && checkRace(p.percentages)){
+      // A complete seven-category chart is allowed only if every category and
+      // its official campus denominator are public (one campus in this batch).
+      const stack=document.createElement('div');
+      stack.className=compact?'tea-school-inline-stack':'tea-insights-stack';
+      stack.setAttribute('role','img');
+      stack.setAttribute('aria-label',rows.map(r=>r.label+' '+r.pct.toFixed(1)+'%').join(', '));
+      rows.forEach(function(r){
+        if(r.pct===0)return;
+        const bar=document.createElement('span');
+        bar.className='tea-insights-segment';
+        bar.style.width=r.pct+'%';
+        bar.style.backgroundColor=r.color;
+        bar.title=r.label+' '+r.pct.toFixed(1)+'%';
+        stack.appendChild(bar);
+      });
+      target.appendChild(stack);
+    }
+    const list=document.createElement('ul');
+    list.className='tea-insights-public-races'+(compact?' tea-insights-public-races--compact':'');
+    rows.forEach(function(r){
+      const li=document.createElement('li');
+      const name=textTag('span','tea-insights-public-race-name',r.label);
+      const swatch=document.createElement('span');
+      swatch.className='tea-insights-swatch';
+      swatch.style.backgroundColor=r.color;
+      swatch.setAttribute('aria-hidden','true');
+      name.prepend(swatch);
+      li.appendChild(name);
+      const value=r.status==='published'
+        ?r.count.toLocaleString('en-US')+'명'+(r.pct===null?'':' · '+r.pct.toFixed(1)+'%')
+        :r.status==='suppressed'?'비공개':'미제공';
+      li.appendChild(textTag('strong','tea-insights-public-race-value',value));
+      list.appendChild(li);
+    });
+    target.appendChild(list);
+    target.appendChild(textTag('p','tea-insights-privacy-note',
+      '비공개·미제공 인원은 0명이 아니며 비율을 역산하지 않습니다. 표시된 비율만 TEA 공식 총학생 수를 분모로 계산했습니다.'));
+    return true;
+  }
   function makeLink(label,url) {
     const a=textTag('a','tea-insights-link',label);
     a.href=url;a.target='_blank';a.rel='noopener noreferrer';
@@ -464,8 +516,10 @@
       panel.appendChild(subjects);
     }
 
-    const demo=(data.demographics && checkRace(data.demographics.race))?data.demographics:null;
-    if(demo){
+    const demo=(!data.publicPeims && data.demographics && checkRace(data.demographics.race))?data.demographics:null;
+    if(data.publicPeims){
+      appendPublicPeims(panel,id,false);
+    } else if(demo){
       const demographicHeading=document.createElement('div');
       demographicHeading.className='tea-insights-heading tea-insights-demographic-heading';
       demographicHeading.appendChild(textTag('h5','tea-insights-subtitle','학생 인종·민족 구성'));
@@ -509,9 +563,21 @@
     notes.className='tea-insights-provenance-body';
     notes.appendChild(textTag('p','tea-insights-meta','2026 TEA 종합 평가 · 적용 단계 '+data.rolloutPhase+' · '+data.cohort));
     if(!data.domains) notes.appendChild(textTag('p','tea-insights-missing',
-      '영역별 점수 및 과목별 성취도: 개별 TEA 원문 미연결. 종합점수만으로 과목별 강점이나 약점을 추정하지 않습니다.'));
-    if(data.domainsSource&&hasOfficialSource(data.domainsSource))notes.appendChild(makeLink('2026 TEA 영역별 점수 원문',data.domainsSource));
-    if(demo){
+      data.officialAcademicStatus==='paired'
+        ?'연계 평가 캠퍼스: 해당 학교 자체의 영역 점수·STAAR 성적은 TEA에서 제공하지 않습니다.'
+        :data.officialAcademicStatus==='not-rated'
+          ?'TEA 2026 Not Rated: 공개된 영역 점수·STAAR 성적이 없습니다. F나 0점이 아닙니다.'
+          :'영역별 점수 및 과목별 성취도: 개별 TEA 원문 미연결. 종합점수만으로 과목별 강점이나 약점을 추정하지 않습니다.'));
+    if(data.domainsSource&&hasOfficialSource(data.domainsSource))notes.appendChild(makeLink('2026 TEA 영역별·종합평가 원문',data.domainsSource));
+    if(data.subjectsSource&&hasOfficialSource(data.subjectsSource))notes.appendChild(makeLink('2026 STAAR 과목별 성적 원문',data.subjectsSource));
+    if(data.publicPeims){
+      notes.appendChild(textTag('p','tea-insights-meta',
+        '2025–26 PEIMS 학생 수 및 인종·민족별 공개 집계입니다. 학교 재학생 기준이며 ZIP 인종 구성이나 주소별 배정 결과가 아닙니다.'));
+      if(hasOfficialSource(data.publicPeims.source))notes.appendChild(makeLink('2025–26 PEIMS 인종별 공식 원문',data.publicPeims.source));
+      if(hasOfficialSource(data.publicPeims.enrollmentSource))notes.appendChild(makeLink('2025–26 PEIMS 총학생 수 공식 원문',data.publicPeims.enrollmentSource));
+      notes.appendChild(textTag('p','tea-insights-meta',
+        '개별 공개 수치만 비율화하며 비공개·미제공 범주는 추정하지 않습니다. 과목 성적과 인종 구성 사이의 인과관계는 주장하지 않습니다.'));
+    } else if(demo){
       notes.appendChild(textTag('p','tea-insights-meta','학생 인종 구성: '+demo.year+' · '+demo.document+' · 등록 학생 '+demo.enrollment.toLocaleString('en-US')+'명'));
       notes.appendChild(makeLink(demo.document+' 원문',demo.src));
       notes.appendChild(textTag('p','tea-insights-meta',
@@ -586,8 +652,10 @@
         facts.appendChild(item);
       });
       preview.appendChild(facts);
-      const rows=getRaceRows(id);
-      if(rows){
+      const rows=data.publicPeims?null:getRaceRows(id);
+      if(data.publicPeims){
+        appendPublicPeims(preview,id,true);
+      }else if(rows){
         const demographicHeading=document.createElement('div');
         demographicHeading.className='tea-school-inline-heading';
         demographicHeading.appendChild(textTag('strong','','학생 인종·민족 구성'));
