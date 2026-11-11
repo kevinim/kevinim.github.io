@@ -5,6 +5,7 @@ on:
     paths:
       - 'data/tea-cfb-lisd-campus-qa-ledger-2026.json'
       - 'data/tea-cfb-lisd-academic-2026-verified-batch01.json'
+      - 'data/tea-cfb-lisd-2026-official-campus-listing-92.json'
       - 'tests/tea-cfb-lisd-independent-qa.test.cjs'
       - 'docs/TEA_CFB_LISD_INDEPENDENT_QA_2026-11-11.md'
       - '.github/workflows/qa-cfb-lisd-tea-2026.yml'
@@ -15,6 +16,7 @@ on:
     paths:
       - 'data/tea-cfb-lisd-campus-qa-ledger-2026.json'
       - 'data/tea-cfb-lisd-academic-2026-verified-batch01.json'
+      - 'data/tea-cfb-lisd-2026-official-campus-listing-92.json'
       - 'tests/tea-cfb-lisd-independent-qa.test.cjs'
       - 'data/tea-ethnicity-2025-26-priority.json'
       - 'tea-ratings-2026.json'
