@@ -1,0 +1,28 @@
+name: Independent TEA 2025-26 PEIMS total enrollment audit
+on:
+  pull_request:
+    paths:
+      - 'data/tea-peims-2025-26-enrollment-total-audit-allen-mckinney.json'
+      - 'tests/tea-peims-enrollment-total-audit-allen-mckinney.test.cjs'
+      - '.github/workflows/verify-tea-peims-2025-26-enrollment-total-audit.yml'
+      - 'docs/TEA_PEIMS_2025-26_ENROLLMENT_AUDIT_ALLEN_MCKINNEY.md'
+      - 'data/tea-peims-2025-26-gender-parity-audit-1343.json'
+      - 'tests/tea-peims-2025-26-gender-parity-audit.test.cjs'
+      - 'docs/TEA_PEIMS_2025-26_GENDER_PARITY_AUDIT_1343.md'
+      - 'data/tea-peims-2025-26-statewide-parity-audit-2282.json'
+      - 'tests/tea-peims-2025-26-statewide-parity-audit.test.cjs'
+      - 'docs/TEA_PEIMS_2025-26_STATEWIDE_PARITY_AUDIT_2282.md'
+  push:
+    branches:
+      - 'data/tea-peims-2025-26-enrollment-total-audit-20261111'
+permissions:
+  contents: read
+jobs:
+  peims-enrollment-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: node --test tests/tea-peims-enrollment-total-audit-allen-mckinney.test.cjs tests/tea-peims-2025-26-gender-parity-audit.test.cjs tests/tea-peims-2025-26-statewide-parity-audit.test.cjs
