@@ -42,6 +42,7 @@ async function run(){
    assert.ok(allen.inside>0,'No Allen campus in selected ZIP bounds');
    assert.equal(allen.drawn,allen.inside,'Allen visible school markers regressed');
    // Official source-only CFB disclosure.
+   if(await page.locator('#schoolDataDetails').count())await page.locator('#schoolDataDetails > summary').click();
    const cfb=page.locator('#cfbOfficialRezoningReference');
    await cfb.locator('summary').click();
    const cfbLinks=await cfb.locator('a').evaluateAll(all=>all.map(a=>a.href));
