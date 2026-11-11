@@ -54,11 +54,16 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
             state.schoolQuery=s.name.toLowerCase();
             state.level='all';state.ratingFilter='all';
             drawList();
-            return {name:s.name,district:s.district};
+            const exact=[...document.querySelectorAll('#schoolList button.school[data-sid]')].filter(button=>{
+              const candidate=state.schools[Number(button.dataset.sid)];
+              return candidate && scoreRecord(candidate.name,candidate.district)?.id===id;
+            });
+            return {name:s.name,district:s.district,sid:exact[0]?.dataset.sid,exactCount:exact.length};
           },id);
           assert.ok(chosen,'campus missing from live directory '+id);
-          const card=page.locator('#schoolList button.school[data-sid]');
-          assert.equal(await card.count(),1,'one and only one exact campus listing '+id);
+          assert.equal(chosen.exactCount,1,'one exact campus by TEA ID despite duplicate school names '+id);
+          const card=page.locator('#schoolList button.school[data-sid="'+chosen.sid+'"]');
+          assert.equal(await card.count(),1,'one and only one campus button by school index '+id);
           await card.click();
           await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel')?.dataset.campus===id,id,{timeout:15000});
           await page.waitForFunction(()=>[...document.styleSheets].some(s=>(s.href||'').includes('carrollton-school-insights.css?v=4')),
