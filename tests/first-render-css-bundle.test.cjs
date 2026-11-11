@@ -19,7 +19,7 @@ test('six individual render-blocking stylesheets become exactly one linked asset
   assert.equal(html.includes('href="./'+p+'?v=1"'),false,'Old CSS link still loaded: '+p);
  const links=[...html.matchAll(/<link\b[^>]*rel=["']stylesheet["'][^>]*>/gi)];
  assert.ok(links.length>=7);
- const peimsLinks=links.filter(link=>link[0].includes('./features/tea-peims-public-share-addon.css?v=1'));
+ const peimsLinks=links.filter(link=>link[0].includes('./features/tea-peims-public-share-addon.css?v=2'));
  assert.equal(peimsLinks.length,1,'Exactly one independently reviewed PEIMS chart stylesheet');
  assert.equal(links.length-peimsLinks.length,10,
   'Baseline first-render CSS bundle must still remove five of fifteen blocking requests');
