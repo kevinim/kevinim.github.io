@@ -66,3 +66,40 @@ test real residential addresses, external provider terms, source licensing or
 authentication, and **does not deploy**. For the source-repository/public-artifact
 separation requirements of a future separate Public Production, this change alone
 is insufficient.
+
+
+## Narrow opt-in school-name reference extension — 2026-11-10
+
+**Decision category: CONDITIONAL INFORMATIONAL GO on the existing GitHub Pages site; NOT a
+residential-school assignment or license certification.** The owner requested prompt release of
+tested informational UI changes and previously chose an explicit-warning Track B approach.
+This extension permits only the following **user-triggered, text-only** research view:
+
+1. After the user selects a geocoded Texas address, **no GIS school name appears automatically**.
+   The visitor may explicitly select **GIS 참고 후보 직접 보기 · 실제 배정 미인증**.
+2. The text-only candidate view may show school names and grade levels derived from the
+   **already published in-site**, individually vetted 2026–27 Frisco or Prosper campus
+   zones, or McKinney's live current-year official Finder source. No new polygon, raster,
+   vendor feed, parcel coordinates, per-address records or data asset is introduced by
+   this extension. Existing source use and unverified derivative rights remain separate
+   governance questions; this paragraph does **not** confer rights to redistribute any GIS.
+3. The name list is **never** treated as assigned schools, enrollment eligibility,
+   property/parcel survey, automatically selected map highlights or a permission to display
+   address-selected school polygons. Displayed warnings, academic year and district's
+   official Finder link are mandatory. Returning students, transfer/capacity and split
+   apartment exceptions must be surfaced or blocked.
+4. Reject historical Allen, current-year-uncertain Plano/Lewisville, CFB campus GIS
+   without certified polygons, stale feature vintages, boundary-proximity, ambiguous
+   feeder paths, district conflicts and weak geocode input. If the reference policy or
+   official link is unavailable, show official Finder-only guidance.
+5. Maintain the untouched, immutable `APPROVED_AUTO_DISTRICTS={}` grant policy and the
+   independent 2026–27 E/M/H residence-Finder-geometric release gate. Opt-in is **not**
+   a release-grant source. The existing school source attribution and provider privacy
+   notices remain visible.
+
+**Review evidence for this narrow UI scope:** PR #218 provides exact-head
+Node/CSP/XSS, 390/1366 synthetic Chromium address-click/clear, source-vintage/grade,
+CFB/Allen map, privacy, and disabled home-assignment checks. Actual school enrollment
+and publisher GIS redistribution rights remain outside the positive test claim.
+Any *new* polygon output or formal address-to-school assignment must be separately
+authorized and cannot piggyback on this informational extension.
