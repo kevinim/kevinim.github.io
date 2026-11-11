@@ -607,7 +607,7 @@
     if(document.querySelector('link[data-tea-carrollton-css]')) return;
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='./features/carrollton-school-insights.css?v=4';
+    css.href='./features/carrollton-school-insights.css?v=5';
     css.dataset.teaCarrolltonCss='1';
     document.head.appendChild(css);
   }
