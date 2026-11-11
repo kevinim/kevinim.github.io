@@ -615,14 +615,15 @@
             ['학교별 기본 설명',info.profilePanelsConnected],
             ['개별 강점·개선과제 분석',info.individualNarratives],
             ['2026 영역별 평가점수',info.domainComponentsReviewed],
-            ['학생 인종 구성',info.ethnicityReviewed]
+            ['2025–26 공개 인종별 학생 수 (부분 자료)',info.public2025_26CampusCounts],
+            ['검증된 전체 인종 비율 (2024–25 포함)',info.ethnicityReviewed]
           ].forEach(function(pair){
             const p=document.createElement('p');
             p.appendChild(textTag('strong','',pair[0]+' '+Number(pair[1]||0).toLocaleString('en-US')+' / '+count.toLocaleString('en-US')));
             p.appendChild(document.createTextNode(' · '+ratio(pair[1])));
             content.appendChild(p);
           });
-          content.appendChild(textTag('p','','미평가(Not Rated) '+info.notRated+'개 · 2025–26 공식 자료는 학교별 검증 후 갱신됩니다.'));
+          content.appendChild(textTag('p','','미평가(Not Rated) '+info.notRated+'개 · 2025–26 공개 학생 수는 '+Number(info.public2025_26PublishedCells||0)+'개 분류에 연결되었습니다. '+Number(info.public2025_26SuppressedCells||0)+'개는 비공개, '+Number(info.public2025_26UnlistedCells||0)+'개는 원본 미표시입니다.'));
           content.appendChild(textTag('p','','종합등급 연결과 과목별 분석 완료는 다른 기준입니다. 개인정보 보호로 마스킹된 수치는 추정하지 않습니다.'));
         }).catch(function(){content.textContent='현재 진행률 파일을 불러올 수 없습니다. 학교별 공식 출처를 확인해 주세요.';});
     });
