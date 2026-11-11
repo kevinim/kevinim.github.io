@@ -12,7 +12,7 @@
     "teAPEIMSLewisville": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=061902&_debug=0",
     "officialSTAARPortal": "https://txreports.emetric.net/"
   },
-  "explanation": "6 campus TEA 2026 official summary and STAAR test-report metrics now independently checked; remaining 86 academic records unverified. Published PEIMS count cells are not complete percentages, and original 2025–26 PEIMS enrollment totals remain unverified. No residential assignment inference. Three new independent numeric observations are in academic batch, while three existing curated narratives remain untouched.",
+  "explanation": "Official 2026 TEA district-wide Campus Listings linked exact 92 campus IDs, 87 with published Student Achievement and Closing the Gaps plus School Progress growth/relative components; 5 without these scores (four Not Rated, one paired early-childhood). Only six also have independently checked full School Progress and STAAR subject test rates. 2025–26 PEIMS seven-group published counts are staged in PR #232 but independent raw totals and complete percentages remain unavailable; complete academic-plus-PEIMS rate 0/92.",
   "summary": {
     "targetCampuses": 92,
     "districts": {
@@ -34,7 +34,11 @@
     "independentlyVerified2026STAARSubjects": 6,
     "newlyWrittenMetricBasedNarratives": 3,
     "fullyVerifiedAcademicAndDemographicCampuses": 0,
-    "verifiedAcademic2026WithoutPEIMSCompleteness": 6
+    "verifiedAcademic2026WithoutPEIMSCompleteness": 6,
+    "withOfficial2026AchievementAndGaps": 87,
+    "withOfficial2026PartiallyCheckedDomains": 81,
+    "withOfficial2026FullDomainAndSTAAR": 6,
+    "withNoPublished2026Domains": 5
   },
   "campuses": {
     "057903001": {
@@ -43,19 +47,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=057903001&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 83,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 69,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 56,
+          "relativePerformance": 88
+        },
+        "listingStudentAchievement": 83,
+        "listingClosingTheGaps": 69,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -74,19 +86,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=057903002&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 82,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 76,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 67,
+          "relativePerformance": 87
+        },
+        "listingStudentAchievement": 82,
+        "listingClosingTheGaps": 76,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -105,19 +125,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=057903003&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 87,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 82,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": null,
+          "relativePerformance": 77
+        },
+        "listingStudentAchievement": 87,
+        "listingClosingTheGaps": 82,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -136,7 +164,7 @@
       "accountabilityRating2026": "Not Rated",
       "officialProfile": "https://txschools.gov/?view=school&id=057903005&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "TEA-not-rated-no-domain-scores",
         "domainAndSubjectScores": {
           "studentAchievement": null,
           "schoolProgress": null,
@@ -148,7 +176,14 @@
         },
         "officialComponentSourceRow": null,
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": null,
+          "relativePerformance": null
+        },
+        "listingStudentAchievement": null,
+        "listingClosingTheGaps": null
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -167,19 +202,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=057903006&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 90,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 94,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 77,
+          "relativePerformance": 93
+        },
+        "listingStudentAchievement": 90,
+        "listingClosingTheGaps": 94,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -198,19 +241,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=057903007&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 87,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 82,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 62,
+          "relativePerformance": 89
+        },
+        "listingStudentAchievement": 87,
+        "listingClosingTheGaps": 82,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -229,7 +280,7 @@
       "accountabilityRating2026": "Not Rated",
       "officialProfile": "https://txschools.gov/?view=school&id=057903009&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "TEA-not-rated-no-domain-scores",
         "domainAndSubjectScores": {
           "studentAchievement": null,
           "schoolProgress": null,
@@ -241,7 +292,14 @@
         },
         "officialComponentSourceRow": null,
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": null,
+          "relativePerformance": null
+        },
+        "listingStudentAchievement": null,
+        "listingClosingTheGaps": null
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -260,19 +318,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=057903010&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 97,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 100,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 79,
+          "relativePerformance": 97
+        },
+        "listingStudentAchievement": 97,
+        "listingClosingTheGaps": 100,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -291,19 +357,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=057903041&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 80,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 77,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 79,
+          "relativePerformance": 90
+        },
+        "listingStudentAchievement": 80,
+        "listingClosingTheGaps": 77,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -322,19 +396,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=057903042&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 80,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 74,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 70,
+          "relativePerformance": 88
+        },
+        "listingStudentAchievement": 80,
+        "listingClosingTheGaps": 74,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -353,19 +435,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=057903045&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 81,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 77,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 72,
+          "relativePerformance": 85
+        },
+        "listingStudentAchievement": 81,
+        "listingClosingTheGaps": 77,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -384,19 +474,27 @@
       "accountabilityRating2026": "F",
       "officialProfile": "https://txschools.gov/?view=school&id=057903046&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 60,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 45,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 57,
+          "relativePerformance": 60
+        },
+        "listingStudentAchievement": 60,
+        "listingClosingTheGaps": 45,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -415,19 +513,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=057903047&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 75,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 64,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 69,
+          "relativePerformance": 75
+        },
+        "listingStudentAchievement": 75,
+        "listingClosingTheGaps": 64,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -446,19 +552,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=057903102&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 73,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 86,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 91,
+          "relativePerformance": 81
+        },
+        "listingStudentAchievement": 73,
+        "listingClosingTheGaps": 86,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -477,19 +591,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=057903105&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 91,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 86,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 87,
+          "relativePerformance": 90
+        },
+        "listingStudentAchievement": 91,
+        "listingClosingTheGaps": 86,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -508,19 +630,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=057903106&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 74,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 74,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 74,
+          "relativePerformance": 72
+        },
+        "listingStudentAchievement": 74,
+        "listingClosingTheGaps": 74,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -539,19 +669,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=057903109&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 77,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 88,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 74,
+          "relativePerformance": 85
+        },
+        "listingStudentAchievement": 77,
+        "listingClosingTheGaps": 88,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -570,19 +708,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=057903110&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 77,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 75,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 60,
+          "relativePerformance": 82
+        },
+        "listingStudentAchievement": 77,
+        "listingClosingTheGaps": 75,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -601,19 +747,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=057903111&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 73,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 70,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 73,
+          "relativePerformance": 80
+        },
+        "listingStudentAchievement": 73,
+        "listingClosingTheGaps": 70,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -632,19 +786,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=057903112&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 89,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 77,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 79,
+          "relativePerformance": 84
+        },
+        "listingStudentAchievement": 89,
+        "listingClosingTheGaps": 77,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -663,19 +825,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=057903113&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 72,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 73,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 69,
+          "relativePerformance": 77
+        },
+        "listingStudentAchievement": 72,
+        "listingClosingTheGaps": 73,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -694,7 +864,7 @@
       "accountabilityRating2026": "Not Rated",
       "officialProfile": "https://txschools.gov/?view=school&id=057903117&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "TEA-not-rated-no-domain-scores",
         "domainAndSubjectScores": {
           "studentAchievement": null,
           "schoolProgress": null,
@@ -706,7 +876,14 @@
         },
         "officialComponentSourceRow": null,
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": null,
+          "relativePerformance": null
+        },
+        "listingStudentAchievement": null,
+        "listingClosingTheGaps": null
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -725,19 +902,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=057903118&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 91,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 77,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 71,
+          "relativePerformance": 85
+        },
+        "listingStudentAchievement": 91,
+        "listingClosingTheGaps": 77,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -756,19 +941,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=057903120&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 94,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 92,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 92,
+          "relativePerformance": 88
+        },
+        "listingStudentAchievement": 94,
+        "listingClosingTheGaps": 92,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -787,19 +980,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=057903121&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 77,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 87,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 82,
+          "relativePerformance": 79
+        },
+        "listingStudentAchievement": 77,
+        "listingClosingTheGaps": 87,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -832,7 +1033,14 @@
         "officialSTAARSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fdomain1a.sas",
         "analysisGenerated": false,
         "sourceEvidenceFile": "data/tea-cfb-lisd-academic-2026-verified-batch01.json",
-        "socialStudiesNotApplicable": true
+        "socialStudiesNotApplicable": true,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 86,
+          "relativePerformance": 92
+        },
+        "listingStudentAchievement": 93,
+        "listingClosingTheGaps": 85
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -851,19 +1059,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=057903123&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 73,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 79,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 79,
+          "relativePerformance": 74
+        },
+        "listingStudentAchievement": 73,
+        "listingClosingTheGaps": 79,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -882,19 +1098,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=057903124&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 67,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 78,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 80,
+          "relativePerformance": 70
+        },
+        "listingStudentAchievement": 67,
+        "listingClosingTheGaps": 78,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -913,19 +1137,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=057903125&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 58,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 70,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 73,
+          "relativePerformance": 58
+        },
+        "listingStudentAchievement": 58,
+        "listingClosingTheGaps": 70,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -944,19 +1176,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=057903126&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 89,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 90,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 90,
+          "relativePerformance": 86
+        },
+        "listingStudentAchievement": 89,
+        "listingClosingTheGaps": 90,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -975,19 +1215,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=057903128&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 85,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 82,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 86,
+          "relativePerformance": 72
+        },
+        "listingStudentAchievement": 85,
+        "listingClosingTheGaps": 82,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1006,19 +1254,27 @@
       "accountabilityRating2026": "D",
       "officialProfile": "https://txschools.gov/?view=school&id=057903129&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 60,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 71,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 68,
+          "relativePerformance": 60
+        },
+        "listingStudentAchievement": 60,
+        "listingClosingTheGaps": 71,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1037,19 +1293,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=057903131&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 85,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 90,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 92,
+          "relativePerformance": 90
+        },
+        "listingStudentAchievement": 85,
+        "listingClosingTheGaps": 90,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1068,19 +1332,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=057903132&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 90,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 78,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 85,
+          "relativePerformance": 74
+        },
+        "listingStudentAchievement": 90,
+        "listingClosingTheGaps": 78,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1099,19 +1371,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=057903135&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 67,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 71,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 70,
+          "relativePerformance": 72
+        },
+        "listingStudentAchievement": 67,
+        "listingClosingTheGaps": 71,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1130,19 +1410,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=061902001&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 74,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 81,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 75,
+          "relativePerformance": 78
+        },
+        "listingStudentAchievement": 74,
+        "listingClosingTheGaps": 81,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1161,19 +1449,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=061902002&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 91,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 92,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 81,
+          "relativePerformance": 81
+        },
+        "listingStudentAchievement": 91,
+        "listingClosingTheGaps": 92,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1192,19 +1488,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=061902004&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 79,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 79,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 75,
+          "relativePerformance": 79
+        },
+        "listingStudentAchievement": 79,
+        "listingClosingTheGaps": 79,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1223,19 +1527,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=061902005&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 76,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 78,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 75,
+          "relativePerformance": 85
+        },
+        "listingStudentAchievement": 76,
+        "listingClosingTheGaps": 78,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1254,7 +1566,7 @@
       "accountabilityRating2026": "Not Rated",
       "officialProfile": "https://txschools.gov/?view=school&id=061902007&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "TEA-not-rated-no-domain-scores",
         "domainAndSubjectScores": {
           "studentAchievement": null,
           "schoolProgress": null,
@@ -1266,7 +1578,14 @@
         },
         "officialComponentSourceRow": null,
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": null,
+          "relativePerformance": null
+        },
+        "listingStudentAchievement": null,
+        "listingClosingTheGaps": null
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1285,19 +1604,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=061902008&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 88,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 92,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 79,
+          "relativePerformance": 84
+        },
+        "listingStudentAchievement": 88,
+        "listingClosingTheGaps": 92,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1316,19 +1643,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=061902010&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 94,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 94,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 84,
+          "relativePerformance": 85
+        },
+        "listingStudentAchievement": 94,
+        "listingClosingTheGaps": 94,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1347,19 +1682,27 @@
       "accountabilityRating2026": "D",
       "officialProfile": "https://txschools.gov/?view=school&id=061902042&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 69,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 67,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 67,
+          "relativePerformance": 75
+        },
+        "listingStudentAchievement": 69,
+        "listingClosingTheGaps": 67,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1378,19 +1721,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=061902044&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 76,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 72,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 76,
+          "relativePerformance": 72
+        },
+        "listingStudentAchievement": 76,
+        "listingClosingTheGaps": 72,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1409,19 +1760,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=061902045&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 87,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 79,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 82,
+          "relativePerformance": 66
+        },
+        "listingStudentAchievement": 87,
+        "listingClosingTheGaps": 79,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1440,19 +1799,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=061902046&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 70,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 72,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 67,
+          "relativePerformance": 58
+        },
+        "listingStudentAchievement": 70,
+        "listingClosingTheGaps": 72,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1485,7 +1852,14 @@
         "officialSTAARSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902047&lev=C&prgopt=reports%2Facct%2Fdomain1a.sas",
         "analysisGenerated": true,
         "sourceEvidenceFile": "data/tea-cfb-lisd-academic-2026-verified-batch01.json",
-        "socialStudiesNotApplicable": false
+        "socialStudiesNotApplicable": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 85,
+          "relativePerformance": 77
+        },
+        "listingStudentAchievement": 91,
+        "listingClosingTheGaps": 91
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1504,19 +1878,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=061902048&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 93,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 83,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 83,
+          "relativePerformance": 79
+        },
+        "listingStudentAchievement": 93,
+        "listingClosingTheGaps": 83,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1535,19 +1917,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=061902049&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 92,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 88,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 86,
+          "relativePerformance": 74
+        },
+        "listingStudentAchievement": 92,
+        "listingClosingTheGaps": 88,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1566,19 +1956,27 @@
       "accountabilityRating2026": "F",
       "officialProfile": "https://txschools.gov/?view=school&id=061902050&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 55,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 62,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 57,
+          "relativePerformance": 58
+        },
+        "listingStudentAchievement": 55,
+        "listingClosingTheGaps": 62,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1597,19 +1995,27 @@
       "accountabilityRating2026": "D",
       "officialProfile": "https://txschools.gov/?view=school&id=061902052&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 60,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 61,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 58,
+          "relativePerformance": 59
+        },
+        "listingStudentAchievement": 60,
+        "listingClosingTheGaps": 61,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1628,19 +2034,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=061902053&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 94,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 93,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 91,
+          "relativePerformance": 81
+        },
+        "listingStudentAchievement": 94,
+        "listingClosingTheGaps": 93,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1659,19 +2073,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=061902054&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 83,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 71,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 70,
+          "relativePerformance": 74
+        },
+        "listingStudentAchievement": 83,
+        "listingClosingTheGaps": 71,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1690,19 +2112,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=061902055&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 94,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 86,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 91,
+          "relativePerformance": 81
+        },
+        "listingStudentAchievement": 94,
+        "listingClosingTheGaps": 86,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1721,19 +2151,27 @@
       "accountabilityRating2026": "D",
       "officialProfile": "https://txschools.gov/?view=school&id=061902056&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 60,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 72,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 62,
+          "relativePerformance": 63
+        },
+        "listingStudentAchievement": 60,
+        "listingClosingTheGaps": 72,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1752,19 +2190,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=061902058&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 94,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 88,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 89,
+          "relativePerformance": 81
+        },
+        "listingStudentAchievement": 94,
+        "listingClosingTheGaps": 88,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1783,19 +2229,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=061902059&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 92,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 75,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 81,
+          "relativePerformance": 82
+        },
+        "listingStudentAchievement": 92,
+        "listingClosingTheGaps": 75,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1814,19 +2268,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=061902101&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 57,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 72,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 75,
+          "relativePerformance": 60
+        },
+        "listingStudentAchievement": 57,
+        "listingClosingTheGaps": 72,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1845,19 +2307,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=061902104&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 65,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 69,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 75,
+          "relativePerformance": 70
+        },
+        "listingStudentAchievement": 65,
+        "listingClosingTheGaps": 69,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1876,19 +2346,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=061902106&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 73,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 77,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 89,
+          "relativePerformance": 77
+        },
+        "listingStudentAchievement": 73,
+        "listingClosingTheGaps": 77,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1907,19 +2385,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=061902107&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 74,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 75,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 79,
+          "relativePerformance": 73
+        },
+        "listingStudentAchievement": 74,
+        "listingClosingTheGaps": 75,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1938,19 +2424,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=061902108&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 85,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 80,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 85,
+          "relativePerformance": 69
+        },
+        "listingStudentAchievement": 85,
+        "listingClosingTheGaps": 80,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -1969,19 +2463,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=061902109&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 67,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 76,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 71,
+          "relativePerformance": 60
+        },
+        "listingStudentAchievement": 67,
+        "listingClosingTheGaps": 76,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2000,19 +2502,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=061902112&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 92,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 92,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 90,
+          "relativePerformance": 76
+        },
+        "listingStudentAchievement": 92,
+        "listingClosingTheGaps": 92,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2031,19 +2541,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=061902113&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 76,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 77,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 73,
+          "relativePerformance": 66
+        },
+        "listingStudentAchievement": 76,
+        "listingClosingTheGaps": 77,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2062,19 +2580,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=061902114&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 92,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 81,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 86,
+          "relativePerformance": 72
+        },
+        "listingStudentAchievement": 92,
+        "listingClosingTheGaps": 81,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2093,19 +2619,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=061902117&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 91,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 79,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 87,
+          "relativePerformance": 72
+        },
+        "listingStudentAchievement": 91,
+        "listingClosingTheGaps": 79,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2138,7 +2672,14 @@
         "officialSTAARSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fdomain1a.sas",
         "analysisGenerated": false,
         "sourceEvidenceFile": "data/tea-cfb-lisd-academic-2026-verified-batch01.json",
-        "socialStudiesNotApplicable": true
+        "socialStudiesNotApplicable": true,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 73,
+          "relativePerformance": 65
+        },
+        "listingStudentAchievement": 82,
+        "listingClosingTheGaps": 73
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2157,19 +2698,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=061902119&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 78,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 75,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 81,
+          "relativePerformance": 67
+        },
+        "listingStudentAchievement": 78,
+        "listingClosingTheGaps": 75,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2188,19 +2737,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=061902121&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 83,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 77,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 76,
+          "relativePerformance": 74
+        },
+        "listingStudentAchievement": 83,
+        "listingClosingTheGaps": 77,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2219,19 +2776,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=061902122&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 91,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 78,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 83,
+          "relativePerformance": 66
+        },
+        "listingStudentAchievement": 91,
+        "listingClosingTheGaps": 78,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2250,19 +2815,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=061902123&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 95,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 97,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 96,
+          "relativePerformance": 83
+        },
+        "listingStudentAchievement": 95,
+        "listingClosingTheGaps": 97,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2281,19 +2854,27 @@
       "accountabilityRating2026": "D",
       "officialProfile": "https://txschools.gov/?view=school&id=061902124&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 67,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 60,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 56,
+          "relativePerformance": 66
+        },
+        "listingStudentAchievement": 67,
+        "listingClosingTheGaps": 60,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2312,19 +2893,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=061902126&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 90,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 87,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 88,
+          "relativePerformance": 74
+        },
+        "listingStudentAchievement": 90,
+        "listingClosingTheGaps": 87,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2343,19 +2932,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=061902127&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 74,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 68,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 74,
+          "relativePerformance": 58
+        },
+        "listingStudentAchievement": 74,
+        "listingClosingTheGaps": 68,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2374,19 +2971,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=061902128&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 93,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 92,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 94,
+          "relativePerformance": 85
+        },
+        "listingStudentAchievement": 93,
+        "listingClosingTheGaps": 92,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2405,19 +3010,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=061902129&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 93,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 86,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 83,
+          "relativePerformance": 75
+        },
+        "listingStudentAchievement": 93,
+        "listingClosingTheGaps": 86,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2436,19 +3049,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=061902130&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 94,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 88,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 87,
+          "relativePerformance": 81
+        },
+        "listingStudentAchievement": 94,
+        "listingClosingTheGaps": 88,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2467,19 +3088,27 @@
       "accountabilityRating2026": "D",
       "officialProfile": "https://txschools.gov/?view=school&id=061902131&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 57,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 69,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 68,
+          "relativePerformance": 59
+        },
+        "listingStudentAchievement": 57,
+        "listingClosingTheGaps": 69,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2498,19 +3127,27 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=061902132&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 91,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 75,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 85,
+          "relativePerformance": 79
+        },
+        "listingStudentAchievement": 91,
+        "listingClosingTheGaps": 75,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2529,19 +3166,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=061902133&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 95,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 96,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 96,
+          "relativePerformance": 86
+        },
+        "listingStudentAchievement": 95,
+        "listingClosingTheGaps": 96,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2574,7 +3219,14 @@
         "officialSTAARSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902134&lev=C&prgopt=reports%2Facct%2Fdomain1a.sas",
         "analysisGenerated": true,
         "sourceEvidenceFile": "data/tea-cfb-lisd-academic-2026-verified-batch01.json",
-        "socialStudiesNotApplicable": true
+        "socialStudiesNotApplicable": true,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 86,
+          "relativePerformance": 75
+        },
+        "listingStudentAchievement": 92,
+        "listingClosingTheGaps": 83
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2593,19 +3245,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=061902135&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 92,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 90,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 91,
+          "relativePerformance": 72
+        },
+        "listingStudentAchievement": 92,
+        "listingClosingTheGaps": 90,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2624,19 +3284,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=061902136&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 94,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 92,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 89,
+          "relativePerformance": 79
+        },
+        "listingStudentAchievement": 94,
+        "listingClosingTheGaps": 92,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2655,19 +3323,27 @@
       "accountabilityRating2026": "D",
       "officialProfile": "https://txschools.gov/?view=school&id=061902138&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 65,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 67,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 66,
+          "relativePerformance": 69
+        },
+        "listingStudentAchievement": 65,
+        "listingClosingTheGaps": 67,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2686,19 +3362,27 @@
       "accountabilityRating2026": "C",
       "officialProfile": "https://txschools.gov/?view=school&id=061902139&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 67,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 84,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 76,
+          "relativePerformance": 69
+        },
+        "listingStudentAchievement": 67,
+        "listingClosingTheGaps": 84,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2731,7 +3415,14 @@
         "officialSTAARSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902140&lev=C&prgopt=reports%2Facct%2Fdomain1a.sas",
         "analysisGenerated": false,
         "sourceEvidenceFile": "data/tea-cfb-lisd-academic-2026-verified-batch01.json",
-        "socialStudiesNotApplicable": true
+        "socialStudiesNotApplicable": true,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 78,
+          "relativePerformance": 63
+        },
+        "listingStudentAchievement": 73,
+        "listingClosingTheGaps": 72
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2750,7 +3441,7 @@
       "accountabilityRating2026": "B",
       "officialProfile": "https://txschools.gov/?view=school&id=061902141&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "TEA-paired-or-unreported-domain-scores",
         "domainAndSubjectScores": {
           "studentAchievement": null,
           "schoolProgress": null,
@@ -2762,7 +3453,14 @@
         },
         "officialComponentSourceRow": null,
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": null,
+          "relativePerformance": null
+        },
+        "listingStudentAchievement": null,
+        "listingClosingTheGaps": null
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2795,7 +3493,14 @@
         "officialSTAARSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902142&lev=C&prgopt=reports%2Facct%2Fdomain1a.sas",
         "analysisGenerated": true,
         "sourceEvidenceFile": "data/tea-cfb-lisd-academic-2026-verified-batch01.json",
-        "socialStudiesNotApplicable": true
+        "socialStudiesNotApplicable": true,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 70,
+          "relativePerformance": 70
+        },
+        "listingStudentAchievement": 76,
+        "listingClosingTheGaps": 70
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2814,19 +3519,27 @@
       "accountabilityRating2026": "D",
       "officialProfile": "https://txschools.gov/?view=school&id=061902143&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 62,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 72,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 68,
+          "relativePerformance": 66
+        },
+        "listingStudentAchievement": 62,
+        "listingClosingTheGaps": 72,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2845,19 +3558,27 @@
       "accountabilityRating2026": "D",
       "officialProfile": "https://txschools.gov/?view=school&id=061902144&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 51,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 69,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 66,
+          "relativePerformance": 52
+        },
+        "listingStudentAchievement": 51,
+        "listingClosingTheGaps": 69,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
@@ -2876,19 +3597,27 @@
       "accountabilityRating2026": "A",
       "officialProfile": "https://txschools.gov/?view=school&id=061902145&lng=en",
       "academic2026": {
-        "status": "not-independently-verified",
+        "status": "official-district-listing-partial",
         "domainAndSubjectScores": {
-          "studentAchievement": null,
+          "studentAchievement": 92,
           "schoolProgress": null,
-          "closingTheGaps": null,
+          "closingTheGaps": 84,
           "reading": null,
           "mathematics": null,
           "science": null,
           "socialStudies": null
         },
-        "officialComponentSourceRow": null,
+        "officialComponentSourceRow": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
         "officialSTAARSourceRow": null,
-        "analysisGenerated": false
+        "analysisGenerated": false,
+        "officialListingReference": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+        "listingProgressComponents": {
+          "academicGrowth": 91,
+          "relativePerformance": 81
+        },
+        "listingStudentAchievement": 92,
+        "listingClosingTheGaps": 84,
+        "sourceEvidenceFile": "data/tea-cfb-lisd-2026-official-campus-listing-92.json"
       },
       "peims2025_26": {
         "idJoinToStagedPR232": "matched",
