@@ -25,3 +25,13 @@ test('every exact district appears once and coverage totals reconcile without fi
   assert.equal(snapshot.public2025_26PublishedCells,8277);
   assert.equal(snapshot.official2026.schoolYear,'2025-26');
 });
+
+test('release progress UI shows separate domain, STAAR, ethnicity and district counts without misleading UAT/production label',()=>{
+  const js=fs.readFileSync(path.join(root,'features/carrollton-school-insights.js'),'utf8');
+  assert.match(js,/const integrated=info\\.official2026/);
+  for(const label of ['2026 학업 영역 3개 모두 공개','2025–26 STAAR 과목 1개 이상 공개','2025–26 STAAR 4개 과목 모두 공개','학군별 수치 확인','학군 행정코드 기준'])
+    assert.ok(js.includes(label),label);
+  assert.match(js,/if\\(!\\/\\^\\\\d\\{6\\}\\$\\/\\.test\\(d\\.districtId\\)/);
+  assert.match(js,/if\\(integrated &&/);
+  assert.match(js,/\\}else\\{[\\s\\S]*?UAT 신규 2026 TEA 상세 원본/);
+});
