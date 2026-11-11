@@ -106,7 +106,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  let expected=replaceOnce(source,'./home-lookup-v2.js?v=16','./home-lookup-v2.js?v=17');
  // Claude B mobile UX is an explicitly reviewed two-anchor extension of the
  // protected CFB index baseline. Every other byte must still match.
- const originalPrivacy=expected.match(/<div id="homePrivacy" class="source">([\\s\\S]*?)<\\/div>/)?.[1];
+ const originalPrivacy=expected.match(/<div id="homePrivacy" class="source">([\s\S]*?)<\/div>/)?.[1];
  assert.ok(originalPrivacy&&originalPrivacy.includes('Collin CAD'),'Reviewed baseline privacy disclosure');
  const brief='자동완성·주소 검색은 Esri, 경로 계산은 OSRM, 필지 대조는 Collin CAD, 지도 링크는 Google에 정보를 전송합니다. 외부 서비스의 접속 기록 및 보존 기간은 이 사이트에서 통제하지 않습니다. 사적인 정보나 비밀번호를 입력하지 마세요.';
  expected=replaceOnce(expected,
