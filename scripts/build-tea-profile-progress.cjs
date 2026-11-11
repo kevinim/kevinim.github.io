@@ -6,6 +6,31 @@ const insights=require('../features/carrollton-school-insights.js');
 const enrichment=require('../data/tea-campus-enrichment-2026.json');
 const publicPeims=require('../data/tea-ethnicity-2025-26-priority.json');
 const DEST=path.join(__dirname,'../data/tea-profile-progress-2026.json');
+function officialCoverage(records,validPeims,accountability,staar){
+  if(accountability.accountabilityYear!==2026||staar.accountabilityYear!==2026||accountability.schoolYear!=="2025-26"||staar.schoolYear!=="2025-26")throw Error("Wrong official TEA source year");
+  const ids=new Set(records.map(r=>r.id)),a=accountability.campuses,s=staar.campuses;
+  if(ids.size!==records.length||Object.keys(a).length!==ids.size||Object.keys(s).length!==ids.size)throw Error("Official source/inventory mismatch");
+  const peims=new Map(validPeims),districts=new Map();
+  const total={campuses:ids.size,domainAnyReported:0,domainAllReported:0,staarAnyReported:0,staarAllFourReported:0,scoreBasedComparisonEligible:0,staarSourceAbsent:0,public2025_26CountCampuses:0,fullRaceShareCampuses:0};
+  for(const r of records){
+    const d=a[r.id],t=s[r.id],dk=String(r.id).slice(0,6);
+    if(!d||!t||!/^\d{9}$/.test(r.id)||d.districtId!==dk||d.overall.rating!==r.rating||d.overall.score!==r.score)throw Error("Official campus mismatch "+r.id);
+    if(!districts.has(dk))districts.set(dk,{districtId:dk,name:r.districtName,campuses:0,domainAllReported:0,staarAnyReported:0,public2025_26CountCampuses:0,fullRaceShareCampuses:0});
+    const group=districts.get(dk);
+    const domains=["studentAchievement","schoolProgress","closingTheGaps"].filter(k=>d[k]?.status==="reported").length;
+    const subjects=["reading","math","science","socialStudies"].filter(k=>t[k]?.status==="reported").length;
+    const enrollment=peims.get(r.id);
+    const complete=enrollment&&Object.values(enrollment.counts||{}).length===7&&Object.values(enrollment.counts).every(c=>c.status==="published");
+    group.campuses++;group.domainAllReported+=Number(domains===3);group.staarAnyReported+=Number(subjects>0);
+    group.public2025_26CountCampuses+=Number(!!enrollment);group.fullRaceShareCampuses+=Number(!!complete);
+    total.domainAnyReported+=Number(domains>0);total.domainAllReported+=Number(domains===3);
+    total.staarAnyReported+=Number(subjects>0);total.staarAllFourReported+=Number(subjects===4);
+    total.scoreBasedComparisonEligible+=Number(domains===3&&subjects>0&&d.overall.rating!=="Not Rated");
+    total.staarSourceAbsent+=Number(t.reading?.status==="not-in-source");
+    total.public2025_26CountCampuses+=Number(!!enrollment);total.fullRaceShareCampuses+=Number(!!complete);
+  }
+  return {accountabilityYear:2026,schoolYear:"2025-26",sourceAccountability:"data/tea-accountability-2026-verified-batch.json",sourceStaar:"data/tea-staar-meets-2026-verified-batch.json",...total,byDistrict:[...districts.values()].sort((a,b)=>a.districtId.localeCompare(b.districtId)),caveat:"Reported source scores are not universal QA or deployment approval. Not Rated, suppressed, not-in-source and unavailable are never zero; school address is not home assignment; partial PEIMS counts do not define full-campus ethnicity percentages."};
+}
 function makeProgress(asOf){
   const entries=records.map(record=>{
     const base=insights.getSchoolInsight(record);
@@ -69,7 +94,8 @@ function makeProgress(asOf){
       'Suppressed TEA PEIMS counts are unavailable, not zero; no ZIP or district values are imputed.',
       '2025-26 public race counts include FERPA suppressed and omitted cells; count coverage is not complete seven-race percentage coverage.',
       'Source complete for all inventory campus IDs using 2025-26 statewide aggregate; this is partial ethnicity COUNT coverage, not seven-race distribution completeness.'
-    ]
+    ],
+    official2026:officialCoverage(records,validPeims,require('../data/tea-accountability-2026-verified-batch.json'),require('../data/tea-staar-meets-2026-verified-batch.json'))
   };
 }
 if(require.main===module){
