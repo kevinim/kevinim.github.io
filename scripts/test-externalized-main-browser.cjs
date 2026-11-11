@@ -25,7 +25,7 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
     return route.abort();
    });
    let asset=0;
-   page.on('response',r=>{if(r.url().includes('/dashboard-main.js?v=5')&&r.status()===200)asset++});
+   page.on('response',r=>{if(r.url().includes('/dashboard-main.js?v=6')&&r.status()===200)asset++});
    try{
     await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});
     await page.waitForFunction(()=>typeof map!=='undefined'&&map&&typeof state!=='undefined'&&
@@ -70,11 +70,14 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
       await page.locator('#schoolGradeQuick button[data-grade="'+grade+'"]').click();
       const filter=await page.evaluate(()=>{
         const candidates=[...document.querySelectorAll('#schoolList button.school[data-sid]')];
-        const mapBadges=schoolGroup.getLayers().map(m=>m.getElement()?.querySelector('.school-map-grade-badge')?.textContent||'');
+        const layers=schoolGroup.getLayers();
+        const mapBadges=layers.map(m=>m.getElement()?.querySelector('.school-map-grade-badge')?.textContent||'').filter(Boolean);
+        const mapRepresented=layers.every(m=>(m.options.schoolMembers||[]).every(s=>
+          scoreRecord(s.name,s.district)?.rating===state.ratingFilter));
         return {grade:state.ratingFilter,select:document.getElementById('ratingFilter').value,
           schoolCount:candidates.length,allCorrect:candidates.every(b=>
             scoreRecord(state.schools[Number(b.dataset.sid)].name,state.schools[Number(b.dataset.sid)].district)?.rating===state.ratingFilter),
-          badgesValid:mapBadges.every(b=>b===state.ratingFilter),
+          badgesValid:mapBadges.every(b=>b===state.ratingFilter)&&mapRepresented,
           pressed:document.querySelector('#schoolGradeQuick button.active')?.dataset.grade};
       });
       assert.equal(filter.grade,grade,'Quick grade filter updates application state');
@@ -83,6 +86,39 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
       assert.equal(filter.allCorrect,true,'Every filtered list school must have matching TEA grade');
       assert.equal(filter.badgesValid,true,'All rendered map campus badges must match selected grade');
       assert.equal(filter.pressed,grade,'Quick grade button remains active');
+    }
+    // Regional view must group rather than overplot hundreds of 27px icons;
+    // every eligible campus remains represented in one clickable group.
+    const clutter=await page.evaluate(()=>{
+      const before=map.getZoom();
+      map.stop();map.setView([33.095,-96.77],10,{animate:false});
+      drawSchools();
+      const layers=schoolGroup.getLayers();
+      const represented=layers.flatMap(l=>l.options.schoolMembers||[]);
+      const clusters=layers.filter(l=>l.options.schoolMembers?.length>1);
+      const counts=layers.map(l=>l.options.schoolMembers?.length||0);
+      const expected=state.schools.filter(s=>s.ll&&s.type!=='other'&&
+        (state.level==='all'||s.type===state.level)&&schoolPassesRatingFilter(s)&&
+        map.getBounds().contains(s.ll));
+      const head=clusters[0];
+      const current=map.getZoom();
+      if(head)head.fire('click');
+      const clickedZoom=map.getZoom();
+      map.stop();map.setZoom(before,{animate:false});drawSchools();
+      return {eligible:expected.length,rendered:layers.length,represented:represented.length,
+        unique:new Set(represented).size,clusters:clusters.length,
+        clickZoom:clickedZoom,originalZoom:current,
+        bad:new Set(expected.filter(s=>!represented.includes(s))).size,
+        allClustersClickable:clusters.every(l=>l.listens('click'))};
+    });
+    if(clutter.eligible>45){
+      assert.ok(clutter.clusters>0,'Regional school markers should have visible count clusters');
+      assert.ok(clutter.rendered<clutter.represented,'Clustering must reduce cluttered pin count');
+      assert.equal(clutter.represented,clutter.eligible,'Every school remains represented in cluster mode');
+      assert.equal(clutter.unique,clutter.eligible,'No school is duplicated or silently removed');
+      assert.equal(clutter.bad,0,'No missing campus');
+      assert.ok(clutter.clickZoom>clutter.originalZoom,'Cluster click should zoom into schools');
+      assert.equal(clutter.allClustersClickable,true);
     }
     // A grade with no numeric score still belongs in grade-A.
     const noScore=await page.evaluate(()=>{
