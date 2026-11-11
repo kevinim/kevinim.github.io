@@ -92,6 +92,13 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           if(PUBLISHED_IDS.has(id)){
             await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel[data-campus="'+id+'"] .tea-peims-counts')!==null,id,{timeout:15000});
           }
+          // Academic batches are lazy-loaded separately from PEIMS. Await the
+          // exact selected-campus domain and subject panels before assertions.
+          await page.waitForFunction(id=>{
+            const panel=document.querySelector('#detailContent .tea-insights-panel[data-campus="'+id+'"]');
+            return !!panel?.querySelector('.tea-insights-domains') &&
+              !!panel?.querySelector('.tea-insights-subjects');
+          },id,{timeout:25000});
           const found=await page.evaluate(()=>({
             inlineCampus:document.querySelector('#schoolList .tea-school-inline-preview')?.dataset.campus,
             inlineFacts:document.querySelectorAll('#schoolList .tea-school-inline-preview .tea-insights-fact').length,
@@ -109,6 +116,8 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
             notesCollapsed:!document.querySelector('.tea-insights-provenance:not(.tea-peims-counts)').open,
             warningOutsideNotes:!!document.getElementById('zoneNotice')&&!document.querySelector('.tea-insights-provenance:not(.tea-peims-counts)').contains(document.getElementById('zoneNotice')),
             domainCount:document.querySelectorAll('.tea-insights-domains dd').length,
+            domainText:document.querySelector('.tea-insights-domains')?.textContent||'',
+            subjectText:document.querySelector('.tea-insights-subjects')?.textContent||'',
             raceCount:document.querySelectorAll('.tea-insights-figure .tea-insights-legend li').length,
             peimsCountRows:document.querySelectorAll('#detailContent .tea-peims-counts li').length,
             peimsText:document.querySelector('#detailContent .tea-peims-counts')?.textContent||'',
@@ -134,9 +143,10 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           assert.equal(found.notesCollapsed,true,'technical footnotes are closed by default');
           assert.equal(found.warningOutsideNotes,true,'important school assignment warning remains visible');
           assert.ok(found.link.some(x=>x.url.startsWith('https://txschools.gov/')),'official campus source included');
-          const reviewed=['061902118','061902008'].includes(id);
           const raceVerified=['061902118','061902008','061902136','061902140','061902142','061902143','043901001','043907002'].includes(id);
-          assert.equal(found.domainCount,reviewed?3:0,'domain scores must not be invented '+id);
+          assert.equal(found.domainCount,3,'UAT TEA scaled domain/missingness for exact campus '+id);
+          assert.ok(found.subjectText.includes('STAAR')&&found.subjectText.includes('사회'),
+            '2025–26 Reading/Math/Science/Social Studies labels and missingness visible '+id);
           if(raceVerified){
             assert.equal(found.years.length,2,'evaluation and ethnicity years displayed separately');
             assert.notEqual(found.years[0].text,found.years[1].text,'different vintages must remain distinct');
@@ -189,7 +199,16 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           if(id==='061914001')assert.ok(found.peimsText.includes('106명'),'Little Elm statewide Asian count');
           if(id==='184907001')assert.ok(found.peimsText.includes('비공개 (<20)'),'Aledo source Asian count stays masked');
           if(id==='043901105')assert.ok(found.peimsText.includes('비공개'),'suppressed Asian count remains hidden');
-          if(!reviewed)assert.equal(found.missingDomain,true,'grade-only campus must show missing domain notice');
+          assert.equal(found.missingDomain,false,'official domain statuses are loaded, not falsely called unconnected '+id);
+          if(id==='043901001'){
+            assert.ok(found.domainText.includes('88점')&&found.subjectText.includes('사회 86%'),
+              'Allen High uses official 2026 domain scaled and Social Studies STAAR values');
+          }
+          if(id==='057912046'){
+            assert.ok(found.domainText.includes('62점')&&found.subjectText.includes('독해 34%'),
+              'Houston Middle official 2026 exact TEA scores');
+          }
+
           assert.deepEqual(found.csp,[],'CSP violation detected '+JSON.stringify(found.csp));
           if(width===390)assert.ok(found.scrollWidth<=width+5,'mobile horizontal overflow '+found.scrollWidth);
           if(id===CASES[0][0]){
