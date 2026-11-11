@@ -103,7 +103,7 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
 });
 test('main index is byte-exact to newest approved CFB baseline, except home lookup cache version',()=>{
  const source=show('b7c330aab35f0183a234f057acb2ab1e35f38943','index.html');
- let expected=replaceOnce(source,'./home-lookup-v2.js?v=16','./home-lookup-v2.js?v=17');
+ let expected=replaceOnce(source,'./home-lookup-v2.js?v=16','./home-lookup-v2.js?v=18');
  // Claude B mobile UX is an explicitly reviewed two-anchor extension of the
  // protected CFB index baseline. Every other byte must still match.
  const originalPrivacy=expected.match(/<div id="homePrivacy" class="source">([\s\S]*?)<\/div>/)?.[1];
@@ -114,6 +114,12 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
   '<div id="homePrivacy" class="source">'+brief+'</div><details id="homePrivacyDetails" class="home-privacy-disclosure"><summary>개인정보·외부 서비스 안내 자세히 보기</summary><div class="source">'+originalPrivacy+'</div></details>');
  expected=replaceOnce(expected,'<script src="./features/theme-toggle.js?v=2"></script>',
   '<link rel="stylesheet" href="./features/first-fold-ux.css?v=1"><script src="./features/theme-toggle.js?v=2"></script>');
+ // Track A is stacked on B, and adds only a trusted first-party reference
+ // module and its stylesheet. Residential release policy script stays before it.
+ expected=replaceOnce(expected,'<link rel="stylesheet" href="./features/first-fold-ux.css?v=1">',
+  '<link rel="stylesheet" href="./features/first-fold-ux.css?v=1"><link rel="stylesheet" href="./features/school-reference-preview.css?v=1">');
+ expected=replaceOnce(expected,'<script src="./features/conditional-school-release.js?v=1"></script>',
+  '<script src="./features/conditional-school-release.js?v=1"></script>\n<script src="./features/school-reference-preview.js?v=1"></script>');
  assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expected.replace(/\r\n/g,'\n')),
   'No HTML drift beyond reviewed mobile first-fold + privacy disclosure anchors');
  const originalPanel=show('b1a787eb6bd877318a1275a4a29225069782ece7','index.html')
@@ -125,7 +131,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  const policy='./features/conditional-school-release.js?v=1';
  assert.equal(html.split(policy).length,2);
  assert.ok(html.indexOf('./school-zone-ui.js?v=1')<html.indexOf(policy));
- assert.ok(html.indexOf(policy)<html.indexOf('./home-lookup-v2.js?v=17'));
+ assert.ok(html.indexOf(policy)<html.indexOf('./home-lookup-v2.js?v=18'));
 });
 test('strict script CSP preserved exactly and personal office artifacts absent',()=>{
  const allowed=oldCsp.replace('https://geocode.arcgis.com https://nominatim.openstreetmap.org',
