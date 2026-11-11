@@ -11,10 +11,10 @@
   "domainComponentsReviewed": 2,
   "subjectsReviewed": 2,
   "ethnicityReviewed": 8,
-  "public2025_26CampusCounts": 1644,
-  "public2025_26PublishedCells": 6263,
-  "public2025_26SuppressedCells": 3536,
-  "public2025_26UnlistedCells": 1709,
+  "public2025_26CampusCounts": 2282,
+  "public2025_26PublishedCells": 8277,
+  "public2025_26SuppressedCells": 5141,
+  "public2025_26UnlistedCells": 2556,
   "public2025_26CompleteShares": 6,
   "imported2026Components": 0,
   "imported2025_26Ethnicity": 0,
@@ -53,13 +53,14 @@
       "individualAnalysis": 0,
       "domainScores": 0,
       "ethnicity": 0,
-      "public2025_26CampusCounts": 1496
+      "public2025_26CampusCounts": 2134
     }
   ],
   "notes": [
     "Basic profile means official overall grade and exact campus ID; it is NOT complete domain analysis.",
     "Student race/ethnicity is context, not a school quality indicator.",
     "Suppressed TEA PEIMS counts are unavailable, not zero; no ZIP or district values are imputed.",
-    "2025-26 public race counts include FERPA suppressed and omitted cells; count coverage is not complete seven-race percentage coverage."
+    "2025-26 public race counts include FERPA suppressed and omitted cells; count coverage is not complete seven-race percentage coverage.",
+    "Source complete for all inventory campus IDs using 2025-26 statewide aggregate; this is partial ethnicity COUNT coverage, not seven-race distribution completeness."
   ]
 }
