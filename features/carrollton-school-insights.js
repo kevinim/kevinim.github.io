@@ -353,7 +353,7 @@
     if(document.querySelector('link[data-tea-carrollton-css]')) return;
     const css=document.createElement('link');
     css.rel='stylesheet';
-    css.href='./features/carrollton-school-insights.css?v=3';
+    css.href='./features/carrollton-school-insights.css?v=4';
     css.dataset.teaCarrolltonCss='1';
     document.head.appendChild(css);
   }
@@ -467,9 +467,53 @@
     if(!document.querySelector('link[data-tea-carrollton-css]'))ensureStyles();
     mountInline(school,rating);
   }
+  function installCoveragePanel(){
+    const list=document.getElementById('schoolList');
+    if(!list || document.getElementById('tea-data-progress'))return;
+    const details=document.createElement('details');
+    details.id='tea-data-progress';
+    details.className='source school-info tea-data-progress';
+    details.appendChild(textTag('summary','','학교정보 구축 현황 · 기본 2,282개 / 세부 분석 확대 중'));
+    const content=document.createElement('div');
+    content.className='tea-data-progress-content';
+    content.setAttribute('aria-live','polite');
+    content.appendChild(textTag('p','','펼치면 최신 학교별 데이터 연결률을 표시합니다.'));
+    details.appendChild(content);
+    let started=false;
+    details.addEventListener('toggle',function(){
+      if(!details.open||started)return;
+      started=true;
+      if(!root||typeof root.fetch!=='function')return;
+      root.fetch('./data/tea-profile-progress-2026.json?v=1',{credentials:'same-origin'})
+        .then(function(response){if(!response.ok)throw Error('Progress not available');return response.json();})
+        .then(function(info){
+          if(!Number.isInteger(info.totalCampuses)||info.totalCampuses<1)return;
+          const count=info.totalCampuses;
+          const ratio=function(n){return ((Number(n)||0)*100/count).toFixed(1)+'%';};
+          content.replaceChildren();
+          content.appendChild(textTag('p','','집계 기준 '+info.asOf+' · 현재 등록 TEA 캠퍼스 기록 '+count.toLocaleString('en-US')+'개'));
+          [
+            ['2026 A–F 종합등급',info.accountabilityRatingPresent],
+            ['학교별 기본 설명',info.profilePanelsConnected],
+            ['개별 강점·개선과제 분석',info.individualNarratives],
+            ['2026 영역별 평가점수',info.domainComponentsReviewed],
+            ['학생 인종 구성',info.ethnicityReviewed]
+          ].forEach(function(pair){
+            const p=document.createElement('p');
+            p.appendChild(textTag('strong','',pair[0]+' '+Number(pair[1]||0).toLocaleString('en-US')+' / '+count.toLocaleString('en-US')));
+            p.appendChild(document.createTextNode(' · '+ratio(pair[1])));
+            content.appendChild(p);
+          });
+          content.appendChild(textTag('p','','미평가(Not Rated) '+info.notRated+'개 · 2025–26 공식 자료는 학교별 검증 후 갱신됩니다.'));
+          content.appendChild(textTag('p','','종합등급 연결과 과목별 분석 완료는 다른 기준입니다. 개인정보 보호로 마스킹된 수치는 추정하지 않습니다.'));
+        }).catch(function(){content.textContent='현재 진행률 파일을 불러올 수 없습니다. 학교별 공식 출처를 확인해 주세요.';});
+    });
+    list.insertAdjacentElement('afterend',details);
+  }
   function boot() {
     const host=document.getElementById('detailContent');
     if(!host || typeof MutationObserver==='undefined')return;
+    installCoveragePanel();
     const search=document.getElementById('schoolSearch');
     if(search)search.placeholder='학교 이름 검색 (주변 학교·배정학교 검색 아님)';
     const observer=new MutationObserver(mount);
