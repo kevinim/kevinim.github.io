@@ -8,7 +8,8 @@ test('theme stylesheet and early classic script load from same-origin with uncha
  const meta=html.match(/http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
  assert.match(meta,/script-src-attr 'none'/);
  assert.doesNotMatch(meta.match(/script-src ([^;]+)/)?.[1]||'',/'unsafe-inline'/);
- assert.match(html,/theme-toggle\.css\?v=1/);
+ assert.match(html,/first-render-ui\.bundle\.css\?v=1/);
+ assert.doesNotMatch(html,/href="\.\/features\/theme-toggle\.css\?v=1"/);
  assert.match(html,/theme-toggle\.js\?v=2/);
  const headEnd=html.indexOf('</head>'),scriptAt=html.indexOf('theme-toggle.js?v=2');
  assert.ok(scriptAt>0&&scriptAt<headEnd,'Theme must initialize before body paints');
