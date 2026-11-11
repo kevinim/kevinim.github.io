@@ -13,7 +13,7 @@ const baseline='5a5b3a8fbe1b29ba71797525696d1f092821e6b7';
 const old=show(baseline,'index.html'),oldJs=show(baseline,'dashboard-main.js');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const js=fs.readFileSync(path.join(root,'dashboard-main.js'),'utf8');
-const external='<script src="./dashboard-main.js?v=6"></script>';
+const external='<script src="./features/map/area-label-hierarchy.js?v=1"></script><script src="./dashboard-main.js?v=7"></script>';
 const oldCsp=old.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
 const newCsp=html.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
 const hash=buf=>crypto.createHash('sha256').update(buf).digest('hex');
@@ -90,8 +90,14 @@ function expectedPublicJs(source){
 test('pre-existing dashboard remains byte-exact except approved personal commute removals',()=>{
  assert.equal(hash(show('99cc1fca0781b4589bb8de97fa3069f428bdffbe','dashboard-main.js')),hash(expectedPublicJs(oldJs)),
   'Pre-feature main must retain exactly the reviewed privacy cleanup');
- assert.equal(hash(js),hash(show('c7abd55d1fff6748b45c72d51d801cbe16335b17','dashboard-main.js')),
-  'Decluttered school marker clusters must match the exact reviewed source commit');
+ const mapLabelBaseJs=show('55ae28393a91766a7197041b138c260bf625309c','dashboard-main.js');
+ const areaFn=/function drawAreaLabels\\(\\)\\{[\\s\\S]*?(?=function schoolType\\(s\\)\\{)/;
+ const integratedFn=js.match(areaFn)?.[0],previousFn=mapLabelBaseJs.match(areaFn)?.[0];
+ assert.ok(integratedFn&&previousFn,'Map labels remain a single scoped function');
+ assert.ok(integratedFn.includes('AreaLabelHierarchy.buildCandidates'),'Verified zoom-aware labels are used');
+ assert.ok(integratedFn.includes('escape(label)'),'Map label output must be HTML escaped');
+ assert.equal(hash(js.replace(integratedFn,previousFn)),hash(mapLabelBaseJs),
+  'Only the scoped map-area label function may differ from reviewed #258 main');
  const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
  const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);
  assert.ok(start>40000&&end>start+70000);
@@ -142,7 +148,15 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  expected=replaceOnce(expected,"<label>2026 TEA 학교 점수</label><select id=\"ratingFilter\"><option value=\"all\">전체 (점수 미확인 포함)</option><option value=\"rated\">점수 확인된 학교만</option></select>","<label for=\"ratingFilter\">2026 TEA 학교 등급</label><select id=\"ratingFilter\" aria-label=\"지도와 목록 학교 등급 필터\"><option value=\"all\">전체 학교 (등급 없는 학교 포함)</option><option value=\"A\">A등급만</option><option value=\"B\">B등급만</option><option value=\"C\">C등급만</option><option value=\"D\">D등급만</option><option value=\"F\">F등급만</option><option value=\"rated\">점수 확인된 학교만</option><option value=\"unrated\">미평가 (Not Rated)</option><option value=\"unlinked\">TEA 등급 미연결</option></select><div class=\"school-grade-quick\" id=\"schoolGradeQuick\" role=\"group\" aria-label=\"학교 등급 빠른 필터\"><button type=\"button\" data-grade=\"all\" class=\"active\" aria-pressed=\"true\">전체</button><button type=\"button\" data-grade=\"A\" aria-pressed=\"false\">A</button><button type=\"button\" data-grade=\"B\" aria-pressed=\"false\">B</button><button type=\"button\" data-grade=\"C\" aria-pressed=\"false\">C</button></div><div class=\"source\">TEA 2026 문자 등급 기준으로 학교 목록과 지도 마커를 함께 필터링합니다. 점수 숫자는 고려하지 않습니다. 등급 미연결과 공식 미평가는 구별합니다.</div>");
  expected=replaceOnce(expected,'<script src="./dashboard-main.js?v=4"></script>',
   '<script src="./dashboard-main.js?v=6"></script>');
- const actualHtmlHash=hash(html.replace(/\r\n/g,'\n'));
+ // Approved #259 only adds these exact styles and the zoom-aware script before the bootstrap.
+ const approvedLabelStyle=".area-label{pointer-events:none}.area-label span{display:block;text-align:center;white-space:nowrap;background:rgba(255,255,255,.94);border:1px solid #8194ae;border-radius:6px;padding:3px 6px;color:#172d4a;font-size:11px;font-weight:750;line-height:1.15;box-shadow:0 1px 4px #1b355044}.area-label.selected span{background:#173b78;border-color:#fff;color:white}\n.area-label.city span{font-size:12px;font-weight:850;padding:5px 9px;border-radius:8px;border-color:#59779b;box-shadow:0 2px 7px #1b355044}\n.area-label.region span{font-size:11px;font-weight:750;padding:4px 7px}\n.area-label.zip span{font-size:10px;font-weight:720;padding:3px 6px}\nhtml[data-theme=\"dark\"] .area-label:not(.selected) span{background:rgba(17,32,50,.96);color:#eaf2ff;border-color:#67819d;box-shadow:0 2px 7px #0008}\nhtml[data-theme=\"dark\"] .area-label.selected span{background:#2d5592;border-color:#b6d7ff;color:white}\r\n";
+ const previousLabelStyle=".area-label{pointer-events:none}.area-label span{display:block;text-align:center;white-space:nowrap;background:rgba(255,255,255,.94);border:1px solid #8194ae;border-radius:6px;padding:3px 6px;color:#172d4a;font-size:11px;font-weight:750;line-height:1.15;box-shadow:0 1px 4px #1b355044}.area-label.selected span{background:#173b78;border-color:#fff;color:white}\r\n";
+ const approvedLabelScript="<script src=\"./features/map/area-label-hierarchy.js?v=1\"></script><script src=\"./dashboard-main.js?v=7\"></script>";
+ assert.equal(html.split(approvedLabelStyle).length,2,'Exact zoom label style added once');
+ assert.equal(html.split(approvedLabelScript).length,2,'Exact zoom label runtime added once');
+ const integrityHtml=html.replace(approvedLabelStyle,previousLabelStyle)
+  .replace(approvedLabelScript,"<script src=\"./dashboard-main.js?v=6\"></script>");
+ const actualHtmlHash=hash(integrityHtml.replace(/\r\n/g,'\n'));
  const baselineHtmlHash=hash(expected.replace(/\r\n/g,'\n'));
  // Exact-byte allowlist for approved #258 collapsible-only markup.
  if(actualHtmlHash!==baselineHtmlHash){
