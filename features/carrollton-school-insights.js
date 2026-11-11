@@ -298,7 +298,7 @@
   // No full percentages from unreviewed seven-cell sums.
   const AUDITED_PEIMS_TOTALS=Object.freeze({
     '043901001':5127,'057912046':753,'057912123':756,
-    '061911001':2806,'061911007':2997
+    '061911001':2806,'061911007':2997,'220912002':3033
   });
   function auditedPeimsTotal(id,rows){
     if(!Object.hasOwn(AUDITED_PEIMS_TOTALS,String(id)) ||
