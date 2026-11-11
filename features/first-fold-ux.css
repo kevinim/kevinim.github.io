@@ -24,3 +24,31 @@
   .main>.section{order:5;width:100%;min-width:0}
   #homePrivacy{font-size:11px;line-height:1.45}
 }
+
+/* Explicit school-list selection: distinct from attendance boundaries. */
+#schoolList button.school.school-map-selected{outline:3px solid #facc15;outline-offset:-3px;border-radius:8px}
+#schoolList button.school.school-map-selected:focus-visible{outline:3px solid #facc15;outline-offset:2px}
+.selected-school-campus-pin{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;box-sizing:border-box;
+  background:#facc15;border:3px solid #202c41;color:#152238;font-size:11px;font-weight:900;line-height:1;
+  box-shadow:0 0 0 4px rgba(250,204,21,.37),0 4px 12px rgba(0,0,0,.35)}
+.leaflet-tooltip.selected-school-campus-tooltip{max-width:min(300px,75vw);white-space:normal;overflow-wrap:anywhere;
+  padding:7px 10px;border:2px solid #facc15;border-radius:7px;background:#162338;color:#fff;
+  font-size:12px;font-weight:800;box-shadow:0 3px 14px rgba(0,0,0,.35)}
+.leaflet-tooltip-top.selected-school-campus-tooltip:before{border-top-color:#facc15}
+
+/* Accessible one-tap TEA 2026 grade filters; separate Not Rated and unlinked. */
+.school-grade-quick{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0}
+.school-grade-quick button{font:inherit;font-size:12px;font-weight:800;min-width:45px;min-height:38px;
+  padding:7px 11px;border:1px solid #8fa1b8;border-radius:8px;background:#f3f6fa;color:#213652;cursor:pointer}
+.school-grade-quick button:hover{border-color:#4264a5;background:#e1eafa}
+.school-grade-quick button.active{background:#243e72;color:#fff;border-color:#243e72}
+.school-grade-quick button:focus-visible{outline:3px solid #facc15;outline-offset:2px}
+.mapmark{position:relative}
+.school-map-grade-badge{position:absolute;right:-8px;bottom:-6px;display:grid;place-items:center;min-width:17px;height:17px;
+  padding:0 2px;background:#243e72;border:1.5px solid #fff;border-radius:10px;color:#fff;font-size:10px;
+  font-weight:900;font-style:normal;line-height:1;box-shadow:0 1px 4px #182c49a8}
+.school-map-grade-badge.grade-a{background:#137a57}
+.school-map-grade-badge.grade-b{background:#2258b9}
+.school-map-grade-badge.grade-c{background:#946000}
+.school-map-grade-badge.grade-d{background:#8b4422}
+.school-map-grade-badge.grade-f{background:#9e2234}

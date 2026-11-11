@@ -14,7 +14,7 @@ test('first-render CSS is the exact ordered source concatenation',()=>{
  for(const p of INPUTS)assert.ok(actual.includes('/* SOURCE: '+p+' */'),p);
 });
 test('six individual render-blocking stylesheets become exactly one linked asset',()=>{
- assert.equal(html.split('./features/first-render-ui.bundle.css?v=1').length-1,1);
+ assert.equal(html.split('./features/first-render-ui.bundle.css?v=2').length-1,1);
  for(const p of INPUTS)
   assert.equal(html.includes('href="./'+p+'?v=1"'),false,'Old CSS link still loaded: '+p);
  const links=[...html.matchAll(/<link\b[^>]*rel=["']stylesheet["'][^>]*>/gi)];
