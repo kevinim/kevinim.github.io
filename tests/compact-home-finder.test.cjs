@@ -96,3 +96,15 @@ test('official Texas school DISTRICT polygon safely overrides Carrollton ZIP rou
   assert.equal(model.likely,'CFB','No high-quality coordinate: degrade to explicitly labeled city/ZIP only hint');
  }finally{delete ctx.home;delete ctx.window.CfbJurisdiction}
 });
+
+test('async same-home rerenders preserve the advanced school panel but switching homes resets it',()=>{
+ const start=source.indexOf('let lastAdvancedPanelHome=null;');
+ const end=source.indexOf('async function checkHomeParcel()',start);
+ assert.ok(start>=0&&end>start,'advanced panel lifecycle is explicitly stateful');
+ const render=source.slice(start,end);
+ assert.match(render,/preserveAdvancedOpen=lastAdvancedPanelHome===home&&el\('homeAdvancedSchoolTools'\)\?\.open===true/);
+ assert.match(render,/lastAdvancedPanelHome=home/);
+ assert.match(render,/advanced\.open=preserveAdvancedOpen/);
+ assert.ok(render.indexOf('advanced.open=preserveAdvancedOpen')<render.indexOf('advanced.addEventListener(\'toggle\''),
+   'restored state must precede visibility synchronization');
+});
