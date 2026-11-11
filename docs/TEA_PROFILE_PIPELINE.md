@@ -105,6 +105,36 @@ All official CSV source URLs are retained by district code under `sources` in `d
 
 **QA required:** source URL contract + campus ID/district exact join + race keys/masking + full-data ratio authorization only if all seven counts public; browser desktop/mobile, privacy/security, GIS/markers. Production deploy remains blocked until explicit user release approval, even if all PR actions pass.
 
+## Wave 4A · 2025–26 official PEIMS ethnicity count expansion — 2026-11-11
+
+Using the public Texas Education Agency 2025–26 **Selected Campus Totals using district number → Ethnicity → CSV** report, this batch added **301 existing TEA inventory campuses in 15 additional districts** on top of the source-verified 1,343-campus wave:
+
+| TEA district code | District | New exact campus-ID matches |
+|---|---|---:|
+| 220918 | Eagle Mountain–Saginaw ISD | 32 |
+| 220902 | Birdville ISD | 31 |
+| 129902 | Forney ISD | 24 |
+| 199901 | Rockwall ISD | 23 |
+| 220912 | Crowley ISD | 23 |
+| 043914 | Wylie ISD | 22 |
+| 126902 | Burleson ISD | 20 |
+| 220906 | Grapevine–Colleyville ISD | 20 |
+| 070912 | Waxahachie ISD | 18 |
+| 043911 | Princeton ISD | 16 |
+| 057922 | Coppell ISD | 16 |
+| 091906 | Sherman ISD | 16 |
+| 057907 | Duncanville ISD | 14 |
+| 070908 | Midlothian ISD | 13 |
+| 199902 | Royse City ISD | 13 |
+
+**Staged cumulative coverage: 1,644 / 2,282 schools (72.04%) across 38 publisher-validated district exports.** Across 11,508 possible school/race cells: **6,263 exact public counts; 3,536 TEA-masked cells; 1,709 TEA-unlisted cells.** Source masking/omission never means zero or permits derivation; the data are not individual-student records.
+
+Six current-year schools have all seven official categories published: the prior five plus **North Crowley High School (220912002), with 3,033 students and 105 Asian students (3.5%)**. School panels show current-year percentages only for fully public seven-category profiles; previous 2024–25 percentage charts remain clearly separate. In Crowley ISD, the public TEA CSV also contains campus ID `220912012`, which is absent from this dashboard's official 2026 TEA inventory; it is deliberately not imported or included in 1,644 verified joins. The CFB/Carrollton address→school assignment and GIS data are unaffected.
+
+The per-district exact publisher CSV URL for each of these new 15 sources is recorded in `data/tea-ethnicity-2025-26-priority.json:sources` and validated by the strict TEA-host/year/grouping/district contract. Example source for Wylie: https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=c&selsumm=ic&linespg=60&charsln=120&grouping=e&loop=2&key=043914&_debug=0
+
+Ready-for-review UAT requires passing exact-head CI, school-ID/country source checks, FERPA, desktop/mobile school selection, XSS/CSP and map regressions. **No main/Production merge absent user authorization.**
+
 ## Importing an official verified batch
 
 The native TEA export may use different column names by report/year. Before ingestion, inspect TEA's associated data dictionary and explicitly transpose **aggregated campus rows only** into these normalized CSV headers. Do not assume any file's column names.
