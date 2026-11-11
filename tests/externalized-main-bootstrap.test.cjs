@@ -181,8 +181,15 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  const priorPrivacy='<p id="destinationPrivacy" class="source" role="note">목적지 검색을 누르면 입력한 목적지가 OpenStreetMap Nominatim으로, 경로 계산 시 출발지·목적지 좌표가 OSRM으로 전송됩니다. 실제 주거지나 기밀 주소 대신 공개된 사업장·대표 위치를 사용하세요. 이 사이트는 입력값을 자체 서버에 영구 저장하도록 구성되지 않았으나, 외부 서비스의 로그 보존·삭제는 보장할 수 없습니다.</p>';
  const approvedPrivacy='<p id="destinationPrivacy" class="source" role="note">목적지 자동완성 중 입력한 일부 주소는 Esri로, 경로 계산을 누르면 목적지 전체 주소가 OpenStreetMap Nominatim으로, 출발지·목적지 좌표가 OSRM으로 전송됩니다. 실제 주거지나 기밀 주소 대신 공개된 사업장·대표 위치를 사용하세요. 직장 등록을 누르면 이름·주소가 이 브라우저 로컬 저장소에만 저장되며 공개 저장소나 서버에는 저장되지 않습니다. 외부 서비스의 로그 보존·삭제는 보장할 수 없습니다.</p>';
  approvedHtml=replaceOnce(approvedHtml,priorPrivacy,approvedPrivacy);
+ // Separately reviewed #256 PEIMS addon: only two same-origin assets may be
+ // inserted; entire production HTML must match this exact immutable allowlist.
+ approvedHtml=replaceOnce(approvedHtml,'</head><body>',
+  '<link rel="stylesheet" href="./features/tea-peims-public-share-addon.css?v=1">\n</head><body>');
+ approvedHtml=replaceOnce(approvedHtml,
+  '<script src="./features/home-school-manual-bridge.js?v=1" defer></script></body></html>',
+  '<script src="./features/home-school-manual-bridge.js?v=1" defer></script><script src="./features/tea-peims-public-share-addon.js?v=1" defer></script></body></html>');
  assert.equal(hash(html),hash(approvedHtml),
-  'Unreviewed HTML drift beyond four approved workplace additions');
+  'Unreviewed HTML drift beyond approved workplace and PEIMS addon anchors');
  // Strip only previously released #262 zoom label additions from the
  // immutable baseline; the existing #258 content SHA remains enforced.
  const integrityHtml=reviewedMainHtml.replace(approvedLabelStyle,previousLabelStyle)
