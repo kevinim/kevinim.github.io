@@ -18,7 +18,7 @@ test('Plano campus identities and TEA year/provenance remain exact',()=>{
   assert.equal(scope.length,69);
   assert.deepEqual(Object.keys(batch.campuses).sort(),scope.map(x=>x.id).sort());
   for(const school of scope){
-    assert.match(school.id,/^\\d{9}$/);
+    assert.match(school.id,/^\d{9}$/);
     assert.equal(batch.campuses[school.id].district,'PISD');
     assert.equal(batch.campuses[school.id].name,school.officialName);
   }
