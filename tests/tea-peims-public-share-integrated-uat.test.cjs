@@ -150,7 +150,7 @@ test('actual selected-school DOM add-on mounts once, hides protected group share
   assert.equal(masked.get().mounts,1,'MutationObserver must not duplicate widget');
   const noData=simulate('057903009',normalize(data.campuses['057903009']),null);
   assert.equal(noData.get().mounts,1);
-  assert.equal(noData.get().stack,undefined,'zero published counts must not produce misleading chart');
+  assert.equal(noData.get().stack,null,'zero published counts must not produce misleading chart');
   assert.match(noData.get().region.textContent,/비율 차트를 표시하지 않습니다/);
   const verified=simulate('043901001',normalize(data.campuses['043901001']),5127);
   assert.equal(verified.get().mounts,0,'do not duplicate already-audited full enrollment chart');
