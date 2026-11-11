@@ -30,6 +30,8 @@ test('statewide 2025-26 source reconciliation pins scope and exact public publis
 test('all 2,282 dashboard inventory campuses have status-only gender parity results',()=>{
  const ids=new Set(inventory.map(x=>x.id));
  assert.equal(ids.size,2282);
+ assert.match(audit.scopeCaveat,/not a geographically verified list/);
+ assert.ok(ids.has('061806015'),'source inventory includes a flagged non-local campus; geographic QA is separate');
  const entries=Object.entries(audit.campuses);
  assert.equal(entries.length,ids.size);
  const districts=new Set();
