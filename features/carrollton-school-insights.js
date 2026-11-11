@@ -183,9 +183,192 @@
         strength:hasScore?'확인된 공식 종합 등급: '+rating:'공식 종합 평가로 판단 불가',
         challenge:'개별 과목·성장·학생 집단별 성과 원문 확인 필요'
       };
-    return enrichFromOfficial(record,base);
+    return enrichFromAllenMcKinney(record,enrichFromOfficial(record,base));
+  }
+  // Allen/McKinney 2026 academics + 2025–26 public PEIMS, keyed ONLY by Campus ID.
+  // The whole batch is validated before use; never infer residential assignments.
+  const ALLEN_MCKINNEY=Object.create(null);
+  let officialBatchStarted=false;
+  let officialBatchError=false;
+  function reportLink(url,id,report){
+    if(!hasOfficialSource(url))return false;
+    try{
+      const u=new URL(url);
+      return u.hostname==='rptsvr1.tea.texas.gov' &&
+        u.searchParams.get('id')===id && u.searchParams.get('ccyy')==='2026' &&
+        u.searchParams.get('prgopt')==='reports/acct/'+report+'.sas';
+    }catch{return false;}
+  }
+  function peimsLink(url,district,grouping){
+    if(!hasOfficialSource(url))return false;
+    try{
+      const u=new URL(url);
+      return u.hostname==='rptsvr1.tea.texas.gov' &&
+        u.searchParams.get('endyear')==='26' &&
+        u.searchParams.get('key')===district &&
+        u.searchParams.get('grouping')===grouping;
+    }catch{return false;}
+  }
+  function validPublicPeims(peims,district){
+    if(!peims || peims.schoolYear!=='2025-26' ||
+      !peimsLink(peims.source,district,'e') ||
+      !peimsLink(peims.enrollmentSource,district,'g') ||
+      !peims.counts || typeof peims.counts!=='object')return false;
+    const enrollment=peims.enrollment;
+    if(peims.enrollmentStatus==='published'){
+      if(!Number.isSafeInteger(enrollment) || enrollment<=0 ||
+         !peims.partialPercentages || typeof peims.partialPercentages!=='object')return false;
+    }else if(peims.enrollmentStatus==='suppressed'){
+      if(enrollment!==null || peims.percentages!==null || peims.partialPercentages!==null ||
+        !/^<\d+$/.test(peims.enrollmentMask||''))return false;
+    }else return false;
+    let disclosed=0,allSeven=true;
+    for(const [key] of RACES){
+      const c=peims.counts[key],pct=peims.partialPercentages?.[key];
+      if(!c || typeof c!=='object')return false;
+      if(c.status==='published'){
+        if(!Number.isSafeInteger(c.count)||c.count<0)return false;
+        disclosed+=c.count;
+        if(enrollment!==null && pct!==Math.round(c.count*1000/enrollment)/10)return false;
+      }else if(c.status==='suppressed'){
+        allSeven=false;
+        if(c.count!==undefined || !/^<\d+$/.test(c.publishedMask||'') || pct!=null)return false;
+      }else if(c.status==='not-listed'){
+        allSeven=false;
+        if(c.count!==undefined || pct!=null)return false;
+      }else return false;
+    }
+    if(enrollment!==null && disclosed>enrollment)return false;
+    if(allSeven && enrollment!==null){
+      if(disclosed!==enrollment || !checkRace(peims.percentages))return false;
+    }else if(peims.percentages!==null)return false;
+    return true;
+  }
+  function applyAllenMcKinneyBatch(file){
+    if(!file || file.schemaVersion!==1 || file.accountabilityYear!==2026 ||
+      file.schoolYear!=='2025-26' || !file.campuses ||
+      typeof file.campuses!=='object')return 0;
+    const rows=Object.entries(file.campuses);
+    if(rows.length!==56)return 0; // Reject truncated/partially published source snapshots.
+    const parsed=Object.create(null);
+    let allen=0,mckinney=0;
+    for(const [id,row] of rows){
+      if(!/^\d{9}$/.test(id)||!row || typeof row!=='object')return 0;
+      const district=id.slice(0,6);
+      if(district==='043901')allen++;
+      else if(district==='043907')mckinney++;
+      else return 0;
+      const a=row.accountability,d=row.domains,st=row.staar;
+      if(row.districtId!==district || a?.year!==2026 ||
+        d?.year!==2026 || st?.year!==2026 ||
+        !reportLink(a.source,id,'summary') ||
+        !reportLink(d.source,id,'summary') ||
+        !reportLink(st.source,id,'domain1a') ||
+        !validPublicPeims(row.peims,district))return 0;
+      const rated=['A','B','C','D','F'].includes(a.rating)&&
+        Number.isInteger(a.score)&&a.score>=0&&a.score<=100;
+      const notRated=a.rating==='Not Rated'&&a.score===null;
+      if(!rated&&!notRated)return 0;
+      const domainsValid=d.status==='official-verified' &&
+        [d.studentAchievement,d.schoolProgress,d.closingTheGaps].every(
+          x=>Number.isInteger(x)&&x>=0&&x<=100);
+      const domainsUnavailable=d.status==='official-not-reported' &&
+        [d.studentAchievement,d.schoolProgress,d.closingTheGaps].every(x=>x===null);
+      if(!domainsValid&&!domainsUnavailable)return 0;
+      const scores=['reading','math','science','socialStudies'].map(k=>st[k]);
+      const staarValid=st.status==='official-verified' &&
+        scores.some(x=>Number.isInteger(x)) &&
+        scores.every(x=>x===null||(Number.isInteger(x)&&x>=0&&x<=100));
+      const staarUnavailable=st.status==='official-not-reported' &&
+        scores.every(x=>x===null);
+      if(!staarValid&&!staarUnavailable)return 0;
+      parsed[id]=row;
+    }
+    if(allen!==23 || mckinney!==33)return 0;
+    Object.assign(ALLEN_MCKINNEY,parsed);
+    officialBatchError=false;
+    return rows.length;
+  }
+  function publicPeimsRows(id){
+    const p=ALLEN_MCKINNEY[String(id)]?.peims;
+    if(!p)return null;
+    return RACES.map(function(r){
+      const c=p.counts[r[0]];
+      return {key:r[0],label:r[1],color:r[2],status:c.status,
+        count:c.status==='published'?c.count:null,
+        pct:c.status==='published'?p.partialPercentages?.[r[0]]??null:null};
+    });
+  }
+  function enrichFromAllenMcKinney(record,base){
+    const official=ALLEN_MCKINNEY[String(record.id)];
+    if(!official || official.accountability.rating!==record.rating ||
+      official.accountability.score!==record.score)return base;
+    const out={...base,publicPeims:official.peims};
+    const d=official.domains,st=official.staar;
+    if(d.status==='official-verified' && st.status==='official-verified'){
+      out.domains={achievement:d.studentAchievement,progress:d.schoolProgress,gaps:d.closingTheGaps};
+      out.domainsSource=d.source;
+      out.subjectsSource=st.source;
+      out.subjects=Object.fromEntries([
+        ['reading',st.reading],['math',st.math],['science',st.science],['social',st.socialStudies]
+      ].filter(x=>Number.isInteger(x[1])));
+      const labels={reading:'독해',math:'수학',science:'과학',social:'사회'};
+      const rows=Object.entries(out.subjects).sort(function(a,b){return b[1]-a[1];});
+      out.summary='2026 TEA 공식 영역별 점수: 학업 성취 '+d.studentAchievement+
+        '점 · 학교 향상도 '+d.schoolProgress+'점 · 학생 집단별 성과 '+d.closingTheGaps+
+        '점. STAAR 과목별 수치는 전체 학생 응시 시험의 학년 수준 충족 이상 비율입니다.';
+      out.strength=labels[rows[0][0]]+' '+rows[0][1]+'% (공개된 과목 중 가장 높음)';
+      out.challenge=labels[rows[rows.length-1][0]]+' '+rows[rows.length-1][1]+
+        '% (공개된 과목 중 상대적으로 낮음)';
+      out.evidenceStatus='reviewed';
+      out.officialAcademicStatus='published';
+    }else{
+      const paired=official.accountability.pairedWith;
+      out.domains=undefined;out.subjects=undefined;
+      out.domainsSource=d.source;out.subjectsSource=st.source;
+      out.evidenceStatus='rating-only';
+      out.officialAcademicStatus=paired?'paired':'not-rated';
+      if(paired){
+        out.summary='2026 TEA 종합등급 '+record.rating+' · '+record.score+
+          '점. 이 유아교육 캠퍼스는 '+paired.name+
+          '과(와) 연계 평가되어 캠퍼스 자체의 영역별 점수와 STAAR 과목 성적은 제공되지 않습니다.';
+        out.strength='공식 종합 평가 '+record.rating+' · '+record.score+'점 (연계 평가)';
+        out.challenge='해당 캠퍼스 자체의 과목별 성적 미제공';
+      }else{
+        out.summary='2026 TEA 공식 Not Rated(미평가). 개별 영역 점수와 STAAR 과목별 공개 성적이 없습니다.';
+        out.strength='공식 종합평가 Not Rated';
+        out.challenge='성적 미제공: F 등급이나 0점으로 해석하지 않음';
+      }
+    }
+    return out;
+  }
+  function refreshAllenMcKinneyPanels(){
+    if(typeof document==='undefined')return;
+    document.getElementById('detailContent')?.querySelectorAll('.tea-insights-panel')
+      .forEach(function(el){el.remove();});
+    document.getElementById('schoolList')?.querySelectorAll('.tea-school-inline-preview')
+      .forEach(function(el){el.remove();});
+    mount();
+  }
+  function loadAllenMcKinneyBatch(rating){
+    const id=String(rating?.id||'');
+    if(!/^04390(?:1|7)\d{3}$/.test(id) || officialBatchStarted ||
+      !root || typeof root.fetch!=='function')return;
+    officialBatchStarted=true;
+    // Same-origin, public campus-level aggregates; never send residential searches.
+    root.fetch('./data/tea-allen-mckinney-campus-qa-2026.json?v=2',
+      {credentials:'same-origin'})
+      .then(function(res){if(!res.ok)throw Error('TEA campus data '+res.status);return res.json();})
+      .then(function(file){if(applyAllenMcKinneyBatch(file)!==56)throw Error('Invalid TEA source batch');})
+      .catch(function(){officialBatchError=true;})
+      .finally(refreshAllenMcKinneyPanels);
   }
   function getRaceRows(id) {
+    const current=ALLEN_MCKINNEY[String(id)]?.peims;
+    if(current){
+      if(!checkRace(current.percentages))return null;
+      return RACES.map(function(r){return {key:r[0],label:r[1],color:r[2],pct:current.percentages[r[0]]};});
+    }
     const d=ENRICHED[String(id)]?.demographics||
       (getRecord(id)||VERIFIED_TAPR[String(id)])?.demographics;
     if (!d || !checkRace(d.race)) return null;
@@ -459,6 +642,7 @@
     }
     if(typeof scoreRecord!=='function')return;
     const rating=scoreRecord(school.name,school.district);
+    loadAllenMcKinneyBatch(rating);
     const id=String(rating?.id||'');
     if(getSchoolInsight(rating) && !host.querySelector('.tea-insights-panel[data-campus="'+id+'"]')){
       const panel=render(rating);
@@ -539,7 +723,11 @@
     rolloutDistricts:Object.keys(ROLLOUT),
     rolloutPhase:function(district){return ROLLOUT[district]?.phase||4;},
     enrichedCampusCount:function(){return Object.keys(ENRICHED).length;},
-    validDomains:validDomains
+    validDomains:validDomains,
+    applyAllenMcKinneyBatch:applyAllenMcKinneyBatch,
+    publicPeimsRows:publicPeimsRows,
+    officialBatchCount:function(){return Object.keys(ALLEN_MCKINNEY).length;},
+    officialBatchError:function(){return officialBatchError;}
   };
   if(typeof module!=='undefined' && module.exports)module.exports=api;
   if(root && typeof document!=='undefined'){
