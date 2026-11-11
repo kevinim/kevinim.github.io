@@ -132,9 +132,15 @@ def certification_report(registry, tea, manifest, geo_dir):
             "districtPublishedNarrative":{"status":"SOURCE_TEXT_CROSS_REFERENCED","count":narrative["officialTextCases"]},
             "TEACampusIdentity":{"status":"CAMPUS_IDENTITY_MATCH_ONLY","crossReferences":narrative["verifiedCampusIdentityCrossReferences"]},
             "GISCampusZone":{"status":"NOT_CERTIFIED","count":0},
-            "GuideK12CurrentResidence":{"status":"NOT_CERTIFIED","count":0}
+            "GuideK12CurrentResidence":{"status":"TWO_PUBLIC_BASE_ADDRESS_UI_RESULTS_RECONFIRMED_NOT_GEOMETRY","count":2,"gradeResults":6}
         },
         "narrative":narrative,"geometry":geometry,
+        "officialFinderUIRecheckEvidence": {
+            "sourceFile": "data/cfb-ag03-official-finder-reconfirmed-public-samples-2026.json",
+            "publicBaseAddressExactCandidateRechecked": 2, "gradeResults": 6,
+            "geometryCompared": 0, "explicitCurrent2026_27WidgetYear": False,
+            "status": "PUBLIC_ADDRESS_FINDER_OBSERVATIONS_ONLY_NOT_CAMPUS_GIS_CERTIFICATION"
+        },
         "releaseDecision":"NO_GO_AUTOMATED_SCHOOL_ASSIGNMENT",
         "label":"DRAFT_UNVERIFIED_VISUAL_ONLY",
         "constraints":{"autoAssignmentEnabled":False,"GISPublishApproved":False,
@@ -159,7 +165,8 @@ def main(argv=None):
     print("CFB_AG03_CERTIFICATION_READINESS "+json.dumps({
         "narrative":report["narrative"]["officialTextCases"],
         "conflicts":report["narrative"]["sourceConflicts"],
-        "districtGISCertified":0,"geometry":{x["grade"]:x["draftFragments"] for x in report["geometry"]},
+        "districtGISCertified":0,"finderPublicBaseAddressesReconfirmed":2,
+        "geometry":{x["grade"]:x["draftFragments"] for x in report["geometry"]},
         "releaseDecision":report["releaseDecision"]
     }))
     return report
