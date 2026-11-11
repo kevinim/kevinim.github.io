@@ -67,7 +67,8 @@ function makeProgress(asOf){
       'Basic profile means official overall grade and exact campus ID; it is NOT complete domain analysis.',
       'Student race/ethnicity is context, not a school quality indicator.',
       'Suppressed TEA PEIMS counts are unavailable, not zero; no ZIP or district values are imputed.',
-      '2025-26 public race counts include FERPA suppressed and omitted cells; count coverage is not complete seven-race percentage coverage.'
+      '2025-26 public race counts include FERPA suppressed and omitted cells; count coverage is not complete seven-race percentage coverage.',
+      'Source complete for all inventory campus IDs using 2025-26 statewide aggregate; this is partial ethnicity COUNT coverage, not seven-race distribution completeness.'
     ]
   };
 }
