@@ -9,7 +9,7 @@ const root=path.join(__dirname,'..');
 test('canonical release progress snapshot is generated from exact official TEA source batches',()=>{
   const actual=makeProgress(snapshot.asOf);
   assert.deepEqual(actual,snapshot);
-  assert.equal(fs.readFileSync(path.join(root,'data/tea-profile-progress-2026.json'),'utf8'),JSON.stringify(actual,null,2)+'\\n');
+  assert.equal(fs.readFileSync(path.join(root,'data/tea-profile-progress-2026.json'),'utf8'),JSON.stringify(actual,null,2)+'\n');
   assert.equal(actual.totalCampuses,2282);
   assert.deepEqual(Object.fromEntries(['campuses','domainAnyReported','domainAllReported','staarAnyReported','staarAllFourReported','scoreBasedComparisonEligible','staarSourceAbsent','public2025_26CountCampuses','fullRaceShareCampuses'].map(k=>[k,actual.official2026[k]])),{campuses:2282,domainAnyReported:2101,domainAllReported:2063,staarAnyReported:2105,staarAllFourReported:814,scoreBasedComparisonEligible:2060,staarSourceAbsent:110,public2025_26CountCampuses:2282,fullRaceShareCampuses:6});
 });
