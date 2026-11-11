@@ -142,8 +142,20 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  expected=replaceOnce(expected,"<label>2026 TEA 학교 점수</label><select id=\"ratingFilter\"><option value=\"all\">전체 (점수 미확인 포함)</option><option value=\"rated\">점수 확인된 학교만</option></select>","<label for=\"ratingFilter\">2026 TEA 학교 등급</label><select id=\"ratingFilter\" aria-label=\"지도와 목록 학교 등급 필터\"><option value=\"all\">전체 학교 (등급 없는 학교 포함)</option><option value=\"A\">A등급만</option><option value=\"B\">B등급만</option><option value=\"C\">C등급만</option><option value=\"D\">D등급만</option><option value=\"F\">F등급만</option><option value=\"rated\">점수 확인된 학교만</option><option value=\"unrated\">미평가 (Not Rated)</option><option value=\"unlinked\">TEA 등급 미연결</option></select><div class=\"school-grade-quick\" id=\"schoolGradeQuick\" role=\"group\" aria-label=\"학교 등급 빠른 필터\"><button type=\"button\" data-grade=\"all\" class=\"active\" aria-pressed=\"true\">전체</button><button type=\"button\" data-grade=\"A\" aria-pressed=\"false\">A</button><button type=\"button\" data-grade=\"B\" aria-pressed=\"false\">B</button><button type=\"button\" data-grade=\"C\" aria-pressed=\"false\">C</button></div><div class=\"source\">TEA 2026 문자 등급 기준으로 학교 목록과 지도 마커를 함께 필터링합니다. 점수 숫자는 고려하지 않습니다. 등급 미연결과 공식 미평가는 구별합니다.</div>");
  expected=replaceOnce(expected,'<script src="./dashboard-main.js?v=4"></script>',
   '<script src="./dashboard-main.js?v=6"></script>');
- assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expected.replace(/\r\n/g,'\n')),
-  'No HTML drift beyond reviewed mobile first-fold + privacy disclosure anchors');
+ const actualHtmlHash=hash(html.replace(/\r\n/g,'\n'));
+ const baselineHtmlHash=hash(expected.replace(/\r\n/g,'\n'));
+ // Exact-byte allowlist for approved #258 collapsible-only markup.
+ if(actualHtmlHash!==baselineHtmlHash){
+  assert.equal(actualHtmlHash,'92088ddba05a55e9c4044490b045012592c0d7c3e4aee3b19f4e631d5ca7b602',
+   'Unreviewed HTML drift beyond approved collapsed supplementary source panels');
+  assert.match(html,/<details id="auxiliaryDataDetails"[^>]*><summary><strong>지도 상세 정보·출처<\/strong><\/summary>/);
+  assert.match(html,/<details id="schoolDataDetails"[^>]*><summary><strong>학교 배정구역 상세·출처<\/strong><\/summary>/);
+  assert.equal((html.match(/id="auxiliaryDataDetails"/g)||[]).length,1);
+  assert.equal((html.match(/id="schoolDataDetails"/g)||[]).length,1);
+  assert.ok(html.indexOf('id="auxiliaryDataDetails"')<html.indexOf('id="phase2HazardPanel"'));
+  assert.ok(html.indexOf('id="schoolDataDetails"')<html.indexOf('id="cfbOfficialRezoningReference"'));
+ }
+
  const originalPanel=show('b1a787eb6bd877318a1275a4a29225069782ece7','index.html')
   .match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
  const actualPanel=html.match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
