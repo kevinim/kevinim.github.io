@@ -204,7 +204,14 @@
     const validGrade=['A','B','C','D','F'].includes(record.rating);
     const hasScore=validGrade && Number.isInteger(record.score) && record.score>=0 && record.score<=100;
     const rating=hasScore?record.rating+' · '+record.score+'점':record.rating==='Not Rated'?'미평가':'등급 정보 미확인';
-    const base=curated
+    // Do not present unsourced draft narratives as independently reviewed strengths.
+    // Only the two pilot records with verified numeric domains/subjects are reviewed.
+    const reviewedCurated=!!curated && curated.evidenceStatus==='reviewed' &&
+      validDomains(curated.domains) && curated.subjects &&
+      Object.keys(curated.subjects).some(function(k){
+        return typeof curated.subjects[k]==='number' && Number.isFinite(curated.subjects[k]);
+      });
+    const base=reviewedCurated
       ?{...curated,rolloutPhase:cohort.phase,cohort:cohort.label}
       :{
         rolloutPhase:cohort.phase,
@@ -271,6 +278,21 @@
       if(cell.status==='suppressed')return typeof cell.publishedMask==='string'&&/^(?:<\d+|-999|N\/A)$/.test(cell.publishedMask)&&cell.count===undefined;
       return cell.status==='not-listed' && cell.count===undefined;
     });
+  }
+  // TEA PEIMS ethnicity grouping reconciled against the *same* 2025–26
+  // TEA gender-grouping total in independent source audit PR #239 (23 ISDs).
+  // A seven-cell sum alone is NOT enough evidence to publish percentages.
+  // Campus IDs not in this independently audited snapshot stay counts-only.
+  const AUDITED_PEIMS_TOTALS=Object.freeze({
+    '043901001':5127,'057912046':753,'057912123':756,
+    '061911001':2806,'061911007':2997
+  });
+  function auditedPeimsTotal(id,rows){
+    if(!Object.hasOwn(AUDITED_PEIMS_TOTALS,String(id)) ||
+       !Array.isArray(rows) || rows.length!==RACES.length ||
+       rows.some(function(x){return x.status!=='published'||!Number.isSafeInteger(x.count)||x.count<0;}))return null;
+    const sum=rows.reduce(function(a,x){return a+x.count;},0);
+    return sum>0&&sum===AUDITED_PEIMS_TOTALS[String(id)]?sum:null;
   }
   function getPublishedCountRows(id) {
     const item=PUBLIC_PEIMS_COUNTS[String(id)];
@@ -403,14 +425,17 @@
 
     const published=getPublishedCountRows(id);
     if(published){
-      const complete=published.every(function(cell){return cell.status==='published';});
-      const total=complete?published.reduce(function(n,cell){return n+cell.count;},0):0;
+      const sevenPublic=published.every(function(cell){return cell.status==='published';});
+      const auditedTotal=auditedPeimsTotal(id,published);
+      const complete=auditedTotal!==null;
+      const total=auditedTotal||0;
       const current=document.createElement('details');
       current.className='tea-insights-provenance tea-peims-counts';
       current.open=true;
       current.appendChild(textTag('summary','tea-insights-provenance-summary',
-        complete?'2025–26 공식 학생 인종별 인원 · 7개 분류 공개':
-          '2025–26 공식 학생 인종별 인원 · 일부 비공개'));
+        complete?'2025–26 PEIMS 인종별 인원 · 같은 원본 등록 인원 검증':
+          sevenPublic?'2025–26 PEIMS 인종별 인원 · 등록 인원 대조 대기':
+          '2025–26 PEIMS 인종별 인원 · 일부 비공개'));
       const recentList=document.createElement('ul');
       recentList.className='tea-insights-legend';
       published.forEach(function(cell){
@@ -420,8 +445,13 @@
       });
       current.appendChild(recentList);
       current.appendChild(textTag('p','tea-insights-empty',complete&&total>0?
-        '2025–26 공식 집계에서 7개 인종 분류가 모두 공개되어 동일 학년도 인원 합계를 기준으로 비율을 계산했습니다.':
+        '2025–26 TEA PEIMS 인종별 7개 공개 수치를 동일 TEA PEIMS 성별 등록 인원 집계와 대조한 비율입니다. 다른 TEA 보고서의 등록 인원과 일치한다는 의미는 아닙니다.':
+        sevenPublic?'7개 인종 범주는 공개됐으나 독립 등록 인원 대조가 완료되지 않아 비율을 표시하지 않습니다.':
         'TEA가 일부 학생 수를 비공개 또는 미표시하여 정확한 전체 인종 비율을 계산하지 않습니다.'));
+      if(complete&&id==='043901001'){
+        current.appendChild(textTag('p','tea-insights-missing',
+          '주의: Allen High는 같은 연도의 TEA PEIMS 5,127명과 별도 TEA 학교 프로필 5,126명이 일치하지 않습니다. 이 비율은 PEIMS 기준이며 다른 원본의 차이는 미해결입니다.'));
+      }
       panel.appendChild(current);
     }
     const demo=(data.demographics && checkRace(data.demographics.race))?data.demographics:null;
@@ -456,7 +486,9 @@
       });
       figure.appendChild(list);panel.appendChild(figure);
     } else {
-      panel.appendChild(textTag('p','tea-insights-empty','학생 인종 구성 · 공식 수치 확인 중'));
+      panel.appendChild(textTag('p','tea-insights-empty',published?
+        '2025–26 PEIMS 공개 인원은 위에 표시됩니다. 7개 분류 전체 비율은 비공개 또는 등록 인원 대조 조건에 따라 별도로 제한됩니다.':
+        '학생 인종 구성 · 공식 수치 확인 중'));
     }
 
     // Keep detailed methodology, sources and missing-data explanations together.
@@ -690,7 +722,7 @@
     enrichedCampusCount:function(){return Object.keys(ENRICHED).length;},
     validDomains:validDomains,validPublishedCampus:validPublishedCampus,
     validPeimsSource:validPeimsSource,
-    getPublishedCountRows:getPublishedCountRows
+    getPublishedCountRows:getPublishedCountRows,auditedPeimsTotal:auditedPeimsTotal
   };
   if(typeof module!=='undefined' && module.exports)module.exports=api;
   if(root && typeof document!=='undefined'){
