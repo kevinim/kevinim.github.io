@@ -24,6 +24,9 @@ jobs:
       - run: node scripts/build-first-render-css.cjs --check
       - run: node --test tests/school-grade-focus.test.cjs
       - run: node --test tests/carrollton-school-insights.test.cjs
+      - run: node --test tests/home-school-manual-bridge.test.cjs tests/compact-home-finder.test.cjs
+      - run: node --test tests/tea-campus-enrichment-pipeline.test.cjs
+      - run: node scripts/build-tea-profile-progress.cjs --check
       - name: Required security and privacy controls for every main-bound PR
         run: |
           node --test tests/actions-immutable-permissions.test.cjs tests/public-privacy-disclosure.test.cjs tests/no-legacy-source-builders.test.cjs tests/audit-runtime-privacy-assets.test.cjs

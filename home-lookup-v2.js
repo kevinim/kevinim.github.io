@@ -149,13 +149,15 @@ function compactHomeFinderModel(address,raw){
  const geo=/\bCarrollton\b|\bFarmers Branch\b/i.test(a)&&loc?window.CfbJurisdiction?.lookup(loc):null;
  const geoGood=geo?.status==='district-reference'&&valid.includes(geo.district);
  const geoUncertain=geo?.status==='boundary-review'||geo?.status==='conflict';
- const likely=geoUncertain?'':geoGood?geo.district:evidence?raw.district:!conflict?nearby.find(x=>valid.includes(x))||'':'';
+ const ambiguousCarrolltonZip=/\bCarrollton\b/i.test(a)&&/\b75007\b/.test(a);
+ const likely=geoUncertain?'':geoGood?geo.district:evidence?raw.district:!conflict&&!ambiguousCarrolltonZip?nearby.find(x=>valid.includes(x))||'':'';
  const near=[...new Set([...(geoGood?[geo.district]:[]),...(evidence?[raw.district]:[]),...nearby,...(raw?.status==='conflict'?(raw.matches||[]).map(m=>m.district):[])])].filter(x=>valid.includes(x));
  const other=valid.filter(x=>!near.includes(x)).sort((a,b)=>String(districtName(a,'ko')||a).localeCompare(String(districtName(b,'ko')||b),'ko'));
  const why=geoUncertain?'공식 2025–26 학군 외곽 경계 인접 · 배정 학군 확정 금지':
   geoGood?'Texas Legislative Council 2025–26 학군 외곽 GIS 참고 (학교 배정 아님)':
   evidence?'기존 GIS 참고자료 기반 후보':
-  likely?'도시·ZIP 기준 첫 확인 후보':'소속 학군 미확인';
+  likely?'도시·ZIP 기준 첫 확인 후보':
+  ambiguousCarrolltonZip?'Carrollton 75007은 위치에 따라 학군이 다를 수 있습니다. 아래에서 학군을 선택한 뒤 공식 Finder로 확인하세요.':'소속 학군 미확인';
  return {likely,near,other,why};
 }
 function compactHomeFinderHtml(address,raw){

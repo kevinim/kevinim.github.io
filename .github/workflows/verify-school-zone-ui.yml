@@ -8,6 +8,9 @@ on:
       - school-zone-ui.js
       - tests/school-zone-ui.test.cjs
       - scripts/test-school-zone-fallback-browser.cjs
+      - features/home-school-manual-bridge.js
+      - features/home-school-manual-bridge.css
+      - home-lookup-v2.js
       - .github/workflows/verify-school-zone-ui.yml
   push:
     branches: [fix/school-zone-status-and-finder-fallback-20261109]
@@ -63,6 +66,10 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/school-zone-ui-browser-tmp/node_modules
         run: node scripts/test-carrollton-tea-insights-browser.cjs
+      - name: Browser QA of manual address-school bridge with a synthetic Carrollton ZIP
+        env:
+          NODE_PATH: ${{ github.workspace }}/school-zone-ui-browser-tmp/node_modules
+        run: node scripts/test-home-school-manual-bridge-browser.cjs
       - name: Preserve campus-only QA evidence and screenshots
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

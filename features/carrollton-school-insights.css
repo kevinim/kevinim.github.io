@@ -83,3 +83,10 @@ html[data-theme="dark"] .tea-school-inline-heading,html[data-theme="dark"] .tea-
 html[data-theme="dark"] .tea-school-inline-legend{color:#c3d1e7}
 html[data-theme="dark"] .tea-school-inline-detail{background:#29476f;border-color:#6d98cd;color:#f0f7ff}
 @media(forced-colors:active){.school-group .tea-school-inline-preview,.tea-school-inline-detail{border-color:CanvasText;background:Canvas;color:CanvasText}}
+
+/* Collapsed TEA coverage ledger: separate verified counts from completeness. */
+.tea-data-progress{padding:9px 10px;margin:10px 0;border:1px solid var(--line,#dce5f2);border-radius:8px}
+.tea-data-progress>summary{font-weight:700;font-size:11px;cursor:pointer}
+.tea-data-progress-content{padding:7px 0 2px}
+.tea-data-progress-content p{font-size:10.5px;line-height:1.5;margin:6px 0}
+html[data-theme="dark"] .tea-data-progress{border-color:#51647f}

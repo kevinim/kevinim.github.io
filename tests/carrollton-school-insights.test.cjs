@@ -59,7 +59,12 @@ test('rollout covers all 148 TEA records in CFB, Lewisville, Allen, McKinney',()
     }
   }
   const nonTarget=source.data.find(r=>r.district==='057905'&&r.rating==='A');
-  assert.equal(insights.getSchoolInsight(nonTarget),null,'DFW further districts require staged rollout');
+  const fallback=insights.getSchoolInsight(nonTarget);
+  assert.ok(fallback,'all cataloged schools now receive an honest rating-only fallback');
+  assert.equal(fallback.rolloutPhase,4,'non-priority districts remain phase 4');
+  assert.equal(fallback.evidenceStatus,'rating-only');
+  assert.equal(fallback.domains,undefined,'a bare TEA grade cannot fabricate domains');
+  assert.equal(fallback.demographics,undefined,'a bare TEA grade cannot fabricate race data');
 });
 test('four campuses have individually source-linked ethnicity data',()=>{
   assert.equal(insights.verifiedEthnicityCount,4);
@@ -88,4 +93,30 @@ test('Not Rated remains not-a-performance-judgment and absent data never maps to
   assert.equal(r.domains,undefined);
   assert.equal(r.demographics,undefined);
   assert.equal(insights.getRaceRows(sample.id),null);
+});
+
+test('all 2282 official campus records show basic facts, but only sourced data gets analysis',()=>{
+ const records=source.data;
+ assert.equal(records.length,2282);
+ let ratingOnly=0,unrated=0,domain=0,race=0;
+ for(const record of records){
+   const analysis=insights.getSchoolInsight(record);
+   assert.ok(analysis?.summary&&analysis?.strength&&analysis?.challenge,'missing campus '+record.id);
+   assert.ok(Number.isInteger(analysis.rolloutPhase),'missing rollout phase '+record.id);
+   if(analysis.evidenceStatus==='rating-only')ratingOnly++;
+   if(record.rating==='Not Rated'){
+     unrated++;
+     assert.match(analysis.summary,/미부여|확인되지/,'NR must never be called F '+record.id);
+   }
+   if(analysis.domains)domain++;
+   if(analysis.demographics)race++;
+ }
+ assert.equal(unrated,138);
+ assert.equal(domain,2);
+ assert.equal(race,4);
+ assert.ok(ratingOnly>2200);
+ const valid=source.data.find(r=>r.district==='057905');
+ assert.equal(insights.getSchoolInsight({...valid,id:'057905999'}),null,'campus ID must match official source URL');
+ assert.equal(insights.getSchoolInsight({...valid,official:'https://malicious.example/?view=school&id='+valid.id}),null,
+   'untrusted TEA citations rejected');
 });

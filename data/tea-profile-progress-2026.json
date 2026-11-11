@@ -1,0 +1,55 @@
+{
+  "asOf": "2026-11-11",
+  "scope": "Current dashboard TEA campus inventory; not a census of every Texas school",
+  "inventoryFile": "tea-ratings-2026.json",
+  "totalCampuses": 2282,
+  "distinctDistricts": 181,
+  "accountabilityRatingPresent": 2144,
+  "notRated": 138,
+  "profilePanelsConnected": 2282,
+  "individualNarratives": 18,
+  "domainComponentsReviewed": 2,
+  "subjectsReviewed": 2,
+  "ethnicityReviewed": 4,
+  "imported2026Components": 0,
+  "imported2025_26Ethnicity": 0,
+  "cohorts": [
+    {
+      "name": "Carrollton · CFB/Lewisville",
+      "campuses": 92,
+      "profiles": 92,
+      "individualAnalysis": 18,
+      "domainScores": 2,
+      "ethnicity": 2
+    },
+    {
+      "name": "Allen",
+      "campuses": 23,
+      "profiles": 23,
+      "individualAnalysis": 0,
+      "domainScores": 0,
+      "ethnicity": 1
+    },
+    {
+      "name": "McKinney",
+      "campuses": 33,
+      "profiles": 33,
+      "individualAnalysis": 0,
+      "domainScores": 0,
+      "ethnicity": 1
+    },
+    {
+      "name": "기타 DFW",
+      "campuses": 2134,
+      "profiles": 2134,
+      "individualAnalysis": 0,
+      "domainScores": 0,
+      "ethnicity": 0
+    }
+  ],
+  "notes": [
+    "Basic profile means official overall grade and exact campus ID; it is NOT complete domain analysis.",
+    "Student race/ethnicity is context, not a school quality indicator.",
+    "Suppressed TEA PEIMS counts are unavailable, not zero; no ZIP or district values are imputed."
+  ]
+}

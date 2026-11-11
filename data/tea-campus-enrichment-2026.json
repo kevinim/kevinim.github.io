@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "accountabilityYear": 2026,
+  "schoolYear": "2025–26",
+  "sources": {
+    "accountability": "https://rptsvr1.tea.texas.gov/perfreport/account/acct_download?year=2026",
+    "enrollment": "https://rptsvr1.tea.texas.gov/adhocrpt/adste.html"
+  },
+  "campuses": {}
+}
