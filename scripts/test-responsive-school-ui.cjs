@@ -40,6 +40,11 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
           top:box('.top'),
           homeWrap:box('.home-address-autocomplete'),
           homeInput:box('#homeAddress'),
+          homeCard:box('.home-controls'),
+          officeCard:box('.office-controls'),
+          mapBox:box('.mapbox'),
+          filterCard:box('.filter-panel'),
+          privacyDisclosureClosed:!!document.querySelector('#homePrivacyDetails')&&!document.querySelector('#homePrivacyDetails').open,
           clear:box('#homeClear'),
           schoolControls:grouped.map(k=>({key:k,box:box(k),inside:document.querySelector('#schoolSettings').contains(document.querySelector(k))})),
           segments:[...document.querySelectorAll('#levels button')].map(e=>{const r=e.getBoundingClientRect();return {x:r.x,right:r.right,y:r.y,bottom:r.bottom}}),
@@ -48,6 +53,17 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
         };
       });
       assert.ok(state.schoolControls.every(x=>x.inside),'All school settings should be grouped together at '+width);
+      assert.equal(state.privacyDisclosureClosed,true,'Detailed privacy notice must be closed by default at '+width);
+      if(width<=720){
+        assert.ok(state.homeCard&&state.mapBox&&state.officeCard&&state.filterCard,
+          'All home/map/commute/filter panels are present at '+width);
+        assert.ok(state.homeCard.bottom<=state.mapBox.y+2,
+          'Map should follow address search, not appear above it at '+width);
+        assert.ok(state.mapBox.y<state.officeCard.y,
+          'Map should appear before commute controls on mobile at '+width);
+        assert.ok(state.mapBox.y<state.filterCard.y,
+          'Map should appear before long filter settings on mobile at '+width);
+      }
       assert.equal(await page.locator('#homeClear').isVisible(),false,'X initially hidden at '+width);
       await page.locator('#homeAddress').fill('3400 Legacy Dr, Plano, TX');
       assert.equal(await page.locator('#homeClear').isVisible(),true,'X appears when address typed at '+width);

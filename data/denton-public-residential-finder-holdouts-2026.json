@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "district": "061901",
+  "schoolYear": "2026-27",
+  "checkedOn": "2026-11-09",
+  "officialLocator": "https://webquery-2-denton-tx.etstack.io/",
+  "officialDistrictInstructions": "https://www.dentonisd.org/our-district/departments-services/student-support-services/student-transfers",
+  "legacyDistrictSearchDirections": "https://www.dentonisd.org/cms/lib/tx21000245/centricity/Domain/635/Finding%20Schools%20for%20a%20Particular%20Address.pdf",
+  "purpose": "Read-only public real-house listings for independently audited school locator grade-specific UAT. Not students, household records or user-provided/private addresses.",
+  "rules": {
+    "useGradeSpecificLookups": true,
+    "allowedGrades": [
+      2,
+      7,
+      10
+    ],
+    "noGuessedAddresses": true,
+    "exactNumberAndRoadAndCity": true,
+    "programMustRemainDefault": true,
+    "noQueryBatching": true,
+    "publishScreenshotsTemporary": true,
+    "mayCertifyProduction": false,
+    "polygonRequiredForMapNoGo": true
+  },
+  "samples": [
+    {
+      "id": "DENTON_CRESCENT",
+      "address": "702 Crescent St, Denton, TX 76201",
+      "publicListingSource": "https://www.zillow.com/denton-tx/houses/",
+      "kind": "publicly-advertised-single-family-sale",
+      "status": "UNVERIFIED"
+    },
+    {
+      "id": "DENTON_BUENAVISTA",
+      "address": "1800 Buena Vista Dr, Denton, TX 76210",
+      "publicListingSource": "https://www.zillow.com/denton-tx/houses/",
+      "kind": "publicly-advertised-single-family-sale",
+      "status": "UNVERIFIED"
+    },
+    {
+      "id": "DENTON_WINDSOR",
+      "address": "2309 Windsor Farms Dr, Denton, TX 76207",
+      "publicListingSource": "https://www.zillow.com/denton-tx/houses/",
+      "kind": "publicly-advertised-single-family-sale",
+      "status": "UNVERIFIED"
+    }
+  ]
+}

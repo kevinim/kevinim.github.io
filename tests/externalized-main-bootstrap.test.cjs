@@ -101,25 +101,34 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  assert.ok(js.includes('const DATA=['));
  assert.ok(!js.includes('window.WestDFWIntegration'));
 });
-test('main index equals previous live release plus exactly the CFB atlas source additions',()=>{
- const original=show('4aa623a2da1c40971fc0e4231a27ab53f1d5d40b','index.html');
- let expected=replaceOnce(original,"img-src 'self' data: blob: https://unpkg.com",
+test('main index is byte-exact to newest approved CFB baseline, except home lookup cache version',()=>{
+ const source=show('b7c330aab35f0183a234f057acb2ab1e35f38943','index.html');
+ let expected=replaceOnce(source,'./home-lookup-v2.js?v=16','./home-lookup-v2.js?v=17');
+ // Claude B mobile UX is an explicitly reviewed two-anchor extension of the
+ // protected CFB index baseline. Every other byte must still match.
+ const originalPrivacy=expected.match(/<div id="homePrivacy" class="source">([\s\S]*?)<\/div>/)?.[1];
+ assert.ok(originalPrivacy&&originalPrivacy.includes('Collin CAD'),'Reviewed baseline privacy disclosure');
+ const brief='자동완성·주소 검색은 Esri, 도로망 경로 계산은 OSRM에 전송됩니다. 필지 대조 시 집 핀 좌표가 Collin CAD에, Dallas 참고 GIS 조회 시 선택한 좌표가 Dallas ISD ArcGIS에, Irving 참고 GIS 조회 시 집 핀 좌표가 Irving ISD ArcGIS에 전송됩니다. Google Maps 링크는 위치·목적지를 Google에 전송합니다. 외부 서비스의 접속 기록 및 보존 기간은 이 사이트에서 통제하지 않습니다. 사적인 정보나 비밀번호를 입력하지 마세요.';
+ expected=replaceOnce(expected,
+  '<div id="homePrivacy" class="source">'+originalPrivacy+'</div>',
+  '<div id="homePrivacy" class="source">'+brief+'</div><details id="homePrivacyDetails" class="home-privacy-disclosure"><summary>개인정보·외부 서비스 안내 자세히 보기</summary><div class="source">'+originalPrivacy+'</div></details>');
+ expected=replaceOnce(expected,'<script src="./features/theme-toggle.js?v=2"></script>',
+  '<link rel="stylesheet" href="./features/first-fold-ux.css?v=1"><script src="./features/theme-toggle.js?v=2"></script>');
+ // AG06 reviewed CFB atlas and manual overlay, preserving mobile first-fold/privacy.
+ expected=replaceOnce(expected,"img-src 'self' data: blob: https://unpkg.com",
   "img-src 'self' data: blob: https://resources.finalsite.net https://unpkg.com");
  expected=replaceOnce(expected,'<link rel="stylesheet" href="./features/cfb-official-inline.css?v=1">',
-  '<link rel="stylesheet" href="./features/cfb-official-inline.css?v=1">\n<link rel="stylesheet" href="./features/cfb-approved-zone-atlas.css?v=1">');
+  '<link rel="stylesheet" href="./features/cfb-official-inline.css?v=2">\n<link rel="stylesheet" href="./features/cfb-approved-zone-atlas.css?v=1">');
  expected=replaceOnce(expected,'<script src="./features/cfb-official-bridge.js?v=1" defer></script></body></html>',
-  '<script src="./features/cfb-official-bridge.js?v=1" defer></script><script src="./features/cfb-approved-zone-atlas.js?v=1" defer></script><script src="./features/cfb-district-jurisdiction.js?v=1" defer></script></body></html>');
- // AG06: preserve #208 byte-pinned baseline with only reviewed AG05 deltas.
- expected=replaceOnce(expected,'./features/cfb-official-inline.css?v=1','./features/cfb-official-inline.css?v=2');
- expected=replaceOnce(expected,'./features/cfb-official-bridge.js?v=1" defer></script>',
-  './features/cfb-official-bridge.js?v=2" defer></script><script src="./features/cfb-zone-overlay.js?v=1" defer></script>');
+  '<script src="./features/cfb-official-bridge.js?v=2" defer></script><script src="./features/cfb-zone-overlay.js?v=1" defer></script><script src="./features/cfb-approved-zone-atlas.js?v=1" defer></script><script src="./features/cfb-district-jurisdiction.js?v=1" defer></script></body></html>');
  assert.equal(hash(html.replace(/\r\n/g,'\n')),hash(expected.replace(/\r\n/g,'\n')),
-  'Only one exact publisher image host and two first-party atlas imports are allowed');
- assert.equal(html.split(external).length,2);
- const originalPanel=original.match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
+  'No HTML drift beyond reviewed mobile first-fold + privacy disclosure anchors');
+ const originalPanel=show('b1a787eb6bd877318a1275a4a29225069782ece7','index.html')
+  .match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
  const actualPanel=html.match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
- assert.ok(originalPanel&&actualPanel,'Merged CFB Finder panel missing');
- assert.equal(hash(actualPanel),hash(originalPanel),'Prior CFB official Finder panel HTML changed');
+ assert.ok(originalPanel&&actualPanel,'Merged CFB Finder is retained');
+ assert.equal(hash(actualPanel),hash(originalPanel),'Existing CFB official Finder panel untouched');
+ assert.equal(html.split(external).length,2);
  const policy='./features/conditional-school-release.js?v=1';
  assert.equal(html.split(policy).length,2);
  assert.ok(html.indexOf('./school-zone-ui.js?v=1')<html.indexOf(policy));
@@ -129,9 +138,8 @@ test('strict script CSP preserved exactly and personal office artifacts absent',
  const allowed=oldCsp.replace('https://geocode.arcgis.com https://nominatim.openstreetmap.org',
   'https://geocode.arcgis.com https://iisd1.maps.arcgis.com https://services.arcgis.com https://nominatim.openstreetmap.org');
  const atlasCsp=allowed.replace("frame-src 'none'","frame-src https://app.guidek12.com")
-  .replace("img-src 'self' data: blob: https://unpkg.com",
-   "img-src 'self' data: blob: https://resources.finalsite.net https://unpkg.com");
- assert.equal(newCsp,atlasCsp,'Only official GuideK12 frame and official Finalsite raster image origin allowed');
+  .replace("img-src 'self' data: blob: https://unpkg.com","img-src 'self' data: blob: https://resources.finalsite.net https://unpkg.com");
+ assert.equal(newCsp,atlasCsp,'CFB Finder and publisher image allowlist only, all mobile protections retained');
  for(const part of ["script-src-attr 'none'","object-src 'none'","base-uri 'self'","form-action 'self'"])
   assert.ok(newCsp.includes(part));
  assert.ok(newCsp.includes("script-src 'self' https://unpkg.com;"));

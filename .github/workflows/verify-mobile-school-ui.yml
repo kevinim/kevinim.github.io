@@ -5,6 +5,7 @@ on:
     paths:
       - 'index.html'
       - 'ui-action-buttons.css'
+      - 'features/first-fold-ux.css'
       - 'home-lookup-v2.js'
       - 'scripts/test-responsive-school-ui.cjs'
       - '.github/workflows/verify-mobile-school-ui.yml'
