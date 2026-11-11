@@ -31,7 +31,7 @@ test('independent total enrollment sources and arithmetic flags pass',()=>{
   if(c.verifiedSevenGroupShares){assert.equal(x.exactPublished,7);assert.equal(x.knownPublishedGroupSum,c.officialEnrollment);}
  }
  assert.deepEqual(cells,{published:240,suppressed:102,missing:50});
- assert.ok(enroll>=55&&enroll<=56);assert.equal(enroll+unavailable,56);
+ assert.equal(enroll,56);assert.equal(unavailable,0);assert.equal(enroll+unavailable,56);
  assert.equal(conflicts,8);assert.equal(seven,1);assert.equal(full,0);
  assert.equal(audit.summary.officialEnrollmentPublished,enroll);
  assert.equal(audit.summary.totalDisagreements,8);
