@@ -6,6 +6,10 @@ on:
       - data/tea-allen-mckinney-campus-qa-2026.json
       - data/tea-allen-mckinney-academics-2026-source.json
       - data/tea-allen-mckinney-enrollment-2025-26-source.json
+      - features/carrollton-school-insights.js
+      - features/carrollton-school-insights.css
+      - index.html
+      - tests/allen-mckinney-tea-ui.test.cjs
       - tests/tea-allen-mckinney-campus-qa.test.cjs
       - docs/TEA_ALLEN_MCKINNEY_CAMPUS_QA_2026-11-11.md
       - .github/workflows/tea-allen-mckinney-campus-qa.yml
@@ -27,4 +31,6 @@ jobs:
         run: |
           node --check tests/tea-allen-mckinney-campus-qa.test.cjs
           node --test tests/tea-allen-mckinney-campus-qa.test.cjs
+          node --test tests/allen-mckinney-tea-ui.test.cjs
+          node --test tests/carrollton-school-insights.test.cjs
           node --test tests/tea-campus-enrichment-pipeline.test.cjs
