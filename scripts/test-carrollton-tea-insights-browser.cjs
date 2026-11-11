@@ -108,7 +108,7 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
             raceCount:document.querySelectorAll('.tea-insights-figure .tea-insights-legend li').length,
             peimsCountRows:document.querySelectorAll('#detailContent .tea-peims-counts li').length,
             peimsText:document.querySelector('#detailContent .tea-peims-counts')?.textContent||'',
-            missingRace:[...document.querySelectorAll('#detailContent .tea-insights-missing')].some(el=>el.textContent.includes('학생 인종·민족 구성')),
+            missingRace:[...document.querySelectorAll('#detailContent .tea-insights-empty')].some(el=>el.textContent.includes('전체 비율')||el.textContent.includes('공식 수치 확인 중')),
             missingDomain:[...document.querySelectorAll('#detailContent .tea-insights-missing')].some(el=>el.textContent.includes('영역별 점수')),
             link:[...document.querySelectorAll('.tea-insights-panel a')].map(a=>({label:a.textContent,url:a.href})),
             chart:document.querySelector('.tea-insights-stack')?.getAttribute('aria-label'),
@@ -146,12 +146,14 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
             assert.equal(found.inlineChart,undefined,'unverified race cannot render in-list chart');
             assert.equal(found.missingRace,true);
           }
-          const currentPeims=PUBLISHED_IDS.has(id).some(prefix=>id.startsWith(prefix));
+          const currentPeims=PUBLISHED_IDS.has(id);
           assert.equal(found.peimsCountRows,currentPeims?7:0,'2025–26 source year and seven explicit privacy statuses '+id);
           if(currentPeims){
             assert.ok(found.peimsText.includes('2025–26'),'current-year PEIMS source labeled');
-            if(['043901001','057912046','061911001','220912002'].includes(id))assert.ok(found.peimsText.includes('7개 분류 공개'),
-              'Allen High is the one fully public seven-category campus');
+            if(['043901001','057912046','057912123','061911001','061911007'].includes(id))assert.ok(found.peimsText.includes('같은 원본 등록 인원 검증'),
+              'only independently same-source audited campuses may publish full percentages');
+            else if(id==='220912002')assert.ok(found.peimsText.includes('등록 인원 대조 대기'),
+              'new fully published records stay counts-only until same-source denominator QA');
             else assert.ok(found.peimsText.includes('비공개')||found.peimsText.includes('원본 미표시'),
               'masking or source omission remains visible');
           }
@@ -166,13 +168,13 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           if(id==='043910008')assert.ok(found.peimsText.includes('30명'),'Plano Academy HS current Asian count correct');
           if(id==='061911001'){
             assert.ok(found.peimsText.includes('102명'),'Northwest High published Asian count');
-            assert.ok(found.peimsText.includes('7개 분류 공개'),'Northwest High complete same-year count profile');
+            assert.ok(found.peimsText.includes('같은 원본 등록 인원 검증'),'Northwest High same-source reconciled profile');
           }
           if(id==='220905001')assert.ok(found.peimsText.includes('13명'),'Fort Worth school Asian count');
           if(id==='220916001')assert.ok(found.peimsText.includes('153명'),'HEB school Asian count');
           if(id==='220912002'){
             assert.ok(found.peimsText.includes('105명'),'North Crowley seven-group source Asian count');
-            assert.ok(found.peimsText.includes('3.5%'),'North Crowley fully public same-year Asian ratio');
+            assert.ok(!found.peimsText.includes('3.5%'),'North Crowley cannot display unaudited full shares');
           }
           if(id==='043914001')assert.ok(found.peimsText.includes('702명'),'Wylie High source Asian count');
           if(id==='220918001')assert.ok(found.peimsText.includes('131명'),'Boswell High source Asian count');
