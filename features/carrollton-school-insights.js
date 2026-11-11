@@ -522,7 +522,22 @@
     });
     panel.appendChild(facts);
 
-    if(data.domains){
+    if(data.academicDomainRows){
+      const metrics=document.createElement('dl');metrics.className='tea-insights-domains';
+      metrics.setAttribute('aria-label','2026 TEA 공식 영역별 환산점수 및 미평가 상태');
+      data.academicDomainRows.forEach(function(v){
+        const item=document.createElement('div');
+        const label=v.status==='reported'?v.score+'점 ('+v.rating+')':
+          v.status==='not-rated'?'미평가 (Not Rated)':
+          v.status==='suppressed'?'비공개':'원본 미제공';
+        item.appendChild(textTag('dt','',v.label));
+        item.appendChild(textTag('dd','',label));
+        metrics.appendChild(item);
+      });
+      panel.appendChild(metrics);
+      panel.appendChild(textTag('p','tea-insights-meta',
+        '2026 TEA 영역별 환산점수입니다. 종합등급 원인을 직접 설명하는 원시 구성점수가 아닙니다.'));
+    }else if(data.domains){
       const metrics=document.createElement('dl');metrics.className='tea-insights-domains';
       [['학업 성취',data.domains.achievement],['학교 향상도',data.domains.progress],['집단별 목표',data.domains.gaps]].forEach(function(pair){
         const item=document.createElement('div');
@@ -534,7 +549,17 @@
     } else {
       panel.appendChild(textTag('p','tea-insights-empty','영역별 세부 성적 · 자료 확인 중'));
     }
-    if(data.subjects){
+    if(data.academicSubjectRows){
+      const subjects=document.createElement('p');subjects.className='tea-insights-subjects';
+      subjects.appendChild(textTag('strong','','2025–26 STAAR 전체 학생 · Meets 이상: '));
+      subjects.appendChild(document.createTextNode(data.academicSubjectRows.map(function(v){
+        const status=v.status==='reported'?v.value+'%':
+          v.status==='suppressed'?'비공개':
+          v.status==='not-in-source'?'학교 원본 행 없음':'수치 미제공/미해당 여부 확인';
+        return v.label+' '+status;
+      }).join(' · ')));
+      panel.appendChild(subjects);
+    }else if(data.subjects){
       const subjects=document.createElement('p');subjects.className='tea-insights-subjects';
       const labels={reading:'독해',math:'수학',science:'과학',social:'사회'};
       subjects.appendChild(textTag('strong','','STAAR 학년 수준 충족 이상: '));
@@ -621,9 +646,13 @@
     const notes=document.createElement('div');
     notes.className='tea-insights-provenance-body';
     notes.appendChild(textTag('p','tea-insights-meta','2026 TEA 종합 평가 · 적용 단계 '+data.rolloutPhase+' · '+data.cohort));
-    if(!data.domains) notes.appendChild(textTag('p','tea-insights-missing',
+    if(!data.domains&&!data.academicDomainRows) notes.appendChild(textTag('p','tea-insights-missing',
       '영역별 점수 및 과목별 성취도: 개별 TEA 원문 미연결. 종합점수만으로 과목별 강점이나 약점을 추정하지 않습니다.'));
+    if(data.academicDomainRows&&data.evidenceStatus!=='reviewed')
+      notes.appendChild(textTag('p','tea-insights-missing',
+        '이 학교는 영역별 미평가·수치 미제공 항목이 있습니다. 빈칸과 미평가는 0점 또는 F등급을 뜻하지 않습니다.'));
     if(data.domainsSource&&hasOfficialSource(data.domainsSource))notes.appendChild(makeLink('2026 TEA 영역별 점수 원문',data.domainsSource));
+    if(data.subjectsSource&&hasOfficialSource(data.subjectsSource))notes.appendChild(makeLink('2026 TEA STAAR 과목별 자료 원문',data.subjectsSource));
     if(published){
       notes.appendChild(textTag('p','tea-insights-meta','2025–26 인종별 학생 수: TEA PEIMS 공개 캠퍼스 집계 · 일부 항목 비공개/미표시.'));
       notes.appendChild(makeLink('TEA 공식 2025–26 학교별 집계 CSV',
