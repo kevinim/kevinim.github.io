@@ -36,3 +36,56 @@ test('unknown and non-campus identifiers do not receive an insight',()=>{
   assert.equal(insights.getRecord('000000000'),null);
   assert.equal(insights.getRecord('061902118<script>'),null);
 });
+
+test('rollout covers all 148 TEA records in CFB, Lewisville, Allen, McKinney',()=>{
+  const cohorts={'CFB':35,'LISD':57,'AISD':23,'043907':33};
+  assert.deepEqual([...insights.rolloutDistricts].sort(),Object.keys(cohorts).sort());
+  const matching=source.data.filter(r=>Object.hasOwn(cohorts,r.district));
+  assert.equal(matching.length,148);
+  for(const [code,count] of Object.entries(cohorts)){
+    assert.equal(matching.filter(r=>r.district===code).length,count);
+    const phase=insights.rolloutPhase(code);
+    assert.equal(phase,code==='CFB'||code==='LISD'?1:code==='AISD'?2:3);
+  }
+  for(const record of matching){
+    const result=insights.getSchoolInsight(record);
+    assert.ok(result?.summary && result?.strength && result?.challenge,record.id);
+    assert.equal(result.rolloutPhase,insights.rolloutPhase(record.district));
+    if(!pilotIds.includes(record.id)&&!['043901001','043907002'].includes(record.id)){
+      assert.equal(result.domains,undefined,'never invent domain metrics '+record.id);
+      assert.equal(result.subjects,undefined,'never invent subject metrics '+record.id);
+      assert.equal(result.demographics,undefined,'never invent race data '+record.id);
+      assert.equal(result.evidenceStatus,'rating-only');
+    }
+  }
+  const nonTarget=source.data.find(r=>r.district==='057905'&&r.rating==='A');
+  assert.equal(insights.getSchoolInsight(nonTarget),null,'DFW further districts require staged rollout');
+});
+test('four campuses have individually source-linked ethnicity data',()=>{
+  assert.equal(insights.verifiedEthnicityCount,4);
+  for(const [id,cohort,headCount] of [
+    ['061902118','LISD',424],
+    ['061902008','LISD',3668],
+    ['043901001','AISD',5206],
+    ['043907002','043907',2668]
+  ]){
+    const record=source.data.find(x=>x.id===id);
+    assert.equal(record?.district,cohort);
+    const demo=insights.getSchoolInsight(record).demographics;
+    assert.equal(demo.enrollment,headCount);
+    assert.equal(demo.year,'2024–25');
+    assert.equal(insights.checkRace(demo.race),true);
+    assert.equal(insights.getRaceRows(id)?.length,7);
+    assert.match(demo.src,/^https:\/\//);
+  }
+});
+test('Not Rated remains not-a-performance-judgment and absent data never maps to zero',()=>{
+  const sample=source.data.find(x=>x.district==='043907'&&x.rating==='Not Rated');
+  assert.ok(sample);
+  const r=insights.getSchoolInsight(sample);
+  assert.equal(r.evidenceStatus,'rating-only');
+  assert.match(r.summary,/미부여|확인되지/);
+  assert.equal(r.domains,undefined);
+  assert.equal(r.demographics,undefined);
+  assert.equal(insights.getRaceRows(sample.id),null);
+});
