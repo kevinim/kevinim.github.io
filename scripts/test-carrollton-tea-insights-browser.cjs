@@ -57,8 +57,14 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           assert.equal(await card.count(),1,'one and only one exact campus listing '+id);
           await card.click();
           await page.waitForFunction(id=>document.querySelector('#detailContent .tea-insights-panel')?.dataset.campus===id,id,{timeout:15000});
-          await page.waitForFunction(()=>[...document.styleSheets].some(s=>(s.href||'').includes('carrollton-school-insights.css?v=4')),
+          await page.waitForFunction(()=>[...document.styleSheets].some(s=>(s.href||'').includes('carrollton-school-insights.css?v=5')),
             null,{timeout:15000});
+          if(id.startsWith('043901')||id.startsWith('043907')){
+            await page.waitForFunction(()=>window.CarrolltonSchoolInsights?.officialBatchCount?.()===56,
+              null,{timeout:18000});
+            await page.waitForFunction(id=>!!document.querySelector(
+              '#detailContent .tea-insights-panel[data-campus="'+id+'"] .tea-insights-public-races'),id,{timeout:15000});
+          }
           const found=await page.evaluate(()=>({
             inlineCampus:document.querySelector('#schoolList .tea-school-inline-preview')?.dataset.campus,
             inlineFacts:document.querySelectorAll('#schoolList .tea-school-inline-preview .tea-insights-fact').length,
@@ -76,7 +82,9 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
             notesCollapsed:!document.querySelector('.tea-insights-provenance').open,
             warningOutsideNotes:!!document.getElementById('zoneNotice')&&!document.querySelector('.tea-insights-provenance').contains(document.getElementById('zoneNotice')),
             domainCount:document.querySelectorAll('.tea-insights-domains dd').length,
-            raceCount:document.querySelectorAll('.tea-insights-legend li').length,
+            raceCount:document.querySelectorAll('#detailContent .tea-insights-legend li, #detailContent .tea-insights-public-races li').length,
+            publicRaceCount:document.querySelectorAll('#detailContent .tea-insights-public-races li').length,
+            maskedRaceCount:[...document.querySelectorAll('#detailContent .tea-insights-public-races li')].filter(x=>/비공개|미제공/.test(x.textContent)).length,
             missingRace:[...document.querySelectorAll('#detailContent .tea-insights-missing')].some(el=>el.textContent.includes('학생 인종·민족 구성')),
             missingDomain:[...document.querySelectorAll('#detailContent .tea-insights-missing')].some(el=>el.textContent.includes('영역별 점수')),
             link:[...document.querySelectorAll('.tea-insights-panel a')].map(a=>({label:a.textContent,url:a.href})),
@@ -99,23 +107,34 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           assert.equal(found.notesCollapsed,true,'technical footnotes are closed by default');
           assert.equal(found.warningOutsideNotes,true,'important school assignment warning remains visible');
           assert.ok(found.link.some(x=>x.url.startsWith('https://txschools.gov/')),'official campus source included');
-          const reviewed=['061902118','061902008'].includes(id);
-          const raceVerified=['061902118','061902008','043901001','043907002'].includes(id);
+          const reviewed=['061902118','061902008','043901001','043901105','043907002','043907043'].includes(id);
+          const raceVerified=['061902118','061902008','043901001','043901105','043907002','043907043'].includes(id);
+          const fullyCharted=['061902118','061902008','043901001'].includes(id);
+          const newPeims=['043901001','043901105','043907002','043907043'].includes(id);
           assert.equal(found.domainCount,reviewed?3:0,'domain scores must not be invented '+id);
           if(raceVerified){
             assert.equal(found.years.length,2,'evaluation and ethnicity years displayed separately');
             assert.notEqual(found.years[0].text,found.years[1].text,'different vintages must remain distinct');
             assert.ok(found.years[1].size<found.titleSize,'demographic year is a small label');
             assert.equal(found.raceCount,7,'seven verified demographic groups for '+id);
-            assert.ok(found.inlineChart?.includes('아시아계'),'in-list chart must show verified race distribution');
+            if(fullyCharted)assert.ok(found.inlineChart?.includes('아시아계'),'complete race distribution in-list chart must be accessible');
+            else assert.equal(found.inlineChart,undefined,'partial PEIMS data must not be drawn as a complete in-list race chart');
             assert.equal(found.missingRace,false);
-            assert.ok(found.chart?.includes('아시아계'),'chart needs accessible ethnic names and shares');
+            if(fullyCharted)assert.ok(found.chart?.includes('아시아계'),'complete race chart needs accessible ethnic names and shares');
+            else assert.equal(found.chart,undefined,'partial PEIMS campus must not render a misleading 100% chart');
+            if(newPeims){
+              assert.equal(found.publicRaceCount,7,'2025–26 PEIMS seven rows with privacy status');
+              assert.ok(found.years[1].text.includes('2025–26'),'current PEIMS school year');
+              assert.ok(found.link.some(x=>x.label.includes('PEIMS') && x.url.startsWith('https://rptsvr1.tea.texas.gov/')),
+                'official PEIMS source link must remain available');
+            }
           }else{
             assert.equal(found.raceCount,0,'unknown student ethnicity must remain absent for '+id);
             assert.equal(found.inlineChart,undefined,'unverified race cannot render in-list chart');
             assert.equal(found.missingRace,true);
           }
           if(!reviewed)assert.equal(found.missingDomain,true,'grade-only campus must show missing domain notice');
+          else assert.equal(found.domainCount,3,'published official academic domain score count');
           assert.deepEqual(found.csp,[],'CSP violation detected '+JSON.stringify(found.csp));
           if(width===390)assert.ok(found.scrollWidth<=width+5,'mobile horizontal overflow '+found.scrollWidth);
           if(id===CASES[0][0]){
