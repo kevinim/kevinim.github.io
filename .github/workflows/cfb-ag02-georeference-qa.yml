@@ -9,6 +9,7 @@ on:
     paths:
       - 'scripts/cfb-ag02-georeference-qa.py'
       - 'scripts/cfb-ag02-legacy-gis-audit.py'
+      - 'scripts/cfb-ag02-map-overlay-qa.py'
       - 'tests/cfb-ag02-georef.test.py'
       - '.github/workflows/cfb-ag02-georeference-qa.yml'
       - 'data/cfb-ag02-*-gcps.json'
@@ -35,6 +36,16 @@ jobs:
         run: python scripts/cfb-ag02-georeference-qa.py --fetch-images
       - name: Audit newly discovered municipal E/M/H 2020 geometry and compare outer jurisdiction
         run: python scripts/cfb-ag02-legacy-gis-audit.py
+      - name: Draw visually labelled 2025 source vs 2020 historic source overlays
+        run: python scripts/cfb-ag02-map-overlay-qa.py
+      - name: Save E/M/H historic boundary comparison image overlays (NOT certified GIS)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ag02-cfb-2020-vs-2025-raster-visual-review-NOT-LIVE
+          path: artifacts/cfb-ag02-raster-legacy-comparison/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Upload short-lived historical-city-GIS audit (strictly not current attendance)
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
