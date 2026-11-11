@@ -383,7 +383,19 @@ function useHomeCandidate(candidate){
   const matches=homeZipMatches(home.ll);
   if(matches.length===1)selectZip(matches[0].z,false);
   map.setView(home.ll,13);renderHome();drawSchools();drawList();
-   if(typeof focusHomeAssignedSchools==='function')focusHomeAssignedSchools();el('homeStatus').textContent='검색 결과 위치를 지도에 표시했습니다. 주소와 핀을 확인하세요.';syncHomeClearVisibility();return true;
+   if(typeof focusHomeAssignedSchools==='function')focusHomeAssignedSchools();el('homeStatus').textContent='검색 결과 위치를 지도에 표시했습니다. 주소와 핀을 확인하세요.';syncHomeClearVisibility();
+   // After a deliberate address selection, bring the map into view once.
+   // Never scroll on background redraws or imply any school assignment approval.
+   const chosenMap=el('map');
+   if(chosenMap&&typeof chosenMap.scrollIntoView==='function'&&typeof requestAnimationFrame==='function'){
+    requestAnimationFrame(()=>{
+     if(home&&chosenMap.isConnected){
+      const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      chosenMap.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+     }
+    });
+   }
+   return true;
 }
 // Similar addresses are shown rather than silently selecting an arbitrary school-zone pin.
 function showHomeCandidateChoices(candidates){
