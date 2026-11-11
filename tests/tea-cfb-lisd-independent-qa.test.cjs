@@ -22,7 +22,7 @@ test('CFB 35 + Lewisville 57 campus IDs match current inventory exactly',()=>{
  const lookup=new Map(records.map(c=>[c.id,c]));
  for(const [id,row] of Object.entries(ledger.campuses)){
   const source=lookup.get(id);
-  assert.match(id,/^\\d{9}$/);
+  assert.match(id,/^\d{9}$/);
   assert.ok(source);
   assert.equal(row.district,source.district);
   assert.equal(row.campusName,source.officialName||source.name);
