@@ -47,7 +47,9 @@ mkdirSync(dir,{recursive:true});
   assert.ok((await page.locator('#zoneNotice').innerText()).includes('Isbell 세부 학년 주의'));
   result.checks.push('Live Frisco school click draws official K-4 polygon with grade exception');
 
-  await page.locator('#auxiliaryDataDetails > summary').click();
+  // Live pre-deploy Pages lacks this #258 wrapper; expand only when present.
+  if(await page.locator('#auxiliaryDataDetails').count())
+   await page.locator('#auxiliaryDataDetails > summary').click();
   await page.locator('#phase2HazardPanel > summary').click();
   await page.locator('#nfhlFloodPanel > summary').click();
   assert.equal(await page.locator('#nfhlEnabled').isChecked(),false);
