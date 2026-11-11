@@ -77,7 +77,7 @@ test('UAT presentation has strict same-origin static resources, mobile styles, a
  assert.match(html,/peims-published-share-preview.js/);
  assert.match(html,/peims-published-share-preview.css/);
  assert.match(html,/공개된 학생 인원 기준 비율/);
- assert.match(html,/학교 전체 학생 분포로 사용하면 안 됩니다/);
+ assert.match(html,/전체 학교 학생 분포로 사용하면 안 됩니다/);
  assert.match(js,/document.createElement/);
  assert.doesNotMatch(js,/innerHTML\s*=/);
  assert.match(js,/same-origin/);
