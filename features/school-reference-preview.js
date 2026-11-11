@@ -48,6 +48,11 @@
       typeof p?.school!=='string'||p.school.trim().length<2||p.school.length>120||
       !Object.hasOwn(LEVEL,p.gradeLevel))
     return blocked('학교별 도형 또는 학년 정보가 누락되어 참고 후보를 표시하지 않습니다.');
+   // Even a source registered as current cannot promote a feature that
+   // explicitly identifies itself as older, proposed or unverified.
+   const vintage=String(p.schoolYear||p.sourceVintage||'').replace(/[–—]/g,'-').trim();
+   if((vintage&&vintage!=='2026-27')||p.current===false||p.sourceYearConfirmed===false)
+    return blocked('해당 학교 도형의 출처 학년도가 현행으로 검증되지 않았습니다.');
    const school=p.school.trim(),key=p.gradeLevel+'|'+school.toLocaleLowerCase('en-US');
    if(seen.has(key))return blocked('같은 학교·학년 후보가 중복되어 표시하지 않습니다.');
    seen.add(key);
