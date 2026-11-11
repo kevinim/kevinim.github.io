@@ -58,7 +58,7 @@ test('HTML and main dashboard load the helper, keep the existing ZIP and school 
   const html = fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
   const main = fs.readFileSync(path.join(__dirname,'../dashboard-main.js'),'utf8');
   assert.match(html, /features\/map\/area-label-hierarchy\.js\?v=1/);
-  assert.match(html, /features\/map\/area-label-hierarchy\.css\?v=1/);
+  assert.match(html, /\.area-label\.city span/);
   assert.match(main, /AreaLabelHierarchy\.buildCandidates/);
   assert.match(main, /zipGroup\.clearLayers\(\)/);
   assert.match(main, /drawSchools\(\)/);
