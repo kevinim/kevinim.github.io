@@ -52,7 +52,7 @@ function auditSchoolBoundaryTrust(files, registry = DISTRICT_REGISTRY) {
   const legacyScript = files?.['features/reviewed-bootstrap.js'] || '';
   const uploadGuard = files?.['features/geojson-upload-guard.js'] || '';
   const match = files?.['school-boundary-match.js'] || '';
-  if (!page || !main || !page.includes('<script src="./dashboard-main.js?v=5"></script>') || !legacy || !legacyScript || !uploadGuard || !match) {
+  if (!page || !main || !page.includes('<script src="./dashboard-main.js?v=6"></script>') || !legacy || !legacyScript || !uploadGuard || !match) {
     errors.push('Missing required school boundary source files');
     return {errors, warnings, inventory: null};
   }

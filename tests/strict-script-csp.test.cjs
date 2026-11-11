@@ -21,7 +21,7 @@ const inlineScripts=html=>[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/scrip
 test('index.html uses zero-hash external same-origin main bootstrap',()=>{
  const html=read('index.html'),policy=csp(html),scripts=inlineScripts(html);
  assert.equal(scripts.length,0,'Main must have no inline executable scripts');
- assert.ok(html.includes('<script src="./dashboard-main.js?v=5"></script>'));
+ assert.ok(html.includes('<script src="./dashboard-main.js?v=6"></script>'));
  assert.doesNotMatch(policy,/'sha256-/);
  assert.ok(policy.includes("script-src 'self' https://unpkg.com;"));
  assert.ok(read('dashboard-main.js').includes('button[data-clear-school]'));
