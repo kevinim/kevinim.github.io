@@ -56,6 +56,17 @@ test('explicit stale or unconfirmed school feature year cannot be elevated by di
  valid.properties.schoolYear='2026–27';
  assert.equal(plan({...candidate(),features:[valid]}).kind,'reference-only');
 });
+test('Frisco Nelson and McKinney transfer exceptions must not be silently hidden',()=>{
+ const nelson=candidate();
+ nelson.features[1].properties.school='Nelson Middle School';
+ const p=plan(nelson);
+ assert.equal(p.kind,'reference-only');
+ assert.ok(p.notices.some(v=>v.includes('Wester Middle School')));
+ assert.equal(plan(candidate()).notices.length,0);
+ const mc=plan(candidate('043907','finder-current'));
+ assert.equal(mc.kind,'reference-only');
+ assert.ok(mc.notices.some(v=>v.includes('grandfathering')));
+});
 test('reject missing, spoofed, or non-allowlisted source link',()=>{
  assert.equal(preview.plan(candidate(),DISTRICT_REGISTRY,()=>null).kind,'unavailable');
  assert.equal(preview.plan(candidate(),{FISD:{...DISTRICT_REGISTRY.FISD,official:'https://evil.example/'}},safe.official).kind,'unavailable');
