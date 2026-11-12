@@ -2,6 +2,12 @@
   "schemaVersion": 1,
   "asOf": "2026-11-12",
   "stage": "Production integrated (PR #264); legacy UAT filename retained for compatibility",
+  "productionIntegration": {
+    "status": "deployed",
+    "pullRequest": 264,
+    "integrationDate": "2026-11-11",
+    "sourceYear": "2025-26"
+  },
   "inventory": "tea-ratings-2026.json",
   "accountabilityYear": 2026,
   "schoolYear": "2025-26",
@@ -19,11 +25,5 @@
     "overallNotRated": 138,
     "staarSourceRowAbsent": 110
   },
-  "note": "Domain scores are TEA scaled scores. Source-masked, Not Rated, blank and absent STAAR rows do not imply zero; school assignment is independent.",
-  "productionIntegration": {
-    "status": "deployed",
-    "pullRequest": 264,
-    "integrationDate": "2026-11-11",
-    "sourceYear": "2025-26"
-  }
+  "note": "Domain scores are TEA scaled scores. Source-masked, Not Rated, blank and absent STAAR rows do not imply zero; school assignment is independent."
 }
