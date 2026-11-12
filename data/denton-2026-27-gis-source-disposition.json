@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "district": "061901",
   "schoolYear": "2026-27",
-  "checkedOn": "2026-11-09",
+  "checkedOn": "2026-11-12",
   "scope": "Publicly discoverable, safely attributable Denton ISD school-specific attendance polygons (not administrative district boundaries or campus points)",
   "officialCurrentYearPdfCount": 39,
   "expectedCampusGradeCounts": {
@@ -84,5 +84,19 @@
     "futureProposalYear": "2028-29",
     "futureProposalMayCertifyCurrentYear": false,
     "yearUnmatchedSourcesMustRemainQuarantined": true
+  },
+  "originalVectorRecordsRequest": {
+    "status": "sent-awaiting-response",
+    "sentOn": "2026-11-09",
+    "channel": "email",
+    "recipientRole": "Denton ISD public information records office",
+    "requested": "existing 2026-27 elementary/middle/high attendance-zone vector GIS, campus IDs, effective year, spatial reference, split-zone exceptions, and redistribution terms",
+    "sentEvidence": "confirmed-in-connected-Sent-mailbox-2026-11-12",
+    "publicReceiptAvailable": false,
+    "receivedResponseAsOf": "not-observed-in-connected-inbox-search-2026-11-12",
+    "publicPrivacyGuard": "No owner email address, Gmail message IDs, subject or private link in repository",
+    "licensingConsentVerified": false,
+    "districtOriginalVectorReceived": false,
+    "feeAuthority": "No paid request or vendor service without express approval"
   }
 }

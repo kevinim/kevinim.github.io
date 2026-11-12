@@ -99,3 +99,21 @@ test('proposed future 2028–29 rezoning must never certify current 2026–27 po
  assert.equal(gis.verifiedCurrentYearSchoolPolygonLayerCount,0);
  assert.equal(gis.releaseGate.status,'NO_GO');
 });
+test('Denton Nov 9 existing GIS records request is sent, but neither reply nor vector rights is certified',()=>{
+ const q=gis.originalVectorRecordsRequest;
+ assert.ok(q);
+ assert.equal(q.status,'sent-awaiting-response');
+ assert.equal(q.sentOn,'2026-11-09');
+ assert.equal(q.channel,'email');
+ assert.equal(q.sentEvidence,'confirmed-in-connected-Sent-mailbox-2026-11-12');
+ assert.equal(q.publicReceiptAvailable,false);
+ assert.equal(q.receivedResponseAsOf,'not-observed-in-connected-inbox-search-2026-11-12');
+ assert.equal(q.districtOriginalVectorReceived,false);
+ assert.equal(q.licensingConsentVerified,false);
+ assert.match(q.feeAuthority,/No paid request/);
+ assert(!JSON.stringify(q).includes('mail.google.com'));
+ assert(!Object.hasOwn(q,'messageId'));
+ assert(!Object.hasOwn(q,'threadId'));
+ assert.equal(gis.verifiedCurrentYearSchoolPolygonLayerCount,0);
+ assert.equal(gis.releaseGate.status,'NO_GO');
+});

@@ -7,8 +7,25 @@ function inspect(manifest){
  if(manifest?.schemaVersion!==1||manifest?.district!=='CFB')errors.push('invalid_district');
  if(!/^\d{4}-\d{2}-\d{2}$/.test(manifest?.reviewedAt||''))errors.push('review_date_missing');
  const req=manifest?.officialRequest;
- if(req?.status!=='draft-prepared-not-sent'&&!(/^https:\/\//.test(req?.receiptUrl||'')&&req?.status==='submitted'))
-  errors.push('request_status_missing_or_unsubstantiated');
+ // A public GitHub manifest must NOT contain the owner's private Gmail IDs or message links.
+ // The sent evidence was privately crosschecked in the connected Sent mailbox;
+ // no district receipt or affirmative response may be inferred from that alone.
+ const draft=req?.status==='draft-prepared-not-sent';
+ const sent=req?.status==='sent-awaiting-response'&&req?.sentOn==='2026-11-09'&&
+   req?.channel==='email'&&req?.sentEvidence==='confirmed-in-connected-Sent-mailbox-2026-11-12'&&
+   req?.publicReceiptAvailable===false&&
+   req?.receivedResponseAsOf==='not-observed-in-connected-inbox-search-2026-11-12'&&
+   typeof req?.evidenceDisclaimer==='string'&&req.evidenceDisclaimer.includes('intentionally excluded');
+ const receipt=req?.status==='submitted'&&(()=>{
+   try{
+    const u=new URL(req.receiptUrl);
+    return u.protocol==='https:'&&u.hostname==='www.cfbisd.edu'&&u.username===''&&u.password===''&&u.port===''&&u.hash==='';
+   }catch{return false}
+  })();
+ if(!draft&&!sent&&!receipt)errors.push('request_status_missing_or_unsubstantiated');
+ if(sent&&('receiptUrl' in req||'messageId' in req||'senderEmail' in req||
+    'threadId' in req||'privateGmailLink' in req))
+  errors.push('private_mail_identifiers_must_not_enter_public_repo');
  if(req?.submitTo!=='publicinformation@cfbisd.edu'||
    !String(req?.subjectIncludes||'').includes('Public Information Request')||
    !String(req?.requestPolicy||'').includes('no paid work without express approval'))
