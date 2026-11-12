@@ -90,7 +90,7 @@ async function main(){
    assert.match(disputed,/2026–27 주소별 Finder 확인 필수/);
    assert.doesNotMatch(disputed,/2025–26 승인 내역/,'conflicting descriptions must not appear certified');
    await page.locator('#cfbAtlasAreaSelect').selectOption('Morningside subdivision');
-   await page.locator('.cfb-atlas-evidence > summary').click();
+   await page.locator('#cfbAtlasFixtures .cfb-atlas-evidence > summary').click();
    const evidence=await page.locator('.cfb-atlas-evidence-list').innerText();
    assert.match(evidence,/1600 S Josey Ln/);
    assert.match(evidence,/1011 S Main St/);
