@@ -1,0 +1,34 @@
+name: TEA 2025-26 six district PR source parity (read-only)
+on:
+  pull_request:
+    paths:
+      - 'scripts/audit-legacy-tea-peims-district-prs.cjs'
+      - 'tests/tea-legacy-district-pr-dedupe.test.cjs'
+      - 'docs/TEA_LEGACY_DISTRICT_PR_DEDUPE_2026-11-11.md'
+      - '.github/workflows/qa-tea-legacy-district-pr-dedupe.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    name: Six source district PRs against current canonical 2,282 TEA campus snapshot
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Audit algorithm and FERPA suppression negative cases
+        run: node --test tests/tea-legacy-district-pr-dedupe.test.cjs
+      - name: Read-only fetch immutable candidate PR heads from this public repository
+        run: |
+          set -euo pipefail
+          for pr in 234 236 240 241 242 243; do
+            git -c protocol.version=2 fetch --no-tags --depth=1 origin "refs/pull/$pr/head:refs/audit/pr$pr"
+          done
+      - name: Compare all seven categories for every candidate campus against current main
+        run: node scripts/audit-legacy-tea-peims-district-prs.cjs
