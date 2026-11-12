@@ -45,7 +45,7 @@ async function main(){
    await page.locator('#cfbOpenInlineFinder').click();
    assert.equal(await atlas.isVisible(),true);
    assert.equal(remoteImages,0,'Opening CFB panel must not fetch map rasters');
-   await atlas.locator('summary').click();
+   await page.locator('#cfbAtlas > summary').click();
    await page.locator('#cfbAtlasBands button').first().waitFor({timeout:25000});
    assert.equal(remoteImages,0,'Opening raster atlas itself must not fetch third-party images');
    assert.equal(await page.locator('#cfbAtlasBands button').count(),3);
