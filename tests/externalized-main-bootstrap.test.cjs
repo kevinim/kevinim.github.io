@@ -193,8 +193,14 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  approvedHtml=replaceOnce(approvedHtml,
   '<script src="./features/tea-peims-public-share-addon.js?v=2" defer></script></body></html>',
   '<script src="./features/tea-peims-public-share-addon.js?v=2" defer></script><script src="./features/tea-allen-mckinney-subject-notes.js?v=1" defer></script></body></html>');
+ // CMS nearby reference is a separately reviewed option: exactly two asset
+ // version bumps are allowed, with the existing immutable HTML baseline intact.
+ approvedHtml=replaceOnce(approvedHtml,'./features/healthcare/map-layer.js?v=1',
+  './features/healthcare/map-layer.js?v=2');
+ approvedHtml=replaceOnce(approvedHtml,'./features/dashboard-extras.js?v=1',
+  './features/dashboard-extras.js?v=2');
  assert.equal(hash(html),hash(approvedHtml),
-  'Unreviewed HTML drift beyond approved workplace, PEIMS and Allen/McKinney additions');
+  'Unreviewed HTML drift beyond approved source-only optional CMS hospital references');
  // Strip only previously released #262 zoom label additions from the
  // immutable baseline; the existing #258 content SHA remains enforced.
  const integrityHtml=reviewedMainHtml.replace(approvedLabelStyle,previousLabelStyle)

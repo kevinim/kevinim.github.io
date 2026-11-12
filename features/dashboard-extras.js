@@ -41,8 +41,8 @@
   health.innerHTML=`
     <summary><span class="extra-glyph" aria-hidden="true">✚</span><span>병원 · 응급실<small>공식 시설 목록과 경로 링크</small></span></summary>
     <div class="extra-body">
-      <p class="extra-disclosure">CMS 병원 등록자료(2026년 자료). 응급서비스 표시 여부를 확인할 수 있지만 24시간 운영·외상센터 등급 또는 실제 운전시간을 보장하지 않습니다. 가까운 응급실 순서가 아니라 선택 도시의 시설 목록입니다.</p>
-      <label>시설이 있는 도시<select id="hospitalCity"><option value="">도시를 선택하세요</option></select></label>
+      <p class="extra-disclosure">CMS 병원 등록자료(2026년 자료). 도시별 목록 또는 선택 ZIP 대표점에서의 직선거리 참고 순서를 볼 수 있습니다. Census 추정 좌표는 실제 응급실 출입구가 아니며 24시간 운영·운전시간·전체 응급시설 포함을 보장하지 않습니다.</p>
+      <label>도시 또는 ZIP 주변 보기<select id="hospitalCity"><option value="">도시를 선택하세요</option></select></label>
       <label class="extra-check"><input id="hospitalEdOnly" type="checkbox" checked> 응급서비스 표시 시설만</label><label class="extra-check"><input id="hospitalMapEnabled" type="checkbox"> 지도에 병원 위치 표시</label><p class="extra-disclosure">지도 마커는 Census 주소범위 기반의 대략적인 위치이며, 실제 응급실 출입구나 15·30분 운전권을 뜻하지 않습니다. 확인된 DSHS 외상센터 등급만 표시합니다.</p>
       <div id="hospitalStatus" class="extra-disclosure" role="status">열면 공식 병원 목록을 불러옵니다.</div>
       <div id="hospitalList" class="extra-list" aria-live="polite"></div>
@@ -115,7 +115,7 @@
       else place(res,'p','입력한 가정값 기반 예상치입니다. 실제 통행료 고지서나 교통상황과 차이가 날 수 있습니다.','extra-disclosure');
     }catch(e){place(res,'p','입력값을 확인하세요: '+(e&&e.message?e.message:'유효하지 않은 값'),'extra-warning');}
   });
-  let hospitalData=null,gridData=null;
+  let hospitalData=null,gridData=null,nearbyData=null,nearbyPromise=null,nearbyError=null;
   async function loadHospitals(){
     const status=$('hospitalStatus');status.textContent='공식 CMS 시설 목록을 불러오는 중…';
     try{
@@ -125,7 +125,7 @@
       if(!Array.isArray(data.records))throw Error('시설 데이터 형식 오류');
       hospitalData=data.records;
       const cities=[...new Set(hospitalData.map(r=>r.city).filter(Boolean))].sort();
-      $('hospitalCity').replaceChildren(new Option('도시를 선택하세요',''),...cities.map(c=>new Option(c,c)));
+      $('hospitalCity').replaceChildren(new Option('도시를 선택하세요',''),new Option('선택 ZIP 주변 (직선거리 참고)','__nearby__'),...cities.map(c=>new Option(c,c)));
       const desired=(typeof getZip==='function'?String(getZip().name||''):'').toUpperCase();
       const matched=cities.find(c=>desired.includes(c));
       if(matched)$('hospitalCity').value=matched;
@@ -133,10 +133,42 @@
       renderHospitals();
     }catch(e){status.textContent='병원 목록을 불러오지 못했습니다: '+e.message;}
   }
+  function loadNearbyPoints(){
+    if(nearbyPromise||nearbyData||nearbyError)return;
+    nearbyPromise=fetch('./data/healthcare/cms-dfw-census-points-2026.json')
+      .then(resp=>{if(!resp.ok)throw Error('HTTP '+resp.status);return resp.json()})
+      .then(data=>{if(!root.HospitalNearbyReference||!Array.isArray(data.records))throw Error('자료 검증 모듈을 확인할 수 없습니다');nearbyData=data;})
+      .catch(()=>{nearbyError='병원 위치 참고자료를 불러오거나 확인하지 못했습니다. 도시별 목록을 이용하세요.';})
+      .finally(()=>{nearbyPromise=null;if($('hospitalCity')?.value==='__nearby__')renderHospitals();});
+  }
   function renderHospitals(){
     if(!hospitalData)return;
     const dest=$('hospitalCity').value,edOnly=$('hospitalEdOnly').checked,box=$('hospitalList');
     box.replaceChildren();
+    if(dest==='__nearby__'){
+      const z=typeof getZip==='function'?getZip():null;
+      if(!Array.isArray(z?.ll)||z.ll.length!==2){
+        place(box,'p','선택한 ZIP의 기준 좌표가 없습니다. 도시별 목록을 이용하세요.');return;
+      }
+      if(nearbyError){place(box,'p',nearbyError,'extra-warning');return;}
+      if(!nearbyData){place(box,'p','CMS 위치 참고자료를 불러오는 중…');loadNearbyPoints();return;}
+      let ranked;
+      try{ranked=root.HospitalNearbyReference.rankNearbyCMS(nearbyData,z.ll,{edOnly,limit:8})}
+      catch(e){place(box,'p','위치 자료 검증에 실패했습니다. 도시별 목록을 이용하세요.','extra-warning');return;}
+      place(box,'p','선택 ZIP '+z.z+' 대표점 기준 · 대략적인 직선거리 순 상위 '+ranked.records.length+'곳','extra-caption');
+      place(box,'p','104개 CMS 등록 시설 중 '+ranked.approximateLocationsCount+'개만 Census 주소 구간 추정 좌표가 있습니다. '+ranked.missingLocationsCount+'개는 거리 비교에서 제외됩니다. 응급서비스 표시 시설 '+ranked.rankedCount+'개 중 일부를 보여주며, 실제 운전시간·가장 가까운 운영 응급실·응급실 입구 위치가 아닙니다.','extra-disclosure');
+      for(const r of ranked.records){
+        const item=place(box,'div','','extra-hospital');
+        place(item,'strong',r.name);
+        place(item,'small','직선거리 약 '+r.distanceMiles.toFixed(1)+' mile · ZIP 대표점 기준 (Census 추정 좌표)');
+        place(item,'small',[r.address,r.city,'TX',r.zip].filter(Boolean).join(', '));
+        place(item,'small','CMS 응급서비스: '+(r.emergencyServices===true?'Yes':'No')+' · 24시간 운영 여부 미확인');
+        const link=place(item,'a','Google Maps에서 실제 위치·경로 확인');
+        link.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent([r.name,r.address,r.city,'TX',r.zip].filter(Boolean).join(', '));
+        link.target='_blank';link.rel='noopener noreferrer';
+      }
+      return;
+    }
     if(!dest){place(box,'p','시설이 있는 도시를 선택하세요.');return;}
     const arr=hospitalData.filter(r=>r.city===dest&&(!edOnly||r.emergencyServices===true)).sort((a,b)=>a.name.localeCompare(b.name));
     place(box,'p',dest+' · '+arr.length+'개 CMS 등록 시설','extra-caption');
@@ -154,6 +186,7 @@
   }
   health.addEventListener('toggle',()=>{if(health.open&&!hospitalData)loadHospitals();});
   $('hospitalCity').addEventListener('change',renderHospitals);
+  $('zipSelect')?.addEventListener('change',()=>{if(hospitalData&&$('hospitalCity').value==='__nearby__')renderHospitals();});
   $('hospitalEdOnly').addEventListener('change',renderHospitals);
   async function loadGrid(){
     const status=$('gridResilienceStatus');status.textContent='EIA 텍사스 통계를 불러오는 중…';

@@ -15,6 +15,29 @@ function validDataset(x){
  Array.isArray(x.records)&&x.records.length===104&&
  x.records.filter(validPoint).length===x.metadata.matchedCount;
 }
+/* Informational-only radius ranking: interpolated Census addresses and ZIP
+   reference points are not ED entrances, driving routes, or complete coverage. */
+function rankNearbyCMS(dataset,center,{edOnly=true,limit=8}={}){
+ if(!validDataset(dataset))throw new TypeError('validated CMS location dataset required');
+ if(!Array.isArray(center)||center.length!==2||!center.every(Number.isFinite)||
+    center[0]<24||center[0]>38||center[1]<-108||center[1]>-92)
+  throw new RangeError('valid Texas [latitude,longitude] reference required');
+ if(typeof edOnly!=='boolean'||!Number.isInteger(limit)||limit<1||limit>20)
+  throw new RangeError('invalid informational ranking options');
+ const rad=n=>n*Math.PI/180,fromLat=rad(center[0]),fromLng=rad(center[1]);
+ const matches=dataset.records.filter(p=>validPoint(p)&&(!edOnly||p.emergencyServices===true));
+ const ordered=matches.map(p=>{
+  const dlat=rad(p.lat)-fromLat,dlng=rad(p.long)-fromLng;
+  const a=Math.sin(dlat/2)**2+Math.cos(fromLat)*Math.cos(rad(p.lat))*Math.sin(dlng/2)**2;
+  const distanceMiles=3958.7613*2*Math.asin(Math.min(1,Math.sqrt(a)));
+  return {...p,distanceMiles};
+ }).sort((a,b)=>a.distanceMiles-b.distanceMiles||a.cmsFacilityId.localeCompare(b.cmsFacilityId));
+ return {records:ordered.slice(0,limit),rankedCount:ordered.length,
+  approximateLocationsCount:dataset.metadata.matchedCount,
+  missingLocationsCount:dataset.metadata.unmatchedCount,
+  totalFacilitiesCount:dataset.metadata.recordCount,
+  metric:'straight-line-miles-only; not drive time or ED-entrance location'};
+}
 function initHealthcareMap(map,d){
  d=d||document;
  const trigger=d.getElementById('healthcareMapQuickToggle');
@@ -28,7 +51,7 @@ function initHealthcareMap(map,d){
    if(checkbox)checkbox.checked=enabled;
  }
  const edOnly=()=>d.getElementById('hospitalEdOnly')?.checked!==false;
- const city=()=>String(d.getElementById('hospitalCity')?.value||'').trim().toUpperCase();
+ const city=()=>{const value=String(d.getElementById('hospitalCity')?.value||'').trim().toUpperCase();return value==='__NEARBY__'?'':value;};
  function filtered(){
    if(!records)return[];
    return records.filter(p=>validPoint(p)&&(!edOnly()||p.emergencyServices===true)&&(!city()||p.city?.toUpperCase()===city()));
@@ -92,5 +115,6 @@ function initHealthcareMap(map,d){
  return {toggle,getVisibleCount:()=>enabled?filtered().length:0,validPoint,validDataset};
 }
 root.initHealthcareMap=initHealthcareMap;
-if(typeof module!=='undefined')module.exports={initHealthcareMap,validPoint,validDataset};
+root.HospitalNearbyReference=Object.freeze({rankNearbyCMS});
+if(typeof module!=='undefined')module.exports={initHealthcareMap,validPoint,validDataset,rankNearbyCMS};
 })(typeof window!=='undefined'?window:globalThis);
