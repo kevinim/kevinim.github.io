@@ -1,0 +1,300 @@
+{
+  "schemaVersion": 1,
+  "accountabilityYear": 2026,
+  "verifiedAsOf": "2026-11-11",
+  "scope": "CFB ISD + Lewisville ISD only",
+  "sourcePublisher": "Texas Education Agency",
+  "sourceType": "Public 2026 Campus Accountability Overall Summary and Campus STAAR Performance",
+  "metricDefinition": "All Students: Meets Grade Level or Above, Percent of Tests (not students); domain scores are scaled scores",
+  "privacy": "No student-level records. Masked subgroup cells not included; no inference from masked cells.",
+  "summary": {
+    "targetCampuses": 92,
+    "verifiedAcademicCampuses": 6,
+    "CFB": 1,
+    "LISD": 5,
+    "existingCuratedNarrativesPreserved": 3,
+    "newIndependentMetricAnalyses": 3,
+    "fullyVerifiedAcademicAndPEIMS": 0
+  },
+  "campuses": {
+    "057903122": {
+      "campusName": "KENT EL",
+      "district": "CFB",
+      "accountabilityYear": 2026,
+      "overallRatingScore": 91,
+      "officialSummaryReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fsummary.sas",
+      "officialSTAARReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fdomain1a.sas",
+      "domainsScaledScores": {
+        "studentAchievement": 93,
+        "schoolProgress": 92,
+        "closingTheGaps": 85
+      },
+      "staarPerformanceComponentScore": 70,
+      "subjectsMeetsGradeLevel": {
+        "reading": {
+          "status": "published",
+          "totalTests": 195,
+          "meetsTests": 150,
+          "meetsPercentReported": 77
+        },
+        "math": {
+          "status": "published",
+          "totalTests": 195,
+          "meetsTests": 149,
+          "meetsPercentReported": 76
+        },
+        "science": {
+          "status": "published",
+          "totalTests": 58,
+          "meetsTests": 27,
+          "meetsPercentReported": 47
+        },
+        "socialStudies": {
+          "status": "not-applicable",
+          "totalTests": null,
+          "meetsTests": null,
+          "meetsPercentReported": null
+        }
+      },
+      "officialDataStatus": "TEA-2026-published-summary-and-STAAR-checked",
+      "existingCuratedNarrative": true,
+      "newMetricAnalysis": null,
+      "note": "Reported Meets Grade Level % is among tests, not percentages of students; not 2025-26 PEIMS ethnicity. Elementary Social Studies has no tests in this report."
+    },
+    "061902118": {
+      "campusName": "STEM ACADEMY AT HEBRON VALLEY EL",
+      "district": "LISD",
+      "accountabilityYear": 2026,
+      "overallRatingScore": 79,
+      "officialSummaryReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fsummary.sas",
+      "officialSTAARReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fdomain1a.sas",
+      "domainsScaledScores": {
+        "studentAchievement": 82,
+        "schoolProgress": 73,
+        "closingTheGaps": 73
+      },
+      "staarPerformanceComponentScore": 54,
+      "subjectsMeetsGradeLevel": {
+        "reading": {
+          "status": "published",
+          "totalTests": 356,
+          "meetsTests": 230,
+          "meetsPercentReported": 65
+        },
+        "math": {
+          "status": "published",
+          "totalTests": 357,
+          "meetsTests": 169,
+          "meetsPercentReported": 47
+        },
+        "science": {
+          "status": "published",
+          "totalTests": 121,
+          "meetsTests": 49,
+          "meetsPercentReported": 40
+        },
+        "socialStudies": {
+          "status": "not-applicable",
+          "totalTests": null,
+          "meetsTests": null,
+          "meetsPercentReported": null
+        }
+      },
+      "officialDataStatus": "TEA-2026-published-summary-and-STAAR-checked",
+      "existingCuratedNarrative": true,
+      "newMetricAnalysis": null,
+      "note": "Reported Meets Grade Level % is among tests, not percentages of students; not 2025-26 PEIMS ethnicity. Elementary Social Studies has no tests in this report."
+    },
+    "061902140": {
+      "campusName": "COYOTE RIDGE EL",
+      "district": "LISD",
+      "accountabilityYear": 2026,
+      "overallRatingScore": 76,
+      "officialSummaryReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902140&lev=C&prgopt=reports%2Facct%2Fsummary.sas",
+      "officialSTAARReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902140&lev=C&prgopt=reports%2Facct%2Fdomain1a.sas",
+      "domainsScaledScores": {
+        "studentAchievement": 73,
+        "schoolProgress": 78,
+        "closingTheGaps": 72
+      },
+      "staarPerformanceComponentScore": 45,
+      "subjectsMeetsGradeLevel": {
+        "reading": {
+          "status": "published",
+          "totalTests": 221,
+          "meetsTests": 125,
+          "meetsPercentReported": 57
+        },
+        "math": {
+          "status": "published",
+          "totalTests": 220,
+          "meetsTests": 93,
+          "meetsPercentReported": 42
+        },
+        "science": {
+          "status": "published",
+          "totalTests": 85,
+          "meetsTests": 26,
+          "meetsPercentReported": 31
+        },
+        "socialStudies": {
+          "status": "not-applicable",
+          "totalTests": null,
+          "meetsTests": null,
+          "meetsPercentReported": null
+        }
+      },
+      "officialDataStatus": "TEA-2026-published-summary-and-STAAR-checked",
+      "existingCuratedNarrative": true,
+      "newMetricAnalysis": null,
+      "note": "Reported Meets Grade Level % is among tests, not percentages of students; not 2025-26 PEIMS ethnicity. Elementary Social Studies has no tests in this report."
+    },
+    "061902142": {
+      "campusName": "INDEPENDENCE EL",
+      "district": "LISD",
+      "accountabilityYear": 2026,
+      "overallRatingScore": 74,
+      "officialSummaryReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902142&lev=C&prgopt=reports%2Facct%2Fsummary.sas",
+      "officialSTAARReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902142&lev=C&prgopt=reports%2Facct%2Fdomain1a.sas",
+      "domainsScaledScores": {
+        "studentAchievement": 76,
+        "schoolProgress": 70,
+        "closingTheGaps": 70
+      },
+      "staarPerformanceComponentScore": 48,
+      "subjectsMeetsGradeLevel": {
+        "reading": {
+          "status": "published",
+          "totalTests": 394,
+          "meetsTests": 221,
+          "meetsPercentReported": 56
+        },
+        "math": {
+          "status": "published",
+          "totalTests": 394,
+          "meetsTests": 176,
+          "meetsPercentReported": 45
+        },
+        "science": {
+          "status": "published",
+          "totalTests": 137,
+          "meetsTests": 47,
+          "meetsPercentReported": 34
+        },
+        "socialStudies": {
+          "status": "not-applicable",
+          "totalTests": null,
+          "meetsTests": null,
+          "meetsPercentReported": null
+        }
+      },
+      "officialDataStatus": "TEA-2026-published-summary-and-STAAR-checked",
+      "existingCuratedNarrative": false,
+      "newMetricAnalysis": {
+        "strength": "독해 Meets Grade Level 56%로 공개된 과목 중 가장 높음",
+        "improvement": "과학 34%로 독해보다 22%p 낮으며, School Progress 및 Closing the Gaps 점수는 각각 70점으로 Student Achievement(76점)보다 낮음",
+        "sourceYear": 2026,
+        "causalExplanation": false
+      },
+      "note": "Reported Meets Grade Level % is among tests, not percentages of students; not 2025-26 PEIMS ethnicity. Elementary Social Studies has no tests in this report."
+    },
+    "061902134": {
+      "campusName": "TOM HICKS EL",
+      "district": "LISD",
+      "accountabilityYear": 2026,
+      "overallRatingScore": 89,
+      "officialSummaryReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902134&lev=C&prgopt=reports%2Facct%2Fsummary.sas",
+      "officialSTAARReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902134&lev=C&prgopt=reports%2Facct%2Fdomain1a.sas",
+      "domainsScaledScores": {
+        "studentAchievement": 92,
+        "schoolProgress": 86,
+        "closingTheGaps": 83
+      },
+      "staarPerformanceComponentScore": 67,
+      "subjectsMeetsGradeLevel": {
+        "reading": {
+          "status": "published",
+          "totalTests": 266,
+          "meetsTests": 220,
+          "meetsPercentReported": 83
+        },
+        "math": {
+          "status": "published",
+          "totalTests": 265,
+          "meetsTests": 180,
+          "meetsPercentReported": 68
+        },
+        "science": {
+          "status": "published",
+          "totalTests": 94,
+          "meetsTests": 48,
+          "meetsPercentReported": 51
+        },
+        "socialStudies": {
+          "status": "not-applicable",
+          "totalTests": null,
+          "meetsTests": null,
+          "meetsPercentReported": null
+        }
+      },
+      "officialDataStatus": "TEA-2026-published-summary-and-STAAR-checked",
+      "existingCuratedNarrative": false,
+      "newMetricAnalysis": {
+        "strength": "Student Achievement 92점과 독해 Meets Grade Level 83%가 확인된 상대적 강점",
+        "improvement": "과학 Meets Grade Level 51%로 독해(83%)보다 32%p 낮으며 Closing the Gaps(83점)는 Student Achievement보다 9점 낮음",
+        "sourceYear": 2026,
+        "causalExplanation": false
+      },
+      "note": "Reported Meets Grade Level % is among tests, not percentages of students; not 2025-26 PEIMS ethnicity. Elementary Social Studies has no tests in this report."
+    },
+    "061902047": {
+      "campusName": "ARBOR CREEK MIDDLE",
+      "district": "LISD",
+      "accountabilityYear": 2026,
+      "overallRatingScore": 91,
+      "officialSummaryReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902047&lev=C&prgopt=reports%2Facct%2Fsummary.sas",
+      "officialSTAARReport": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902047&lev=C&prgopt=reports%2Facct%2Fdomain1a.sas",
+      "domainsScaledScores": {
+        "studentAchievement": 91,
+        "schoolProgress": 85,
+        "closingTheGaps": 91
+      },
+      "staarPerformanceComponentScore": 63,
+      "subjectsMeetsGradeLevel": {
+        "reading": {
+          "status": "published",
+          "totalTests": 900,
+          "meetsTests": 675,
+          "meetsPercentReported": 75
+        },
+        "math": {
+          "status": "published",
+          "totalTests": 899,
+          "meetsTests": 549,
+          "meetsPercentReported": 61
+        },
+        "science": {
+          "status": "published",
+          "totalTests": 276,
+          "meetsTests": 179,
+          "meetsPercentReported": 65
+        },
+        "socialStudies": {
+          "status": "published",
+          "totalTests": 276,
+          "meetsTests": 144,
+          "meetsPercentReported": 52
+        }
+      },
+      "officialDataStatus": "TEA-2026-published-summary-and-STAAR-checked",
+      "existingCuratedNarrative": false,
+      "newMetricAnalysis": {
+        "strength": "Student Achievement 및 Closing the Gaps 모두 91점, 독해 Meets Grade Level 75%",
+        "improvement": "사회 과목 Meets Grade Level 52%로 독해(75%) 대비 23%p 낮고 School Progress(85점)가 다른 두 영역(91점)보다 낮음",
+        "sourceYear": 2026,
+        "causalExplanation": false
+      },
+      "note": "Reported Meets Grade Level % is among tests, not percentages of students; not 2025-26 PEIMS ethnicity. Elementary Social Studies has no tests in this report."
+    }
+  }
+}
