@@ -63,10 +63,10 @@
   const statuses=['operator-address-in-11-county-msa','operator-address-outside-11-county-msa','pending-exact-name-crosswalk'];
   const ids=new Set(),counts=[0,0,0];
   for(const entry of extra.campuses){
-   if(!/^061806\\d{3}$/.test(entry.campusId||'')||ids.has(entry.campusId)||
+   if(!/^061806\d{3}$/.test(entry.campusId||'')||ids.has(entry.campusId)||
       typeof entry.officialCampusName!=='string'||!entry.officialCampusName.startsWith('TEXASWORKS - ')||
       typeof entry.operatorLocation!=='string'||entry.operatorLocation.length<3||
-      !/^\\d{5}$/.test(entry.operatorZIP||'')||
+      !/^\d{5}$/.test(entry.operatorZIP||'')||
       entry.sourceURL!=='https://texasworks.com/learning/landing-page-find-a-campus/')return false;
    const i=statuses.indexOf(entry.locationEvidence);if(i<0)return false;
    ids.add(entry.campusId);counts[i]++;
