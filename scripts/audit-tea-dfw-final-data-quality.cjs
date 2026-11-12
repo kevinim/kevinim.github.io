@@ -64,7 +64,11 @@ function inspect(x){
  check(progress?.official2026?.campuses===2282&&
        progress.official2026.domainAllReported===domainsAll&&
        progress.official2026.staarAnyReported===staarAny&&
-       progress.official2026.staarSourceAbsent===staarMissing,'production_progress_parity');
+       progress.official2026.staarSourceAbsent===staarMissing&&
+       progress.productionMetricSemantics?.officialAcademicBatches?.state==='deployed'&&
+       progress.productionMetricSemantics?.officialAcademicBatches?.integrationPullRequest===264&&
+       progress.productionMetricSemantics?.historicalManualImportCountersAreNotOfficialBatchCoverage===true,
+       'production_progress_parity');
  check(legacy?.schemaVersion===1&&legacy?.counts?.campuses===2282&&
        legacy.counts.domainAllReported===domainsAll&&legacy.counts.subjectAnyReported===staarAny&&
        legacy.counts.staarSourceRowAbsent===staarMissing&&
