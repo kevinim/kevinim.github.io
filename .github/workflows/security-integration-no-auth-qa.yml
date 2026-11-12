@@ -15,6 +15,7 @@ on:
       - 'tests/audit-live-public-headers.test.mjs'
       - 'tests/audit-actions-write-scopes.test.cjs'
       - 'tests/audit-visitor-xss.test.cjs'
+      - 'tests/crime-popup-html-escape.test.cjs'
       - 'tests/audit-external-api-contract.test.cjs'
   workflow_dispatch:
 permissions:
@@ -34,7 +35,7 @@ jobs:
           package-manager-cache: false
       - name: Test all four PR security contracts together
         run: |
-          node --test tests/audit-live-public-headers.test.mjs tests/audit-actions-write-scopes.test.cjs tests/audit-visitor-xss.test.cjs tests/audit-external-api-contract.test.cjs tests/workplace-destinations.test.cjs
+          node --test tests/audit-live-public-headers.test.mjs tests/audit-actions-write-scopes.test.cjs tests/audit-visitor-xss.test.cjs tests/crime-popup-html-escape.test.cjs tests/audit-external-api-contract.test.cjs tests/workplace-destinations.test.cjs
       - name: Re-run source, privacy, and privileges audits
         run: |
           node scripts/audit-actions-write-scopes.cjs
