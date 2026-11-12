@@ -1,0 +1,91 @@
+'use strict';
+const test=require('node:test'),assert=require('node:assert/strict');
+const {inspect,load}=require('../scripts/audit-tea-dfw-final-data-quality.cjs');
+const source=load();
+const copy=()=>({...structuredClone(Object.fromEntries(Object.entries(source).filter(([k])=>k!=='lifecycle'))),lifecycle:source.lifecycle});
+test('cross-file school data quality is ready for published metrics only, with explicit source limitations',()=>{
+ const r=inspect(source);
+ assert.deepEqual(r.errors,[]);
+ assert.equal(r.status,'PASS_WITH_KNOWN_LIMITATIONS');
+ assert.equal(r.academic.inventory,2282);
+ assert.equal(r.academic.matchedAcademicRows,2282);
+ assert.equal(r.academic.domainAllReported,2063);
+ assert.equal(r.academic.staarAnyReported,2105);
+ assert.equal(r.academic.staARowsAbsent,110);
+ assert.equal(r.academic.pairedOverallRatingWithNoOwnDomains,67);
+ assert.equal(r.ethnicity.exactOriginalCellsMatched,15974);
+ assert.equal(r.ethnicity.mismatches,0);
+ assert.deepEqual([r.ethnicity.publishedCells,r.ethnicity.maskedCells,r.ethnicity.unlistedCells],[8277,5141,2556]);
+ assert.equal(r.ethnicity.wholeSchoolSevenGroupSharesVerified,6);
+ assert.equal(r.ethnicity.fullPublicEnrollmentDenominators,2126);
+ assert.equal(r.geographic.sourceRowsByAdministrativeCounty,2182);
+ assert.equal(r.geographic.officialDistrictParentRoutes,107);
+ assert.equal(r.geographic.publicDistrictCount,108);
+ assert.deepEqual(r.geographic.texasworksOperatorLocality,{local:6,nonLocal:34,pending:1,pendingCampusIds:['061806029']});
+ assert.deepEqual([r.operating2026_27.transitionEntries,r.operating2026_27.archivedNotCurrentAssignments,
+  r.operating2026_27.newWithoutTEA2026Rating],[7,3,2]);
+ assert.equal(r.operating2026_27.futureClosureCurrentlyActive,'220919106');
+ assert.equal(r.staARowInvestigation.exactReasonStillUnknown,14);
+ assert.equal(new Set(r.staARowInvestigation.affectedPublicCampusIds).size,14);
+ assert.equal(r.releasePolicy.officialScoresForComparison,true);
+ assert.equal(r.releasePolicy.publishedOnlyRaceContext,true);
+ assert.equal(r.releasePolicy.entireRaceCompositionForEveryCampus,false);
+ assert.equal(r.releasePolicy.allDFWGeolocationVerified,false);
+ assert.equal(r.releasePolicy.automaticResidentialSchoolAssignment,false);
+ assert(!Object.values(r.warnings).some(v=>v.includes('home address')));
+});
+test('cannot revive false UAT-only data-stage statement after #264 Production integration',()=>{
+ const s=copy();
+ s.legacy.stage='UAT only; not deployed to production';
+ assert(inspect(s).errors.includes('legacy_aggregate_status_stale'));
+ s.legacy.stage='Production integrated';
+ s.legacy.productionIntegration.pullRequest=0;
+ assert(inspect(s).errors.includes('legacy_aggregate_status_stale'));
+});
+test('changing a single campus rating, source-year or row cardinality blocks source-level GO',()=>{
+ const s=copy();
+ s.ratings.data[0].score=101;
+ assert(inspect(s).errors.includes('academic_id_or_rating_parity'));
+ s.ratings.data[0].score=source.ratings.data[0].score;
+ s.accountability.schoolYear='2026-27';
+ assert(inspect(s).errors.includes('academic_year'));
+ s.accountability.schoolYear=source.accountability.schoolYear;
+ delete s.staar.campuses['043901001'];
+ assert(inspect(s).errors.includes('academic_cardinality'));
+});
+test('PEIMS masking may not be claimed as complete seven-group ethnic shares',()=>{
+ const s=copy();
+ s.peims.summary.allSevenRaceGroupsPublished=2282;
+ assert(inspect(s).errors.includes('peims_independent_parity_summary'));
+ s.peims.summary.allSevenRaceGroupsPublished=6;
+ s.peims.summary.rawRaceCellMismatches=1;
+ assert(inspect(s).errors.includes('peims_independent_parity_summary'));
+});
+test('TexasWorks locality remains operator-address evidence, never county-certified geometry',()=>{
+ const s=copy();
+ const row=s.locality.campuses.find(z=>z.campusId==='061806015');
+ row.locationEvidence='operator-address-in-11-county-msa';
+ assert(inspect(s).errors.includes('texasworks_operator_location_crosswalk'));
+ s.locality.campuses.find(z=>z.campusId==='061806015').locationEvidence='operator-address-outside-11-county-msa';
+ s.matrix.summary.exactAddressAssignmentCoveragePercent=100;
+ assert(inspect(s).errors.includes('district_county_proxy_misrepresented_as_gis'));
+});
+test('archived Paloma Creek/GCISD campuses and future Durham closure cannot be promoted',()=>{
+ const s=copy();
+ const paloma=s.transitions.entries.find(z=>z.campusId==='061901120');
+ paloma.regularAssignmentCampus2026_27=true;
+ assert(inspect(s).errors.includes('active_school_lifecycle_or_new_school_parity'));
+ paloma.regularAssignmentCampus2026_27=false;
+ const durham=s.transitions.entries.find(z=>z.campusId==='220919106');
+ durham.effectiveAcademicYear='2026-27';
+ assert(inspect(s).errors.includes('active_school_lifecycle_or_new_school_parity'));
+});
+test('14 missing STAAR row explanations remain unresolved; no fabricated zero values',()=>{
+ const s=copy();
+ const c=s.exceptions.positiveGradeNoSTAAR.find(z=>z.classification==='aea-registered');
+ c.specificMissingRowReasonConfirmed='because alternative school';
+ assert(inspect(s).errors.includes('staar_14_unknown_reasons_not_safely_quarantined'));
+ c.specificMissingRowReasonConfirmed=null;
+ s.staar.campuses[c.campusId].reading.value=0;
+ assert(inspect(s).errors.includes('staar_absent_not_zero'));
+});
