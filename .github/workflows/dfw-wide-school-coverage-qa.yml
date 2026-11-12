@@ -7,8 +7,10 @@ on:
       - 'district-registry.js'
       - 'data/school-polygon-linkage-baseline.json'
       - 'data/dfw-school-coverage-matrix-2026.json'
+      - 'data/tea-texasworks-locality-2026.json'
       - 'scripts/build-dfw-school-coverage-matrix.cjs'
       - 'tests/dfw-school-coverage-matrix.test.cjs'
+      - 'tests/tea-texasworks-physical-locality-panel.test.cjs'
       - 'scripts/test-dfw-school-coverage-browser.cjs'
       - 'features/dfw-school-coverage-panel.js'
       - 'features/dfw-school-coverage-panel.css'
@@ -37,7 +39,7 @@ jobs:
           node --check features/dfw-school-coverage-panel.js
           node --check scripts/test-dfw-school-coverage-browser.cjs
           node scripts/build-dfw-school-coverage-matrix.cjs --check
-          node --test tests/dfw-school-coverage-matrix.test.cjs tests/strict-script-csp.test.cjs tests/school-zone-ui.test.cjs
+          node --test tests/dfw-school-coverage-matrix.test.cjs tests/tea-texasworks-physical-locality-panel.test.cjs tests/strict-script-csp.test.cjs tests/school-zone-ui.test.cjs
 
   dashboard-browser:
     name: Collapsed DFW coverage panel on mobile and desktop
