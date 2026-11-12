@@ -40,3 +40,11 @@ This branch has no modifications to index.html, HANDOFF.md, crime, school, FEMA,
 - `cms-dfw-census-points-2026.json`: official U.S. Census interpolated locations for 83/104 CMS entries, 21 unmatched and deliberately unplotted. **Census geocoder produces address-range estimates**; not verified facility entrances or drive-time destinations.
 - `dshs-trauma-facilities-2026.json`: 288 DSHS facility rows, 22/31/62/173 Level I/II/III/IV. `dshs-cms-exact-matches-2026.json`: 34 strict verified matches; missing join means **unknown**, not No.
 - `features/healthcare/map-layer.js` browser map uses these files, filtering ED flag and selected city. UI is already deployed; earlier 'add hospital layer' steps above are now obsolete. Validate current operations before working on route ETA or trauma enrichment.
+
+## 2026-11-11 ZIP-reference proximity feature
+
+- Optional `선택 ZIP 주변 (직선거리 참고)` in the existing CMS hospital panel, independent of Redfin and school GIS. Defaults to existing city view when a recognized city matches the selected ZIP, so the previous browsing flow is retained.
+- Ranks up to eight **mapped** CMS hospitals from the selected ZIP's *representative point* by a transparent Haversine **straight-line** distance in miles. The existing CMS emergency-services flag filter remains active; the map shows all eligible plotted facilities when the nearby list is selected, not just the top eight.
+- Based on **83/104** strict Census address-range approximate coordinates (21 unmapped); **67** mapped hospitals are CMS ED-flagged in this dated dataset. No invented entrance, routing time, 24/7 availability, geographic coverage, trauma level or household address assignment. Freestanding emergency centers outside the CMS source are not covered.
+- Nearby data loads only when the visitor selects that mode. Changing ZIP recalculates the order, without geocoding private home addresses or making network calls to address vendors. Existing City / ED-only / map toggle and Allen school markers remain independent.
+- Tests: `node --test tests/p41-nearby-hospital-reference.test.cjs` and updated `scripts/test-healthcare-winter-map-browser.cjs` (390px and 1360px). The latter checks switch back to city mode, map markers, winter layer and nonzero school marker regression.
