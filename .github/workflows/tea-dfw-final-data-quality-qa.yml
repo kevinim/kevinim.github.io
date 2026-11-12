@@ -1,0 +1,55 @@
+name: Final TEA/PEIMS, school lifecycle and DFW locality data quality QA (no deploy)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/audit-tea-dfw-final-data-quality.cjs'
+      - 'tests/tea-dfw-final-data-quality.test.cjs'
+      - 'scripts/build-tea-academic-uat-progress.cjs'
+      - 'scripts/build-tea-profile-progress.cjs'
+      - 'data/tea-2026-uat-progress.json'
+      - 'data/tea-accountability-2026-verified-batch.json'
+      - 'data/tea-staar-meets-2026-verified-batch.json'
+      - 'data/tea-profile-progress-2026.json'
+      - 'data/tea-peims-2025-26-statewide-parity-audit-2282.json'
+      - 'data/tea-2026-staar-missing-row-qa-exceptions.json'
+      - 'data/tea-texasworks-locality-2026.json'
+      - 'data/dfw-noncfb-campus-transition-evidence-2026.json'
+      - 'school-lifecycle.js'
+      - 'docs/TEA_DFW_FINAL_DATA_QUALITY_20261112.md'
+      - '.github/workflows/tea-dfw-final-data-quality-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # pinned checkout
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # pinned setup-node
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Source, lifecycle, locality, masked race and missingness invariants
+        run: |
+          node --check scripts/audit-tea-dfw-final-data-quality.cjs
+          node --check tests/tea-dfw-final-data-quality.test.cjs
+          node --check scripts/build-tea-academic-uat-progress.cjs
+          node scripts/build-tea-academic-uat-progress.cjs --check
+          node scripts/build-tea-profile-progress.cjs --check
+          node --test tests/tea-dfw-final-data-quality.test.cjs tests/tea-2026-missingness-independent-qa.test.cjs tests/tea-texasworks-physical-locality-panel.test.cjs tests/school-lifecycle-curriculum-2026.test.cjs tests/dfw-noncfb-grade-year-source-quality.test.cjs tests/tea-2026-official-extracts.test.cjs tests/tea-peims-2025-26-statewide-parity-audit.test.cjs tests/tea-peims-2025-26-gender-parity-audit.test.cjs
+      - name: Save privacy-safe source-summary evidence
+        run: |
+          mkdir -p artifacts/data-quality
+          node scripts/audit-tea-dfw-final-data-quality.cjs > artifacts/data-quality/final-tea-data-quality.jsonl
+          node -e "const fs=require('fs'); const x=JSON.parse(fs.readFileSync('artifacts/data-quality/final-tea-data-quality.jsonl','utf8').trim().replace(/^TEA_DFW_FINAL_DATA_QUALITY /,''));if(x.status!=='PASS_WITH_KNOWN_LIMITATIONS'||x.errors.length||x.releasePolicy.automaticResidentialSchoolAssignment)process.exit(1);console.log(JSON.stringify({status:x.status,academic:x.academic,geographic:x.geographic,missing:x.staARowInvestigation.exactReasonStillUnknown}))"
+      - name: Retain reviewed aggregate findings only
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # pinned upload-artifact
+        with:
+          name: tea-dfw-final-data-quality-no-personal-records
+          path: artifacts/data-quality/final-tea-data-quality.jsonl
+          retention-days: 7
+          if-no-files-found: error

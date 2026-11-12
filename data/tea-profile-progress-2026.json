@@ -1709,5 +1709,31 @@
       }
     ],
     "caveat": "Reported source scores are not universal QA or deployment approval. Not Rated, suppressed, not-in-source and unavailable are never zero; school address is not home assignment; partial PEIMS counts do not define full-campus ethnicity percentages."
+  },
+  "productionMetricSemantics": {
+    "reviewedOn": "2026-11-12",
+    "officialAcademicBatches": {
+      "state": "deployed",
+      "integrationPullRequest": 264,
+      "sourceYear": "2025-26"
+    },
+    "publishedPeimsCountDisplay": {
+      "state": "deployed",
+      "integrations": [
+        264,
+        265,
+        266
+      ],
+      "sourceYear": "2025-26"
+    },
+    "historicalManualImportCountersAreNotOfficialBatchCoverage": true,
+    "legacyCounters": [
+      "domainComponentsReviewed",
+      "subjectsReviewed",
+      "ethnicityReviewed",
+      "imported2026Components",
+      "imported2025_26Ethnicity"
+    ],
+    "label": "Legacy/manual detail counters cannot be interpreted as zero Production TEA/PEIMS coverage; use official2026 and source-specific PEIMS checks instead."
   }
 }

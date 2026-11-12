@@ -1,7 +1,13 @@
 {
   "schemaVersion": 1,
-  "asOf": "2026-11-11",
-  "stage": "UAT only; not deployed to production",
+  "asOf": "2026-11-12",
+  "stage": "Production integrated (PR #264); legacy UAT filename retained for compatibility",
+  "productionIntegration": {
+    "status": "deployed",
+    "pullRequest": 264,
+    "integrationDate": "2026-11-11",
+    "sourceYear": "2025-26"
+  },
   "inventory": "tea-ratings-2026.json",
   "accountabilityYear": 2026,
   "schoolYear": "2025-26",

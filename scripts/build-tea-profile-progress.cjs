@@ -95,7 +95,15 @@ function makeProgress(asOf){
       '2025-26 public race counts include FERPA suppressed and omitted cells; count coverage is not complete seven-race percentage coverage.',
       'Source complete for all inventory campus IDs using 2025-26 statewide aggregate; this is partial ethnicity COUNT coverage, not seven-race distribution completeness.'
     ],
-    official2026:officialCoverage(records,validPeims,require('../data/tea-accountability-2026-verified-batch.json'),require('../data/tea-staar-meets-2026-verified-batch.json'))
+    official2026:officialCoverage(records,validPeims,require('../data/tea-accountability-2026-verified-batch.json'),require('../data/tea-staar-meets-2026-verified-batch.json')),
+    productionMetricSemantics:{
+      reviewedOn:'2026-11-12',
+      officialAcademicBatches:{state:'deployed',integrationPullRequest:264,sourceYear:'2025-26'},
+      publishedPeimsCountDisplay:{state:'deployed',integrations:[264,265,266],sourceYear:'2025-26'},
+      historicalManualImportCountersAreNotOfficialBatchCoverage:true,
+      legacyCounters:['domainComponentsReviewed','subjectsReviewed','ethnicityReviewed','imported2026Components','imported2025_26Ethnicity'],
+      label:'Legacy/manual detail counters cannot be interpreted as zero Production TEA/PEIMS coverage; use official2026 and source-specific PEIMS checks instead.'
+    }
   };
 }
 if(require.main===module){
