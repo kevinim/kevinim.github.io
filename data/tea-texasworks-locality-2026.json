@@ -1,0 +1,348 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-11-11",
+  "districtId": "061806",
+  "officialDistrictName": "TEXAS WORKS",
+  "inventoryCount": 41,
+  "geographicScope": "Dallas–Fort Worth–Arlington MSA 11 counties used in dashboard school-coverage matrix (excludes Hood county)",
+  "source": {
+    "teaInventory": "tea-ratings-2026.json",
+    "operatorCampusDirectory": "https://texasworks.com/learning/landing-page-find-a-campus/"
+  },
+  "evidencePolicy": "Source-matched operator-published city/ZIP plus 2026 TEA campus name; not a geocoded entrance, campus operating-status certificate, residential attendance assignment, GIS polygon, or school quality recommendation. Pending exact name/ID links remain pending.",
+  "counts": {
+    "operatorAddressIn11CountyMSA": 6,
+    "operatorAddressOutside11CountyMSA": 34,
+    "pendingExactCampusCrosswalk": 1
+  },
+  "campuses": [
+    {
+      "campusId": "061806001",
+      "officialCampusName": "TEXASWORKS - ABILENE",
+      "operatorLocation": "Abilene",
+      "operatorZIP": "79605",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806002",
+      "officialCampusName": "TEXASWORKS - AUSTIN-WELLS BRANCH",
+      "operatorLocation": "Austin (Wells Branch)",
+      "operatorZIP": "78727",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806003",
+      "officialCampusName": "TEXASWORKS - BROWNSVILLE",
+      "operatorLocation": "Brownsville",
+      "operatorZIP": "78521",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806004",
+      "officialCampusName": "TEXASWORKS - CORPUS CHRISTI",
+      "operatorLocation": "Corpus Christi",
+      "operatorZIP": "78415",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806005",
+      "officialCampusName": "TEXASWORKS - EDINBURG-CTE",
+      "operatorLocation": "Edinburg (Career & Technology Center)",
+      "operatorZIP": "78539",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806006",
+      "officialCampusName": "TEXASWORKS - EL PASO-MESA",
+      "operatorLocation": "El Paso (Mesa)",
+      "operatorZIP": "79912",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806007",
+      "officialCampusName": "TEXASWORKS - GRANBURY",
+      "operatorLocation": "Granbury",
+      "operatorZIP": "76048",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806008",
+      "officialCampusName": "TEXASWORKS - HOUSTON-GALLERY FURNITURE",
+      "operatorLocation": "Houston (Gallery Furniture North)",
+      "operatorZIP": "77076",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806009",
+      "officialCampusName": "TEXASWORKS - HOUSTON-HOBBY",
+      "operatorLocation": "Houston (Hobby)",
+      "operatorZIP": "77034",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806010",
+      "officialCampusName": "TEXASWORKS - LAREDO",
+      "operatorLocation": "Laredo",
+      "operatorZIP": "78043",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806011",
+      "officialCampusName": "TEXASWORKS - LUBBOCK-BRIERCROFT",
+      "operatorLocation": "Lubbock (Briercroft)",
+      "operatorZIP": "79412",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806012",
+      "officialCampusName": "TEXASWORKS - MISSION",
+      "operatorLocation": "Mission",
+      "operatorZIP": "78572",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806013",
+      "officialCampusName": "TEXASWORKS - SAN ANGELO",
+      "operatorLocation": "San Angelo",
+      "operatorZIP": "76901",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806014",
+      "officialCampusName": "TEXASWORKS - SAN ANTONIO-INGRAM",
+      "operatorLocation": "San Antonio (Ingram)",
+      "operatorZIP": "78238",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806015",
+      "officialCampusName": "TEXASWORKS - SAN JUAN",
+      "operatorLocation": "San Juan",
+      "operatorZIP": "78589",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806016",
+      "officialCampusName": "TEXASWORKS - TYLER",
+      "operatorLocation": "Tyler",
+      "operatorZIP": "75702",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806017",
+      "officialCampusName": "TEXASWORKS - WESLACO",
+      "operatorLocation": "Weslaco",
+      "operatorZIP": "78599",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806018",
+      "officialCampusName": "TEXASWORKS - DESOTO",
+      "operatorLocation": "DeSoto",
+      "operatorZIP": "75115",
+      "locationEvidence": "operator-address-in-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806019",
+      "officialCampusName": "TEXASWORKS - FT WORTH-SOUTHSIDE",
+      "operatorLocation": "Fort Worth (Southside)",
+      "operatorZIP": "76104",
+      "locationEvidence": "operator-address-in-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806020",
+      "officialCampusName": "TEXASWORKS - ARLINGTON",
+      "operatorLocation": "Arlington",
+      "operatorZIP": "76011",
+      "locationEvidence": "operator-address-in-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806021",
+      "officialCampusName": "TEXASWORKS - MESQUITE",
+      "operatorLocation": "Mesquite",
+      "operatorZIP": "75150",
+      "locationEvidence": "operator-address-in-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806022",
+      "officialCampusName": "TEXASWORKS - LONGVIEW",
+      "operatorLocation": "Longview",
+      "operatorZIP": "75604",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806023",
+      "officialCampusName": "TEXASWORKS - HOUSTON-CHAMPIONS",
+      "operatorLocation": "Houston (Champions)",
+      "operatorZIP": "77068",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806024",
+      "officialCampusName": "TEXASWORKS - AUSTIN SOUTH CAMPUS",
+      "operatorLocation": "Austin (South)",
+      "operatorZIP": "78704",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806025",
+      "officialCampusName": "TEXASWORKS - AMARILLO",
+      "operatorLocation": "Amarillo",
+      "operatorZIP": "79109",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806027",
+      "officialCampusName": "TEXASWORKS - DAYTON",
+      "operatorLocation": "Dayton",
+      "operatorZIP": "77535",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806028",
+      "officialCampusName": "TEXASWORKS - DEL RIO",
+      "operatorLocation": "Del Rio",
+      "operatorZIP": "78840",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806029",
+      "officialCampusName": "TEXASWORKS - EARLY",
+      "operatorLocation": "Brownwood / Early",
+      "operatorZIP": "76802",
+      "locationEvidence": "pending-exact-name-crosswalk",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806030",
+      "officialCampusName": "TEXASWORKS - EL PASO EASTPOINTE",
+      "operatorLocation": "El Paso (Eastpointe)",
+      "operatorZIP": "79907",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806031",
+      "officialCampusName": "TEXASWORKS - FORT WORTH (CAMP BOWIE)",
+      "operatorLocation": "Fort Worth (Camp Bowie)",
+      "operatorZIP": "76116",
+      "locationEvidence": "operator-address-in-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806032",
+      "officialCampusName": "TEXASWORKS - FORT WORTH (JACKSBORO)",
+      "operatorLocation": "Fort Worth (Jacksboro)",
+      "operatorZIP": "76114",
+      "locationEvidence": "operator-address-in-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806034",
+      "officialCampusName": "TEXASWORKS - HOUSTON (SHARPSTOWN)",
+      "operatorLocation": "Houston (Sharpstown)",
+      "operatorZIP": "77074",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806035",
+      "officialCampusName": "TEXASWORKS - HUNTSVILLE",
+      "operatorLocation": "Huntsville",
+      "operatorZIP": "77320",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806036",
+      "officialCampusName": "TEXASWORKS - MIDLAND",
+      "operatorLocation": "Midland",
+      "operatorZIP": "79703",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806037",
+      "officialCampusName": "TEXASWORKS - NEW BRAUNFELS",
+      "operatorLocation": "New Braunfels",
+      "operatorZIP": "78130",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806038",
+      "officialCampusName": "TEXASWORKS - ODESSA",
+      "operatorLocation": "Odessa",
+      "operatorZIP": "79761",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806039",
+      "officialCampusName": "TEXASWORKS - MCALLEN",
+      "operatorLocation": "McAllen",
+      "operatorZIP": "78501",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806040",
+      "officialCampusName": "TEXASWORKS - SAN ANTONIO WINDCREST",
+      "operatorLocation": "San Antonio (Windcrest)",
+      "operatorZIP": "78239",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806041",
+      "officialCampusName": "TEXASWORKS - TEXARKANA",
+      "operatorLocation": "Texarkana",
+      "operatorZIP": "75503",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806042",
+      "officialCampusName": "TEXASWORKS - WACO",
+      "operatorLocation": "Waco",
+      "operatorZIP": "76708",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    },
+    {
+      "campusId": "061806043",
+      "officialCampusName": "TEXASWORKS - WICHITA FALLS",
+      "operatorLocation": "Wichita Falls",
+      "operatorZIP": "76309",
+      "locationEvidence": "operator-address-outside-11-county-msa",
+      "sourceURL": "https://texasworks.com/learning/landing-page-find-a-campus/"
+    }
+  ]
+}
