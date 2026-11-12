@@ -56,7 +56,7 @@ test('CFB map atlas does not add fake GIS or downgrade residential release polic
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  assert.match(script,/rasterReferenceOnly/);
  assert.doesNotMatch(script,/L\.imageOverlay|L\.geoJSON|APPROVED_AUTO_DISTRICTS|localStorage|sessionStorage|iframe\.contentDocument/);
- assert.match(html,/features\/cfb-approved-zone-atlas\.js\?v=1/);
+ assert.match(html,/features\/cfb-approved-zone-atlas\.js\?v=2/);
  assert.match(html,/img-src[^"]*https:\/\/resources\.finalsite\.net/);
  assert.equal(require('../features/conditional-school-release.js').releaseSummary().currentYearResidentialDistrictApprovals,0);
 });
