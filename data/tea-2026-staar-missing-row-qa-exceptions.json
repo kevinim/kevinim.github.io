@@ -17,6 +17,7 @@
     "overallRatedWithOwnDomainNotRated": 67,
     "zeroTestedGradeButNoPairing": 5,
     "positiveGrade3to12ButNoRow": 38,
+    "officialAEATypeChecks": {"residentialFacility": 2, "dropoutRecoverySchool": 1},
     "positiveByEvidenceClass": {
       "jjaep": 19,
       "daep": 5,
@@ -394,6 +395,9 @@
       "officialOverallRating": "Not Rated",
       "missingSTAARAllFour": true,
       "classification": "aea-registered",
+      "officialAEA2026CampusType": "DROPOUT RECOVERY SCHOOL",
+      "officialAEA2026SourceUrl": "https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-final-aea-campus-list-updated.pdf",
+      "notRatedResidentialRuleApplies": false,
       "regulatoryBasis": null,
       "specificMissingRowReasonConfirmed": null
     },
@@ -424,6 +428,9 @@
       "officialOverallRating": "Not Rated",
       "missingSTAARAllFour": true,
       "classification": "aea-registered",
+      "officialAEA2026CampusType": "RESIDENTIAL FACILITY",
+      "officialAEA2026SourceUrl": "https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-final-aea-campus-list-updated.pdf",
+      "notRatedResidentialRuleApplies": true,
       "regulatoryBasis": null,
       "specificMissingRowReasonConfirmed": null
     },
@@ -434,6 +441,9 @@
       "officialOverallRating": "Not Rated",
       "missingSTAARAllFour": true,
       "classification": "aea-registered",
+      "officialAEA2026CampusType": "RESIDENTIAL FACILITY",
+      "officialAEA2026SourceUrl": "https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-final-aea-campus-list-updated.pdf",
+      "notRatedResidentialRuleApplies": true,
       "regulatoryBasis": null,
       "specificMissingRowReasonConfirmed": null
     },
