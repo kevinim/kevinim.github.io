@@ -1,13 +1,19 @@
 {
   "schemaVersion": 1,
   "district": "CFB",
-  "reviewedAt": "2026-11-09",
+  "reviewedAt": "2026-11-12",
   "officialRequest": {
-    "status": "draft-prepared-not-sent",
+    "status": "sent-awaiting-response",
+    "sentOn": "2026-11-09",
+    "channel": "email",
     "submitTo": "publicinformation@cfbisd.edu",
     "subjectIncludes": "Public Information Request",
     "requestPolicy": "electronic-existing-records-only; no paid work without express approval",
-    "portal": "https://www.cfbisd.edu/departments/public-information-requests"
+    "portal": "https://www.cfbisd.edu/departments/public-information-requests",
+    "sentEvidence": "confirmed-in-connected-Sent-mailbox-2026-11-12",
+    "publicReceiptAvailable": false,
+    "receivedResponseAsOf": "not-observed-in-connected-inbox-search-2026-11-12",
+    "evidenceDisclaimer": "Private email IDs, personal sender addresses, request body and mailbox links are intentionally excluded from this public repository; no acknowledgement or GIS delivery inferred"
   },
   "candidateSources": [
     {
