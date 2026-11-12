@@ -5,6 +5,7 @@
  const MANIFEST='./data/cfb-approved-zone-raster-reference-2026.json';
  const AREA_CHANGES='./data/cfb-rezoning-boundary-review-targets-2026.json';
  const VERIFIED_SAMPLES='./tests/cfb-official-resident-finder-verified-2026-11-07.json';
+ const CONFLICTS='./data/cfb-ag03-official-narrative-evidence-2025.json';
  const ALLOWED_IMG_HOST='resources.finalsite.net';
  const sourceUrl=value=>{
   try {
@@ -39,6 +40,34 @@
   if(!levels.every(level=>m.maps.filter(x=>x.level===level&&sourceUrl(x.url)).length===1))return null;
   return m;
  }
+ function validConflictLedger(value){
+  if(value?.schemaVersion!==1||value.district!=='CFB'||value.districtTeaCode!=='057903'||
+     value.sourceEffectiveSchoolYear!=='2025-26'||value.automaticAssignmentAllowed!==false||
+     value.currentYear2026_27PolygonVerified!==false||
+     !Array.isArray(value.discrepancies)||value.discrepancies.length!==2)return null;
+  const expected={
+   CFB25_CONFLICT_MCCOY:'Parks of Carrollton/Jackson Place/Bluffview',
+   CFB25_CONFLICT_FURNEAUX:'Woodlake/Woodland subdivision on Frankford Road'
+  };
+  const seen=new Set();
+  for(const row of value.discrepancies){
+   if(!Object.prototype.hasOwnProperty.call(expected,row?.id)||seen.has(row.id)||
+      row.area!==expected[row.id]||row.grade!=='elementary'||
+      row.status!=='PUBLISHED_PAGES_CONFLICT_NO_ADDRESS_CERTIFICATION'||
+      !row.districtwideStatement||!row.campusPlanStatement||
+      typeof row.requiredAction!=='string'||!Array.isArray(row.sourceUrls)||row.sourceUrls.length!==2)return null;
+   for(const link of row.sourceUrls){
+    try{
+     const url=new URL(link);
+     if(url.protocol!=='https:'||url.hostname!=='www.cfbisd.edu'||
+        url.username||url.password||!url.pathname.startsWith('/departments/')&&
+        !url.pathname.startsWith('/about-us/'))return null;
+    }catch{return null}
+   }
+   seen.add(row.id);
+  }
+  return seen.size===2?value.discrepancies:null;
+ }
  function setup(){
   const parent=document.getElementById('cfbOfficialFinderPanel');
   if(!parent||document.getElementById('cfbAtlas'))return;
@@ -53,11 +82,18 @@
   const imageWrap=node('div',{id:'cfbAtlasImageWrap',cls:'cfb-atlas-image-wrap'});
   const mapNote=node('p',{cls:'cfb-atlas-caution',text:'참고 지도 이미지 · 지리 좌표 정합·경계 디지타이징·주소별 검증 미완료'});
   const areas=node('div',{id:'cfbAtlasAreas',cls:'cfb-atlas-areas'});
+  const conflictWarning=node('p',{id:'cfbAtlasConflictWarning',cls:'cfb-atlas-caution',
+   text:'주의: 공식 CFB 재배정 안내에는 일부 상충하는 지역 표기가 있습니다. 특정 집의 2026–27 배정학교는 반드시 현재 공식 School Search에서 확인하세요.'});
+  const conflictDetails=node('details',{id:'cfbAtlasConflicts',cls:'cfb-atlas-evidence'});
+  conflictDetails.appendChild(element('summary',null,'공식 안내 자료 상충 2건 · 원문 비교 (자동 배정 아님)'));
+  const conflictList=node('div',{id:'cfbAtlasConflictList',cls:'cfb-atlas-evidence-list',
+   text:'공식 안내 간 충돌 원문을 확인 중입니다.'});
+  conflictDetails.appendChild(conflictList);
   const fixture=node('div',{id:'cfbAtlasFixtures',cls:'cfb-atlas-fixtures'});
   const sourceLink=node('a',{cls:'cardlink',text:'CFB 공식 승인·재배정 설명 열기',href:'https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning'});
   const finderLink=node('a',{cls:'cardlink',text:'현재 공식 주소 Finder 열기',href:'https://www.cfbisd.edu/students/school-maps-locator-system'});
   const sources=node('div',{cls:'cfb-atlas-sources'},[sourceLink,finderLink]);
-  content.append(status,buttons,mapNote,imageWrap,areas,fixture,sources);
+  content.append(status,buttons,mapNote,imageWrap,conflictWarning,conflictDetails,areas,fixture,sources);
   details.append(summary,content);
   const next=document.getElementById('cfbOfficialManualBridge');
   if(next&&next.parentNode===parent)parent.insertBefore(details,next);
@@ -94,6 +130,27 @@
     }
     // This explicitly requires another click to fetch a third-party source image.
     status.textContent='학교급을 선택하면 해당 공식 지도 이미지를 표시합니다.';
+    let conflictRows=null;
+    try{
+     conflictRows=validConflictLedger(await fetchJson(CONFLICTS));
+    }catch(_error){/* No external source evidence should be interpreted as certainty. */}
+    conflictList.replaceChildren();
+    if(conflictRows){
+     for(const conflict of conflictRows){
+      const item=node('div',{cls:'source'});
+      item.appendChild(node('p',{text:conflict.id==='CFB25_CONFLICT_MCCOY'?
+        'McCoy 인근 구역 · Good Elementary vs Blanton Elementary · 공식 문서 간 다른 안내':
+        'Furneaux 인근 구역 · Woodlake vs Woodland 지명 표기가 상충합니다. Thompson Elementary 관련 문맥이나 필지를 확정하지 마세요.'}));
+      for(const link of conflict.sourceUrls){
+       const a=node('a',{cls:'cardlink',text:'CFB 공식 자료 원문 보기',href:link});
+       item.appendChild(a);
+      }
+      conflictList.appendChild(item);
+     }
+    }else{
+     conflictList.appendChild(node('p',{text:'공식 충돌 근거를 검증하지 못했습니다. 해당 지역의 학교 선택을 확정하지 말고 공식 Finder를 이용하세요.'}));
+    }
+    const disputedWoodlake=!!conflictRows?.some(x=>x.id==='CFB25_CONFLICT_FURNEAUX');
     const areaData=await fetchJson(AREA_CHANGES);
     if(areaData?.districtCode==='CFB'&&Array.isArray(areaData.targets)){
      const label=node('label',{text:'2025–26 재배정 지역 참고'});
@@ -113,7 +170,12 @@
       summary.replaceChildren();
       for(const row of groups.get(select.value)||[]){
        const kind={elementary:'초등',middle:'중등',high:'고등'}[row.level]||row.level;
-       summary.appendChild(node('p',{text:kind+' · '+row.approvedCampus2025+' · 2025–26 승인 내역 (현행 주소 배정 미검증)'}));
+       const ambiguous=disputedWoodlake&&row.level==='elementary'&&
+        /Woodlake|Furneaux/i.test(row.areaLabel||'');
+       summary.appendChild(node('p',{text:ambiguous?
+        kind+' · '+row.approvedCampus2025+' · 주의: Woodlake/Woodland 공식 자료 간 상충 · 2026–27 주소별 Finder 확인 필수':
+        kind+' · '+row.approvedCampus2025+' · 2025–26 승인 내역 (현행 주소 배정 미검증)'}));
+       if(ambiguous)summary.appendChild(node('p',{text:'이 지역의 명칭과 실제 적용 필지는 검증되지 않았습니다. 특정 주소의 배정학교를 확정하지 않습니다.'}));
       }
       if(!select.value)summary.textContent='지역을 선택하면 공식 재배정 설명이 표시됩니다.';
      });
@@ -137,7 +199,7 @@
    }
   });
  }
- if(typeof module!=='undefined'&&module.exports)module.exports={validateManifest,sourceUrl};
+ if(typeof module!=='undefined'&&module.exports)module.exports={validateManifest,sourceUrl,validConflictLedger};
  if(typeof document!=='undefined'){
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});
   else setup();
