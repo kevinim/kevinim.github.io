@@ -122,13 +122,29 @@ test('2026 grade-zero unpaired exceptions are documented from exact official cam
     '043908106','057833001','057905302','129902116','220802101']);
   assert.equal(zero.filter(x=>x.classification === 'ee-only').length, 3);
   assert.equal(zero.filter(x=>x.classification === 'charter-no-pair').length, 2);
+  assert.equal(zero.filter(x=>x.officialEvidenceScope === 'campus').length, 1);
+  assert.equal(zero.filter(x=>x.officialEvidenceScope === 'district-listing').length, 4);
+  assert.equal(zero.find(x=>x.campusId === '057905302').officialEvidenceUrl.includes('id=057905&lev=D'), true);
   for(const x of zero) {
     assert.equal(x.grades3to12, 0);
     assert.equal(x.officialPaired, false);
     assert(x.totalEnrollment > 0);
-    assert(x.officialCampusReportUrl.startsWith(
-      'https://rptsvr1.tea.texas.gov/cgi/sas/broker?'));
-    assert(x.officialCampusReportUrl.includes('ccyy=2026'));
+    // A district summary may list a campus, but must never be cited as
+    // that campus's own independently verified STAAR/domain report.
+    const evidence = new URL(x.officialEvidenceUrl);
+    assert.equal(evidence.protocol, 'https:');
+    assert.equal(evidence.hostname, 'rptsvr1.tea.texas.gov');
+    assert.equal(evidence.pathname, '/cgi/sas/broker');
+    assert.equal(evidence.searchParams.get('ccyy'), '2026');
+    const sourceId = evidence.searchParams.get('id');
+    const sourceLevel = evidence.searchParams.get('lev');
+    if (x.officialEvidenceScope === 'campus') {
+      assert.equal(sourceLevel, 'C', x.campusId);
+      assert.equal(sourceId, x.campusId, 'reject wrong-campus source');
+    } else if (x.officialEvidenceScope === 'district-listing') {
+      assert.equal(sourceLevel, 'D', x.campusId);
+      assert.equal(sourceId, x.campusId.slice(0, 6), 'reject wrong-district source');
+    } else assert.fail('Unclassified TEA source scope: ' + x.campusId);
     assert.match(x.gradeSpan, /^(EE - EE|KG - 01|KG - 02)$/);
   }
 });

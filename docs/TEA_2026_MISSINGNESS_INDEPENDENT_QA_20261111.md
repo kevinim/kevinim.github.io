@@ -119,3 +119,9 @@ All **38** have official **positive grade-3–12 membership** and official **ove
 Special caution: TEA 2026 Chapter 7 says **special education campuses with assessed students are rated on their student performance**, with no special blanket exemption. Therefore do not automatically classify `HUIE SPECIAL EDUC CTR`, `LESTER DAVIS`, or other specialized campuses as "exempt" just from names. The 14 unresolved require specific official evidence before final classification. **AEA registration is not equivalent to JJAEP/DAEP and does not alone justify omission.**
 
 These are **QA classifications**, not substitute values. The protected source batches in PR #244 remain unchanged.
+
+## Source-link scope correction (2026-11-11 QA follow-up)
+
+The five zero-tested-grade unpaired exception links previously used the key `officialCampusReportUrl`, although only one linked to the matching nine-digit campus ID with `lev=C`. Three others were six-digit `lev=D` district listings. The Callier Center record `057905302` incorrectly pointed to a different campus ID `057905069`; the replacement is the official 2026 Dallas ISD district summary listing, where `057905302` appears as Not Rated / EE–EE. This correction is limited to QA provenance; it changes no campus scores, student counts, suppression codes, school assignments or runtime UI.
+
+The exception register now records `officialEvidenceUrl` and explicit `officialEvidenceScope` (`campus` versus `district-listing`). Regression tests reject cross-campus IDs and district/campus scope mismatches. **A district listing is not proof of a campus-owned STAAR result or an individual missing-row cause.** All 14 unresolved special-setting missing-row explanations remain open.

@@ -46,7 +46,8 @@
       "missingSTAARAllFour": true,
       "classification": "ee-only",
       "notes": "Melissa ISD / only EE; 2025 was EE–PK and paired, 2026 now EE–EE and unpaired",
-      "officialCampusReportUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043908&lev=D&prgopt=reports/acct/ca.sas"
+      "officialEvidenceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=043908&lev=D&prgopt=reports/acct/ca.sas",
+      "officialEvidenceScope": "district-listing"
     },
     {
       "campusId": "057833001",
@@ -59,7 +60,8 @@
       "missingSTAARAllFour": true,
       "classification": "charter-no-pair",
       "notes": "Charter campus; 2026 KG–01 vs 2025 school with tested grade cohort; manual charter pairing exclusion",
-      "officialCampusReportUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057833001&lev=C&prgopt=reports/acct/ca.sas"
+      "officialEvidenceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057833001&lev=C&prgopt=reports/acct/ca.sas",
+      "officialEvidenceScope": "campus"
     },
     {
       "campusId": "057905302",
@@ -72,7 +74,8 @@
       "missingSTAARAllFour": true,
       "classification": "ee-only",
       "notes": "Dallas ISD / early education for deaf preschoolers, EE-only",
-      "officialCampusReportUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057905069&lev=C&prgopt=reports/acct/ca.sas"
+      "officialEvidenceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057905&lev=D&prgopt=reports/acct/state_summary.sas",
+      "officialEvidenceScope": "district-listing"
     },
     {
       "campusId": "129902116",
@@ -85,7 +88,8 @@
       "missingSTAARAllFour": true,
       "classification": "ee-only",
       "notes": "Forney ISD / only EE, outside PK–12 pairing requirement",
-      "officialCampusReportUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&domain=3&id=129902&lev=D&prgopt=reports/acct/ca.sas"
+      "officialEvidenceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&domain=3&id=129902&lev=D&prgopt=reports/acct/ca.sas",
+      "officialEvidenceScope": "district-listing"
     },
     {
       "campusId": "220802101",
@@ -98,7 +102,8 @@
       "missingSTAARAllFour": true,
       "classification": "charter-no-pair",
       "notes": "Charter campus; manual states charter campuses are not paired with another campus",
-      "officialCampusReportUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&domain=3&id=220802&lev=D&prgopt=reports/acct/ca.sas"
+      "officialEvidenceUrl": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&domain=3&id=220802&lev=D&prgopt=reports/acct/ca.sas",
+      "officialEvidenceScope": "district-listing"
     }
   ],
   "positiveGradeNoSTAAR": [
