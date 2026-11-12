@@ -40,7 +40,7 @@ jobs:
           node --check scripts/build-tea-academic-uat-progress.cjs
           node scripts/build-tea-academic-uat-progress.cjs --check
           node scripts/build-tea-profile-progress.cjs --check
-          node --test tests/tea-dfw-final-data-quality.test.cjs tests/tea-2026-missingness-independent-qa.test.cjs tests/tea-texasworks-physical-locality-panel.test.cjs tests/school-lifecycle-curriculum-2026.test.cjs tests/dfw-noncfb-grade-year-source-quality.test.cjs tests/tea-2026-official-extracts.test.cjs
+          node --test tests/tea-dfw-final-data-quality.test.cjs tests/tea-2026-missingness-independent-qa.test.cjs tests/tea-texasworks-physical-locality-panel.test.cjs tests/school-lifecycle-curriculum-2026.test.cjs tests/dfw-noncfb-grade-year-source-quality.test.cjs tests/tea-2026-official-extracts.test.cjs tests/tea-peims-2025-26-statewide-parity-audit.test.cjs tests/tea-peims-2025-26-gender-parity-audit.test.cjs
       - name: Save privacy-safe source-summary evidence
         run: |
           mkdir -p artifacts/data-quality
