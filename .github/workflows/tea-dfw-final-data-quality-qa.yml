@@ -6,6 +6,7 @@ on:
       - 'scripts/audit-tea-dfw-final-data-quality.cjs'
       - 'tests/tea-dfw-final-data-quality.test.cjs'
       - 'scripts/build-tea-academic-uat-progress.cjs'
+      - 'scripts/build-tea-profile-progress.cjs'
       - 'data/tea-2026-uat-progress.json'
       - 'data/tea-accountability-2026-verified-batch.json'
       - 'data/tea-staar-meets-2026-verified-batch.json'
