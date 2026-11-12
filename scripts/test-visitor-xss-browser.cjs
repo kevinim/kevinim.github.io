@@ -182,8 +182,8 @@ async function savedWorkplaceProfiles(browser, width) {
       ]));
     }, {name: localName, address: localAddress});
     await page.addScriptTag({content: read('features/commute/workplace-destinations.js')});
-    assert.equal(await page.locator('#workplaceList .workplace-entry strong').innerText(), localName);
-    assert.equal(await page.locator('#workplaceList .workplace-entry small').innerText(), localAddress);
+    assert.equal(await page.locator('#workplaceList .workplace-entry strong').textContent(), localName);
+    assert.equal(await page.locator('#workplaceList .workplace-entry small').textContent(), localAddress);
     assert.equal(await page.locator('#workplaceList img, #workplaceList svg').count(), 0,
       'saved workplace data unexpectedly created HTML nodes');
     assert.equal(await page.evaluate(() => window.__visitorXssProbe), 0,
