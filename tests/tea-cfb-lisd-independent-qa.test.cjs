@@ -222,12 +222,15 @@ test('PR #232 campus joins were audited without republishing or guessing protect
  assert.ok(validTEA(ledger.provenance.teAPEIMSCFB));
  assert.ok(validTEA(ledger.provenance.teAPEIMSLewisville));
 });
-test('when PR #232 lands, independent cohort audit must match actual staged status cells',t=>{
+test('the full 2,282-campus canonical 2025-26 PEIMS source exactly matches the 92-school CFB/LISD cohort statuses',()=>{
  const file=path.join(__dirname,'../data/tea-ethnicity-2025-26-priority.json');
- if(!fs.existsSync(file)){t.diagnostic('PR #232 staged file not yet on this independent main-based branch; crosscheck pending merge');return;}
+ assert.ok(fs.existsSync(file),'Current Production main must have the official statewide canonical source');
  const source=JSON.parse(fs.readFileSync(file,'utf8'));
  assert.equal(source.schoolYear,'2025-26');
- assert.deepEqual(Object.keys(source.campuses).sort(),Object.keys(ledger.campuses).sort());
+ assert.equal(Object.keys(source.campuses).length,2282,'Do not mistake the original 92-school PR subset for current statewide source');
+ const cohortIds=Object.keys(source.campuses).filter(id=>['057903','061902'].includes(id.slice(0,6)));
+ assert.deepEqual(cohortIds.sort(),Object.keys(ledger.campuses).sort(),
+   'Every CFB/LISD inventory school is present in current statewide canonical source, with no extra cohort ID');
  for(const [id,row] of Object.entries(ledger.campuses)){
   const actual=source.campuses[id];
   assert.equal(actual.district,row.district);
