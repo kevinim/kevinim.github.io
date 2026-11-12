@@ -125,3 +125,17 @@ These are **QA classifications**, not substitute values. The protected source ba
 The five zero-tested-grade unpaired exception links previously used the key `officialCampusReportUrl`, although only one linked to the matching nine-digit campus ID with `lev=C`. Three others were six-digit `lev=D` district listings. The Callier Center record `057905302` incorrectly pointed to a different campus ID `057905069`; the replacement is the official 2026 Dallas ISD district summary listing, where `057905302` appears as Not Rated / EE–EE. This correction is limited to QA provenance; it changes no campus scores, student counts, suppression codes, school assignments or runtime UI.
 
 The exception register now records `officialEvidenceUrl` and explicit `officialEvidenceScope` (`campus` versus `district-listing`). Regression tests reject cross-campus IDs and district/campus scope mismatches. **A district listing is not proof of a campus-owned STAAR result or an individual missing-row cause.** All 14 unresolved special-setting missing-row explanations remain open.
+
+## 2026 AEA subtypes verified for three of the 14 unresolved positive-enrollment campuses (Nov 11 follow-up)
+
+The official [TEA 2026 Final AEA Campus List, page 4](https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-final-aea-campus-list-updated.pdf), dated April 30, identifies these **exact nine-digit campus IDs**:
+
+| Campus ID | Campus | AEA type |
+| --- | --- | --- |
+| `220905035` | TRANSITION CTR | DROPOUT RECOVERY SCHOOL |
+| `220905212` | BRIDGE ASSOC | RESIDENTIAL FACILITY |
+| `220905242` | TARRANT YOUTH RECOVERY | RESIDENTIAL FACILITY |
+
+The [2026 Accountability Manual, Chapter 1, page 5](https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/chapter-1-2026-accountability-overview-0.pdf) explicitly lists *residential facility* as a reason a campus may be **Not Rated**. This establishes a specific **rating eligibility rationale** for two of the three facilities but does **not** prove the precise reason the TEA public STAAR export contains **no row** for any of these campuses. The DRS designation for Transition Ctr is not a standalone reason to assume no STAAR performance.
+
+The QA exception register now pins the original AEA type and source for all three. The negative regression prohibits treating an AEA type, Not Rated, a small grade 3–12 population or a residential label as fabricated STAAR data. Thus **two residential-facility classifications and one DRS classification are verified; individual missing-row causes remain unresolved for all 14** (the 3 AEA + 11 other-review cases). No source scores, enrollment values, district/year mappings, demographic masks, campus whereabouts or household school assignments were modified.
