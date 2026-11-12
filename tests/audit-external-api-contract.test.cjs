@@ -46,7 +46,14 @@ test('unexpected parcel owner-field expansion fails prior to release', () => {
 
 test('an insecure OSM tile URL is rejected', () => {
   const files = actual();
-  files['features/reviewed-bootstrap.js'] = files['features/reviewed-bootstrap.js'].replace('https://{s}.tile.openstreetmap.org/', 'http://{s}.tile.openstreetmap.org/');
+  files['features/reviewed-bootstrap.js'] = files['features/reviewed-bootstrap.js'].replace('https://tile.openstreetmap.org/', 'http://tile.openstreetmap.org/');
   const report = auditProviderContract(files);
   assert.ok(report.errors.some(e => e.includes('insecure OSM tile protocol')));
+});
+
+
+test('obsolete OSM tile subdomains must not silently return', () => {
+  const files = actual();
+  files['features/reviewed-bootstrap.js'] += "\\n'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'\\n";
+  assert.ok(auditProviderContract(files).errors.some(e => e.includes('legacy subdomain OSM tile endpoint')));
 });

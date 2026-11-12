@@ -1,0 +1,29 @@
+name: TX live public HTTP security headers audit (read-only)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/audit-live-public-headers.yml'
+      - 'scripts/audit-live-public-headers.mjs'
+      - 'tests/audit-live-public-headers.test.mjs'
+  workflow_dispatch:
+  schedule:
+    - cron: '10 13 * * 2'
+permissions:
+  contents: read
+jobs:
+  public-header-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Unit and negative tests (no network)
+        run: node --test tests/audit-live-public-headers.test.mjs
+      - name: Audit public live homepage security headers and meta CSP
+        run: node scripts/audit-live-public-headers.mjs

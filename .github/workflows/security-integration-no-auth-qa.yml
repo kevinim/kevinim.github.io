@@ -1,0 +1,48 @@
+name: No-auth security integrated regression (no deploy)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/security-integration-no-auth-qa.yml'
+      - '.github/workflows/audit-live-public-headers.yml'
+      - '.github/workflows/audit-actions-write-scopes.yml'
+      - 'scripts/audit-live-public-headers.mjs'
+      - 'scripts/audit-actions-write-scopes.cjs'
+      - 'scripts/audit-visitor-xss-sinks.cjs'
+      - 'scripts/audit-external-api-contract.cjs'
+      - 'features/reviewed-bootstrap.js'
+      - 'scripts/test-visitor-xss-browser.cjs'
+      - 'tests/audit-live-public-headers.test.mjs'
+      - 'tests/audit-actions-write-scopes.test.cjs'
+      - 'tests/audit-visitor-xss.test.cjs'
+      - 'tests/crime-popup-html-escape.test.cjs'
+      - 'tests/audit-external-api-contract.test.cjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  combined-security-contract:
+    name: combined-security-contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Test all four PR security contracts together
+        run: |
+          node --test tests/audit-live-public-headers.test.mjs tests/audit-actions-write-scopes.test.cjs tests/audit-visitor-xss.test.cjs tests/crime-popup-html-escape.test.cjs tests/audit-external-api-contract.test.cjs tests/workplace-destinations.test.cjs
+      - name: Re-run source, privacy, and privileges audits
+        run: |
+          node scripts/audit-actions-write-scopes.cjs
+          node scripts/audit-visitor-xss-sinks.cjs
+          node scripts/audit-external-api-contract.cjs
+          node scripts/check-public-personalization.cjs .
+      - name: Validate curated preview but do not deploy
+        run: node scripts/verify-public-preview.cjs
+      - name: No production mutation
+        run: git diff --exit-code

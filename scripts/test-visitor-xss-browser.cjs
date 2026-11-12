@@ -153,6 +153,54 @@ async function hospitalPopup(browser, width) {
   } finally { await page.close(); }
 }
 
+
+async function savedWorkplaceProfiles(browser, width) {
+  // Synthetic HTML hosted at a reserved .invalid origin: no real app or vendor
+  // requests, user data, network credentials, or deployment changes.
+  const { page, errors } = await fresh(browser, width);
+  const otherRequests = [];
+  const localName = 'Test ' + PROBE;
+  const localAddress = '123 ' + SECOND + ' Street, Plano, TX 75024';
+  await page.route('**/*', route => {
+    const url = route.request().url();
+    if (route.request().isNavigationRequest() && url.startsWith('https://workplace-probe.invalid/'))
+      return route.fulfill({status: 200, contentType: 'text/html',
+        body: '<!doctype html><html><body>' +
+          '<div class="field"><input id="destination" value=""></div>' +
+          '<select id="officeSelect"><option value="custom" selected>Custom</option></select>' +
+          '</body></html>'});
+    otherRequests.push('unexpected outbound request');
+    return route.abort();
+  });
+  try {
+    await page.goto('https://workplace-probe.invalid/', {waitUntil: 'load'});
+    await page.evaluate(({name, address}) => {
+      window.__visitorXssProbe = 0;
+      window.attachTexasAddressSuggestions = () => {};
+      localStorage.setItem('tx-dashboard-workplaces-v1', JSON.stringify([
+        {id: 'test-1', name, address}
+      ]));
+    }, {name: localName, address: localAddress});
+    await page.addScriptTag({content: read('features/commute/workplace-destinations.js')});
+    assert.equal(await page.locator('#workplaceList .workplace-entry strong').textContent(), localName);
+    assert.equal(await page.locator('#workplaceList .workplace-entry small').textContent(), localAddress);
+    assert.equal(await page.locator('#workplaceList img, #workplaceList svg').count(), 0,
+      'saved workplace data unexpectedly created HTML nodes');
+    assert.equal(await page.evaluate(() => window.__visitorXssProbe), 0,
+      'saved workplace profile executed inert probe');
+    assert.equal(await page.locator('#officeSelect option[value^="saved:"]').count(), 1);
+    assert.deepEqual(otherRequests, [], 'saved profile unexpectedly triggered an outbound request');
+    // The workplace manager is intentionally collapsed until the user opens it.
+    await page.locator('#workplacesPanel > summary').click();
+    await page.locator('#workplaceList .workplace-entry-actions button')
+      .filter({hasText: '삭제'}).click();
+    assert.deepEqual(await page.evaluate(() =>
+      JSON.parse(localStorage.getItem('tx-dashboard-workplaces-v1'))), []);
+    assert.deepEqual(errors, []);
+    console.log('PASS browser-local saved workplace HTML/XSS probe, width=' + width);
+  } finally { await page.close(); }
+}
+
 (async () => {
   const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
   try {
@@ -160,8 +208,9 @@ async function hospitalPopup(browser, width) {
       await candidateCard(browser, width);
       await addressSuggestions(browser, width);
       await hospitalPopup(browser, width);
+      await savedWorkplaceProfiles(browser, width);
     }
-    console.log('PASS six real-module Chromium negative-input checks. No external requests.');
+    console.log('PASS eight real-module Chromium negative-input checks. No external requests.');
     console.log('LIMITATION: tested paths only, not full-app penetration testing or runtime CSP.');
   } finally { await browser.close(); }
 })().catch(e => { console.error('Visitor XSS QA failed:', e.stack || String(e)); process.exitCode = 1; });
