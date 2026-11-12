@@ -16,7 +16,12 @@ function inspect(manifest){
    req?.publicReceiptAvailable===false&&
    req?.receivedResponseAsOf==='not-observed-in-connected-inbox-search-2026-11-12'&&
    typeof req?.evidenceDisclaimer==='string'&&req.evidenceDisclaimer.includes('intentionally excluded');
- const receipt=req?.status==='submitted'&&/^https:\/\//.test(req?.receiptUrl||'');
+ const receipt=req?.status==='submitted'&&(()=>{
+   try{
+    const u=new URL(req.receiptUrl);
+    return u.protocol==='https:'&&u.hostname==='www.cfbisd.edu'&&u.username===''&&u.password===''&&u.port===''&&u.hash==='';
+   }catch{return false}
+  })();
  if(!draft&&!sent&&!receipt)errors.push('request_status_missing_or_unsubstantiated');
  if(sent&&('receiptUrl' in req||'messageId' in req||'senderEmail' in req||
     'threadId' in req||'privateGmailLink' in req))
