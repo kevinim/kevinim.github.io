@@ -203,6 +203,9 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  // only the existing collapsed, lazily loaded coverage JS module.
  approvedHtml=replaceOnce(approvedHtml,'./features/dfw-school-coverage-panel.js?v=1',
   './features/dfw-school-coverage-panel.js?v=2');
+ // Source-only CFB 2025-26 conflict disclosure; still no auto-assignment.
+ approvedHtml=replaceOnce(approvedHtml,'./features/cfb-approved-zone-atlas.js?v=1',
+  './features/cfb-approved-zone-atlas.js?v=2');
  assert.equal(hash(html),hash(approvedHtml),
   'Unreviewed HTML drift beyond approved source-only optional CMS hospital references');
  // Strip only previously released #262 zoom label additions from the
