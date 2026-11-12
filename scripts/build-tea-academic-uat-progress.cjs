@@ -27,7 +27,8 @@ function make(accountability,staar){
     if(a.overall.rating==='Not Rated')counts.overallNotRated++;
     if(b.reading.status==='not-in-source')counts.staarSourceRowAbsent++;
   }
-  return {schemaVersion:1,asOf:'2026-11-11',stage:'UAT only; not deployed to production',
+  return {schemaVersion:1,asOf:'2026-11-12',stage:'Production integrated (PR #264); legacy UAT filename retained for compatibility',
+    productionIntegration:{status:'deployed',pullRequest:264,integrationDate:'2026-11-11',sourceYear:'2025-26'},
     inventory:'tea-ratings-2026.json',accountabilityYear:2026,schoolYear:'2025-26',
     originPullRequest:244,sources:['data/tea-accountability-2026-verified-batch.json',
       'data/tea-staar-meets-2026-verified-batch.json'],counts,
@@ -36,8 +37,8 @@ function make(accountability,staar){
 if(require.main===module){
   const actual=JSON.stringify(make(read(source),read(subjects)),null,2)+'\n';
   if(process.argv.includes('--check')){
-    if(fs.readFileSync(dest,'utf8')!==actual)throw Error('Academic UAT progress snapshot is stale');
-    console.log('PASS TEA academic UAT snapshot exact official source/status parity');
+    if(fs.readFileSync(dest,'utf8')!==actual)throw Error('TEA academic source/prod status snapshot is stale');
+    console.log('PASS TEA academic source/prod status snapshot exact official source/status parity');
   }else if(process.argv.includes('--write'))fs.writeFileSync(dest,actual);
   else process.stdout.write(actual);
 }
