@@ -2,6 +2,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const {inspect,load}=require('../scripts/audit-tea-dfw-final-data-quality.cjs');
 const source=load();
+const copy=()=>({...structuredClone(Object.fromEntries(Object.entries(source).filter(([k])=>k!=='lifecycle'))),lifecycle:source.lifecycle});
 test('cross-file school data quality is ready for published metrics only, with explicit source limitations',()=>{
  const r=inspect(source);
  assert.deepEqual(r.errors,[]);
@@ -34,7 +35,7 @@ test('cross-file school data quality is ready for published metrics only, with e
  assert(!Object.values(r.warnings).some(v=>v.includes('home address')));
 });
 test('cannot revive false UAT-only data-stage statement after #264 Production integration',()=>{
- const s=structuredClone(source);
+ const s=copy();
  s.legacy.stage='UAT only; not deployed to production';
  assert(inspect(s).errors.includes('legacy_aggregate_status_stale'));
  s.legacy.stage='Production integrated';
@@ -42,7 +43,7 @@ test('cannot revive false UAT-only data-stage statement after #264 Production in
  assert(inspect(s).errors.includes('legacy_aggregate_status_stale'));
 });
 test('changing a single campus rating, source-year or row cardinality blocks source-level GO',()=>{
- const s=structuredClone(source);
+ const s=copy();
  s.ratings.data[0].score=101;
  assert(inspect(s).errors.includes('academic_id_or_rating_parity'));
  s.ratings.data[0].score=source.ratings.data[0].score;
@@ -53,7 +54,7 @@ test('changing a single campus rating, source-year or row cardinality blocks sou
  assert(inspect(s).errors.includes('academic_cardinality'));
 });
 test('PEIMS masking may not be claimed as complete seven-group ethnic shares',()=>{
- const s=structuredClone(source);
+ const s=copy();
  s.peims.summary.allSevenRaceGroupsPublished=2282;
  assert(inspect(s).errors.includes('peims_independent_parity_summary'));
  s.peims.summary.allSevenRaceGroupsPublished=6;
@@ -61,7 +62,7 @@ test('PEIMS masking may not be claimed as complete seven-group ethnic shares',()
  assert(inspect(s).errors.includes('peims_independent_parity_summary'));
 });
 test('TexasWorks locality remains operator-address evidence, never county-certified geometry',()=>{
- const s=structuredClone(source);
+ const s=copy();
  const row=s.locality.campuses.find(z=>z.campusId==='061806015');
  row.locationEvidence='operator-address-in-11-county-msa';
  assert(inspect(s).errors.includes('texasworks_operator_location_crosswalk'));
@@ -70,7 +71,7 @@ test('TexasWorks locality remains operator-address evidence, never county-certif
  assert(inspect(s).errors.includes('district_county_proxy_misrepresented_as_gis'));
 });
 test('archived Paloma Creek/GCISD campuses and future Durham closure cannot be promoted',()=>{
- const s=structuredClone(source);
+ const s=copy();
  const paloma=s.transitions.entries.find(z=>z.campusId==='061901120');
  paloma.regularAssignmentCampus2026_27=true;
  assert(inspect(s).errors.includes('active_school_lifecycle_or_new_school_parity'));
@@ -80,7 +81,7 @@ test('archived Paloma Creek/GCISD campuses and future Durham closure cannot be p
  assert(inspect(s).errors.includes('active_school_lifecycle_or_new_school_parity'));
 });
 test('14 missing STAAR row explanations remain unresolved; no fabricated zero values',()=>{
- const s=structuredClone(source);
+ const s=copy();
  const c=s.exceptions.positiveGradeNoSTAAR.find(z=>z.classification==='aea-registered');
  c.specificMissingRowReasonConfirmed='because alternative school';
  assert(inspect(s).errors.includes('staar_14_unknown_reasons_not_safely_quarantined'));
