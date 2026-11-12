@@ -1,0 +1,52 @@
+name: Allen McKinney TEA selected-school subject notes browser QA (no deploy)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'features/tea-allen-mckinney-subject-notes.js'
+      - 'tests/tea-allen-mckinney-subject-notes.test.cjs'
+      - 'scripts/test-allen-mckinney-verified-subject-notes-browser.cjs'
+      - 'index.html'
+      - 'tests/externalized-main-bootstrap.test.cjs'
+      - '.github/workflows/qa-tea-allen-mckinney-subject-notes.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    name: Official source and Allen/McKinney selected school desktop/mobile QA
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Official source, cross-cohort privacy and negative security tests
+        run: |
+          node --test tests/tea-allen-mckinney-subject-notes.test.cjs
+          node --test tests/tea-allen-mckinney-campus-qa.test.cjs
+          node --test tests/tea-peims-public-share-integrated-uat.test.cjs
+      - name: Install isolated Chromium
+        run: |
+          mkdir -p tea-allen-browser-tmp
+          cd tea-allen-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve exact PR checkout on loopback
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/tea-allen-school-browser.log 2>&1 &
+          sleep 2
+      - name: Test real school clicks and 390px/1280px note panels
+        env:
+          NODE_PATH: ${{ github.workspace }}/tea-allen-browser-tmp/node_modules
+        run: node scripts/test-allen-mckinney-verified-subject-notes-browser.cjs
+      - name: Preserve UAT screenshots for review
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: tea-allen-mckinney-subject-note-screenshots
+          path: artifacts/tea-allen-subject-uat/
+          if-no-files-found: warn
