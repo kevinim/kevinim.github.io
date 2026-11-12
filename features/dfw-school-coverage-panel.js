@@ -4,6 +4,7 @@
  */
 (function(){
  const FILE='./data/dfw-school-coverage-matrix-2026.json';
+ const LOCALITY_FILE='./data/tea-texasworks-locality-2026.json';
  const priorityLabel={P0:'P0 · 공식 안내 조사',P1:'P1 · 원본/제도 점검',P2:'P2 · 보완'};
  const reasonLabels={
   'official-parent-lookup-not-yet-verified':'학군 공식 확인 경로 미등록',
@@ -40,12 +41,41 @@
    const data=await response.json();
    if(data.schemaVersion!==1||!Array.isArray(data.districts)||
       data.districts.length!==data.summary?.teaDistrictCodes)throw Error('자료 버전 불일치');
-   render(mount,data);
+   // Optional evidence: never alter the certified-source count or block the core view.
+   let locality=null;
+   try{
+    const response=await fetch(LOCALITY_FILE,{cache:'force-cache'});
+    if(response.ok){
+     const extra=await response.json();
+     if(validTexasWorks(extra,data.districts.find(x=>x.code==='061806')))locality=extra;
+    }
+   }catch(_error){/* Failed evidence fetch means unknown, never location-certified. */}
+   render(mount,data,locality);
   }catch(error){
    mount.replaceChildren(el('p',null,'학군 연결 현황을 불러올 수 없습니다. 페이지 새로고침 후 다시 열어주세요. ('+error.message+')'));
   }
  }
- function render(mount,data){
+ function validTexasWorks(extra,district){
+  if(!extra||extra.schemaVersion!==1||extra.districtId!=='061806'||
+     !district||district.name!=='TEXAS WORKS'||extra.inventoryCount!==district.teaCampusRecords||
+     extra.inventoryCount!==41||!Array.isArray(extra.campuses)||
+     extra.campuses.length!==41)return false;
+  const statuses=['operator-address-in-11-county-msa','operator-address-outside-11-county-msa','pending-exact-name-crosswalk'];
+  const ids=new Set(),counts=[0,0,0];
+  for(const entry of extra.campuses){
+   if(!/^061806\\d{3}$/.test(entry.campusId||'')||ids.has(entry.campusId)||
+      typeof entry.officialCampusName!=='string'||!entry.officialCampusName.startsWith('TEXASWORKS - ')||
+      typeof entry.operatorLocation!=='string'||entry.operatorLocation.length<3||
+      !/^\\d{5}$/.test(entry.operatorZIP||'')||
+      entry.sourceURL!=='https://texasworks.com/learning/landing-page-find-a-campus/')return false;
+   const i=statuses.indexOf(entry.locationEvidence);if(i<0)return false;
+   ids.add(entry.campusId);counts[i]++;
+  }
+  return counts[0]===extra.counts?.operatorAddressIn11CountyMSA&&
+   counts[1]===extra.counts?.operatorAddressOutside11CountyMSA&&
+   counts[2]===extra.counts?.pendingExactCampusCrosswalk;
+ }
+ function render(mount,data,locality){
   mount.replaceChildren();
   const s=data.summary;
   const stats=el('div','dfw-coverage-stats');
@@ -61,7 +91,7 @@
   }
   mount.appendChild(stats);
   mount.appendChild(el('p','dfw-coverage-help',
-   '기준: DFW 광역통계권 11개 카운티 · TEA 2026 예비 학교 기록. 행정상 소속 카운티 기준이므로 카운티 경계를 넘는 통학구역까지 완전 검증한 값은 아닙니다.'));
+   '기준: DFW 광역통계권 11개 카운티 · TEA 2026 예비 학교 기록. 학군 행정상 소속 카운티 기록이며 실제 개별 캠퍼스의 DFW 소재지를 뜻하지 않습니다. TexasWorks처럼 여러 도시에 있는 운영기관은 별도 확인이 필요합니다.'));
   mount.appendChild(el('p','dfw-coverage-help',
    'GIS 배정선 연결률과 실제 주소·학년별 배정 확인률은 아직 전체 학군 기준으로 산출할 수 없습니다. 미검증을 0%로 표시하지 않습니다.'));
   const controls=el('div','dfw-coverage-filter');
@@ -105,7 +135,16 @@
    body.replaceChildren();
    for(const d of page){
     const row=el('tr');
-    const name=el('td');name.append(el('strong',null,d.name),el('div','dfw-coverage-help',d.countyOfRecord+' · '+d.code));
+    const name=el('td');name.append(el('strong',null,d.name),el('div','dfw-coverage-help',d.countyOfRecord+' (행정 소속) · '+d.code));
+    if(d.code==='061806'){
+     name.appendChild(el('div','dfw-coverage-help',
+      locality?'운영자 공개 주소 대조 · DFW 11카운티 내 '+locality.counts.operatorAddressIn11CountyMSA+
+        ' · 범위 밖 '+locality.counts.operatorAddressOutside11CountyMSA+
+        ' · 명칭/ID 추가 확인 '+locality.counts.pendingExactCampusCrosswalk:
+       '학교 실제 소재지 대조자료 미확인 · 41개를 DFW 소재 학교로 계산하면 안 됩니다'));
+     name.appendChild(el('div','dfw-coverage-help',
+      '공개 주소 위치 참고만 가능 · 집 주소의 배정학교나 현행 GIS 경계 인증이 아닙니다'));
+    }
     const n=el('td',null,d.teaCampusRecords);n.style.textAlign='right';
     const route=el('td');
     route.append(el('div',null,reasonLabels[d.missingReason]||d.missingReason));
