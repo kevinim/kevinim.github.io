@@ -49,6 +49,26 @@ async function main(){
    await page.locator('#cfbAtlasBands button').first().waitFor({timeout:25000});
    assert.equal(remoteImages,0,'Opening raster atlas itself must not fetch third-party images');
    assert.equal(await page.locator('#cfbAtlasBands button').count(),3);
+   const conflictWarning=page.locator('#cfbAtlasConflictWarning');
+   await conflictWarning.waitFor({state:'visible',timeout:10000});
+   assert.match(await conflictWarning.innerText(),/상충/);
+   assert.match(await conflictWarning.innerText(),/2026–27/);
+   const conflictDetails=page.locator('#cfbAtlasConflicts');
+   assert.equal(await conflictDetails.evaluate(el=>el.open),false,'detailed conflicts should be folded by default');
+   await conflictDetails.locator('summary').click();
+   await page.locator('#cfbAtlasConflictList .source').first().waitFor({timeout:15000});
+   assert.equal(await page.locator('#cfbAtlasConflictList .source').count(),2);
+   const conflictText=await page.locator('#cfbAtlasConflictList').innerText();
+   assert.match(conflictText,/Good Elementary vs Blanton Elementary/);
+   assert.match(conflictText,/Woodlake vs Woodland/);
+   const conflictLinks=page.locator('#cfbAtlasConflictList a');
+   assert.equal(await conflictLinks.count(),4);
+   for(const link of await conflictLinks.all()){
+    const href=await link.getAttribute('href');
+    assert.match(href,/^https:\/\/www\.cfbisd\.edu\/(?:departments|about-us)\//);
+    assert.equal(await link.getAttribute('rel'),'noopener noreferrer');
+   }
+   await conflictDetails.locator('summary').click();
    for(const [level,slug] of [['elementary','elementary-zones.jpg'],['middle','middleschoolproposed-02.png'],['high','highschoolproposed-02.png']]){
     await page.locator('#cfbAtlasBands button[data-level="'+level+'"]').click();
     await page.waitForFunction(n=>document.querySelector('#cfbAtlasImageWrap img')?.src.includes(n),slug);
@@ -64,6 +84,12 @@ async function main(){
    assert.match(area,/Blalack Middle School/);
    assert.match(area,/Creekview High School/);
    assert.match(area,/2025–26 승인 내역/);
+   await page.locator('#cfbAtlasAreaSelect').selectOption('Woodlake subdivision on Frankford Road');
+   const disputed=await page.locator('#cfbAtlasAreaResult').innerText();
+   assert.match(disputed,/Woodlake\/Woodland 공식 자료 간 상충/);
+   assert.match(disputed,/2026–27 주소별 Finder 확인 필수/);
+   assert.doesNotMatch(disputed,/2025–26 승인 내역/,'conflicting descriptions must not appear certified');
+   await page.locator('#cfbAtlasAreaSelect').selectOption('Morningside subdivision');
    await page.locator('.cfb-atlas-evidence > summary').click();
    const evidence=await page.locator('.cfb-atlas-evidence-list').innerText();
    assert.match(evidence,/1600 S Josey Ln/);
