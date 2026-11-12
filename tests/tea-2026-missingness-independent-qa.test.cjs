@@ -162,3 +162,32 @@ test('the 38 positive-enrollment cases remain explicit and are not replaced by a
   }
   assert.equal(x.filter(e=>e.grades3to12 < 10).length, 22);
 });
+
+test('2026 official AEA subtype distinguishes residential Not Rated eligibility from STAAR source absence', () => {
+  const cases = {
+    '220905035': 'DROPOUT RECOVERY SCHOOL',
+    '220905212': 'RESIDENTIAL FACILITY',
+    '220905242': 'RESIDENTIAL FACILITY'
+  };
+  const rows = exceptionRegister.positiveGradeNoSTAAR;
+  const tagged = rows.filter(row => row.officialAEA2026CampusType !== undefined);
+  assert.equal(tagged.length, 3, 'do not silently extend source evidence to unverified campuses');
+  assert.deepEqual(exceptionRegister.totals.officialAEATypeChecks,
+    {residentialFacility:2,dropoutRecoverySchool:1});
+  for (const [id, type] of Object.entries(cases)) {
+    const row = rows.find(x => x.campusId === id);
+    assert(row, id);
+    assert.equal(row.classification, 'aea-registered');
+    assert.equal(row.officialAEA2026CampusType, type);
+    assert.equal(row.notRatedResidentialRuleApplies, type === 'RESIDENTIAL FACILITY');
+    assert.equal(row.officialAEA2026SourceUrl,
+      'https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-final-aea-campus-list-updated.pdf');
+    assert.equal(row.specificMissingRowReasonConfirmed, null,
+      '2026 AEA type is not a campus-specific reason for a missing STAAR source row');
+    assert.equal(subjects[id].reading.status, 'not-in-source');
+    assert.equal(subjects[id].reading.value, null);
+  }
+  assert.equal(tagged.filter(x => x.notRatedResidentialRuleApplies).length, 2);
+  assert.equal(rows.filter(x => ['aea-registered','other-review'].includes(x.classification)).length, 14,
+    'individual missing-row cause investigation remains open for all 14');
+});
