@@ -91,7 +91,7 @@ async function main(){
    assert.doesNotMatch(disputed,/2025–26 승인 내역/,'conflicting descriptions must not appear certified');
    await page.locator('#cfbAtlasAreaSelect').selectOption('Morningside subdivision');
    await page.locator('#cfbAtlasFixtures .cfb-atlas-evidence > summary').click();
-   const evidence=await page.locator('.cfb-atlas-evidence-list').innerText();
+   const evidence=await page.locator('#cfbAtlasFixtures .cfb-atlas-evidence-list').innerText();
    assert.match(evidence,/1600 S Josey Ln/);
    assert.match(evidence,/1011 S Main St/);
    assert.match(evidence,/폴리곤과의 교차검증은 아직 이루어지지 않았습니다/);
