@@ -70,11 +70,11 @@ function auditProviderContract(files) {
   for (const [name, body] of [['index.html', main], ['reviewed.html + reviewed-bootstrap.js', archived]]) {
     const canonicalTile = body.includes('https://tile.openstreetmap.org/');
     const legacySubdomainTile = body.includes('https://{s}.tile.openstreetmap.org/');
-    if (!canonicalTile && !legacySubdomainTile) {
-      errors.push(name + ': no recognized OSM HTTPS tile endpoint');
+    if (!canonicalTile) {
+      errors.push(name + ': canonical OSM tile endpoint missing');
     }
     if (legacySubdomainTile) {
-      warnings.push(name + ': legacy {s}.tile.openstreetmap.org subdomain endpoint is not the current canonical OSM tile URL; migrate in a separate UI PR');
+      errors.push(name + ': legacy subdomain OSM tile endpoint prohibited by current policy');
     }
     if (!body.includes('OpenStreetMap contributors')) {
       errors.push(name + ': visible OSM attribution source marker missing');
