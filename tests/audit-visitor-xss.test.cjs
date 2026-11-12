@@ -13,7 +13,7 @@ test('tracked high-risk browser sources remain within the reviewed HTML sink inv
   const result = auditBrowserSurface(sources());
   assert.deepEqual(result.errors, []);
   assert.equal(result.summary.scannedFiles, Object.keys(SINK_LIMITS).length);
-  assert.equal(result.summary.htmlSinkOccurrences, 30);
+  assert.equal(result.summary.htmlSinkOccurrences, 31);
   assert.ok(result.warnings.some(x => /not certified safe/i.test(x)));
 });
 
@@ -60,4 +60,16 @@ test('no new raw popups in the currently text-safe address suggestion renderer',
   assert.match(source, /button\.textContent\s*=\s*item\.text/);
   assert.doesNotMatch(source, /\.innerHTML\s*=|insertAdjacentHTML\s*\(/);
   // This structural assertion alone does not prove that every future sink is safe.
+});
+
+test('saved workplace names/addresses remain on the reviewed XSS boundary', () => {
+  const source = read('features/commute/workplace-destinations.js');
+  assert.match(source, /name\.textContent\s*=\s*rec\.name/);
+  assert.match(source, /addr\.textContent\s*=\s*rec\.address/);
+  assert.match(source, /option\.textContent\s*=\s*rec\.name/);
+  assert.equal(countHtmlSinks(source), 1, 'only fixed workplace panel HTML is approved');
+  const files = sources();
+  files['features/commute/workplace-destinations.js'] += '\nlist.innerHTML = rec.name;\n';
+  assert.ok(auditBrowserSurface(files).errors.some(x =>
+    x.includes('features/commute/workplace-destinations.js: new HTML insertion sink')));
 });

@@ -16,6 +16,9 @@ const SINK_LIMITS = Object.freeze({
   'reviewed.html': 0,
   'features/reviewed-bootstrap.js': 10,
   'features/geojson-upload-guard.js': 0,
+  // Saved workplace profiles are intentionally browser-local. Their sole HTML
+  // assignment is a fixed UI template; saved names/addresses use textContent.
+  'features/commute/workplace-destinations.js': 1,
   'home-lookup-v2.js': 2,
   'candidate-compare.js': 2,
   'features/dashboard-extras.js': 3,
