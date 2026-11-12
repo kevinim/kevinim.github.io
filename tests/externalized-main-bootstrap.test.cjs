@@ -188,8 +188,13 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  approvedHtml=replaceOnce(approvedHtml,
   '<script src="./features/home-school-manual-bridge.js?v=1" defer></script></body></html>',
   '<script src="./features/home-school-manual-bridge.js?v=1" defer></script><script src="./features/tea-peims-public-share-addon.js?v=2" defer></script></body></html>');
+ // #272 allows exactly one audited same-origin school-subject note asset.
+ // All previously reviewed HTML and production security hash checks remain pinned.
+ approvedHtml=replaceOnce(approvedHtml,
+  '<script src="./features/tea-peims-public-share-addon.js?v=2" defer></script></body></html>',
+  '<script src="./features/tea-peims-public-share-addon.js?v=2" defer></script><script src="./features/tea-allen-mckinney-subject-notes.js?v=1" defer></script></body></html>');
  assert.equal(hash(html),hash(approvedHtml),
-  'Unreviewed HTML drift beyond approved workplace and PEIMS addon anchors');
+  'Unreviewed HTML drift beyond approved workplace, PEIMS and Allen/McKinney additions');
  // Strip only previously released #262 zoom label additions from the
  // immutable baseline; the existing #258 content SHA remains enforced.
  const integrityHtml=reviewedMainHtml.replace(approvedLabelStyle,previousLabelStyle)
