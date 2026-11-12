@@ -245,3 +245,42 @@ test('the full 2,282-campus canonical 2025-26 PEIMS source exactly matches the 9
   assert.deepEqual([status.published,status.suppressed,status['not-listed']],[row.peims2025_26.publishedGroupCells,row.peims2025_26.suppressedGroupCells,row.peims2025_26.unlistedGroupCells]);
  }
 });
+
+test('current published canonical 2026 TEA score imports independently agree with 92 listings and nine source-verified school reports',()=>{
+ const imported=require('../data/tea-accountability-2026-verified-batch.json');
+ const importedSTAAR=require('../data/tea-staar-meets-2026-verified-batch.json');
+ assert.equal(imported.accountabilityYear,2026);
+ assert.equal(importedSTAAR.schoolYear,'2025-26');
+ let partialMatched=0,fullMatched=0;
+ for(const [id,row] of Object.entries(listing.campuses)){
+  const canonical=imported.campuses[id];
+  assert.ok(canonical,'Missing campus from canonical 2026 TEA import: '+id);
+  assert.equal(canonical.districtId,id.slice(0,6));
+  assert.equal(canonical.overall.score,row.overallScore);
+  const x=row.publishedCategoryValues;
+  if(x.studentAchievementScaled!==null){
+   assert.equal(canonical.studentAchievement.status,'reported',id);
+   assert.equal(canonical.studentAchievement.score,x.studentAchievementScaled,'Student Achievement discrepancy '+id);
+   assert.equal(canonical.closingTheGaps.score,x.closingTheGapsScaled,'Closing the Gaps discrepancy '+id);
+   partialMatched++;
+  } else {
+   assert.equal(canonical.studentAchievement.score,null,'unpublished Student Achievement must stay unavailable '+id);
+  }
+ }
+ assert.equal(partialMatched,87);
+ for(const [id,row] of Object.entries(allAcademic)){
+  const c=imported.campuses[id],t=importedSTAAR.campuses[id];
+  assert.ok(c&&t,id);
+  for(const [name,value] of Object.entries(row.domainsScaledScores)){
+   assert.equal(c[name].score,value,'independent campus report and canonical score differ '+id+' '+name);
+  }
+  for(const [subject,report] of Object.entries(row.subjectsMeetsGradeLevel)){
+   if(report.status==='published'){
+    assert.equal(t[subject].status,'reported',id+' '+subject);
+    assert.equal(t[subject].value,report.meetsPercentReported,'STAAR report/import value differs '+id+' '+subject);
+   }else assert.equal(t[subject].value,null,'do not invent non-applicable subject rate '+id+' '+subject);
+  }
+  fullMatched++;
+ }
+ assert.equal(fullMatched,9);
+});
