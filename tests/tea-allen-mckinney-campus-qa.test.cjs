@@ -255,3 +255,52 @@ test('2025–26 official Campus Total denominators yield only published category
   assert.equal(batch.summary.partialPublishedPercentProfiles, 52);
   assert.equal(batch.summary.fullyAuditedProfiles, 1);
 });
+
+
+test('2026 TEA and 2025-26 PEIMS canonical Production source values reconcile across all 56 campus IDs',()=>{
+ const domains=require('../data/tea-accountability-2026-verified-batch.json');
+ const staar=require('../data/tea-staar-meets-2026-verified-batch.json');
+ const peims=require('../data/tea-ethnicity-2025-26-priority.json');
+ assert.equal(domains.accountabilityYear,2026);
+ assert.equal(staar.accountabilityYear,2026);
+ assert.equal(peims.schoolYear,'2025-26');
+ assert.equal(Object.keys(peims.campuses).length,2282);
+ let academics=0,demographics=0;
+ for(const [id,c] of Object.entries(batch.campuses)){
+  const verified=domains.campuses[id],tests=staar.campuses[id],race=peims.campuses[id];
+  assert.ok(verified&&tests&&race,'Missing canonical campus source '+id);
+  assert.equal(verified.districtId,id.slice(0,6));
+  assert.equal(verified.overall.rating,c.accountability.rating,'A-F rating mismatch '+id);
+  assert.equal(verified.overall.score,c.accountability.score,'A-F score mismatch '+id);
+  if(c.domains.status==='official-verified'){
+   for(const k of ['studentAchievement','schoolProgress','closingTheGaps'])
+    assert.equal(verified[k].score,c.domains[k],'Official 2026 domain mismatch '+id+' '+k);
+   academics++;
+  }else{
+   for(const k of ['studentAchievement','schoolProgress','closingTheGaps'])
+    assert.equal(c.domains[k],null,'Unpublished candidate academic value must stay null '+id+' '+k);
+  }
+  for(const k of subjects){
+   const value=c.staar[k],published=tests[k];
+   if(value===null){
+    assert.equal(published.value,null,'Candidate missing but canonical published STAAR '+id+' '+k);
+   }else{
+    assert.equal(published.status,'reported','No official STAAR report '+id+' '+k);
+    assert.equal(published.value,value,'STAAR percentage mismatch '+id+' '+k);
+   }
+  }
+  for(const k of categories){
+   const left=c.peims.counts[k],right=race.counts[k];
+   assert.ok(left&&right,'Missing race category '+id+' '+k);
+   assert.equal(left.status,right.status,'PEIMS race status mismatch '+id+' '+k);
+   if(left.status==='published')assert.equal(left.count,right.count,'PEIMS exact count mismatch '+id+' '+k);
+   else{
+    assert.equal(left.count,undefined,'Protected race candidate count must not be inferred '+id+' '+k);
+    assert.equal(right.count,undefined,'Protected race canonical count must not be inferred '+id+' '+k);
+   }
+  }
+  demographics++;
+ }
+ assert.equal(academics,50);
+ assert.equal(demographics,56);
+});
