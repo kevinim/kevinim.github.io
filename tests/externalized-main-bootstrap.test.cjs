@@ -199,6 +199,10 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
   './features/healthcare/map-layer.js?v=2');
  approvedHtml=replaceOnce(approvedHtml,'./features/dashboard-extras.js?v=1',
   './features/dashboard-extras.js?v=2');
+ // Independently sourced TexasWorks physical-campuses explanation: cache-bust
+ // only the existing collapsed, lazily loaded coverage JS module.
+ approvedHtml=replaceOnce(approvedHtml,'./features/dfw-school-coverage-panel.js?v=1',
+  './features/dfw-school-coverage-panel.js?v=2');
  assert.equal(hash(html),hash(approvedHtml),
   'Unreviewed HTML drift beyond approved source-only optional CMS hospital references');
  // Strip only previously released #262 zoom label additions from the

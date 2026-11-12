@@ -13,9 +13,12 @@ fs.mkdirSync(folder,{recursive:true});
  try{
   for(const width of [390,1366]){
    const page=await browser.newPage({viewport:{width,height:900},deviceScaleFactor:1});
-   const errors=[],csp=[],requests=[];
+   const errors=[],csp=[],requests=[],localityRequests=[];
    page.on('pageerror',e=>errors.push(String(e.message||e)));
-   page.on('request',r=>{if(r.url().includes('dfw-school-coverage-matrix-2026.json'))requests.push(r.url())});
+   page.on('request',r=>{
+    if(r.url().includes('dfw-school-coverage-matrix-2026.json'))requests.push(r.url());
+    if(r.url().includes('tea-texasworks-locality-2026.json'))localityRequests.push(r.url());
+   });
    await page.addInitScript(()=>{
     document.addEventListener('securitypolicyviolation',e=>{
      window.__dfwCsp=(window.__dfwCsp||[]).concat(e.violatedDirective+':'+e.blockedURI);
@@ -26,9 +29,11 @@ fs.mkdirSync(folder,{recursive:true});
     await page.locator('#dfwSchoolCoveragePanel > summary').waitFor();
     assert.equal(await page.locator('#dfwSchoolCoveragePanel').evaluate(x=>x.open),false,'panel must stay folded by default');
     assert.equal(requests.length,0,'large coverage file must lazy-load, not block initial map');
+    assert.equal(localityRequests.length,0,'TexasWorks physical-locality evidence must also lazy-load');
     await page.locator('#dfwSchoolCoveragePanel > summary').click();
     await page.locator('#dfwSchoolCoverageContent .dfw-coverage-stats').waitFor({timeout:45000});
     assert.equal(requests.length,1,'opening panel should request coverage dataset once');
+    assert.equal(localityRequests.length,1,'TexasWorks physical-locality evidence must load only when panel opens');
     const summary=await page.locator('#dfwSchoolCoverageContent .dfw-coverage-stats').innerText();
     assert.match(summary,/107\/108/,'full ISD denominator must appear');
     assert.match(summary,/99\.1%/);
@@ -66,9 +71,19 @@ fs.mkdirSync(folder,{recursive:true});
     assert.equal(await rows.count(),1,'non-ISD school networks must be explicitly included');
     assert.match(await rows.first().innerText(),/입학 방식 확인 필요|별도 운영기관/);
     assert.match(await rows.first().innerText(),/링크 검증 필요/);
+    // texasworks-physical-locality: corporate administrative county is not 41 DFW schools.
+    await page.locator('#dfwSchoolCoverageContent input[type=search]').fill('TEXAS WORKS');
+    assert.equal(await rows.count(),1,'all-operator filter should show exactly TexasWorks');
+    const texasWorksText=await rows.first().innerText();
+    assert.match(texasWorksText,/41/,'retained administrative TEA count');
+    assert.match(texasWorksText,/DFW 11카운티 내 6/,'operator-reported physical localities');
+    assert.match(texasWorksText,/범위 밖 34/);
+    assert.match(texasWorksText,/명칭\/ID 추가 확인 1/);
+    assert.match(texasWorksText,/집 주소의 배정학교/);
     await page.locator('#dfwSchoolCoveragePanel > summary').click();
     await page.locator('#dfwSchoolCoveragePanel > summary').click();
     assert.equal(requests.length,1,'reopening should use cached table without duplicate fetch');
+    assert.equal(localityRequests.length,1,'reopening must not refetch physical-locality source');
     const dim=await page.evaluate(()=>({
       viewport:window.innerWidth,scrollWidth:document.documentElement.scrollWidth,
       csp:window.__dfwCsp||[],mapPresent:!!document.querySelector('#map')
