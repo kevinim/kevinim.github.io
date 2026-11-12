@@ -1,0 +1,31 @@
+name: Allen McKinney 56 campus official TEA/PEIMS QA (no deployment)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/tea-allen-mckinney-campus-qa-2026.json'
+      - 'data/tea-allen-mckinney-academics-2026-source.json'
+      - 'data/tea-allen-mckinney-enrollment-2025-26-source.json'
+      - 'tests/tea-allen-mckinney-campus-qa.test.cjs'
+      - 'docs/TEA_ALLEN_MCKINNEY_CAMPUS_QA_2026-11-11.md'
+      - '.github/workflows/tea-allen-mckinney-campus-qa.yml'
+permissions:
+  contents: read
+jobs:
+  source-parity:
+    name: Verify 56 campus IDs, published 2026 TEA domains and FERPA protection
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Validate official source rows, exact IDs, missingness, and no inferred students
+        run: |
+          node --check tests/tea-allen-mckinney-campus-qa.test.cjs
+          node --test tests/tea-allen-mckinney-campus-qa.test.cjs
+          node --test tests/carrollton-school-insights.test.cjs
+          node --test tests/tea-campus-enrichment-pipeline.test.cjs

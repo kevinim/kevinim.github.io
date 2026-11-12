@@ -1,0 +1,358 @@
+{
+  "schemaVersion": 1,
+  "schoolYear": "2025-26",
+  "sourceAuthority": "TEA PEIMS official Student Enrollment Reports, Grade grouping, Campus Total rows",
+  "sources": {
+    "ALLEN": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0",
+    "MCKINNEY": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+  },
+  "summary": {
+    "scope": 56,
+    "officialCampusTotals": 56,
+    "published": 53,
+    "suppressed": 3,
+    "suppressedCampusIds": [
+      "043901003",
+      "043907005",
+      "043907197"
+    ]
+  },
+  "rows": {
+    "043901001": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 5127,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901102": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 393,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901105": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 486,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901117": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 696,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901110": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 542,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901114": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 685,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901003": {
+      "schoolYear": "2025-26",
+      "status": "suppressed",
+      "publishedMask": "<10",
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901116": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 676,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901113": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 765,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901044": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 1201,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901107": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 508,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901108": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 592,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901104": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 437,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901201": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 413,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901112": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 651,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901119": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 648,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901111": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 613,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901118": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 780,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901002": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 1667,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901115": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 560,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901106": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 643,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901042": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 713,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043901043": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 1318,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043901&_debug=0"
+    },
+    "043907118": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 430,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907117": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 302,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907105": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 403,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907113": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 383,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907107": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 443,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907006": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 101,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907120": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 409,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907043": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 976,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907046": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 1173,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907116": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 422,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907041": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 1100,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907102": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 320,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907121": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 446,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907109": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 474,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907125": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 562,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907122": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 441,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907197": {
+      "schoolYear": "2025-26",
+      "status": "suppressed",
+      "publishedMask": "<10",
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907123": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 563,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907119": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 467,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907045": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 731,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907126": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 782,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907007": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 2595,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907002": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 2527,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907004": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 2551,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907124": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 736,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907112": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 361,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907115": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 388,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907127": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 809,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907044": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 1307,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907005": {
+      "schoolYear": "2025-26",
+      "status": "suppressed",
+      "publishedMask": "<10",
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907111": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 564,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907108": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 524,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    },
+    "043907104": {
+      "schoolYear": "2025-26",
+      "status": "published",
+      "count": 522,
+      "source": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_service=marykay&_program=adhoc.addispatch.sas&endyear=26&major=st&minor=e&format=W&selsumm=ic&linespg=60&charsln=120&grouping=g&loop=2&key=043907&_debug=0"
+    }
+  }
+}
