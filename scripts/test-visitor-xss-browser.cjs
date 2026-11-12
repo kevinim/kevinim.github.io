@@ -190,6 +190,8 @@ async function savedWorkplaceProfiles(browser, width) {
       'saved workplace profile executed inert probe');
     assert.equal(await page.locator('#officeSelect option[value^="saved:"]').count(), 1);
     assert.deepEqual(otherRequests, [], 'saved profile unexpectedly triggered an outbound request');
+    // The workplace manager is intentionally collapsed until the user opens it.
+    await page.locator('#workplacesPanel > summary').click();
     await page.locator('#workplaceList .workplace-entry-actions button')
       .filter({hasText: '삭제'}).click();
     assert.deepEqual(await page.evaluate(() =>
