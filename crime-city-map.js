@@ -64,7 +64,7 @@ function createCrimeCityMap(map,documentRef){
  const popup=f=>{
   const p=f.properties,y=year(),ref=data?.metadata?.reference?.[y]||{};
   const row=cat=>{const r=crimeCityRate(f,cat,y),c=CRIME_CATEGORIES[cat],tx=ref[cat]?.texas;
-   return '<div style="margin-top:5px">'+esc(c.label)+' '+y+': '+(r.rate===null?'<b>자료 부족</b> ('+r.months+'/12개월 보고)':'<b>'+fmt(r.rate)+'</b> / 10만 명'+(Number.isFinite(tx)?' <small>(텍사스 '+fmt(tx)+')</small>':''))+
+   return '<div style="margin-top:5px">'+esc(c.label)+' '+esc(y)+': '+(r.rate===null?'<b>자료 부족</b> ('+r.months+'/12개월 보고)':'<b>'+fmt(r.rate)+'</b> / 10만 명'+(Number.isFinite(tx)?' <small>(텍사스 '+fmt(tx)+')</small>':''))+
     '<br><small>'+crimeYearsHtml(p.years,cat,esc)+'</small></div>'};
   const pop=f.properties.years?.[y]?.population;
   return '<div class="fema-popup"><strong>'+esc(p.city)+'</strong>'+row('violent')+row('property')+
@@ -147,10 +147,10 @@ function crimeZipHtml(zip,data=crimeZipData){
   const city=data.cities[c.ori];if(!city)continue;
   const rate=k=>city.years?.[latest]?.[k+'Rate'];
   html+='<div class="crime-zip-city"><div><b>'+esc(city.city)+'</b> <span class="source">ZIP 면적의 약 '+Math.round(c.share*100)+'%'+((city.years?.[latest]?.population||0)<10000?' · 인구 1만 미만, 변동 큼':'')+'</span></div>'+
-   ['violent','property'].map(k=>'<div class="crime-zip-row"><span>'+esc(CRIME_CATEGORIES[k].label)+(Number.isFinite(rate(k))?' · '+latest+' 10만 명당 '+rate(k).toLocaleString('en-US'):'')+'</span><span>'+crimeYearsHtml(city.years,k,esc)+'</span></div>').join('')+'</div>';
+   ['violent','property'].map(k=>'<div class="crime-zip-row"><span>'+esc(CRIME_CATEGORIES[k].label)+(Number.isFinite(rate(k))?' · '+esc(latest)+' 10만 명당 '+rate(k).toLocaleString('en-US'):'')+'</span><span>'+crimeYearsHtml(city.years,k,esc)+'</span></div>').join('')+'</div>';
  }
  if(z.outsideCityShare>=0.05)html+='<p class="source">ZIP 면적의 약 '+Math.round(z.outsideCityShare*100)+'%는 시 경찰 자료가 없는 지역(카운티 보안관 관할 등)입니다.</p>';
- return html+'<p class="source">시 경찰에 신고된 건수(FBI)입니다. 도시 전체 수치이며 이 ZIP 안의 건수가 아닙니다. 추세는 '+esc(data.metadata.years[0])+'→'+latest+' 인구 10만 명당 비율 변화(±10% 이내는 비슷)입니다.</p>';
+ return html+'<p class="source">시 경찰에 신고된 건수(FBI)입니다. 도시 전체 수치이며 이 ZIP 안의 건수가 아닙니다. 추세는 '+esc(data.metadata.years[0])+'→'+esc(latest)+' 인구 10만 명당 비율 변화(±10% 이내는 비슷)입니다.</p>';
 }
 if(typeof window!=='undefined'){
  // crimeZipHtml is already global (top-level function in a classic script).
