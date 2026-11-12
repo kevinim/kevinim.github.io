@@ -12,7 +12,7 @@ test('full 56-campus source guard, 50 published subject profiles, two linked cam
  assert.ok(parsed);
  assert.equal(Object.keys(parsed).length,56);
  const statuses=Object.values(parsed).reduce((m,c)=>(m[c.kind]=(m[c.kind]||0)+1,m),{});
- assert.deepEqual(statuses,{subjects:50,not-rated:4,paired:2});
+ assert.deepEqual(statuses,{subjects:50,'not-rated':4,paired:2});
  assert.equal(Object.keys(parsed).filter(k=>k.startsWith('043901')).length,23);
  assert.equal(Object.keys(parsed).filter(k=>k.startsWith('043907')).length,33);
  assert.match(parsed['043901201'].summary,/연계 평가/);
