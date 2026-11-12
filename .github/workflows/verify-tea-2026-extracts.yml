@@ -1,0 +1,36 @@
+name: TEA 2026 official campus score batch source and privacy QA
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/tea-accountability-2026-verified-batch.json'
+      - 'data/tea-staar-meets-2026-verified-batch.json'
+      - 'scripts/verify-tea-2026-extracts.cjs'
+      - 'tests/tea-2026-official-extracts.test.cjs'
+      - 'docs/TEA_2026_OFFICIAL_EXTRACTS.md'
+      - '.github/workflows/verify-tea-2026-extracts.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Syntax, source parity, campus join, missingness, FERPA QA
+        run: |
+          node --check scripts/verify-tea-2026-extracts.cjs
+          node --check tests/tea-2026-official-extracts.test.cjs
+          node scripts/verify-tea-2026-extracts.cjs
+          node --test tests/tea-2026-official-extracts.test.cjs
+      - name: Existing official enrichment and school click regression
+        run: |
+          node --test tests/tea-campus-enrichment-pipeline.test.cjs tests/carrollton-school-insights.test.cjs
+          node scripts/build-tea-profile-progress.cjs --check
