@@ -1,0 +1,1596 @@
+{
+  "schemaVersion": 1,
+  "scope": "CFB and Lewisville ISD, exactly 92 campus IDs",
+  "year": 2026,
+  "verifiedAsOf": "2026-11-11",
+  "publisher": "Texas Education Agency",
+  "reportType": "2026 A-F Accountability Campus Listing (district section, official public report)",
+  "sourceURLs": {
+    "CFB": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+    "LISD": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas"
+  },
+  "sourceColumnOrder": [
+    "overallScore",
+    "studentAchievementScaled",
+    "academicGrowthScaled",
+    "relativePerformanceScaled",
+    "closingTheGapsScaled"
+  ],
+  "sourceCategoryCaveat": "School Progress combined score is not a published separate column in this listing. Academic Growth and Relative Performance remain independent report scores; no 2026 STAAR subject percentages are inferred here.",
+  "sourcePrivacy": "Only school-level scores and annual school membership. No individual student data; no PEIMS demographic inference.",
+  "metrics": {
+    "target": 92,
+    "rows": 92,
+    "withAchievement": 87,
+    "withGaps": 87,
+    "missingAchievement": 5,
+    "explicitNotRated": 4,
+    "mainRatingScoreDiscrepancies": 0
+  },
+  "campuses": {
+    "057903001": {
+      "name": "TURNER H S",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 82,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 83,
+        "academicGrowthScaled": 56,
+        "relativePerformanceScaled": 88,
+        "closingTheGapsScaled": 69
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903002": {
+      "name": "SMITH H S",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 84,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 82,
+        "academicGrowthScaled": 67,
+        "relativePerformanceScaled": 87,
+        "closingTheGapsScaled": 76
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903003": {
+      "name": "GRIMES EDUCATION CENTER",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 86,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 87,
+        "academicGrowthScaled": null,
+        "relativePerformanceScaled": 77,
+        "closingTheGapsScaled": 82
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903005": {
+      "name": "SALAZAR DISTRICT ALTERNATIVE EDUCATION PROGRAM",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": null,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": null,
+        "academicGrowthScaled": null,
+        "relativePerformanceScaled": null,
+        "closingTheGapsScaled": null
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903006": {
+      "name": "CREEKVIEW H S",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 93,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 90,
+        "academicGrowthScaled": 77,
+        "relativePerformanceScaled": 93,
+        "closingTheGapsScaled": 94
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903007": {
+      "name": "RANCHVIEW H S",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 87,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 87,
+        "academicGrowthScaled": 62,
+        "relativePerformanceScaled": 89,
+        "closingTheGapsScaled": 82
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903009": {
+      "name": "DALLAS COUNTY JJAEP CFB CAMPUS",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": null,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": null,
+        "academicGrowthScaled": null,
+        "relativePerformanceScaled": null,
+        "closingTheGapsScaled": null
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903010": {
+      "name": "EARLY COLLEGE H S",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 98,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 97,
+        "academicGrowthScaled": 79,
+        "relativePerformanceScaled": 97,
+        "closingTheGapsScaled": 100
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903041": {
+      "name": "FIELD MIDDLE",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 86,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 80,
+        "academicGrowthScaled": 79,
+        "relativePerformanceScaled": 90,
+        "closingTheGapsScaled": 77
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903042": {
+      "name": "PERRY MIDDLE",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 84,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 80,
+        "academicGrowthScaled": 70,
+        "relativePerformanceScaled": 88,
+        "closingTheGapsScaled": 74
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903045": {
+      "name": "BLALACK MIDDLE",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 83,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 81,
+        "academicGrowthScaled": 72,
+        "relativePerformanceScaled": 85,
+        "closingTheGapsScaled": 77
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903046": {
+      "name": "POLK MIDDLE",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 56,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 60,
+        "academicGrowthScaled": 57,
+        "relativePerformanceScaled": 60,
+        "closingTheGapsScaled": 45
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903047": {
+      "name": "BUSH MIDDLE",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 72,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 75,
+        "academicGrowthScaled": 69,
+        "relativePerformanceScaled": 75,
+        "closingTheGapsScaled": 64
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903102": {
+      "name": "CARROLLTON EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 90,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 73,
+        "academicGrowthScaled": 91,
+        "relativePerformanceScaled": 81,
+        "closingTheGapsScaled": 86
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903105": {
+      "name": "GOOD EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 90,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 91,
+        "academicGrowthScaled": 87,
+        "relativePerformanceScaled": 90,
+        "closingTheGapsScaled": 86
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903106": {
+      "name": "STARK EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 74,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 74,
+        "academicGrowthScaled": 74,
+        "relativePerformanceScaled": 72,
+        "closingTheGapsScaled": 74
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903109": {
+      "name": "FARMERS BRANCH EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 86,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 77,
+        "academicGrowthScaled": 74,
+        "relativePerformanceScaled": 85,
+        "closingTheGapsScaled": 88
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903110": {
+      "name": "BLANTON EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 80,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 77,
+        "academicGrowthScaled": 60,
+        "relativePerformanceScaled": 82,
+        "closingTheGapsScaled": 75
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903111": {
+      "name": "THOMPSON EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 77,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 73,
+        "academicGrowthScaled": 73,
+        "relativePerformanceScaled": 80,
+        "closingTheGapsScaled": 70
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903112": {
+      "name": "COUNTRY PLACE EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 85,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 89,
+        "academicGrowthScaled": 79,
+        "relativePerformanceScaled": 84,
+        "closingTheGapsScaled": 77
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903113": {
+      "name": "DAVIS EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 76,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 72,
+        "academicGrowthScaled": 69,
+        "relativePerformanceScaled": 77,
+        "closingTheGapsScaled": 73
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903117": {
+      "name": "HUIE SPECIAL EDUC CTR",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": null,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": null,
+        "academicGrowthScaled": null,
+        "relativePerformanceScaled": null,
+        "closingTheGapsScaled": null
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903118": {
+      "name": "ROSEMEADE EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 87,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 91,
+        "academicGrowthScaled": 71,
+        "relativePerformanceScaled": 85,
+        "closingTheGapsScaled": 77
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903120": {
+      "name": "LAS COLINAS EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 93,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 94,
+        "academicGrowthScaled": 92,
+        "relativePerformanceScaled": 88,
+        "closingTheGapsScaled": 92
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903121": {
+      "name": "LANDRY EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 84,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 77,
+        "academicGrowthScaled": 82,
+        "relativePerformanceScaled": 79,
+        "closingTheGapsScaled": 87
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903122": {
+      "name": "KENT EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 91,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 93,
+        "academicGrowthScaled": 86,
+        "relativePerformanceScaled": 92,
+        "closingTheGapsScaled": 85
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903123": {
+      "name": "RIVERCHASE ELE",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 79,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 73,
+        "academicGrowthScaled": 79,
+        "relativePerformanceScaled": 74,
+        "closingTheGapsScaled": 79
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903124": {
+      "name": "MCKAMY EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 79,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 67,
+        "academicGrowthScaled": 80,
+        "relativePerformanceScaled": 70,
+        "closingTheGapsScaled": 78
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903125": {
+      "name": "SHEFFIELD EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 72,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 58,
+        "academicGrowthScaled": 73,
+        "relativePerformanceScaled": 58,
+        "closingTheGapsScaled": 70
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903126": {
+      "name": "RAINWATER EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 90,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 89,
+        "academicGrowthScaled": 90,
+        "relativePerformanceScaled": 86,
+        "closingTheGapsScaled": 90
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903128": {
+      "name": "FREEMAN EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 85,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 85,
+        "academicGrowthScaled": 86,
+        "relativePerformanceScaled": 72,
+        "closingTheGapsScaled": 82
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903129": {
+      "name": "MCWHORTER EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 69,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 60,
+        "academicGrowthScaled": 68,
+        "relativePerformanceScaled": 60,
+        "closingTheGapsScaled": 71
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903131": {
+      "name": "BLAIR EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 91,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 85,
+        "academicGrowthScaled": 92,
+        "relativePerformanceScaled": 90,
+        "closingTheGapsScaled": 90
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903132": {
+      "name": "LA VILLITA EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 86,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 90,
+        "academicGrowthScaled": 85,
+        "relativePerformanceScaled": 74,
+        "closingTheGapsScaled": 78
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "057903135": {
+      "name": "MCLAUGHLIN STRICKLAND EL",
+      "district": "CFB",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=057903122&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 72,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 67,
+        "academicGrowthScaled": 70,
+        "relativePerformanceScaled": 72,
+        "closingTheGapsScaled": 71
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902001": {
+      "name": "LEWISVILLE H S",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 79,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 74,
+        "academicGrowthScaled": 75,
+        "relativePerformanceScaled": 78,
+        "closingTheGapsScaled": 81
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902002": {
+      "name": "MARCUS H S",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 91,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 91,
+        "academicGrowthScaled": 81,
+        "relativePerformanceScaled": 81,
+        "closingTheGapsScaled": 92
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902004": {
+      "name": "THE COLONY H S",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 79,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 79,
+        "academicGrowthScaled": 75,
+        "relativePerformanceScaled": 79,
+        "closingTheGapsScaled": 79
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902005": {
+      "name": "LEARNING CTR",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 83,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 76,
+        "academicGrowthScaled": 75,
+        "relativePerformanceScaled": 85,
+        "closingTheGapsScaled": 78
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902007": {
+      "name": "DENTON CO J J A E P",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": null,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": null,
+        "academicGrowthScaled": null,
+        "relativePerformanceScaled": null,
+        "closingTheGapsScaled": null
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902008": {
+      "name": "HEBRON H S",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 89,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 88,
+        "academicGrowthScaled": 79,
+        "relativePerformanceScaled": 84,
+        "closingTheGapsScaled": 92
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902010": {
+      "name": "FLOWER MOUND H S",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 94,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 94,
+        "academicGrowthScaled": 84,
+        "relativePerformanceScaled": 85,
+        "closingTheGapsScaled": 94
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902042": {
+      "name": "STEM ACADEMY AT HEDRICK MIDDLE",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 69,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 69,
+        "academicGrowthScaled": 67,
+        "relativePerformanceScaled": 75,
+        "closingTheGapsScaled": 67
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902044": {
+      "name": "STEM ACADEMY AT GRIFFIN MIDDLE",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 75,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 76,
+        "academicGrowthScaled": 76,
+        "relativePerformanceScaled": 72,
+        "closingTheGapsScaled": 72
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902045": {
+      "name": "LAMAR MIDDLE",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 85,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 87,
+        "academicGrowthScaled": 82,
+        "relativePerformanceScaled": 66,
+        "closingTheGapsScaled": 79
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902046": {
+      "name": "LAKEVIEW MIDDLE",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 71,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 70,
+        "academicGrowthScaled": 67,
+        "relativePerformanceScaled": 58,
+        "closingTheGapsScaled": 72
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902047": {
+      "name": "ARBOR CREEK MIDDLE",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 91,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 91,
+        "academicGrowthScaled": 85,
+        "relativePerformanceScaled": 77,
+        "closingTheGapsScaled": 91
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902048": {
+      "name": "STEM ACADEMY AT FORESTWOOD MIDDLE",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 90,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 93,
+        "academicGrowthScaled": 83,
+        "relativePerformanceScaled": 79,
+        "closingTheGapsScaled": 83
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902049": {
+      "name": "BRIARHILL MIDDLE",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 91,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 92,
+        "academicGrowthScaled": 86,
+        "relativePerformanceScaled": 74,
+        "closingTheGapsScaled": 88
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902050": {
+      "name": "DELAY MIDDLE",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 59,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 55,
+        "academicGrowthScaled": 57,
+        "relativePerformanceScaled": 58,
+        "closingTheGapsScaled": 62
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902052": {
+      "name": "HUFFINES MIDDLE",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 60,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 60,
+        "academicGrowthScaled": 58,
+        "relativePerformanceScaled": 59,
+        "closingTheGapsScaled": 61
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902053": {
+      "name": "MCKAMY MIDDLE",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 94,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 94,
+        "academicGrowthScaled": 91,
+        "relativePerformanceScaled": 81,
+        "closingTheGapsScaled": 93
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902054": {
+      "name": "STEM ACADEMY AT CREEK VALLEY MIDDLE",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 79,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 83,
+        "academicGrowthScaled": 70,
+        "relativePerformanceScaled": 74,
+        "closingTheGapsScaled": 71
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902055": {
+      "name": "STEM ACADEMY AT CLAYTON DOWNING MIDDLE",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 92,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 94,
+        "academicGrowthScaled": 91,
+        "relativePerformanceScaled": 81,
+        "closingTheGapsScaled": 86
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902056": {
+      "name": "MARSHALL DURHAM MIDDLE",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 66,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 60,
+        "academicGrowthScaled": 62,
+        "relativePerformanceScaled": 63,
+        "closingTheGapsScaled": 72
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902058": {
+      "name": "SHADOW RIDGE MIDDLE",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 92,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 94,
+        "academicGrowthScaled": 89,
+        "relativePerformanceScaled": 81,
+        "closingTheGapsScaled": 88
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902059": {
+      "name": "KILLIAN MIDDLE",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 87,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 92,
+        "academicGrowthScaled": 81,
+        "relativePerformanceScaled": 82,
+        "closingTheGapsScaled": 75
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902101": {
+      "name": "CENTRAL EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 74,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 57,
+        "academicGrowthScaled": 75,
+        "relativePerformanceScaled": 60,
+        "closingTheGapsScaled": 72
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902104": {
+      "name": "LAKELAND EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 73,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 65,
+        "academicGrowthScaled": 75,
+        "relativePerformanceScaled": 70,
+        "closingTheGapsScaled": 69
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902106": {
+      "name": "DEGAN EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 85,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 73,
+        "academicGrowthScaled": 89,
+        "relativePerformanceScaled": 77,
+        "closingTheGapsScaled": 77
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902107": {
+      "name": "CAMEY EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 78,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 74,
+        "academicGrowthScaled": 79,
+        "relativePerformanceScaled": 73,
+        "closingTheGapsScaled": 75
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902108": {
+      "name": "TIMBER CREEK EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 84,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 85,
+        "academicGrowthScaled": 85,
+        "relativePerformanceScaled": 69,
+        "closingTheGapsScaled": 80
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902109": {
+      "name": "PETERS COLONY EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 73,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 67,
+        "academicGrowthScaled": 71,
+        "relativePerformanceScaled": 60,
+        "closingTheGapsScaled": 76
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902112": {
+      "name": "FLOWER MOUND EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 92,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 92,
+        "academicGrowthScaled": 90,
+        "relativePerformanceScaled": 76,
+        "closingTheGapsScaled": 92
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902113": {
+      "name": "INDIAN CREEK EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 76,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 76,
+        "academicGrowthScaled": 73,
+        "relativePerformanceScaled": 66,
+        "closingTheGapsScaled": 77
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902114": {
+      "name": "MCAULIFFE EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 89,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 92,
+        "academicGrowthScaled": 86,
+        "relativePerformanceScaled": 72,
+        "closingTheGapsScaled": 81
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902117": {
+      "name": "STEM ACADEMY AT DONALD EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 87,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 91,
+        "academicGrowthScaled": 87,
+        "relativePerformanceScaled": 72,
+        "closingTheGapsScaled": 79
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902118": {
+      "name": "STEM ACADEMY AT HEBRON VALLEY EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 79,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 82,
+        "academicGrowthScaled": 73,
+        "relativePerformanceScaled": 65,
+        "closingTheGapsScaled": 73
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902119": {
+      "name": "ETHRIDGE EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 79,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 78,
+        "academicGrowthScaled": 81,
+        "relativePerformanceScaled": 67,
+        "closingTheGapsScaled": 75
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902121": {
+      "name": "MORNINGSIDE EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 81,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 83,
+        "academicGrowthScaled": 76,
+        "relativePerformanceScaled": 74,
+        "closingTheGapsScaled": 77
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902122": {
+      "name": "HERITAGE EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 87,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 91,
+        "academicGrowthScaled": 83,
+        "relativePerformanceScaled": 66,
+        "closingTheGapsScaled": 78
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902123": {
+      "name": "OLD SETTLERS EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 96,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 95,
+        "academicGrowthScaled": 96,
+        "relativePerformanceScaled": 83,
+        "closingTheGapsScaled": 97
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902124": {
+      "name": "PARKWAY EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 65,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 67,
+        "academicGrowthScaled": 56,
+        "relativePerformanceScaled": 66,
+        "closingTheGapsScaled": 60
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902126": {
+      "name": "PRAIRIE TRAIL EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 89,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 90,
+        "academicGrowthScaled": 88,
+        "relativePerformanceScaled": 74,
+        "closingTheGapsScaled": 87
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902127": {
+      "name": "STEM ACADEMY AT VALLEY RIDGE EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 72,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 74,
+        "academicGrowthScaled": 74,
+        "relativePerformanceScaled": 58,
+        "closingTheGapsScaled": 68
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902128": {
+      "name": "FOREST VISTA EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 93,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 93,
+        "academicGrowthScaled": 94,
+        "relativePerformanceScaled": 85,
+        "closingTheGapsScaled": 92
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902129": {
+      "name": "STEM ACADEMY AT BRIDLEWOOD EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 91,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 93,
+        "academicGrowthScaled": 83,
+        "relativePerformanceScaled": 75,
+        "closingTheGapsScaled": 86
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902130": {
+      "name": "WELLINGTON EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 92,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 94,
+        "academicGrowthScaled": 87,
+        "relativePerformanceScaled": 81,
+        "closingTheGapsScaled": 88
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902131": {
+      "name": "SOUTHRIDGE EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 68,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 57,
+        "academicGrowthScaled": 68,
+        "relativePerformanceScaled": 59,
+        "closingTheGapsScaled": 69
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902132": {
+      "name": "HOMESTEAD EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 86,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 91,
+        "academicGrowthScaled": 85,
+        "relativePerformanceScaled": 79,
+        "closingTheGapsScaled": 75
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902133": {
+      "name": "BLUEBONNET EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 96,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 95,
+        "academicGrowthScaled": 96,
+        "relativePerformanceScaled": 86,
+        "closingTheGapsScaled": 96
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902134": {
+      "name": "TOM HICKS EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 89,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 92,
+        "academicGrowthScaled": 86,
+        "relativePerformanceScaled": 75,
+        "closingTheGapsScaled": 83
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902135": {
+      "name": "LIBERTY EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 91,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 92,
+        "academicGrowthScaled": 91,
+        "relativePerformanceScaled": 72,
+        "closingTheGapsScaled": 90
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902136": {
+      "name": "CASTLE HILLS EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 93,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 94,
+        "academicGrowthScaled": 89,
+        "relativePerformanceScaled": 79,
+        "closingTheGapsScaled": 92
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902138": {
+      "name": "MARJORY VICKERY EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 68,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 65,
+        "academicGrowthScaled": 66,
+        "relativePerformanceScaled": 69,
+        "closingTheGapsScaled": 67
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902139": {
+      "name": "ROCKBROOK EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 78,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 67,
+        "academicGrowthScaled": 76,
+        "relativePerformanceScaled": 69,
+        "closingTheGapsScaled": 84
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902140": {
+      "name": "COYOTE RIDGE EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 76,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 73,
+        "academicGrowthScaled": 78,
+        "relativePerformanceScaled": 63,
+        "closingTheGapsScaled": 72
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902141": {
+      "name": "LILLIE J JACKSON EARLY CHILDHOOD CENTER",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 83,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": null,
+        "academicGrowthScaled": null,
+        "relativePerformanceScaled": null,
+        "closingTheGapsScaled": null
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902142": {
+      "name": "INDEPENDENCE EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 74,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 76,
+        "academicGrowthScaled": 70,
+        "relativePerformanceScaled": 70,
+        "closingTheGapsScaled": 70
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902143": {
+      "name": "LEWISVILLE EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 69,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 62,
+        "academicGrowthScaled": 68,
+        "relativePerformanceScaled": 66,
+        "closingTheGapsScaled": 72
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902144": {
+      "name": "MILL STREET EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 67,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 51,
+        "academicGrowthScaled": 66,
+        "relativePerformanceScaled": 52,
+        "closingTheGapsScaled": 69
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    },
+    "061902145": {
+      "name": "STEM ACADEMY AT MEMORIAL EL",
+      "district": "LISD",
+      "year": 2026,
+      "officialDistrictCampusListing": "https://rptsvr1.tea.texas.gov/cgi/sas/broker?_debug=0&_program=perfrept.perfmast.sas&_service=marykay&ccyy=2026&id=061902118&lev=C&prgopt=reports%2Facct%2Fca.sas",
+      "overallScore": 90,
+      "publishedCategoryValues": {
+        "studentAchievementScaled": 92,
+        "academicGrowthScaled": 91,
+        "relativePerformanceScaled": 81,
+        "closingTheGapsScaled": 84
+      },
+      "schoolProgressScaled": null,
+      "progressNote": "This official district listing reports growth and relative performance separately, not the combined School Progress scaled score; do not infer it here.",
+      "originalTEAListingReviewed": true,
+      "sourceSuppressionPolicy": "Null means Not Rated/blank/non-applicable, not zero."
+    }
+  }
+}
