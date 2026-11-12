@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const load=p=>fs.readFileSync(path.resolve(__dirname,'..',p),'utf8');
 const html=load('index.html'),count=s=>html.split(s).length-1;
 test('AG06 retains CFB atlas, ISD border and AG05 overlay imports exactly once',()=>{
- for(const s of ['./features/cfb-approved-zone-atlas.js?v=1','./features/cfb-district-jurisdiction.js?v=1','./features/cfb-zone-overlay.js?v=1','./features/cfb-official-bridge.js?v=2'])assert.equal(count(s),1,s);
+ for(const s of ['./features/cfb-approved-zone-atlas.js?v=2','./features/cfb-district-jurisdiction.js?v=1','./features/cfb-zone-overlay.js?v=1','./features/cfb-official-bridge.js?v=2'])assert.equal(count(s),1,s);
  assert.ok(html.indexOf('cfb-zone-overlay.js')<html.indexOf('cfb-approved-zone-atlas.js'));
 });
 test('AG03 and AG05 cannot silently approve school-zone geometry',()=>{
