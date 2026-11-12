@@ -64,4 +64,12 @@ test('a sent email is not the same thing as receiving an acknowledgement or a li
  const falseSubmitted=copy(x);
  falseSubmitted.officialRequest.status='submitted';
  assert.ok(inspect(falseSubmitted).errors.includes('request_status_missing_or_unsubstantiated'));
+ const spoof=copy(x);
+ spoof.officialRequest.status='submitted';
+ spoof.officialRequest.receiptUrl='https://www.cfbisd.edu.attacker.invalid/request-confirmed';
+ assert.ok(inspect(spoof).errors.includes('request_status_missing_or_unsubstantiated'));
+ const credentials=copy(x);
+ credentials.officialRequest.status='submitted';
+ credentials.officialRequest.receiptUrl='https://somebody@www.cfbisd.edu/receipt';
+ assert.ok(inspect(credentials).errors.includes('request_status_missing_or_unsubstantiated'));
 });
