@@ -5,7 +5,9 @@ on:
     paths:
       - 'rent-map-uat.html'
       - 'features/dfw-rent-map-uat*'
+      - 'features/dfw-area-explorer-uat*'
       - 'tests/dfw-rent-map-uat.test.cjs'
+      - 'tests/dfw-area-explorer-uat.test.cjs'
       - 'scripts/test-rent-map-uat-browser.cjs'
       - '.github/workflows/verify-rent-map-uat.yml'
   push:
@@ -13,7 +15,9 @@ on:
     paths:
       - 'rent-map-uat.html'
       - 'features/dfw-rent-map-uat*'
+      - 'features/dfw-area-explorer-uat*'
       - 'tests/dfw-rent-map-uat.test.cjs'
+      - 'tests/dfw-area-explorer-uat.test.cjs'
       - 'scripts/test-rent-map-uat-browser.cjs'
       - '.github/workflows/verify-rent-map-uat.yml'
 permissions:
@@ -32,7 +36,9 @@ jobs:
       - run: |
           node --check features/dfw-rent-map-uat-core.js
           node --check features/dfw-rent-map-uat.js
-          node --test tests/dfw-rent-map-uat.test.cjs
+          node --check features/dfw-area-explorer-uat-core.js
+          node --check features/dfw-area-explorer-uat.js
+          node --test tests/dfw-rent-map-uat.test.cjs tests/dfw-area-explorer-uat.test.cjs
   browser:
     runs-on: ubuntu-latest
     timeout-minutes: 25
