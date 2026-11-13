@@ -114,8 +114,11 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  assert.equal(hash(show('4de683d2f27b4db9117ed8a92c8f572c869ae3ca','dashboard-main.js')),
   hash(show('f81a800d4855b00037ad63599c9c879515b6fa43','dashboard-main.js')),
   'District-sharded main must preserve the previously reviewed dashboard renderer');
- assert.equal(hash(js),hash(show('0d2bf41dad7d9d92f5265d760fee27fa219a3e56','dashboard-main.js')),
-  'Only the exact reviewed incremental school-marker performance commit may change the dashboard');
+ assert.equal(hash(show('a9785b33d7c60dba43281aba27b9e1fd25d14180','dashboard-main.js')),
+  hash(show('0d2bf41dad7d9d92f5265d760fee27fa219a3e56','dashboard-main.js')),
+  'Before TX load performance work, the reviewed marker renderer remained byte-identical');
+ assert.equal(hash(js),hash(show('b12bbb62e9cd57441ffd9000850b1c1f837a6821','dashboard-main.js')),
+  'Only the exact reviewed TX first-load and cache policy performance commit may change the dashboard');
  const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
  const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);
  assert.ok(start>40000&&end>start+70000);
