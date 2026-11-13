@@ -104,7 +104,39 @@ async function settle(page){await page.waitForTimeout(450)}
   assert.equal(await page.evaluate(()=>schoolGroup.getLayers().length),0,'Markers must be removed when overlay is off');
   await page.locator('#schoolOverlay').check();await settle(page);
   checkView(await page.evaluate(audit),'overlay re-enabled',{district:'AISD'});
-  // Level and rating filters change the marker set consistently.
+  // Phase 3: stable markers and their DOM must survive redundant redraws,
+// map pans with overlapping schools, and the off/on overlay toggle.
+const reused=await page.evaluate(()=>{
+ map.stop();map.setZoom(14,{animate:false});drawSchools();
+ const pins=schoolGroup.getLayers().filter(l=>(l.options.schoolMembers||[]).length===1).slice(0,30);
+ const elements=pins.map(m=>m.getElement());
+ drawSchools();
+ const sameRender=pins.filter((m,i)=>schoolGroup.hasLayer(m)&&m.getElement()===elements[i]).length;
+ map.panBy([12,8],{animate:false});drawSchools();
+ const overlapping=pins.filter(m=>map.getBounds().contains(m.getLatLng()));
+ const samePan=overlapping.filter(m=>schoolGroup.hasLayer(m)).length;
+ state.showSchools=false;drawSchools();
+ const hiddenCount=schoolGroup.getLayers().length;
+ state.showSchools=true;drawSchools();
+ const sameReenabled=overlapping.filter(m=>schoolGroup.hasLayer(m)).length;
+ map.stop();map.setZoom(10,{animate:false});drawSchools();
+ const clusters=schoolGroup.getLayers().filter(m=>(m.options.schoolMembers||[]).length>1);
+ const oldElements=clusters.map(m=>m.getElement());
+ drawSchools();
+ const sameClusters=clusters.filter((m,i)=>schoolGroup.hasLayer(m)&&m.getElement()===oldElements[i]).length;
+ return {pins:pins.length,sameRender,overlapping:overlapping.length,samePan,
+  hiddenCount,sameReenabled,clusters:clusters.length,sameClusters};
+});
+assert.ok(reused.pins>0,'Must test actual visible school pins: '+JSON.stringify(reused));
+assert.equal(reused.sameRender,reused.pins,'Unchanged redraw must retain every school pin and DOM element');
+assert.ok(reused.overlapping>0,'Small pan must keep overlapping schools');
+assert.equal(reused.samePan,reused.overlapping,'Small pan must reuse the same school marker objects');
+assert.equal(reused.hiddenCount,0,'Overlay off must clear all rendered school markers');
+assert.equal(reused.sameReenabled,reused.overlapping,'Overlay on must reattach cached school markers');
+assert.ok(reused.clusters>0,'Zoomed-out viewport must contain actual multi-school clusters');
+assert.equal(reused.sameClusters,reused.clusters,'Unchanged clustered redraw must retain marker and DOM identity');
+checkView(await page.evaluate(audit),'incremental markers after cluster redraw',{district:'AISD'});
+// Level and rating filters change the marker set consistently.
   await page.locator('#levels button[data-v="high"]').click();await settle(page);
   const high=await page.evaluate(audit);checkView(high,'high-school filter',{allowEmpty:true});
   assert.ok(await page.evaluate(()=>schoolGroup.getLayers().every(l=>(l.options.schoolMembers||[]).every(s=>s.type==='high'))),'High filter must represent only high schools');
