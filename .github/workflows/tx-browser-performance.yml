@@ -1,0 +1,63 @@
+name: TX relocation browser performance budget (baseline vs candidate)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'dashboard-main.js'
+      - 'scripts/benchmark-tx-map-browser.cjs'
+      - 'tests/tx-deferred-script-order.test.cjs'
+      - '.github/workflows/tx-browser-performance.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: tx-browser-performance-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Validate ordered defer/CSP and pinned full HTML baseline
+        run: |
+          node --test tests/tx-deferred-script-order.test.cjs
+          node --test tests/externalized-main-bootstrap.test.cjs
+      - name: Checkout reviewed pre-defer deployed baseline into read-only worktree
+        run: |
+          git worktree add --detach ./tx-perf-baseline-tmp 52776f3c87933d5e8c4374aaadfd460f246c0a71
+      - name: Install isolated Chromium (never add persistent dependency)
+        run: |
+          mkdir -p tx-perf-deps-tmp
+          cd tx-perf-deps-tmp
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve exact baseline and candidate over local HTTP
+        run: |
+          python3 -m http.server 8766 --bind 127.0.0.1 --directory tx-perf-baseline-tmp >/tmp/tx-perf-base.log 2>&1 &
+          echo $! > /tmp/tx-perf-base.pid
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/tx-perf-candidate.log 2>&1 &
+          echo $! > /tmp/tx-perf-candidate.pid
+          sleep 2
+          curl --fail --silent http://127.0.0.1:8766/ >/dev/null
+          curl --fail --silent http://127.0.0.1:8765/ >/dev/null
+      - name: Compare 390px and 1366px cold/warm Chromium map load
+        env:
+          NODE_PATH: ${{ github.workspace }}/tx-perf-deps-tmp/node_modules
+        run: node scripts/benchmark-tx-map-browser.cjs
+      - name: Archive exact measurements and source loads
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: tx-relocation-chromium-cold-warm-performance
+          path: artifacts/performance/tx-map-load.json
+          if-no-files-found: warn
