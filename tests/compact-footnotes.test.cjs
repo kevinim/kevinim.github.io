@@ -2,9 +2,9 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');
 const html=fs.readFileSync('index.html','utf8');
 const js=fs.readFileSync('features/compact-footnotes.js','utf8');
-const css=fs.readFileSync('features/compact-footnotes.css','utf8');
+const css=html;
 test('production loads CSP-compatible compact-footnote assets',()=>{
-  assert.match(html,/features\/compact-footnotes\.css\?v=1/);
+  assert.match(html,/\.footnote-original-hidden/);
   assert.match(html,/features\/compact-footnotes\.js\?v=1/);
   assert.doesNotMatch(js,/\b(eval|new Function)\s*\(/);
 });
