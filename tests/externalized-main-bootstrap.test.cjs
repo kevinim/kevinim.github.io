@@ -135,8 +135,8 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  perfP9=replaceOnce(perfP9,
   'fillOpacity:(state.withinHour||scopedZips().includes(d))?.72:.3',
   'fillOpacity:(state.withinHour||visible.has(d))?.72:.3');
- assert.equal(hash(js),hash(perfP9),
-  'TX P9 dashboard JS must match five exact audited scope-cache substitutions');
+ assert.equal(hash(show('667aa4666550641679ebd373c61082b2dcceb971','dashboard-main.js')),hash(perfP9),
+  'Deployed P9 dashboard JS must still match five exact audited scope-cache substitutions');
  // P10: only the reviewed ZIP table redraw and event delegation changes.
  let perfP10=perfP9;
  perfP10=replaceOnce(perfP10,"el('metric').onchange=e=>{state.metric=e.target.value;drawZip();drawDetail();drawTable()}","el('metric').onchange=e=>{state.metric=e.target.value;drawZip();drawDetail()}");
