@@ -52,8 +52,14 @@ test('existing verified official Finder results are public test observations, ne
  assert.ok(targets.targets.every(x=>x.mapPublishable===false&&x.finder2026Verified===false));
 });
 test('CFB map atlas does not add fake GIS or downgrade residential release policy',()=>{
- const script=fs.readFileSync(path.join(root,'features/cfb-approved-zone-atlas.js'),'utf8');
+ const script=fs.readFileSync(path.join(root,'features/cfb-approved-zone-atlas-renderer.js'),'utf8');
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+ assert.equal(require('node:child_process').execFileSync('git',['hash-object','features/cfb-approved-zone-atlas-renderer.js'],{cwd:root,encoding:'utf8'}).trim(),
+  'bf1d7754b6f9b59812ea46308c543616f860490a','Original source-validated CFB atlas renderer stays byte-identical');
+ const loader=fs.readFileSync(path.join(root,'features/cfb-approved-zone-atlas.js'),'utf8');
+ assert.match(loader,/const RENDERER='\.\/features\/cfb-approved-zone-atlas-renderer\.js\?v=1'/);
+ assert.match(loader,/stub\.addEventListener\('toggle'/);
+ assert.doesNotMatch(loader,/innerHTML|localStorage|sessionStorage|L\.geoJSON|L\.imageOverlay/);
  assert.match(script,/rasterReferenceOnly/);
  assert.doesNotMatch(script,/L\.imageOverlay|L\.geoJSON|APPROVED_AUTO_DISTRICTS|localStorage|sessionStorage|iframe\.contentDocument/);
  assert.match(html,/features\/cfb-approved-zone-atlas\.js\?v=2/);
@@ -62,7 +68,7 @@ test('CFB map atlas does not add fake GIS or downgrade residential release polic
 });
 test('two mutually inconsistent published CFB pages are visible as source conflicts, never a school assignment',()=>{
  const ledger=read('data/cfb-ag03-official-narrative-evidence-2025.json');
- const {validConflictLedger}=require('../features/cfb-approved-zone-atlas.js');
+ const {validConflictLedger}=require('../features/cfb-approved-zone-atlas-renderer.js');
  const reviewed=validConflictLedger(ledger);
  assert.ok(reviewed);
  assert.deepEqual(reviewed.map(x=>x.id),
@@ -85,7 +91,7 @@ test('two mutually inconsistent published CFB pages are visible as source confli
  const downgraded=structuredClone(ledger);
  downgraded.currentYear2026_27PolygonVerified=true;
  assert.equal(validConflictLedger(downgraded),null,'no unsupported 2026-27 polygon attestation');
- const script=fs.readFileSync(path.join(root,'features/cfb-approved-zone-atlas.js'),'utf8');
+ const script=fs.readFileSync(path.join(root,'features/cfb-approved-zone-atlas-renderer.js'),'utf8');
  assert.match(script,/cfbAtlasConflictWarning/);
  assert.match(script,/cfbAtlasConflictList/);
  assert.match(script,/Woodlake\/Woodland/);

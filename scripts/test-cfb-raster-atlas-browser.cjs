@@ -25,8 +25,9 @@ async function main(){
  try{
   for(const width of [390,1366]){
    const page=await browser.newPage({viewport:{width,height:900}});
-   let remoteImages=0,remoteOther=0;
+   let remoteImages=0,remoteOther=0,rendererRequests=0;
    const errors=[];page.on('pageerror',x=>errors.push(String(x)));
+    page.on('request',req=>{if(req.url().includes('cfb-approved-zone-atlas-renderer.js'))rendererRequests++});
    await page.route('**/*',route=>{
     const url=new URL(route.request().url());
     if(url.hostname==='127.0.0.1'||url.hostname==='unpkg.com')return route.continue();
@@ -39,14 +40,18 @@ async function main(){
    const atlas=page.locator('#cfbAtlas');
    await atlas.waitFor({state:'attached',timeout:45000});
    assert.equal(remoteImages,0,'No official raster should be fetched on initial page render');
+    assert.equal(rendererRequests,0,'Optional CFB raster renderer must not download at first entry');
    assert.equal(await atlas.isVisible(),false,'Atlas should be within the opt-in CFB panel');
    await page.locator('#schoolDataDetails > summary').click();
    await page.locator('#cfbOfficialRezoningReference > summary').click();
    await page.locator('#cfbOpenInlineFinder').click();
    assert.equal(await atlas.isVisible(),true);
    assert.equal(remoteImages,0,'Opening CFB panel must not fetch map rasters');
+    assert.equal(rendererRequests,0,'Opening the CFB parent must not download the optional atlas');
    await page.locator('#cfbAtlas > summary').click();
    await page.locator('#cfbAtlasBands button').first().waitFor({timeout:25000});
+    assert.equal(rendererRequests,1,'Opening the atlas fetches trusted renderer once');
+    assert.equal(await page.locator('#cfbAtlas').evaluate(node=>node.open),true,'Atlas stays open after dynamic renderer replacement');
    assert.equal(remoteImages,0,'Opening raster atlas itself must not fetch third-party images');
    assert.equal(await page.locator('#cfbAtlasBands button').count(),3);
    const conflictWarning=page.locator('#cfbAtlasConflictWarning');
