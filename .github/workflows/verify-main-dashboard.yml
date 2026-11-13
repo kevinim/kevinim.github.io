@@ -25,6 +25,7 @@ jobs:
       - run: node --test tests/school-grade-focus.test.cjs
       - run: node --test tests/school-list-spatial-cache.test.cjs
       - run: node --test tests/school-marker-reuse.test.cjs
+      - run: node --test tests/tx-first-load-cache.test.cjs
       - run: node --test tests/carrollton-school-insights.test.cjs
       - run: node --test tests/tea-campus-enrichment-pipeline.test.cjs
       - run: node --test tests/tea-peims-priority-campus.test.cjs
