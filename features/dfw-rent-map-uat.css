@@ -1,0 +1,32 @@
+/* Standalone rent/map discovery UAT only: no production selectors are modified. */
+.rent-map-uat{background:#f8fbff;color:#183252;border:1px solid #c5d9ef;border-radius:13px;padding:15px;margin-bottom:13px;box-shadow:0 3px 14px #1c375b0c}
+.rent-map-heading{display:flex;justify-content:space-between;align-items:start;gap:9px}
+.rent-map-eyebrow{display:block;color:#4667b4;font-size:10px;letter-spacing:1px;font-weight:850;margin-bottom:4px}
+.rent-map-heading h2{font-size:16px;margin:0}
+.rent-map-chip{background:#e3eefe;color:#22549c;border-radius:20px;font-size:10px;font-weight:750;padding:6px 9px;white-space:nowrap}
+.rent-map-desc{color:#4c627e;font-size:12px;line-height:1.55;margin:8px 0 12px}
+.rent-map-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(210px,.85fr);gap:13px}
+.rent-map-discovery,.rent-map-listings{min-width:0;border:1px solid #d7e4f1;background:#fff;border-radius:10px;padding:11px}
+.rent-map-small-heading{font-size:11px;font-weight:800;color:#476080;margin-bottom:7px}
+.rent-map-focus{display:flex;gap:5px;flex-wrap:wrap}
+.rent-map-focus button,.rent-map-map-tools button{padding:7px 9px;background:#f4f7fd;color:#284b80;border:1px solid #cbd8eb;border-radius:7px;min-height:33px;font-weight:700;font-size:11px}
+.rent-map-focus button[aria-pressed="true"],.rent-map-map-tools button[aria-pressed="true"]{background:#2355a9;border-color:#2355a9;color:#fff}
+.rent-map-map-tools{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.rent-map-map-tools span{font-size:11px;color:#62758c}
+.rent-map-current{display:block;font-size:15px;color:#213e6c;margin:4px 0 10px}
+.rent-map-search-actions{display:flex;gap:7px;flex-wrap:wrap}
+.rent-map-search-actions a{color:#fff;background:#2759b3;padding:9px 11px;font-size:11px;font-weight:800;border-radius:8px;text-decoration:none;min-height:36px;display:inline-flex;align-items:center}
+.rent-map-search-actions a:nth-child(2){background:#0c7775}
+.rent-map-search-actions a[aria-disabled="true"]{opacity:.45;pointer-events:none}
+.rent-map-listings small{display:block;font-size:11px;line-height:1.5;margin-top:10px;color:#596e88}
+.rent-map-status,.rent-map-source{font-size:11px;line-height:1.55;margin:10px 0 0;color:#506682}
+.rent-map-source{border-top:1px solid #e4edf6;padding-top:8px;font-size:10px}
+.rent-map-uat button:focus-visible,.rent-map-uat a:focus-visible{outline:3px solid #76a6e5;outline-offset:2px}
+html[data-theme="dark"] .rent-map-uat{background:#14273e;border-color:#47678a;color:#edf5ff}
+html[data-theme="dark"] .rent-map-discovery,html[data-theme="dark"] .rent-map-listings{background:#1d344f;border-color:#476381}
+html[data-theme="dark"] .rent-map-uat .rent-map-small-heading,html[data-theme="dark"] .rent-map-uat .rent-map-desc,html[data-theme="dark"] .rent-map-uat .rent-map-status,html[data-theme="dark"] .rent-map-uat .rent-map-source,html[data-theme="dark"] .rent-map-uat .rent-map-listings small{color:#bed0e5}
+html[data-theme="dark"] .rent-map-current{color:#eef6ff}
+html[data-theme="dark"] .rent-map-focus button,html[data-theme="dark"] .rent-map-map-tools button{background:#253c59;border-color:#607895;color:#e6effe}
+html[data-theme="dark"] .rent-map-focus button[aria-pressed="true"],html[data-theme="dark"] .rent-map-map-tools button[aria-pressed="true"]{background:#3d69ba}
+@media(max-width:960px){.rent-map-layout{grid-template-columns:1fr}}
+@media(max-width:630px){.rent-map-uat{padding:11px}.rent-map-heading h2{font-size:14px}.rent-map-search-actions{display:grid;grid-template-columns:1fr 1fr}.rent-map-search-actions a{justify-content:center;padding:9px 7px}.rent-map-focus button{flex:1 1 auto}}
