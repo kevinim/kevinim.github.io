@@ -132,8 +132,18 @@ function percent(base,next){
    assert.ok(after.visibleMarkerCount>0,'No rendered TX school markers: '+JSON.stringify(row));
    // Guard only catastrophic regressions. Report variation; one CI runner is NOT
    // a scientifically stable performance experiment and should not gate small deltas.
-   assert.ok(after.coreReadyMs<Math.max(before.coreReadyMs*2.5,20000),
-    'Critical map readiness >2.5x baseline or 20s: '+JSON.stringify(row));
+   assert.ok(after.coreReadyMs<Math.max(before.coreReadyMs*2,5000),
+    'Critical map readiness >2x baseline or 5s: '+JSON.stringify(row));
+   assert.ok(after.resourceRequests<=before.resourceRequests+5,
+    'Unexpected extra first-party asset requests: '+JSON.stringify(row));
+   assert.ok(after.transferBytes<=before.transferBytes*1.2+262144,
+    'Unexpected first-party resource byte growth: '+JSON.stringify(row));
+  }
+  for(const viewport of VIEWPORTS){
+   const base=cases.find(x=>x.viewport===viewport.name&&x.label==='baseline');
+   const candidate=cases.find(x=>x.viewport===viewport.name&&x.label==='candidate');
+   assert.ok(candidate.pageErrors.length<=base.pageErrors.length+2,
+    'New unexpected browser runtime failures: '+JSON.stringify({viewport:viewport.name,base:base.pageErrors,candidate:candidate.pageErrors}));
   }
   const output={scope:'Texas relocation / Area Intelligence (not job-search)',
    measuredAt:new Date().toISOString(),environment:'GitHub Actions Linux Chromium, local HTTP',
