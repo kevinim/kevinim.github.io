@@ -5,7 +5,6 @@ on:
     paths:
       - 'index.html'
       - 'features/compact-footnotes.js'
-      - 'features/compact-footnotes.css'
       - 'tests/compact-footnotes.test.cjs'
       - 'scripts/test-compact-footnotes-browser.cjs'
       - '.github/workflows/verify-compact-footnotes.yml'
