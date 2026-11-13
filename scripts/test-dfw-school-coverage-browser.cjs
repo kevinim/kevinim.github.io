@@ -13,10 +13,11 @@ fs.mkdirSync(folder,{recursive:true});
  try{
   for(const width of [390,1366]){
    const page=await browser.newPage({viewport:{width,height:900},deviceScaleFactor:1});
-   const errors=[],csp=[],requests=[],localityRequests=[];
+   const errors=[],csp=[],requests=[],localityRequests=[],rendererRequests=[];
    page.on('pageerror',e=>errors.push(String(e.message||e)));
    page.on('request',r=>{
     if(r.url().includes('dfw-school-coverage-matrix-2026.json'))requests.push(r.url());
+     if(r.url().includes('/features/dfw-school-coverage-renderer.js'))rendererRequests.push(r.url());
     if(r.url().includes('tea-texasworks-locality-2026.json'))localityRequests.push(r.url());
    });
    await page.addInitScript(()=>{
@@ -28,11 +29,13 @@ fs.mkdirSync(folder,{recursive:true});
     await page.goto(URL,{waitUntil:'domcontentloaded',timeout:75000});
     await page.locator('#dfwSchoolCoveragePanel > summary').waitFor();
     assert.equal(await page.locator('#dfwSchoolCoveragePanel').evaluate(x=>x.open),false,'panel must stay folded by default');
-    assert.equal(requests.length,0,'large coverage file must lazy-load, not block initial map');
+    assert.equal(rendererRequests.length,0,'Collapsed DFW coverage renderer must not download during initial map');
+     assert.equal(requests.length,0,'large coverage file must lazy-load, not block initial map');
     assert.equal(localityRequests.length,0,'TexasWorks physical-locality evidence must also lazy-load');
     await page.locator('#dfwSchoolCoveragePanel > summary').click();
     await page.locator('#dfwSchoolCoverageContent .dfw-coverage-stats').waitFor({timeout:45000});
-    assert.equal(requests.length,1,'opening panel should request coverage dataset once');
+    assert.equal(rendererRequests.length,1,'Opening panel should load the approved same-origin JS renderer exactly once');
+     assert.equal(requests.length,1,'opening panel should request coverage dataset once');
     assert.equal(localityRequests.length,1,'TexasWorks physical-locality evidence must load only when panel opens');
     const summary=await page.locator('#dfwSchoolCoverageContent .dfw-coverage-stats').innerText();
     assert.match(summary,/107\/108/,'full ISD denominator must appear');
@@ -82,7 +85,8 @@ fs.mkdirSync(folder,{recursive:true});
     assert.match(texasWorksText,/집 주소의 배정학교/);
     await page.locator('#dfwSchoolCoveragePanel > summary').click();
     await page.locator('#dfwSchoolCoveragePanel > summary').click();
-    assert.equal(requests.length,1,'reopening should use cached table without duplicate fetch');
+    assert.equal(rendererRequests.length,1,'Reopening must reuse renderer; no repeated JavaScript requests');
+     assert.equal(requests.length,1,'reopening should use cached table without duplicate fetch');
     assert.equal(localityRequests.length,1,'reopening must not refetch physical-locality source');
     const dim=await page.evaluate(()=>({
       viewport:window.innerWidth,scrollWidth:document.documentElement.scrollWidth,
