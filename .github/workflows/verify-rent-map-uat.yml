@@ -1,0 +1,60 @@
+name: DFW Map & Rental ZIP Discovery UAT
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'rent-map-uat.html'
+      - 'features/dfw-rent-map-uat*'
+      - 'tests/dfw-rent-map-uat.test.cjs'
+      - 'scripts/test-rent-map-uat-browser.cjs'
+      - '.github/workflows/verify-rent-map-uat.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'rent-map-uat.html'
+      - 'features/dfw-rent-map-uat*'
+      - 'tests/dfw-rent-map-uat.test.cjs'
+      - 'scripts/test-rent-map-uat-browser.cjs'
+      - '.github/workflows/verify-rent-map-uat.yml'
+permissions:
+  contents: read
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - run: |
+          node --check features/dfw-rent-map-uat-core.js
+          node --check features/dfw-rent-map-uat.js
+          node --test tests/dfw-rent-map-uat.test.cjs
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Install isolated Playwright Chromium
+        run: |
+          mkdir -p rent-map-browser-tmp
+          cd rent-map-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve UAT branch
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/rent-map-browser.log 2>&1 &
+          sleep 2
+      - name: Desktop & mobile map focus, layers, and listings
+        env:
+          NODE_PATH: rent-map-browser-tmp/node_modules
+        run: node scripts/test-rent-map-uat-browser.cjs
