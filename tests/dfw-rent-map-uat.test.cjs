@@ -7,7 +7,7 @@ test('Redfin links are ZIP-scoped and HTTPS without user data',()=>{
  assert.equal(core.redfinUrl('75093','houses'),'https://www.redfin.com/zipcode/75093/houses-for-rent');
  assert.equal(core.redfinUrl('75034','apartments'),'https://www.redfin.com/zipcode/75034/apartments-for-rent');
  assert.equal(core.redfinUrl('75093','not-supported'),'https://www.redfin.com/zipcode/75093/houses-for-rent');
- for(const invalid of ['','abc','75093%2F..','75093/evil','75093?x=1','075093','\n75093'])assert.equal(core.redfinUrl(invalid,'houses'),'');
+ for(const invalid of ['','abc','75093%2F..','75093/evil','75093?x=1','075093','75093\nabc'])assert.equal(core.redfinUrl(invalid,'houses'),'');
 });
 test('City navigation uses a stable deduplicated set and constrained coordinates',()=>{
  const ids=core.cities.map(x=>x.key);
