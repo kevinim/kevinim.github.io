@@ -214,8 +214,24 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  // Source-only CFB 2025-26 conflict disclosure; still no auto-assignment.
  approvedHtml=replaceOnce(approvedHtml,'./features/cfb-approved-zone-atlas.js?v=1',
   './features/cfb-approved-zone-atlas.js?v=2');
- assert.equal(hash(html),hash(approvedHtml),
-  'Unreviewed HTML drift beyond approved source-only optional CMS hospital references');
+ // #298: the only new inline style is a compact footnote presentation block.
+ // Normalize only that named block and the single same-origin script before
+ // comparing the rest of production HTML to the immutable reviewed baseline.
+ const compactMarker='\n/* Compact links preserve all source content in the shared, collapsed footer. */';
+ const compactStart=html.indexOf(compactMarker);
+ const compactEnd=html.indexOf('</style>',compactStart);
+ assert.ok(compactStart>0&&compactEnd>compactStart&&compactEnd-compactStart<4000,
+  'Expected one narrowly scoped compact footnote CSS block');
+ const compactCss=html.slice(compactStart,compactEnd);
+ assert.match(compactCss,/\\.footnote-original-hidden \\{ display: none !important; \\}/);
+ assert.match(compactCss,/html\\[data-theme="dark"\\] \\.footnote-ref/);
+ assert.equal((html.match(/features\\/compact-footnotes\\.js\\?v=1/g)||[]).length,1);
+ const withoutCompactStyle=html.slice(0,compactStart)+html.slice(compactEnd);
+ const withoutCompactFootnotes=replaceOnce(withoutCompactStyle,
+  '<script src="./features/compact-footnotes.js?v=1"></script></body></html>',
+  '</body></html>');
+ assert.equal(hash(withoutCompactFootnotes),hash(approvedHtml),
+  'Unreviewed HTML drift beyond the documented compact-footnote additions');
  // Strip only previously released #262 zoom label additions from the
  // immutable baseline; the existing #258 content SHA remains enforced.
  const integrityHtml=reviewedMainHtml.replace(approvedLabelStyle,previousLabelStyle)
