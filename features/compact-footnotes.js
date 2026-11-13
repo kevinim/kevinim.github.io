@@ -147,7 +147,8 @@
 
   function sourceLinkPosition(group, first, link) {
     if (group.classList.contains('kpis')) group.after(link);
-    else if (group.matches('.panel, .candidate-card, .insight-card, .area-qa, details[open]')) group.appendChild(link);
+    else if (group.matches('details[open]')) group.after(link); // Never alter official links inside a published school/source details element.
+    else if (group.matches('.panel, .candidate-card, .insight-card, .area-qa')) group.appendChild(link);
     else first.before(link);
   }
 
