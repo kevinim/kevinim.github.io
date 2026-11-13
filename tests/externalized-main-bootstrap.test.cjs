@@ -223,9 +223,9 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  assert.ok(compactStart>0&&compactEnd>compactStart&&compactEnd-compactStart<4000,
   'Expected one narrowly scoped compact footnote CSS block');
  const compactCss=html.slice(compactStart,compactEnd);
- assert.match(compactCss,/\\.footnote-original-hidden \\{ display: none !important; \\}/);
- assert.match(compactCss,/html\\[data-theme="dark"\\] \\.footnote-ref/);
- assert.equal((html.match(/features\\/compact-footnotes\\.js\\?v=1/g)||[]).length,1);
+ assert.ok(compactCss.includes('.footnote-original-hidden { display: none !important; }'));
+ assert.ok(compactCss.includes('html[data-theme="dark"] .footnote-ref'));
+ assert.equal(html.split('features/compact-footnotes.js?v=1').length,2);
  const withoutCompactStyle=html.slice(0,compactStart)+html.slice(compactEnd);
  const withoutCompactFootnotes=replaceOnce(withoutCompactStyle,
   '<script src="./features/compact-footnotes.js?v=1"></script></body></html>',
