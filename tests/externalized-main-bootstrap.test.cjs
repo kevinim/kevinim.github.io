@@ -109,8 +109,10 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
   "(window.WorkplaceDestinations?.findByAddress(el('destination').value)?.id&&('saved:'+window.WorkplaceDestinations.findByAddress(el('destination').value).id))||Object.keys(OFFICES).find(k=>OFFICES[k].toLowerCase()===el('destination').value.trim().toLowerCase())");
  approved=replaceOnce(approved,"el('destination').value=OFFICES[e.target.value]||''",
   "el('destination').value=OFFICES[e.target.value]||window.WorkplaceDestinations?.addressForChoice(e.target.value)||''");
- assert.equal(hash(js),hash(approved),
-  'Unreviewed dashboard JS change beyond three approved workplace handlers');
+ assert.equal(hash(approved),hash(show('d1e30f1cdd8a5bfe0199e75d4c1533c42964494d','dashboard-main.js')),
+  'Prior main remains the exact reviewed workplace and school baseline');
+ assert.equal(hash(js),hash(show('f81a800d4855b00037ad63599c9c879515b6fa43','dashboard-main.js')),
+  'Only the separately reviewed school-list performance commit may change the dashboard');
  const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
  const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);
  assert.ok(start>40000&&end>start+70000);
