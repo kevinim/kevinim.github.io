@@ -24,7 +24,16 @@
       minPrice:$('rentMapMinPrice')?.value||'',
       maxPrice:$('rentMapMaxPrice')?.value||'',
       minBeds:$('rentMapMinBeds')?.value||'',
-      maxBeds:$('rentMapMaxBeds')?.value||''
+      maxBeds:$('rentMapMaxBeds')?.value||'',
+      minBaths:$('rentMapMinBaths')?.value||'',
+      dogs:!!$('rentMapDogs')?.checked,
+      cats:!!$('rentMapCats')?.checked,
+      parking:!!$('rentMapParking')?.checked,
+      laundry:!!$('rentMapLaundry')?.checked,
+      furnished:!!$('rentMapFurnished')?.checked,
+      pool:!!$('rentMapPool')?.checked,
+      ac:!!$('rentMapAC')?.checked,
+      dishwasher:!!$('rentMapDishwasher')?.checked
     };
   }
   function updateSearchLinks() {
@@ -47,6 +56,9 @@
       note.textContent=error||('월 렌트 '+fmt(filters.minPrice)+' ~ '+fmt(filters.maxPrice)+
         ' · 침실 '+(filters.minBeds===null?'제한 없음':filters.minBeds+'개 이상')+
         (filters.maxBeds===null?'':', '+filters.maxBeds+'개 이하')+
+        ' · 추가 조건 '+(Object.entries(filters).filter(([key,val])=>
+          !['minPrice','maxPrice','minBeds','maxBeds'].includes(key)&&
+          val!==null&&val!==false).length)+'개'+
         ' · Redfin에서 실제 검색 조건을 확인하세요.');
     }
     $('rentMapNoListings').textContent='가격은 월 렌트 기준입니다. 결과와 필터 적용 여부는 Redfin에서 확인하세요. 이 지도에는 실시간 매물 핀이 없습니다.';
@@ -105,13 +117,25 @@
       '<div class="rent-map-layout"><div class="rent-map-discovery"><div class="rent-map-small-heading">지도에서 지역 찾기</div>'+
       '<div id="rentMapFocus" class="rent-map-focus" role="group" aria-label="지도 중심 이동"></div>'+
       '<div class="rent-map-map-tools"><button type="button" id="rentMapRefs" aria-pressed="false">생활 기준점 표시</button><span id="rentMapMapScale" aria-live="polite">지도 준비 중</span></div></div>'+
-      '<div class="rent-map-listings"><div class="rent-map-small-heading">선택 ZIP의 렌트 매물 찾기</div>'+
+      '<div class="rent-map-listings"><div class="rent-map-small-heading rent-map-brandline"><img class="rent-map-redfin-icon" src="https://www.redfin.com/favicon.ico?v=3" alt="" aria-hidden="true" width="22" height="22" referrerpolicy="no-referrer" loading="lazy"><span>Redfin 렌트 매물 검색</span></div>'+
       '<strong id="rentMapSelectedZip" class="rent-map-current">ZIP 확인 중</strong>'+
       '<div id="rentMapFilters" class="rent-map-filters" role="group" aria-label="Redfin 렌트 가격과 침실 필터">'+
       '<label>월 렌트 최소 ($)<input id="rentMapMinPrice" type="number" min="0" max="50000" step="50" inputmode="numeric" placeholder="제한 없음"></label>'+
       '<label>월 렌트 최대 ($)<input id="rentMapMaxPrice" type="number" min="0" max="50000" step="50" inputmode="numeric" placeholder="제한 없음"></label>'+
       '<label>최소 침실 수<select id="rentMapMinBeds"><option value="">제한 없음</option><option value="0">Studio 이상</option><option value="1">1개 이상</option><option value="2">2개 이상</option><option value="3">3개 이상</option><option value="4">4개 이상</option><option value="5">5개 이상</option></select></label>'+
       '<label>최대 침실 수<select id="rentMapMaxBeds"><option value="">제한 없음</option><option value="0">Studio만</option><option value="1">1개 이하</option><option value="2">2개 이하</option><option value="3">3개 이하</option><option value="4">4개 이하</option><option value="5">5개 이하</option></select></label>'+
+      '<details class="rent-map-more"><summary>추가 조건 · 욕실, 반려동물, 편의시설</summary>'+
+      '<div class="rent-map-more-body"><label class="rent-map-bath-label">최소 욕실 수<select id="rentMapMinBaths"><option value="">제한 없음</option><option value="1">1개 이상</option><option value="1.5">1.5개 이상</option><option value="2">2개 이상</option><option value="2.5">2.5개 이상</option><option value="3">3개 이상</option><option value="4">4개 이상</option></select></label>'+
+      '<div class="rent-map-checks">'+
+      '<label><input id="rentMapDogs" type="checkbox">반려견 허용</label>'+
+      '<label><input id="rentMapCats" type="checkbox">반려묘 허용</label>'+
+      '<label><input id="rentMapParking" type="checkbox">주차 가능</label>'+
+      '<label><input id="rentMapLaundry" type="checkbox">실내 세탁기</label>'+
+      '<label><input id="rentMapFurnished" type="checkbox">가구 포함</label>'+
+      '<label><input id="rentMapPool" type="checkbox">수영장</label>'+
+      '<label><input id="rentMapAC" type="checkbox">에어컨</label>'+
+      '<label><input id="rentMapDishwasher" type="checkbox">식기세척기</label>'+
+      '</div></div></details>'+
       '<button id="rentMapResetFilters" class="rent-map-reset" type="button">필터 초기화</button></div>'+
       '<p id="rentMapFilterStatus" class="rent-map-filter-status" role="status" aria-live="polite"></p>'+
       '<div class="rent-map-search-actions"><a id="rentMapHouses" target="_blank" rel="noopener noreferrer" href="https://www.redfin.com/rentals">단독주택 렌트</a>'+
@@ -130,7 +154,8 @@
     panel.querySelector('#rentMapFilters').addEventListener('input',updateSearchLinks);
     panel.querySelector('#rentMapFilters').addEventListener('change',updateSearchLinks);
     panel.querySelector('#rentMapResetFilters').addEventListener('click',()=>{
-      for(const id of ['rentMapMinPrice','rentMapMaxPrice','rentMapMinBeds','rentMapMaxBeds'])$(id).value='';
+      for(const id of ['rentMapMinPrice','rentMapMaxPrice','rentMapMinBeds','rentMapMaxBeds','rentMapMinBaths'])$(id).value='';
+      for(const id of ['rentMapDogs','rentMapCats','rentMapParking','rentMapLaundry','rentMapFurnished','rentMapPool','rentMapAC','rentMapDishwasher'])$(id).checked=false;
       updateSearchLinks();
     });
     mapBox.before(panel);

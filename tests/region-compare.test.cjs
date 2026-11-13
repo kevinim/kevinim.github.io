@@ -59,7 +59,13 @@ test('schools are only campus-location facts; commute only user-computed for cur
  assert.match(present.rows.school.note,/주소|ZIP 내 위치/);
 });
 test('responsive UI is independent from home candidate comparison and preserves script CSP',()=>{
- const source=fs.readFileSync(path.join(__dirname,'..','features/region-compare.js'),'utf8');
+ const source=fs.readFileSync(path.join(__dirname,'..','features/region-compare-renderer.js'),'utf8');
+  const loader=fs.readFileSync(path.join(__dirname,'..','features/region-compare.js'),'utf8');
+  assert.equal(require('node:child_process').execFileSync('git',['hash-object','features/region-compare-renderer.js'],{cwd:path.join(__dirname,'..'),encoding:'utf8'}).trim(),
+   '5e45b2e8d10f440626afe1bdaf7748f23131deeb','ZIP comparison renderer must remain byte-identical to audited baseline');
+  assert.match(loader,/const RENDERER='\.\/features\/region-compare-renderer\.js\?v=1'/);
+  assert.match(loader,/section\.addEventListener\('toggle'/);
+  assert.doesNotMatch(loader,/\.innerHTML|localStorage|sessionStorage|fetch\(/);
  const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8');
  const css=fs.readFileSync(path.join(__dirname,'..','features/region-compare.css'),'utf8');
  for(const script of ['./features/region-compare-core.js?v=1','./features/region-compare.js?v=1'])

@@ -2,7 +2,8 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const html=read('index.html'),theme=read('features/theme-toggle.js'),
- css=read('features/theme-toggle.css'),compare=read('features/region-compare.js'),
+ css=read('features/theme-toggle.css'),compare=read('features/region-compare-renderer.js'),
+  compareLoader=read('features/region-compare.js'),
  regionCss=read('features/region-compare.css');
 test('theme stylesheet and early classic script load from same-origin with unchanged strict script CSP',()=>{
  const meta=html.match(/http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
@@ -30,6 +31,8 @@ test('dark is default; explicit light preference persists without private data s
  assert.match(theme,/DOMContentLoaded/);
 });
 test('native details comparison is collapsed by default and fetches only on first open',()=>{
+ assert.match(compareLoader,/element\('details','region-compare'\)/);
+ assert.match(compareLoader,/section\.addEventListener\('toggle'/);
  assert.match(compare,/n\('details','region-compare'\)/);
  assert.match(compare,/n\('summary','region-compare-summary'\)/);
  assert.match(compare,/if\(!sourceStarted\)\{sourceStarted=true;load\(\)\}/);

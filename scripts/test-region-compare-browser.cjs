@@ -9,12 +9,18 @@ const report={viewports:[]};
  try{
   for(const width of [390,1280]){
    const page=await browser.newPage({viewport:{width,height:940}});
-   const errors=[];
+   const errors=[],rendererRequests=[],comparisonData=[];
+    page.on('request',req=>{
+      if(req.url().includes('/features/region-compare-renderer.js'))rendererRequests.push(req.url());
+      if(/county-scopes\.json|area-noaa-counts-2024-2025\.json|dfw-crime-zip-cities-2023-2025\.json/.test(req.url()))comparisonData.push(req.url());
+    });
    page.on('pageerror',e=>errors.push(String(e)));
    await page.route(/tile\.openstreetmap\.org|server\.arcgisonline\.com/,r=>r.fulfill({status:200,body:'',contentType:'image/png'}));
    await page.goto(base+'?region-compare-test='+width,{waitUntil:'domcontentloaded',timeout:90000});
    await page.locator('#regionCompare').waitFor({state:'visible',timeout:30000});
-   assert.equal(await page.locator('#regionCompare').evaluate(el=>el.open),false,
+   assert.equal(rendererRequests.length,0,'Collapsed ZIP comparison must not fetch renderer');
+    // County and NOAA source data may be used by the independent always-visible area assessment.
+    assert.equal(await page.locator('#regionCompare').evaluate(el=>el.open),false,
      'Side-by-side comparison must start collapsed');
    assert.equal(await page.locator('.region-compare-table-scroll').isVisible(),false,
      'Comparison table cannot occupy viewport while folded');
@@ -24,7 +30,9 @@ const report={viewports:[]};
    assert.equal(await page.locator('#regionCompare').evaluate(el=>el.open),true);
 
    await page.waitForFunction(()=>document.querySelector('#regionCompareTable thead')?.querySelectorAll('th').length===4,null,{timeout:30000});
-   const defaults=await page.locator('.region-compare-select').evaluateAll(items=>items.map(x=>x.value));
+   assert.equal(rendererRequests.length,1,'First expansion loads the verified ZIP comparison renderer once');
+    // County and NOAA source data may be used by the independent always-visible area assessment.
+    const defaults=await page.locator('.region-compare-select').evaluateAll(items=>items.map(x=>x.value));
    assert.deepEqual(defaults,['75013','75034','75093']);
    assert.equal(await page.locator('#regionCompareTable tbody tr th').count()>5,true);
    // Source not location-level: confirmed FBI municipality and duplicated NOAA county.
@@ -66,7 +74,11 @@ const report={viewports:[]};
    await page.selectOption('#zipSelect','75024');
    await page.locator('#regionCompareAddCurrent').click();
    await page.waitForFunction(()=>document.querySelector('.region-compare-select[data-slot="2"]')?.value==='75024',null,{timeout:15000});
-   assert.ok(!errors.length,'Browser JS errors: '+errors.join(' | '));
+   await page.locator('#regionCompare > summary').click();
+    await page.locator('#regionCompare > summary').click();
+    assert.equal(rendererRequests.length,1,'Reopening must not reload comparison JS');
+    // County and NOAA source data may be used by the independent always-visible area assessment.
+    assert.ok(!errors.length,'Browser JS errors: '+errors.join(' | '));
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
    assert.ok(overflow<=2,'Page horizontal overflow '+overflow+'px at '+width);
    mkdirSync('artifacts/region-compare',{recursive:true});

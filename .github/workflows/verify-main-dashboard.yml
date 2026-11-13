@@ -29,6 +29,7 @@ jobs:
       - run: node --test tests/tx-deferred-script-order.test.cjs
       - run: node --test tests/dfw-coverage-lazy-loader.test.cjs
       - run: node --test tests/cfb-atlas-lazy-loader.test.cjs
+      - run: node --test tests/region-compare-lazy-loader.test.cjs
       - run: node --test tests/carrollton-school-insights.test.cjs
       - run: node --test tests/tea-campus-enrichment-pipeline.test.cjs
       - run: node --test tests/tea-peims-priority-campus.test.cjs

@@ -45,7 +45,14 @@
       throw new RangeError('최소 월 렌트는 최대 월 렌트보다 클 수 없습니다.');
     if(minBeds!==null&&maxBeds!==null&&minBeds>maxBeds)
       throw new RangeError('최소 침실 수는 최대 침실 수보다 클 수 없습니다.');
-    return {minPrice,maxPrice,minBeds,maxBeds};
+    const bathsRaw=String(f.minBaths??'').trim();
+    const minBaths=bathsRaw===''?null:Number(bathsRaw);
+    if(minBaths!==null&&![1,1.5,2,2.5,3,4].includes(minBaths))
+      throw new RangeError('욕실 수는 제공된 선택지에서만 선택하세요.');
+    const dogs=f.dogs===true,cats=f.cats===true,parking=f.parking===true,
+      laundry=f.laundry===true,furnished=f.furnished===true,pool=f.pool===true,
+      ac=f.ac===true,dishwasher=f.dishwasher===true;
+    return {minPrice,maxPrice,minBeds,maxBeds,minBaths,dogs,cats,parking,laundry,furnished,pool,ac,dishwasher};
   }
   function redfinPrice(value) {
     if(value<1000)return String(value);
@@ -59,7 +66,7 @@
     if(kind!=='houses'&&kind!=='apartments')return '';
     const f=normalizeRentalFilters(filters);
     const prefix='https://www.redfin.com/zipcode/'+z;
-    const hasAny=Object.values(f).some(v=>v!==null);
+    const hasAny=Object.values(f).some(v=>v===true||(v!==null&&v!==false));
     if(!hasAny)return prefix+(kind==='apartments'?'/apartments-for-rent':'/houses-for-rent');
     // Apartment filter is called 'multifamily' by Redfin's own rental UI.
     const tokens=['property-type='+(kind==='apartments'?'multifamily':'house')];
@@ -67,6 +74,16 @@
     if(f.maxPrice!==null)tokens.push('max-price='+redfinPrice(f.maxPrice));
     if(f.minBeds!==null)tokens.push('min-beds='+f.minBeds);
     if(f.maxBeds!==null)tokens.push('max-beds='+f.maxBeds);
+    if(f.minBaths!==null)tokens.push('min-baths='+f.minBaths);
+    // Exact token names observed after applying Redfin's own rental filters.
+    if(f.pool)tokens.push('has-pool');
+    if(f.dogs)tokens.push('dogs-allowed');
+    if(f.cats)tokens.push('cats-allowed');
+    if(f.ac)tokens.push('air-conditioning');
+    if(f.laundry)tokens.push('washer-dryer-in-unit');
+    if(f.dishwasher)tokens.push('has-dishwasher');
+    if(f.parking)tokens.push('has-parking');
+    if(f.furnished)tokens.push('is-furnished');
     return prefix+'/rentals/filter/'+tokens.join(',');
   }
   function cityByKey(key) { return cities.find(c=>c.key===key)||null; }
