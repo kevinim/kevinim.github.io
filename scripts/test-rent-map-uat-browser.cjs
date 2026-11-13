@@ -11,11 +11,41 @@ const base=process.env.SITE_URL||'http://127.0.0.1:8765/';
       const errors=[];
       page.on('pageerror',e=>errors.push(String(e.message||e)));
       await page.goto(base+'rent-map-uat.html',{waitUntil:'domcontentloaded',timeout:80000});
-      await page.waitForFunction(()=>window.__rentMapUatReady===true,{timeout:100000});
+      await page.waitForFunction(()=>window.__rentMapUatReady===true&&window.__areaExplorerUatReady===true,{timeout:100000});
+      assert.equal(await page.locator('#areaExploreSearch').count(),1);
+      const selectedName=await page.locator('#areaExploreSelectedName').innerText();
+      assert.ok(selectedName.length>0,'Selected ZIP has a place name');
+      // Find place by name instead of requiring a user to know ZIP.
+      await page.locator('#areaExploreSearch').fill('West Plano');
+      await page.waitForFunction(()=>document.querySelector('#areaExploreList button[data-zip="75093"]'));
+      assert.equal(await page.locator('#areaExploreList button[data-zip="75093"]').count(),1);
+      await page.locator('#areaExploreList button[data-zip="75093"]').click();
+      assert.equal(await page.locator('#zipSelect').inputValue(),'75093');
+      assert.equal(await page.locator('#areaExploreSearch').inputValue(),'');
+      assert.ok((await page.locator('#areaExploreSelectedZip').innerText()).includes('75093'));
+      // Broader view groups cities; clicking a city drills down to ZIP results.
+      await page.evaluate(()=>{map.setView([33.10,-96.82],10,{animate:false});return true;});
+      await page.waitForFunction(()=>document.querySelector('#areaExploreList button[data-kind="city"]'));
+      const cityButtons=await page.locator('#areaExploreList button[data-kind="city"]').count();
+      assert.ok(cityButtons>1,'Zoomed-out view groups by city');
+      await page.locator('#areaExploreList button[data-kind="city"]').first().click();
+      await page.waitForFunction(()=>document.querySelector('#areaExploreList button[data-kind="zip"]'));
+      assert.ok((await page.locator('#areaExploreList button[data-kind="zip"]').count())>=1,'Drilldown offers ZIPs');
+      // Native polygon clicks still propagate through existing ZIP selection.
+      await page.waitForFunction(()=>typeof state!=='undefined'&&Object.keys(state.polys).length>200,{timeout:100000});
+      await page.evaluate(()=>{
+        state.polys['75024'].fire('click');
+      });
+      await page.waitForFunction(()=>document.querySelector('#zipSelect').value==='75024');
+      await page.waitForFunction(()=>document.querySelector('#areaExploreSelectedZip')?.textContent==='75024 · ZIP 통계 구역');
+      assert.equal(await page.locator('#areaExploreSelectedZip').innerText(),'75024 · ZIP 통계 구역');
+      await page.locator('#zipSelect').selectOption('75093');
+      await page.waitForFunction(()=>document.querySelector('#rentMapSelectedZip')?.textContent.startsWith('75093'));
       assert.equal(await page.locator('#rentMapSelectedZip').innerText().then(s=>s.split(' · ')[0]),'75093');
       assert.equal(await page.locator('#rentMapHouses').getAttribute('href'),'https://www.redfin.com/zipcode/75093/houses-for-rent');
       assert.equal(await page.locator('#rentMapApartments').getAttribute('href'),'https://www.redfin.com/zipcode/75093/apartments-for-rent');
       const before=await page.evaluate(()=>({center:map.getCenter(),zoom:map.getZoom(),school:schoolGroup.getLayers().length}));
+      await page.locator('.area-explore-city-shortcuts summary').click();
       await page.locator('#rentMapFocus button[data-focus="frisco"]').click();
       const moved=await page.evaluate(()=>({center:map.getCenter(),zoom:map.getZoom(),school:schoolGroup.getLayers().length}));
       assert.ok(Math.abs(moved.center.lat-33.15)<.02,'Frisco focus moves map');
@@ -68,6 +98,9 @@ const base=process.env.SITE_URL||'http://127.0.0.1:8765/';
         assert.equal(await page.locator('#'+id).isChecked(),false);
       assert.equal(await page.locator('#rentMapHouses').getAttribute('href'),'https://www.redfin.com/zipcode/75034/houses-for-rent');
       assert.equal(await page.locator('#rentMapApartments').getAttribute('href'),'https://www.redfin.com/zipcode/75034/apartments-for-rent');
+      const exploreLayout=await page.locator('#areaExplorerUat').evaluate(e=>({width:e.clientWidth,scroll:e.scrollWidth}));
+      assert.ok(exploreLayout.scroll<=exploreLayout.width+2,
+        'Explore search/list/cards cannot overflow '+width+'px: '+JSON.stringify(exploreLayout));
       const layout=await page.locator('#rentMapUatPanel').evaluate(e=>({width:e.clientWidth,scroll:e.scrollWidth}));
       assert.ok(layout.scroll<=layout.width+2,'Rental filters should not overflow '+width+'px: '+JSON.stringify(layout));
       assert.equal(await page.locator('#k-zip').innerText(),'75034');
@@ -75,7 +108,8 @@ const base=process.env.SITE_URL||'http://127.0.0.1:8765/';
       assert.deepEqual(errors,[],'No runtime page errors: '+errors.join(' | '));
       await page.goto(base,{waitUntil:'domcontentloaded',timeout:80000});
       assert.equal(await page.locator('#rentMapUatPanel').count(),0,'Normal dashboard remains UAT free');
-      console.log('PASS '+width+'px map-navigation, reference landmarks, Redfin advanced Price/Beds/Baths/pets/amenities ZIP filters, and normal dashboard isolation');
+      assert.equal(await page.locator('#areaExplorerUat').count(),0,'Normal dashboard has no map explorer');
+      console.log('PASS '+width+'px map-navigation, reference landmarks, map-first ZIP browse/search and Redfin advanced rental filters, and normal dashboard isolation');
       await page.close();
     }
   }finally{await browser.close();}
