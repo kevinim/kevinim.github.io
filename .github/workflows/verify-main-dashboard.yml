@@ -26,6 +26,7 @@ jobs:
       - run: node --test tests/school-list-spatial-cache.test.cjs
       - run: node --test tests/school-marker-reuse.test.cjs
       - run: node --test tests/tx-first-load-cache.test.cjs
+      - run: node --test tests/tx-zip-heatmap-scope.test.cjs
       - run: node --test tests/tx-deferred-script-order.test.cjs
       - run: node --test tests/dfw-coverage-lazy-loader.test.cjs
       - run: node --test tests/cfb-atlas-lazy-loader.test.cjs
