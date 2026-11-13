@@ -248,6 +248,20 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  // Source-only CFB 2025-26 conflict disclosure; still no auto-assignment.
  approvedHtml=replaceOnce(approvedHtml,'./features/cfb-approved-zone-atlas.js?v=1',
   './features/cfb-approved-zone-atlas.js?v=2');
+ // #304: compact the always-visible privacy headlines but preserve complete,
+ // unchanged previous disclosures under separately collapsed details.
+ const briefHome="주소 검색은 Esri, 도로망 경로는 OSRM에 전송됩니다. 필지 대조는 Collin CAD, Dallas·Irving 참고 GIS는 집 핀 좌표를 해당 교육청 ArcGIS에 전송합니다. Google Maps 링크도 위치·목적지를 전송합니다. 외부 서비스의 접속 기록 및 보존 기간은 통제할 수 없습니다. 사적인 정보나 비밀번호를 입력하지 마세요.";
+ const briefDestination="직장 주소는 Esri·Nominatim, 이동 좌표는 OSRM으로 외부 전송될 수 있습니다. 공개된 사업장만 입력하세요. 외부 서비스의 로그 보존은 통제할 수 없습니다. 등록한 직장은 이 브라우저에만 저장됩니다.";
+ approvedHtml=replaceOnce(approvedHtml,
+  '<div id="homePrivacy" class="source">'+brief+'</div>',
+  '<div id="homePrivacy" class="source">'+briefHome+'</div>');
+ const destOriginal=approvedPrivacy.slice(approvedPrivacy.indexOf('>')+1,-4);
+ assert.ok(destOriginal&&destOriginal.includes('Nominatim'));
+ approvedHtml=replaceOnce(approvedHtml,approvedPrivacy,
+  '<p id="destinationPrivacy" class="source" role="note">'+briefDestination+'</p>'+ 
+  '<details id="destinationPrivacyDetails" class="home-privacy-disclosure" data-footnotes-keep>'+ 
+  '<summary>외부 서비스·직장정보 개인정보 상세</summary><p class="source">'+destOriginal+'</p></details>');
+ assert.ok(html.includes('id="homePrivacyDetails"')&&html.includes('id="destinationPrivacyDetails"'));
  // #298: the only new inline style is a compact footnote presentation block.
  // Normalize only that named block and the single same-origin script before
  // comparing the rest of production HTML to the immutable reviewed baseline.
@@ -262,9 +276,9 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  assert.equal(gitBlobSha(areaCss),'165d23e4a2d6eee84391737b25608b235ac3dd5e','Approved region-explorer CSS changed without review');
  const releaseCss='\n/* Approved Map-First/Redfin production styles, reviewed UAT CSS kept as source. */\n'+
   rentCss+'\n'+areaCss+'\n/* End approved Map-First/Redfin production styles. */\n';
- const releaseFooter="<script src=\"./features/compact-footnotes.js?v=1\"></script><script src=\"./features/dfw-rent-map-uat-core.js?v=3\"></script>\n<script src=\"./features/dfw-rent-map-uat.js?v=4\" defer></script>\n<script src=\"./features/dfw-area-explorer-uat-core.js?v=1\"></script>\n<script src=\"./features/dfw-area-explorer-uat.js?v=2\" defer></script>\n</body></html>";
+ const releaseFooter="<script src=\"./features/compact-footnotes.js?v=2\"></script><script src=\"./features/dfw-rent-map-uat-core.js?v=3\"></script>\n<script src=\"./features/dfw-rent-map-uat.js?v=4\" defer></script>\n<script src=\"./features/dfw-area-explorer-uat-core.js?v=1\"></script>\n<script src=\"./features/dfw-area-explorer-uat.js?v=2\" defer></script>\n</body></html>";
  const normalizedReleaseHtml=replaceOnce(replaceOnce(providerNormalizedHtml,releaseCss,''),
-  releaseFooter,'<script src="./features/compact-footnotes.js?v=1"></script></body></html>');
+  releaseFooter,'<script src="./features/compact-footnotes.js?v=2"></script></body></html>');
  const compactMarker='\n/* Compact links preserve all source content in the shared, collapsed footer. */';
  const compactStart=normalizedReleaseHtml.indexOf(compactMarker);
  const compactEnd=normalizedReleaseHtml.indexOf('</style>',compactStart);
@@ -273,10 +287,10 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  const compactCss=normalizedReleaseHtml.slice(compactStart,compactEnd);
  assert.ok(compactCss.includes('.footnote-original-hidden { display: none !important; }'));
  assert.ok(compactCss.includes('html[data-theme="dark"] .footnote-ref'));
- assert.equal(html.split('features/compact-footnotes.js?v=1').length,2);
+ assert.equal(html.split('features/compact-footnotes.js?v=2').length,2);
  const withoutCompactStyle=normalizedReleaseHtml.slice(0,compactStart)+normalizedReleaseHtml.slice(compactEnd);
  const withoutCompactFootnotes=replaceOnce(withoutCompactStyle,
-  '<script src="./features/compact-footnotes.js?v=1"></script></body></html>',
+  '<script src="./features/compact-footnotes.js?v=2"></script></body></html>',
   '</body></html>');
  assert.equal(hash(withoutCompactFootnotes),hash(approvedHtml),
   'Unreviewed HTML drift beyond the documented compact-footnote additions');

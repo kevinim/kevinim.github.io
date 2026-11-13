@@ -29,14 +29,29 @@ async function run(){
     const original=[...document.querySelectorAll('.footnote-original-hidden')];
     return {closed:!document.getElementById('centralFootnotes').open,
       refs:document.querySelectorAll('.footnote-ref').length,
-      sourceCopies:document.querySelectorAll('#sourceFootnotes li').length,
+      sourceCopies:document.querySelectorAll('#sourceFootnotes > li').length,
+      archived:original.length,
+      stats:window.DashboardFootnotes.stats(),
+      firstLinkIsAnchor:document.querySelector('.footnote-ref')?.tagName==='A',
       allHidden:original.every(x=>getComputedStyle(x).display==='none'),
       addressPrivacyRetained:!!document.getElementById('homePrivacy')&&!document.getElementById('homePrivacy').classList.contains('footnote-original-hidden')};
    });
    assert.equal(initial.closed,true);
    assert.ok(initial.refs>0&&initial.sourceCopies>0);
+   assert.ok(initial.archived>=15,'Footnote cleanup should archive materially more than the previous 12 visible notes');
+   assert.ok(initial.refs<initial.archived,'One compact link must cover multiple notes per area');
+   if(width===1366){
+     const remaining=await page.evaluate(()=>[...document.querySelectorAll('.shell p,.shell small,.shell .source,.shell .muted,.shell .settings-group-note,.shell .area-qa-foot,.shell .area-qa-note,.shell .school-zone-note')]
+       .filter(el=>el.getClientRects().length>0&&!el.closest('.footnotes-panel')&&!el.classList.contains('footnote-original-hidden')&&!el.closest('details:not([open])')&&getComputedStyle(el).fontSize&&parseFloat(getComputedStyle(el).fontSize)<=13)
+       .map(el=>({tag:el.tagName.toLowerCase(),cls:String(el.className||'').slice(0,70),id:el.id||'',text:(el.textContent||'').trim().replace(/\\s+/g,' ').slice(0,115)}))
+       .filter(el=>el.text.length>=25).slice(0,75));
+     console.log('LEFTOVER FOOTNOTE INVENTORY',JSON.stringify(remaining));
+   }
+   assert.equal(initial.firstLinkIsAnchor,true,'Use an accessible real link, not an extra card button');
    assert.equal(initial.allHidden,true);
    assert.equal(initial.addressPrivacyRetained,true);
+   assert.ok(await page.locator('#destinationPrivacy').isVisible(),'Privacy warning remains visible');
+   assert.equal(await page.locator('#homeSuggestHint').evaluate(x=>getComputedStyle(x).display),'none','Secondary keyboard hint moves to source index');
    await page.locator('.footnote-ref:visible').first().click();
    assert.equal(await page.locator('#centralFootnotes').evaluate(e=>e.open),true);
    await page.evaluate(()=>{
