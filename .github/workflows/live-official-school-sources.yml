@@ -2,6 +2,23 @@ name: Public school source crosschecks (no browser agent)
 on:
   pull_request:
     branches: [main]
+    paths:
+      - 'index.html'
+      - 'district-registry.js'
+      - 'school-zone-ui.js'
+      - 'home-lookup-v2.js'
+      - 'trusted-link-policy.js'
+      - 'features/cfb-*'
+      - 'features/dfw-school*'
+      - 'data/dfw-*'
+      - 'data/cfb-*'
+      - 'scripts/check-official-source-health-live.mjs'
+      - 'scripts/check-public-address-finders-live.mjs'
+      - 'scripts/check-plano-feeder-zones-live.mjs'
+      - 'scripts/check-plano-public-address-layer-live.mjs'
+      - 'scripts/check-cfb-feeder-source-drift-live.mjs'
+      - 'scripts/check-lisd-budget-suites-source-drift-live.mjs'
+      - '.github/workflows/live-official-school-sources.yml'
   workflow_dispatch:
   schedule:
     - cron: '15 13 * * 1'

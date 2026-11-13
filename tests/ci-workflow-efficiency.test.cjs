@@ -13,7 +13,8 @@ const existingConcurrency=new Set(['tx-browser-performance.yml','denton-pdf-vect
 const narrowlyScoped=[
   'audit-external-api-contract.yml','audit-gis-upload-links.yml','audit-school-provenance.yml',
   'audit-visitor-xss.yml','integration-west-dfw-qa.yml','provider-resilience-contract.yml',
-  'school-data-preflight.yml','denton-eight-point-gis-audit-qa.yml'
+  'school-data-preflight.yml','denton-eight-point-gis-audit-qa.yml',
+  'live-official-school-sources.yml'
 ];
 function prEvent(source){
  const lines=source.split(/\r?\n/);
