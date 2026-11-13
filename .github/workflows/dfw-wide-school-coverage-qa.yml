@@ -13,6 +13,7 @@ on:
       - 'tests/tea-texasworks-physical-locality-panel.test.cjs'
       - 'scripts/test-dfw-school-coverage-browser.cjs'
       - 'features/dfw-school-coverage-panel.js'
+      - 'features/dfw-school-coverage-renderer.js'
       - 'features/dfw-school-coverage-panel.css'
       - 'index.html'
       - '.github/workflows/dfw-wide-school-coverage-qa.yml'
@@ -37,6 +38,7 @@ jobs:
         run: |
           node --check scripts/build-dfw-school-coverage-matrix.cjs
           node --check features/dfw-school-coverage-panel.js
+           node --check features/dfw-school-coverage-renderer.js
           node --check scripts/test-dfw-school-coverage-browser.cjs
           node scripts/build-dfw-school-coverage-matrix.cjs --check
           node --test tests/dfw-school-coverage-matrix.test.cjs tests/tea-texasworks-physical-locality-panel.test.cjs tests/strict-script-csp.test.cjs tests/school-zone-ui.test.cjs
