@@ -25,11 +25,49 @@
     const z=String(value??'').trim();
     return /^[0-9]{5}$/.test(z) ? z : '';
   }
-  function redfinUrl(zip,kind) {
+  // Redfin canonical rental URL filters, confirmed using its own Price and
+  // Beds/baths controls. Values are monthly USD; never concatenate raw input.
+  function numberOrNull(value,label,max) {
+    if (value===undefined||value===null||String(value).trim()==='')return null;
+    const raw=String(value).trim();
+    if(!/^[0-9]+$/.test(raw))throw new RangeError(label+'은 0 이상의 정수여야 합니다.');
+    const number=Number(raw);
+    if(!Number.isSafeInteger(number)||number>max)throw new RangeError(label+' 범위를 확인하세요.');
+    return number;
+  }
+  function normalizeRentalFilters(filters) {
+    const f=filters||{};
+    const minPrice=numberOrNull(f.minPrice,'최소 월 렌트',50000);
+    const maxPrice=numberOrNull(f.maxPrice,'최대 월 렌트',50000);
+    const minBeds=numberOrNull(f.minBeds,'최소 침실 수',5);
+    const maxBeds=numberOrNull(f.maxBeds,'최대 침실 수',5);
+    if(minPrice!==null&&maxPrice!==null&&minPrice>maxPrice)
+      throw new RangeError('최소 월 렌트는 최대 월 렌트보다 클 수 없습니다.');
+    if(minBeds!==null&&maxBeds!==null&&minBeds>maxBeds)
+      throw new RangeError('최소 침실 수는 최대 침실 수보다 클 수 없습니다.');
+    return {minPrice,maxPrice,minBeds,maxBeds};
+  }
+  function redfinPrice(value) {
+    if(value<1000)return String(value);
+    const thousands=Math.floor(value/1000);
+    const decimals=String(value%1000).padStart(3,'0').replace(/0+$/,'');
+    return thousands+(decimals?'.'+decimals:'')+'k';
+  }
+  function redfinUrl(zip,kind,filters) {
     const z=safeZip(zip);
-    if (!z) return '';
-    return 'https://www.redfin.com/zipcode/'+z+
-      (kind==='apartments' ? '/apartments-for-rent' : '/houses-for-rent');
+    if (!z)return '';
+    if(kind!=='houses'&&kind!=='apartments')return '';
+    const f=normalizeRentalFilters(filters);
+    const prefix='https://www.redfin.com/zipcode/'+z;
+    const hasAny=Object.values(f).some(v=>v!==null);
+    if(!hasAny)return prefix+(kind==='apartments'?'/apartments-for-rent':'/houses-for-rent');
+    // Apartment filter is called 'multifamily' by Redfin's own rental UI.
+    const tokens=['property-type='+(kind==='apartments'?'multifamily':'house')];
+    if(f.minPrice!==null)tokens.push('min-price='+redfinPrice(f.minPrice));
+    if(f.maxPrice!==null)tokens.push('max-price='+redfinPrice(f.maxPrice));
+    if(f.minBeds!==null)tokens.push('min-beds='+f.minBeds);
+    if(f.maxBeds!==null)tokens.push('max-beds='+f.maxBeds);
+    return prefix+'/rentals/filter/'+tokens.join(',');
   }
   function cityByKey(key) { return cities.find(c=>c.key===key)||null; }
   function mapScaleLabel(zoom) {
@@ -38,5 +76,5 @@
     if (zoom <= 12) return '세부 지역 보기';
     return '도로·학교 상세 보기';
   }
-  return {cities,referencePlaces,safeZip,redfinUrl,cityByKey,mapScaleLabel};
+  return {cities,referencePlaces,safeZip,redfinUrl,normalizeRentalFilters,cityByKey,mapScaleLabel};
 });

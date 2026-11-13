@@ -19,17 +19,37 @@
   function selectedZip() {
     return core.safeZip($('zipSelect')?.value||$('k-zip')?.textContent);
   }
+  function selectedRentalFilters() {
+    return {
+      minPrice:$('rentMapMinPrice')?.value||'',
+      maxPrice:$('rentMapMaxPrice')?.value||'',
+      minBeds:$('rentMapMinBeds')?.value||'',
+      maxBeds:$('rentMapMaxBeds')?.value||''
+    };
+  }
   function updateSearchLinks() {
     const zip=selectedZip(),place=$('k-area')?.textContent?.trim()||'지역';
     const display=$('rentMapSelectedZip'),house=$('rentMapHouses'),apts=$('rentMapApartments');
-    if (!display||!house||!apts) return;
-    display.textContent=zip ? zip+' · '+place : 'ZIP 선택 필요';
+    if(!display||!house||!apts)return;
+    display.textContent=zip?zip+' · '+place:'ZIP 선택 필요';
+    let error='',filters=null;
+    try{filters=core.normalizeRentalFilters(selectedRentalFilters());}
+    catch(e){error=e?.message||'가격 및 침실 조건을 확인하세요.';}
     for(const [anchor,kind] of [[house,'houses'],[apts,'apartments']]){
-      const url=core.redfinUrl(zip,kind);
+      const url=error?'':core.redfinUrl(zip,kind,filters);
       if(url){anchor.href=url;anchor.removeAttribute('aria-disabled');anchor.tabIndex=0;}
       else{anchor.removeAttribute('href');anchor.setAttribute('aria-disabled','true');anchor.tabIndex=-1;}
     }
-    $('rentMapNoListings').textContent='실제 매물은 Redfin 원본에서 확인하세요. 이 지도에는 실시간 매물 핀이 아직 없습니다.';
+    const note=$('rentMapFilterStatus');
+    if(note){
+      note.dataset.invalid=String(!!error);
+      const fmt=n=>n===null?'제한 없음':'$'+n.toLocaleString('en-US');
+      note.textContent=error||('월 렌트 '+fmt(filters.minPrice)+' ~ '+fmt(filters.maxPrice)+
+        ' · 침실 '+(filters.minBeds===null?'제한 없음':filters.minBeds+'개 이상')+
+        (filters.maxBeds===null?'':', '+filters.maxBeds+'개 이하')+
+        ' · Redfin에서 실제 검색 조건을 확인하세요.');
+    }
+    $('rentMapNoListings').textContent='가격은 월 렌트 기준입니다. 결과와 필터 적용 여부는 Redfin에서 확인하세요. 이 지도에는 실시간 매물 핀이 없습니다.';
   }
   function setScopeNote(m) {
     $('rentMapMapScale').textContent=core.mapScaleLabel(m.getZoom());
@@ -87,6 +107,13 @@
       '<div class="rent-map-map-tools"><button type="button" id="rentMapRefs" aria-pressed="false">생활 기준점 표시</button><span id="rentMapMapScale" aria-live="polite">지도 준비 중</span></div></div>'+
       '<div class="rent-map-listings"><div class="rent-map-small-heading">선택 ZIP의 렌트 매물 찾기</div>'+
       '<strong id="rentMapSelectedZip" class="rent-map-current">ZIP 확인 중</strong>'+
+      '<div id="rentMapFilters" class="rent-map-filters" role="group" aria-label="Redfin 렌트 가격과 침실 필터">'+
+      '<label>월 렌트 최소 ($)<input id="rentMapMinPrice" type="number" min="0" max="50000" step="50" inputmode="numeric" placeholder="제한 없음"></label>'+
+      '<label>월 렌트 최대 ($)<input id="rentMapMaxPrice" type="number" min="0" max="50000" step="50" inputmode="numeric" placeholder="제한 없음"></label>'+
+      '<label>최소 침실 수<select id="rentMapMinBeds"><option value="">제한 없음</option><option value="0">Studio 이상</option><option value="1">1개 이상</option><option value="2">2개 이상</option><option value="3">3개 이상</option><option value="4">4개 이상</option><option value="5">5개 이상</option></select></label>'+
+      '<label>최대 침실 수<select id="rentMapMaxBeds"><option value="">제한 없음</option><option value="0">Studio만</option><option value="1">1개 이하</option><option value="2">2개 이하</option><option value="3">3개 이하</option><option value="4">4개 이하</option><option value="5">5개 이하</option></select></label>'+
+      '<button id="rentMapResetFilters" class="rent-map-reset" type="button">필터 초기화</button></div>'+
+      '<p id="rentMapFilterStatus" class="rent-map-filter-status" role="status" aria-live="polite"></p>'+
       '<div class="rent-map-search-actions"><a id="rentMapHouses" target="_blank" rel="noopener noreferrer" href="https://www.redfin.com/rentals">단독주택 렌트</a>'+
       '<a id="rentMapApartments" target="_blank" rel="noopener noreferrer" href="https://www.redfin.com/rentals">아파트 렌트</a></div>'+
       '<small id="rentMapNoListings">실제 매물은 원본에서 확인합니다.</small></div></div>'+
@@ -100,6 +127,12 @@
       nav.appendChild(b);
     }
     panel.querySelector('#rentMapRefs').addEventListener('click',()=>setReferencePlaces(m,!state.referenceVisible));
+    panel.querySelector('#rentMapFilters').addEventListener('input',updateSearchLinks);
+    panel.querySelector('#rentMapFilters').addEventListener('change',updateSearchLinks);
+    panel.querySelector('#rentMapResetFilters').addEventListener('click',()=>{
+      for(const id of ['rentMapMinPrice','rentMapMaxPrice','rentMapMinBeds','rentMapMaxBeds'])$(id).value='';
+      updateSearchLinks();
+    });
     mapBox.before(panel);
     $('zipSelect')?.addEventListener('change',updateSearchLinks);
     const zipLabel=$('k-zip'),areaLabel=$('k-area');

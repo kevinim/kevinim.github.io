@@ -30,3 +30,20 @@ html[data-theme="dark"] .rent-map-focus button,html[data-theme="dark"] .rent-map
 html[data-theme="dark"] .rent-map-focus button[aria-pressed="true"],html[data-theme="dark"] .rent-map-map-tools button[aria-pressed="true"]{background:#3d69ba}
 @media(max-width:960px){.rent-map-layout{grid-template-columns:1fr}}
 @media(max-width:630px){.rent-map-uat{padding:11px}.rent-map-heading h2{font-size:14px}.rent-map-search-actions{display:grid;grid-template-columns:1fr 1fr}.rent-map-search-actions a{justify-content:center;padding:9px 7px}.rent-map-focus button{flex:1 1 auto}}
+
+
+/* Price & bedroom deep-link filters: no external data or new map layer. */
+.rent-map-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:9px 0 7px}
+.rent-map-filters label{display:flex;flex-direction:column;gap:5px;min-width:0;font-size:11px;font-weight:750;color:#425d80}
+.rent-map-filters input,.rent-map-filters select{width:100%;min-width:0;max-width:100%;height:37px;padding:7px 8px;background:#fff;border:1px solid #bdcde1;border-radius:7px;color:#193657;font-size:12px}
+.rent-map-filters input::placeholder{color:#8495ab}
+.rent-map-filters .rent-map-reset{justify-self:start;padding:6px 10px;background:transparent;color:#2856a0;border:1px solid #b4c8e5;border-radius:7px;min-height:32px;font-size:11px;font-weight:750}
+.rent-map-filter-status{font-size:11px;line-height:1.5;min-height:16px;color:#526f91;margin:5px 0 8px}
+.rent-map-filter-status[data-invalid="true"]{color:#ac3030;font-weight:750}
+html[data-theme="dark"] .rent-map-filters label{color:#c1d5eb}
+html[data-theme="dark"] .rent-map-filters input,html[data-theme="dark"] .rent-map-filters select{background:#18324e;border-color:#567493;color:#eff6ff}
+html[data-theme="dark"] .rent-map-filters input::placeholder{color:#bdc8d8}
+html[data-theme="dark"] .rent-map-filters .rent-map-reset{color:#d5e7ff;border-color:#6584a4}
+html[data-theme="dark"] .rent-map-filter-status{color:#ccdbed}
+html[data-theme="dark"] .rent-map-filter-status[data-invalid="true"]{color:#ffb7b4}
+@media(max-width:630px){.rent-map-filters{gap:7px}.rent-map-filters input,.rent-map-filters select{font-size:12px}}
