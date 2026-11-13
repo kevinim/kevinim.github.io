@@ -5,11 +5,12 @@ const fs=require('node:fs');
 const path=require('node:path');
 const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8');
 const scripts=[...html.matchAll(/<script\b[^>]*\bsrc="([^"]+)"[^>]*><\/script>/g)];
-test('TX dashboard retains 61 scripts, with only early theme script synchronous',()=>{
+test('TX dashboard preserves deployed synchronous and deferred script dependency order',()=>{
  assert.equal(scripts.length,61,'Unexpected script inventory; review dependency ordering before bundling');
  assert.match(scripts[0][1],/features\/theme-toggle\.js/);
  assert.doesNotMatch(scripts[0][0],/\sdefer\b/);
- assert.ok(scripts.slice(1).every(m=>/\sdefer\b/.test(m[0])),'Footer scripts should be ordered-deferred');
+ assert.equal(scripts.slice(1).filter(m=>/\sdefer\b/.test(m[0])).length,11,'11 reviewed, late CFB and TEA addons remain deferred');
+ assert.equal(scripts.slice(1).filter(m=>!/\sdefer\b/.test(m[0])).length,49,'Do not broaden defer until all source/CSP guards are updated and proven');
  assert.ok(scripts.every(m=>!/\sasync\b/.test(m[0])),'Never async-load dependent school modules');
  assert.equal(scripts.map(m=>m[1]).length,new Set(scripts.map(m=>m[1])).size,'No duplicate JS');
 });
