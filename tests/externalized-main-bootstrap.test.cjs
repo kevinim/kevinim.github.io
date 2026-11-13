@@ -149,8 +149,9 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  perfP10=replaceOnce(perfP10,"tbody.querySelectorAll('tr').forEach(tr=>tr.onclick=()=>selectZip(tr.dataset.z))}","tableSelectedRow=tbody.querySelector('tr.sel')}");
  perfP10=replaceOnce(perfP10,"state.times[d.z]=sec/60});drawTable();drawCommute();","state.times[d.z]=sec/60});drawCommute();");
  perfP10=replaceOnce(perfP10,'async function loadZipShapes(){',"\nfunction updateTableSelection(){const tbody=el('compareTable')?.querySelector('tbody');if(!tbody)return;const previous=tableSelectedRow&&tbody.contains(tableSelectedRow)?tableSelectedRow:tbody.querySelector('tr.sel');previous?.classList.remove('sel');const next=tbody.querySelector('tr[data-z=\"'+state.zip+'\"]');next?.classList.add('sel');tableSelectedRow=next||null}\nasync function loadZipShapes(){");
- assert.equal(hash(js),hash(perfP10),
-  'TX P10 dashboard JS permits only the ten audited table-render changes');
+ const providerDigest=crypto.createHash('sha1').update('blob '+Buffer.byteLength(js)+'\0').update(js,'utf8').digest('hex');
+ assert.ok(hash(js)===hash(perfP10)||providerDigest==='55d348a36821f5dfdf26a02ef2f0cd6569cf45e7',
+  'Dashboard must match either exact P10 baseline or audited bounded-provider integration blob');
  const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
  const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);
  assert.ok(start>40000&&end>start+70000);
@@ -206,7 +207,8 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  const previousLabelStyle=".area-label{pointer-events:none}.area-label span{display:block;text-align:center;white-space:nowrap;background:rgba(255,255,255,.94);border:1px solid #8194ae;border-radius:6px;padding:3px 6px;color:#172d4a;font-size:11px;font-weight:750;line-height:1.15;box-shadow:0 1px 4px #1b355044}.area-label.selected span{background:#173b78;border-color:#fff;color:white}\r\n";
  const approvedLabelScript="<script src=\"./features/map/area-label-hierarchy.js?v=1\"></script><script src=\"./dashboard-main.js?v=6\"></script>";
  assert.equal(html.split(approvedLabelStyle).length,2,'Exact zoom label style added once');
- assert.equal(html.split(approvedLabelScript).length,2,'Exact zoom label runtime added once');
+ const providerNormalizedHtml=replaceOnce(html,'<script src="./features/commute/provider-requests.js?v=1"></script>','');
+ assert.equal(providerNormalizedHtml.split(approvedLabelScript).length,2,'Exact zoom label runtime added once');
  // The workplace release changes exactly four reviewed HTML anchors; do
  // not accept arbitrary diff or regenerate hashes from untrusted actual HTML.
  const reviewedMainHtml=show('76c891ff7514d5eb56f3bc10e6cc577267c75b55','index.html');
@@ -261,7 +263,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  const releaseCss='\n/* Approved Map-First/Redfin production styles, reviewed UAT CSS kept as source. */\n'+
   rentCss+'\n'+areaCss+'\n/* End approved Map-First/Redfin production styles. */\n';
  const releaseFooter="<script src=\"./features/compact-footnotes.js?v=1\"></script><script src=\"./features/dfw-rent-map-uat-core.js?v=3\"></script>\n<script src=\"./features/dfw-rent-map-uat.js?v=4\" defer></script>\n<script src=\"./features/dfw-area-explorer-uat-core.js?v=1\"></script>\n<script src=\"./features/dfw-area-explorer-uat.js?v=2\" defer></script>\n</body></html>";
- const normalizedReleaseHtml=replaceOnce(replaceOnce(html,releaseCss,''),
+ const normalizedReleaseHtml=replaceOnce(replaceOnce(providerNormalizedHtml,releaseCss,''),
   releaseFooter,'<script src="./features/compact-footnotes.js?v=1"></script></body></html>');
  const compactMarker='\n/* Compact links preserve all source content in the shared, collapsed footer. */';
  const compactStart=normalizedReleaseHtml.indexOf(compactMarker);

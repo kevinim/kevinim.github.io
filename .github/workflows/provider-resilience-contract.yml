@@ -1,0 +1,33 @@
+name: Public provider resilience and privacy contracts (no deploy)
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  provider-resilience:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Syntax check affected scripts
+        run: |
+          node --check features/commute/provider-requests.js
+          node --check dashboard-main.js
+          node --check home-lookup-v2.js
+          node --check features/reviewed-bootstrap.js
+      - name: Offline negative-input provider tests and existing contracts
+        run: |
+          node --test tests/provider-requests.test.cjs tests/audit-external-api-contract.test.cjs
+          node scripts/audit-external-api-contract.cjs
+          node scripts/check-public-personalization.cjs .
+      - name: Verify no unreviewed general-public launch state
+        run: |
+          node -e "const a=require('./deploy/environment-plan.json');if(a.publicProduction?.deployEnabled||a.release?.ownerApproved)process.exit(1);console.log('General-public launch is not approved; family UAT unchanged.');"
