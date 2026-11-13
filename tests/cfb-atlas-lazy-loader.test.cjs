@@ -20,6 +20,19 @@ function setup(){
   remove(){if(!this.parentNode)return;const p=this.parentNode;p.children.splice(p.children.indexOf(this),1);this.parentNode=null;this.isConnected=false}
   setAttribute(k,v){this[k]=v}
   addEventListener(k,fn){this.events[k]=fn}
+  querySelector(selector){
+   const predicate=selector[0]==='#'
+    ? node=>node.id===selector.slice(1)
+    :selector[0]==='.'?node=>String(node.className||'').split(/\s+/).includes(selector.slice(1)):()=>false;
+   const find=node=>{
+    for(const child of node.children){
+     if(predicate(child))return child;
+     const nested=find(child);if(nested)return nested;
+    }
+    return null;
+   };
+   return find(this);
+  }
   walk(id){if(this.id===id)return this;for(const c of this.children){const found=c.walk(id);if(found)return found}return null}
  }
  const parent=new Element('section');parent.id='cfbOfficialFinderPanel';parent.isConnected=true;
@@ -53,6 +66,23 @@ test('first expansion uses one immutable same-origin script; opened state surviv
  s.onload();await Promise.resolve();
  assert.equal(real.open,true,'User must not have to click a second time');
  assert.equal(h.scripts.length,1);
+});
+test('CFB outer district reference toggle retains exact DOM node and event handlers',async()=>{
+ const h=setup(),stub=h.parent.walk('cfbAtlas');
+ const content=stub.querySelector('.cfb-atlas-inner');
+ const toggle=new h.Element('div');toggle.className='cfb-district-reference';
+ const handler=()=>42;toggle.addEventListener('click',handler);
+ content.appendChild(toggle);
+ h.open();
+ const atlas=new h.Element('details');atlas.id='cfbAtlas';
+ const inner=new h.Element('div');inner.className='cfb-atlas-inner';
+ const areas=new h.Element('div');areas.id='cfbAtlasAreas';
+ inner.appendChild(areas);atlas.appendChild(inner);
+ h.parent.insertBefore(atlas,h.manual);
+ h.scripts[0].onload();await Promise.resolve();
+ assert.equal(inner.children[0],toggle,'Original CFB reference GIS button must move, never clone');
+ assert.equal(toggle.events.click,handler,'The separate jurisdiction module click listener must survive');
+ assert.equal(atlas.open,true);
 });
 test('network error restores source warning and allows another explicit expansion',async()=>{
  const h=setup(),stub=h.open(),s=h.scripts[0];
