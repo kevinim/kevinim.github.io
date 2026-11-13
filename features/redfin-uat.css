@@ -1,0 +1,35 @@
+/* Strictly opt-in: only mounted under ?redfinUat=1. No production layout mutation otherwise. */
+.redfin-uat{margin:0 0 15px;padding:16px 18px;border:1px solid #c9d9ef;border-radius:13px;background:#f9fbff;box-shadow:0 3px 15px #172b4410;color:#243c59}
+.redfin-uat h2{margin:0;font-size:15px}.redfin-uat .redfin-kicker{font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:800;color:#4e69b7}
+.redfin-uat .redfin-help{font-size:12px;line-height:1.65;color:#566a83;margin:8px 0}
+.redfin-uat .redfin-form{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,2fr) minmax(110px,1fr) auto;gap:9px;align-items:end}
+.redfin-uat label{display:block;font-size:11px;font-weight:750;color:#415875;margin-bottom:5px}
+.redfin-uat input{width:100%;min-width:0;border:1px solid #bdcde0;border-radius:8px;background:#fff;color:#172b44;padding:10px}
+.redfin-uat button{border:1px solid #5573bb;background:#3159a7;color:#fff;border-radius:8px;padding:10px 12px;font-weight:700;min-height:40px}
+.redfin-uat button.secondary{background:transparent;color:#28519e}.redfin-uat button:disabled{opacity:.55;cursor:not-allowed}
+.redfin-uat .redfin-status{font-size:12px;margin:9px 0;color:#465b78;min-height:18px}
+.redfin-uat .redfin-status[data-error="true"]{color:#9b2b23;font-weight:700}
+.redfin-uat .redfin-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.redfin-uat .redfin-card{background:#fff;border:1px solid #d7e1ed;border-radius:9px;padding:11px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.redfin-uat .redfin-card b{font-size:12px;overflow-wrap:anywhere}.redfin-uat .redfin-card small{font-size:11px;color:#60738f}
+.redfin-uat .redfin-card .redfin-actions{display:flex;flex-wrap:wrap;gap:6px}
+.redfin-uat .redfin-card button{padding:7px 9px;min-height:34px;font-size:11px}.redfin-uat .redfin-card a{font-size:11px;font-weight:750;color:#2357b0;align-self:flex-start}
+.redfin-toggle{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:8px 15px;border-top:1px solid #dae4f3}
+.redfin-toggle button{padding:6px 10px;border-radius:7px;background:transparent;border:1px solid #a8bada;color:#31527a;cursor:pointer;min-height:34px;font-size:11px;font-weight:700}
+.redfin-toggle button[aria-pressed="true"]{background:#234e9e;color:#fff;border-color:#234e9e}
+.redfin-toggle small{font-size:11px;color:#63758e}
+.redfin-uat a:focus-visible,.redfin-uat button:focus-visible,.redfin-toggle button:focus-visible{outline:3px solid #6f94d9;outline-offset:2px}
+html[data-theme="dark"] .redfin-uat{background:#17283f;color:#ebf3ff;border-color:#446280}
+html[data-theme="dark"] .redfin-uat .redfin-help,html[data-theme="dark"] .redfin-uat .redfin-status,html[data-theme="dark"] .redfin-uat label{color:#bfd1e9}
+html[data-theme="dark"] .redfin-uat .redfin-card{background:#203851;border-color:#426280}
+html[data-theme="dark"] .redfin-uat .redfin-card small{color:#bed0e7}
+html[data-theme="dark"] .redfin-uat input{background:#10253d;color:#f2f7ff;border-color:#647e9a}
+html[data-theme="dark"] .redfin-uat button.secondary{color:#d5e7ff}
+html[data-theme="dark"] .redfin-uat .redfin-card a{color:#a8d2ff}
+html[data-theme="dark"] .redfin-toggle{border-color:#34516d}
+html[data-theme="dark"] .redfin-toggle button{color:#d6e5fa;border-color:#53708b}
+html[data-theme="dark"] .redfin-toggle button[aria-pressed="true"]{background:#315bb6}
+html[data-theme="dark"] .redfin-toggle small{color:#b6c8dd}
+html[data-theme="dark"] .redfin-uat .redfin-status[data-error="true"]{color:#ffb1a9}
+@media(max-width:990px){.redfin-uat .redfin-form{grid-template-columns:1fr 1fr}.redfin-uat .redfin-cards{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.redfin-uat{padding:12px}.redfin-uat .redfin-form,.redfin-uat .redfin-cards{grid-template-columns:1fr}.redfin-toggle{padding:8px 10px}}
