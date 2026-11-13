@@ -37,7 +37,7 @@ async function run(){
    assert.ok(initial.refs>0&&initial.sourceCopies>0);
    assert.equal(initial.allHidden,true);
    assert.equal(initial.addressPrivacyRetained,true);
-   await page.locator('.footnote-ref').first().click();
+   await page.locator('.footnote-ref:visible').first().click();
    assert.equal(await page.locator('#centralFootnotes').evaluate(e=>e.open),true);
    await page.evaluate(()=>{
      const section=document.createElement('section');
@@ -51,7 +51,7 @@ async function run(){
    await page.evaluate(()=>document.getElementById('syntheticFootnoteRegion').remove());
    await page.waitForFunction(()=>!document.getElementById('sourceFootnotes').textContent.includes('합성 테스트 전용'));
    await page.evaluate(()=>document.documentElement.dataset.theme='dark');
-   const color=await page.locator('.footnote-ref').first().evaluate(e=>getComputedStyle(e).color);
+   const color=await page.locator('.footnote-ref:visible').first().evaluate(e=>getComputedStyle(e).color);
    assert.equal(color,'rgb(167, 199, 255)');
    assert.ok(!errors.some(x=>/compact-footnotes/i.test(x)),errors.join('\n'));
    console.log('PASS compact footnotes at '+width+'px:',JSON.stringify(initial));
