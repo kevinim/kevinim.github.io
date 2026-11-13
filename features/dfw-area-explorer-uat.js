@@ -1,7 +1,7 @@
 'use strict';
 /* Separate Map-First ZIP discovery UAT: existing dashboard remains source of truth. */
 (function(){
-  if(!/\/rent-map-uat\.html$/i.test(location.pathname))return;
+  if(!/(?:\/|\/index\.html|\/rent-map-uat\.html)$/i.test(location.pathname))return;
   const core=window.DfwAreaExplorerCore;
   if(!core)return;
   const $=id=>document.getElementById(id);

@@ -249,16 +249,30 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  // #298: the only new inline style is a compact footnote presentation block.
  // Normalize only that named block and the single same-origin script before
  // comparing the rest of production HTML to the immutable reviewed baseline.
+ // Approved #302 Map-First/Redfin rollout: subtract ONLY the exact new,
+ // first-party CSS/JS tags. This retains byte-exact review of the entire
+ // pre-existing school/GIS/address HTML, while disallowing unrelated drift.
+ const rentCss=fs.readFileSync(path.join(root,'features/dfw-rent-map-uat.css'),'utf8');
+ const areaCss=fs.readFileSync(path.join(root,'features/dfw-area-explorer-uat.css'),'utf8');
+ const gitBlobSha=value=>crypto.createHash('sha1')
+  .update('blob '+Buffer.byteLength(value)).update(Buffer.from([0])).update(value,'utf8').digest('hex');
+ assert.equal(gitBlobSha(rentCss),'5a4501eb78cec8d31f62235bb1ad89c44a7cc0d4','Approved rental CSS changed without review');
+ assert.equal(gitBlobSha(areaCss),'165d23e4a2d6eee84391737b25608b235ac3dd5e','Approved region-explorer CSS changed without review');
+ const releaseCss='\n/* Approved Map-First/Redfin production styles, reviewed UAT CSS kept as source. */\n'+
+  rentCss+'\n'+areaCss+'\n/* End approved Map-First/Redfin production styles. */\n';
+ const releaseFooter="<script src=\"./features/compact-footnotes.js?v=1\"></script><script src=\"./features/dfw-rent-map-uat-core.js?v=3\"></script>\n<script src=\"./features/dfw-rent-map-uat.js?v=4\" defer></script>\n<script src=\"./features/dfw-area-explorer-uat-core.js?v=1\"></script>\n<script src=\"./features/dfw-area-explorer-uat.js?v=2\" defer></script>\n</body></html>";
+ const normalizedReleaseHtml=replaceOnce(replaceOnce(html,releaseCss,''),
+  releaseFooter,'<script src="./features/compact-footnotes.js?v=1"></script></body></html>');
  const compactMarker='\n/* Compact links preserve all source content in the shared, collapsed footer. */';
- const compactStart=html.indexOf(compactMarker);
- const compactEnd=html.indexOf('</style>',compactStart);
+ const compactStart=normalizedReleaseHtml.indexOf(compactMarker);
+ const compactEnd=normalizedReleaseHtml.indexOf('</style>',compactStart);
  assert.ok(compactStart>0&&compactEnd>compactStart&&compactEnd-compactStart<4000,
   'Expected one narrowly scoped compact footnote CSS block');
- const compactCss=html.slice(compactStart,compactEnd);
+ const compactCss=normalizedReleaseHtml.slice(compactStart,compactEnd);
  assert.ok(compactCss.includes('.footnote-original-hidden { display: none !important; }'));
  assert.ok(compactCss.includes('html[data-theme="dark"] .footnote-ref'));
  assert.equal(html.split('features/compact-footnotes.js?v=1').length,2);
- const withoutCompactStyle=html.slice(0,compactStart)+html.slice(compactEnd);
+ const withoutCompactStyle=normalizedReleaseHtml.slice(0,compactStart)+normalizedReleaseHtml.slice(compactEnd);
  const withoutCompactFootnotes=replaceOnce(withoutCompactStyle,
   '<script src="./features/compact-footnotes.js?v=1"></script></body></html>',
   '</body></html>');

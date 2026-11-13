@@ -45,13 +45,17 @@ test('actual polygon hit testing supports Polygon, holes and MultiPolygon',()=>{
   assert.equal(core.containsGeoJSON({type:'FeatureCollection',features:[{type:'Feature',geometry:{type:'Polygon',coordinates:[ring]}}]},33.5,-96.5),true);
   assert.equal(core.containsGeoJSON({type:'Point',coordinates:[-96.5,33.5]},33.5,-96.5),false);
 });
-test('UAT integration is isolated and does not pretend ZIP means school assignment',()=>{
+test('approved dashboard rollout shares one source with preview without inferring school assignment',()=>{
   const base=fs.readFileSync('index.html','utf8');
   const preview=fs.readFileSync('rent-map-uat.html','utf8');
   const script=fs.readFileSync('features/dfw-area-explorer-uat.js','utf8');
-  assert.ok(!base.includes('dfw-area-explorer-uat'));
+  assert.match(base,/features\/dfw-area-explorer-uat-core\.js/);
+  assert.match(base,/features\/dfw-area-explorer-uat\.js/);
+  assert.match(base,/\.area-explorer\{/,'Approved explorer styles ship within existing inline style budget');
+  assert.match(base,/\.rent-map-uat\{/,'Approved Redfin rental styles ship within existing inline style budget');
   assert.match(preview,/dfw-area-explorer-uat-core\.js/);
   assert.match(preview,/dfw-area-explorer-uat\.css/);
+  assert.match(preview,/name="robots" content="noindex,nofollow"/);
   assert.match(script,/dispatchEvent\(new Event\('change'/);
   assert.match(script,/core\.containsGeoJSON/);
   assert.ok(!/localStorage|sessionStorage|fetch\s*\(|XMLHttpRequest/.test(script));

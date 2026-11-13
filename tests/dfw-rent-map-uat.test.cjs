@@ -50,16 +50,17 @@ test('Redfin advanced rental filters match verified source controls',()=>{
   for(const bad of ['0','0.5','7','1.75','2,has-pool','invalid'])
     assert.throws(()=>core.redfinUrl('75093','houses',{minBaths:bad}),RangeError);
 });
-test('UAT brand image is attributed, and advanced filters are collapsible without impacting root entry',()=>{
+test('Redfin brand image and advanced filters are available in approved production and preview',()=>{
   const js=fs.readFileSync('features/dfw-rent-map-uat.js','utf8');
   const html=fs.readFileSync('rent-map-uat.html','utf8');
   const index=fs.readFileSync('index.html','utf8');
   assert.match(js,/rent-map-redfin-icon/);
-  assert.match(js,/www\.redfin\.com\/favicon\.ico/);
+  assert.match(js,/data:image\/png;base64,/);
   assert.match(js,/<details class="rent-map-more">/);
   assert.match(js,/rentMapMinBaths/);
-  assert.ok(!index.includes('dfw-rent-map-uat'));
-  assert.match(html,/https:\/\/www\.redfin\.com/);
+  assert.match(index,/features\/dfw-rent-map-uat\.js/);
+  assert.match(core.redfinUrl('75093','houses'),/^https:\/\/www\.redfin\.com\//);
+  assert.doesNotMatch(html.match(/img-src [^;]+/)?.[0]||'',/redfin\.com/,'UAT favicon should be inline too');
 });
 test('City navigation uses a stable deduplicated set and constrained coordinates',()=>{
  const ids=core.cities.map(x=>x.key);
@@ -77,14 +78,16 @@ test('Map scale descriptions reflect zoom levels',()=>{
  assert.equal(core.mapScaleLabel(12),'세부 지역 보기');
  assert.equal(core.mapScaleLabel(15),'도로·학교 상세 보기');
 });
-test('UAT is independent and does not modify normal dashboard entry',()=>{
+test('approved production and noindex UAT share a vetted rental search module',()=>{
  const index=fs.readFileSync('index.html','utf8');
  const preview=fs.readFileSync('rent-map-uat.html','utf8');
- assert.ok(!index.includes('dfw-rent-map-uat'));
+ assert.match(index,/features\/dfw-rent-map-uat\.js/);
  assert.ok(preview.includes('features/dfw-rent-map-uat.js'));
  assert.ok(preview.includes('features/dfw-rent-map-uat-core.js'));
  assert.ok(preview.includes('name="robots" content="noindex,nofollow"'));
  assert.ok(preview.includes('homeForm')&&preview.includes('zipSelect'));
+ assert.ok(index.includes('homeForm')&&index.includes('zipSelect'));
+ assert.doesNotMatch(index.match(/img-src [^;]+/)?.[0]||'',/redfin\.com/,'No third-party image origin needed for approved favicon');
  const code=fs.readFileSync('features/dfw-rent-map-uat.js','utf8');
  assert.ok(!/localStorage|sessionStorage|document\.cookie|fetch\s*\(/.test(code));
  assert.ok(!/rentcast|api\.redfin|scrap/i.test(code));

@@ -6,11 +6,11 @@ const path=require('node:path');
 const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8');
 const scripts=[...html.matchAll(/<script\b[^>]*\bsrc="([^"]+)"[^>]*><\/script>/g)];
 test('TX dashboard preserves deployed synchronous and deferred script dependency order',()=>{
- assert.equal(scripts.length,62,'Unexpected script inventory; review dependency ordering before bundling');
+ assert.equal(scripts.length,66,'Unexpected script inventory; review dependency ordering before bundling');
  assert.match(scripts[0][1],/features\/theme-toggle\.js/);
  assert.doesNotMatch(scripts[0][0],/\sdefer\b/);
- assert.equal(scripts.slice(1).filter(m=>/\sdefer\b/.test(m[0])).length,11,'11 reviewed, late CFB and TEA addons remain deferred');
- assert.equal(scripts.slice(1).filter(m=>!/\sdefer\b/.test(m[0])).length,50,'Do not broaden defer until all source/CSP guards are updated and proven');
+ assert.equal(scripts.slice(1).filter(m=>/\sdefer\b/.test(m[0])).length,13,'13 reviewed, late CFB/TEA and Map-First addons remain deferred');
+ assert.equal(scripts.slice(1).filter(m=>!/\sdefer\b/.test(m[0])).length,52,'Do not broaden defer until all source/CSP guards are updated and proven');
  assert.ok(scripts.every(m=>!/\sasync\b/.test(m[0])),'Never async-load dependent school modules');
  assert.equal(scripts.map(m=>m[1]).length,new Set(scripts.map(m=>m[1])).size,'No duplicate JS');
 });
@@ -24,7 +24,12 @@ test('Leaflet and shared GIS modules evaluate before main bootstrap',()=>{
  assert.ok(index('area-label-hierarchy.js')<index('dashboard-main.js'));
  assert.ok(index('dashboard-main.js')<index('carrollton-school-insights.js'));
  assert.ok(index('carrollton-school-insights.js')<index('tea-peims-public-share-addon.js'));
- assert.equal(index('compact-footnotes.js'),order.length-1,'Footnotes enhance the final rendered DOM without changing school module order');
+ assert.equal(index('compact-footnotes.js'),order.length-5,'Footnotes remain after school modules, before approved map-first extras');
+ assert.equal(index('dfw-rent-map-uat-core.js'),order.length-4,'Rental core precedes UI');
+ assert.equal(index('dfw-rent-map-uat.js'),order.length-3,'Rental UI follows core');
+ assert.equal(index('dfw-area-explorer-uat-core.js'),order.length-2,'Region core precedes UI');
+ assert.equal(index('dfw-area-explorer-uat.js'),order.length-1,'Region UI loads last');
+ assert.ok(index('dfw-rent-map-uat-core.js')>index('dashboard-main.js'));
 });
 test('CSP forbids inline script and no inline handler introduced',()=>{
  const csp=html.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
