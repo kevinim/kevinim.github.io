@@ -54,6 +54,14 @@
       request=null;script.remove();
       reject(Error('CFB atlas renderer failed to initialize'));return;
      }
+     // The CFB jurisdiction toggle is installed by a separate reviewed module
+     // into the initially available .cfb-atlas-inner during DOMContentLoaded.
+     // Move the actual node (not a clone) so its listeners/closure and official
+     // source controls survive the placeholder-to-renderer transition.
+     const outline=contents.querySelector?.('.cfb-district-reference');
+     const realInner=atlas.querySelector?.('.cfb-atlas-inner');
+     const areas=atlas.querySelector?.('#cfbAtlasAreas');
+     if(outline&&realInner)realInner.insertBefore(outline,areas||null);
      if(open)atlas.open=true; // Same user action opens the original atlas.
      resolve(true);
     };
