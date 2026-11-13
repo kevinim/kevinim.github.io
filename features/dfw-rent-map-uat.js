@@ -1,0 +1,129 @@
+'use strict';
+/* Separate, opt-in rent-map exploration UAT. Does not call rental APIs. */
+(function () {
+  if (!/\/rent-map-uat\.html$/i.test(location.pathname)) return;
+  const core=window.DfwRentMapUatCore;
+  if (!core) return;
+  const $=id=>document.getElementById(id);
+  const state={referenceLayer:null,referenceVisible:false,ready:false};
+  function getMap() {
+    try { return typeof map !== 'undefined' && map && typeof map.setView==='function' ? map : null; }
+    catch (_) { return null; }
+  }
+  function el(tag,klass,contents) {
+    const node=document.createElement(tag);
+    if (klass) node.className=klass;
+    if (contents!==undefined) node.textContent=contents;
+    return node;
+  }
+  function selectedZip() {
+    return core.safeZip($('zipSelect')?.value||$('k-zip')?.textContent);
+  }
+  function updateSearchLinks() {
+    const zip=selectedZip(),place=$('k-area')?.textContent?.trim()||'지역';
+    const display=$('rentMapSelectedZip'),house=$('rentMapHouses'),apts=$('rentMapApartments');
+    if (!display||!house||!apts) return;
+    display.textContent=zip ? zip+' · '+place : 'ZIP 선택 필요';
+    for(const [anchor,kind] of [[house,'houses'],[apts,'apartments']]){
+      const url=core.redfinUrl(zip,kind);
+      if(url){anchor.href=url;anchor.removeAttribute('aria-disabled');anchor.tabIndex=0;}
+      else{anchor.removeAttribute('href');anchor.setAttribute('aria-disabled','true');anchor.tabIndex=-1;}
+    }
+    $('rentMapNoListings').textContent='실제 매물은 Redfin 원본에서 확인하세요. 이 지도에는 실시간 매물 핀이 아직 없습니다.';
+  }
+  function setScopeNote(m) {
+    $('rentMapMapScale').textContent=core.mapScaleLabel(m.getZoom());
+  }
+  function focusCity(m,key) {
+    const city=core.cityByKey(key);
+    if(!city) return;
+    m.stop();
+    m.setView([city.lat,city.lng],city.zoom,{animate:false});
+    for(const btn of document.querySelectorAll('#rentMapFocus button[data-focus]')){
+      btn.setAttribute('aria-pressed',String(btn.dataset.focus===key));
+    }
+    $('rentMapStatus').textContent=city.label+' 주변을 표시합니다. 지도 중심 변경은 선택 ZIP이나 학교 배정 결과를 변경하지 않습니다.';
+  }
+  function ensureReferenceLayer(m) {
+    if (state.referenceLayer||!window.L) return state.referenceLayer;
+    const group=L.layerGroup();
+    for(const ref of core.referencePlaces){
+      // Use separate vector markers to avoid touching any school or GIS layer.
+      const dot=L.circleMarker([ref.lat,ref.lng],{
+        radius:8,color:'#fff',weight:2,fillColor:ref.color,fillOpacity:1
+      });
+      dot.bindPopup(ref.label+'<div>'+ref.detail+'</div><small>지역 참고 기준점 · 정확한 시설 위치 아님</small>');
+      dot.bindTooltip(ref.label,{direction:'top'});
+      group.addLayer(dot);
+    }
+    state.referenceLayer=group;
+    return group;
+  }
+  function setReferencePlaces(m,visible) {
+    const group=ensureReferenceLayer(m);
+    if(!group) return;
+    state.referenceVisible=!!visible;
+    if(visible&&!m.hasLayer(group))group.addTo(m);
+    if(!visible&&m.hasLayer(group))m.removeLayer(group);
+    const button=$('rentMapRefs');
+    button.setAttribute('aria-pressed',String(!!visible));
+    button.textContent=visible?'생활 기준점 숨기기':'생활 기준점 표시';
+    $('rentMapStatus').textContent=visible
+      ?'Plano 업무지구, Irving Las Colinas, Dallas Mockingbird 주변을 별도 참고 마커로 표시했습니다. 위치는 대략적입니다.'
+      :'생활 기준점 마커를 숨겼습니다. 학교·ZIP 지도 레이어는 그대로 유지됩니다.';
+  }
+  function addUI(m) {
+    if($('rentMapUatPanel')) return;
+    const host=document.querySelector('.mapcol'),mapBox=host?.querySelector('.mapbox');
+    if(!host||!mapBox)return;
+    const panel=el('section','rent-map-uat');
+    panel.id='rentMapUatPanel';
+    panel.setAttribute('aria-label','DFW 지도 방향 및 렌트 검색 UAT');
+    panel.innerHTML=
+      '<div class="rent-map-heading"><div><span class="rent-map-eyebrow">MAP & RENTALS · UAT</span><h2>내가 보는 동네, 렌트 매물 연결</h2></div><span class="rent-map-chip">무료 · 원본 연결</span></div>'+
+      '<p class="rent-map-desc">동네 위치를 먼저 확인하고, 선택한 ZIP의 실제 렌트 매물을 Redfin에서 바로 엽니다. 링크·주소를 복사할 필요가 없습니다.</p>'+
+      '<div class="rent-map-layout"><div class="rent-map-discovery"><div class="rent-map-small-heading">지도에서 지역 찾기</div>'+
+      '<div id="rentMapFocus" class="rent-map-focus" role="group" aria-label="지도 중심 이동"></div>'+
+      '<div class="rent-map-map-tools"><button type="button" id="rentMapRefs" aria-pressed="false">생활 기준점 표시</button><span id="rentMapMapScale" aria-live="polite">지도 준비 중</span></div></div>'+
+      '<div class="rent-map-listings"><div class="rent-map-small-heading">선택 ZIP의 렌트 매물 찾기</div>'+
+      '<strong id="rentMapSelectedZip" class="rent-map-current">ZIP 확인 중</strong>'+
+      '<div class="rent-map-search-actions"><a id="rentMapHouses" target="_blank" rel="noopener noreferrer" href="https://www.redfin.com/rentals">단독주택 렌트</a>'+
+      '<a id="rentMapApartments" target="_blank" rel="noopener noreferrer" href="https://www.redfin.com/rentals">아파트 렌트</a></div>'+
+      '<small id="rentMapNoListings">실제 매물은 원본에서 확인합니다.</small></div></div>'+
+      '<p id="rentMapStatus" class="rent-map-status" role="status" aria-live="polite">도시를 누르면 지도 중심이 이동합니다. ZIP 선택은 지도나 지역 선택 메뉴에서 변경하세요.</p>'+
+      '<p class="rent-map-source">참고 기준점은 개인 주소나 시설의 정확한 지점이 아닌 주변 지역 표시입니다. Redfin 매물은 별도 사이트에서 제공하며 자동 수집·삽입·동기화하지 않습니다.</p>';
+    const nav=panel.querySelector('#rentMapFocus');
+    for(const city of core.cities){
+      const b=el('button','',city.label);
+      b.type='button';b.dataset.focus=city.key;b.setAttribute('aria-pressed','false');
+      b.addEventListener('click',()=>focusCity(m,city.key));
+      nav.appendChild(b);
+    }
+    panel.querySelector('#rentMapRefs').addEventListener('click',()=>setReferencePlaces(m,!state.referenceVisible));
+    mapBox.before(panel);
+    $('zipSelect')?.addEventListener('change',updateSearchLinks);
+    const zipLabel=$('k-zip'),areaLabel=$('k-area');
+    if(window.MutationObserver&&zipLabel) {
+      const observer=new MutationObserver(updateSearchLinks);
+      observer.observe(zipLabel,{childList:true,subtree:true,characterData:true});
+      if(areaLabel)observer.observe(areaLabel,{childList:true,subtree:true,characterData:true});
+    }
+    m.on('zoomend',()=>setScopeNote(m));
+    setScopeNote(m);
+    updateSearchLinks();
+    state.ready=true;
+    window.__rentMapUatReady=true;
+  }
+  let attempts=0;
+  function boot() {
+    if(state.ready)return;
+    const m=getMap();
+    if(m&&$('zipSelect')?.options.length&&m.getContainer?.()&&window.L){
+      addUI(m);return;
+    }
+    if(++attempts<100)setTimeout(boot,250);
+    else console.warn('Rent map UAT: dashboard map did not initialize');
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
+  else boot();
+})();
