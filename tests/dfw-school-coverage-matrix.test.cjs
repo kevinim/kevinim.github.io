@@ -150,7 +150,10 @@ test('HTML loads optional coverage UI without modifying inline CSP bootstrap',()
  assert.ok(html.includes('./features/dfw-school-coverage-panel.js?v=2'));
  assert.ok(html.includes('./features/dfw-school-coverage-panel.css?v=1'));
  assert.ok(html.includes('src="./school-zone-ui.js?v=1"'));
- const ui=fs.readFileSync(path.join(root,'features/dfw-school-coverage-panel.js'),'utf8');
+ const ui=fs.readFileSync(path.join(root,'features/dfw-school-coverage-renderer.js'),'utf8');
+ assert.ok(fs.readFileSync(path.join(root,'features/dfw-school-coverage-panel.js'),'utf8').includes("./features/dfw-school-coverage-renderer.js?v=1"));
+ assert.equal(require('node:child_process').execFileSync('git',['hash-object','features/dfw-school-coverage-renderer.js'],{cwd:root,encoding:'utf8'}).trim(),
+  '9becc61e4a9ead1112af007e43033bc5066b27f3','Original vetted DFW coverage renderer must remain byte-for-byte identical');
  assert.ok(ui.includes('document.createElement'));
  assert.ok(!ui.includes('.innerHTML'));
  assert.ok(ui.includes('window.TrustedLinkPolicy?.official?.(url)'));

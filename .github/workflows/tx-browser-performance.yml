@@ -5,6 +5,8 @@ on:
     paths:
       - 'index.html'
       - 'dashboard-main.js'
+      - 'features/dfw-school-coverage-panel.js'
+      - 'features/dfw-school-coverage-renderer.js'
       - 'scripts/benchmark-tx-map-browser.cjs'
       - 'tests/tx-deferred-script-order.test.cjs'
       - '.github/workflows/tx-browser-performance.yml'
