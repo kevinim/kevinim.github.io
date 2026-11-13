@@ -303,7 +303,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  const actualPanel=html.match(/<section class="panel cfb-inline-panel" id="cfbOfficialFinderPanel"[\s\S]*?<\/section>/)?.[0];
  assert.ok(originalPanel&&actualPanel,'Merged CFB Finder is retained');
  assert.equal(hash(actualPanel),hash(originalPanel),'Existing CFB official Finder panel untouched');
- assert.equal(html.split(external).length,2);
+ assert.equal(providerNormalizedHtml.split(external).length,2,'Reviewed zoom-label/main boot pair stays intact after stripping the single audited provider guard');
  const policy='./features/conditional-school-release.js?v=1';
  assert.equal(html.split(policy).length,2);
  assert.ok(html.indexOf('./school-zone-ui.js?v=1')<html.indexOf(policy));
