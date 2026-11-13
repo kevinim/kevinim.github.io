@@ -4,6 +4,9 @@ on:
     branches: [main]
   push:
     branches: [main]
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 
@@ -17,6 +20,8 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
+      - name: Guard CI required checks, PR run cancellation and source-aware filters
+        run: node --test tests/ci-workflow-efficiency.test.cjs
       - run: node scripts/verify-main-data.mjs
       - run: node --test tests/first-load-assets.test.cjs
       - run: node scripts/audit-first-load-assets.cjs --check

@@ -20,6 +20,9 @@ on:
       - 'docs/FINDER_DERIVED_BOUNDARY_ENGINE.md'
       - '.github/workflows/finder-derived-engine-qa.yml'
   workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:

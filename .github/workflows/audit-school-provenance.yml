@@ -3,10 +3,27 @@ name: Audit TX school provenance (read-only)
 on:
   pull_request:
     branches: [main]
+    paths:
+      - 'index.html'
+      - 'data/**'
+      - 'district-registry.js'
+      - 'school-identity.js'
+      - 'school-assignment.js'
+      - 'school-zone-ui.js'
+      - 'features/cfb-*'
+      - 'features/tea-*'
+      - 'features/dfw-school*'
+      - 'features/carrollton-school-insights.js'
+      - 'scripts/audit-school-provenance.cjs'
+      - 'tests/audit-school-provenance.test.cjs'
+      - '.github/workflows/audit-school-provenance.yml'
   workflow_dispatch:
   schedule:
     - cron: '40 13 * * 1'
 
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 

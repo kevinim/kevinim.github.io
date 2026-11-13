@@ -21,6 +21,9 @@ on:
       - 'school-boundary-match.js'
       - 'data/phase2a-fema-nri-dfw-2025.geojson'
       - '.github/workflows/phase2a-browser-qa.yml'
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 

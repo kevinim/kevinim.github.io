@@ -2,7 +2,30 @@ name: TX integrated West DFW strict-CSP and school UAT (no deploy)
 on:
   pull_request:
     branches: [main]
+    paths:
+      - 'index.html'
+      - 'reviewed.html'
+      - 'district-registry.js'
+      - 'school-zone-ui.js'
+      - 'trusted-link-policy.js'
+      - 'home-lookup-v2.js'
+      - 'features/west-dfw/**'
+      - 'data/dfw-*'
+      - 'scripts/test-west-dfw-browser.cjs'
+      - 'scripts/test-public-preview-browser.cjs'
+      - 'scripts/audit-west-dfw-zone-sources.cjs'
+      - 'scripts/build-public-preview.cjs'
+      - 'scripts/verify-public-preview.cjs'
+      - 'scripts/school-data-release-preflight.cjs'
+      - 'tests/west-dfw-*'
+      - 'tests/audit-west-dfw-*'
+      - 'tests/probe-west-dfw-*'
+      - 'tests/strict-script-csp.test.cjs'
+      - '.github/workflows/integration-west-dfw-qa.yml'
   workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:

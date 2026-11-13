@@ -6,6 +6,16 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - 'index.html'
+      - 'data/denton*'
+      - 'data/denton/**'
+      - 'features/denton*'
+      - 'denton-*'
+      - 'scripts/*denton*'
+      - 'tests/denton*'
+      - 'docs/DENTON*'
+      - '.github/workflows/denton-eight-point-gis-audit-qa.yml'
   workflow_dispatch:
 concurrency:
   group: denton-agent02-${{ github.workflow }}-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}

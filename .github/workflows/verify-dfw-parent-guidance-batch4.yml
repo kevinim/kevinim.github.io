@@ -15,6 +15,9 @@ on:
       - 'tests/dfw-parent-guidance-batch3.test.cjs'
       - '.github/workflows/verify-dfw-parent-guidance-batch4.yml'
   workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:

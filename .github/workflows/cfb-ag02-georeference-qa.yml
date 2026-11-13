@@ -16,6 +16,9 @@ on:
       - '.github/workflows/cfb-ag02-georeference-qa.yml'
       - 'data/cfb-ag02-*-gcps.json'
   workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:

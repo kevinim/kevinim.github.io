@@ -16,6 +16,9 @@ on:
       - 'scripts/test-cfb-official-inline-live-browser.cjs'
       - '.github/workflows/cfb-inline-official-finder-pilot-qa.yml'
   workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:

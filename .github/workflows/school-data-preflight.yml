@@ -2,9 +2,27 @@ name: TX school data snapshot and release preflight (read-only)
 on:
   pull_request:
     branches: [main]
+    paths:
+      - 'index.html'
+      - 'dashboard-main.js'
+      - 'home-lookup-v2.js'
+      - 'district-registry.js'
+      - 'school-identity.js'
+      - 'school-assignment.js'
+      - 'school-zone-ui.js'
+      - 'data/**'
+      - 'features/cfb-*'
+      - 'features/tea-*'
+      - 'features/dfw-school*'
+      - 'scripts/school-data-release-preflight.cjs'
+      - 'tests/school-data-release-preflight.test.cjs'
+      - '.github/workflows/school-data-preflight.yml'
   push:
     branches: [main]
   workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:

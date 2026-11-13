@@ -9,6 +9,9 @@ on:
       - 'tests/tea-allen-mckinney-campus-qa.test.cjs'
       - 'docs/TEA_ALLEN_MCKINNEY_CAMPUS_QA_2026-11-11.md'
       - '.github/workflows/tea-allen-mckinney-campus-qa.yml'
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:

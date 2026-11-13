@@ -9,6 +9,9 @@ on:
       - 'scripts/test-tea-peims-public-share-browser.cjs'
       - 'data/tea-ethnicity-2025-26-priority.json'
       - '.github/workflows/qa-tea-peims-public-share-integrated-uat.yml'
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:
