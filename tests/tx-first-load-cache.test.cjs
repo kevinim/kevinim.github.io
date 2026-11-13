@@ -30,8 +30,8 @@ test('both independent TX bootstrap JSON requests start concurrently, in source 
  r.pending.get('./dfw-outside-public.json').resolve(response({type:'neighbor'}));
  r.pending.get('./dfw-demographics.json').resolve(response({type:'dfw'}));
  const results=await r.request;
- assert.deepEqual(results.map(x=>x.status),['fulfilled','fulfilled']);
- assert.deepEqual(results.map(x=>x.value.type),['dfw','neighbor']);
+ assert.deepEqual(Array.from(results,x=>x.status),['fulfilled','fulfilled']);
+ assert.deepEqual(Array.from(results,x=>x.value.type),['dfw','neighbor']);
 });
 
 test('one failed source does not abort the independent source or bootstrap',async()=>{
