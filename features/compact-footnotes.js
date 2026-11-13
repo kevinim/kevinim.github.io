@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   const SOURCE_SELECTOR = 'p.source:not([id]), div.source:not([id]), small.source:not([id]), small.boundary-footnote:not([id])';
-  const CRITICAL = /검증되지 않았|확인되지 않았|불러오지 못|실패했|사용할 수 없|안전한.*뜻이 아닙니다|위험이 없.*뜻이 아닙니다|자료가 없습니다|해당 자료.*없습니다/;
+  const CRITICAL = /검증되지 않았|확인되지 않았|불러오지 못|실패했|사용할 수 없|안전한.*뜻이 아닙니다|위험이 없.*뜻이 아닙니다|자료가 없습니다|해당 자료.*없습니다|사용자가 공식 Finder에서 직접 선택한 참고 정보|배정 학교 목록이 아닙니다/;
   const DYNAMIC = '#detailContent, #zipInsights, #homeSchoolInfo, #schoolList, #zoneNotice, #dfwSchoolCoverageContent, #cfbManualSchoolCards, #candidateCards, #areaAssessment, #regionalCompare';
   const state = { sources: [], html: [], triggers: new Map(), scheduled: false };
   let panel, list, count, root;
