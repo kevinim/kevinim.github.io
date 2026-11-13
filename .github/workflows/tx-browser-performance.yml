@@ -7,6 +7,8 @@ on:
       - 'dashboard-main.js'
       - 'features/dfw-school-coverage-panel.js'
       - 'features/dfw-school-coverage-renderer.js'
+      - 'features/cfb-approved-zone-atlas.js'
+      - 'features/cfb-approved-zone-atlas-renderer.js'
       - 'scripts/benchmark-tx-map-browser.cjs'
       - 'tests/tx-deferred-script-order.test.cjs'
       - '.github/workflows/tx-browser-performance.yml'
