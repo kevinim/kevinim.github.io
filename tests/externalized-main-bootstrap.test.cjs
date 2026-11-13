@@ -135,8 +135,22 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  perfP9=replaceOnce(perfP9,
   'fillOpacity:(state.withinHour||scopedZips().includes(d))?.72:.3',
   'fillOpacity:(state.withinHour||visible.has(d))?.72:.3');
- assert.equal(hash(js),hash(perfP9),
-  'TX P9 dashboard JS must match five exact audited scope-cache substitutions');
+ assert.equal(hash(show('667aa4666550641679ebd373c61082b2dcceb971','dashboard-main.js')),hash(perfP9),
+  'Deployed P9 dashboard JS must still match five exact audited scope-cache substitutions');
+ // P10: only the reviewed ZIP table redraw and event delegation changes.
+ let perfP10=perfP9;
+ perfP10=replaceOnce(perfP10,"el('metric').onchange=e=>{state.metric=e.target.value;drawZip();drawDetail();drawTable()}","el('metric').onchange=e=>{state.metric=e.target.value;drawZip();drawDetail()}");
+ perfP10=replaceOnce(perfP10,"tableSort.key=k;drawTable()};el('ratingFilter').onchange","tableSort.key=k;drawTable()};el('compareTable').querySelector('tbody').onclick=e=>{const tr=e.target.closest('tr[data-z]');if(tr&&e.currentTarget.contains(tr))selectZip(tr.dataset.z)};el('ratingFilter').onchange");
+ perfP10=replaceOnce(perfP10,"showSavedCommute();drawTable();if(typeof refreshHomeOffice","showSavedCommute();if(typeof refreshHomeOffice");
+ perfP10=replaceOnce(perfP10,"function renderData(){showSavedCommute();","function renderData(selectionOnly=false){showSavedCommute();");
+ perfP10=replaceOnce(perfP10,"el('k-income').textContent=money(d.income);drawDetail();drawTable()}","el('k-income').textContent=money(d.income);drawDetail();if(selectionOnly)updateTableSelection();else drawTable()}");
+ perfP10=replaceOnce(perfP10,"renderSchoolZoneMapHint(null,null);renderData();drawZip();","renderSchoolZoneMapHint(null,null);renderData(true);drawZip();");
+ perfP10=replaceOnce(perfP10,"let tableSort={key:null,dir:1};","let tableSort={key:null,dir:1},tableSelectedRow=null;");
+ perfP10=replaceOnce(perfP10,"tbody.querySelectorAll('tr').forEach(tr=>tr.onclick=()=>selectZip(tr.dataset.z))}","tableSelectedRow=tbody.querySelector('tr.sel')}");
+ perfP10=replaceOnce(perfP10,"state.times[d.z]=sec/60});drawTable();drawCommute();","state.times[d.z]=sec/60});drawCommute();");
+ perfP10=replaceOnce(perfP10,'async function loadZipShapes(){',"\nfunction updateTableSelection(){const tbody=el('compareTable')?.querySelector('tbody');if(!tbody)return;const previous=tableSelectedRow&&tbody.contains(tableSelectedRow)?tableSelectedRow:tbody.querySelector('tr.sel');previous?.classList.remove('sel');const next=tbody.querySelector('tr[data-z=\"'+state.zip+'\"]');next?.classList.add('sel');tableSelectedRow=next||null}\nasync function loadZipShapes(){");
+ assert.equal(hash(js),hash(perfP10),
+  'TX P10 dashboard JS permits only the ten audited table-render changes');
  const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
  const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);
  assert.ok(start>40000&&end>start+70000);
