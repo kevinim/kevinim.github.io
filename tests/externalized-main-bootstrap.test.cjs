@@ -250,16 +250,16 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  assert.ok(html.indexOf(policy)<html.indexOf('./home-lookup-v2.js?v=18'));
 });
 test('Phase 5 TX footer scripts gain defer with identical URLs and ordered execution',()=>{
- const before=[...html.matchAll(/<script\\b[^>]*\\bsrc="([^"]+)"[^>]*><\\/script>/gi)];
- const expected=html.replace(/<script\\b[^>]*\\bsrc="([^"]+)"[^>]*><\\/script>/gi,(tag,url)=>{
-  return url.includes('theme-toggle.js')||/\\sdefer\\b/.test(tag)
+ const before=[...html.matchAll(/<script\b[^>]*\bsrc="([^"]+)"[^>]*><\/script>/gi)];
+ const expected=html.replace(/<script\b[^>]*\bsrc="([^"]+)"[^>]*><\/script>/gi,(tag,url)=>{
+  return url.includes('theme-toggle.js')||/\sdefer\b/.test(tag)
    ?tag:tag.replace('></script>',' defer></script>');
  });
- const after=[...currentHtml.matchAll(/<script\\b[^>]*\\bsrc="([^"]+)"[^>]*><\\/script>/gi)];
+ const after=[...currentHtml.matchAll(/<script\b[^>]*\bsrc="([^"]+)"[^>]*><\/script>/gi)];
  assert.equal(before.length,61,'Reviewed baseline script inventory retained');
  assert.equal(after.length,before.length,'No script added/removed');
- assert.equal(after.filter(x=>/\\sdefer\\b/.test(x[0])).length,60,'All non-theme scripts deferred');
- assert.ok(!/\\sdefer\\b/.test(after[0][0]),'Early color theme remains synchronous');
+ assert.equal(after.filter(x=>/\sdefer\b/.test(x[0])).length,60,'All non-theme scripts deferred');
+ assert.ok(!/\sdefer\b/.test(after[0][0]),'Early color theme remains synchronous');
  assert.deepEqual(after.map(x=>x[1]),before.map(x=>x[1]),'Dependency order and URLs unchanged');
  assert.equal(hash(currentHtml),hash(expected),'No HTML change except exact approved script attributes');
 });
