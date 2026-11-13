@@ -56,7 +56,7 @@ test('six local, 34 nonlocal, one alias-pending; never infer residential school 
 });
 
 test('coverage UI has resilient lazy, validated source evidence and no unsafe HTML injection',()=>{
- const ui=fs.readFileSync(path.join(root,'features/dfw-school-coverage-panel.js'),'utf8');
+ const ui=fs.readFileSync(path.join(root,'features/dfw-school-coverage-renderer.js'),'utf8');
  const browser=fs.readFileSync(path.join(root,'scripts/test-dfw-school-coverage-browser.cjs'),'utf8');
  assert.match(ui,/const LOCALITY_FILE='\.\/data\/tea-texasworks-locality-2026\.json'/);
  assert.match(ui,/function validTexasWorks\(extra,district\)/);
