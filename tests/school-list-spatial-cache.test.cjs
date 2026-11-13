@@ -81,7 +81,7 @@ test('ZIP, county and all-school scopes retain prior filtering semantics',()=>{
 test('list search debounces, uses O(n) school indices, and delegates click listeners',()=>{
  assert.match(source,/schoolListSearchTimer=setTimeout\(drawList,140\)/);
  assert.match(source,/const scopeZips=schoolScopeZipCandidates\(\),schoolIndexes=new Map\(state\.schools\.map/);
- assert.match(source,/data-sid=\\"\$\{schoolIndexes\.get\(s\)\}/);
+ assert.ok(source.includes('data-sid="${schoolIndexes.get(s)}"'));
  assert.doesNotMatch(source,/state\.schools\.indexOf\(s\)/);
  assert.match(source,/el\('schoolList'\)\.addEventListener\('click'/);
  assert.doesNotMatch(source,/box\.querySelectorAll\('button\.school\[data-sid\]'\)\.forEach/);
