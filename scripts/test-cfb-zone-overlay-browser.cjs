@@ -74,7 +74,7 @@ async function main(){
    await page.locator('#cfbManualApply').click();
    assert.equal(await page.locator('#cfbManualSchoolCards .cfb-manual-card').count(),1);
    assert.equal(await page.locator('.cfb-manual-campus').count(),1);
-   await page.locator('#cfbManualSchoolCards .cfb-manual-card button').click();
+   await page.locator('#cfbManualSchoolCards .cfb-manual-card button.mini-btn').click();
    assert.match(await page.locator('#cfbZoneReferenceStatus').innerText(),/검증된 GIS 경계가 없습니다/);
    const layout=await page.evaluate(()=>{
     const panel=document.getElementById('cfbZoneReferenceControls');
