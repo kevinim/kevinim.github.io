@@ -1,7 +1,8 @@
 'use strict';
 /* Separate, opt-in rent-map exploration UAT. Does not call rental APIs. */
 (function () {
-  if (!/\/rent-map-uat\.html$/i.test(location.pathname)) return;
+  const preview=/\/rent-map-uat\.html$/i.test(location.pathname);
+  if(!preview&&!/(?:\/|\/index\.html)$/i.test(location.pathname))return;
   const core=window.DfwRentMapUatCore;
   if (!core) return;
   const $=id=>document.getElementById(id);
@@ -110,14 +111,14 @@
     if(!host||!mapBox)return;
     const panel=el('section','rent-map-uat');
     panel.id='rentMapUatPanel';
-    panel.setAttribute('aria-label','DFW 지도 방향 및 렌트 검색 UAT');
+    panel.setAttribute('aria-label',preview?'DFW 지도 방향 및 렌트 검색 UAT':'DFW 지도 방향 및 렌트 검색');
     panel.innerHTML=
-      '<div class="rent-map-heading"><div><span class="rent-map-eyebrow">MAP & RENTALS · UAT</span><h2>내가 보는 동네, 렌트 매물 연결</h2></div><span class="rent-map-chip">무료 · 원본 연결</span></div>'+
+      '<div class="rent-map-heading"><div><span class="rent-map-eyebrow">'+(preview?'MAP & RENTALS · UAT':'MAP & RENTALS')+'</span><h2>내가 보는 동네, 렌트 매물 연결</h2></div><span class="rent-map-chip">무료 · 원본 연결</span></div>'+
       '<p class="rent-map-desc">동네 위치를 먼저 확인하고, 선택한 ZIP의 실제 렌트 매물을 Redfin에서 바로 엽니다. 링크·주소를 복사할 필요가 없습니다.</p>'+
       '<div class="rent-map-layout"><div class="rent-map-discovery"><div class="rent-map-small-heading">지도에서 지역 찾기</div>'+
       '<div id="rentMapFocus" class="rent-map-focus" role="group" aria-label="지도 중심 이동"></div>'+
       '<div class="rent-map-map-tools"><button type="button" id="rentMapRefs" aria-pressed="false">생활 기준점 표시</button><span id="rentMapMapScale" aria-live="polite">지도 준비 중</span></div></div>'+
-      '<div class="rent-map-listings"><div class="rent-map-small-heading rent-map-brandline"><img class="rent-map-redfin-icon" src="https://www.redfin.com/favicon.ico?v=3" alt="" aria-hidden="true" width="22" height="22" referrerpolicy="no-referrer" loading="lazy"><span>Redfin 렌트 매물 검색</span></div>'+
+      '<div class="rent-map-listings"><div class="rent-map-small-heading rent-map-brandline"><img class="rent-map-redfin-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADyElEQVR4AexWT2gUVxj/vjdJ7aFIK/TShsbdZFtLZeNMpSAl2dkeSqEF26bSlh6qYhAPXj2oePGq4klERRRBRPyLB0/BWdaoCMnECDFhs7tBxUsUBZXE7M77/J6yk53ZefsnKl4c3jfvfb/f9+c3b2ZnR8B7Pj4IaHkHCEBMJe2Veavvz4KVGlCWN3v7Faa4Vu9o0wIKPb0/FK300eL36RnRjrcRjbOA4pAyFG1nFDbNXMG0j+XM1JpmhTQUMJ3si+Ut+xIYxg1C2MCFl7FFDt6BZSDwf0PgUMGyL09ZdndkYBVYV0DeTPfLdmMUEX8DPlXlNVgicvwvAtAtmvY/9YKFjpyy+jZzmdPML2Vb3ED4hBBOFszUVl2BSAHFVem1AowDgBDJQysHIu+G2F9YlVoXlVbTIJe0O0jQsbfSvNIR+UIMcaRg/tQJoaNGgNGGewHx01BcwCWgMhBkeD6oDIActlIgqNZZiujtC8MBAbme9Hcc8BebdqCUJ5eUIBYfuWJ3DTtblMWHnfS8LC0HSceBiHTJBPhHwepNVvMBAcKgAUDeLog+pJS7Ym7mv44x5344YoU79CDuOutBwrYw5/uICNS2yfd5ERCAgL8zFj0kXex2M7ujyQU0PursQaJTC0hwRQhrqxFfwF3zxy/46jurSX/N2+qBt933GyzKOL8TiPciIo734KvJnjVfVihfgEftX1fA8IyI4wk3Ox7GdX5i+FoekcZ0vMAliQrnC0BBn1XA8MwbMBHGGvkEkNPFtFf18gWQFFKXwPgcW0sDCQ1dQnUvX4AH5Ye6hMXghLBSl4fgzVQ4X8DHcx9N1PsNVxKamfOmvZrjop8pvp+zc3OTzL8avoCOicFHBHjnFfoGJwIQiLBHV4K4x7cTNx9VeF+AAvjJPafmxRr/dRpFK30QEFO6GvyOCPQICCAoHQagki65Hp4ze1OrLTsLCAO6OOLa9EL1WIgICOgaHrrLzwGLWAhoZsXNPzfQOA+IdT/F+OoPd41zj6qiAQEKf1bydvIu3FPrZo1fUjMe0a/89numy+Grv48Sd4T5GgHJ21cfe5L+ZhGz4eB6fsLNXDcI1H9JxDuDZgXButio8wRCR40AxatiQlJ/qyI63SuD0qN/CaCs6rw2bs61YiPOjdd+8BwpQIUsdzOXS2XP5mdiWvnNWveoc4G/GTby7ZAqV9VQtXT5WgEq4Ztb2Zvzz0tJr1z7JaN4ncXdzAmi8s8qV9XQxSm8rgAVsGJy6GliLDui1q1Yl5sdVLmNchoKaFTgTfl3LqCRwJcAAAD//5qref8AAAAGSURBVAMAwnVaUBMjA3IAAAAASUVORK5CYII=" alt="" aria-hidden="true" width="22" height="22" referrerpolicy="no-referrer" loading="lazy"><span>Redfin 렌트 매물 검색</span></div>'+
       '<strong id="rentMapSelectedZip" class="rent-map-current">ZIP 확인 중</strong>'+
       '<div id="rentMapFilters" class="rent-map-filters" role="group" aria-label="Redfin 렌트 가격과 침실 필터">'+
       '<label>월 렌트 최소 ($)<input id="rentMapMinPrice" type="number" min="0" max="50000" step="50" inputmode="numeric" placeholder="제한 없음"></label>'+

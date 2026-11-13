@@ -78,6 +78,132 @@ html[data-theme="dark"] .area-label.selected span{background:#2d5592;border-colo
 .fema-nfhl-warning{font-size:10px;color:#586880;line-height:1.6}
 
 
+/* Approved Map-First/Redfin production styles, reviewed UAT CSS kept as source. */
+/* Standalone rent/map discovery UAT only: no production selectors are modified. */
+.rent-map-uat{background:#f8fbff;color:#183252;border:1px solid #c5d9ef;border-radius:13px;padding:15px;margin-bottom:13px;box-shadow:0 3px 14px #1c375b0c}
+.rent-map-heading{display:flex;justify-content:space-between;align-items:start;gap:9px}
+.rent-map-eyebrow{display:block;color:#4667b4;font-size:10px;letter-spacing:1px;font-weight:850;margin-bottom:4px}
+.rent-map-heading h2{font-size:16px;margin:0}
+.rent-map-chip{background:#e3eefe;color:#22549c;border-radius:20px;font-size:10px;font-weight:750;padding:6px 9px;white-space:nowrap}
+.rent-map-desc{color:#4c627e;font-size:12px;line-height:1.55;margin:8px 0 12px}
+.rent-map-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(210px,.85fr);gap:13px}
+.rent-map-discovery,.rent-map-listings{min-width:0;border:1px solid #d7e4f1;background:#fff;border-radius:10px;padding:11px}
+.rent-map-small-heading{font-size:11px;font-weight:800;color:#476080;margin-bottom:7px}
+.rent-map-focus{display:flex;gap:5px;flex-wrap:wrap}
+.rent-map-focus button,.rent-map-map-tools button{padding:7px 9px;background:#f4f7fd;color:#284b80;border:1px solid #cbd8eb;border-radius:7px;min-height:33px;font-weight:700;font-size:11px}
+.rent-map-focus button[aria-pressed="true"],.rent-map-map-tools button[aria-pressed="true"]{background:#2355a9;border-color:#2355a9;color:#fff}
+.rent-map-map-tools{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.rent-map-map-tools span{font-size:11px;color:#62758c}
+.rent-map-current{display:block;font-size:15px;color:#213e6c;margin:4px 0 10px}
+.rent-map-search-actions{display:flex;gap:7px;flex-wrap:wrap}
+.rent-map-search-actions a{color:#fff;background:#2759b3;padding:9px 11px;font-size:11px;font-weight:800;border-radius:8px;text-decoration:none;min-height:36px;display:inline-flex;align-items:center}
+.rent-map-search-actions a:nth-child(2){background:#0c7775}
+.rent-map-search-actions a[aria-disabled="true"]{opacity:.45;pointer-events:none}
+.rent-map-listings small{display:block;font-size:11px;line-height:1.5;margin-top:10px;color:#596e88}
+.rent-map-status,.rent-map-source{font-size:11px;line-height:1.55;margin:10px 0 0;color:#506682}
+.rent-map-source{border-top:1px solid #e4edf6;padding-top:8px;font-size:10px}
+.rent-map-uat button:focus-visible,.rent-map-uat a:focus-visible{outline:3px solid #76a6e5;outline-offset:2px}
+html[data-theme="dark"] .rent-map-uat{background:#14273e;border-color:#47678a;color:#edf5ff}
+html[data-theme="dark"] .rent-map-discovery,html[data-theme="dark"] .rent-map-listings{background:#1d344f;border-color:#476381}
+html[data-theme="dark"] .rent-map-uat .rent-map-small-heading,html[data-theme="dark"] .rent-map-uat .rent-map-desc,html[data-theme="dark"] .rent-map-uat .rent-map-status,html[data-theme="dark"] .rent-map-uat .rent-map-source,html[data-theme="dark"] .rent-map-uat .rent-map-listings small{color:#bed0e5}
+html[data-theme="dark"] .rent-map-current{color:#eef6ff}
+html[data-theme="dark"] .rent-map-focus button,html[data-theme="dark"] .rent-map-map-tools button{background:#253c59;border-color:#607895;color:#e6effe}
+html[data-theme="dark"] .rent-map-focus button[aria-pressed="true"],html[data-theme="dark"] .rent-map-map-tools button[aria-pressed="true"]{background:#3d69ba}
+@media(max-width:960px){.rent-map-layout{grid-template-columns:1fr}}
+@media(max-width:630px){.rent-map-uat{padding:11px}.rent-map-heading h2{font-size:14px}.rent-map-search-actions{display:grid;grid-template-columns:1fr 1fr}.rent-map-search-actions a{justify-content:center;padding:9px 7px}.rent-map-focus button{flex:1 1 auto}}
+
+
+/* Price & bedroom deep-link filters: no external data or new map layer. */
+.rent-map-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:9px 0 7px}
+.rent-map-filters label{display:flex;flex-direction:column;gap:5px;min-width:0;font-size:11px;font-weight:750;color:#425d80}
+.rent-map-filters input,.rent-map-filters select{width:100%;min-width:0;max-width:100%;height:37px;padding:7px 8px;background:#fff;border:1px solid #bdcde1;border-radius:7px;color:#193657;font-size:12px}
+.rent-map-filters input::placeholder{color:#8495ab}
+.rent-map-filters .rent-map-reset{justify-self:start;padding:6px 10px;background:transparent;color:#2856a0;border:1px solid #b4c8e5;border-radius:7px;min-height:32px;font-size:11px;font-weight:750}
+.rent-map-filter-status{font-size:11px;line-height:1.5;min-height:16px;color:#526f91;margin:5px 0 8px}
+.rent-map-filter-status[data-invalid="true"]{color:#ac3030;font-weight:750}
+html[data-theme="dark"] .rent-map-filters label{color:#c1d5eb}
+html[data-theme="dark"] .rent-map-filters input,html[data-theme="dark"] .rent-map-filters select{background:#18324e;border-color:#567493;color:#eff6ff}
+html[data-theme="dark"] .rent-map-filters input::placeholder{color:#bdc8d8}
+html[data-theme="dark"] .rent-map-filters .rent-map-reset{color:#d5e7ff;border-color:#6584a4}
+html[data-theme="dark"] .rent-map-filter-status{color:#ccdbed}
+html[data-theme="dark"] .rent-map-filter-status[data-invalid="true"]{color:#ffb7b4}
+@media(max-width:630px){.rent-map-filters{gap:7px}.rent-map-filters input,.rent-map-filters select{font-size:12px}}
+
+
+/* Source-identifying Redfin icon and opt-in, secondary rental controls. */
+.rent-map-brandline{display:flex;align-items:center;gap:7px;min-height:25px}
+.rent-map-redfin-icon{width:22px;height:22px;object-fit:contain;border-radius:5px;background:#c82021}
+.rent-map-more{grid-column:1/-1;margin:5px 0 0;border-top:1px solid #e0e9f5;padding-top:8px}
+.rent-map-more summary{cursor:pointer;color:#255b9e;font-size:11px;font-weight:800;padding:6px 0;list-style-position:inside}
+.rent-map-more-body{padding:8px 0;display:grid;gap:11px}
+.rent-map-more-body .rent-map-bath-label{max-width:190px}
+.rent-map-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 7px}
+.rent-map-filters .rent-map-checks label{display:flex;flex-direction:row;align-items:center;gap:7px;font-size:11px;font-weight:650;cursor:pointer;min-height:27px}
+.rent-map-filters .rent-map-checks input{width:16px;height:16px;flex:0 0 16px;min-width:16px;max-width:16px;margin:0;accent-color:#c82021}
+html[data-theme="dark"] .rent-map-more{border-color:#476381}
+html[data-theme="dark"] .rent-map-more summary{color:#b9d5ff}
+@media(max-width:420px){.rent-map-checks{grid-template-columns:1fr 1fr;gap:8px 6px}.rent-map-filters .rent-map-checks label{font-size:10px}}
+
+/* Map-first region discovery UAT: scoped, no edits to production theme/map. */
+.rent-map-layout{align-items:start}
+.rent-map-discovery{align-self:start}
+.area-explorer{width:100%;display:flex;flex-direction:column;gap:9px}
+.area-explore-search{border:1px solid #b8cbe6;border-radius:9px;display:flex;align-items:center;gap:7px;padding:0 9px;background:#f8fbff;min-height:43px}
+.area-explore-search span{font-size:23px;color:#5b78a8;line-height:1}
+.area-explore-search input{min-width:0;width:100%;flex:1;border:0;outline:none;background:transparent;color:#1c3c66;font-size:12px;font-weight:600;padding:11px 0}
+.area-explore-search input::placeholder{color:#667f9f;opacity:1}
+.area-explore-search button{border:0;background:none;color:#5977a3;min-width:28px;min-height:30px;padding:3px;font-size:20px;font-weight:500}
+.area-explore-results-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:2px;font-size:11px;color:#2f568b}
+.area-explore-results-heading span{color:#657c99;font-size:10px;white-space:nowrap}
+.area-explore-list{display:grid;grid-template-columns:1fr;align-content:start;gap:5px;max-height:224px;overflow-y:auto;padding:2px 2px 2px 0;scrollbar-width:thin}
+.area-explore-option{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;gap:1px 6px;text-align:left;padding:8px 10px;border-radius:8px;border:1px solid #d4e0ee;background:#f9fbff;color:#183653;min-height:52px;width:100%}
+.area-explore-option:hover{border-color:#6190ca;background:#edf5ff}
+.area-explore-option.selected{border:2px solid #3b70b7;background:#e5f1ff;padding:7px 9px}
+.area-explore-option-name{font-size:12px;font-weight:800;grid-row:1;grid-column:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.area-explore-option-sub{font-size:10px;color:#5c7593;grid-row:2;grid-column:1}
+.area-explore-option-arrow{grid-column:2;grid-row:1/3;align-self:center;font-size:20px;color:#547fae}
+.area-explore-empty{color:#65788d;font-size:11px;padding:14px 7px}
+.area-explore-hint{margin:1px 0 3px;color:#566f8e;font-size:10px;line-height:1.6}
+.area-explore-selected{border:1px solid #cbdcef;border-radius:10px;background:linear-gradient(130deg,#edf5ff,#fbfdff);padding:11px}
+.area-explore-selected-top{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.area-explore-kicker{font-size:9px;letter-spacing:.07em;color:#5e78a3;font-weight:750}
+.area-explore-selected h3{margin:4px 0;font-size:15px;color:#203c66}
+.area-explore-zip{font-size:10px;padding:4px 6px;border-radius:8px;background:#deebfc;color:#2c5593;font-weight:750;text-align:right}
+.area-explore-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:10px}
+.area-explore-facts>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.area-explore-facts small{font-size:9px;line-height:1.4;color:#6c7f99}
+.area-explore-facts strong{color:#243e67;font-size:12px;overflow-wrap:anywhere}
+.area-explore-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.area-explore-actions button{font-size:10px;font-weight:750;color:#245b9e;background:#fff;border:1px solid #bed3ec;border-radius:7px;padding:7px 9px;min-height:33px}
+.area-explore-actions button:hover{background:#deebfb}
+.area-explore-factnote{color:#58708d;font-size:9px;line-height:1.5;margin:8px 0 0}
+.area-explore-city-shortcuts{border-top:1px solid #d8e4f0;padding-top:7px;margin-top:3px}
+.area-explore-city-shortcuts summary{font-size:10px;color:#4d6890;cursor:pointer;font-weight:750}
+.area-explore-city-shortcuts #rentMapFocus{margin-top:9px}
+.area-explorer button:focus-visible,.area-explorer input:focus-visible{outline:3px solid #77a7ed;outline-offset:2px}
+html[data-theme="dark"] .area-explore-search{background:#193451;border-color:#547aa5}
+html[data-theme="dark"] .area-explore-search input{color:#edf6ff}
+html[data-theme="dark"] .area-explore-search input::placeholder{color:#b6cce7}
+html[data-theme="dark"] .area-explore-search span,html[data-theme="dark"] .area-explore-search button{color:#bbd3ef}
+html[data-theme="dark"] .area-explore-results-heading{color:#e6f0ff}
+html[data-theme="dark"] .area-explore-results-heading span,html[data-theme="dark"] .area-explore-hint{color:#b3c9e5}
+html[data-theme="dark"] .area-explore-option{background:#193451;border-color:#456887;color:#f1f7ff}
+html[data-theme="dark"] .area-explore-option:hover{background:#254968;border-color:#8eb6df}
+html[data-theme="dark"] .area-explore-option.selected{background:#284f79;border-color:#80ade3}
+html[data-theme="dark"] .area-explore-option-sub,html[data-theme="dark"] .area-explore-option-arrow{color:#c2d6ed}
+html[data-theme="dark"] .area-explore-selected{background:#193653;border-color:#56779a}
+html[data-theme="dark"] .area-explore-selected h3,html[data-theme="dark"] .area-explore-facts strong{color:#f1f7ff}
+html[data-theme="dark"] .area-explore-kicker,html[data-theme="dark"] .area-explore-facts small,html[data-theme="dark"] .area-explore-factnote{color:#bed3e9}
+html[data-theme="dark"] .area-explore-zip{background:#254a72;color:#d4e9ff}
+html[data-theme="dark"] .area-explore-actions button{background:#284965;border-color:#5a83ac;color:#e2f1ff}
+html[data-theme="dark"] .area-explore-actions button:hover{background:#365d80}
+html[data-theme="dark"] .area-explore-city-shortcuts{border-color:#496885}
+html[data-theme="dark"] .area-explore-city-shortcuts summary{color:#cee1f9}
+@media(max-width:960px){.area-explore-list{max-height:190px}}
+@media(max-width:630px){.area-explore-list{max-height:208px}.area-explore-option{min-height:50px}.area-explore-actions button{flex:1}}
+
+/* End approved Map-First/Redfin production styles. */
+
 /* Compact links preserve all source content in the shared, collapsed footer. */
 .footnote-original-hidden { display: none !important; }
 .footnote-ref { display: inline-flex; align-items: center; width: fit-content; max-width: 100%; margin: 3px 0; padding: 3px 5px; border: 0; border-radius: 4px; background: transparent; color: #365eb2; font-size: 10px; font-weight: 600; line-height: 1.5; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
@@ -269,5 +395,9 @@ html[data-theme="dark"] .footnotes-baseline, html[data-theme="dark"] .footnote-c
 <script src="./school-zone-ui.js?v=1"></script>
 <script src="./features/conditional-school-release.js?v=1"></script>
 <script src="./features/school-reference-preview.js?v=1"></script>
-<script src="./home-assignment-map.js?v=1"></script><script src="./features/map/area-label-hierarchy.js?v=1"></script><script src="./dashboard-main.js?v=6"></script><script src="./features/west-dfw/attach.js?v=2" defer></script><script src="./features/commute/workplace-marker.js?v=1"></script><script src="./features/healthcare/map-layer.js?v=2"></script><script src="./features/resilience/winter-map.js?v=2"></script><script src="./rating-context.js?v=1"></script><script src="./school-identity.js?v=1"></script><script src="./school-assignment.js?v=6"></script><script src="./irving-official-spatial.js?v=1"></script><script src="./dallas-attendance-live.js?v=1"></script><script src="./home-lookup-v2.js?v=18"></script><script src="./features/commute/workplace-destinations.js?v=1"></script><script src="./allen-lookup.js?v=5"></script><script src="./candidate-compare.js?v=4"></script><script src="./features/commute/cost-model.js?v=1"></script><script src="./features/dashboard-extras.js?v=2"></script><script src="./features/commute/sourced-cost-core.js?v=1"></script><script src="./features/commute/sourced-cost-ui.js?v=1"></script><script src="./features/area-assessment-core.js?v=3"></script><script src="./features/area-assessment.js?v=3"></script><script src="./features/region-compare-core.js?v=1"></script><script src="./features/region-compare.js?v=1"></script><script src="./features/dfw-school-coverage-panel.js?v=2" defer></script><script src="./features/cfb-official-inline.js?v=1" defer></script><script src="./features/cfb-official-bridge.js?v=2" defer></script><script src="./features/cfb-zone-overlay.js?v=1" defer></script><script src="./features/cfb-approved-zone-atlas.js?v=2" defer></script><script src="./features/cfb-district-jurisdiction.js?v=1" defer></script><script src="./features/carrollton-school-insights.js?v=4" defer></script><script src="./features/home-school-manual-bridge.js?v=1" defer></script><script src="./features/tea-peims-public-share-addon.js?v=2" defer></script><script src="./features/tea-allen-mckinney-subject-notes.js?v=1" defer></script><script src="./features/compact-footnotes.js?v=1"></script></body></html>
+<script src="./home-assignment-map.js?v=1"></script><script src="./features/map/area-label-hierarchy.js?v=1"></script><script src="./dashboard-main.js?v=6"></script><script src="./features/west-dfw/attach.js?v=2" defer></script><script src="./features/commute/workplace-marker.js?v=1"></script><script src="./features/healthcare/map-layer.js?v=2"></script><script src="./features/resilience/winter-map.js?v=2"></script><script src="./rating-context.js?v=1"></script><script src="./school-identity.js?v=1"></script><script src="./school-assignment.js?v=6"></script><script src="./irving-official-spatial.js?v=1"></script><script src="./dallas-attendance-live.js?v=1"></script><script src="./home-lookup-v2.js?v=18"></script><script src="./features/commute/workplace-destinations.js?v=1"></script><script src="./allen-lookup.js?v=5"></script><script src="./candidate-compare.js?v=4"></script><script src="./features/commute/cost-model.js?v=1"></script><script src="./features/dashboard-extras.js?v=2"></script><script src="./features/commute/sourced-cost-core.js?v=1"></script><script src="./features/commute/sourced-cost-ui.js?v=1"></script><script src="./features/area-assessment-core.js?v=3"></script><script src="./features/area-assessment.js?v=3"></script><script src="./features/region-compare-core.js?v=1"></script><script src="./features/region-compare.js?v=1"></script><script src="./features/dfw-school-coverage-panel.js?v=2" defer></script><script src="./features/cfb-official-inline.js?v=1" defer></script><script src="./features/cfb-official-bridge.js?v=2" defer></script><script src="./features/cfb-zone-overlay.js?v=1" defer></script><script src="./features/cfb-approved-zone-atlas.js?v=2" defer></script><script src="./features/cfb-district-jurisdiction.js?v=1" defer></script><script src="./features/carrollton-school-insights.js?v=4" defer></script><script src="./features/home-school-manual-bridge.js?v=1" defer></script><script src="./features/tea-peims-public-share-addon.js?v=2" defer></script><script src="./features/tea-allen-mckinney-subject-notes.js?v=1" defer></script><script src="./features/compact-footnotes.js?v=1"></script><script src="./features/dfw-rent-map-uat-core.js?v=3"></script>
+<script src="./features/dfw-rent-map-uat.js?v=4" defer></script>
+<script src="./features/dfw-area-explorer-uat-core.js?v=1"></script>
+<script src="./features/dfw-area-explorer-uat.js?v=2" defer></script>
+</body></html>
 

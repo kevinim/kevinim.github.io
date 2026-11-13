@@ -106,10 +106,30 @@ const base=process.env.SITE_URL||'http://127.0.0.1:8765/';
       assert.equal(await page.locator('#k-zip').innerText(),'75034');
       assert.equal(await page.locator('#rentMapUatPanel').count(),1);
       assert.deepEqual(errors,[],'No runtime page errors: '+errors.join(' | '));
+      // Production acceptance: the exact same modules are now on normal root.
       await page.goto(base,{waitUntil:'domcontentloaded',timeout:80000});
-      assert.equal(await page.locator('#rentMapUatPanel').count(),0,'Normal dashboard remains UAT free');
-      assert.equal(await page.locator('#areaExplorerUat').count(),0,'Normal dashboard has no map explorer');
-      console.log('PASS '+width+'px map-navigation, reference landmarks, map-first ZIP browse/search and Redfin advanced rental filters, and normal dashboard isolation');
+      await page.waitForFunction(()=>window.__rentMapUatReady===true&&window.__areaExplorerUatReady===true,{timeout:100000});
+      assert.equal(await page.locator('#rentMapUatPanel').count(),1,'Production must show rental discovery');
+      assert.equal(await page.locator('#areaExplorerUat').count(),1,'Production must show map-first search');
+      assert.equal(await page.locator('.rent-map-eyebrow').innerText(),'MAP & RENTALS','Production has no UAT badge');
+      assert.equal(await page.locator('#rentMapHouses').getAttribute('href'),
+        'https://www.redfin.com/zipcode/75093/houses-for-rent');
+      await page.locator('#areaExploreSearch').fill('75034');
+      await page.locator('#areaExploreList button[data-zip="75034"]').click();
+      await page.waitForFunction(()=>document.querySelector('#zipSelect')?.value==='75034'&&
+        document.querySelector('#rentMapHouses')?.getAttribute('href')?.includes('/zipcode/75034/'));
+      assert.equal(await page.locator('#areaExploreSelectedZip').innerText(),'75034 · ZIP 통계 구역');
+      await page.locator('#rentMapMinPrice').fill('2000');
+      await page.locator('#rentMapMinBeds').selectOption('3');
+      assert.equal(await page.locator('#rentMapHouses').getAttribute('href'),
+        'https://www.redfin.com/zipcode/75034/rentals/filter/property-type=house,min-price=2k,min-beds=3');
+      assert.equal(await page.locator('#rentMapApartments').getAttribute('href'),
+        'https://www.redfin.com/zipcode/75034/rentals/filter/property-type=multifamily,min-price=2k,min-beds=3');
+      assert.equal(await page.locator('.rent-map-redfin-icon').count(),1);
+      const productionLayout=await page.locator('#areaExplorerUat').evaluate(e=>({width:e.clientWidth,scroll:e.scrollWidth}));
+      assert.ok(productionLayout.scroll<=productionLayout.width+2,
+        'Production mobile region search must not overflow '+width+'px: '+JSON.stringify(productionLayout));
+      console.log('PASS '+width+'px UAT + PRODUCTION map-first ZIP browse/search, Redfin filters, school/map and mobile isolation');
       await page.close();
     }
   }finally{await browser.close();}

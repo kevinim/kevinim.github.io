@@ -1,8 +1,9 @@
-name: DFW Map & Rental ZIP Discovery UAT
+name: DFW Map & Rental Discovery (production and UAT)
 on:
   pull_request:
     branches: [main]
     paths:
+      - 'index.html'
       - 'rent-map-uat.html'
       - 'features/dfw-rent-map-uat*'
       - 'features/dfw-area-explorer-uat*'
@@ -13,6 +14,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'index.html'
       - 'rent-map-uat.html'
       - 'features/dfw-rent-map-uat*'
       - 'features/dfw-area-explorer-uat*'
@@ -60,7 +62,7 @@ jobs:
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/rent-map-browser.log 2>&1 &
           sleep 2
-      - name: Desktop & mobile map focus, layers, and listings
+      - name: Desktop & mobile production and UAT map focus, layers and rental filters
         env:
           NODE_PATH: rent-map-browser-tmp/node_modules
         run: node scripts/test-rent-map-uat-browser.cjs
