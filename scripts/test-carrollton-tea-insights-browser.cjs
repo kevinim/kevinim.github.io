@@ -44,7 +44,8 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
   try{
     for(const width of [1280,390]){
       const page=await browser.newPage({viewport:{width,height:900}});
-      const errors=[],csp=[];
+      const errors=[],csp=[],detailNetwork=[];
+      page.on('request',request=>{const url=request.url();if(url.includes('/data/tea-district-profiles-2026/')||/(tea-accountability-2026-verified-batch|tea-staar-meets-2026-verified-batch|tea-ethnicity-2025-26-priority)\.json/.test(url))detailNetwork.push(url);});
       page.on('pageerror',e=>errors.push(String(e.message||e)));
       await page.addInitScript(()=>{
         window.__carrolltonCsp=[];
@@ -232,6 +233,12 @@ fs.mkdirSync(ARTIFACTS,{recursive:true});
           results.push({school:label,...found});
           if(id==='061902118')await page.screenshot({path:path.join(ARTIFACTS,'campus-'+width+'.png'),fullPage:true,timeout:40000});
         }
+        const expectedDistricts=new Set(CASES.map(([id])=>id.slice(0,6)));
+        const shards=detailNetwork.filter(url=>url.includes('/data/tea-district-profiles-2026/'));
+        const receivedDistricts=shards.map(url=>/\/([0-9]{6})\.json(?:\?|$)/.exec(url)?.[1]);
+        assert.deepEqual(new Set(receivedDistricts),expectedDistricts,'school clicks must load only selected districts');
+        assert.equal(shards.length,expectedDistricts.size,'repeated school selections must reuse downloaded district profiles');
+        assert.equal(detailNetwork.length,shards.length,'full-campus TEA/STAAR/PEIMS files must never be requested by school click');
         assert.deepEqual(errors,[],'runtime exceptions '+errors.join(','));
         fs.writeFileSync(path.join(ARTIFACTS,'qa-'+width+'.json'),JSON.stringify(results,null,2)+'\n');
         console.log('PASS Carrollton TEA campus profiles '+width+'px, '+results.length+' school selections');
