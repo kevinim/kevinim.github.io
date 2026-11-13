@@ -24,7 +24,7 @@ const base=process.env.SITE_URL||'http://127.0.0.1:8765/';
       assert.equal(await page.locator('#areaExploreSearch').inputValue(),'');
       assert.ok((await page.locator('#areaExploreSelectedZip').innerText()).includes('75093'));
       // Broader view groups cities; clicking a city drills down to ZIP results.
-      await page.evaluate(()=>map.setView([33.10,-96.82],10,{animate:false}));
+      await page.evaluate(()=>{map.setView([33.10,-96.82],10,{animate:false});return true;});
       await page.waitForFunction(()=>document.querySelector('#areaExploreList button[data-kind="city"]'));
       const cityButtons=await page.locator('#areaExploreList button[data-kind="city"]').count();
       assert.ok(cityButtons>1,'Zoomed-out view groups by city');
