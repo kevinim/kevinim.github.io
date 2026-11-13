@@ -134,8 +134,11 @@ function percent(base,next){
    // a scientifically stable performance experiment and should not gate small deltas.
    assert.ok(after.coreReadyMs<Math.max(before.coreReadyMs*2,5000),
     'Critical map readiness >2x baseline or 5s: '+JSON.stringify(row));
-   assert.ok(after.resourceRequests<=before.resourceRequests+5,
-    'Unexpected extra first-party asset requests: '+JSON.stringify(row));
+   // The audited no-key provider guard is one additional same-origin script;
+   // keep the existing +5 budget otherwise, and do not permit arbitrary addons.
+   const providerAdded=fs.readFileSync('index.html','utf8').includes('<script src="./features/commute/provider-requests.js?v=1"></script>')?1:0;
+   assert.ok(after.resourceRequests<=before.resourceRequests+5+providerAdded,
+    'Unexpected extra first-party asset requests beyond approved provider guard: '+JSON.stringify(row));
    assert.ok(after.transferBytes<=before.transferBytes*1.2+262144,
     'Unexpected first-party resource byte growth: '+JSON.stringify(row));
   }
