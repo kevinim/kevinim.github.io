@@ -23,8 +23,6 @@ const base=process.env.SITE_URL||'http://127.0.0.1:8765/';
       assert.equal(await page.locator('#rentMapFocus button[data-focus="frisco"]').getAttribute('aria-pressed'),'true');
       await page.locator('#rentMapRefs').click();
       assert.equal(await page.locator('#rentMapRefs').getAttribute('aria-pressed'),'true');
-      const reference=await page.evaluate(()=>({markers:stateReferenceForTest(),school:schoolGroup.getLayers().length}));
-      function stateReferenceForTest() {return 3;}
       // inspect markers through Leaflet's own DOM (3 independent circles)
       assert.equal(await page.locator('#map .leaflet-interactive').count()>0,true,'Leaflet map renders');
       await page.locator('#rentMapRefs').click();
