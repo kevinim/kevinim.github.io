@@ -87,10 +87,10 @@ test('scoped source/security audits still cover all their own workflow and sourc
 test('one postdeploy trigger per GitHub Pages build; manual smoke remains',()=>{
  for(const name of ['cfb-live-pages-smoke.yml','track-b-live-production-smoke.yml']){
   const y=workflows.get(name);
-  assert.match(y,/^  workflow_run:\s*\n    workflows: \['pages build and deployment'\]/m);
-  assert.ok(!/^\s{2}deployment_status:/m.test(y),'duplicate deployment_status runs: '+name);
+  assert.match(y,/^  deployment_status:\s*$/m,'Pages deploy success event must trigger browser smoke: '+name);
+  assert.doesNotMatch(y,/^  workflow_run:/m,'Pages dynamic workflow_run does not fire reliably: '+name);
   assert.match(y,/^  workflow_dispatch:/m);
-  assert.match(y,/github\.event\.workflow_run\.conclusion == 'success'/);
+  assert.match(y,/github\.event\.deployment_status\.state == 'success'/);
  }
 });
 test('workflow YAML does not introduce PR privilege escalation',()=>{
