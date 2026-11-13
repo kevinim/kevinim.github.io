@@ -1,0 +1,71 @@
+name: Redfin manual listing UAT (opt-in)
+on:
+  pull_request:
+    paths:
+      - "redfin-uat.html"
+      - "features/redfin-uat*"
+      - "tests/redfin-uat.test.cjs"
+      - "scripts/test-redfin-uat-browser.cjs"
+      - ".github/workflows/verify-redfin-uat.yml"
+  push:
+    branches:
+      - "uat/redfin-link-bridge-20261112"
+    paths:
+      - "redfin-uat.html"
+      - "features/redfin-uat*"
+      - "tests/redfin-uat.test.cjs"
+      - "scripts/test-redfin-uat-browser.cjs"
+      - ".github/workflows/verify-redfin-uat.yml"
+permissions:
+  contents: read
+jobs:
+  redfin-uat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+      - name: Validate manual listing bridge
+        run: node --test tests/redfin-uat.test.cjs
+      - name: Parse production-boundary JavaScript
+        run: |
+          node --check features/redfin-uat-core.js
+          node --check features/redfin-uat.js
+
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+      - name: Install isolated pinned Chromium and Leaflet
+        run: |
+          mkdir -p redfin-uat-browser-tmp
+          cd redfin-uat-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0 leaflet@1.9.4
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve integration HTML locally (never deploy)
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/redfin-uat-local.log 2>&1 &
+          sleep 2
+      - name: Desktop and mobile address, map, sources and memory UAT
+        env:
+          NODE_PATH: "${{ github.workspace }}/redfin-uat-browser-tmp/node_modules"
+        run: node scripts/test-redfin-uat-browser.cjs
+      - name: Retain synthetic 390px and 1280px screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: redfin-uat-browser-390-1280
+          path: artifacts/redfin-uat/*.png
+          if-no-files-found: warn
+          retention-days: 7
