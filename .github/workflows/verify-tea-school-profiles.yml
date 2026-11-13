@@ -7,6 +7,13 @@ on:
       - features/carrollton-school-insights.css
       - tests/carrollton-school-insights.test.cjs
       - scripts/test-carrollton-tea-insights-browser.cjs
+      - scripts/build-tea-district-profiles.cjs
+      - tests/tea-district-profiles.test.cjs
+      - 'data/tea-district-profiles-2026/**'
+      - data/tea-accountability-2026-verified-batch.json
+      - data/tea-staar-meets-2026-verified-batch.json
+      - data/tea-ethnicity-2025-26-priority.json
+      - tea-ratings-2026.json
       - .github/workflows/verify-tea-school-profiles.yml
   push:
     branches: [main]
@@ -15,6 +22,13 @@ on:
       - features/carrollton-school-insights.css
       - tests/carrollton-school-insights.test.cjs
       - scripts/test-carrollton-tea-insights-browser.cjs
+      - scripts/build-tea-district-profiles.cjs
+      - tests/tea-district-profiles.test.cjs
+      - 'data/tea-district-profiles-2026/**'
+      - data/tea-accountability-2026-verified-batch.json
+      - data/tea-staar-meets-2026-verified-batch.json
+      - data/tea-ethnicity-2025-26-priority.json
+      - tea-ratings-2026.json
       - .github/workflows/verify-tea-school-profiles.yml
 
 permissions:
@@ -37,6 +51,8 @@ jobs:
           node --check features/carrollton-school-insights.js
           node --check scripts/test-carrollton-tea-insights-browser.cjs
           node --test tests/carrollton-school-insights.test.cjs
+          node scripts/build-tea-district-profiles.cjs --check
+          node --test tests/tea-district-profiles.test.cjs tests/tea-academic-uat-panel.test.cjs tests/tea-peims-priority-campus.test.cjs
 
   browser:
     runs-on: ubuntu-latest
