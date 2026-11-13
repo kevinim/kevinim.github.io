@@ -8,6 +8,7 @@ on:
       - 'noaa-storm-history.js'
       - 'data/noaa-storm-events-dfw-2024-2025.json'
       - 'index.html'
+      - 'dashboard-main.js'
       - 'scripts/test-phase2a-browser.cjs'
       - 'scripts/test-school-boundary-browser.cjs'
       - 'scripts/test-map-viewport-sync-browser.cjs'

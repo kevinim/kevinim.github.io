@@ -457,83 +457,141 @@ function syncMapSize(){
  if(s.x!==c.clientWidth||s.y!==c.clientHeight)map.invalidateSize({debounceMoveend:true});
  return map.getSize();
 }
-function drawSchools(){
- if(!map)return;
- const homeActive=typeof home!=='undefined'&&!!home&&window.ConditionalSchoolRelease?.decide?.(home.assignment)?.allowed===true;
- const legend=el('schoolLegend');
- if(legend){
-  legend.classList.toggle('matching',homeActive);
-  legend.innerHTML=homeActive?'<span>집 주소 배정 후보</span><span>그 외 학교 · 배정 미확인</span>':'<span>초등</span><span>중등</span><span>고등</span><span>숫자 그룹을 누르면 확대</span>';
+// Keep only on-screen cluster entries strongly referenced. Individual school markers
+ // are weakly cached and survive pan/zoom/filter changes without new click handlers.
+ const schoolMarkerIds=new WeakMap(),schoolPinCache=new WeakMap(),schoolPinIcons=new Map();
+ const schoolActiveMarkers=new Map();
+ let schoolMarkerNextId=0;
+ function schoolMarkerId(s){
+  let id=schoolMarkerIds.get(s);
+  if(id===undefined){id=++schoolMarkerNextId;schoolMarkerIds.set(s,id)}
+  return id;
  }
- schoolGroup.clearLayers();
- const notice=el('schoolMapStatus'),zoom=map.getZoom();
- if(!state.showSchools){
-  if(notice)notice.textContent='학교 마커 표시가 꺼져 있습니다. 목록에서 선택한 학교는 노란색 위치 강조로 표시합니다.';
-  return;
- }
- // getBounds() is derived from Leaflet's cached size; refresh it first so the
- // bounds always describe the area actually on screen (root cause of the
- // Allen 75013 / Plano 75093 "화면 내 0개" P0).
- const size=syncMapSize();
- const bounds=map.getBounds();
- // Render every eligible school in the current viewport, irrespective of ISD
- // or zoom. Filtering is explicit; never silently discard campuses by rank.
- const eligible=state.schools.filter(s=>s.ll&&s.type!=='other'&&
-  (state.level==='all'||s.type===state.level)&&
-  schoolPassesRatingFilter(s));
- const visible=eligible.filter(s=>bounds.contains(s.ll));
- const homeCandidates=homeActive?state.schools.filter(s=>s.ll&&s.type!=='other'&&
-  (state.level==='all'||s.type===state.level)&&homeSchoolMatches(s)):[];
- const displayed=[...new Set([...visible,...homeCandidates])];
- if(!size.x||!size.y){
-  // The map container is not laid out (hidden/collapsed). The ResizeObserver
-  // redraws once it gets a size; say so instead of showing a false zero.
-  if(notice)notice.textContent='지도가 아직 화면에 배치되지 않아 학교 마커를 계산하지 않았습니다. 지도가 보이면 자동으로 다시 표시합니다.';
-  return;
- }
- // Zoom-dependent grid clustering preserves every eligible school in a
- // represented cluster, instead of hundreds of overlapping full-size pins.
- const clusterMode=zoom<=12&&displayed.length>45;
- const compactMode=!clusterMode&&zoom<=13&&displayed.length>45;
- const groups=[];
- if(clusterMode){
-  const cells=new Map(),cellSize=zoom<=10?75:60;
-  for(const s of displayed){
-   const p=map.latLngToContainerPoint(s.ll);
-   const key=Math.floor(p.x/cellSize)+':'+Math.floor(p.y/cellSize);
-   if(!cells.has(key))cells.set(key,[]);
-   cells.get(key).push(s);
-  }
-  for(const members of cells.values())groups.push(members);
- }else for(const s of displayed)groups.push([s]);
- for(const members of groups){
-  if(clusterMode&&members.length>1){
-   const schoolBounds=L.latLngBounds(members.map(s=>s.ll)),center=schoolBounds.getCenter();
-   const icon=L.divIcon({className:'school-cluster-marker',
-    html:'<span class="school-cluster-bubble" aria-hidden="true">'+members.length+'</span>',
-    iconSize:[40,40],iconAnchor:[20,20]});
-   L.marker(center,{icon,keyboard:true,
-    title:members.length+'개 학교 · 눌러서 확대',schoolMembers:members}).addTo(schoolGroup).on('click',()=>{
-     map.stop();map.setView(center,Math.min(16,zoom+2),{animate:false});
-    });
-   continue;
-  }
-  const s=members[0];
+ function schoolPinIcon(s,homeActive,compact){
   const cls=homeActive?(homeSchoolMatches(s)?'home-match':'nearby'):s.type;
   const rating=scoreRecord(s.name,s.district)?.rating;
   const letter=['A','B','C','D','F'].includes(rating)?rating:'';
-  const compact=clusterMode||compactMode;
-  const badge=!compact&&letter?'<small class="school-map-grade-badge grade-'+letter.toLowerCase()+'">'+letter+'</small>':'';
-  const glyph=compact?'':s.type==='elementary'?'초':s.type==='middle'?'중':'고';
-  const diameter=compact?14:27,anchor=Math.floor(diameter/2);
-  const icon=L.divIcon({className:'',html:`<div class="mapmark ${cls}${compact?' mapmark-compact':''}">${glyph}${badge}</div>`,
-   iconSize:[diameter,diameter],iconAnchor:[anchor,anchor]});
-  L.marker(s.ll,{icon,title:s.name,schoolMembers:members}).addTo(schoolGroup).on('click',()=>schoolClicked(s));
+  const signature=cls+'|'+letter+'|'+(compact?'compact':'full');
+  let icon=schoolPinIcons.get(signature);
+  if(!icon){
+   const badge=!compact&&letter?'<small class="school-map-grade-badge grade-'+letter.toLowerCase()+'">'+letter+'</small>':'';
+   const glyph=compact?'':s.type==='elementary'?'초':s.type==='middle'?'중':'고';
+   const diameter=compact?14:27,anchor=Math.floor(diameter/2);
+   icon=L.divIcon({className:'',html:'<div class="mapmark '+cls+(compact?' mapmark-compact':'')+'">'+glyph+badge+'</div>',
+    iconSize:[diameter,diameter],iconAnchor:[anchor,anchor]});
+   schoolPinIcons.set(signature,icon);
+  }
+  return icon;
  }
- if(notice){
-  notice.textContent=(clusterMode?'학교 '+displayed.length+'개를 '+groups.length+'개 위치 그룹으로 표시 · 숫자를 눌러 확대 · ':compactMode?'학교 '+displayed.length+'개를 작은 점으로 표시 · 확대하면 등급 배지 · ':'학교 마커 '+displayed.length+'개 표시 · ')+'등록 '+state.schools.length+'개 · 필터 적합 '+eligible.length+'개 · 화면 내 '+visible.length+'개 · ZIP '+state.zip+' · Zoom '+zoom+' · 지도 '+size.x+'×'+size.y+' · 학교 위치는 배정 확정 정보가 아닙니다.'+(state.selectedSchool?' · 선택: '+state.selectedSchool.name+(Array.isArray(state.selectedSchool.ll)?' (노란색 학교 위치 마커)':' (학교 좌표 미확인)'):'');
+ function schoolPinMarker(s,homeActive,compact){
+  const icon=schoolPinIcon(s,homeActive,compact);
+  let entry=schoolPinCache.get(s);
+  if(!entry){
+   const marker=L.marker(s.ll,{icon,title:s.name,schoolMembers:[s]});
+   marker.on('click',()=>schoolClicked(marker.options.schoolMembers[0]));
+   entry={marker,icon};
+   schoolPinCache.set(s,entry);
+  }else{
+   if(entry.icon!==icon){entry.marker.setIcon(icon);entry.icon=icon}
+   const ll=entry.marker.getLatLng();
+   if(ll.lat!==s.ll[0]||ll.lng!==s.ll[1])entry.marker.setLatLng(s.ll);
+   if(entry.marker.options.title!==s.name){
+    entry.marker.options.title=s.name;
+    const element=entry.marker.getElement();
+    if(element)element.setAttribute('title',s.name);
+   }
+   entry.marker.options.schoolMembers=[s];
+  }
+  return entry.marker;
  }
-}
+ function schoolClusterMarker(members,key){
+  const center=L.latLngBounds(members.map(s=>s.ll)).getCenter();
+  let marker=schoolActiveMarkers.get(key);
+  if(!marker){
+   const icon=L.divIcon({className:'school-cluster-marker',
+    html:'<span class="school-cluster-bubble" aria-hidden="true">'+members.length+'</span>',
+    iconSize:[40,40],iconAnchor:[20,20]});
+   marker=L.marker(center,{icon,keyboard:true,
+    title:members.length+'개 학교 · 눌러서 확대',schoolMembers:members});
+   // Read the current map zoom and marker position, never stale closure values.
+   marker.on('click',()=>{map.stop();map.setView(marker.getLatLng(),Math.min(16,map.getZoom()+2),{animate:false})});
+  }else{
+   if(!marker.getLatLng().equals(center))marker.setLatLng(center);
+   marker.options.schoolMembers=members;
+  }
+  return marker;
+ }
+ function reconcileSchoolMarkerLayers(next){
+  // Do not destroy Leaflet markers or their DOM while they remain visible.
+  for(const [key,marker] of schoolActiveMarkers){
+   if(next.has(key))continue;
+   if(schoolGroup.hasLayer(marker))schoolGroup.removeLayer(marker);
+   schoolActiveMarkers.delete(key);
+  }
+  for(const [key,marker] of next){
+   if(!schoolGroup.hasLayer(marker))schoolGroup.addLayer(marker);
+   schoolActiveMarkers.set(key,marker);
+  }
+ }
+ function drawSchools(){
+  if(!map)return;
+  const homeActive=typeof home!=='undefined'&&!!home&&window.ConditionalSchoolRelease?.decide?.(home.assignment)?.allowed===true;
+  const legend=el('schoolLegend');
+  if(legend){
+   legend.classList.toggle('matching',homeActive);
+   const html=homeActive?'<span>집 주소 배정 후보</span><span>그 외 학교 · 배정 미확인</span>':'<span>초등</span><span>중등</span><span>고등</span><span>숫자 그룹을 누르면 확대</span>';
+   if(legend.innerHTML!==html)legend.innerHTML=html;
+  }
+  const notice=el('schoolMapStatus'),zoom=map.getZoom();
+  if(!state.showSchools){
+   reconcileSchoolMarkerLayers(new Map());
+   if(notice)notice.textContent='학교 마커 표시가 꺼져 있습니다. 목록에서 선택한 학교는 노란색 위치 강조로 표시합니다.';
+   return;
+  }
+  // Preserve the hidden-container viewport guardrail: map.getBounds() cannot
+  // represent a collapsed/zero-size map until invalidateSize().
+  const size=syncMapSize();
+  const bounds=map.getBounds();
+  const eligible=state.schools.filter(s=>s.ll&&s.type!=='other'&&
+   (state.level==='all'||s.type===state.level)&&
+   schoolPassesRatingFilter(s));
+  const visible=eligible.filter(s=>bounds.contains(s.ll));
+  const homeCandidates=homeActive?state.schools.filter(s=>s.ll&&s.type!=='other'&&
+   (state.level==='all'||s.type===state.level)&&homeSchoolMatches(s)):[];
+  const displayed=[...new Set([...visible,...homeCandidates])];
+  if(!size.x||!size.y){
+   reconcileSchoolMarkerLayers(new Map());
+   if(notice)notice.textContent='지도가 아직 화면에 배치되지 않아 학교 마커를 계산하지 않았습니다. 지도가 보이면 자동으로 다시 표시합니다.';
+   return;
+  }
+  const clusterMode=zoom<=12&&displayed.length>45;
+  const compactMode=!clusterMode&&zoom<=13&&displayed.length>45;
+  const groups=[];
+  if(clusterMode){
+   const cells=new Map(),cellSize=zoom<=10?75:60;
+   for(const s of displayed){
+    const p=map.latLngToContainerPoint(s.ll);
+    const key=Math.floor(p.x/cellSize)+':'+Math.floor(p.y/cellSize);
+    if(!cells.has(key))cells.set(key,[]);
+    cells.get(key).push(s);
+   }
+   for(const members of cells.values())groups.push(members);
+  }else for(const s of displayed)groups.push([s]);
+  const next=new Map();
+  for(const members of groups){
+   if(clusterMode&&members.length>1){
+    const key='cluster:'+members.map(schoolMarkerId).sort((a,b)=>a-b).join(',');
+    next.set(key,schoolClusterMarker(members,key));
+    continue;
+   }
+   const s=members[0];
+   next.set('school:'+schoolMarkerId(s),schoolPinMarker(s,homeActive,clusterMode||compactMode));
+  }
+  reconcileSchoolMarkerLayers(next);
+  if(notice){
+   notice.textContent=(clusterMode?'학교 '+displayed.length+'개를 '+groups.length+'개 위치 그룹으로 표시 · 숫자를 눌러 확대 · ':compactMode?'학교 '+displayed.length+'개를 작은 점으로 표시 · 확대하면 등급 배지 · ':'학교 마커 '+displayed.length+'개 표시 · ')+'등록 '+state.schools.length+'개 · 필터 적합 '+eligible.length+'개 · 화면 내 '+visible.length+'개 · ZIP '+state.zip+' · Zoom '+zoom+' · 지도 '+size.x+'×'+size.y+' · 학교 위치는 배정 확정 정보가 아닙니다.'+(state.selectedSchool?' · 선택: '+state.selectedSchool.name+(Array.isArray(state.selectedSchool.ll)?' (노란색 학교 위치 마커)':' (학교 좌표 미확인)'):'');
+  }
+ }
 function drawHomeAssignmentMap(){
  if(!map||!homeZoneGroup)return;
  homeZoneGroup.clearLayers();
