@@ -111,8 +111,11 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
   "el('destination').value=OFFICES[e.target.value]||window.WorkplaceDestinations?.addressForChoice(e.target.value)||''");
  assert.equal(hash(approved),hash(show('d1e30f1cdd8a5bfe0199e75d4c1533c42964494d','dashboard-main.js')),
   'Prior main remains the exact reviewed workplace and school baseline');
- assert.equal(hash(js),hash(show('f81a800d4855b00037ad63599c9c879515b6fa43','dashboard-main.js')),
-  'Only the separately reviewed school-list performance commit may change the dashboard');
+ assert.equal(hash(show('4de683d2f27b4db9117ed8a92c8f572c869ae3ca','dashboard-main.js')),
+  hash(show('f81a800d4855b00037ad63599c9c879515b6fa43','dashboard-main.js')),
+  'District-sharded main must preserve the previously reviewed dashboard renderer');
+ assert.equal(hash(js),hash(show('0d2bf41dad7d9d92f5265d760fee27fa219a3e56','dashboard-main.js')),
+  'Only the exact reviewed incremental school-marker performance commit may change the dashboard');
  const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
  const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);
  assert.ok(start>40000&&end>start+70000);
