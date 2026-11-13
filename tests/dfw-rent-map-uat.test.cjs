@@ -38,6 +38,29 @@ test('Rental filter ranges and malicious inputs are rejected safely',()=>{
  ];
  for(const f of cases)assert.throws(()=>core.redfinUrl('75093','houses',f),RangeError);
 });
+test('Redfin advanced rental filters match verified source controls',()=>{
+  assert.equal(core.redfinUrl('75093','houses',{minPrice:2000,maxPrice:3500,minBeds:3,minBaths:2,dogs:true,parking:true,laundry:true}),
+    'https://www.redfin.com/zipcode/75093/rentals/filter/property-type=house,min-price=2k,max-price=3.5k,min-beds=3,min-baths=2,dogs-allowed,washer-dryer-in-unit,has-parking');
+  assert.equal(core.redfinUrl('75093','apartments',{cats:true,furnished:true,pool:true,ac:true,dishwasher:true}),
+    'https://www.redfin.com/zipcode/75093/rentals/filter/property-type=multifamily,has-pool,cats-allowed,air-conditioning,has-dishwasher,is-furnished');
+  assert.equal(core.redfinUrl('75093','houses',{minBaths:'1.5'}),
+    'https://www.redfin.com/zipcode/75093/rentals/filter/property-type=house,min-baths=1.5');
+  assert.equal(core.redfinUrl('75093','houses',{dogs:false,cats:false}),
+    'https://www.redfin.com/zipcode/75093/houses-for-rent');
+  for(const bad of ['0','0.5','7','1.75','2,has-pool','invalid'])
+    assert.throws(()=>core.redfinUrl('75093','houses',{minBaths:bad}),RangeError);
+});
+test('UAT brand image is attributed, and advanced filters are collapsible without impacting root entry',()=>{
+  const js=fs.readFileSync('features/dfw-rent-map-uat.js','utf8');
+  const html=fs.readFileSync('rent-map-uat.html','utf8');
+  const index=fs.readFileSync('index.html','utf8');
+  assert.match(js,/rent-map-redfin-icon/);
+  assert.match(js,/www\.redfin\.com\/favicon\.ico/);
+  assert.match(js,/<details class="rent-map-more">/);
+  assert.match(js,/rentMapMinBaths/);
+  assert.ok(!index.includes('dfw-rent-map-uat'));
+  assert.match(html,/https:\/\/www\.redfin\.com/);
+});
 test('City navigation uses a stable deduplicated set and constrained coordinates',()=>{
  const ids=core.cities.map(x=>x.key);
  assert.equal(new Set(ids).size,ids.length);
