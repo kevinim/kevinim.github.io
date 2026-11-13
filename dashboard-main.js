@@ -195,12 +195,29 @@ function setBaseMap(choice, fallbackFrom=null){
 }
 async function loadRatings(){
  try{
-  const res=await fetch('./tea-ratings-2026.json',{cache:'no-store'});
-  if(!res.ok)throw Error('2026 rating HTTP '+res.status);
-  const j=await res.json();
+  // Independent static TEA ratings and NCES locations travel in parallel.
+  // Official live Finder/ArcGIS calls retain their existing no-store policy.
+  const [ratingsResult,locationsResult]=await Promise.allSettled([
+   fetch('./tea-ratings-2026.json',{cache:'default'}).then(async res=>{
+    if(!res.ok)throw Error('2026 rating HTTP '+res.status);
+    return res.json();
+   }),
+   fetch('./nces-locations-2024.json',{cache:'default'}).then(async res=>{
+    if(!res.ok)throw Error('HTTP '+res.status);
+    return res.json();
+   })
+  ]);
+  if(ratingsResult.status!=='fulfilled')throw ratingsResult.reason;
+  const j=ratingsResult.value;
   if(j.year!==2026||!Array.isArray(j.data))throw Error('rating schema');
   state.ratings=j.data.filter(r=>/^\d{9}$/.test(r.id)&&['A','B','C','D','F','Not Rated'].includes(r.rating));
-  let locationById=new Map();try{const lr=await fetch('./nces-locations-2024.json',{cache:'no-store'});if(!lr.ok)throw Error('HTTP '+lr.status);const lj=await lr.json();if(!Array.isArray(lj.data))throw Error('location schema');locationById=new Map(lj.data.map(x=>[x.id,x]))}catch(e){console.error('NCES location data:',e);toast('학교 위치 자료 일부를 불러오지 못했습니다.')}
+  let locationById=new Map();
+  try{
+   if(locationsResult.status!=='fulfilled')throw locationsResult.reason;
+   const lj=locationsResult.value;
+   if(!Array.isArray(lj.data))throw Error('location schema');
+   locationById=new Map(lj.data.map(x=>[x.id,x]));
+  }catch(e){console.error('NCES location data:',e);toast('학교 위치 자료 일부를 불러오지 못했습니다.')}
   state.ratingIndex=new Map();
   for(const r of state.ratings){for(const key of new Set([canonical(r.name),canonical(r.officialName)])){const k=r.district+'|'+key;const values=state.ratingIndex.get(k)||[];values.push(r);state.ratingIndex.set(k,values)}}
   addVerifiedAliases(state.ratingIndex,state.schools,state.ratings,(name,district)=>district+'|'+canonical(name));
@@ -221,7 +238,7 @@ async function loadRatings(){
 async function loadExtra2026SchoolLocations(){
  const paths=['./schools2026-1.json','./schools2026-2.json','./schools2026-3.json','./schools2026-4.json'];
  const resp=await Promise.allSettled(paths.map(async path=>{
-  const r=await fetch(path,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status+' '+path);
+  const r=await fetch(path,{cache:'default'});if(!r.ok)throw Error('HTTP '+r.status+' '+path);
   const j=await r.json();if(!Array.isArray(j.data))throw Error('Invalid schools file '+path);
   return j.data;
  }));
@@ -292,7 +309,7 @@ let tableSort={key:null,dir:1};
 function drawTable(){const table=el('compareTable'),tbody=table.querySelector('tbody');let rows=DATA.slice();if(tableSort.key){const k=tableSort.key,dir=tableSort.dir;rows.sort((a,b)=>{const x=a[k],y=b[k];if(x==null||y==null)return x==null?(y==null?0:1):-1;return (typeof x==='number'?x-y:String(x).localeCompare(String(y)))*dir})}table.querySelectorAll('th').forEach(th=>{th.removeAttribute('aria-sort');if(th.dataset.sort===tableSort.key)th.setAttribute('aria-sort',tableSort.dir===1?'ascending':'descending')});tbody.innerHTML=rows.map(d=>`<tr data-z="${d.z}" class="${d.z===state.zip?'sel':''}"><td><b>${d.z}</b><br><span style="color:#718095">${escape(displayPlace(d.name))}</span></td><td>${pct(d.korean)}</td><td>${pct(d.indian)}</td><td>${pct(d.chinese)}</td><td>${pct(d.kids)}</td><td>${pct(d.childHH)}</td><td>${money(d.income)}</td></tr>`).join('');tbody.querySelectorAll('tr').forEach(tr=>tr.onclick=()=>selectZip(tr.dataset.z))}
 async function loadZipShapes(){
   try{
-    const res=await fetch('./dfw-zcta-boundaries.geojson',{cache:'no-store'});
+    const res=await fetch('./dfw-zcta-boundaries.geojson',{cache:'default'});
     if(!res.ok)throw new Error('ZIP 데이터 HTTP '+res.status);
     const obj=await res.json();
     if(outsideData?.shapes?.features)obj.features.push(...outsideData.shapes.features);
@@ -360,7 +377,7 @@ async function loadSchools(){
   drawList();
   let loaded=0;
   try{
-    const res=await fetch('./schools.json',{cache:'no-store'});
+    const res=await fetch('./schools.json',{cache:'default'});
     if(!res.ok)throw new Error('학교 데이터 HTTP '+res.status);
     const obj=await res.json();
     if(!Array.isArray(obj.schools))throw new Error('학교 데이터 형식 오류');
@@ -921,6 +938,45 @@ function drawCommute(){const d=getZip(),v=state.times[d.z];el('routeStatus').inn
 
 let routeRequestSeq=0;
 async function drawSelectedRoute(){if(!map||!state.dest)return;const seq=++routeRequestSeq;routeGroup.clearLayers();const d=getZip(),p=state.dest.ll;try{const uri='https://router.project-osrm.org/route/v1/driving/'+d.ll[1]+','+d.ll[0]+';'+p[1]+','+p[0]+'?overview=full&geometries=geojson';const r=await fetch(uri);if(!r.ok)throw Error('route HTTP '+r.status);const j=await r.json();if(seq!==routeRequestSeq||d.z!==state.zip)return;const line=j.routes?.[0]?.geometry;if(line){window.noteCommuteRouteDistance?.(j.routes?.[0]?.distance,'zip');L.geoJSON(line,{style:{color:'#1d57d4',weight:4,opacity:.8}}).addTo(routeGroup);const mid=line.coordinates[Math.floor(line.coordinates.length/2)],minutes=j.routes?.[0]?.duration;if(mid&&Number.isFinite(minutes))L.marker([mid[1],mid[0]],{interactive:false,icon:L.divIcon({className:'',html:'<span class="route-label">ZIP 대표점 '+Math.round(minutes/60)+'분</span>',iconSize:[120,30]})}).addTo(routeGroup)}}catch(e){if(seq===routeRequestSeq)console.warn('route overlay',e)}}
-document.addEventListener('DOMContentLoaded',async()=>{try{const r=await fetch('./dfw-demographics.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const j=await r.json();if(j.year!==2024||!Array.isArray(j.data)||j.data.length!==292)throw Error('DFW 데이터 형식 오류');const existing=new Map(DATA.map(d=>[d.z,d]));for(const row of j.data){const prior=existing.get(row.z);if(prior){const name=prior.name;Object.assign(prior,row,{name})}else DATA.push(row)}}catch(e){console.error('DFW demographics:',e);toast('DFW 통계 데이터를 불러오지 못해 기존 11개 지역만 표시합니다.')}try{const r=await fetch('./dfw-outside-public.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);outsideData=await r.json();if(!Array.isArray(outsideData.data)||!Array.isArray(outsideData.shapes?.features))throw Error('주변 ZIP 데이터 형식 오류');for(const d of outsideData.data){Object.assign(d,outsideData.race[d.z]||{});DATA.push(d)}}catch(e){console.error('주변 ZIP 자료 오류:',e);toast('DFW 바깥 일부 ZIP을 불러오지 못했습니다.')}init()});
+// Start both independent public static datasets together, but commit rows in
+// deterministic DFW-then-neighbor order before Leaflet and search UI initialize.
+function loadInitialDashboardSources(){
+ const read=async response=>{
+  if(!response.ok)throw Error('HTTP '+response.status);
+  return response.json();
+ };
+ return Promise.allSettled([
+  fetch('./dfw-demographics.json',{cache:'default'}).then(read),
+  fetch('./dfw-outside-public.json',{cache:'default'}).then(read)
+ ]);
+}
+document.addEventListener('DOMContentLoaded',async()=>{
+ const [dfwResult,neighborResult]=await loadInitialDashboardSources();
+ try{
+  if(dfwResult.status!=='fulfilled')throw dfwResult.reason;
+  const j=dfwResult.value;
+  if(j.year!==2024||!Array.isArray(j.data)||j.data.length!==292)throw Error('DFW 데이터 형식 오류');
+  const existing=new Map(DATA.map(d=>[d.z,d]));
+  for(const row of j.data){
+   const prior=existing.get(row.z);
+   if(prior){const name=prior.name;Object.assign(prior,row,{name})}
+   else DATA.push(row);
+  }
+ }catch(e){
+  console.error('DFW demographics:',e);
+  toast('DFW 통계 데이터를 불러오지 못해 기존 11개 지역만 표시합니다.');
+ }
+ try{
+  if(neighborResult.status!=='fulfilled')throw neighborResult.reason;
+  const neighbor=neighborResult.value;
+  if(!Array.isArray(neighbor.data)||!Array.isArray(neighbor.shapes?.features)||!neighbor.race||typeof neighbor.race!=='object')throw Error('주변 ZIP 데이터 형식 오류');
+  outsideData=neighbor;
+  for(const d of outsideData.data){Object.assign(d,outsideData.race[d.z]||{});DATA.push(d)}
+ }catch(e){
+  console.error('주변 ZIP 자료 오류:',e);
+  toast('DFW 바깥 일부 ZIP을 불러오지 못했습니다.');
+ }
+ init();
+});
 
 document.addEventListener('click',event=>{const button=event.target?.closest?.('button[data-clear-school]');if(button){event.preventDefault();clearSchool()}});
