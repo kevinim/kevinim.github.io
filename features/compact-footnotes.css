@@ -1,0 +1,18 @@
+/* Compact links preserve all source content in the shared, collapsed footer. */
+.footnote-original-hidden { display: none !important; }
+.footnote-ref { display: inline-flex; align-items: center; width: fit-content; max-width: 100%; margin: 3px 0; padding: 3px 5px; border: 0; border-radius: 4px; background: transparent; color: #365eb2; font-size: 10px; font-weight: 600; line-height: 1.5; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.footnote-ref:hover { background: rgba(54,94,178,.10); }
+.footnote-ref:focus-visible { outline: 2px solid #618de0; outline-offset: 2px; }
+.footnotes-panel { max-width: 100%; }
+.footnotes-panel > summary { cursor: pointer; font-weight: 700; }
+.footnote-count { margin-left: 5px; color: var(--sub, #64748b); font-size: 11px; font-weight: 500; }
+.footnotes-baseline { margin: 10px 0; font-size: 11px; line-height: 1.65; color: var(--sub, #64748b); }
+.source-footnote-list { padding-left: 26px; margin: 10px 0 0; }
+.source-footnote-item { margin: 0 0 10px; padding: 6px 2px; font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; scroll-margin-top: 24px; }
+.source-footnote-item:focus { outline: none; }
+.source-footnote-item:focus-visible { outline: 2px solid #618de0; border-radius: 4px; }
+.source-footnote-item .source { display: block; margin: 0; }
+html[data-theme="dark"] .footnote-ref { color: #a7c7ff; }
+html[data-theme="dark"] .footnote-ref:hover { background: rgba(167,199,255,.12); }
+html[data-theme="dark"] .footnotes-baseline, html[data-theme="dark"] .footnote-count { color: #aabbd0; }
+@media (max-width: 720px) { .footnote-ref { font-size: 10px; padding: 4px 5px; } .source-footnote-list { padding-left: 21px; } }
