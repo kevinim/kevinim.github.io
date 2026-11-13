@@ -47,3 +47,18 @@ html[data-theme="dark"] .rent-map-filters .rent-map-reset{color:#d5e7ff;border-c
 html[data-theme="dark"] .rent-map-filter-status{color:#ccdbed}
 html[data-theme="dark"] .rent-map-filter-status[data-invalid="true"]{color:#ffb7b4}
 @media(max-width:630px){.rent-map-filters{gap:7px}.rent-map-filters input,.rent-map-filters select{font-size:12px}}
+
+
+/* Source-identifying Redfin icon and opt-in, secondary rental controls. */
+.rent-map-brandline{display:flex;align-items:center;gap:7px;min-height:25px}
+.rent-map-redfin-icon{width:22px;height:22px;object-fit:contain;border-radius:5px;background:#c82021}
+.rent-map-more{grid-column:1/-1;margin:5px 0 0;border-top:1px solid #e0e9f5;padding-top:8px}
+.rent-map-more summary{cursor:pointer;color:#255b9e;font-size:11px;font-weight:800;padding:6px 0;list-style-position:inside}
+.rent-map-more-body{padding:8px 0;display:grid;gap:11px}
+.rent-map-more-body .rent-map-bath-label{max-width:190px}
+.rent-map-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 7px}
+.rent-map-filters .rent-map-checks label{display:flex;flex-direction:row;align-items:center;gap:7px;font-size:11px;font-weight:650;cursor:pointer;min-height:27px}
+.rent-map-filters .rent-map-checks input{width:16px;height:16px;flex:0 0 16px;min-width:16px;max-width:16px;margin:0;accent-color:#c82021}
+html[data-theme="dark"] .rent-map-more{border-color:#476381}
+html[data-theme="dark"] .rent-map-more summary{color:#b9d5ff}
+@media(max-width:420px){.rent-map-checks{grid-template-columns:1fr 1fr;gap:8px 6px}.rent-map-filters .rent-map-checks label{font-size:10px}}
