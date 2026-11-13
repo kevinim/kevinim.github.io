@@ -99,7 +99,7 @@ test('map tile URLs remain allowed while data APIs are not blanket image hosts',
   ['dashboard-main.js','https://tile.openstreetmap.org'],
   ['dashboard-main.js','https://server.arcgisonline.com'],
   ['txwrap-wildfire-potential.js','https://gis.texaswildfirerisk.com'],
-  ['features/reviewed-bootstrap.js','https://{s}.tile.openstreetmap.org']
+  ['features/reviewed-bootstrap.js','https://tile.openstreetmap.org']
  ];
  for(const [file,origin] of tiles)assert.ok(read(file).includes(origin),file+' tile URL changed');
  for(const host of ['https://evil.example','http:','https:','*']){
