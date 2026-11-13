@@ -8,6 +8,7 @@
   let panel, list, count, root;
 
   function eligible(node) {
+    if (node.classList.contains('boundary-footnote')) return false; // School-specific grade exceptions are release-critical warnings.
     if (!node.isConnected || node.closest('details, .footnotes-panel, .leaflet-container, [role="status"], [role="alert"], [aria-live], .fema-nfhl-legend, .lisd-source-conflict')) return false;
     if (node.querySelector('button, input, select, textarea, iframe, [role="status"], [aria-live]')) return false;
     const text = node.textContent.trim();
