@@ -189,7 +189,6 @@
   // Official 2026 TEA campus accountability and 2025–26 STAAR, staged independently
   // from school zones and demographics. Loaded only after school selection.
   const ACADEMIC=Object.create(null);
-  let academicStarted=false;
   let academicSources=null;
   const DOMAIN_KEYS=[
     ['studentAchievement','학업 성취','achievement'],
@@ -289,24 +288,6 @@
     }
     return added;
   }
-  function loadAcademicBatches(){
-    if(academicStarted||!root||typeof root.fetch!=='function')return;
-    academicStarted=true;
-    Promise.all([
-      root.fetch('./data/tea-accountability-2026-verified-batch.json?v=1',{credentials:'same-origin'}),
-      root.fetch('./data/tea-staar-meets-2026-verified-batch.json?v=1',{credentials:'same-origin'})
-    ]).then(function(responses){
-      if(responses.some(function(r){return !r.ok;}))throw Error('Academic TEA data absent');
-      return Promise.all(responses.map(function(r){return r.json();}));
-    }).then(function(batch){
-      if(installAcademicBatches(batch[0],batch[1])!==2282)return;
-      if(typeof document!=='undefined'){
-        document.querySelectorAll('.tea-insights-panel').forEach(function(panel){panel.remove();});
-        document.querySelectorAll('.tea-school-inline-preview').forEach(function(panel){panel.remove();});
-        mount();
-      }
-    }).catch(function(){/* No inferred TEA scores when official batch unavailable. */});
-  }
   function getSchoolInsight(record) {
     if(!record || !/^\d{9}$/.test(String(record.id||''))) return null;
     const code=String(record.district||'');
@@ -364,7 +345,6 @@
   // suppressed or not listed, so these are COUNTS only, never fabricated percentages.
   const PUBLIC_PEIMS_COUNTS=Object.create(null);
   const PUBLIC_PEIMS_SOURCES=Object.create(null);
-  let publicPeimsStarted=false;
   const PEIMS_SOURCE_PREFIX='https://rptsvr1.tea.texas.gov/cgi/sas/broker';
   const PEIMS_DISTRICTS=Object.freeze({
     CFB:'057903',LISD:'061902',AISD:'043901','043907':'043907',
@@ -448,36 +428,74 @@
           cell.status==='suppressed'?'비공개 ('+cell.publishedMask+')':'원본 미표시'};
     });
   }
-  function loadPublishedPeimsCounts() {
-    if(publicPeimsStarted||!root||typeof root.fetch!=='function')return;
-    publicPeimsStarted=true;
-    root.fetch('./data/tea-ethnicity-2025-26-priority.json?v=1',{credentials:'same-origin'})
-      .then(function(res){if(!res.ok)throw Error('PEIMS counts unavailable');return res.json();})
+  // The district shard contains only official aggregate TEA/STAAR/PEIMS rows.
+  // Validation is all-or-nothing so a malformed file cannot partially overwrite
+  // verified campus records or reveal suppressed student-group values.
+  const districtProfileLoaded=new Set();
+  const districtProfileInflight=new Map();
+  function installDistrictProfileBatch(file,districtId){
+    if(!/^\d{6}$/.test(String(districtId))||!file||file.schemaVersion!==1||
+       file.districtId!==districtId||file.accountabilityYear!==2026||
+       file.schoolYear!=='2025-26'||!file.source||!file.campuses||
+       typeof file.campuses!=='object'||Array.isArray(file.campuses))return 0;
+    const src=file.source,ids=Object.keys(file.campuses);
+    if(!ids.length||ids.length>300||file.campusCount!==ids.length||
+       !validAcademicUrl(src.domainUrl,'RATE')||
+       !['D1_STAAR1','D1_STAAR2','D1_STAAR3'].every(function(dataset){
+         return validAcademicUrl(src.staarUrls?.[dataset],dataset);
+       })||
+       !validPeimsStatewideSource(src.peimsStatewideUrl)||
+       (src.peimsDistrictUrl!==null && !validPeimsSource(src.peimsDistrictUrl,districtId)))return 0;
+    const validated=Object.create(null);
+    for(const id of ids){
+      const entry=file.campuses[id],a=entry?.accountability,st=entry?.staar,p=entry?.peims;
+      if(!/^\d{9}$/.test(id)||!id.startsWith(districtId)||!a||!st||!p||
+         a.districtId!==districtId||typeof a.officialCampusName!=='string'||!a.overall||
+         !['A','B','C','D','F','Not Rated'].includes(a.overall.rating)||
+         !(a.overall.score===null||(Number.isInteger(a.overall.score)&&a.overall.score>=0&&a.overall.score<=100))||
+         !DOMAIN_KEYS.every(function(tuple){return validOfficialMetric(a[tuple[0]],true);})||
+         !SUBJECT_KEYS.every(function(tuple){return validOfficialMetric(st[tuple[0]],false);})||
+         !validPublishedCampus(id,p)||
+         (src.peimsDistrictUrl && !validPeimsSource(src.peimsDistrictUrl,p.district)))return 0;
+      validated[id]={academic:{accountability:a,staar:st},peims:p};
+    }
+    // Commit all three public datasets after validating the entire district.
+    academicSources={domain:src.domainUrl,subjects:src.staarUrls.D1_STAAR1};
+    PUBLIC_PEIMS_SOURCES.__statewide=src.peimsStatewideUrl;
+    if(src.peimsDistrictUrl)PUBLIC_PEIMS_SOURCES[districtId]=src.peimsDistrictUrl;
+    for(const id of ids){
+      ACADEMIC[id]=validated[id].academic;
+      const p=validated[id].peims;
+      PUBLIC_PEIMS_COUNTS[id]=p;
+      if(src.peimsDistrictUrl)PUBLIC_PEIMS_SOURCES[p.district]=src.peimsDistrictUrl;
+    }
+    return ids.length;
+  }
+  function loadDistrictProfile(record){
+    const id=String(record?.id||'');
+    if(!/^\d{9}$/.test(id)||!root||typeof root.fetch!=='function')return;
+    const districtId=id.slice(0,6);
+    if(districtProfileLoaded.has(districtId)||districtProfileInflight.has(districtId))return;
+    const request=root.fetch('./data/tea-district-profiles-2026/'+districtId+'.json?v=1',
+      {credentials:'same-origin',cache:'force-cache'})
+      .then(function(res){if(!res.ok)throw Error('District shard HTTP '+res.status);return res.json();})
       .then(function(file){
-        if(file.schemaVersion!==1||file.schoolYear!=='2025-26'||
-           !file.campuses||typeof file.campuses!=='object'||!file.sources)return;
-        const sourceEntries=Object.entries(file.sources);
-        if(sourceEntries.length<11)return;
-        for(const [district,url] of sourceEntries){
-          if(!validPeimsSource(url,district))return;
+        if(!installDistrictProfileBatch(file,districtId))throw Error('Invalid official district shard');
+        districtProfileLoaded.add(districtId);
+        if(typeof document!=='undefined' && typeof state!=='undefined'){
+          const selected=state.selectedSchool;
+          const selectedId=selected&&typeof scoreRecord==='function'
+            ?String(scoreRecord(selected.name,selected.district)?.id||''):'';
+          if(selectedId.slice(0,6)===districtId){
+            document.querySelectorAll('.tea-insights-panel,.tea-school-inline-preview').forEach(function(node){node.remove();});
+            mount();
+          }
         }
-        const statewide=file.statewideSource;
-        if(statewide && !validPeimsStatewideSource(statewide))return;
-        for(const [district,url] of sourceEntries)
-          PUBLIC_PEIMS_SOURCES[district]=url;
-        if(statewide)PUBLIC_PEIMS_SOURCES.__statewide=statewide;
-        let accepted=0;
-        for(const [id,item] of Object.entries(file.campuses)){
-          if(!validPublishedCampus(id,item) ||
-             !(PUBLIC_PEIMS_SOURCES[item.district]||PUBLIC_PEIMS_SOURCES.__statewide))continue;
-          PUBLIC_PEIMS_COUNTS[id]=item;accepted++;
-        }
-        if(accepted && typeof document!=='undefined'){
-          document.querySelectorAll('.tea-insights-panel').forEach(function(panel){panel.remove();});
-          document.querySelectorAll('.tea-school-inline-preview').forEach(function(panel){panel.remove();});
-          mount();
-        }
-      }).catch(function(){/* Offline or invalid data: no demographic inference. */});
+      }).catch(function(err){
+        // Retry on the next explicit school selection; never impute missing data.
+        console.warn('Official school detail unavailable for district '+districtId,err);
+      }).finally(function(){districtProfileInflight.delete(districtId);});
+    districtProfileInflight.set(districtId,request);
   }
 
   function loadVerifiedAggregates() {
@@ -810,7 +828,7 @@
     const host=document.getElementById('detailContent');
     if(!host || typeof state==='undefined') return;
     const school=state.selectedSchool;
-    if(school){loadVerifiedAggregates();loadPublishedPeimsCounts();loadAcademicBatches();}
+    if(school){loadVerifiedAggregates();const selectedRating=typeof scoreRecord==='function'?scoreRecord(school.name,school.district):null;if(selectedRating)loadDistrictProfile(selectedRating);}
     if(!school){
       mountInline(null,null);
       return;
@@ -977,7 +995,7 @@
     validDomains:validDomains,validPublishedCampus:validPublishedCampus,
     validPeimsSource:validPeimsSource,validPeimsStatewideSource:validPeimsStatewideSource,
     getPublishedCountRows:getPublishedCountRows,auditedPeimsTotal:auditedPeimsTotal,
-    installAcademicBatches:installAcademicBatches,validAcademicUrl:validAcademicUrl
+    installAcademicBatches:installAcademicBatches,installDistrictProfileBatch:installDistrictProfileBatch,validAcademicUrl:validAcademicUrl
   };
   if(typeof module!=='undefined' && module.exports)module.exports=api;
   if(root && typeof document!=='undefined'){
