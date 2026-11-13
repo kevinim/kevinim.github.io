@@ -37,7 +37,7 @@ jobs:
           node --test tests/externalized-main-bootstrap.test.cjs
       - name: Checkout reviewed pre-defer deployed baseline into read-only worktree
         run: |
-          git worktree add --detach ./tx-perf-baseline-tmp 52776f3c87933d5e8c4374aaadfd460f246c0a71
+          git worktree add --detach ./tx-perf-baseline-tmp 90cc6f3b0ddb641471b6519553a566ca3afff4c6
       - name: Install isolated Chromium (never add persistent dependency)
         run: |
           mkdir -p tx-perf-deps-tmp
