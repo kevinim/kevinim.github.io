@@ -1,0 +1,48 @@
+name: TX compact footnotes QA (NO DEPLOY)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'features/compact-footnotes.js'
+      - 'features/compact-footnotes.css'
+      - 'tests/compact-footnotes.test.cjs'
+      - 'scripts/test-compact-footnotes-browser.cjs'
+      - '.github/workflows/verify-compact-footnotes.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - run: |
+          node --check features/compact-footnotes.js
+          node --test tests/compact-footnotes.test.cjs
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Install isolated Chromium
+        run: |
+          mkdir -p compact-footnote-browser-tmp
+          cd compact-footnote-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Test mobile/desktop Chromium
+        run: |
+          NODE_PATH="$PWD/compact-footnote-browser-tmp/node_modules" node scripts/test-compact-footnotes-browser.cjs
