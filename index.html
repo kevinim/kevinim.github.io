@@ -222,33 +222,33 @@ html[data-theme="dark"] .area-label.selected span{background:#2d5592;border-colo
 <label for="schoolScope" class="source">학교 목록 범위</label><select id="schoolScope" aria-label="학교 목록 범위"><option value="zip">선택 ZIP</option><option value="county">대표 카운티의 ZIP</option><option value="all">전체 학교</option></select><div class="source">학교 위치 기준이며 배정 학교 목록이 아닙니다. 카운티는 대표 카운티에 속한 ZIP 통계구역으로 추정하며 좌표 없는 학교는 전체에서만 보입니다.</div><div class="searchrow"><input aria-label="학교 이름 검색" id="schoolSearch" placeholder="학교 이름 검색 (예: Wakeland, Rice, Lawler)"><button id="schoolSearchClear">초기화</button></div><div class="school-list" id="schoolList"></div><details class="source school-info"><summary>등급과 자료 설명</summary><p>TEA 2026 예비 등급: A가 가장 높고 F가 가장 낮습니다. 학업 성취, 학교 향상도, 학생 집단 간 성취 격차를 평가합니다. 고등학교는 졸업 및 대학·취업·군 복무 준비도도 포함합니다. 적용 항목은 학교별로 다를 수 있습니다. 미연결과 등급 미부여는 다릅니다. 소년사법·징계 대안교육기관은 TEA 미평가 대상이며, 그 밖의 대안학교는 별도 기준으로 등급을 받을 수 있습니다. 자료 부족 등 다른 이유로도 미평가될 수 있습니다. <a href="https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-accountability-manual" target="_blank" rel="noopener">TEA 평가 기준</a></p><p>학교 지도 좌표는 Plano City GIS의 2022년 자료와 2026년 학교 주소 기반 고신뢰도 지오코딩 자료를 함께 사용합니다. TEA 2026 예비 평가 원본에서 DFW 11개 카운티 및 주변 Grayson·Fannin·Cooke 카운티에 소속된 학군의 학교를 표시합니다. 학교 위치는 NCES 2024–25 좌표를 학교 고유번호로 연결하며 현재 위치와 다를 수 있습니다. 최신 배정 경계는 학군마다 다르며, 학군 소재 카운티와 학교 실제 위치는 다를 수 있습니다. 고유 학교번호 또는 학군과 이름이 고유하게 일치하는 경우에만 연결하며, 미연결과 Not Rated는 다릅니다. 최신 주소, 개교 및 학교 배정은 해당 학군에서 반드시 확인하세요.</p></details></section>
 <section class="panel"><div class="secHead"><h2>지역 전체 비교</h2><span class="pill">우편번호별</span></div><div class="scroll-table" tabindex="0" role="region" aria-label="지역별 통계 비교"><table class="data-table" id="compareTable"><thead><tr><th scope="col" data-sort="z"><button type="button" data-sort="z">지역 ↕</button></th><th scope="col" data-sort="korean"><button type="button" data-sort="korean">한국 ↕</button></th><th scope="col" data-sort="indian"><button type="button" data-sort="indian">인도 ↕</button></th><th scope="col" data-sort="chinese"><button type="button" data-sort="chinese">중국 ↕</button></th><th scope="col" data-sort="kids"><button type="button" data-sort="kids">18세 미만 ↕</button></th><th scope="col" data-sort="childHH"><button type="button" data-sort="childHH">자녀가구 ↕</button></th><th scope="col" data-sort="income"><button type="button" data-sort="income">중위 소득 ↕</button></th></tr></thead><tbody></tbody></table></div><div class="source">Census ZCTA 경계는 USPS 배달 ZIP과 완전히 일치하지 않습니다. 열 제목을 누르면 정렬됩니다.</div></section></div></div>
 <div class="footer"><details><summary>자료 출처 및 기준</summary>자료 검증: 2026-11-06. TEA 2026 preliminary campus accountability summary (downloaded November 3, 2026); U.S. Census ACS 2020–2024 (B01001, B01002, B11005, B19013, B02018); North Central Texas Council of Governments (2020 ZCTA polygons; 2021 service); City of Plano GIS (school positions last updated Oct 2022); OpenStreetMap tiles; Frisco ISD / Plano ISD / Allen ISD / Prosper ISD / Lewisville ISD / Carrollton-Farmers Branch ISD; Texas Education Agency accountability portal (school scores must be checked individually). Static demographics are 5-year estimates, not a 2026 census. Map tiles © OpenStreetMap contributors. 도로망 시간: OSRM, 도달선: Valhalla / © OpenStreetMap contributors, ODbL.</details></div></div><div id="toast" class="toast"></div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
-<script src="./district-registry.js?v=2" defer></script>
-<script src="./features/west-dfw/official-finder.js?v=2" defer></script>
-<script src="./features/west-dfw/panel.js?v=2" defer></script>
-<script src="./school-lifecycle.js?v=1" defer></script>
-<script src="./geocode-quality.js?v=1" defer></script>
-<script src="./school-zone-risk.js?v=2" defer></script>
-<script src="./school-boundary-match.js?v=3" defer></script>
-<script src="./denton-official-zone-references.js?v=1" defer></script>
-<script src="./denton-campus-point-quality.js?v=1" defer></script>
-<script src="./features/denton-campus-marker-info.js?v=1" defer></script>
-<script src="./phase2a-fema-hazards.js?v=3" defer></script>
-<script src="./phase2a-nfhl-flood.js?v=2" defer></script>
-<script src="./txwrap-wildfire-potential.js?v=1" defer></script>
-<script src="./noaa-storm-history.js?v=1" defer></script>
-<script src="./crime-city-map.js?v=3" defer></script>
-<script src="./collin-parcel-check.js?v=1" defer></script>
-<script src="./official-school-review.js?v=1" defer></script>
-<script src="./texas-address-suggest.js?v=2" defer></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="./district-registry.js?v=2"></script>
+<script src="./features/west-dfw/official-finder.js?v=2"></script>
+<script src="./features/west-dfw/panel.js?v=2"></script>
+<script src="./school-lifecycle.js?v=1"></script>
+<script src="./geocode-quality.js?v=1"></script>
+<script src="./school-zone-risk.js?v=2"></script>
+<script src="./school-boundary-match.js?v=3"></script>
+<script src="./denton-official-zone-references.js?v=1"></script>
+<script src="./denton-campus-point-quality.js?v=1"></script>
+<script src="./features/denton-campus-marker-info.js?v=1"></script>
+<script src="./phase2a-fema-hazards.js?v=3"></script>
+<script src="./phase2a-nfhl-flood.js?v=2"></script>
+<script src="./txwrap-wildfire-potential.js?v=1"></script>
+<script src="./noaa-storm-history.js?v=1"></script>
+<script src="./crime-city-map.js?v=3"></script>
+<script src="./collin-parcel-check.js?v=1"></script>
+<script src="./official-school-review.js?v=1"></script>
+<script src="./texas-address-suggest.js?v=2"></script>
 
 
-<script src="./allen-apartment-exceptions.js?v=1" defer></script>
-<script src="./plano-finder-live.js?v=1" defer></script>
-<script src="./plano-feeder-guard.js?v=1" defer></script>
-<script src="./trusted-link-policy.js?v=1" defer></script>
-<script src="./school-zone-ui.js?v=1" defer></script>
-<script src="./features/conditional-school-release.js?v=1" defer></script>
-<script src="./features/school-reference-preview.js?v=1" defer></script>
-<script src="./home-assignment-map.js?v=1" defer></script><script src="./features/map/area-label-hierarchy.js?v=1" defer></script><script src="./dashboard-main.js?v=6" defer></script><script src="./features/west-dfw/attach.js?v=2" defer></script><script src="./features/commute/workplace-marker.js?v=1" defer></script><script src="./features/healthcare/map-layer.js?v=2" defer></script><script src="./features/resilience/winter-map.js?v=2" defer></script><script src="./rating-context.js?v=1" defer></script><script src="./school-identity.js?v=1" defer></script><script src="./school-assignment.js?v=6" defer></script><script src="./irving-official-spatial.js?v=1" defer></script><script src="./dallas-attendance-live.js?v=1" defer></script><script src="./home-lookup-v2.js?v=18" defer></script><script src="./features/commute/workplace-destinations.js?v=1" defer></script><script src="./allen-lookup.js?v=5" defer></script><script src="./candidate-compare.js?v=4" defer></script><script src="./features/commute/cost-model.js?v=1" defer></script><script src="./features/dashboard-extras.js?v=2" defer></script><script src="./features/commute/sourced-cost-core.js?v=1" defer></script><script src="./features/commute/sourced-cost-ui.js?v=1" defer></script><script src="./features/area-assessment-core.js?v=3" defer></script><script src="./features/area-assessment.js?v=3" defer></script><script src="./features/region-compare-core.js?v=1" defer></script><script src="./features/region-compare.js?v=1" defer></script><script src="./features/dfw-school-coverage-panel.js?v=2" defer></script><script src="./features/cfb-official-inline.js?v=1" defer></script><script src="./features/cfb-official-bridge.js?v=2" defer></script><script src="./features/cfb-zone-overlay.js?v=1" defer></script><script src="./features/cfb-approved-zone-atlas.js?v=2" defer></script><script src="./features/cfb-district-jurisdiction.js?v=1" defer></script><script src="./features/carrollton-school-insights.js?v=4" defer></script><script src="./features/home-school-manual-bridge.js?v=1" defer></script><script src="./features/tea-peims-public-share-addon.js?v=2" defer></script><script src="./features/tea-allen-mckinney-subject-notes.js?v=1" defer></script></body></html>
+<script src="./allen-apartment-exceptions.js?v=1"></script>
+<script src="./plano-finder-live.js?v=1"></script>
+<script src="./plano-feeder-guard.js?v=1"></script>
+<script src="./trusted-link-policy.js?v=1"></script>
+<script src="./school-zone-ui.js?v=1"></script>
+<script src="./features/conditional-school-release.js?v=1"></script>
+<script src="./features/school-reference-preview.js?v=1"></script>
+<script src="./home-assignment-map.js?v=1"></script><script src="./features/map/area-label-hierarchy.js?v=1"></script><script src="./dashboard-main.js?v=6"></script><script src="./features/west-dfw/attach.js?v=2" defer></script><script src="./features/commute/workplace-marker.js?v=1"></script><script src="./features/healthcare/map-layer.js?v=2"></script><script src="./features/resilience/winter-map.js?v=2"></script><script src="./rating-context.js?v=1"></script><script src="./school-identity.js?v=1"></script><script src="./school-assignment.js?v=6"></script><script src="./irving-official-spatial.js?v=1"></script><script src="./dallas-attendance-live.js?v=1"></script><script src="./home-lookup-v2.js?v=18"></script><script src="./features/commute/workplace-destinations.js?v=1"></script><script src="./allen-lookup.js?v=5"></script><script src="./candidate-compare.js?v=4"></script><script src="./features/commute/cost-model.js?v=1"></script><script src="./features/dashboard-extras.js?v=2"></script><script src="./features/commute/sourced-cost-core.js?v=1"></script><script src="./features/commute/sourced-cost-ui.js?v=1"></script><script src="./features/area-assessment-core.js?v=3"></script><script src="./features/area-assessment.js?v=3"></script><script src="./features/region-compare-core.js?v=1"></script><script src="./features/region-compare.js?v=1"></script><script src="./features/dfw-school-coverage-panel.js?v=2" defer></script><script src="./features/cfb-official-inline.js?v=1" defer></script><script src="./features/cfb-official-bridge.js?v=2" defer></script><script src="./features/cfb-zone-overlay.js?v=1" defer></script><script src="./features/cfb-approved-zone-atlas.js?v=2" defer></script><script src="./features/cfb-district-jurisdiction.js?v=1" defer></script><script src="./features/carrollton-school-insights.js?v=4" defer></script><script src="./features/home-school-manual-bridge.js?v=1" defer></script><script src="./features/tea-peims-public-share-addon.js?v=2" defer></script><script src="./features/tea-allen-mckinney-subject-notes.js?v=1" defer></script></body></html>
 
