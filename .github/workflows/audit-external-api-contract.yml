@@ -3,10 +3,24 @@ name: External API policy contract (read-only)
 on:
   pull_request:
     branches: [main]
+    paths:
+      - 'index.html'
+      - 'reviewed.html'
+      - 'dashboard-main.js'
+      - 'home-lookup-v2.js'
+      - 'features/**'
+      - 'backend/**'
+      - 'scripts/audit-external-api-contract.cjs'
+      - 'tests/audit-external-api-contract.test.cjs'
+      - 'deploy/environment-plan.json'
+      - '.github/workflows/audit-external-api-contract.yml'
   workflow_dispatch:
   schedule:
     - cron: '10 15 * * 1'
 
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 

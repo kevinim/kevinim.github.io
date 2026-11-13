@@ -8,6 +8,9 @@ on:
       - 'tests/uat-cutover-rollback-dry-run.test.cjs'
       - 'docs/UAT_CUTOVER_ROLLBACK_DRY_RUN.md'
   workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:

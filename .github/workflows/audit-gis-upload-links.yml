@@ -3,10 +3,27 @@ name: GIS upload, official links and hostile metadata (read-only)
 on:
   pull_request:
     branches: [main]
+    paths:
+      - 'index.html'
+      - 'reviewed.html'
+      - 'dashboard-main.js'
+      - 'home-lookup-v2.js'
+      - 'school-zone-ui.js'
+      - 'trusted-link-policy.js'
+      - 'district-registry.js'
+      - 'features/**'
+      - 'data/**'
+      - 'scripts/audit-gis-upload-links.cjs'
+      - 'scripts/test-gis-upload-browser.cjs'
+      - 'tests/audit-gis-upload-links.test.cjs'
+      - '.github/workflows/audit-gis-upload-links.yml'
   workflow_dispatch:
   schedule:
     - cron: '20 16 * * 1'
 
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 

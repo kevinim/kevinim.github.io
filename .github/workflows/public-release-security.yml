@@ -7,6 +7,9 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '20 14 * * 1'
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:
@@ -74,6 +77,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_ENABLE_COMMENTS: 'false'
   full-history-secrets:
+    # Full-history scan still runs on every main push, weekly schedule and manual dispatch.
+    # PR diff Gitleaks and always-on privacy/browser QA continue on every PR.
+    if: ${{ github.event_name != 'pull_request' }}
     name: ALL refs and full Git history Gitleaks
     runs-on: ubuntu-latest
     timeout-minutes: 20

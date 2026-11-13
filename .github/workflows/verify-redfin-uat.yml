@@ -16,6 +16,9 @@ on:
       - "tests/redfin-uat.test.cjs"
       - "scripts/test-redfin-uat-browser.cjs"
       - ".github/workflows/verify-redfin-uat.yml"
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:

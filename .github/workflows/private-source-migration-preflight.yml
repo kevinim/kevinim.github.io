@@ -8,6 +8,9 @@ on:
       - 'tests/private-source-migration-preflight.test.cjs'
       - 'docs/PRIVATE_SOURCE_MIGRATION_READINESS.md'
   workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:

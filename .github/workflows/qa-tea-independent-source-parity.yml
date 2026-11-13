@@ -8,6 +8,9 @@ on:
       - '.github/workflows/qa-tea-independent-source-parity.yml'
       - 'docs/QA_TEA_INDEPENDENT_CSV_PARITY_2026-11-11.md'
   workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:

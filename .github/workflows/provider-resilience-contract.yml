@@ -2,7 +2,24 @@ name: Public provider resilience and privacy contracts (no deploy)
 on:
   pull_request:
     branches: [main]
+    paths:
+      - 'index.html'
+      - 'reviewed.html'
+      - 'dashboard-main.js'
+      - 'home-lookup-v2.js'
+      - 'features/commute/**'
+      - 'features/reviewed-bootstrap.js'
+      - 'features/geojson-upload-guard.js'
+      - 'tests/provider-requests.test.cjs'
+      - 'tests/audit-external-api-contract.test.cjs'
+      - 'scripts/audit-external-api-contract.cjs'
+      - 'scripts/check-public-personalization.cjs'
+      - 'deploy/environment-plan.json'
+      - '.github/workflows/provider-resilience-contract.yml'
   workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:

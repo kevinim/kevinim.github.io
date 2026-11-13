@@ -3,10 +3,30 @@ name: Visitor browser XSS negative tests (audit-only)
 on:
   pull_request:
     branches: [main]
+    paths:
+      - 'index.html'
+      - 'reviewed.html'
+      - 'dashboard-main.js'
+      - 'home-lookup-v2.js'
+      - 'school-zone-ui.js'
+      - 'candidate-compare.js'
+      - 'trusted-link-policy.js'
+      - 'features/**'
+      - 'data/**'
+      - 'scripts/audit-visitor-xss-sinks.cjs'
+      - 'scripts/audit-csp-readiness.cjs'
+      - 'scripts/test-visitor-xss-browser.cjs'
+      - 'scripts/test-csp-isolation-browser.cjs'
+      - 'tests/audit-visitor-xss.test.cjs'
+      - 'tests/audit-csp-readiness.test.cjs'
+      - '.github/workflows/audit-visitor-xss.yml'
   workflow_dispatch:
   schedule:
     - cron: '40 15 * * 1'
 
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 

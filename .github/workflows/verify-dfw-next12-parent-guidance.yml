@@ -12,6 +12,9 @@ on:
       - 'tests/dfw-school-coverage-matrix.test.cjs'
       - '.github/workflows/verify-dfw-next12-parent-guidance.yml'
   workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:

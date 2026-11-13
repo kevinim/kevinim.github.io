@@ -10,6 +10,9 @@ on:
       - 'tests/cfb-ag03-finder-evidence-guard.test.cjs'
       - '.github/workflows/cfb-ag03-boundary-reconstruction-qa.yml'
   workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:

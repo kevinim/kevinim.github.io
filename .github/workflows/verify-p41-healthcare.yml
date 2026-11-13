@@ -16,6 +16,9 @@ on:
       - 'tests/p41-nearby-hospital-reference.test.cjs'
       - '.github/workflows/verify-p41-healthcare.yml'
   workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:

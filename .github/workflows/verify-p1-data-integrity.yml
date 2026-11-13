@@ -10,6 +10,9 @@ on:
       - 'data/healthcare/**'
       - 'data/dfw-crime-city-2023-2025.geojson'
       - 'data/resilience/fema-nri-dfw-winter-2025.json'
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 

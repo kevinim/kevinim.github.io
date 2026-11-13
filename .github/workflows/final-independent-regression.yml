@@ -8,6 +8,9 @@ on:
       - 'tests/evaluate-final-regression.test.cjs'
       - 'docs/FINAL_INDEPENDENT_QA_2026-11-09.md'
   workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 

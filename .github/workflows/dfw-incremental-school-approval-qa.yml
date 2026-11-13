@@ -9,6 +9,9 @@ on:
       - 'docs/RESIDENTIAL_SCHOOL_RELEASE_GATE.md'
       - '.github/workflows/dfw-incremental-school-approval-qa.yml'
   workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:

@@ -22,6 +22,9 @@ on:
       - 'tests/dfw-area-explorer-uat.test.cjs'
       - 'scripts/test-rent-map-uat-browser.cjs'
       - '.github/workflows/verify-rent-map-uat.yml'
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:
