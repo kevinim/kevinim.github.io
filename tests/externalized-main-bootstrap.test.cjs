@@ -117,8 +117,26 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  assert.equal(hash(show('a9785b33d7c60dba43281aba27b9e1fd25d14180','dashboard-main.js')),
   hash(show('0d2bf41dad7d9d92f5265d760fee27fa219a3e56','dashboard-main.js')),
   'Before TX load performance work, the reviewed marker renderer remained byte-identical');
- assert.equal(hash(js),hash(show('b12bbb62e9cd57441ffd9000850b1c1f837a6821','dashboard-main.js')),
-  'Only the exact reviewed TX first-load and cache policy performance commit may change the dashboard');
+ // P9 preserves the historical approved JS and checks only five exact heatmap
+ // substitutions. Any unrelated runtime drift still fails the entire SHA-256.
+ let perfP9=show('b12bbb62e9cd57441ffd9000850b1c1f837a6821','dashboard-main.js');
+ perfP9=replaceOnce(perfP9,
+  'function metricRange(){const a=scopedZips().map(d=>d[state.metric]).filter(Number.isFinite);return a.length?[Math.min(...a),Math.max(...a)]:[null,null]}',
+  'function metricRange(scoped=scopedZips()){const a=scoped.map(d=>d[state.metric]).filter(Number.isFinite);return a.length?[Math.min(...a),Math.max(...a)]:[null,null]}');
+ perfP9=replaceOnce(perfP9,
+  "function shade(v){if(!Number.isFinite(v))return '#b8c2cc';const [mn,mx]=metricRange();",
+  "function shade(v,range=metricRange()){if(!Number.isFinite(v))return '#b8c2cc';const [mn,mx]=range;");
+ perfP9=replaceOnce(perfP9,
+  'function drawZip(){if(!map)return;zipGroup.clearLayers();zipMarkers.clearLayers();DATA.forEach(d=>{',
+  'function drawZip(){if(!map)return;const scoped=scopedZips(),visible=new Set(scoped),range=metricRange(scoped);zipGroup.clearLayers();zipMarkers.clearLayers();DATA.forEach(d=>{');
+ perfP9=replaceOnce(perfP9,
+  "(scopedZips().includes(d)?shade(d[state.metric]):'#d1d5db')",
+  "(visible.has(d)?shade(d[state.metric],range):'#d1d5db')");
+ perfP9=replaceOnce(perfP9,
+  'fillOpacity:(state.withinHour||scopedZips().includes(d))?.72:.3',
+  'fillOpacity:(state.withinHour||visible.has(d))?.72:.3');
+ assert.equal(hash(js),hash(perfP9),
+  'TX P9 dashboard JS must match five exact audited scope-cache substitutions');
  const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
  const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);
  assert.ok(start>40000&&end>start+70000);
