@@ -49,23 +49,52 @@
    // CFB has no authorized current campus polygons in dashboard.
    return 'blocked';
  }
+ function recordLevel(record){
+   const text=String(record?.officialName||record?.name||'').toLowerCase();
+   if(/\b(?:elementary|el)\b/.test(text))return 'elementary';
+   if(/\bmiddle\b/.test(text))return 'middle';
+   if(/\b(?:high|h\s*s)\b/.test(text))return 'high';
+   return null;
+ }
  function matchRating(feature,district,ratings,lookup){
-   const p=feature.properties;
+   const p=feature?.properties||{};
+   const all=Array.isArray(ratings)?ratings:[];
    const id=p.campusId;
    let record=null;
    if(id!==null&&id!==undefined&&id!==''){
      if(!/^\d{9}$/.test(String(id)))return null;
-     record=(Array.isArray(ratings)?ratings:[]).find(r=>r.id===id&&r.district===district)||null;
-     if(!record)return null; // No fuzzy fallback when publisher gave an unmatched campus ID
-     if(normalizedName(record.name)!==normalizedName(p.school)&&
+     record=all.find(r=>r.id===id&&r.district===district)||null;
+     if(!record)return null;
+     // McKinney/Lewisville's official Finder provides a unique 9-digit ID,
+     // joined from its own Schools layer to the polygon by exact source name
+     // AND school level before it enters state.zoneData. TEA may include
+     // honoree names which the GIS polygon abbreviates, e.g. "NORTON".
+     // A validated campus ID is more precise than a text-name comparison.
+     if(!['043907','LISD'].includes(district)&&
+        normalizedName(record.name)!==normalizedName(p.school)&&
         normalizedName(record.officialName)!==normalizedName(p.school))return null;
    }else{
-     record=typeof lookup==='function'?lookup(p.school,district):null;
-     if(!record||record.district!==district)return null;
-     if(normalizedName(record.name)!==normalizedName(p.school)&&
-        normalizedName(record.officialName)!==normalizedName(p.school))return null;
+     const picked=typeof lookup==='function'?lookup(p.school,district):null;
+     if(picked&&picked.district===district&&
+        (normalizedName(picked.name)===normalizedName(p.school)||
+         normalizedName(picked.officialName)===normalizedName(p.school)))
+       record=picked;
+     if(!record&&district==='AISD'){
+       // Allen polygons contain surnames from 2019/2023. Match only when the
+       // full TEA name has that exact trailing surname, the school level matches,
+       // and ONE district campus is eligible. Otherwise fail closed.
+       const key=normalizedName(p.school);
+       if(key.length>=4){
+         const matches=all.filter(r=>r.district==='AISD'&&
+           recordLevel(r)===p.gradeLevel&&
+           (normalizedName(r.name).endsWith(key)||normalizedName(r.officialName).endsWith(key))&&
+           /^\d{9}$/.test(r.id));
+         if(matches.length===1)record=matches[0];
+       }
+     }
    }
-   if(!/^\d{9}$/.test(record.id)||!Object.hasOwn(RANK,record.rating)||!Number.isFinite(record.score))
+   if(!record||record.district!==district||!/^\d{9}$/.test(record.id)||
+      !Object.hasOwn(RANK,record.rating)||!Number.isFinite(record.score))
      return null;
    return record;
  }
