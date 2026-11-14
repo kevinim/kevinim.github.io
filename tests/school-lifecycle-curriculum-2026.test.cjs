@@ -39,3 +39,24 @@ test('2027–28 Durham closure is future only; do not erase 2026–27 active cam
  assert.equal(isRetiredCampus({district:'220919',name:'Durham Intermediate School'}),false);
  assert.equal(isRetiredCampus({district:'220919',id:'220919102',name:'CARROLL EL'}),false);
 });
+
+test('McKinney 2026–27 repurposed schools have historical TEA ratings but no active-school pins',()=>{
+ const ids=['043907113','043907117','043907116'];
+ const official='https://www.mckinneyisd.net/article/2532090';
+ const knownNames=['C T EDDINS EL','ARTHUR H MCNEIL EL','EARL & LOTTIE WOLFORD EL'];
+ for(let i=0;i<ids.length;i++){
+  const rec=tea.find(r=>r.id===ids[i]&&r.district==='043907');
+  assert.ok(rec,'McKinney official TEA campus '+ids[i]+' should exist');
+  assert.ok(['A','C'].includes(rec.rating));
+  assert.equal(isRetiredCampus(rec),true,'Historical 2026 TEA snapshot cannot become active marker');
+  assert.equal(isRetiredCampus({district:'043907',name:knownNames[i]}),true);
+  const row=RETIRED_CAMPUSES_2026.find(x=>x.id===ids[i]);
+  assert.ok(row);
+  assert.equal(row.source,official);
+  assert.equal(row.retiredFrom,'2026-27');
+ }
+ assert.equal(isRetiredCampus({district:'043907',name:'ROY LEE WALKER EL',id:'043907115'}),false,
+  'Currently zoned A-rated Walker must not be hidden');
+ assert.equal(isRetiredCampus({district:'043907',name:'DEAN AND MILDRED BENNETT EL',id:'043907120'}),false);
+ assert.equal(isRetiredCampus({district:'043905',name:'Wolford Elementary'}),false);
+});
