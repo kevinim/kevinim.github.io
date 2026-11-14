@@ -73,7 +73,6 @@
    if(!LEVELS.includes(level)||!Object.hasOwn(RANK,threshold))throw new RangeError('Invalid grade/level');
    const source=Array.isArray(features)?features:[];
    const result={visible:[],matched:0,nonRated:0,unverified:0,eligible:0,sourceCount:source.length};
-   const seen=new Set();
    for(const feature of source){
      if(feature?.properties?.gradeLevel!==level)continue;
      result.eligible++;
@@ -84,9 +83,8 @@
      result.matched++;
      if(!thresholdPass(record.rating,threshold))continue;
      if(kind!=='finder-2026-elementary'&&!showReference)continue;
-     const identity=district+'|'+level+'|'+record.id;
-     if(seen.has(identity))continue;
-     seen.add(identity);
+     // Keep disconnected polygon pieces from the same campus; map coverage
+     // must not silently drop school islands. UI deduplicates school count.
      result.visible.push({feature,school:pureLabel(feature.properties.school),rating:record.rating,
        score:record.score,campusId:record.id,kind,level,district,year:YEAR});
    }
