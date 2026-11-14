@@ -1,0 +1,60 @@
+name: School grade zones UAT (TEA + GIS)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'school-grade-uat.html'
+      - 'features/school-grade-zones-uat*'
+      - 'tests/school-grade-zones-uat.test.cjs'
+      - 'scripts/test-school-grade-zones-browser.cjs'
+      - '.github/workflows/verify-school-grade-zones-uat.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'school-grade-uat.html'
+      - 'features/school-grade-zones-uat*'
+      - 'tests/school-grade-zones-uat.test.cjs'
+      - 'scripts/test-school-grade-zones-browser.cjs'
+      - '.github/workflows/verify-school-grade-zones-uat.yml'
+permissions:
+  contents: read
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - run: |
+          node --check features/school-grade-zones-uat-core.js
+          node --check features/school-grade-zones-uat.js
+          node --test tests/school-grade-zones-uat.test.cjs
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Install pinned Playwright Chromium
+        run: |
+          mkdir -p school-grade-browser-tmp
+          cd school-grade-browser-tmp
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve UAT branch
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/school-grade-uat.log 2>&1 &
+          sleep 2
+      - name: Browser checks with mobile and desktop
+        env:
+          NODE_PATH: school-grade-browser-tmp/node_modules
+        run: node scripts/test-school-grade-zones-browser.cjs
