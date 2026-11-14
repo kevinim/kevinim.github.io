@@ -27,7 +27,7 @@ function apiClient(fetcher=fetch,token=''){
  const baseHeaders={Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'tx-dashboard-queue-audit'};
  if(token)baseHeaders.Authorization='Bearer '+token;
  return async function request(path,{method='GET'}={}){
-  if(!path.startsWith('/')||path.includes('://')||path.includes('..'))throw Error('invalid_api_path');
+  if(!path.startsWith('/')||path.startsWith('//')||path.includes('://')||path.includes('..')||path.includes('\\'))throw Error('invalid_api_path');
   const response=await fetcher(API+path,{method,headers:baseHeaders,signal:AbortSignal.timeout(20000)});
   if(method==='POST'&&response.status===202)return {accepted:true};
   if(!response.ok){
