@@ -1,6 +1,12 @@
 'use strict';
 // Official closures: do not interpret archived TEA ratings or 2024-25 NCES points as active campuses.
 const RETIRED_CAMPUSES_2026=[
+  // Official McKinney ISD repurposing starts with 2026–27. TEA's 2026
+  // accountability snapshot still rates these former general-attendance
+  // campuses, but that historic score cannot be shown as an active school pin.
+  {"district":"043907","id":"043907113","name":"C T EDDINS EL","aliases":["C.T. Eddins Elementary School","C T Eddins Elementary","Eddins Elementary","CT Eddins EL"],"retiredFrom":"2026-27","source":"https://www.mckinneyisd.net/article/2532090","reason":"repurposed-2026-27"},
+  {"district":"043907","id":"043907117","name":"ARTHUR H MCNEIL EL","aliases":["Arthur H. McNeil Elementary","McNeil Elementary","McNeil EL"],"retiredFrom":"2026-27","source":"https://www.mckinneyisd.net/article/2532090","reason":"repurposed-2026-27"},
+  {"district":"043907","id":"043907116","name":"EARL & LOTTIE WOLFORD EL","aliases":["Earl and Lottie Wolford Elementary","Earl & Lottie Wolford Elementary","Wolford Elementary","Wolford EL"],"retiredFrom":"2026-27","source":"https://www.mckinneyisd.net/article/2532090","reason":"repurposed-2026-27"},
   {"district":"061901","id":"061901120","name":"PALOMA CREEK EL","aliases":["Paloma Creek Elementary"],"retiredFrom":"2026-27","source":"https://www.dentonisd.org/families/attendance-zones/attendance-boundary-modification-26-27","reason":"reassigned-2026-27"},
   {"district":"220906","id":"220906103","name":"DOVE EL","aliases":["Dove Elementary"],"retiredFrom":"2026-27","source":"https://www.gcisd.net/article/2594779","reason":"consolidated-2026-27"},
   {"district":"220906","id":"220906108","name":"BRANSFORD EL","aliases":["Bransford Elementary"],"retiredFrom":"2026-27","source":"https://www.gcisd.net/article/2594779","reason":"consolidated-2026-27"},
