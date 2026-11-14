@@ -112,6 +112,18 @@
    :displayCount+'개 학교 경계가 표시됐습니다.';
   status.textContent=town+' · '+reason+(outlines.errors.length?' '+outlines.errors.length+'개 학교는 경계 병합이 실패해 내부·외부 선 없이 채색만 표시합니다.':'')+' 같은 학교 안의 조각 경계는 제거하고 외곽선만 표시합니다. 이 지도는 학교별 등급·경계 참고자료이며, 주소별 초·중·고 배정이나 세 학제 동시 B 이상 지역을 뜻하지 않습니다.';
   $('schoolGradeZoneDisclaimer').textContent=cityDetails();
+  const scoped=$('schoolGradeMarkerScope');
+  if(scoped){
+   const zip=$('zipSelect')?.value||'선택 없음';
+   let note='이 화면의 '+town+' · '+(
+     ui.level==='elementary'?'초등':ui.level==='middle'?'중등':'고등')+
+     ' · '+ui.threshold+' 이상은 학교 경계에만 적용됩니다. '+
+     '지도 A/B/C 학교 위치 마커는 좌측 「학교·학군 설정」의 별도 필터이며 다른 학군이나 학제 학교가 보일 수 있습니다. '+
+     '좌측 ZIP '+zip+'는 별도 인구·지역 통계 선택값입니다.';
+   if(ui.city==='mckinney'&&ui.level==='elementary'&&ui.threshold==='A')
+    note+=' McKinney 2026 TEA에 A등급인 일반 초등학교는 Walker·Eddins·Wolford 3곳이지만, Eddins와 Wolford는 2026–27년부터 일반 출석구역 학교가 아닙니다. 따라서 현행 초등 A 구역은 Walker만 표시됩니다.';
+   scoped.textContent=note;
+  }
   window.__schoolGradeZonesUatDebug={
    city:ui.city,threshold:ui.threshold,level:ui.level,reference:ui.reference,
    drawn:selected.length,schools:displayCount,zoneReady:ui.zoneReady,ratingsReady:ui.ratingsReady,
@@ -129,6 +141,7 @@
   panel.innerHTML=
    '<div class="sg-heading"><div><span class="sg-eyebrow">SCHOOL ZONES · UAT</span><h2>학교 등급별 구역 지도</h2></div><span class="sg-badge">TEA 2026 예비 평가</span></div>'+
    '<p class="sg-desc">선택 학제의 A/B/C 등급 학교에 연결된 경계만 색칠합니다. 같은 학교에 속하는 자잘한 내부 경계선은 합치고 바깥 윤곽만 표시합니다. ZIP·학교 위치가 아닌 학군 출처의 폴리곤을 사용합니다.</p>'+
+   '<p class="sg-marker-scope-note" id="schoolGradeMarkerScope" role="note">학교 구역을 확인하고 있습니다.</p>'+
    '<div class="sg-filters">'+
    '<label>지역 <select id="schoolGradeCity"><option value="mckinney">McKinney</option><option value="allen">Allen</option><option value="carrollton">Carrollton (CFB + LISD)</option></select></label>'+
    '<label>학교 학제 <select id="schoolGradeLevel"><option value="elementary">초등학교</option><option value="middle">중학교</option><option value="high">고등학교</option></select></label>'+
@@ -153,6 +166,7 @@
   }
   $('schoolGradeIncludeReference').addEventListener('change',()=>{ui.reference=$('schoolGradeIncludeReference').checked;render()});
   $('schoolGradeEnabled').addEventListener('change',()=>{ui.enabled=$('schoolGradeEnabled').checked;render()});
+  $('zipSelect')?.addEventListener('change',render);
   ui.ready=true;
   return true;
  }
@@ -165,6 +179,14 @@
    return;
   }
   if(!addControls(db.map))return;
+  // The default dropdown says McKinney, but the copied dashboard still starts
+  // at ZIP 75093 (West Plano). Move the map to the visible selected district
+  // so the location and filled layer do not appear to disagree on first load.
+  const initial=core.DISTRICTS[ui.city];
+  if(initial){
+   db.map.stop();
+   db.map.setView(initial.center,initial.zoom,{animate:false});
+  }
   // Existing core loads both ratings and finder polygons asynchronously. Stop
   // retrying after success, or show unknown rather than inventing school zones.
   let checks=0;function ready(){

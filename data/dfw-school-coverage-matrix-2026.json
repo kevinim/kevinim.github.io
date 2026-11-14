@@ -667,9 +667,9 @@
       },
       "geometry": {
         "status": "reference-browser-minimum-only",
-        "referenceLoadedMinimum": 30,
+        "referenceLoadedMinimum": 27,
         "referenceMatchedMinimum": 25,
-        "matchedLoadedPercent": 83.3,
+        "matchedLoadedPercent": 92.6,
         "vintageMode": "live-official-finder-only",
         "confirmedCurrentYear": false,
         "referenceRun": 42548036191

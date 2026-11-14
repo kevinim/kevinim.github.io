@@ -18,6 +18,22 @@ const base=process.env.SITE_URL||'http://127.0.0.1:8765/';
    assert.equal(await page.locator('#schoolGradeThreshold').inputValue(),'B');
    assert.equal(await page.locator('#schoolGradeLevel').inputValue(),'elementary');
    assert.equal(await page.locator('#schoolGradeIncludeReference').isChecked(),false);
+   const center=await page.evaluate(()=>map.getCenter());
+   assert.ok(Math.abs(center.lat-33.197)<0.02&&Math.abs(center.lng+96.618)<0.02,
+     'Initial McKinney selector and initial map center must agree');
+   const scopeNote=await page.locator('#schoolGradeMarkerScope').innerText();
+   assert.match(scopeNote,/ZIP 75093/);
+   assert.match(scopeNote,/별도 필터/);
+   await page.locator('#schoolGradeThreshold').selectOption('A');
+   assert.match(await page.locator('#schoolGradeMarkerScope').innerText(),/Eddins와 Wolford/);
+   await page.locator('#schoolGradeThreshold').selectOption('B');
+   // Current campus marker filters must omit officially retired McKinney A campuses.
+   await page.locator('#schoolScope').selectOption('all');
+   await page.locator('#ratingFilter').selectOption('A');
+   const names=(await page.locator('#schoolList').innerText()).toUpperCase();
+   assert.ok(!names.includes('C T EDDINS EL')&&!names.includes('EARL & LOTTIE WOLFORD EL'),
+     'Repurposed McKinney elementary school markers must not appear as active A campuses');
+   assert.ok(names.includes('ROY LEE WALKER EL'),'The current McKinney A campus remains visible');
    const first=await page.evaluate(()=>window.__schoolGradeZonesUatDebug);
    assert.equal(await page.evaluate(()=>typeof window.polygonClipping?.union),'function',
      'Pinned local polygon union engine is loaded');
