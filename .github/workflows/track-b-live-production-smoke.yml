@@ -19,7 +19,7 @@ jobs:
     if: ${{ github.event_name != 'deployment_status' || github.event.deployment_status.state == 'success' }}
     name: Live Pages 390/1366 Allen + Denton + CFB + Dallas/Irving
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -39,6 +39,13 @@ jobs:
           NODE_PATH: ${{ github.workspace }}/live-pages-playwright-tmp/node_modules
           DASHBOARD_BASE_URL: https://kevinim.github.io/
         run: node scripts/test-track-b-live-pages.cjs
+      - name: Verify the official CFB Finder and manual map bridge in the same postdeploy run
+        env:
+          NODE_PATH: ${{ github.workspace }}/live-pages-playwright-tmp/node_modules
+          DASHBOARD_BASE_URL: https://kevinim.github.io/
+        run: |
+          node --check scripts/test-cfb-official-inline-live-browser.cjs
+          node scripts/test-cfb-official-inline-live-browser.cjs
       - name: Aggregate public-only result and screenshots (7 days)
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
