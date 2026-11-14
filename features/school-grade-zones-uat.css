@@ -1,0 +1,42 @@
+/* Grade-zone comparison UAT. Never alter base school marker/assignment styles. */
+.school-grade-zones{background:#f8fbff;color:#173456;border:1px solid #bcd2eb;border-radius:12px;padding:14px;margin:0 0 13px;box-shadow:0 3px 12px #143c5c12}
+.sg-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.sg-heading h2{margin:2px 0 0;font-size:16px;line-height:1.4}
+.sg-eyebrow{font-size:10px;font-weight:800;color:#3e70b2;letter-spacing:.07em}
+.sg-badge{font-size:10px;white-space:nowrap;background:#e3edfd;color:#315a98;padding:5px 9px;border-radius:22px}
+.sg-desc{font-size:11px;color:#516b8a;line-height:1.55;margin:8px 0 11px}
+.sg-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.sg-filters>label{font-size:11px;font-weight:750;color:#3c577d;display:flex;flex-direction:column;gap:5px;min-width:0}
+.sg-filters select{border:1px solid #bacde2;border-radius:7px;background:#fff;color:#173453;padding:8px;min-width:0;width:100%;min-height:37px;font-size:12px}
+.sg-toggles{display:flex;gap:14px;flex-wrap:wrap;grid-column:1/-1;margin-top:3px}
+.sg-toggles label{font-size:11px;line-height:1.4;display:flex;align-items:center;gap:7px;color:#34557e;cursor:pointer}
+.sg-toggles input{width:17px;height:17px;accent-color:#2176b5}
+.sg-legend{display:flex;flex-wrap:wrap;gap:12px;padding:10px 0 8px;font-size:11px;color:#395a7a}
+.sg-legend span{display:inline-flex;align-items:center;gap:5px}
+.sg-color{display:inline-block;height:12px;width:18px;border-radius:3px;border:1px solid #fff}
+.sg-color.a{background:#10886f}.sg-color.b{background:#306cc4}.sg-color.c{background:#bf842b}
+.sg-dashed{display:inline-block;width:18px;border-bottom:2px dashed #8a96a8}
+.sg-summary{display:flex;align-items:center;flex-wrap:wrap;gap:10px;border-top:1px solid #d7e4f2;padding-top:9px;color:#20446f}
+.sg-summary strong{font-size:13px}.sg-summary small{font-size:10px;color:#58718c}
+.sg-status,.sg-disclaimer{font-size:11px;line-height:1.6;color:#506b89;margin:7px 0 0}
+.sg-disclaimer{font-weight:650}
+.sg-details{border-top:1px solid #dbe6f2;margin-top:8px;padding-top:8px}
+.sg-details summary{cursor:pointer;color:#315e9b;font-size:11px;font-weight:750}
+.sg-details p{font-size:11px;color:#456283;line-height:1.65;margin:7px 0 2px}
+.school-grade-popup{max-width:290px;font-size:12px;line-height:1.65}
+.school-grade-popup strong{display:block;font-size:13px}
+.school-grade-popup a{color:#1f5cb1;text-decoration:underline}
+.school-grade-zones select:focus-visible,.school-grade-zones input:focus-visible{outline:3px solid #76a8ea;outline-offset:2px}
+html[data-theme="dark"] .school-grade-zones{background:#182c44;color:#e8f2ff;border-color:#476788}
+html[data-theme="dark"] .sg-heading h2{color:#eff6ff}
+html[data-theme="dark"] .sg-badge{background:#25486c;color:#dcecff}
+html[data-theme="dark"] .sg-eyebrow{color:#a1c9fe}
+html[data-theme="dark"] .sg-desc,html[data-theme="dark"] .sg-status,html[data-theme="dark"] .sg-disclaimer,
+html[data-theme="dark"] .sg-summary small,html[data-theme="dark"] .sg-details p{color:#c3d6ea}
+html[data-theme="dark"] .sg-filters>label,html[data-theme="dark"] .sg-toggles label,html[data-theme="dark"] .sg-legend{color:#d0e3f9}
+html[data-theme="dark"] .sg-filters select{background:#203c5b;color:#f0f7ff;border-color:#5d7e9f}
+html[data-theme="dark"] .sg-summary{color:#dbefff;border-color:#476788}
+html[data-theme="dark"] .sg-details{border-color:#476788}
+html[data-theme="dark"] .sg-details summary{color:#b9d7ff}
+@media(max-width:720px){.sg-filters{grid-template-columns:1fr 1fr}.sg-filters>label:first-child{grid-column:1/-1}}
+@media(max-width:420px){.school-grade-zones{padding:11px}.sg-heading{align-items:flex-start}.sg-heading h2{font-size:14px}.sg-badge{max-width:105px;white-space:normal;text-align:center}.sg-toggles{flex-direction:column;gap:9px}.sg-filters select{font-size:11px}}
