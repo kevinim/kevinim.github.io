@@ -10,10 +10,10 @@ const API='https://api.github.com/repos/'+REPO;
 const WINDOW_START=Date.parse('2026-11-11T20:17:00Z');
 const WINDOW_END=Date.parse('2026-11-11T20:56:00Z');
 const MAX_BATCH=25;
-function candidate(run,{mainSha,openHeads=new Set(),now=Date.now()}={}){
+function candidate(run,{mainSha,openHeads=new Set(),openBranches=new Set(),now=Date.now()}={}){
  if(!run||run.status!=='queued'||run.event!=='pull_request')return false;
- if(!Number.isSafeInteger(run.id)||!String(run.head_sha||'').match(/^[0-9a-f]{40}$/))return false;
- if(run.head_sha===mainSha||openHeads.has(run.head_sha))return false;
+ if(!Number.isSafeInteger(run.id)||run.id<=0||!String(run.head_sha||'').match(/^[0-9a-f]{40}$/))return false;
+ if(run.head_sha===mainSha||openHeads.has(run.head_sha)||openBranches.has(run.head_branch))return false;
  const t=Date.parse(run.created_at||'');
  if(!Number.isFinite(t)||t<WINDOW_START||t>WINDOW_END||now-t<24*3600000)return false;
  if(run.updated_at&&Date.parse(run.updated_at)>t+300000)return false;
@@ -55,7 +55,7 @@ async function preflight(request){
  if(!/^[0-9a-f]{40}$/.test(branch.commit?.sha||''))throw Error('main_sha_unavailable');
  if(!Array.isArray(pulls))throw Error('open_prs_unavailable');
  if(pulls.length===100)throw Error('open_pr_pagination_required');
- return {mainSha:branch.commit.sha,openHeads:new Set(pulls.map(p=>p.head?.sha).filter(Boolean)),openPrCount:pulls.length};
+ return {mainSha:branch.commit.sha,openHeads:new Set(pulls.map(p=>p.head?.sha).filter(Boolean)),openBranches:new Set(pulls.map(p=>p.head?.ref).filter(Boolean)),openPrCount:pulls.length};
 }
 async function verifyJobsEmpty(request,id){
  const jobs=await request('/actions/runs/'+id+'/jobs?per_page=1');
