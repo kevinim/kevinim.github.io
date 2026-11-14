@@ -141,7 +141,7 @@
   panel.innerHTML=
    '<div class="sg-heading"><div><span class="sg-eyebrow">SCHOOL ZONES · UAT</span><h2>학교 등급별 구역 지도</h2></div><span class="sg-badge">TEA 2026 예비 평가</span></div>'+
    '<p class="sg-desc">선택 학제의 A/B/C 등급 학교에 연결된 경계만 색칠합니다. 같은 학교에 속하는 자잘한 내부 경계선은 합치고 바깥 윤곽만 표시합니다. ZIP·학교 위치가 아닌 학군 출처의 폴리곤을 사용합니다.</p>'+
-   '<p class="sg-status" id="schoolGradeMarkerScope" role="note">학교 구역을 확인하고 있습니다.</p>'+
+   '<p class="sg-marker-scope-note" id="schoolGradeMarkerScope" role="note">학교 구역을 확인하고 있습니다.</p>'+
    '<div class="sg-filters">'+
    '<label>지역 <select id="schoolGradeCity"><option value="mckinney">McKinney</option><option value="allen">Allen</option><option value="carrollton">Carrollton (CFB + LISD)</option></select></label>'+
    '<label>학교 학제 <select id="schoolGradeLevel"><option value="elementary">초등학교</option><option value="middle">중학교</option><option value="high">고등학교</option></select></label>'+
