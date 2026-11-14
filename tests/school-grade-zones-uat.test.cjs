@@ -3,6 +3,7 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const core=require('../features/school-grade-zones-uat-core.js');
+const clipper=require('../features/vendor/polygon-clipping-0.15.7.min.js');
 const rect=(school,level,kind='043907',id='043907101')=>({type:'Feature',
  properties:{school,gradeLevel:level,campusId:id,sourceDistrict:kind,
  sourceVintage:kind==='043907'?'2026–27 공식 School Zone Finder':kind==='AISD'?'2023':'공식 검색기 연결 · 학년도 미확인',
@@ -75,6 +76,83 @@ test('Official McKinney campus ID resolves short school source name without fuzz
  assert.equal(good.visible.length,1);
  assert.equal(good.visible[0].campusId,'043907120');
  assert.equal(core.build([f],[{...full,id:'043907121'}],()=>null,{district:'043907',threshold:'B',liveFinder:true}).visible.length,0);
+});
+function rectangle(x1,y1,x2,y2){
+ return {type:'Polygon',coordinates:[[[x1,y1],[x2,y1],[x2,y2],[x1,y2],[x1,y1]]]};
+}
+function zoneItem(id,geom,extra={}){
+ return {campusId:id,school:'Campus '+id,level:'elementary',district:'043907',
+   kind:'finder-2026-elementary',rating:'A',score:93,
+   feature:{type:'Feature',geometry:geom,properties:{gradeLevel:'elementary',school:'Campus '+id}},...extra};
+}
+test('Dissolve same-school adjoining cells into ONE outer polygon without inside seam',()=>{
+ const cells=[zoneItem('043907101',rectangle(0,0,1,1)),
+              zoneItem('043907101',rectangle(1,0,2,1)),
+              zoneItem('043907101',rectangle(2,0,3,1))];
+ const out=core.dissolveByCampus(cells,clipper);
+ assert.equal(out.inputPieces,3);
+ assert.equal(out.groups.length,1);
+ assert.equal(out.errors.length,0);
+ assert.equal(out.independentPieces,1);
+ const union=out.groups[0].feature.geometry;
+ assert.equal(union.type,'MultiPolygon');
+ assert.equal(union.coordinates.length,1);
+ const path=union.coordinates[0][0];
+ for(let i=0;i<path.length-1;i++){
+   const [x1,y1]=path[i],[x2,y2]=path[i+1];
+   assert.ok(!(x1===x2&&(x1===1||x1===2)&&Math.min(y1,y2)<0.5&&Math.max(y1,y2)>0.5),
+     'No internal vertical seam at x=1 or x=2');
+ }
+});
+test('Dissolve preserves disconnected school islands and interior holes',()=>{
+ const a=zoneItem('043907101',rectangle(0,0,2,2));
+ const b=zoneItem('043907101',rectangle(5,0,6,1));
+ const c=core.dissolveByCampus([a,b],clipper);
+ assert.equal(c.independentPieces,2);
+ assert.equal(c.groups[0].feature.geometry.coordinates.length,2);
+ const withHole={type:'Polygon',coordinates:[
+   [[0,0],[6,0],[6,6],[0,6],[0,0]],
+   [[2,2],[2,4],[4,4],[4,2],[2,2]]
+ ]};
+ const d=core.dissolveByCampus([zoneItem('043907101',withHole),zoneItem('043907101',rectangle(6,0,7,6))],clipper);
+ assert.equal(d.groups[0].feature.geometry.coordinates.length,1);
+ assert.equal(d.groups[0].feature.geometry.coordinates[0].length,2,
+   'Interior school boundary hole remains a hole, not a filled attendance region');
+});
+test('Adjacent different-school or reference-year geometries stay separate',()=>{
+ const a=zoneItem('043907101',rectangle(0,0,1,1));
+ const b=zoneItem('043907102',rectangle(1,0,2,1));
+ const c=zoneItem('043907101',rectangle(0,1,1,2),{kind:'reference-finder'});
+ const d=zoneItem('043907101',rectangle(0,2,1,3),{district:'LISD'});
+ const out=core.dissolveByCampus([a,b,c,d],clipper);
+ assert.equal(out.groups.length,4);
+ assert.equal(out.groups.every(z=>z.sourceCount===1),true);
+});
+test('Dissolve caches unchanged campus groups and fails to fill-only, never guessed outlines',()=>{
+ const cells=[zoneItem('043907101',rectangle(0,0,1,1)),zoneItem('043907101',rectangle(1,0,2,1))];
+ let n=0;const counting={union(...xs){n++;return clipper.union(...xs)}};
+ const cache=new Map();
+ const first=core.dissolveByCampus(cells,counting,cache);
+ const again=core.dissolveByCampus(cells,counting,cache);
+ assert.equal(n,1);
+ assert.equal(again.groups[0],first.groups[0]);
+ const failure=core.dissolveByCampus(cells,{union(){throw Error('bad topology')}});
+ assert.equal(failure.errors.length,1);
+ assert.equal(failure.groups[0].feature,null);
+ assert.equal(failure.groups[0].fallback.length,2);
+ assert.equal(failure.groups[0].dissolved,false);
+});
+test('Local licensed clipping engine and UAT script refs are present, production untouched',()=>{
+ const html=fs.readFileSync('school-grade-uat.html','utf8');
+ const root=fs.readFileSync('index.html','utf8');
+ const ui=fs.readFileSync('features/school-grade-zones-uat.js','utf8');
+ const license=fs.readFileSync('features/vendor/polygon-clipping-LICENSE.md','utf8');
+ assert.match(html,/features\/vendor\/polygon-clipping-0\.15\.7\.min\.js/);
+ assert.match(license,/The MIT License/);
+ assert.ok(html.indexOf('vendor/polygon-clipping')<html.indexOf('school-grade-zones-uat-core.js'));
+ assert.ok(!root.includes('vendor/polygon-clipping'));
+ assert.match(ui,/stroke:!item\.error/);
+ assert.match(ui,/core\.dissolveByCampus/);
 });
 test('Preview is noindex and isolated from production, with strict source/assignment messaging',()=>{
  const root=fs.readFileSync('index.html','utf8');

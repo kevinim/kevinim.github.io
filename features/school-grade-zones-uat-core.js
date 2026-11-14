@@ -119,6 +119,64 @@
    }
    return result;
  }
+ function dissolveByCampus(selected,clipper,cache){
+   // Group only the same source-assured campus, grade level, district and
+   // currency kind. Never join different schools or current/reference zones.
+   const buckets=new Map();
+   for(const item of Array.isArray(selected)?selected:[]){
+     if(!item?.feature?.geometry||!/^\d{9}$/.test(String(item.campusId||'')))continue;
+     const key=[item.district,item.level,item.kind,item.campusId].join('|');
+     if(!buckets.has(key))buckets.set(key,[]);
+     buckets.get(key).push(item);
+   }
+   const groups=[],errors=[];
+   let inputPieces=0,mergedGroups=0,independentPieces=0;
+   for(const [key,items] of buckets){
+     inputPieces+=items.length;
+     const first=items[0],previous=cache?.get(key);
+     if(previous?.count===items.length&&previous.first===items[0].feature
+       &&previous.last===items[items.length-1].feature){
+       groups.push(previous.value);
+       if(previous.value.dissolved)mergedGroups++;
+       independentPieces+=previous.value.pieceCount;
+       if(previous.value.error)errors.push(key);
+       continue;
+     }
+     const geometries=items.map(item=>item.feature.geometry).filter(g=>
+       (g?.type==='Polygon'||g?.type==='MultiPolygon')&&Array.isArray(g.coordinates));
+     let geo=null,error=null;
+     try{
+       if(geometries.length!==items.length||geometries.length===0)throw Error('Invalid polygon geometry');
+       // Union returns disjoint islands and true holes as GeoJSON MultiPolygon
+       // topology. A simple MultiPolygon of the input leaves internal lines
+       // behind, so it MUST NOT be used as the success case.
+       if(geometries.length===1){
+         geo=geometries[0];
+       }else{
+         if(typeof clipper?.union!=='function')throw Error('Polygon union unavailable');
+         const merged=clipper.union(...geometries.map(g=>g.coordinates));
+         if(!Array.isArray(merged)||!merged.length)throw Error('Polygon union empty');
+         geo={type:'MultiPolygon',coordinates:merged};
+       }
+     }catch(e){
+       error=e instanceof Error?e.message:'Polygon union failed';
+       errors.push(key);
+     }
+     const result={...first,sourceCount:items.length,
+       // When a union fails, show polygons as transparent fills without any
+       // edges rather than painting a false outer boundary.
+       feature:geo?{type:'Feature',properties:{...first.feature.properties},geometry:geo}:null,
+       fallback:geo?null:items.map(item=>item.feature),
+       pieceCount:geo?(geo.type==='MultiPolygon'?geo.coordinates.length:1):items.length,
+       dissolved:!!geo,error};
+     groups.push(result);
+     if(result.dissolved)mergedGroups++;
+     independentPieces+=result.pieceCount;
+     cache?.set(key,{first:items[0].feature,last:items[items.length-1].feature,
+       count:items.length,value:result});
+   }
+   return {groups,errors,inputPieces,mergedGroups,independentPieces};
+ }
  function pureLabel(s){return String(s).trim().slice(0,130)}
- return {DISTRICTS,LEVELS,RANK,YEAR,normalizedName,thresholdPass,sourceKind,matchRating,build};
+ return {DISTRICTS,LEVELS,RANK,YEAR,normalizedName,thresholdPass,sourceKind,matchRating,build,dissolveByCampus};
 });

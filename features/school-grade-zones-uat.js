@@ -6,6 +6,7 @@
  if(!core)return;
  const $=id=>document.getElementById(id);
  const ui={ready:false,layer:null,city:'mckinney',threshold:'B',level:'elementary',reference:false,enabled:true,zoneReady:false,ratingsReady:false};
+ const dissolveCache=new Map(); // Reuse unchanged official source polygons between filter changes.
  const districtURLs=Object.freeze({
   '043907':'https://www.mckinneyisd.net/page/attendance-zones-maps/',
   AISD:'https://www.allenisd.org/page/findaschool',
@@ -43,10 +44,12 @@
   if(url){box.append(safeText('span',' · '));box.append(infoLink(url,'학군 공식 주소 조회'))}
   return box;
  }
- function metrics(visible,stats){
+ function metrics(visible,stats,outline){
   const count=new Set(visible.map(v=>v.campusId)).size;
-  $('schoolGradeAreaCount').textContent=count+'개 학교 / '+visible.length+'개 경계 도형';
-  $('schoolGradeJoinCount').textContent=stats.matched+'개 등급 연결 · '+stats.nonRated+'개 미연결 · '+stats.unverified+'개 출처 차단';
+  $('schoolGradeAreaCount').textContent=count+'개 학교 / '+(outline?.groups.length??0)+'개 외곽 구역 묶음';
+  $('schoolGradeJoinCount').textContent=
+   (outline?.inputPieces??visible.length)+'개 원본 조각 → '+(outline?.independentPieces??0)+'개 독립 구역 · '+
+   stats.matched+'개 등급 연결 · '+stats.nonRated+'개 미연결 · '+stats.unverified+'개 출처 차단';
  }
  function cityDetails(){
   if(ui.city==='mckinney')
@@ -82,30 +85,38 @@
    summary.matched+=result.matched;summary.nonRated+=result.nonRated;summary.unverified+=result.unverified;
    if(ui.enabled)selected.push(...result.visible);
   }
+  // GIS dissolve happens separately for each validated campus. Source geometry
+  // remains untouched and the disjoint outer islands/holes are preserved.
+  const outlines=core.dissolveByCampus(selected,window.polygonClipping,dissolveCache);
   if(ui.enabled){
-   for(const item of selected){
+   for(const item of outlines.groups){
     const current=item.kind==='finder-2026-elementary';
     const palette={A:'#10886f',B:'#306cc4',C:'#bf842b'};
     const color=palette[item.rating];
-    const shape=L.geoJSON(item.feature,{pane:'schoolGradeZonesPane',interactive:true,
-      style:{color,fillColor:color,weight:current?2:2,dashArray:current?null:'7 5',
-       fillOpacity:current?.25:.08,opacity:current?.96:.85}});
+    const layerSource=item.feature||{type:'FeatureCollection',features:item.fallback};
+    const shape=L.geoJSON(layerSource,{pane:'schoolGradeZonesPane',interactive:true,
+      style:{color,fillColor:color,stroke:!item.error,
+       weight:2,dashArray:current?null:'7 5',fillOpacity:current?.25:.08,
+       opacity:current?.96:.85}});
     shape.bindPopup(popup(item),{maxWidth:300});
-    shape.bindTooltip(item.school+' · '+item.rating+' · '+(current?'Finder 연결':'참고'),{sticky:true});
+    shape.bindTooltip(item.school+' · '+item.rating+' · '+
+      (item.error?'채색만 표시 (외곽선 생성 실패)':current?'Finder 연결':'참고'),{sticky:true});
     ui.layer.addLayer(shape);
    }
   }
-  metrics(selected,summary);
+  metrics(selected,summary,outlines);
   const town=core.DISTRICTS[ui.city].name;
   const displayCount=new Set(selected.map(x=>x.campusId)).size;
   const reason=!ui.enabled?'지도 표시를 껐습니다.'
    :!selected.length?'선택한 조건과 검증 상태에서 표시할 학교 경계가 없습니다.'
    :displayCount+'개 학교 경계가 표시됐습니다.';
-  status.textContent=town+' · '+reason+' 이 지도는 학교별 등급·경계 참고자료이며, 주소별 초·중·고 배정이나 세 학제 동시 B 이상 지역을 뜻하지 않습니다.';
+  status.textContent=town+' · '+reason+(outlines.errors.length?' '+outlines.errors.length+'개 학교는 경계 병합이 실패해 내부·외부 선 없이 채색만 표시합니다.':'')+' 같은 학교 안의 조각 경계는 제거하고 외곽선만 표시합니다. 이 지도는 학교별 등급·경계 참고자료이며, 주소별 초·중·고 배정이나 세 학제 동시 B 이상 지역을 뜻하지 않습니다.';
   $('schoolGradeZoneDisclaimer').textContent=cityDetails();
   window.__schoolGradeZonesUatDebug={
    city:ui.city,threshold:ui.threshold,level:ui.level,reference:ui.reference,
-   drawn:selected.length,schools:displayCount,zoneReady:ui.zoneReady,ratingsReady:ui.ratingsReady
+   drawn:selected.length,schools:displayCount,zoneReady:ui.zoneReady,ratingsReady:ui.ratingsReady,
+   outlineGroups:outlines.groups.length,independentPieces:outlines.independentPieces,
+   dissolvedGroups:outlines.mergedGroups,unionFailures:outlines.errors.length
   };
  }
  function addControls(map){
@@ -117,7 +128,7 @@
   panel.setAttribute('aria-label','학교 등급별 배정 경계 UAT');
   panel.innerHTML=
    '<div class="sg-heading"><div><span class="sg-eyebrow">SCHOOL ZONES · UAT</span><h2>학교 등급별 구역 지도</h2></div><span class="sg-badge">TEA 2026 예비 평가</span></div>'+
-   '<p class="sg-desc">선택 학제의 A/B/C 등급 학교에 연결된 경계만 색칠합니다. ZIP·학교 위치가 아닌 학군 출처의 폴리곤을 사용합니다.</p>'+
+   '<p class="sg-desc">선택 학제의 A/B/C 등급 학교에 연결된 경계만 색칠합니다. 같은 학교에 속하는 자잘한 내부 경계선은 합치고 바깥 윤곽만 표시합니다. ZIP·학교 위치가 아닌 학군 출처의 폴리곤을 사용합니다.</p>'+
    '<div class="sg-filters">'+
    '<label>지역 <select id="schoolGradeCity"><option value="mckinney">McKinney</option><option value="allen">Allen</option><option value="carrollton">Carrollton (CFB + LISD)</option></select></label>'+
    '<label>학교 학제 <select id="schoolGradeLevel"><option value="elementary">초등학교</option><option value="middle">중학교</option><option value="high">고등학교</option></select></label>'+
