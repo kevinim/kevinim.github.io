@@ -22,6 +22,8 @@ jobs:
           node-version: '22'
       - name: Guard CI required checks, PR run cancellation and source-aware filters
         run: node --test tests/ci-workflow-efficiency.test.cjs
+      - name: Audit consolidated DFW and TEA coverage against archived batch scripts
+        run: node --test tests/ci-rationalization.test.cjs
       - run: node scripts/verify-main-data.mjs
       - run: node --test tests/first-load-assets.test.cjs
       - run: node scripts/audit-first-load-assets.cjs --check

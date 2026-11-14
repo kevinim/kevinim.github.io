@@ -1,16 +1,6 @@
 name: DFW batch 5 parent source integrity (read-only)
 on:
-  push:
-    branches: [feature/dfw-parent-guidance-batch5-20261109]
-  pull_request:
-    branches: [main]
-    paths:
-      - 'district-registry.js'
-      - 'data/dfw-parent-source-evidence-batch5-2026.json'
-      - 'data/dfw-school-coverage-matrix-2026.json'
-      - 'scripts/audit-school-provenance.cjs'
-      - 'tests/dfw-parent-guidance-batch5.test.cjs'
-      - '.github/workflows/dfw-parent-source-batch5-qa.yml'
+  # Historical batch replay. Unified active QA covers its complete test contract.
   workflow_dispatch:
 concurrency:
   group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}

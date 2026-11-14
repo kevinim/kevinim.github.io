@@ -1,16 +1,6 @@
 name: DFW next-12 official school guidance and GIS no-inference QA
 on:
-  pull_request:
-    branches:
-      - main
-      - feature/dfw-parent-guidance-top8-20261109
-    paths:
-      - 'district-registry.js'
-      - 'trusted-link-policy.js'
-      - 'data/dfw-school-coverage-matrix-2026.json'
-      - 'tests/dfw-parent-guidance-next12.test.cjs'
-      - 'tests/dfw-school-coverage-matrix.test.cjs'
-      - '.github/workflows/verify-dfw-next12-parent-guidance.yml'
+  # Historical batch replay. Unified active QA covers its complete test contract.
   workflow_dispatch:
 concurrency:
   group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}

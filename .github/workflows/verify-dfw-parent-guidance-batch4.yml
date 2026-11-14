@@ -1,19 +1,6 @@
 name: DFW batch 4 district source coverage and no false GIS
 on:
-  pull_request:
-    branches:
-      - feature/dfw-parent-guidance-next8-20261109
-      - main
-    paths:
-      - 'district-registry.js'
-      - 'trusted-link-policy.js'
-      - 'data/dfw-school-coverage-matrix-2026.json'
-      - 'data/dfw-parent-source-evidence-batch4-2026.json'
-      - 'tests/dfw-parent-guidance-batch4.test.cjs'
-      - 'tests/dfw-school-coverage-matrix.test.cjs'
-      - 'tests/dfw-parent-guidance-next12.test.cjs'
-      - 'tests/dfw-parent-guidance-batch3.test.cjs'
-      - '.github/workflows/verify-dfw-parent-guidance-batch4.yml'
+  # Historical batch replay. Unified active QA covers its complete test contract.
   workflow_dispatch:
 concurrency:
   group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}

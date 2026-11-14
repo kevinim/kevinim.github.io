@@ -1,18 +1,6 @@
 name: DFW batch 3 official school links + honest source quality QA
 on:
-  pull_request:
-    branches:
-      - main
-      - feature/dfw-parent-guidance-next12-20261109
-    paths:
-      - 'district-registry.js'
-      - 'trusted-link-policy.js'
-      - 'data/dfw-school-coverage-matrix-2026.json'
-      - 'data/dfw-parent-source-evidence-batch3-2026.json'
-      - 'tests/dfw-school-coverage-matrix.test.cjs'
-      - 'tests/dfw-parent-guidance-next12.test.cjs'
-      - 'tests/dfw-parent-guidance-batch3.test.cjs'
-      - '.github/workflows/verify-dfw-next8-parent-guidance.yml'
+  # Historical batch replay. Unified active QA covers its complete test contract.
   workflow_dispatch:
 concurrency:
   group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}

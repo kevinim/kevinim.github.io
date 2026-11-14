@@ -1,14 +1,6 @@
 name: TEA evidence-safe school panels and PEIMS percentage gate
 on:
-  pull_request:
-    branches:
-      - main
-      - 'feature/tea-peims-1500-campus-wave3-20261111'
-    paths:
-      - 'features/carrollton-school-insights.js'
-      - 'scripts/test-carrollton-tea-insights-browser.cjs'
-      - 'tests/tea-display-quality-guard.test.cjs'
-      - '.github/workflows/verify-tea-display-quality-guard.yml'
+  # Historical batch replay. Unified active QA covers its complete test contract.
   workflow_dispatch:
 concurrency:
   group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}

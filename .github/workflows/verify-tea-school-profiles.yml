@@ -15,6 +15,10 @@ on:
       - data/tea-ethnicity-2025-26-priority.json
       - tea-ratings-2026.json
       - .github/workflows/verify-tea-school-profiles.yml
+      - 'tests/tea-display-quality-guard.test.cjs'
+      - 'scripts/build-tea-profile-progress.cjs'
+      - 'data/tea-profile-progress-2026.json'
+      - '.github/workflows/verify-tea-display-quality-guard.yml'
   push:
     branches: [main]
     paths:
@@ -30,6 +34,10 @@ on:
       - data/tea-ethnicity-2025-26-priority.json
       - tea-ratings-2026.json
       - .github/workflows/verify-tea-school-profiles.yml
+      - 'tests/tea-display-quality-guard.test.cjs'
+      - 'scripts/build-tea-profile-progress.cjs'
+      - 'data/tea-profile-progress-2026.json'
+      - '.github/workflows/verify-tea-display-quality-guard.yml'
 
 concurrency:
   group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
@@ -56,6 +64,8 @@ jobs:
           node --test tests/carrollton-school-insights.test.cjs
           node scripts/build-tea-district-profiles.cjs --check
           node --test tests/tea-district-profiles.test.cjs tests/tea-academic-uat-panel.test.cjs tests/tea-peims-priority-campus.test.cjs
+          node --test tests/tea-display-quality-guard.test.cjs
+          node scripts/build-tea-profile-progress.cjs --check
 
   browser:
     runs-on: ubuntu-latest

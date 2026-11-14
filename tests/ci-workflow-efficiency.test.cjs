@@ -72,9 +72,9 @@ test('all PR workflows isolate the current PR and cancel only stale PR runs',()=
    automatic++;
   }
  }
- assert.ok(prCount>=95,'lost PR quality checks');
+ assert.ok(prCount>=89,'lost PR quality checks beyond six explicitly archived duplicate suites');
  assert.ok(scoped>=prCount-2,'too many unconditional PR workflows');
- assert.ok(automatic>=85,'expected widespread stale-PR cancellation coverage');
+ assert.ok(automatic>=79,'expected widespread stale-PR cancellation coverage after consolidating six duplicate PR suites');
 });
 test('scoped source/security audits still cover all their own workflow and source changes',()=>{
  for(const name of narrowlyScoped){
