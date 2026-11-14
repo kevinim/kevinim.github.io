@@ -8,7 +8,7 @@ on:
       - 'scripts/test-cfb-official-inline-live-browser.cjs'
       - '.github/workflows/cfb-live-pages-smoke.yml'
   workflow_dispatch:
-  deployment_status:
+  # Post-deployment CFB coverage is executed once by track-b-live-production-smoke.yml.
 concurrency:
   group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -16,7 +16,6 @@ permissions:
   contents: read
 jobs:
   public-cfb-browser:
-    if: ${{ github.event_name != 'deployment_status' || github.event.deployment_status.state == 'success' }}
     name: Actual github.io Finder + manual CFB campus marker at 390/1366px
     runs-on: ubuntu-latest
     timeout-minutes: 18

@@ -84,14 +84,18 @@ test('scoped source/security audits still cover all their own workflow and sourc
   assert.ok(src.includes('workflow_dispatch:'),'manual deep recheck must remain: '+name);
  }
 });
-test('one postdeploy trigger per GitHub Pages build; manual smoke remains',()=>{
- for(const name of ['cfb-live-pages-smoke.yml','track-b-live-production-smoke.yml']){
-  const y=workflows.get(name);
-  assert.match(y,/^  deployment_status:\s*$/m,'Pages deploy success event must trigger browser smoke: '+name);
-  assert.doesNotMatch(y,/^  workflow_run:/m,'Pages dynamic workflow_run does not fire reliably: '+name);
-  assert.match(y,/^  workflow_dispatch:/m);
-  assert.match(y,/github\.event\.deployment_status\.state == 'success'/);
- }
+test('one Pages postdeploy listener covers both live school browser probes',()=>{
+ const consolidated=workflows.get('track-b-live-production-smoke.yml');
+ const targeted=workflows.get('cfb-live-pages-smoke.yml');
+ assert.match(consolidated,/^  deployment_status:\s*$/m);
+ assert.doesNotMatch(consolidated,/^  workflow_run:/m,'dynamic Pages workflow_run is unreliable');
+ assert.match(consolidated,/github\.event\.deployment_status\.state == 'success'/);
+ assert.match(consolidated,/node scripts\/test-track-b-live-pages\.cjs/);
+ assert.match(consolidated,/node scripts\/test-cfb-official-inline-live-browser\.cjs/);
+ assert.match(consolidated,/^  workflow_dispatch:/m);
+ assert.doesNotMatch(targeted,/^  deployment_status:/m,'CFB must not independently queue on every Pages status');
+ assert.match(targeted,/^  pull_request:/m,'CFB source changes must still be tested');
+ assert.match(targeted,/^  workflow_dispatch:/m,'manual CFB verification must remain available');
 });
 test('workflow YAML does not introduce PR privilege escalation',()=>{
  for(const [name,y] of workflows){
