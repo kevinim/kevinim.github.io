@@ -21,6 +21,7 @@ test('only exact incident window, unopened PR, aged queued executions qualify',(
  ])assert.equal(candidate(fixture(patch),settings),false,JSON.stringify(patch));
  assert.equal(candidate(fixture(),{...settings,mainSha:SHA}),false);
  assert.equal(candidate(fixture(),{...settings,openHeads:new Set([SHA])}),false);
+ assert.equal(candidate(fixture({head_branch:'old-pr-branch'}),{...settings,openBranches:new Set(['old-pr-branch'])}),false);
  assert.equal(candidate(fixture(),{...settings,now:Date.parse('2026-11-11T21:00:00Z')}),false);
 });
 test('plan returns sorted, exclusive candidates rather than blindly cancelling all queued',()=>{
@@ -56,7 +57,7 @@ test('queue pagination and branch/PR preflight use only read-only endpoints',asy
    return {workflow_runs:count===1?Array.from({length:100},(_,i)=>fixture({id:i+1})): [fixture({id:101})]};
   }
   if(path==='/branches/main')return {commit:{sha:MAIN}};
-  if(path.startsWith('/pulls?'))return [{head:{sha:'c'.repeat(40)}}];
+  if(path.startsWith('/pulls?'))return [{head:{sha:'c'.repeat(40),ref:'open-pr-branch'}}];
   throw Error('unexpected_path');
  };
  const records=await listAllQueued(req);
@@ -65,6 +66,7 @@ test('queue pagination and branch/PR preflight use only read-only endpoints',asy
  assert.equal(info.openPrCount,1);
  assert.equal(info.mainSha,MAIN);
  assert.deepEqual([...info.openHeads],['c'.repeat(40)]);
+ assert.deepEqual([...info.openBranches],['open-pr-branch']);
  assert.ok(calls.every(p=>p.startsWith('/')));
 });
 test('zero-job check requires both total and an empty jobs collection',async()=>{
