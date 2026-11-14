@@ -65,3 +65,25 @@ test('reduced visible sample or polygons trigger review',()=>{
  const x=report();x.coverage.sampledRenderChecks=1;
  assert.ok(compareBaseline(x,baseline).blockers.some(v=>v.code==='insufficient_polygon_render_sample'));
 });
+
+test('McKinney minimum school-directory revision accounts exactly for three official closures',()=>{
+ const m=baseline.districts['043907'];
+ assert.equal(m.minimumLoaded,27);
+ assert.equal(m.minimumLinked,25,'Never reduce expected active polygon matches');
+ const change=baseline.revisions.find(x=>x.district==='043907'&&x.date==='2026-11-14');
+ assert.ok(change);
+ assert.deepEqual(change.campusIds.slice().sort(),['043907113','043907116','043907117']);
+ assert.match(change.source,/mckinneyisd\.net/);
+ assert.equal(change.unchangedMinimumLinked,25);
+ const {isRetiredCampus}=require('../school-lifecycle.js');
+ const rating=require('../tea-ratings-2026.json').data;
+ for(const id of change.campusIds){
+  const campus=rating.find(x=>x.id===id);
+  assert.ok(campus);
+  assert.equal(isRetiredCampus(campus),true);
+ }
+ const x=report();x.byDistrict['043907'].totalLoadedDirectory=26;
+ const out=compareBaseline(x,baseline);
+ assert.equal(out.status,'REVIEW_REQUIRED');
+ assert.ok(out.blockers.some(x=>x.code==='school_directory_count_regressed'&&x.expectedAtLeast===27));
+});
