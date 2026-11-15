@@ -122,7 +122,7 @@ function verifyExternalCspIntegrity(html){
  const inline=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
   .filter(x=>!/\bsrc\s*=/.test(x[1])&&x[2].trim());
  if(inline.length)throw Error('External build must have zero executable inline scripts');
- const tag='<script src="./dashboard-main.js?v=6"></script>';
+ const tag='<script src="./dashboard-main.js?v=7"></script>';
  if(html.split(tag).length!==2)throw Error('External bootstrap tag missing or duplicated');
  return {policy,inlineHashes:0};
 }
@@ -130,7 +130,7 @@ function sanitizeExtractedAssets(sourceHtml,sourceJs){
  verifyExternalCspIntegrity(sourceHtml);
  if(typeof sourceJs!=='string'||!sourceJs.startsWith("\r\n'use strict';")||
   !sourceJs.includes('const DATA=[')||
-  !sourceJs.includes("fetch('./dfw-outside-public.json'"))
+  !sourceJs.includes("TxBoundedJson.requestJson('./dfw-outside-public.json'"))
   throw Error('Unexpected source bootstrap; privacy review required');
  const privateTokens=/\bJPM\b|JPMorgan|JPM_ADDRESS|jpm-|8181\s+Communications|\bjpmMinutes\b/i;
  if(privateTokens.test(sourceHtml)||privateTokens.test(sourceJs))
@@ -147,7 +147,7 @@ function sanitizeExtractedAssets(sourceHtml,sourceJs){
  if(geocodeStart<0||geocodeEnd<geocodeStart||geocodeEnd-geocodeStart>1400)
   throw Error('Public destination geocoder structure changed: explicit review required');
  const publicJs=sourceJs.slice(0,geocodeStart)+
-  "const hits=await geocodeAddress(addr);if(!hits.length)throw Error('주소를 찾을 수 없습니다. 더 구체적인 텍사스 주소를 입력하세요');const candidate=hits[0];const p=[candidate.location.y,candidate.location.x];state.dest={ll:p,address:candidate.address||addr};"+
+  "const hits=await geocodeAddress(addr,operation.signal);if(!isCurrentZipCommute(operation))return;if(!hits.length)throw Error('주소를 찾을 수 없습니다. 더 구체적인 텍사스 주소를 입력하세요');const candidate=hits[0];const p=[candidate.location.y,candidate.location.x];state.dest={ll:p,address:candidate.address||addr};"+
   sourceJs.slice(geocodeEnd+geocodeFinal.length);
  if(/nominatim\.openstreetmap\.org/i.test(publicJs)||privateTokens.test(publicJs))
   throw Error('Unreviewed vendor or personalized identifier in curated bootstrap');

@@ -66,9 +66,14 @@
   ui.layer.clearLayers();
   const cfg=core.DISTRICTS[ui.city],summary={matched:0,nonRated:0,unverified:0},selected=[];
   const haveRatings=Array.isArray(s.ratings)&&s.ratings.length>100&&s.ratingIndex instanceof Map;
-  ui.ratingsReady=haveRatings;ui.zoneReady=!!s.zoneReady;
+  ui.ratingsReady=haveRatings;
+  ui.zoneReady=cfg.ids.every(district=>{
+   const key=typeof districtZoneKey==='function'?districtZoneKey(district):district;
+   const progress=s.sourceStatus?.[key];
+   return progress?progress.polygon!=='loading':!!s.zoneReady;
+  });
   const status=$('schoolGradeZoneStatus');
-  if(!haveRatings||!s.zoneReady){
+  if(!haveRatings||!ui.zoneReady){
    status.textContent='학교 등급·경계 데이터를 확인하고 있습니다. 로딩 실패 시 영역을 표시하지 않습니다.';
    metrics(selected,summary);
    return;
@@ -167,6 +172,7 @@
   $('schoolGradeIncludeReference').addEventListener('change',()=>{ui.reference=$('schoolGradeIncludeReference').checked;render()});
   $('schoolGradeEnabled').addEventListener('change',()=>{ui.enabled=$('schoolGradeEnabled').checked;render()});
   $('zipSelect')?.addEventListener('change',render);
+  window.addEventListener('schoolsourcechange',render);
   ui.ready=true;
   return true;
  }

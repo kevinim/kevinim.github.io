@@ -4,6 +4,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
+const {createBoundedJsonReader}=require('../features/commute/provider-requests.js');
 
 const source=fs.readFileSync(path.join(__dirname,'..','dashboard-main.js'),'utf8');
 const start=source.indexOf('function loadInitialDashboardSources(){');
@@ -17,7 +18,8 @@ function startRequests(){
   requests.push({url,opts});
   return new Promise((resolve,reject)=>pending.set(url,{resolve,reject}));
  };
- const start=vm.runInNewContext(helper+'\nloadInitialDashboardSources;', {fetch});
+ const window={TxBoundedJson:createBoundedJsonReader({fetcher:fetch})};
+ const start=vm.runInNewContext(helper+'\nloadInitialDashboardSources;', {window});
  return {requests,pending,request:start()};
 }
 const response=data=>({ok:true,json:async()=>data});
@@ -72,7 +74,7 @@ test('cacheable public static site assets and live publisher requests retain dis
   }else assert.ok(source.includes("fetch('./"+file+"',{cache:'"+cache+"'})"),file+' browser cache policy');
  }
  // Do not cache or fabricate the official current attendance boundaries.
- assert.ok(source.includes("fetch('./plano-official-feeder-reference-2026.json',{cache:'no-store'})"));
+ assert.ok(source.includes("TxBoundedJson.requestJson('./plano-official-feeder-reference-2026.json',{cache:'no-store'})"));
  assert.ok(source.includes('loadBoundaryData()'));
  assert.ok(source.includes('window.ConditionalSchoolRelease'));
 });

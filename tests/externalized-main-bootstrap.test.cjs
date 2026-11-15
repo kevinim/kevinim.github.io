@@ -11,7 +11,9 @@ const show=(sha,file)=>cp.execFileSync('git',['show',sha+':'+file],{cwd:root,enc
 // the entire unchanged school/map bootstrap instead of waiving integrity.
 const baseline='5a5b3a8fbe1b29ba71797525696d1f092821e6b7';
 const old=show(baseline,'index.html'),oldJs=show(baseline,'dashboard-main.js');
-const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+const rawHtml=fs.readFileSync(path.join(root,'index.html'),'utf8');
+// T02 cache keys change only these existing assets; every other HTML byte stays pinned.
+const html=[["features/commute/provider-requests.js?v=2","features/commute/provider-requests.js?v=1"],["dashboard-main.js?v=7","dashboard-main.js?v=6"],["home-lookup-v2.js?v=19","home-lookup-v2.js?v=18"],["features/dashboard-extras.js?v=3","features/dashboard-extras.js?v=2"]].reduce((text,[next,prior])=>text.replaceAll(next,prior),rawHtml);
 const js=fs.readFileSync(path.join(root,'dashboard-main.js'),'utf8');
 const external='<script src="./features/map/area-label-hierarchy.js?v=1"></script><script src="./dashboard-main.js?v=6"></script>';
 const oldCsp=old.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
@@ -152,7 +154,7 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  const providerDigest=crypto.createHash('sha1').update('blob '+Buffer.byteLength(js)+'\0').update(js,'utf8').digest('hex');
  // T01: exact reviewed commute-generation patch; school/GIS/rendering code stays pinned.
  // tests/commute-operation-lifecycle.test.cjs exercises late replies in both entry points.
- assert.ok(hash(js)===hash(perfP10)||providerDigest==='55d348a36821f5dfdf26a02ef2f0cd6569cf45e7'||providerDigest==='46f9c72552fc53cf127c51956bbd674fe379dc0f',
+ assert.ok(hash(js)===hash(perfP10)||providerDigest==='55d348a36821f5dfdf26a02ef2f0cd6569cf45e7'||providerDigest==='46f9c72552fc53cf127c51956bbd674fe379dc0f'||providerDigest==='1379614d8fc672c11bf192d7350c3fba0020ecda',
   'Dashboard must match either exact P10 baseline or audited bounded-provider integration blob');
  const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
  const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);
@@ -339,7 +341,7 @@ test('strict script CSP preserved exactly and personal office artifacts absent',
  assert.doesNotMatch(all,/\bJPM\b|JPMorgan|JPM_ADDRESS|jpm-|8181\s+Communications|\bjpmMinutes\b/i);
  assert.match(html,/<input id="destination" value=""/);
  assert.ok(html.includes('id="oneHourOverlay" hidden disabled'));
- assert.ok(js.includes("fetch('./dfw-outside-public.json'"));
+ assert.ok(js.includes("TxBoundedJson.requestJson('./dfw-outside-public.json'"));
  assert.ok(!js.includes('fetch(\'./jpm-'));
 });
 test('HTML has external executable scripts only and no inline handlers',()=>{

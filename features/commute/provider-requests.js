@@ -82,10 +82,41 @@
   }
   return Object.freeze({begin,invalidate,isCurrent:operation=>!!operation&&operation===current&&!operation.signal.aborted});
  }
+
+ // Deadlines cover both fetch and JSON parsing, even if a provider ignores abort.
+ function createBoundedJsonReader({fetcher}={}){
+  const doFetch=fetcher||((url,init)=>root.fetch(url,init));
+  function requestJson(url,{signal,timeoutMs=12000,...init}={}){
+   if(signal?.aborted)return Promise.reject(cancelled());
+   if(!Number.isFinite(timeoutMs)||timeoutMs<=0)throw new RangeError('Invalid request deadline');
+   return new Promise((resolve,reject)=>{
+    const controller=new AbortController();let settled=false;
+    const finish=(error,value)=>{
+     if(settled)return;settled=true;clearTimeout(timer);
+     signal?.removeEventListener('abort',onAbort);
+     if(error)reject(error);else resolve(value);
+    };
+    const onAbort=()=>{finish(cancelled());controller.abort()};
+    const timer=setTimeout(()=>{
+     const error=new ProviderRequestError('timeout','자료 요청 시간이 초과되었습니다. 다시 시도해 주세요.');
+     error.name='TimeoutError';finish(error);controller.abort();
+    },timeoutMs);
+    signal?.addEventListener('abort',onAbort,{once:true});
+    if(signal?.aborted){onAbort();return}
+    try{
+     Promise.resolve(doFetch(url,{...init,signal:controller.signal}))
+      .then(response=>{if(!response.ok)throw new ProviderRequestError('http','자료 요청 실패 (HTTP '+response.status+').');return response.json()})
+      .then(value=>finish(null,value),error=>finish(error));
+    }catch(error){finish(error)}
+   });
+  }
+  return Object.freeze({requestJson});
+ }
+ root.TxBoundedJson=createBoundedJsonReader();
  root.TxCommuteOperations=createOperationController();
  const api=createClient();
  root.TxProviderRequests=api;
  if(typeof module!=='undefined'&&module.exports){
-  module.exports={createClient,createOperationController,ProviderRequestError,assertDestination,GAP_MS,TIMEOUT_MS};
+  module.exports={createClient,createOperationController,createBoundedJsonReader,ProviderRequestError,assertDestination,GAP_MS,TIMEOUT_MS};
  }
 })(typeof window!=='undefined'?window:globalThis);
