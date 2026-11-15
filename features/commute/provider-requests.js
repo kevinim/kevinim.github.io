@@ -70,9 +70,22 @@
   }
   return Object.freeze({requestJson});
  }
+ // One generation owns a complete commute operation; no address is persisted.
+ function createOperationController(){
+  let generation=0,current=null;
+  function invalidate(){generation++;current?.controller.abort();current=null}
+  function begin(snapshot){
+   invalidate();
+   const controller=new AbortController();
+   current=Object.freeze({generation,controller,signal:controller.signal,snapshot:Object.freeze({...snapshot})});
+   return current;
+  }
+  return Object.freeze({begin,invalidate,isCurrent:operation=>!!operation&&operation===current&&!operation.signal.aborted});
+ }
+ root.TxCommuteOperations=createOperationController();
  const api=createClient();
  root.TxProviderRequests=api;
  if(typeof module!=='undefined'&&module.exports){
-  module.exports={createClient,ProviderRequestError,assertDestination,GAP_MS,TIMEOUT_MS};
+  module.exports={createClient,createOperationController,ProviderRequestError,assertDestination,GAP_MS,TIMEOUT_MS};
  }
 })(typeof window!=='undefined'?window:globalThis);

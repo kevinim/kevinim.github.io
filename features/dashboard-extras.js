@@ -81,6 +81,7 @@
     }
     if(wasAuto)$('tollDistanceStatus').textContent='출발 지역 또는 목적지가 변경됐습니다. 새로운 출퇴근 경로를 계산하거나 편도 거리를 직접 입력하세요.';
   };
+  root.clearCommuteRouteDistance=clearStaleRouteMiles;
   $('destination').addEventListener('input',clearStaleRouteMiles);
   $('zipSelect')?.addEventListener('change',clearStaleRouteMiles);
   $('homeClear')?.addEventListener('click',clearStaleRouteMiles);
