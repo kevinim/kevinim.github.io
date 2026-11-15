@@ -10,12 +10,12 @@ const safe=sanitizeExtractedAssets(original,originalJs);
 const preview=safe.html+'\n'+safe.js;
 test('public preview removes personal default office and fixed commute sources',()=>{
  assert.equal(/\bJPM\b|JPMorgan|JPM_ADDRESS|jpm-|8181 Communications/i.test(preview),false);
- assert.equal(preview.includes("fetch('./dfw-outside-public.json'"),true);
+ assert.equal(preview.includes("TxBoundedJson.requestJson('./dfw-outside-public.json'"),true);
  assert.equal(/<input id="destination" value=""/.test(preview),true);
  assert.equal(preview.includes('<option value="custom" selected>'),true);
  assert.equal(preview.includes("fetch('./jpm-road"),false);
  assert.equal(preview.includes('nominatim.openstreetmap.org'),false);
- assert.equal(preview.includes('const hits=await geocodeAddress(addr)'),true);
+ assert.equal(preview.includes('const hits=await geocodeAddress(addr,operation.signal)'),true);
 });
 test('preview retains required map, school and address search hooks',()=>{
  for(const id of ['homeForm','homeAddress','officeSelect','oneHourOverlay','schoolList','map','destination']) {
@@ -56,7 +56,7 @@ test('sanitized public bootstrap is actually transformed and no private original
  assert.notEqual(safe.js,originalJs);
  assert.ok(safe.js.length>45000,'Unexpectedly empty sanitized bootstrap');
  assert.equal(/\\bJPM\\b|JPMorgan|JPM_ADDRESS|jpm-|8181 Communications|jpmMinutes/i.test(safe.js),false);
- assert.ok(safe.js.includes("fetch('./dfw-outside-public.json'"));
+ assert.ok(safe.js.includes("TxBoundedJson.requestJson('./dfw-outside-public.json'"));
  assert.ok(safe.html.includes('./features/area-assessment.js'));
  assert.ok(safe.html.includes('./features/west-dfw/official-finder.js'));
 });

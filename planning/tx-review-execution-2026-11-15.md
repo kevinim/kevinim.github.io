@@ -21,7 +21,7 @@ Plan: TX_Dashboard_Code_Review_Plan_2026-11-15.md, main baseline c4c3d0a085525e5
 - Plano feeder validation has a separate 12-second deadline and readiness status. It no longer blocks completed polygons. Per-source status drives campus boundary hints and the school-grade UAT; global zoneReady remains the compatibility marker for all polygon requests becoming terminal. Home assignment gates remain fail-closed.
 - Esri geocoding uses the shared deadline; search restores its button and retry message on timeout. Abort is distinct from timeout and stale completion cannot replace status.
 - Cache-bust changed consumer/guard assets. Add the missing provider guard to legacy rent/redfin UAT pages before their shared bootstrap, without adding scripts to the production index inventory.
-- RED/GREEN: pending initial data, pending feeder, per-district readiness, Esri timeout/cancellation, stalled JSON body, timer cleanup and entry-point guard ordering. 65 selected local tests passed.
+- RED/GREEN: pending initial data, pending feeder, per-district readiness, Esri timeout/cancellation, stalled JSON body, timer cleanup and entry-point guard ordering. 89 selected local tests passed, including preview transformation and prior safety guards.
 - No automatic retries or provider-policy changes. Explicit home search retry remains available after timeout. More detailed school data partial/error UI belongs to T04.
 
 ## Rulings
@@ -33,6 +33,7 @@ Plan: TX_Dashboard_Code_Review_Plan_2026-11-15.md, main baseline c4c3d0a085525e5
 - T02 reuses the existing provider asset for bounded reads to preserve the synchronous script dependency order. Exact legacy HTML assertions normalize only four reviewed cache-key changes; all other markup and CSP remain byte-pinned. New loader tests require the fresh guard on all five entry points.
 - Update existing audit/build/browser references to the new exact asset versions, without broadening URL/CSP/policy rules or performance budgets. The approved provider-added resource allowance still counts the same single guard asset.
 - CFB evidence rows may move into the existing compact-footnote index. Its browser check now requires original evidence content plus either readable inline text or a working link to that same evidence, instead of racing the footnote observer with an immediate innerText assertion.
+- The curated public-preview builder must recognize the bounded neutral-data read and preserve cancellation/superseded-result guards when replacing Nominatim with Esri. A VM regression failed with the old transformation restoring destination A after edit to B, and passes with the generated operation signal and ownership check retained. The five public-promotion blockers remain unchanged.
 
 ## Remaining
 

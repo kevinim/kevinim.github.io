@@ -318,7 +318,9 @@ test('P0 Plano four-level feeder guard detects Jackson Coit split and blocks mis
  assert.ok(app.includes("['boundary-review','finder-boundary-review'].includes(result.status)"));
  assert.ok(html.includes('./plano-feeder-guard.js?v=1'));
  assert.ok(html.includes("state.planoFeederReference=null"));
- assert.ok(html.includes("await feederPromise"));
+ assert.ok(html.includes("TxBoundedJson.requestJson('./plano-official-feeder-reference-2026.json'"));
+ assert.ok(html.includes('state.sourceStatus.PISD_LOOKUP.feeder'));
+ assert.equal(html.includes('await feederPromise'),false,'optional feeder must not block completed polygons');
  assert.ok(html.includes('Plano 공식 진학표 점검'));
 });
 
