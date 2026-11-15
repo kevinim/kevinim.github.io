@@ -115,9 +115,9 @@ test('school selection auto-displays available source polygons with a specific m
  const inline=inlineScripts.join('\n');
  assert.ok(html.includes('<script src="./school-boundary-match.js?v=3"></script>'));
  assert.ok(html.includes('id="schoolBoundaryCoverageAudit"'));
- assert.ok(inline.includes('state.showOldZones=true;state.showHistoric=true;'));
- assert.ok(inline.includes("el('referenceBoundaryOverlay').checked=true"));
- assert.ok(inline.includes("el('historicOverlay').checked=true"));
+ assert.ok(!inline.includes('state.showOldZones=true;state.showHistoric=true;'),'Campus selection preserves explicit overlay opt-outs');
+ assert.ok(!inline.includes("el('referenceBoundaryOverlay').checked=true"));
+ assert.ok(!inline.includes("el('historicOverlay').checked=true"));
  assert.ok(inline.includes('renderSchoolBoundaryCoverageAudit()'));
  assert.ok(inline.includes('window.getSchoolBoundaryCoverage='));
  assert.ok(inline.includes('SchoolBoundaryMatch.findSchoolBoundary(s,geo'));
