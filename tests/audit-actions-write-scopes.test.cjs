@@ -35,5 +35,31 @@ test('pull_request_target, write-all, and new persistent checkout token are reje
  assert.ok(assess('other.yml',SAFE+'\npull_request_target:\n').errors.includes('pull_request_target_not_allowed'));
  assert.ok(assess('other.yml',SAFE+'\npermissions: write-all\n').errors.includes('write_all_not_allowed'));
  assert.ok(assess('other.yml',SAFE+'\n  persist-credentials: true\n').errors.includes('new_persisted_checkout_credentials'));
+ assert.ok(assess('other.yml',SAFE+'\n  "persist-credentials": "true"\n').errors.includes('new_persisted_checkout_credentials'));
+ assert.ok(assess('other.yml',SAFE+'\n  "pull_request_target":\n').errors.includes('pull_request_target_not_allowed'));
+});
+test('unproven YAML permissions forms fail closed, including the reviewed privilege bypasses',()=>{
+ for(const text of [
+  'permissions: { contents: write }',
+  'jobs:\n  check:\n    permissions: { contents: write }',
+  "permissions:\n  contents: 'write'",
+  '"permissions":\n  "contents": "write"',
+  'permissions: {\n  contents: write\n}',
+  'permissions: *privileges',
+  'permissions: &privileges\n  contents: write',
+  'jobs: { check: { permissions: { contents: write } } }',
+  'jobs:\n  check:\n    <<: *privilegedJob',
+  'permissions: [malformed'
+ ])assert.ok(assess('test.yml',text).errors.length,text);
+ assert.deepEqual(assess('test.yml','permissions:\n  contents: read # safe\n  issues: none').errors,[]);
+ assert.deepEqual(assess('test.yml','permissions: {}').errors,[]);
+});
+test('comments on root and job permission blocks cannot hide writers from the validated scanner',()=>{
+ for(const text of ['permissions: # elevated\n  contents: write','jobs:\n  check:\n    permissions: # elevated\n      contents: write']){
+  assert.deepEqual(writes(text),['contents']);
+  assert.ok(assess('test.yml',text).errors.includes('new_write_permission:contents'));
+ }
+ for(const text of ['"permiss\\u0069ons": {contents: write}','!!str permissions: {contents: write}','? permissions\n: {contents: write}'])
+  assert.ok(assess('test.yml',text).errors.length,text);
 });
 

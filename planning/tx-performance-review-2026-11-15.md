@@ -21,7 +21,7 @@ Both revisions made 104 same-origin resource requests in every sample. Candidate
 
 ## CI queue and setup observations
 
-Measured the successful T02 head 15cd07ffad8742bdc9bc1353c089c3eef3e171b: 52 workflow runs, 86 jobs (GitHub REST run/job/step timestamps). Time from run creation to job start: median 29 seconds, range 0–81 seconds. This combines scheduling, dependencies and runner availability; it is not a direct measurement of GitHub's scheduler alone.
+Measured the successful T02 head 15cd07ffad8742bdc9bc1353c089c3ceef3e171b: 52 workflow runs, 86 jobs (GitHub REST run/job/step timestamps). Time from run creation to job start: median 29 seconds, range 0–81 seconds. This combines scheduling, dependencies and runner availability; it is not a direct measurement of GitHub's scheduler alone.
 
 31 isolated Chromium installation steps took a median 20 seconds, range 14–33, totaling 646 runner-seconds across concurrent jobs. The total is not elapsed user wait. One job has a -1 second start/end discrepancy and is excluded from any duration interpretation. Setup duplication is a measured consolidation opportunity, but sharing browsers/artifacts across security and data gates would require a separately verified workflow redesign. Existing gates remain intact; this release removes unsafe snapshot writeback and PR-time external data generation instead.
 

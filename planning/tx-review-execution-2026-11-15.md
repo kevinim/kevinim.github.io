@@ -45,6 +45,9 @@ Plan: TX_Dashboard_Code_Review_Plan_2026-11-15.md, main baseline c4c3d0a085525e5
 - T07 compares five independent cold/warm browser repetitions per viewport/revision against the current PR base, reporting medians and observed ranges. Existing budgets remain. No unmeasured speedup is claimed.
 - Local regression selection: 123 tests passed before the additional superseded-source retry regression; that additional regression also passed. Full history/data/browser checks run in GitHub because the local checkout is a partial snapshot.
 - Cache keys are advanced for changed runtime assets. Exact HTML checks reverse only the three approved semantic-control changes and exact cache keys; the changed main script has an additional exact blob allowlist entry. Historical checks and CSP are retained.
+- Independent review found a permissions-audit bypass for inline/quoted permissions, then a commented block declaration. Both are now rejected or detected by one validated scanner; regression cases also cover unsupported aliases, merges, escaped keys and elevated trigger/credential quoting. All 101 current workflows audit with zero writers, errors or warnings.
+- Source failures remain visible even when the reference overlay is off, without drawing failed-source geometry or changing the user's switches. The disabled-overlay notice now instructs users to enable the appropriate setting rather than promising automatic activation.
+- After the first 53/62 successful workflows, obsolete auto-enable/writer-inventory assertions were corrected. The next run passed 61/62; its final hung-source browser assertion identified the failure-message priority above. Final CI rerun remains required before merge.
 
 ## Remaining
 

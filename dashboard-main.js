@@ -934,11 +934,12 @@ function drawBoundary(){
  const zoneDisplay=schoolDisplayMode(s);
  const officialYear=zoneDisplay==='official',finderLinked=zoneDisplay==='finder';
  const historical=!officialYear&&!finderLinked;
- if((historical&&!state.showOldZones)||(!historical&&!state.showHistoric)){
-   if(note)note.textContent='배정 경계선 표시를 직접 끈 상태입니다. 학교를 다시 선택하면 해당 경계선을 자동으로 표시합니다.';
+ const sourceFailed=!!state.zoneLoadErrors[districtZoneKey(s.district)];
+ if(!sourceFailed&&((historical&&!state.showOldZones)||(!historical&&!state.showHistoric))){
+   if(note)note.textContent='배정 경계선 표시를 직접 끈 상태입니다. 학교·학군 설정에서 해당 경계선 표시를 켜면 지도에 표시합니다.';
    return;
  }
- const geo=state.zoneData[districtZoneKey(s.district)]||[];
+ const geo=sourceFailed?[]:state.zoneData[districtZoneKey(s.district)]||[];
  const match=window.SchoolBoundaryMatch.findSchoolBoundary(s,geo,(name,district)=>scoreRecord(name,district));
  renderSchoolZoneMapHint(s,schoolZoneInfo(s));
  const found=match.features;

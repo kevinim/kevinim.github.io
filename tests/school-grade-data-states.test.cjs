@@ -41,3 +41,11 @@ test('an older source failure cannot clear the successful replacement retry',asy
  await h.ctx.loadBoundaryData(['LISD']);rejectFirst(Error('old request failed'));await old;
  assert.equal(h.run('state.sourceStatus.LISD.polygon'),'ready');assert.equal(h.run('state.zoneData.LISD.length'),19);assert.equal(h.run('state.zoneLoadErrors.LISD||null'),null);
 });
+test('a failed boundary source is explained even when reference overlays are disabled',()=>{
+ const h=context(()=>Promise.resolve(response({}))),children=[];
+ h.ctx.districtZoneKey=x=>x;h.ctx.districtZoneDisplay=()=> 'historical';h.ctx.districtInfo=()=>({});
+ h.ctx.SchoolBoundaryMatch={findSchoolBoundary:()=>({features:[]}),boundarySchoolSource:x=>x,boundaryMissingExplanation:()=>({reason:'Source unavailable',footnote:'Official Finder remains available'})};
+ h.ctx.document.createElement=()=>({});const note=h.el('zoneNotice');note.appendChild=x=>children.push(x);note.replaceChildren=()=>{children.length=0};
+ h.run("map={};zoneGroup={clearLayers(){}};schoolZoneInfo=()=>({});renderSchoolZoneMapHint=()=>{};state.selectedSchool={district:'043907',type:'elementary',name:'Synthetic'};state.showOldZones=false;state.showHistoric=false;state.zoneLoadErrors['043907']='synthetic unavailable';");
+ h.ctx.drawBoundary();assert.equal(children[0].textContent,'Source unavailable');assert.equal(h.run('state.showOldZones'),false);assert.equal(h.run('state.showHistoric'),false);
+});

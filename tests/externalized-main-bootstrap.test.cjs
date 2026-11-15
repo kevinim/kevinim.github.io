@@ -156,7 +156,7 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  const providerDigest=crypto.createHash('sha1').update('blob '+Buffer.byteLength(js)+'\0').update(js,'utf8').digest('hex');
  // T01: exact reviewed commute-generation patch; school/GIS/rendering code stays pinned.
  // tests/commute-operation-lifecycle.test.cjs exercises late replies in both entry points.
- assert.ok(hash(js)===hash(perfP10)||providerDigest==='55d348a36821f5dfdf26a02ef2f0cd6569cf45e7'||providerDigest==='46f9c72552fc53cf127c51956bbd674fe379dc0f'||providerDigest==='1379614d8fc672c11bf192d7350c3fba0020ecda'||providerDigest==='c544302176d8c3f19a645da8c11abfa21bf8d25f',
+ assert.ok(hash(js)===hash(perfP10)||providerDigest==='55d348a36821f5dfdf26a02ef2f0cd6569cf45e7'||providerDigest==='46f9c72552fc53cf127c51956bbd674fe379dc0f'||providerDigest==='1379614d8fc672c11bf192d7350c3fba0020ecda'||providerDigest==='4e5b9e31e025d57d59cec477686ef6373f7fbc69',
   'Dashboard must match either exact P10 baseline or audited bounded-provider integration blob');
  const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
  const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);

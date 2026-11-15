@@ -6,29 +6,43 @@ const path = require('node:path');
 const known = Object.freeze({});
 function indent(s) { return (s.match(/^\s*/) || [''])[0].length; }
 function writes(content) {
-  const lines=String(content||'').split(/\r?\n/);
-  const found=new Set();
+  return scanPermissions(content).scopes;
+}
+function scanPermissions(content) {
+  // Dependency-free source audit: accept only the proven block form, empty
+  // map, or GitHub's read-all/write-all scalar. Deny flow maps, quoted scope
+  // values, aliases and merges rather than silently treating them as read-only.
+  const lines=String(content||'').split(/\r?\n/),found=new Set();
+  let unsupported=/(?:^|[{,])\s*['"]?<<['"]?\s*:/m.test(content)
+    || /[{,]\s*['"]?permissions['"]?\s*:/m.test(content)
+    || /(?:^|[{,])\s*"[^"\r\n]*\\[^"\r\n]*"\s*:/m.test(content)
+    || /^\s*(?:[?:]\s|![^\r\n]*:)/m.test(content);
   for(let i=0;i<lines.length;i++) {
-    if(!/^\s*permissions:\s*$/.test(lines[i]))continue;
+    const declaration=/^(\s*)(['"]?permissions['"]?)\s*:(.*)$/.exec(lines[i]);
+    if(!declaration)continue;
+    const value=declaration[3].replace(/\s*#.*$/,'').trim();
+    if(declaration[2]!=='permissions')unsupported=true;
+    if(value){if(!['{}','read-all','write-all'].includes(value))unsupported=true;continue;}
     const base=indent(lines[i]);
     for(let j=i+1;j<lines.length;j++) {
-      const line=lines[j];
-      if(!line.trim()||/^\s*#/.test(line))continue;
-      if(indent(line)<=base)break;
-      const m=/^\s*([a-z-]+):\s*write\s*(?:#.*)?$/.exec(line);
-      if(m)found.add(m[1]);
+      if(!lines[j].trim()||/^\s*#/.test(lines[j]))continue;
+      if(indent(lines[j])<=base)break;
+      const scope=/^\s*([a-z-]+):\s*(read|write|none)\s*(?:#.*)?$/.exec(lines[j]);
+      if(!scope)unsupported=true;
+      else if(scope[2]==='write')found.add(scope[1]);
     }
   }
-  return [...found].sort();
+  return {scopes:[...found].sort(),unsupported};
 }
 function assess(name,content) {
-  const errors=[],warnings=[],scopes=writes(content);
-  if(/^\s*pull_request_target\s*:/m.test(content))errors.push('pull_request_target_not_allowed');
+  const errors=[],warnings=[],{scopes,unsupported}=scanPermissions(content);
+  if(unsupported)errors.push('unsupported_permissions_syntax');
+  if(/(?:^|[{,])\s*['"]?pull_request_target['"]?\s*:/m.test(content))errors.push('pull_request_target_not_allowed');
   if(/\bwrite-all\b/i.test(content))errors.push('write_all_not_allowed');
   const allowed=known[name]||[];
   for(const scope of scopes)if(!allowed.includes(scope))errors.push('new_write_permission:'+scope);
 
-  if(/persist-credentials:\s*true/.test(content)) {
+  if(/['"]?persist-credentials['"]?\s*:\s*['"]?true['"]?(?=\s|[,}]|$)/m.test(content)) {
     errors.push('new_persisted_checkout_credentials');
   }
   return {errors,warnings,scopes};
