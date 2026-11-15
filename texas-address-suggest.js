@@ -35,7 +35,7 @@ function filterTexasStreetSuggestions(raw,max=5) {
 // The address field is the only element controlling the ARIA listbox.
 // The user's typed prefix is transmitted to Esri only after a 320ms debounce.
 function attachTexasAddressSuggestions(input,list,onSelect) {
- let timer=null,controller=null,sequence=0,items=[],active=-1,selected=null;
+ let timer=null,controller=null,sequence=0,items=[],active=-1,selected=null,composing=false;
  const optionIdPrefix=input.id==='homeAddress'?'homeSuggestion':(input.id||'texasAddress')+'Suggestion';
  const clearItems=()=>{
   items=[];active=-1;list.replaceChildren();list.hidden=true;
@@ -73,7 +73,8 @@ function attachTexasAddressSuggestions(input,list,onSelect) {
   }
   list.hidden=items.length===0;input.setAttribute('aria-expanded',String(items.length>0));
  };
- const onInput=()=>{
+ const onInput=(event={})=>{
+  if(composing||event.isComposing)return;
   selected=null;stop();clearItems();
   const value=input.value.trim();
   if(value.length<4||!/[0-9]/.test(value))return;
@@ -93,6 +94,7 @@ function attachTexasAddressSuggestions(input,list,onSelect) {
   },320);
  };
  const onKey=e=>{
+  if(composing||e.isComposing||e.keyCode===229)return;
   if(e.key==='Escape'){if(!list.hidden){e.preventDefault();dismiss()}return}
   if(e.key==='Tab'){dismiss();return}
   if(list.hidden||!items.length)return;
@@ -102,10 +104,14 @@ function attachTexasAddressSuggestions(input,list,onSelect) {
    syncActive();
   }else if(e.key==='Enter'&&active>=0){e.preventDefault();choose(active)}
  };
+ const onCompositionStart=()=>{composing=true;selected=null;dismiss()};
+ const onCompositionEnd=()=>{composing=false;onInput()};
  const onOutside=e=>{if(!list.contains(e.target)&&e.target!==input)dismiss()};
+ input.addEventListener('compositionstart',onCompositionStart);
+ input.addEventListener('compositionend',onCompositionEnd);
  input.addEventListener('input',onInput);
  input.addEventListener('keydown',onKey);
  document.addEventListener('pointerdown',onOutside);
- return {dismiss,dispose(){dismiss();input.removeEventListener('input',onInput);input.removeEventListener('keydown',onKey);document.removeEventListener('pointerdown',onOutside)}};
+ return {dismiss,dispose(){dismiss();input.removeEventListener('compositionstart',onCompositionStart);input.removeEventListener('compositionend',onCompositionEnd);input.removeEventListener('input',onInput);input.removeEventListener('keydown',onKey);document.removeEventListener('pointerdown',onOutside)}};
 }
 if(typeof module!=='undefined')module.exports={buildTexasSuggestUrl,isTexasStreetSuggestion,filterTexasStreetSuggestions,TEXAS_SUGGEST_EXTENT};

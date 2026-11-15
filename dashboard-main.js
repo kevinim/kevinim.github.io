@@ -20,10 +20,15 @@ function schoolSourceReady(district){
  const progress=state.sourceStatus?.[source];
  return progress?progress.polygon!=='loading':state.zoneReady;
 }
+function schoolDisplayMode(s){
+ const features=(state.zoneData[districtZoneKey(s.district)]||[]).filter(f=>f.properties?.gradeLevel===s.type);
+ const verified=features.length>0&&features.every(f=>f.properties.yearVerified2627===true&&f.properties.verifiedYear==='2026-27');
+ return districtZoneDisplay(s.district,state.liveFinder,s.type,{verifiedYear:verified?'2026-27':null});
+}
 function schoolZoneInfo(s){
  const source=window.SchoolBoundaryMatch.boundarySchoolSource(s.district);
  const shapes=state.zoneData[source]||[],failed=!!state.zoneLoadErrors[source],sourceReady=schoolSourceReady(s.district);
- const mode=districtZoneDisplay(s.district,state.liveFinder);
+ const mode=schoolDisplayMode(s);
  const districtRecord=districtInfo(s.district),officialUrl=window.TrustedLinkPolicy?.official(OFFICIAL[s.district])||null;
  const officialKind=districtRecord?.lookupKind||'address-search',officialNote=districtRecord?.officialNote||null;
  const prev=schoolZoneCache.get(s);
@@ -170,8 +175,8 @@ for(const b of hazardChips)b.onclick=()=>{
 for(const id of ['femaHazardEnabled','femaHazardType','nfhlEnabled','txwrapWHPEnabled']){
  el(id).addEventListener('change',()=>queueMicrotask(updateHazardShortcut));
 }
-updateHazardShortcut();el('historicOverlay').onchange=e=>{state.showHistoric=e.target.checked;drawBoundary();drawHomeAssignmentMap()};el('referenceBoundaryOverlay').onchange=e=>{state.showOldZones=e.target.checked;drawBoundary();drawHomeAssignmentMap()};el('levels').onclick=e=>{const b=e.target.closest('button');if(!b)return;state.level=b.dataset.v;[...el('levels').children].forEach(x=>x.classList.toggle('active',x===b));clearSelectedSchoolIfFiltered();drawSchools();drawList()};el('schoolSearch').oninput=e=>{state.schoolQuery=e.target.value.toLowerCase();clearTimeout(schoolListSearchTimer);schoolListSearchTimer=setTimeout(drawList,140)};el('schoolSearchClear').onclick=()=>{clearTimeout(schoolListSearchTimer);el('schoolSearch').value='';state.schoolQuery='';drawList()};el('schoolList').addEventListener('click',event=>{const button=event.target?.closest?.('button.school[data-sid]');if(!button||!el('schoolList').contains(button))return;const idx=Number(button.dataset.sid);if(Number.isInteger(idx)&&state.schools[idx])schoolClicked(state.schools[idx],true)});el('calcCommute').onclick=calcCommute;el('destination').onkeydown=e=>{if(e.key==='Enter'&&!e.defaultPrevented&&el('destinationSuggestions')?.hidden!==false)calcCommute()};el('destination').oninput=()=>{invalidateZipCommute();el('officeSelect').value=(window.WorkplaceDestinations?.findByAddress(el('destination').value)?.id&&('saved:'+window.WorkplaceDestinations.findByAddress(el('destination').value).id))||Object.keys(OFFICES).find(k=>OFFICES[k].toLowerCase()===el('destination').value.trim().toLowerCase())||'custom';state.times={};state.dest=null;drawCommute();if(routeGroup)routeGroup.clearLayers();if(map&&targetMarker){map.removeLayer(targetMarker);targetMarker=null}showSavedCommute();if(typeof refreshHomeOffice==='function')refreshHomeOffice()};el('officeSelect').onchange=e=>{el('destination').value=OFFICES[e.target.value]||window.WorkplaceDestinations?.addressForChoice(e.target.value)||'';el('destination').oninput();if(e.target.value==='custom')el('destination').focus()};el('baseMap').onchange=e=>setBaseMap(e.target.value);
-loadSavedCommute();renderData();drawList();if(window.L){map=L.map('map',{zoomControl:true,preferCanvas:true,zoomAnimation:false}).setView([33.129,-96.785],11);setBaseMap('osm');zipGroup=L.featureGroup().addTo(map);schoolGroup=L.featureGroup().addTo(map);zoneGroup=L.featureGroup().addTo(map);homeZoneGroup=L.featureGroup().addTo(map);routeGroup=L.featureGroup().addTo(map);zipMarkers=L.featureGroup().addTo(map);areaLabels=L.layerGroup().addTo(map);schoolFocusGroup=L.featureGroup().addTo(map);window.createFemaHazardOverlay?.(map,document);window.healthcareOverlayController=window.initHealthcareMap?.(map,document);window.winterOverlayController=window.initWinterHazardMap?.(map,document);window.createNFHLFloodOverlay?.(map,document);window.createTxWrapWHPOverlay?.(map,document);window.createNoaaStormHistory?.(document);window.createCrimeCityMap?.(map,document);map.on('moveend',()=>{drawSchools();drawAreaLabels()});if(window.ResizeObserver)new ResizeObserver(()=>syncMapSize()).observe(map.getContainer());fetch('./county-scopes.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{countyData=data;drawZip();drawList()}).catch(e=>{console.error('카운티 비교자료 오류:',e);el('heatScope').value='all';state.heatScope='all';el('heatScope').disabled=true;el('heatScopeStatus').textContent='카운티 자료를 불러오지 못해 전체 범위로 비교합니다. 새로고침해 주세요.';drawZip()});fetch('./data/dfw-mena-ancestry-2024.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(obj=>{menaData=obj;drawDetail()}).catch(e=>console.error('중동·아랍계 조상 자료 오류:',e));fetch('./dfw-race-2024.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(obj=>{for(const d of DATA)Object.assign(d,obj.data[d.z]||{});drawZip();drawDetail();window.refreshCandidateComparisons?.()}).catch(e=>{console.error('인구 구성 자료 오류:',e);el('mapLoadStatus').textContent='인구 구성 자료를 불러오지 못했습니다. 새로고침해 주세요.'});fetch('./zcta-place-names.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{placeNames=data;for(const d of DATA)if(d.name.endsWith(' County')&&data[d.z])d.name=data[d.z];updatePlaceOptions();renderData();drawAreaLabels()}).catch(e=>console.error('지역명 자료를 불러오지 못했습니다:',e));loadZipShapes();Promise.all([loadBoundaryData(),loadSchools().then(loadRatings).then(loadExtra2026SchoolLocations)]).then(()=>{addFriscoBoundarySchools();addProsperCurrentSchools();window.schoolBoundaryAuditReady=true;renderSchoolBoundaryCoverageAudit()});setTimeout(()=>map.invalidateSize(),250)}else{el('map').innerHTML='<div style="padding:30px;color:#53647a">미리보기 또는 브라우저에서 지도 라이브러리 로딩에 실패했습니다. GitHub Pages 정식 주소를 이용하거나 브라우저 연결을 확인하세요. 아래 인구 비교표와 기본 학교 목록은 사용할 수 있습니다.</div>';el('mapLoadStatus').textContent='Leaflet 지도를 로드하지 못했습니다.';state.schools=FALLBACK_SCHOOLS.filter(s=>!isRetiredCampus(s));drawList();}}
+updateHazardShortcut();el('historicOverlay').onchange=e=>{state.showHistoric=e.target.checked;drawBoundary();drawHomeAssignmentMap()};el('referenceBoundaryOverlay').onchange=e=>{state.showOldZones=e.target.checked;drawBoundary();drawHomeAssignmentMap()};el('levels').onclick=e=>{const b=e.target.closest('button');if(!b)return;state.level=b.dataset.v;[...el('levels').children].forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b))});clearSelectedSchoolIfFiltered();drawSchools();drawList()};el('schoolSearch').oninput=e=>{state.schoolQuery=e.target.value.toLowerCase();clearTimeout(schoolListSearchTimer);schoolListSearchTimer=setTimeout(drawList,140)};el('schoolSearchClear').onclick=()=>{clearTimeout(schoolListSearchTimer);el('schoolSearch').value='';state.schoolQuery='';drawList()};el('schoolList').addEventListener('click',event=>{const button=event.target?.closest?.('button.school[data-sid]');if(!button||!el('schoolList').contains(button))return;const idx=Number(button.dataset.sid);if(Number.isInteger(idx)&&state.schools[idx])schoolClicked(state.schools[idx],true)});el('calcCommute').onclick=calcCommute;el('destination').onkeydown=e=>{if(e.isComposing||e.keyCode===229)return;if(e.key==='Enter'&&!e.defaultPrevented&&el('destinationSuggestions')?.hidden!==false)calcCommute()};el('destination').oninput=()=>{invalidateZipCommute();el('officeSelect').value=(window.WorkplaceDestinations?.findByAddress(el('destination').value)?.id&&('saved:'+window.WorkplaceDestinations.findByAddress(el('destination').value).id))||Object.keys(OFFICES).find(k=>OFFICES[k].toLowerCase()===el('destination').value.trim().toLowerCase())||'custom';state.times={};state.dest=null;drawCommute();if(routeGroup)routeGroup.clearLayers();if(map&&targetMarker){map.removeLayer(targetMarker);targetMarker=null}showSavedCommute();if(typeof refreshHomeOffice==='function')refreshHomeOffice()};el('officeSelect').onchange=e=>{el('destination').value=OFFICES[e.target.value]||window.WorkplaceDestinations?.addressForChoice(e.target.value)||'';el('destination').oninput();if(e.target.value==='custom')el('destination').focus()};el('baseMap').onchange=e=>setBaseMap(e.target.value);
+loadSavedCommute();renderData();drawList();if(window.L){map=L.map('map',{zoomControl:true,preferCanvas:true,zoomAnimation:false}).setView([33.129,-96.785],11);setBaseMap('osm');zipGroup=L.featureGroup().addTo(map);schoolGroup=L.featureGroup().addTo(map);zoneGroup=L.featureGroup().addTo(map);homeZoneGroup=L.featureGroup().addTo(map);routeGroup=L.featureGroup().addTo(map);zipMarkers=L.featureGroup().addTo(map);areaLabels=L.layerGroup().addTo(map);schoolFocusGroup=L.featureGroup().addTo(map);window.createFemaHazardOverlay?.(map,document);window.healthcareOverlayController=window.initHealthcareMap?.(map,document);window.winterOverlayController=window.initWinterHazardMap?.(map,document);window.createNFHLFloodOverlay?.(map,document);window.createTxWrapWHPOverlay?.(map,document);window.createNoaaStormHistory?.(document);window.createCrimeCityMap?.(map,document);map.on('movestart',claimMapViewport);map.on('moveend',()=>{drawSchools();drawAreaLabels()});if(window.ResizeObserver)new ResizeObserver(()=>syncMapSize()).observe(map.getContainer());fetch('./county-scopes.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{countyData=data;drawZip();drawList()}).catch(e=>{console.error('카운티 비교자료 오류:',e);el('heatScope').value='all';state.heatScope='all';el('heatScope').disabled=true;el('heatScopeStatus').textContent='카운티 자료를 불러오지 못해 전체 범위로 비교합니다. 새로고침해 주세요.';drawZip()});fetch('./data/dfw-mena-ancestry-2024.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(obj=>{menaData=obj;drawDetail()}).catch(e=>console.error('중동·아랍계 조상 자료 오류:',e));fetch('./dfw-race-2024.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(obj=>{for(const d of DATA)Object.assign(d,obj.data[d.z]||{});drawZip();drawDetail();window.refreshCandidateComparisons?.()}).catch(e=>{console.error('인구 구성 자료 오류:',e);el('mapLoadStatus').textContent='인구 구성 자료를 불러오지 못했습니다. 새로고침해 주세요.'});fetch('./zcta-place-names.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{placeNames=data;for(const d of DATA)if(d.name.endsWith(' County')&&data[d.z])d.name=data[d.z];updatePlaceOptions();renderData();drawAreaLabels()}).catch(e=>console.error('지역명 자료를 불러오지 못했습니다:',e));loadZipShapes();Promise.all([loadBoundaryData(),loadSchools().then(loadRatings).then(loadExtra2026SchoolLocations)]).then(()=>{addFriscoBoundarySchools();addProsperCurrentSchools();window.schoolBoundaryAuditReady=true;renderSchoolBoundaryCoverageAudit()});setTimeout(()=>map.invalidateSize(),250)}else{el('map').innerHTML='<div style="padding:30px;color:#53647a">미리보기 또는 브라우저에서 지도 라이브러리 로딩에 실패했습니다. GitHub Pages 정식 주소를 이용하거나 브라우저 연결을 확인하세요. 아래 인구 비교표와 기본 학교 목록은 사용할 수 있습니다.</div>';el('mapLoadStatus').textContent='Leaflet 지도를 로드하지 못했습니다.';state.schools=FALLBACK_SCHOOLS.filter(s=>!isRetiredCampus(s));drawList();}}
 
 function setBaseMap(choice, fallbackFrom=null){
  if(!map)return;
@@ -274,7 +279,7 @@ async function geocodeSchool(s){
 }
 
 function renderData(selectionOnly=false){showSavedCommute();const d=getZip();el('k-zip').textContent=d.z;el('k-area').textContent=displayPlace(d.name);el('k-korean').textContent=pct(d.korean);el('k-households').textContent=pct(d.childHH);el('k-income').textContent=money(d.income);drawDetail();if(selectionOnly)updateTableSelection();else drawTable()}
-function selectZip(z,fly=true){if(z!==state.zip)invalidateZipCommute({keepDestination:true});state.zip=z;el('zipSelect').value=z;state.selectedSchool=null;schoolFocusGroup?.clearLayers();renderSchoolZoneMapHint(null,null);renderData(true);drawZip();drawList();drawCommute();if(map){syncMapSize();const p=state.polys[z];if(p){map.stop();map.fitBounds(p.getBounds(),{maxZoom:12,padding:[18,18],animate:false})}else{map.stop();map.setView(getZip().ll,12,{animate:false})}}drawSchools();if(state.dest)drawSelectedRoute()}
+function selectZip(z,fly=true){claimMapViewport();if(z!==state.zip)invalidateZipCommute({keepDestination:true});state.zip=z;el('zipSelect').value=z;state.selectedSchool=null;schoolFocusGroup?.clearLayers();renderSchoolZoneMapHint(null,null);renderData(true);drawZip();drawList();drawCommute();if(map){syncMapSize();const p=state.polys[z];if(p){map.stop();map.fitBounds(p.getBounds(),{maxZoom:12,padding:[18,18],animate:false})}else{map.stop();map.setView(getZip().ll,12,{animate:false})}}drawSchools();if(state.dest)drawSelectedRoute()}
 // Middle Eastern / Arab ancestry (ACS B04006). Federal race tables count these
 // residents as White, so they are shown separately from the race breakdown.
 // Self-reported ancestry allows two answers per person: rows are never summed.
@@ -311,10 +316,13 @@ let html=`<h3>${escape(displayPlace(d.name))} <span style="font-size:12px;color:
 const stats=[['전체 인구',fmt(d.pop)+'명'],['중위 연령',d.age==null?'미공개':d.age+'세'],['18세 미만 인구',pct(d.kids)],['미성년자 동거 가구',pct(d.childHH)],['중위 가구 소득',money(d.income)]];html+=stats.map(([x,y])=>`<div class="statrow"><span>${x}</span><strong>${y}</strong></div>`).join('')+'</div>';const race=[['백인 (비히스패닉)',d.white],['흑인 (비히스패닉)',d.black],['아시아계 (비히스패닉)',d.asian],['히스패닉 (모든 인종)',d.hispanic],['복수 인종 (비히스패닉)',d.multiracial],['미 원주민 (비히스패닉)',d.native],['태평양 제도계 (비히스패닉)',d.pacific],['기타 인종 (비히스패닉)',d.other]];html+='<div style="font-size:12px;font-weight:800;margin:14px 0 6px">전체 인구 구성</div>'+race.map(([name,value])=>'<div class="race-row"><span>'+escape(name)+'</span><strong>'+pct(value)+'</strong></div>').join('')+'<div class="source">ACS 2020–2024 B03002; 반올림으로 합계가 100%와 다를 수 있습니다. 지도 아래 “선택 ZIP 상세”의 아시아계·중동계 세부 항목은 복수 응답을 포함하므로 위 구성과 직접 합산하지 않습니다.</div>';el('detailContent').innerHTML=html;if(map)zoneGroup?.clearLayers()}
 window.clearSchool=()=>{state.selectedSchool=null;schoolFocusGroup?.clearLayers();updateSelectedSchoolList();drawDetail();drawBoundary();drawSchools()};
 let tableSort={key:null,dir:1},tableSelectedRow=null;
-function drawTable(){const table=el('compareTable'),tbody=table.querySelector('tbody');let rows=DATA.slice();if(tableSort.key){const k=tableSort.key,dir=tableSort.dir;rows.sort((a,b)=>{const x=a[k],y=b[k];if(x==null||y==null)return x==null?(y==null?0:1):-1;return (typeof x==='number'?x-y:String(x).localeCompare(String(y)))*dir})}table.querySelectorAll('th').forEach(th=>{th.removeAttribute('aria-sort');if(th.dataset.sort===tableSort.key)th.setAttribute('aria-sort',tableSort.dir===1?'ascending':'descending')});tbody.innerHTML=rows.map(d=>`<tr data-z="${d.z}" class="${d.z===state.zip?'sel':''}"><td><b>${d.z}</b><br><span style="color:#718095">${escape(displayPlace(d.name))}</span></td><td>${pct(d.korean)}</td><td>${pct(d.indian)}</td><td>${pct(d.chinese)}</td><td>${pct(d.kids)}</td><td>${pct(d.childHH)}</td><td>${money(d.income)}</td></tr>`).join('');tableSelectedRow=tbody.querySelector('tr.sel')}
+function drawTable(){const table=el('compareTable'),tbody=table.querySelector('tbody');let rows=DATA.slice();if(tableSort.key){const k=tableSort.key,dir=tableSort.dir;rows.sort((a,b)=>{const x=a[k],y=b[k];if(x==null||y==null)return x==null?(y==null?0:1):-1;return (typeof x==='number'?x-y:String(x).localeCompare(String(y)))*dir})}table.querySelectorAll('th').forEach(th=>{th.removeAttribute('aria-sort');if(th.dataset.sort===tableSort.key)th.setAttribute('aria-sort',tableSort.dir===1?'ascending':'descending')});tbody.innerHTML=rows.map(d=>`<tr data-z="${d.z}" class="${d.z===state.zip?'sel':''}"><td><button type="button" class="mini-btn" data-zip-select="${d.z}" aria-current="${d.z===state.zip?'true':'false'}"><b>${d.z}</b><br><span>${escape(displayPlace(d.name))}</span></button></td><td>${pct(d.korean)}</td><td>${pct(d.indian)}</td><td>${pct(d.chinese)}</td><td>${pct(d.kids)}</td><td>${pct(d.childHH)}</td><td>${money(d.income)}</td></tr>`).join('');tableSelectedRow=tbody.querySelector('tr.sel')}
 
-function updateTableSelection(){const tbody=el('compareTable')?.querySelector('tbody');if(!tbody)return;const previous=tableSelectedRow&&tbody.contains(tableSelectedRow)?tableSelectedRow:tbody.querySelector('tr.sel');previous?.classList.remove('sel');const next=tbody.querySelector('tr[data-z="'+state.zip+'"]');next?.classList.add('sel');tableSelectedRow=next||null}
+function updateTableSelection(){const tbody=el('compareTable')?.querySelector('tbody');if(!tbody)return;const previous=tableSelectedRow&&tbody.contains(tableSelectedRow)?tableSelectedRow:tbody.querySelector('tr.sel');previous?.classList.remove('sel');previous?.querySelector?.('[data-zip-select]')?.setAttribute('aria-current','false');const next=tbody.querySelector('tr[data-z="'+state.zip+'"]');next?.classList.add('sel');next?.querySelector?.('[data-zip-select]')?.setAttribute('aria-current','true');tableSelectedRow=next||null}
+let viewportRevision=0;
+function claimMapViewport(){viewportRevision++}
 async function loadZipShapes(){
+  const viewportAtStart=viewportRevision;
   try{
     const res=await fetch('./dfw-zcta-boundaries.geojson',{cache:'default'});
     if(!res.ok)throw new Error('ZIP 데이터 HTTP '+res.status);
@@ -335,7 +343,7 @@ async function loadZipShapes(){
     }
     if(found.size!==DATA.length)throw new Error('ZIP 경계 '+found.size+'/'+DATA.length+'개');
     drawZip();drawList();
-    if(state.polys[state.zip])map.fitBounds(state.polys[state.zip].getBounds(),{padding:[25,25],maxZoom:12});
+    if(viewportAtStart===0&&viewportRevision===viewportAtStart&&state.polys[state.zip])map.fitBounds(state.polys[state.zip].getBounds(),{padding:[25,25],maxZoom:12});
     el('mapLoadStatus').innerHTML='<b>'+found.size+'개 ZIP 통계 경계 표시</b><br>DFW 11개 카운티와 주변 후보 ZIP. ZIP과 학교 배정구역은 다릅니다.';
   }catch(e){
     console.error('ZIP boundary loading failed:',e);
@@ -451,12 +459,10 @@ function focusSelectedSchoolCampus(s,fromList=false){
 }
 async function schoolClicked(s,fromList=false){
  if(!s)return;
- state.selectedSchool=s;
+ claimMapViewport();state.selectedSchool=s;
  updateSelectedSchoolList();
  // Preserve existing source/year warnings and user-selected boundary overlay.
- state.showOldZones=true;state.showHistoric=true;
- el('referenceBoundaryOverlay').checked=true;
- el('historicOverlay').checked=true;
+
  drawDetail();
  if(map){
   drawBoundary();
@@ -739,7 +745,10 @@ function convertMetrostudyZones(webmap,cfg=LEWISVILLE_FINDER){
  for(let i=0;i<ordered.length;i++){const child=ordered[i];const parents=ordered.slice(0,i).filter(p=>ringContains(child.r[0],p.r));if(parents.length){child.parent=parents.reduce((a,b)=>a.area<b.area?a:b);child.depth=child.parent.depth+1}}
  const polys=ordered.filter(r=>r.depth%2===0).map(r=>[r.r,...ordered.filter(h=>h.parent===r&&h.depth%2===1).map(h=>h.r)]);if(!polys.length)continue;
  const ids=campusIndex.get(level+'|'+String(name).trim().toUpperCase())||[];
- out.push({type:'Feature',properties:{school:name,gradeLevel:level,campusId:ids.length===1?ids[0]:null,sourceVintage:cfg.vintage(level)},geometry:{type:'MultiPolygon',coordinates:polys}});
+ const sourceYearRaw=f.attributes?.SCHL_YEAR??null;
+ const sourceYear=typeof sourceYearRaw==='string'&&/^\d{4}[-–]\d{2}$/.test(sourceYearRaw)?sourceYearRaw.replace('–','-'):null;
+ const yearVerified2627=cfg===MCKINNEY_FINDER&&level==='elementary'&&sourceYear==='2026-27';
+ out.push({type:'Feature',properties:{school:name,gradeLevel:level,campusId:ids.length===1?ids[0]:null,sourceVintage:cfg.vintage(level,sourceYear),sourceYearRaw,sourceYear,verifiedYear:yearVerified2627?'2026-27':null,yearVerified2627},geometry:{type:'MultiPolygon',coordinates:polys}});
  }}return out;
 }
 // External finders (Frisco, MetroStudy for Lewisville/McKinney, Plano ArcGIS)
@@ -749,24 +758,33 @@ function convertMetrostudyZones(webmap,cfg=LEWISVILLE_FINDER){
 const ZONE_FETCH_TIMEOUT_MS=window.__zoneFetchTimeoutMs||20000;
 const zoneFetch=(url,opt={})=>window.TxBoundedJson.requestJson(url,{...opt,timeoutMs:ZONE_FETCH_TIMEOUT_MS})
  .then(body=>({ok:true,status:200,json:async()=>body}));
-let zoneDatasetResults=[];
+let zoneDatasetResults=[],zoneDatasetMessages={};
 function notifySchoolSourceStatus(){
  if(window.dispatchEvent&&window.CustomEvent)window.dispatchEvent(new CustomEvent('schoolsourcechange'));
  if(state.selectedSchool)drawBoundary();
  drawSchools();drawList();
 }
-async function loadBoundaryData(){
+async function loadBoundaryData(onlyDistricts=null){
  // Keep the separately published official feeder chains independent of live GIS.
  // Missing/invalid reference never silently validates an address assignment.
+ const allowed=['FISD','LISD','PISD_LOOKUP','043907','PROSPER','AISD'];
+ const selectedKeys=new Set(Array.isArray(onlyDistricts)?onlyDistricts.filter(x=>allowed.includes(x)):allowed);
+ if(!selectedKeys.size)return;
  state.zoneReady=false;
- state.sourceStatus={CFB:{polygon:'error',feeder:'not-required',errorCode:'no-authorized-source'}};
- for(const district of ['FISD','LISD','PISD_LOOKUP','043907','PROSPER','AISD'])
-  state.sourceStatus[district]={polygon:'loading',feeder:district==='PISD_LOOKUP'?'loading':'not-required'};
- state.planoFeederReference=null;
- const feederPromise=window.TxBoundedJson.requestJson('./plano-official-feeder-reference-2026.json',{cache:'no-store'})
-  .then(j=>{if(!validPlanoFeederReference(j))throw Error('unexpected feeder source');state.planoFeederReference=j;state.sourceStatus.PISD_LOOKUP.feeder='ready'})
-  .catch(err=>{state.planoFeederReference=null;state.sourceStatus.PISD_LOOKUP.feeder='error';console.warn('Plano feeder source unavailable',err)})
-  .finally(()=>{if(state.zoneReady){renderBoundaryDatasetStatus();if(typeof refreshHomeSchools==='function')refreshHomeSchools()}notifySchoolSourceStatus()});
+ state.sourceStatus??={};state.sourceStatus.CFB??={polygon:'error',feeder:'not-required',errorCode:'no-authorized-source'};
+ if(!Array.isArray(onlyDistricts))zoneDatasetMessages={};
+ const revisions=new Map();
+ for(const district of selectedKeys){
+  const progress={polygon:'loading',feeder:district==='PISD_LOOKUP'?'loading':'not-required'};
+  state.sourceStatus[district]=progress;revisions.set(district,progress);
+  delete state.zoneLoadErrors[district];state.liveFinder[district]=false;
+ }
+ const feederRevision=revisions.get('PISD_LOOKUP');
+ if(feederRevision)state.planoFeederReference=null;
+ const feederPromise=feederRevision&&window.TxBoundedJson.requestJson('./plano-official-feeder-reference-2026.json',{cache:'no-store'})
+  .then(j=>{if(state.sourceStatus.PISD_LOOKUP!==feederRevision)return;if(!validPlanoFeederReference(j))throw Error('unexpected feeder source');state.planoFeederReference=j;state.sourceStatus.PISD_LOOKUP.feeder='ready'})
+  .catch(err=>{if(state.sourceStatus.PISD_LOOKUP!==feederRevision)return;state.planoFeederReference=null;state.sourceStatus.PISD_LOOKUP.feeder='error';console.warn('Plano feeder source unavailable',err)})
+  .finally(()=>{if(state.sourceStatus.PISD_LOOKUP!==feederRevision)return;if(state.zoneReady){renderBoundaryDatasetStatus();if(typeof refreshHomeSchools==='function')refreshHomeSchools()}notifySchoolSourceStatus()});
  const sources=[
   {district:'FISD',url:'https://static.friscoisd.org/js/json/school.borders.2627.json',label:'프리스코 2026–27 (공식 검색기)'},
   {district:'LISD',url:'https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/03c099e24d304c4fa0f4ce8a76c10062/data?f=json',label:'루이스빌 현재 공식 Finder 지도 (고등학교 2025–26 표기)'},
@@ -776,18 +794,20 @@ async function loadBoundaryData(){
 
   {district:'AISD',url:'./allen-attendance-historical.geojson',label:'Allen 2019·2023'}
  ];
- const results=await Promise.all(sources.map(async x=>{
+ const activeSources=sources.filter(x=>selectedKeys.has(x.district));
+ const results=await Promise.all(activeSources.map(async x=>{
+  const revision=revisions.get(x.district);
   try{
    if(x.district==='PISD_LOOKUP'){
      try{
-      const zones=await loadPlanoLiveFinder(zoneFetch);
+      const zones=await loadPlanoLiveFinder(zoneFetch);if(state.sourceStatus[x.district]!==revision)return null;
       state.zoneData.PISD_LOOKUP=zones;state.liveFinder.PISD_LOOKUP=true;
       return x.label+': '+zones.length+'개 · 공식 서비스 실시간 확인';
      }catch(err){console.warn('Plano official Finder live read failed; cached reference only',err)}
     }
     const r=await zoneFetch(x.url,{cache:'no-store'});
    if(!r.ok)throw Error('HTTP '+r.status);
-   const j=await r.json();
+   const j=await r.json();if(state.sourceStatus[x.district]!==revision)return null;
    if(x.district==='FISD')state.zoneData.FISD=convertFriscoZones(j);
    else if(x.district==='LISD'){state.zoneData.LISD=convertMetrostudyZones(j,LEWISVILLE_FINDER);if(state.zoneData.LISD.length<19)throw Error('Incomplete Lewisville Finder map');state.liveFinder.LISD=true;}
    else if(x.district==='043907'){
@@ -808,15 +828,18 @@ async function loadBoundaryData(){
     state.zoneData[x.district]=j.features.filter(f=>f.geometry&&f.properties?.school);
    }
    return x.label+': '+state.zoneData[x.district].length+'개'+(x.district==='PISD_LOOKUP'?' · 저장된 과거 참고본 (현재 공식 조회 실패)':'');
-  }catch(e){console.error('Zone data '+x.label,e);state.zoneData[x.district]=[];state.zoneLoadErrors[x.district]=e.message;return x.label+': 오류 ('+e.message+')'}finally{
+  }catch(e){if(state.sourceStatus[x.district]!==revision)return null;console.error('Zone data '+x.label,e);state.zoneData[x.district]=[];state.zoneLoadErrors[x.district]=e.message;return x.label+': 오류 ('+e.message+')'}finally{
+   if(state.sourceStatus[x.district]===revision){
    state.sourceStatus[x.district].polygon=state.zoneLoadErrors[x.district]?'error':'ready';
    if(state.zoneLoadErrors[x.district])state.sourceStatus[x.district].errorCode='source-unavailable';
    notifySchoolSourceStatus();
+   }
   }
  }));
  // Feeder is optional and separately bounded; completed polygons stay usable.
- state.assignmentLoadFailed=results.some(x=>x.includes(': 오류 ('));state.zoneReady=true;window.refreshCandidateComparisons?.();
- zoneDatasetResults=results;renderBoundaryDatasetStatus();
+ state.assignmentLoadFailed=Object.values(state.zoneLoadErrors).some(Boolean);state.zoneReady=Object.values(state.sourceStatus).every(x=>x.polygon!=='loading');window.refreshCandidateComparisons?.();
+ results.forEach((message,i)=>{const key=activeSources[i].district;if(message&&state.sourceStatus[key]===revisions.get(key))zoneDatasetMessages[key]=message});
+ zoneDatasetResults=sources.map(x=>zoneDatasetMessages[x.district]).filter(Boolean);renderBoundaryDatasetStatus();
  if(state.selectedSchool)drawBoundary();
  if(typeof refreshHomeSchools==='function')refreshHomeSchools();drawSchools();drawList();
 }
@@ -908,14 +931,15 @@ function drawBoundary(){
  const s=state.selectedSchool;
  if(!s){renderSchoolZoneMapHint(null,null);return;}
  const note=el('zoneNotice');
- const zoneDisplay=districtZoneDisplay(s.district,state.liveFinder);
+ const zoneDisplay=schoolDisplayMode(s);
  const officialYear=zoneDisplay==='official',finderLinked=zoneDisplay==='finder';
  const historical=!officialYear&&!finderLinked;
- if((historical&&!state.showOldZones)||(!historical&&!state.showHistoric)){
-   if(note)note.textContent='배정 경계선 표시를 직접 끈 상태입니다. 학교를 다시 선택하면 해당 경계선을 자동으로 표시합니다.';
+ const sourceFailed=!!state.zoneLoadErrors[districtZoneKey(s.district)];
+ if(!sourceFailed&&((historical&&!state.showOldZones)||(!historical&&!state.showHistoric))){
+   if(note)note.textContent='배정 경계선 표시를 직접 끈 상태입니다. 학교·학군 설정에서 해당 경계선 표시를 켜면 지도에 표시합니다.';
    return;
  }
- const geo=state.zoneData[districtZoneKey(s.district)]||[];
+ const geo=sourceFailed?[]:state.zoneData[districtZoneKey(s.district)]||[];
  const match=window.SchoolBoundaryMatch.findSchoolBoundary(s,geo,(name,district)=>scoreRecord(name,district));
  renderSchoolZoneMapHint(s,schoolZoneInfo(s));
  const found=match.features;
@@ -925,7 +949,7 @@ function drawBoundary(){
   if(layer.getBounds().isValid())map.fitBounds(layer.getBounds(),{padding:[28,28],maxZoom:13});
   const yrs=[...new Set(found.map(f=>f.properties?.sourceVintage).filter(Boolean))].join(', ');
   const grades=[...new Set(found.map(f=>f.properties?.grades).filter(Boolean))].join(', ');
-  if(note)note.innerHTML=s.district==='043907'?'<b>McKinney ISD 2026–27 공식 School Zone Finder 배정구역</b> · 2025년 12월 교육위원회 승인 지도 기준입니다. 5·8·12학년 기존 학교 유지(grandfather) 등 예외가 있으니 실제 주소는 학군 Finder로 확인하세요.':s.district==='PISD'&&finderLinked?'<b>Plano 현행 공식 Finder가 사용하는 배정선</b> · 원본 레이어는 2025–26 명칭입니다. 실제 주소·학년·호수는 Finder로 확인하세요.':s.district==='LISD'&&finderLinked?'<b>Lewisville 현행 공식 Finder가 사용하는 배정선</b> · 고등 레이어의 내부 연도는 2025–26. 실제 주소·아파트 호수는 Finder로 확인하세요.':s.district==='PROSPER'?'<b>Prosper 공식 검색기 배정구역 2026–27 · '+escape(yrs)+'</b> · 초등 20개, 중등 7개, 고등 4개 전체 구역 원본을 학군 검색기 좌표와 교차 검증했습니다. 녹색 도형은 배정구역 참고이며 실제 집 주소·학년·특수 프로그램/예외·등록 자격은 공식 Prosper ISD 검색기로 확인하세요.':current?'<b>Frisco 공식 검색기 경계 '+escape(yrs)+'</b> · 녹색 도형, 학년 '+escape(grades)+(grades.includes(',')?' (여러 학년의 구역을 함께 표시)':'')+'. 배정 예외와 정원 제한이 있을 수 있으므로 학군에 최종 확인하세요.':'<b style="color:#ab531b">과거 GIS 경계 '+escape(yrs)+' (현재 배정 보장 X)</b> · 주황색 점선 '+found.length+'개 도형 표시. 실제 2026–27 배정은 해당 주소로 공식 학군 검색에서 확인하세요.';
+  if(note)note.innerHTML=s.district==='043907'&&officialYear?'<b>McKinney ISD 2026–27 공식 School Zone Finder 배정구역</b> · 2025년 12월 교육위원회 승인 지도 기준입니다. 5·8·12학년 기존 학교 유지(grandfather) 등 예외가 있으니 실제 주소는 학군 Finder로 확인하세요.':s.district==='043907'?'<b>McKinney 공식 Finder 참고 GIS</b> · '+escape(yrs)+' · 중·고등학교의 2026–27 현행성은 별도 확인이 필요합니다. 실제 주소와 학년은 공식 Finder에서 확인하세요.':s.district==='PISD'&&finderLinked?'<b>Plano 현행 공식 Finder가 사용하는 배정선</b> · 원본 레이어는 2025–26 명칭입니다. 실제 주소·학년·호수는 Finder로 확인하세요.':s.district==='LISD'&&finderLinked?'<b>Lewisville 현행 공식 Finder가 사용하는 배정선</b> · 고등 레이어의 내부 연도는 2025–26. 실제 주소·아파트 호수는 Finder로 확인하세요.':s.district==='PROSPER'?'<b>Prosper 공식 검색기 배정구역 2026–27 · '+escape(yrs)+'</b> · 초등 20개, 중등 7개, 고등 4개 전체 구역 원본을 학군 검색기 좌표와 교차 검증했습니다. 녹색 도형은 배정구역 참고이며 실제 집 주소·학년·특수 프로그램/예외·등록 자격은 공식 Prosper ISD 검색기로 확인하세요.':current?'<b>Frisco 공식 검색기 경계 '+escape(yrs)+'</b> · 녹색 도형, 학년 '+escape(grades)+(grades.includes(',')?' (여러 학년의 구역을 함께 표시)':'')+'. 배정 예외와 정원 제한이 있을 수 있으므로 학군에 최종 확인하세요.':'<b style="color:#ab531b">과거 GIS 경계 '+escape(yrs)+' (현재 배정 보장 X)</b> · 주황색 점선 '+found.length+'개 도형 표시. 실제 2026–27 배정은 해당 주소로 공식 학군 검색에서 확인하세요.';
   if(note&&s.district==='FISD'&&window.SchoolBoundaryMatch.boundarySchoolKey(s.name)==='isbell'){
    const gradeLabels=[...new Set(found.map(f=>f.properties?.grades).filter(Boolean))];
    const explain=document.createElement('small');explain.className='source boundary-footnote';

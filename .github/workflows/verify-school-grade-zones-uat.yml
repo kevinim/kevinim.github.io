@@ -6,6 +6,15 @@ on:
       - 'school-grade-uat.html'
       - 'features/school-grade-zones-uat*'
       - 'tests/school-grade-zones-uat.test.cjs'
+      - 'tests/school-grade-data-states.test.cjs'
+      - 'tests/school-grade-status-ui.test.cjs'
+      - 'tests/school-source-currency.test.cjs'
+      - 'tests/map-viewport-ownership.test.cjs'
+      - 'tests/address-ime-controls.test.cjs'
+      - 'scripts/test-review-controls-browser.cjs'
+      - 'texas-address-suggest.js'
+      - 'district-registry.js'
+      - 'dashboard-main.js'
       - 'scripts/test-school-grade-zones-browser.cjs'
       - '.github/workflows/verify-school-grade-zones-uat.yml'
   push:
@@ -14,6 +23,15 @@ on:
       - 'school-grade-uat.html'
       - 'features/school-grade-zones-uat*'
       - 'tests/school-grade-zones-uat.test.cjs'
+      - 'tests/school-grade-data-states.test.cjs'
+      - 'tests/school-grade-status-ui.test.cjs'
+      - 'tests/school-source-currency.test.cjs'
+      - 'tests/map-viewport-ownership.test.cjs'
+      - 'tests/address-ime-controls.test.cjs'
+      - 'scripts/test-review-controls-browser.cjs'
+      - 'texas-address-suggest.js'
+      - 'district-registry.js'
+      - 'dashboard-main.js'
       - 'scripts/test-school-grade-zones-browser.cjs'
       - '.github/workflows/verify-school-grade-zones-uat.yml'
 concurrency:
@@ -35,7 +53,7 @@ jobs:
       - run: |
           node --check features/school-grade-zones-uat-core.js
           node --check features/school-grade-zones-uat.js
-          node --test tests/school-grade-zones-uat.test.cjs
+          node --test tests/school-grade-zones-uat.test.cjs tests/school-grade-data-states.test.cjs tests/school-grade-status-ui.test.cjs tests/school-source-currency.test.cjs tests/map-viewport-ownership.test.cjs tests/address-ime-controls.test.cjs
   browser:
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -60,4 +78,13 @@ jobs:
       - name: Browser checks with mobile and desktop
         env:
           NODE_PATH: school-grade-browser-tmp/node_modules
-        run: node scripts/test-school-grade-zones-browser.cjs
+        run: |
+          node scripts/test-school-grade-zones-browser.cjs
+          node scripts/test-review-controls-browser.cjs
+      - name: Attach keyboard and zoom layout screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: tx-review-control-layouts
+          path: artifacts/review-controls/*.png
+          if-no-files-found: warn

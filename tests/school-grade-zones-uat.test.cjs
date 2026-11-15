@@ -7,7 +7,7 @@ const clipper=require('../features/vendor/polygon-clipping-0.15.7.min.js');
 const rect=(school,level,kind='043907',id='043907101')=>({type:'Feature',
  properties:{school,gradeLevel:level,campusId:id,sourceDistrict:kind,
  sourceVintage:kind==='043907'?'2026–27 공식 School Zone Finder':kind==='AISD'?'2023':'공식 검색기 연결 · 학년도 미확인',
- current:kind==='AISD'?false:undefined},
+ verifiedYear:kind==='043907'?'2026-27':null,yearVerified2627:kind==='043907',current:kind==='AISD'?false:undefined},
  geometry:{type:'Polygon',coordinates:[[[-96.8,33.1],[-96.7,33.1],[-96.7,33.2],[-96.8,33.1]]]}});
 const record={id:'043907101',district:'043907',name:'Test Elementary School',officialName:'TEST EL',rating:'A',score:95};
 test('A only, B+, C+ thresholds never promote D/F or Not Rated',()=>{
@@ -167,3 +167,4 @@ test('Preview is noindex and isolated from production, with strict source/assign
  assert.match(js,/참고 경계도 표시/);
  assert.doesNotMatch(js,/localStorage|sessionStorage|XMLHttpRequest|fetch\s*\(/);
 });
+

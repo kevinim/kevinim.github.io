@@ -48,7 +48,7 @@ const base=process.env.SITE_URL||'http://127.0.0.1:8765/';
    // Allen is historical: default render must never silently paint old GIS as current.
    await page.locator('#schoolGradeCity').selectOption('allen');
    let status=await page.locator('#schoolGradeZoneStatus').innerText();
-   assert.match(status,/선택한 조건과 검증 상태에서 표시할 학교 경계가 없습니다/);
+   assert.ok(['empty','partial'].includes(await page.locator('#schoolGradeZoneStatus').getAttribute('data-state')),'No visible polygons must remain distinct from an incomplete TEA join');
    assert.match(await page.locator('#schoolGradeZoneDisclaimer').innerText(),/2019–23/);
    assert.equal((await page.evaluate(()=>window.__schoolGradeZonesUatDebug)).drawn,0);
    await page.locator('#schoolGradeIncludeReference').check();

@@ -11,12 +11,14 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
+const {providerAllowance}=require('./summarize-tx-map-performance.cjs');
 const {chromium}=require('playwright');
 const BASELINE=process.env.TX_PERF_BASELINE_URL||'http://127.0.0.1:8766/';
 const CANDIDATE=process.env.TX_PERF_CANDIDATE_URL||'http://127.0.0.1:8765/';
 const OUT=path.resolve(process.env.TX_PERF_OUTPUT||'artifacts/performance/tx-map-load.json');
 const VIEWPORTS=[{name:'mobile',width:390,height:844},{name:'desktop',width:1366,height:900}];
 const waitMs=90000;
+const providerAdded=providerAllowance(fs.readFileSync('index.html','utf8'),fs.readFileSync(path.join(process.env.TX_PERF_BASELINE_DIRECTORY||'tx-perf-baseline-tmp','index.html'),'utf8'));
 function local(url){
  const parsed=new URL(url);
  return ['127.0.0.1','localhost'].includes(parsed.hostname);
@@ -134,9 +136,9 @@ function percent(base,next){
    // a scientifically stable performance experiment and should not gate small deltas.
    assert.ok(after.coreReadyMs<Math.max(before.coreReadyMs*2,5000),
     'Critical map readiness >2x baseline or 5s: '+JSON.stringify(row));
-   // The audited no-key provider guard is one additional same-origin script;
+   // Only allow the audited guard if it is actually new relative to this baseline;
    // keep the existing +5 budget otherwise, and do not permit arbitrary addons.
-   const providerAdded=fs.readFileSync('index.html','utf8').includes('<script src="./features/commute/provider-requests.js?v=2"></script>')?1:0;
+
    assert.ok(after.resourceRequests<=before.resourceRequests+5+providerAdded,
     'Unexpected extra first-party asset requests beyond approved provider guard: '+JSON.stringify(row));
    assert.ok(after.transferBytes<=before.transferBytes*1.2+262144,
@@ -150,7 +152,7 @@ function percent(base,next){
   }
   const output={scope:'Texas relocation / Area Intelligence (not job-search)',
    measuredAt:new Date().toISOString(),environment:'GitHub Actions Linux Chromium, local HTTP',
-   methodology:'1 cold and 1 warm navigation per viewport and revision; third-party APIs offline except pinned Leaflet CDN; no real address searches',
+   methodology:'One cold and one warm navigation per viewport/revision in this repetition; CI repeats five times and reports medians/ranges; third-party APIs offline except pinned Leaflet CDN; no real address searches',
    limitations:['Single-run results are directional, not statistical proof',
      'Local HTTP hosting does not reproduce GitHub Pages CDN/cache headers',
      'Core readiness excludes live official Finder boundary verification',

@@ -253,9 +253,10 @@ function districtPolygonStatus(code,liveFinder){
 }
 // Map display class for a school's zone: 'official' (2026-27 verified),
 // 'finder' (live official finder, layer year may differ) or 'historical'.
-function districtZoneDisplay(code,liveFinder){
+function districtZoneDisplay(code,liveFinder,level=null,evidence=null){
  const d=DISTRICT_REGISTRY[code];if(!d)return 'historical';
  const live=!!liveFinder?.[d.zoneKey];
+ if(code==='043907'&&live)return level==='elementary'&&evidence?.verifiedYear==='2026-27'?'official':'finder';
  if(d.currency==='always'||(d.currency==='live'&&live))return 'official';
  if(d.currency==='finder'&&live)return 'finder';
  return 'historical';

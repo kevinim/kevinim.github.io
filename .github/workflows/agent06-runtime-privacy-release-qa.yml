@@ -9,6 +9,10 @@ on:
       - '.github/workflows/agent06-runtime-privacy-release-qa.yml'
       - 'index.html'
       - 'reviewed.html'
+      - 'dashboard-main.js'
+      - 'features/commute/provider-requests.js'
+      - 'features/commute/workplace-destinations.js'
+      - 'tests/snapshot-workflow-security.test.cjs'
       - 'home-lookup-v2.js'
       - 'home-lookup.js'
       - 'texas-address-suggest.js'
@@ -38,6 +42,7 @@ jobs:
           node-version: '22'
       - name: Negative cases and current runtime audit
         run: |
+          node --test tests/snapshot-workflow-security.test.cjs
           node --test tests/audit-runtime-privacy-assets.test.cjs
           node scripts/audit-runtime-privacy-assets.cjs
       - name: Existing security, CSP and provider contract regression

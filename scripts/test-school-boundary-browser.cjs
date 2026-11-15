@@ -58,8 +58,8 @@ mkdirSync(out,{recursive:true});
   });
   assert.ok((await page.locator('#zoneNotice').innerText()).includes('Isbell 세부 학년 주의'));
 
-  // Test that selecting a school auto-enables the previously disabled historic
-  // map checkbox and renders a historical polygon instead of an instructive notice.
+  // Campus selection preserves opt-outs; historical GIS requires an explicit
+  // reference-overlay choice before its polygons may render.
   const allen=await page.evaluate(()=>{
    const report=window.getSchoolBoundaryCoverage();
    const matches=state.schools.filter(s=>s.district==='AISD'&&
@@ -72,9 +72,11 @@ mkdirSync(out,{recursive:true});
     const s=state.schools.find(x=>x.district==='AISD'&&x.name===name);
     await schoolClicked(s);
    },allen[0].name);
-   assert.equal(await page.locator('#referenceBoundaryOverlay').isChecked(),true);
+   assert.equal(await page.locator('#referenceBoundaryOverlay').isChecked(),false);
+   assert.equal(await page.evaluate(()=>zoneGroup.getLayers().length),0,'A campus click cannot override the reference boundary opt-out');
+   await page.locator('#referenceBoundaryOverlay').check();
    const stateAfter=await page.evaluate(()=>({layers:zoneGroup.getLayers().length,note:document.getElementById('zoneNotice').innerText}));
-   assert.ok(stateAfter.layers>0,'old Allen attendance polygon must be drawn automatically on school selection');
+   assert.ok(stateAfter.layers>0,'old Allen attendance polygon renders after explicit reference opt-in');
    assert.ok(/과거 GIS 경계/.test(stateAfter.note),'explicit 2019/2023 vintage disclaimer must remain');
   }
   // A school whose campus pin is missing must show its verified polygon
