@@ -103,6 +103,7 @@ function clearIrvingReference(){
 }
 function clearDallasReference(){if(dallasReferenceLayer&&map)map.removeLayer(dallasReferenceLayer);dallasReferenceLayer=null;}
 function clearHome(){
+  invalidateZipCommute();
   clearIrvingReference();clearDallasReference();
   homeVersion++;homeRequest?.abort();homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;home=null;homeCandidates=[];
   if(map&&homeMarker)map.removeLayer(homeMarker);homeMarker=null;
@@ -412,12 +413,12 @@ function wireOfficialReviewPanel(item){
  });
 }
 
-function refreshHomeOffice(){if(!home)return;homeVersion++;homeRouteRequest?.abort();if(homeRouteLayer)homeRouteLayer.clearLayers();renderHome()}
-function refreshHomeSchools(){if(home){homeVersion++;homeRouteRequest?.abort();renderHome();drawSchools()}}
+function refreshHomeOffice(){if(!home)return;invalidateZipCommute();homeVersion++;homeRouteRequest?.abort();if(homeRouteLayer)homeRouteLayer.clearLayers();renderHome()}
+function refreshHomeSchools(){if(home){invalidateZipCommute();homeVersion++;homeRouteRequest?.abort();renderHome();drawSchools()}}
 function useHomeCandidate(candidate){
   clearIrvingReference();clearDallasReference();
   if(!map){el('homeStatus').textContent='지도가 아직 준비되지 않았습니다. 잠시 후 주소 검색을 다시 눌러 주세요.';return false}
-  homeVersion++;homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;
+  invalidateZipCommute();homeVersion++;homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;
   home={address:candidate.address,typedAddress:candidate.savedTypedAddress||el('homeAddress').value.trim(),ll:[candidate.location.y,candidate.location.x],geocodeQuality:candidate.savedGeocodeQuality||assessResidentialGeocode(el('homeAddress').value.trim(),candidate),parcel:candidate.savedParcel||{status:'idle'},officialReview:candidate.savedOfficialReview||null,officialDraft:candidate.savedOfficialDraft||null};
   // Fetch the static jurisdiction layer only for a searched Carrollton-area
   // address. Never include coordinates/address in the network URL; no stored PII.
@@ -501,16 +502,19 @@ async function searchHome(event,suggestion=null){
 }
 async function calculateHomeCommute(){
   if(!home)return;const office=el('destination').value.trim();if(!office)return;
-  homeRouteRequest?.abort();homeRouteRequest=new AbortController();const version=++homeVersion,button=el('homeRoute'),status=el('homeRouteStatus');
+  invalidateZipCommute();homeRouteRequest?.abort();homeRouteRequest=new AbortController();
+  const origin=home,originLL=[...home.ll],operation=window.TxCommuteOperations.begin({mode:'home',address:office,zip:state.zip});
+  const version=++homeVersion,button=el('homeRoute'),status=el('homeRouteStatus');
+  const isCurrent=()=>version===homeVersion&&home===origin&&window.TxCommuteOperations.isCurrent(operation)&&office===el('destination').value.trim();
   button.disabled=true;status.textContent='회사 주소와 도로 경로를 확인 중입니다…';
   try{
-    const hits=await geocodeAddress(office,homeRouteRequest.signal);if(!hits.length)throw Error('회사 주소를 찾지 못했습니다.');
-    const dest=hits[0].location;const coords=home.ll[1]+','+home.ll[0]+';'+dest.x+','+dest.y;
-    const data=await window.TxProviderRequests.requestJson('osrm','https://router.project-osrm.org/route/v1/driving/'+coords+'?overview=full&geometries=geojson',{signal:homeRouteRequest.signal});
+    const hits=await geocodeAddress(office,operation.signal);if(!isCurrent())return;if(!hits.length)throw Error('회사 주소를 찾지 못했습니다.');
+    const dest=hits[0].location;const coords=originLL[1]+','+originLL[0]+';'+dest.x+','+dest.y;
+    const data=await window.TxProviderRequests.requestJson('osrm','https://router.project-osrm.org/route/v1/driving/'+coords+'?overview=full&geometries=geojson',{signal:operation.signal});if(!isCurrent())return;
     const seconds=data.routes?.[0]?.duration;if(!Number.isFinite(seconds))throw Error('경로를 찾지 못했습니다.');
-    if(version===homeVersion){routeRequestSeq++;if(routeGroup)routeGroup.clearLayers();if(targetMarker){map.removeLayer(targetMarker);targetMarker=null}state.dest=null;const line=data.routes?.[0]?.geometry;if(!line?.coordinates?.length)throw Error('경로 도형을 찾지 못했습니다.');if(!homeRouteLayer)homeRouteLayer=L.layerGroup().addTo(map);homeRouteLayer.clearLayers();const path=L.geoJSON(line,{style:{color:'#1757df',weight:5,opacity:.9}}).addTo(homeRouteLayer);const middle=line.coordinates[Math.floor(line.coordinates.length/2)];L.marker([middle[1],middle[0]],{interactive:false,icon:L.divIcon({className:'',html:'<span class="route-label">집 → 회사 '+Math.round(seconds/60)+'분</span>',iconSize:[130,30]})}).addTo(homeRouteLayer);L.marker([dest.y,dest.x],{icon:window.workDestinationIcon(L)}).addTo(homeRouteLayer).bindPopup('목적지: '+escape(office));map.fitBounds(path.getBounds(),{padding:[35,35],maxZoom:13});window.noteCommuteRouteDistance?.(data.routes?.[0]?.distance,'home');status.textContent='집 → 회사 약 '+Math.round(seconds/60)+'분 · OSRM 도로망 추정, 교통량 미반영. 실제 출근 시간은 Google Maps에서 확인하세요.';}
-  }catch(error){if(error.name!=='AbortError'&&version===homeVersion)status.textContent='도로망 계산 실패: '+error.message+' Google Maps 링크로 확인하세요.'}
-  finally{if(version===homeVersion&&el('homeRoute'))el('homeRoute').disabled=false}
+    if(isCurrent()){routeRequestSeq++;if(routeGroup)routeGroup.clearLayers();if(targetMarker){map.removeLayer(targetMarker);targetMarker=null}state.dest=null;const line=data.routes?.[0]?.geometry;if(!line?.coordinates?.length)throw Error('경로 도형을 찾지 못했습니다.');if(!homeRouteLayer)homeRouteLayer=L.layerGroup().addTo(map);homeRouteLayer.clearLayers();const path=L.geoJSON(line,{style:{color:'#1757df',weight:5,opacity:.9}}).addTo(homeRouteLayer);const middle=line.coordinates[Math.floor(line.coordinates.length/2)];L.marker([middle[1],middle[0]],{interactive:false,icon:L.divIcon({className:'',html:'<span class="route-label">집 → 회사 '+Math.round(seconds/60)+'분</span>',iconSize:[130,30]})}).addTo(homeRouteLayer);L.marker([dest.y,dest.x],{icon:window.workDestinationIcon(L)}).addTo(homeRouteLayer).bindPopup('목적지: '+escape(office));map.fitBounds(path.getBounds(),{padding:[35,35],maxZoom:13});window.noteCommuteRouteDistance?.(data.routes?.[0]?.distance,'home');status.textContent='집 → 회사 약 '+Math.round(seconds/60)+'분 · OSRM 도로망 추정, 교통량 미반영. 실제 출근 시간은 Google Maps에서 확인하세요.';}
+  }catch(error){if(error.name!=='AbortError'&&isCurrent())status.textContent='도로망 계산 실패: '+error.message+' Google Maps 링크로 확인하세요.'}
+  finally{if(isCurrent()&&el('homeRoute'))el('homeRoute').disabled=false}
 }
 document.addEventListener('DOMContentLoaded',()=>{
   homeAutocomplete=attachTexasAddressSuggestions(el('homeAddress'),el('homeSuggestions'),item=>searchHome({preventDefault(){}},item));
