@@ -16,7 +16,7 @@ const html=fs.readFileSync(path.join(ROOT,'reviewed.html'),'utf8');
 const guard=fs.readFileSync(path.join(ROOT,'features/geojson-upload-guard.js'),'utf8');
 const bootstrap=fs.readFileSync(path.join(ROOT,'features/reviewed-bootstrap.js'),'utf8');
 assert.ok(html.includes('src="./features/geojson-upload-guard.js?v=1"'),'reviewed.html must load GeoJSON validator');
-assert.ok(html.includes('src="./features/reviewed-bootstrap.js?v=1"'),'reviewed.html must load bootstrap');
+assert.ok(html.includes('src="./features/reviewed-bootstrap.js?v=3"'),'reviewed.html must load bootstrap');
 assert.ok(bootstrap.includes('async function loadBoundaryFile'),'must test actual uploader');
 const payload='<img src=x onerror="window.__gisQaExecuted=1">';
 const second='<svg onload="window.__gisQaExecuted=2"></svg>';

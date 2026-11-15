@@ -4,6 +4,8 @@
 .sg-heading h2{margin:2px 0 0;font-size:16px;line-height:1.4}
 .sg-eyebrow{font-size:10px;font-weight:800;color:#3e70b2;letter-spacing:.07em}
 .sg-badge{font-size:10px;white-space:nowrap;background:#e3edfd;color:#315a98;padding:5px 9px;border-radius:22px}
+.sg-marker-scope-note{font-size:11px;line-height:1.65;color:#31547c;border-left:3px solid #6997cb;background:#eaf3ff;padding:8px 10px;border-radius:0 6px 6px 0;margin:9px 0 12px;overflow-wrap:anywhere}
+html[data-theme="dark"] .sg-marker-scope-note{color:#d0e4fc;background:#223c5a;border-left-color:#8db8eb}
 .sg-desc{font-size:11px;color:#516b8a;line-height:1.55;margin:8px 0 11px}
 .sg-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .sg-filters>label{font-size:11px;font-weight:750;color:#3c577d;display:flex;flex-direction:column;gap:5px;min-width:0}

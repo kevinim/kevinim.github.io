@@ -8,10 +8,11 @@ const {
 const SHA='a'.repeat(40),MAIN='b'.repeat(40);
 function fixture(overrides={}){
  return {id:43098840916,status:'queued',event:'pull_request',
-  head_sha:SHA,created_at:'2026-11-11T20:55:28Z',
+  head_sha:SHA,head_branch:'closed-incident-branch',created_at:'2026-11-11T20:55:28Z',
   updated_at:'2026-11-11T20:55:28Z',...overrides};
 }
 const settings={mainSha:MAIN,openHeads:new Set(),now:Date.parse('2026-11-14T01:00:00Z')};
+function withPreflight(request){return (path,opts)=>path==='/branches/main'?Promise.resolve({commit:{sha:MAIN}}):path.startsWith('/pulls?')?Promise.resolve([]):request(path,opts)}
 test('only exact incident window, unopened PR, aged queued executions qualify',()=>{
  assert.equal(candidate(fixture(),settings),true);
  for(const patch of [
@@ -85,7 +86,7 @@ test('cancel requires confirmation, bounded batch, and live revalidation',async(
  };
  await assert.rejects(()=>cancelBatch(req,[fixture()],settings),/explicit_confirmation_required/);
  await assert.rejects(()=>cancelBatch(req,[fixture()],settings,{confirm:true,limit:MAX_BATCH+1}),/invalid_batch_size/);
- const done=await cancelBatch(req,[fixture()],settings,{confirm:true,limit:1});
+ const done=await cancelBatch(withPreflight(req),[fixture()],settings,{confirm:true,limit:1});
  assert.deepEqual(done,[{runId:43098840916,result:'cancel_accepted'}]);
  assert.deepEqual(sequence.map(x=>x.method),['GET','GET','POST']);
  assert.ok(!sequence.some(x=>/force-cancel|delete/.test(x.path)));
@@ -100,7 +101,7 @@ test('409 from orphaned queue stops immediately, never brute-forces or force-can
   const id=+path.split('/').at(-1);
   return fixture({id});
  };
- const result=await cancelBatch(req,ids.map(id=>fixture({id})),settings,{confirm:true,limit:3});
+ const result=await cancelBatch(withPreflight(req),ids.map(id=>fixture({id})),settings,{confirm:true,limit:3});
  assert.deepEqual(result,[{runId:ids[0],result:'github_409_orphan_run'}]);
  assert.equal(calls.filter(x=>x.endsWith('/cancel')).length,1);
  assert.ok(!calls.some(x=>x.includes('force-cancel')));
@@ -109,9 +110,40 @@ test('cancelling closed-PR incident runs never attempts current main or open PR 
  const runs=[fixture(),fixture({id:9,head_sha:MAIN}),fixture({id:10,event:'push'})];
  const eligible=plan(runs,settings).eligible;
  assert.deepEqual(eligible.map(x=>x.id),[43098840916]);
- const result=await cancelBatch(async path=>{
+ const result=await cancelBatch(withPreflight(async path=>{
   if(path.includes('/jobs?'))return {total_count:1,jobs:[{}]};
   return fixture({id:43098840916});
- },eligible,settings,{confirm:true,limit:1});
+ }),eligible,settings,{confirm:true,limit:1});
  assert.equal(result[0].result,'has_jobs_skip');
 });
+test('unknown run branch or freshness metadata cannot qualify for cancellation',()=>{
+ for(const patch of [{head_branch:undefined},{head_branch:''},{head_branch:'main'},{updated_at:undefined},{updated_at:'invalid'},{updated_at:'2026-11-11T20:00:00Z'}])
+  assert.equal(candidate(fixture(patch),settings),false,JSON.stringify(patch));
+});
+test('preflight rejects incomplete PR protection metadata and incomplete pagination',async()=>{
+ for(const pulls of [[{}],[{head:{}}],[{head:{sha:SHA,ref:''}}],[{head:{sha:'invalid',ref:'open'}}],Array.from({length:101},()=>({head:{sha:SHA,ref:'open'}}))])
+  await assert.rejects(()=>preflight(async path=>path==='/branches/main'?{commit:{sha:MAIN}}:pulls));
+});
+test('new main or open-PR protection is refreshed after jobs verification before every POST',async()=>{
+ for(const mode of ['main','open-head','open-branch']){
+  const calls=[];const req=async(path,opt={})=>{
+   calls.push({path,method:opt.method||'GET'});
+   if(path==='/branches/main')return {commit:{sha:mode==='main'?SHA:MAIN}};
+   if(path.startsWith('/pulls?'))return mode==='main'?[]:[{head:{sha:mode==='open-head'?SHA:'c'.repeat(40),ref:mode==='open-branch'?'closed-incident-branch':'new-open'}}];
+   if(path.includes('/jobs?'))return {total_count:0,jobs:[]};
+   if(path.endsWith('/cancel'))throw Error('must never cancel a newly protected run');
+   return fixture();
+  };
+  const result=await cancelBatch(req,[fixture()],settings,{confirm:true,limit:1});
+  assert.equal(result[0].result,'protected_skip');assert.equal(calls.some(x=>x.method==='POST'),false);
+  assert.ok(calls.findIndex(x=>x.path.includes('/jobs?'))<calls.findIndex(x=>x.path==='/branches/main'));
+ }
+});
+test('a failed protection refresh stops the batch without a cancellation POST',async()=>{
+ let posts=0;await assert.rejects(()=>cancelBatch(async(path,opt={})=>{
+  if(opt.method==='POST'){posts++;return {accepted:true}}
+  if(path==='/branches/main')throw Error('protection unavailable');
+  return path.includes('/jobs?')?{total_count:0,jobs:[]}:fixture();
+ },[fixture()],settings,{confirm:true,limit:1}),/protection unavailable/);assert.equal(posts,0);
+});
+

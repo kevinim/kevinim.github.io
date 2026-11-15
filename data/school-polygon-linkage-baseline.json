@@ -40,7 +40,7 @@
       "mode": "resident-finder-only-no-dashboard-polygons"
     },
     "043907": {
-      "minimumLoaded": 30,
+      "minimumLoaded": 27,
       "minimumLinked": 25,
       "mode": "live-official-finder-only"
     }
@@ -54,6 +54,23 @@
     "Minima are the actual app linkage counts observed on the reference CI run, not official district school totals.",
     "An official third-party service outage makes the comparison INCONCLUSIVE for affected districts; it must not become a false source-absence conclusion.",
     "A non-outage drop in loaded school count or matched polygons requires review, and intended district boundary updates must explicitly revise the baseline with fresh evidence.",
-    "CFB has no configured school-specific GIS polygon export; resident finder functionality is independent."
+    "CFB has no configured school-specific GIS polygon export; resident finder functionality is independent.",
+    "McKinney minimumLoaded was reduced by exactly three 2026-27 officially repurposed campuses on 2026-11-14; this does not relax minimumLinked, source vintage, render or campus match gates."
+  ],
+  "revisions": [
+    {
+      "date": "2026-11-14",
+      "district": "043907",
+      "change": "Reviewed minimum active loaded directory 30 -> 27 (exactly three official 2026-27 repurposed campuses)",
+      "campusIds": [
+        "043907113",
+        "043907117",
+        "043907116"
+      ],
+      "source": "https://www.mckinneyisd.net/article/2532090",
+      "independentCityEvidence": "https://mckinney.legistar.com/LegislationDetail.aspx?GUID=1F62BDE2-FDDB-4D1D-A677-E8B8A4AD69C0&ID=8063854&Options=&Search=",
+      "unchangedMinimumLinked": 25,
+      "reason": "Remove inactive school directory markers without reducing required active-school polygon coverage or render QA."
+    }
   ]
 }

@@ -58,8 +58,8 @@ mkdirSync(out,{recursive:true});
   });
   assert.ok((await page.locator('#zoneNotice').innerText()).includes('Isbell 세부 학년 주의'));
 
-  // Test that selecting a school auto-enables the previously disabled historic
-  // map checkbox and renders a historical polygon instead of an instructive notice.
+  // Campus selection preserves opt-outs; historical GIS requires an explicit
+  // reference-overlay choice before its polygons may render.
   const allen=await page.evaluate(()=>{
    const report=window.getSchoolBoundaryCoverage();
    const matches=state.schools.filter(s=>s.district==='AISD'&&
@@ -72,9 +72,11 @@ mkdirSync(out,{recursive:true});
     const s=state.schools.find(x=>x.district==='AISD'&&x.name===name);
     await schoolClicked(s);
    },allen[0].name);
-   assert.equal(await page.locator('#referenceBoundaryOverlay').isChecked(),true);
+   assert.equal(await page.locator('#referenceBoundaryOverlay').isChecked(),false);
+   assert.equal(await page.evaluate(()=>zoneGroup.getLayers().length),0,'A campus click cannot override the reference boundary opt-out');
+   await page.locator('#referenceBoundaryOverlay').check();
    const stateAfter=await page.evaluate(()=>({layers:zoneGroup.getLayers().length,note:document.getElementById('zoneNotice').innerText}));
-   assert.ok(stateAfter.layers>0,'old Allen attendance polygon must be drawn automatically on school selection');
+   assert.ok(stateAfter.layers>0,'old Allen attendance polygon renders after explicit reference opt-in');
    assert.ok(/과거 GIS 경계/.test(stateAfter.note),'explicit 2019/2023 vintage disclaimer must remain');
   }
   // A school whose campus pin is missing must show its verified polygon
@@ -227,13 +229,17 @@ mkdirSync(out,{recursive:true});
   assert.equal(await page.locator('#schoolOverlay').isChecked(),true);
   console.log('PASS Allen campus markers automatically at zoom 9, 10, 11 and 13 without shortcut: '+JSON.stringify(allenZoomAudits));
   // McKinney ISD 2026-27 official finder: matched campus shows its zone,
-  // closed campuses explain why instead of drawing an old zone.
+  // Repurposed 2026-27 campuses are excluded from active school choices (#313).
   const mk=await page.evaluate(()=>{const z=state.zoneData['043907']||[];const n=l=>new Set(z.filter(f=>f.properties.gradeLevel===l).map(f=>f.properties.school)).size;
    return {err:state.zoneLoadErrors['043907']||null,el:n('elementary'),mid:n('middle'),high:n('high'),cov:window.getSchoolBoundaryCoverage().byDistrict['043907']}});
   assert.equal(mk.err,null,'McKinney finder must load: '+JSON.stringify(mk));
   assert.ok(mk.el>=15&&mk.mid===5&&mk.high===3,'McKinney zone counts: '+JSON.stringify(mk));
   assert.ok(mk.cov.matched>=20,'McKinney campuses must match zones: '+JSON.stringify(mk));
-  for(const [name,expectZone,text] of [['FINCH EL',true,'McKinney ISD 2026–27'],['ARTHUR H MCNEIL EL',false,'2026–27학년도부터']]){
+  const retiredChoices=await page.evaluate(()=>state.schools.filter(s=>s.district==='043907'&&/MCNEIL|EDDINS|WOLFORD/i.test(s.name)).map(s=>s.name));
+  assert.deepEqual(retiredChoices,[],'Repurposed McKinney campuses must not appear as active choices');
+  for(const [name,expectZone,text] of [['FINCH EL',true,'McKinney ISD 2026–27']]){
+   const exists=await page.evaluate(n=>state.schools.some(s=>s.district==='043907'&&s.name===n),name);
+   assert.equal(exists,true,name+' must be an active selectable school');
    await page.evaluate(n=>{zoneGroup.clearLayers();return schoolClicked(state.schools.find(s=>s.district==='043907'&&s.name===n))},name);
    await page.waitForTimeout(300);
    const r=await page.evaluate(()=>({layers:zoneGroup.getLayers().length,note:document.getElementById('zoneNotice')?.innerText||''}));

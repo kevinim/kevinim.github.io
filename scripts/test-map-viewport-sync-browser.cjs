@@ -158,10 +158,17 @@ checkView(await page.evaluate(audit),'incremental markers after cluster redraw',
   checkView(await page.evaluate(audit),'container restored',{district:'AISD'});
   // Expand to local zoom so the click targets an actual campus, not a cluster.
   await page.evaluate(()=>{map.stop();map.setZoom(14,{animate:false});drawSchools()});await settle(page);
-  // Clicking a school marker still shows its attendance boundary.
+  // A campus click preserves explicit opt-outs. Historical Allen geometry
+  // appears only after the user deliberately enables reference boundaries.
+  await page.locator('#referenceBoundaryOverlay').uncheck();
+  await page.locator('#historicOverlay').uncheck();
   const before=await page.evaluate(()=>zoneGroup.getLayers().length);
   const clicked=await page.evaluate(()=>{const l=schoolGroup.getLayers().find(l=>{const s=state.schools.find(x=>x.name===l.options.title);return s&&s.district==='AISD'});if(!l)return null;l.fire('click');return l.options.title});
   assert.ok(clicked,'An Allen marker must be clickable');
+  assert.equal(await page.locator('#referenceBoundaryOverlay').isChecked(),false);
+  assert.equal(await page.locator('#historicOverlay').isChecked(),false);
+  assert.equal(await page.evaluate(()=>zoneGroup.getLayers().length),0,'Click cannot enable a disabled boundary overlay');
+  await page.locator('#referenceBoundaryOverlay').check();
   await page.waitForFunction(n=>zoneGroup.getLayers().length>n,before,{timeout:15000});
   await settle(page);
   checkView(await page.evaluate(audit),'after school click '+clicked,{allowEmpty:true});
@@ -190,3 +197,4 @@ checkView(await page.evaluate(audit),'incremental markers after cluster redraw',
   console.log('PASS map viewport sync: hidden-at-init, 75013/75093 zoom 9-13, drag, zoom controls, overlay toggle, filters, search, container resize, school boundary click, reload');
  }finally{await browser?.close().catch(()=>{})}
 })().catch(e=>{console.error('FAIL map viewport sync browser QA: '+String(e.stack||e));process.exitCode=1});
+

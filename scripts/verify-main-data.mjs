@@ -67,7 +67,7 @@ const test = (name, fn) => {
 
 const inlineScripts = [mainBootstrap];
 test('external main application bootstrap compiles with no inline HTML execution',()=>{
- assert.ok(pageHtml.includes('<script src="./dashboard-main.js?v=6"></script>'));
+ assert.ok(pageHtml.includes('<script src="./dashboard-main.js?v=8"></script>'));
  assert.equal([...pageHtml.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].filter(x=>!/\bsrc\s*=/.test(x[1])&&x[2].trim()).length,0);
  new Script(mainBootstrap,{filename:'dashboard-main.js'});
 });
@@ -115,9 +115,9 @@ test('school selection auto-displays available source polygons with a specific m
  const inline=inlineScripts.join('\n');
  assert.ok(html.includes('<script src="./school-boundary-match.js?v=3"></script>'));
  assert.ok(html.includes('id="schoolBoundaryCoverageAudit"'));
- assert.ok(inline.includes('state.showOldZones=true;state.showHistoric=true;'));
- assert.ok(inline.includes("el('referenceBoundaryOverlay').checked=true"));
- assert.ok(inline.includes("el('historicOverlay').checked=true"));
+ assert.ok(!inline.includes('state.showOldZones=true;state.showHistoric=true;'),'Campus selection preserves explicit overlay opt-outs');
+ assert.ok(!inline.includes("el('referenceBoundaryOverlay').checked=true"));
+ assert.ok(!inline.includes("el('historicOverlay').checked=true"));
  assert.ok(inline.includes('renderSchoolBoundaryCoverageAudit()'));
  assert.ok(inline.includes('window.getSchoolBoundaryCoverage='));
  assert.ok(inline.includes('SchoolBoundaryMatch.findSchoolBoundary(s,geo'));
@@ -278,7 +278,7 @@ test('P0 Plano senior-high home marker and map source legend are accurate',()=>{
  assert.ok(home.includes('schoolLevelMatchesAssignment(s,f.properties.gradeLevel)'));
  assert.ok(home.includes("result.district!==s.district)return false"));
  assert.ok(html.includes('./school-assignment.js?v=6'));
- assert.ok(html.includes('./home-lookup-v2.js?v=18'));
+ assert.ok(html.includes('./home-lookup-v2.js?v=20'));
  assert.ok(html.includes('현행 공식 Finder가 사용하는 플레이노·루이스빌 경계는 파란색'));
  assert.ok(html.includes('플레이노 저장본과 앨런 과거 GIS는 주황색 점선 참고'));
 });
@@ -318,7 +318,9 @@ test('P0 Plano four-level feeder guard detects Jackson Coit split and blocks mis
  assert.ok(app.includes("['boundary-review','finder-boundary-review'].includes(result.status)"));
  assert.ok(html.includes('./plano-feeder-guard.js?v=1'));
  assert.ok(html.includes("state.planoFeederReference=null"));
- assert.ok(html.includes("await feederPromise"));
+ assert.ok(html.includes("TxBoundedJson.requestJson('./plano-official-feeder-reference-2026.json'"));
+ assert.ok(html.includes('state.sourceStatus.PISD_LOOKUP.feeder'));
+ assert.equal(html.includes('await feederPromise'),false,'optional feeder must not block completed polygons');
  assert.ok(html.includes('Plano 공식 진학표 점검'));
 });
 
@@ -577,8 +579,8 @@ test('CFB official 2026–27 feeder table is accurate and never treated as GIS',
   assert.ok(html.includes('CFB 2026–27 진학표 A') && html.includes('CFB 2026–27 진학표 B'));
   assert.ok(html.includes('2026–27 진학표 20/21행 일치, Farmers Branch Elementary 자료 충돌 별도'));
 });
-test('active 2026-27 campus selection excludes 17 officially inactive schools',()=>{
- assert.equal(RETIRED_CAMPUSES_2026.length,17);
+test('active 2026-27 campus selection excludes 20 officially inactive schools',()=>{
+ assert.equal(RETIRED_CAMPUSES_2026.length,20);
   for(const id of ['061901120','220906103','220906108']){
    const item=rating.data.find(x=>x.id===id);
    assert.ok(item,'TEA campus record missing '+id);
@@ -1276,7 +1278,9 @@ test('District registry is the single source of per-district capabilities',()=>{
  assert.equal(R.districtPolygonStatus('043907',{}),null,'McKinney never from a stale copy');
  assert.equal(R.districtPolygonStatus('043907',{'043907':true}),'finder-current');
  assert.equal(R.districtPolygonStatus('AISD',{}),null,'Allen uses its address table, not polygons');
- assert.equal(R.districtZoneDisplay('043907',{'043907':true}),'official','McKinney 2026-27 zones are not "past GIS"');
+ assert.equal(R.districtZoneDisplay('043907',{'043907':true}),'finder','District-wide verification cannot certify mixed school years');
+ assert.equal(R.districtZoneDisplay('043907',{'043907':true},'elementary',{verifiedYear:'2026-27'}),'official');
+ assert.equal(R.districtZoneDisplay('043907',{'043907':true},'middle',{verifiedYear:'2026-27'}),'finder');
  assert.equal(R.districtZoneDisplay('LISD',{LISD:true}),'finder');
  assert.equal(R.districtZoneDisplay('AISD',{}),'historical');
  assert.match(web, /<script src="\.\/district-registry\.js\?v=[1-9]\d*"><\/script>/);

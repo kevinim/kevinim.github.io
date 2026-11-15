@@ -4,11 +4,11 @@ Repository: kevinim/kevinim.github.io. Current protected main baseline: 96ca9160
 
 ## Verified, non-sensitive queue evidence
 
-- Exactly **624** runs were reported as \`status=queued\` at assessment time.
+- Exactly **624** runs were reported as `status=queued` at assessment time.
 - All creation timestamps fall between **2026-11-11 20:17:39Z and 20:55:28Z**.
 - Event split: **617 pull_request**, **7 push**.
 - Current open PR count was **0**; newer protected-main CI/Pages deployments completed successfully.
-- Sample run IDs \`43098840916\`, \`43095910381\`, \`43097002711\`, \`43095228814\`, \`43098840746\`: each reports queued with **zero jobs**, and no updated timestamp since creation.
+- Sample run IDs `43098840916`, `43095910381`, `43097002711`, `43095228814`, `43098840746`: each reports queued with **zero jobs**, and no updated timestamp since creation.
 - Repeated commit bursts occurred during multi-agent TEA data QA. 403 queue entries share the Allen/McKinney QA branch name, across multiple commit SHAs.
 - No runner capacity, billing failure, or current operational blockage is established by these facts. Similar November 11 zero-job/HTTP 409 anomalies are reported in GitHub Community, but this does **not** prove the exact underlying fault for this repository.
 
@@ -16,7 +16,7 @@ Reference example: https://github.com/kevinim/kevinim.github.io/actions/runs/430
 
 ## What the helper does, and does not do
 
-\`scripts/actions-stale-queue-recovery.cjs\` is a **read-only audit by default**. It lists all queued runs, verifies the present main SHA and open PR heads, isolates only PR events created during the precisely observed incident window, excludes updated/restarted runs and commits still in an open PR, and samples at most five candidate jobs for zero-job status. It never reads private address records or prints tokens.
+`scripts/actions-stale-queue-recovery.cjs` is a **read-only audit by default**. It lists all queued runs, verifies the present main SHA and open PR heads, isolates only PR events created during the precisely observed incident window, excludes updated/restarted runs and commits still in an open PR, and samples at most five candidate jobs for zero-job status. It never reads private address records or prints tokens.
 
 There is **no automated cancellation workflow or broad new Actions write permission**. The assistant's connected GitHub tools can read Actions state and create review PRs, but expose no cancel-run action; an operator with Actions:write must explicitly authorize cancellation.
 
@@ -24,7 +24,7 @@ Optional bounded *normal cancellation* uses GitHub Actions REST API. It only aff
 
 Commands on a trusted local computer with Node.js 22+:
 
-\`\`\`sh
+```sh
 # Safe read-only report. For greater GitHub API allowance, set GH_TOKEN
 # in the terminal environment; never put tokens in files, PRs or chats.
 node scripts/actions-stale-queue-recovery.cjs
@@ -32,24 +32,24 @@ node scripts/actions-stale-queue-recovery.cjs
 # Optional, AFTER reviewing the report and obtaining an Actions:write-scoped token:
 # GH_TOKEN must already be set in your local shell environment.
 node scripts/actions-stale-queue-recovery.cjs --apply --confirm-stale-20261111 --limit=5
-\`\`\`
+```
 
-No token is required for audit-only mode. **Do not enable bulk cancellation by guessing token values.** Since 7 incident-era queued \`push\` runs are deliberately excluded, they require separate manual review and are not automatically cancelled.
+No token is required for audit-only mode. **Do not enable bulk cancellation by guessing token values.** Since 7 incident-era queued `push` runs are deliberately excluded, they require separate manual review and are not automatically cancelled.
 
 If the first normal cancellation returns 409:
 1. Stop. Do not force-cancel hundreds of items.
 2. Record the example run ID, creation timestamp, zero jobs and the HTTP 409 result.
 3. Contact GitHub Support or file a GitHub Community issue referencing the supportable sample and the exact GitHub status/event window.
 4. Re-check the queue after GitHub fixes the incident-era run records.
-5. Keep required \`verify\`, public privacy/security checks, current main history, Pages deployment, and active PR runs untouched.
+5. Keep required `verify`, public privacy/security checks, current main history, Pages deployment, and active PR runs untouched.
 
 Official API: https://docs.github.com/en/rest/actions/workflow-runs#cancel-a-workflow-run
 Community context: https://github.com/orgs/community/discussions/212818
 
 ## CI efficiency improvements already released
 
-- #305: scoped 9 audits to relevant source paths, added per-PR stale-run cancellation across PR workflows, kept required \`verify\` and security gating, moved full-history Gitleaks off each PR (still main pushes/weekly/manual).
-- #306: preserved real GitHub Pages \`deployment_status\` rather than an ineffective dynamic workflow_run link.
+- #305: scoped 9 audits to relevant source paths, added per-PR stale-run cancellation across PR workflows, kept required `verify` and security gating, moved full-history Gitleaks off each PR (still main pushes/weekly/manual).
+- #306: preserved real GitHub Pages `deployment_status` rather than an ineffective dynamic workflow_run link.
 - #309: consolidated CFB browser live checks into one postdeployment Track B Chromium job.
 - Current 101 workflow YAML files are a maintainability concern; they are **not** 101 jobs on every PR.
 
@@ -61,3 +61,13 @@ Illustrative, **not like-for-like** PR check-run counts from GitHub's latest hea
 ## Recommended future measurement, without changing production
 
 For the next 3 representative PRs, record (a) paths changed, (b) runs/jobs generated, (c) queued duration, (d) runner seconds, and (e) required verify/security verdict. Measure comparable PR file scopes and do not optimize by disabling correctness-critical school/GIS/privacy gates. Preserve family no-login GitHub Pages and all protective branch settings.
+
+
+## Follow-up verified November 15, 2026 21:32 UTC
+
+- Current deployed main: `ea0c73a975c15436ddfa46f1804ba6a80e2a42ca` (PR #316; 62 PR workflows and postdeployment production smoke passed).
+- A fresh seven-page GitHub queue read returned **480** queued incident-era records: **473 PR** and **7 push**. Five current samples (`43095785480`, `43095785481`, `43095785484`, `43095785515`, `43095785549`) still had zero jobs. No cancellation was requested in this follow-up. The difference from the older 624-count observation does not establish why those records disappeared.
+- Independent review identified stale protection sets during a batch and incomplete run/PR metadata being accepted. Every POST now requires fresh main/open-PR protection reads after the zero-job check; unknown metadata or a failed protection refresh stops cancellation. The main branch is excluded even when its SHA differs from the latest main SHA.
+- Regression coverage includes main/head/branch becoming protected mid-batch, malformed timestamps, incomplete PR records/pagination and failed protection refresh. Normal cancellation remains bounded, authenticated and explicitly invoked; no force-cancel/delete route is added.
+- FEMA/NOAA PR validation now uses the same per-PR stale-run cancellation groups as other read-only checks. Main/manual runs are not auto-cancelled, write tokens remain absent, and manual generation stays restricted to main.
+- PR #310 is being integrated onto current main. This ships an audit/recovery helper; it does not establish that historical queue records were cleaned up. The connected GitHub tools still lack the cancellation operation.

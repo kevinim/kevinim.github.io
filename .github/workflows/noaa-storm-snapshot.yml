@@ -5,23 +5,40 @@ on:
     paths:
       - 'scripts/refresh-noaa-storm-events.cjs'
       - '.github/workflows/noaa-storm-snapshot.yml'
+      - 'tests/snapshot-workflow-security.test.cjs'
       - 'noaa-storm-history.js'
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  build-snapshot:
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'feat/phase2a-noaa-storm-history-2024-2025-20261107'
+  validate-pr:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    timeout-minutes: 12
-    permissions:
-      contents: write
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          persist-credentials: true
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Validate builder syntax and read-only snapshot policy
+        run: |
+          node --check scripts/refresh-noaa-storm-events.cjs
+          node --test tests/snapshot-workflow-security.test.cjs
+  build-snapshot:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+          persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
@@ -40,17 +57,6 @@ jobs:
           assert.ok(d.summary.every(r=>r.monthly.reduce((a,b)=>a+b,0)===r.count));
           console.log('PASS NOAA source digest/aggregation check',d.metadata.selectedEvents);
           NODE
-      - name: Commit only generated NOAA JSON back to this same-owner PR branch
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/noaa-storm-events-dfw-2024-2025.json
-          if ! git diff --cached --quiet; then
-            git commit -m "Generate verified NOAA 2024-2025 DFW county storm history snapshot"
-            git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
-          else
-            echo "NOAA snapshot unchanged"
-          fi
       - name: Attach NOAA source audit artifact
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -58,3 +64,4 @@ jobs:
           name: noaa-storm-history-dfw-2024-2025
           path: data/noaa-storm-events-dfw-2024-2025.json
           if-no-files-found: warn
+

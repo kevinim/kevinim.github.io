@@ -46,6 +46,13 @@ async function main(){
    await page.locator('#homeAddress').waitFor({timeout:45000});
    await page.waitForFunction(()=>document.querySelector('#map.leaflet-container')!==null,
     null,{timeout:45000});
+   await page.locator('#workplacesPanel > summary').click();
+   await page.locator('#workplaceName').fill('Synthetic office');
+   await page.locator('#workplaceAddress').fill('00000 Synthetic Office Road, TX 00000');
+   assert.equal(await page.evaluate(()=>localStorage.getItem('tx-dashboard-workplaces-v1')),null,
+    'typing a workplace must not save it');
+   await page.locator('#workplaceSave').click();
+   await page.waitForFunction(()=>window.WorkplaceDestinations?.list().length===1);
    // Artificial search prefix, never a residence or person. Provider call cannot leave browser.
    await page.locator('#homeAddress').fill('Test');
    await page.waitForTimeout(950);
@@ -58,8 +65,16 @@ async function main(){
      cleared:document.getElementById('homeAddress').value==='',
      suggestionsHidden:document.getElementById('homeSuggestions').hidden,
      mapPresent:!!document.querySelector('#map.leaflet-container'),
-     themeOnly:[...Array(localStorage.length)].map((_,i)=>localStorage.key(i))
-       .every(key=>key==='tx-dashboard-theme-v1'),
+     expectedKeysOnly:[...Array(localStorage.length)].map((_,i)=>localStorage.key(i))
+       .every(key=>['tx-dashboard-theme-v1','tx-dashboard-workplaces-v1'].includes(key)),
+     intentionalWorkplaceOnly:(()=>{
+      const saved=JSON.parse(localStorage.getItem('tx-dashboard-workplaces-v1')||'[]');
+      return saved.length===1&&saved[0].name==='Synthetic office'
+       &&saved[0].address==='00000 Synthetic Office Road, TX 00000'
+       &&Object.keys(saved[0]).sort().join(',')==='address,id,name';
+     })(),
+     noTypedHomeInStorage:![...Array(localStorage.length)].some((_,i)=>
+      String(localStorage.getItem(localStorage.key(i))).includes('Test')),
      sessionEmpty:sessionStorage.length===0,
      noCookies:document.cookie==='',
      indexedDbEmpty:databases.length===0,
@@ -69,8 +84,16 @@ async function main(){
    for(const [key,value] of Object.entries(outcome))assert.equal(value,true,key+' failed at '+width);
    assert.equal(loggedInput,false,'synthetic typed input reached console output');
    assert.ok(externalBlocked>0,'test did not intercept provider and map requests');
+   await page.reload({waitUntil:'domcontentloaded',timeout:90000});
+   await page.waitForFunction(()=>window.WorkplaceDestinations?.list().length===1);
+   assert.equal(await page.locator('#homeAddress').inputValue(),'','home input survived reload');
+   await page.locator('#workplacesPanel > summary').click();
+   await page.locator('.workplace-entry-actions button').nth(2).click();
+   assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('tx-dashboard-workplaces-v1')).length),0,
+    'explicitly deleting a saved workplace must remove its address');
    reports.push({width,externalCallsBlocked:externalBlocked,
-    addressCleared:true,persistentAddressStorage:false,offlineMapShell:true});
+    addressCleared:true,persistentHomeStorage:false,explicitWorkplaceSaveOnly:true,
+    workplaceSurvivesReload:true,workplaceDeletion:true,offlineMapShell:true});
    await page.close();
   }
  }finally{

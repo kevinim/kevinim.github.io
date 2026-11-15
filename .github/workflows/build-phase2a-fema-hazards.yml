@@ -5,21 +5,39 @@ on:
     paths:
       - 'scripts/build-phase2a-fema-hazards.mjs'
       - '.github/workflows/build-phase2a-fema-hazards.yml'
+      - 'tests/snapshot-workflow-security.test.cjs'
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  build-snapshot:
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+  validate-pr:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    permissions:
-      contents: write
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Validate builder syntax and read-only snapshot policy
+        run: |
+          node --check scripts/build-phase2a-fema-hazards.mjs
+          node --test tests/snapshot-workflow-security.test.cjs
+  build-snapshot:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+          persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
@@ -29,18 +47,9 @@ jobs:
         run: |
           test -s data/phase2a-fema-nri-dfw-2025.geojson
           node -e "const j=JSON.parse(require('node:fs').readFileSync('data/phase2a-fema-nri-dfw-2025.geojson','utf8'));if(j.features.length<1000||Object.keys(j.metadata.coverageCounties).length!==12)process.exit(1)"
-      - name: Commit verified small static geojson to feature branch
-        if: github.event_name == 'pull_request'
-        run: |
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git config user.name 'github-actions[bot]'
-          git add data/phase2a-fema-nri-dfw-2025.geojson
-          if ! git diff --cached --quiet; then
-            git commit -m 'data: materialize official 2025 FEMA NRI DFW hazard tracts'
-            git push origin HEAD:${{ github.event.pull_request.head.ref }}
-          fi
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: phase2a-fema-dfw-tract-snapshot
           path: data/phase2a-fema-nri-dfw-2025.geojson
           retention-days: 14
+

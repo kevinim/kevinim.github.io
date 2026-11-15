@@ -96,10 +96,21 @@ async function main(){
    assert.doesNotMatch(disputed,/2025–26 승인 내역/,'conflicting descriptions must not appear certified');
    await page.locator('#cfbAtlasAreaSelect').selectOption('Morningside subdivision');
    await page.locator('#cfbAtlasFixtures .cfb-atlas-evidence > summary').click();
-   const evidence=await page.locator('#cfbAtlasFixtures .cfb-atlas-evidence-list').innerText();
+   const evidence=await page.locator('#cfbAtlasFixtures .cfb-atlas-evidence-list').textContent();
    assert.match(evidence,/1600 S Josey Ln/);
    assert.match(evidence,/1011 S Main St/);
    assert.match(evidence,/폴리곤과의 교차검증은 아직 이루어지지 않았습니다/);
+   // Compact footnotes may archive these source rows after the disclosure opens.
+   // Require either readable inline evidence or a working link to that evidence.
+   const reachable=await page.evaluate(()=>{
+    const fixture=document.getElementById('cfbAtlasFixtures');
+    if(fixture.innerText.includes('1600 S Josey Ln'))return true;
+    return [...fixture.querySelectorAll('a.footnote-ref')].some(link=>{
+     const id=link.getAttribute('href')?.slice(1),target=id&&document.getElementById(id);
+     return target?.textContent.includes('1600 S Josey Ln');
+    });
+   });
+   assert.equal(reachable,true,'Finder evidence must remain readable inline or through its source footnote');
    assert.equal(await page.locator('#cfbInlineFinderFrameHost iframe').count(),0,
     'Reference map must never secretly start official Finder iframe');
    // One opt-in layer uses Texas Legislative Council district OUTER boundaries,

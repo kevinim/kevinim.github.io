@@ -31,11 +31,11 @@ function auditProviderContract(files) {
   if (errors.length) return { errors, warnings, coverage: null };
 
   const main = get('index.html')+'\n'+get('dashboard-main.js');
-  if(!get('index.html').includes('<script src="./dashboard-main.js?v=6"></script>'))errors.push('main external bootstrap tag missing');
+  if(!get('index.html').includes('<script src="./dashboard-main.js?v=8"></script>'))errors.push('main external bootstrap tag missing');
   const archivedHtml = get('reviewed.html');
   const archivedBootstrap = get('features/reviewed-bootstrap.js');
   const archived = archivedHtml+'\n'+archivedBootstrap;
-  if(!archivedHtml.includes('src="./features/reviewed-bootstrap.js?v=1"'))errors.push('legacy reviewed bootstrap script reference removed');
+  if(!archivedHtml.includes('src="./features/reviewed-bootstrap.js?v=3"'))errors.push('legacy reviewed bootstrap script reference removed');
   const suggest = get('texas-address-suggest.js');
   const home = get('home-lookup-v2.js');
   const parcel = get('collin-parcel-check.js');

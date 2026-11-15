@@ -11,7 +11,11 @@ const show=(sha,file)=>cp.execFileSync('git',['show',sha+':'+file],{cwd:root,enc
 // the entire unchanged school/map bootstrap instead of waiving integrity.
 const baseline='5a5b3a8fbe1b29ba71797525696d1f092821e6b7';
 const old=show(baseline,'index.html'),oldJs=show(baseline,'dashboard-main.js');
-const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+const rawHtml=fs.readFileSync(path.join(root,'index.html'),'utf8');
+// T02 cache keys change only these existing assets; every other HTML byte stays pinned.
+const cacheNormalizedHtml=[["features/commute/provider-requests.js?v=2","features/commute/provider-requests.js?v=1"],["dashboard-main.js?v=8","dashboard-main.js?v=6"],["district-registry.js?v=3","district-registry.js?v=2"],["texas-address-suggest.js?v=3","texas-address-suggest.js?v=2"],["home-lookup-v2.js?v=20","home-lookup-v2.js?v=18"],["features/dashboard-extras.js?v=3","features/dashboard-extras.js?v=2"]].reduce((text,[next,prior])=>text.replaceAll(next,prior),rawHtml);
+// T05 reverses only the three exact reviewed semantic-control changes.
+const html=[["<label for=\"zipSelect\">","<label>"],["<label for=\"metric\">","<label>"],["<div class=\"seg\" id=\"levels\" role=\"group\" aria-label=\"학교 단계\"><button class=\"active\" data-v=\"all\" type=\"button\" aria-pressed=\"true\">전체</button><button data-v=\"elementary\" type=\"button\" aria-pressed=\"false\">초등</button><button data-v=\"middle\" type=\"button\" aria-pressed=\"false\">중등</button><button data-v=\"high\" type=\"button\" aria-pressed=\"false\">고등</button></div>","<div class=\"seg\" id=\"levels\"><button class=\"active\" data-v=\"all\">전체</button><button data-v=\"elementary\">초등</button><button data-v=\"middle\">중등</button><button data-v=\"high\">고등</button></div>"]].reduce((text,[next,prior])=>replaceOnce(text,next,prior),cacheNormalizedHtml);
 const js=fs.readFileSync(path.join(root,'dashboard-main.js'),'utf8');
 const external='<script src="./features/map/area-label-hierarchy.js?v=1"></script><script src="./dashboard-main.js?v=6"></script>';
 const oldCsp=old.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1];
@@ -150,7 +154,9 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  perfP10=replaceOnce(perfP10,"state.times[d.z]=sec/60});drawTable();drawCommute();","state.times[d.z]=sec/60});drawCommute();");
  perfP10=replaceOnce(perfP10,'async function loadZipShapes(){',"\nfunction updateTableSelection(){const tbody=el('compareTable')?.querySelector('tbody');if(!tbody)return;const previous=tableSelectedRow&&tbody.contains(tableSelectedRow)?tableSelectedRow:tbody.querySelector('tr.sel');previous?.classList.remove('sel');const next=tbody.querySelector('tr[data-z=\"'+state.zip+'\"]');next?.classList.add('sel');tableSelectedRow=next||null}\nasync function loadZipShapes(){");
  const providerDigest=crypto.createHash('sha1').update('blob '+Buffer.byteLength(js)+'\0').update(js,'utf8').digest('hex');
- assert.ok(hash(js)===hash(perfP10)||providerDigest==='55d348a36821f5dfdf26a02ef2f0cd6569cf45e7',
+ // T01: exact reviewed commute-generation patch; school/GIS/rendering code stays pinned.
+ // tests/commute-operation-lifecycle.test.cjs exercises late replies in both entry points.
+ assert.ok(hash(js)===hash(perfP10)||providerDigest==='55d348a36821f5dfdf26a02ef2f0cd6569cf45e7'||providerDigest==='46f9c72552fc53cf127c51956bbd674fe379dc0f'||providerDigest==='1379614d8fc672c11bf192d7350c3fba0020ecda'||providerDigest==='4e5b9e31e025d57d59cec477686ef6373f7fbc69',
   'Dashboard must match either exact P10 baseline or audited bounded-provider integration blob');
  const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
  const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);
@@ -337,7 +343,7 @@ test('strict script CSP preserved exactly and personal office artifacts absent',
  assert.doesNotMatch(all,/\bJPM\b|JPMorgan|JPM_ADDRESS|jpm-|8181\s+Communications|\bjpmMinutes\b/i);
  assert.match(html,/<input id="destination" value=""/);
  assert.ok(html.includes('id="oneHourOverlay" hidden disabled'));
- assert.ok(js.includes("fetch('./dfw-outside-public.json'"));
+ assert.ok(js.includes("TxBoundedJson.requestJson('./dfw-outside-public.json'"));
  assert.ok(!js.includes('fetch(\'./jpm-'));
 });
 test('HTML has external executable scripts only and no inline handlers',()=>{

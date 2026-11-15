@@ -8,7 +8,6 @@ const directory=path.resolve(__dirname,'../.github/workflows');
 const workflows=new Map(fs.readdirSync(directory).filter(n=>n.endsWith('.yml'))
   .map(name=>[name,fs.readFileSync(path.join(directory,name),'utf8')]));
 const alwaysOn=new Set(['verify-main-dashboard.yml','public-release-security.yml']);
-const privilegedWriters=new Set(['build-phase2a-fema-hazards.yml','noaa-storm-snapshot.yml']);
 const existingConcurrency=new Set(['tx-browser-performance.yml','denton-pdf-vector-poc.yml','denton-eight-point-gis-audit-qa.yml']);
 const narrowlyScoped=[
   'audit-external-api-contract.yml','audit-gis-upload-links.yml','audit-school-provenance.yml',
@@ -64,7 +63,6 @@ test('all PR workflows isolate the current PR and cancel only stale PR runs',()=
   prCount++;
   if(p.includes('paths:'))scoped++;
   else assert.ok(alwaysOn.has(name),'unscoped PR work must be justified: '+name);
-  if(privilegedWriters.has(name))continue;
   assert.match(y,/^concurrency:\s*$/m,'no per-PR concurrency: '+name);
   if(!existingConcurrency.has(name)){
    assert.match(y,/^  group: tx-ci-\$\{\{ github\.workflow \}\}-\$\{\{ github\.event_name \}\}-\$\{\{ github\.event\.pull_request\.number \|\| github\.ref \}\}/m,'not isolated by PR: '+name);
@@ -103,3 +101,4 @@ test('workflow YAML does not introduce PR privilege escalation',()=>{
   assert.doesNotMatch(y,/write-all/,'write-all permissions: '+name);
  }
 });
+

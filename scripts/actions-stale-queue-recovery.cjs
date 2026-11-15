@@ -10,13 +10,16 @@ const API='https://api.github.com/repos/'+REPO;
 const WINDOW_START=Date.parse('2026-11-11T20:17:00Z');
 const WINDOW_END=Date.parse('2026-11-11T20:56:00Z');
 const MAX_BATCH=25;
+function validBranch(value){return typeof value==='string'&&value.length>0&&value===value.trim()&&!/[\u0000-\u0020\u007f]/.test(value)}
 function candidate(run,{mainSha,openHeads=new Set(),openBranches=new Set(),now=Date.now()}={}){
  if(!run||run.status!=='queued'||run.event!=='pull_request')return false;
  if(!Number.isSafeInteger(run.id)||run.id<=0||!String(run.head_sha||'').match(/^[0-9a-f]{40}$/))return false;
+ if(!validBranch(run.head_branch)||run.head_branch==='main')return false;
  if(run.head_sha===mainSha||openHeads.has(run.head_sha)||openBranches.has(run.head_branch))return false;
  const t=Date.parse(run.created_at||'');
  if(!Number.isFinite(t)||t<WINDOW_START||t>WINDOW_END||now-t<24*3600000)return false;
- if(run.updated_at&&Date.parse(run.updated_at)>t+300000)return false;
+ const updated=Date.parse(run.updated_at||'');
+ if(!Number.isFinite(updated)||updated<t||updated>t+300000)return false;
  return true;
 }
 function plan(runs,settings){
@@ -54,8 +57,9 @@ async function preflight(request){
  ]);
  if(!/^[0-9a-f]{40}$/.test(branch.commit?.sha||''))throw Error('main_sha_unavailable');
  if(!Array.isArray(pulls))throw Error('open_prs_unavailable');
- if(pulls.length===100)throw Error('open_pr_pagination_required');
- return {mainSha:branch.commit.sha,openHeads:new Set(pulls.map(p=>p.head?.sha).filter(Boolean)),openBranches:new Set(pulls.map(p=>p.head?.ref).filter(Boolean)),openPrCount:pulls.length};
+ if(pulls.length>=100)throw Error('open_pr_pagination_required');
+ if(pulls.some(p=>!p||!/^[0-9a-f]{40}$/.test(p.head?.sha||'')||!validBranch(p.head?.ref)))throw Error('open_pr_head_unavailable');
+ return {mainSha:branch.commit.sha,openHeads:new Set(pulls.map(p=>p.head.sha)),openBranches:new Set(pulls.map(p=>p.head.ref)),openPrCount:pulls.length};
 }
 async function verifyJobsEmpty(request,id){
  const jobs=await request('/actions/runs/'+id+'/jobs?per_page=1');
@@ -75,12 +79,19 @@ async function cancelBatch(request,eligible,settings,{limit=5,confirm=false}={})
  const attempted=[];
  for(const snapshot of eligible.slice(0,limit)){
   const current=await request('/actions/runs/'+snapshot.id);
-  if(!candidate(current,settings)||current.head_sha!==snapshot.head_sha){
+  if(!candidate(current,settings)||current.id!==snapshot.id||current.head_sha!==snapshot.head_sha){
    attempted.push({runId:snapshot.id,result:'changed_skip'});
    continue;
   }
   if(!await verifyJobsEmpty(request,snapshot.id)){
    attempted.push({runId:snapshot.id,result:'has_jobs_skip'});
+   continue;
+  }
+  // A new PR or main update may protect this branch after the initial audit.
+  // Refresh all protection sets immediately before each mutation; errors abort.
+  const fresh=await preflight(request);
+  if(!candidate(current,{...fresh,now:Date.now()})){
+   attempted.push({runId:snapshot.id,result:'protected_skip'});
    continue;
   }
   try{
@@ -125,3 +136,4 @@ if(require.main===module)run().catch(err=>{
  process.exitCode=1;
 });
 module.exports={REPO,WINDOW_START,WINDOW_END,MAX_BATCH,candidate,plan,apiClient,listAllQueued,preflight,verifyJobsEmpty,inspectSample,cancelBatch,run};
+
