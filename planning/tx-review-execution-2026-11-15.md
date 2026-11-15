@@ -19,6 +19,7 @@ Plan: TX_Dashboard_Code_Review_Plan_2026-11-15.md, main baseline c4c3d0a085525e5
 - Reuse the existing provider script for operation ownership instead of adding a new script tag. This preserves the audited loader inventory/CSP and avoids dependency-order drift; behavioral coverage remains required.
 - Source inspection found reviewed.html actually references features/reviewed-bootstrap.js. The earlier review's dormant-code observation was incomplete, so T01 covers that real entry point too.
 - Preserve existing mixed line endings outside narrow edits. Extend the existing exact-byte JS allowlist with one exact T01 blob digest; historical baselines and security assertions remain enforced.
+- CI exposed a pre-existing stale McNeil click assertion after #313 removed three repurposed campuses from active choices. Keep the active Finch polygon test and explicitly assert McNeil/Eddins/Wolford are absent; do not restore retired schools or skip browser QA.
 
 ## Remaining
 
