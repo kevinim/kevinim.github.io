@@ -81,7 +81,7 @@ test('already aborted request is never sent; an in-flight fetch can time out',as
 });
 test('both public entry points load guard before commute client code',()=>{
  const idxGuard=paths.index.indexOf('features/commute/provider-requests.js');
- const idxMain=paths.index.indexOf('dashboard-main.js?v=6');
+ const idxMain=paths.index.indexOf('dashboard-main.js?');
  const reviewedGuard=paths.reviewedHTML.indexOf('features/commute/provider-requests.js');
  const reviewedRuntime=paths.reviewedHTML.indexOf('features/reviewed-bootstrap.js');
  assert.ok(idxGuard>=0&&idxGuard<idxMain);

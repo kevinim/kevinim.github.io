@@ -15,18 +15,23 @@ const DATA=[
 ];
 const OFFICIAL=Object.fromEntries(Object.entries(DISTRICT_REGISTRY).map(([k,v])=>[k,v.official]));
 const schoolZoneCache=new WeakMap();
+function schoolSourceReady(district){
+ const source=typeof districtZoneKey==='function'?districtZoneKey(district):district;
+ const progress=state.sourceStatus?.[source];
+ return progress?progress.polygon!=='loading':state.zoneReady;
+}
 function schoolZoneInfo(s){
  const source=window.SchoolBoundaryMatch.boundarySchoolSource(s.district);
- const shapes=state.zoneData[source]||[],failed=!!state.zoneLoadErrors[source];
+ const shapes=state.zoneData[source]||[],failed=!!state.zoneLoadErrors[source],sourceReady=schoolSourceReady(s.district);
  const mode=districtZoneDisplay(s.district,state.liveFinder);
  const districtRecord=districtInfo(s.district),officialUrl=window.TrustedLinkPolicy?.official(OFFICIAL[s.district])||null;
  const officialKind=districtRecord?.lookupKind||'address-search',officialNote=districtRecord?.officialNote||null;
  const prev=schoolZoneCache.get(s);
- if(prev?.shapes===shapes&&prev.ready===state.zoneReady&&prev.failed===failed&&prev.mode===mode&&prev.officialUrl===officialUrl)return prev.value;
+ if(prev?.shapes===shapes&&prev.ready===sourceReady&&prev.failed===failed&&prev.mode===mode&&prev.officialUrl===officialUrl)return prev.value;
  const match=window.SchoolBoundaryMatch.findSchoolBoundary(s,shapes,(name,district)=>scoreRecord(name,district));
- const status=window.SchoolZoneUI.classify({matchStatus:match.status,sourceReady:state.zoneReady,sourceFailed:failed,displayMode:mode,officialUrl,officialKind,schoolType:s.type});
+ const status=window.SchoolZoneUI.classify({matchStatus:match.status,sourceReady,sourceFailed:failed,displayMode:mode,officialUrl,officialKind,schoolType:s.type});
  const value={...status,officialUrl,officialKind,officialNote,match};
- schoolZoneCache.set(s,{shapes,ready:state.zoneReady,failed,mode,officialUrl,value});
+ schoolZoneCache.set(s,{shapes,ready:sourceReady,failed,mode,officialUrl,value});
  return value;
 }
 function schoolZoneLinkLabel(kind){
@@ -742,15 +747,26 @@ function convertMetrostudyZones(webmap,cfg=LEWISVILLE_FINDER){
 // and every district shows "loading" forever. Timeout -> error message +
 // official finder link (Plano falls back to its stored copy).
 const ZONE_FETCH_TIMEOUT_MS=window.__zoneFetchTimeoutMs||20000;
-const zoneFetch=(url,opt={})=>fetch(url,{...opt,signal:window.AbortSignal?.timeout?AbortSignal.timeout(ZONE_FETCH_TIMEOUT_MS):undefined});
+const zoneFetch=(url,opt={})=>window.TxBoundedJson.requestJson(url,{...opt,timeoutMs:ZONE_FETCH_TIMEOUT_MS})
+ .then(body=>({ok:true,status:200,json:async()=>body}));
+let zoneDatasetResults=[];
+function notifySchoolSourceStatus(){
+ if(window.dispatchEvent&&window.CustomEvent)window.dispatchEvent(new CustomEvent('schoolsourcechange'));
+ if(state.selectedSchool)drawBoundary();
+ drawSchools();drawList();
+}
 async function loadBoundaryData(){
  // Keep the separately published official feeder chains independent of live GIS.
  // Missing/invalid reference never silently validates an address assignment.
+ state.zoneReady=false;
+ state.sourceStatus={CFB:{polygon:'error',feeder:'not-required',errorCode:'no-authorized-source'}};
+ for(const district of ['FISD','LISD','PISD_LOOKUP','043907','PROSPER','AISD'])
+  state.sourceStatus[district]={polygon:'loading',feeder:district==='PISD_LOOKUP'?'loading':'not-required'};
  state.planoFeederReference=null;
- const feederPromise=fetch('./plano-official-feeder-reference-2026.json',{cache:'no-store'})
-  .then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()})
-  .then(j=>{if(!validPlanoFeederReference(j))throw Error('unexpected feeder source');state.planoFeederReference=j})
-  .catch(err=>{state.planoFeederReference=null;console.warn('Plano feeder source unavailable',err)});
+ const feederPromise=window.TxBoundedJson.requestJson('./plano-official-feeder-reference-2026.json',{cache:'no-store'})
+  .then(j=>{if(!validPlanoFeederReference(j))throw Error('unexpected feeder source');state.planoFeederReference=j;state.sourceStatus.PISD_LOOKUP.feeder='ready'})
+  .catch(err=>{state.planoFeederReference=null;state.sourceStatus.PISD_LOOKUP.feeder='error';console.warn('Plano feeder source unavailable',err)})
+  .finally(()=>{if(state.zoneReady){renderBoundaryDatasetStatus();if(typeof refreshHomeSchools==='function')refreshHomeSchools()}notifySchoolSourceStatus()});
  const sources=[
   {district:'FISD',url:'https://static.friscoisd.org/js/json/school.borders.2627.json',label:'프리스코 2026–27 (공식 검색기)'},
   {district:'LISD',url:'https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/03c099e24d304c4fa0f4ce8a76c10062/data?f=json',label:'루이스빌 현재 공식 Finder 지도 (고등학교 2025–26 표기)'},
@@ -792,16 +808,24 @@ async function loadBoundaryData(){
     state.zoneData[x.district]=j.features.filter(f=>f.geometry&&f.properties?.school);
    }
    return x.label+': '+state.zoneData[x.district].length+'개'+(x.district==='PISD_LOOKUP'?' · 저장된 과거 참고본 (현재 공식 조회 실패)':'');
-  }catch(e){console.error('Zone data '+x.label,e);state.zoneData[x.district]=[];state.zoneLoadErrors[x.district]=e.message;return x.label+': 오류 ('+e.message+')'}
+  }catch(e){console.error('Zone data '+x.label,e);state.zoneData[x.district]=[];state.zoneLoadErrors[x.district]=e.message;return x.label+': 오류 ('+e.message+')'}finally{
+   state.sourceStatus[x.district].polygon=state.zoneLoadErrors[x.district]?'error':'ready';
+   if(state.zoneLoadErrors[x.district])state.sourceStatus[x.district].errorCode='source-unavailable';
+   notifySchoolSourceStatus();
+  }
  }));
- await feederPromise;
+ // Feeder is optional and separately bounded; completed polygons stay usable.
  state.assignmentLoadFailed=results.some(x=>x.includes(': 오류 ('));state.zoneReady=true;window.refreshCandidateComparisons?.();
- el('zoneDatasetStatus').innerHTML=results.map(escape).join('<br>')+
-  '<br>Plano 공식 진학표 점검: '+(state.planoFeederReference?'11개 경로 로딩 완료 · 집주소별 초·중·고·Senior High 자동 대조':'검증 자료 로딩 실패 · Plano 집주소 자동 학교 강조 중단')+
-  '<br><b>2026–27 GIS 독립 검증: Frisco·Prosper 2곳 · 공식 Finder 연결 GIS: Plano·Lewisville 2곳(연도 불일치 가능) · Allen 주소표 공식 조회 검증 · CFB GuideK12 공식 주소 Finder는 주소 후보 선택 후 초·중·고 결과 2건 검증. 개별 호수와 상충하는 진학표는 학군 담당자 확인이 필요합니다.</b>';
+ zoneDatasetResults=results;renderBoundaryDatasetStatus();
  if(state.selectedSchool)drawBoundary();
  if(typeof refreshHomeSchools==='function')refreshHomeSchools();drawSchools();drawList();
 }
+function renderBoundaryDatasetStatus(){
+ el('zoneDatasetStatus').innerHTML=zoneDatasetResults.map(escape).join('<br>')+
+  '<br>Plano 공식 진학표 점검: '+(state.planoFeederReference?'11개 경로 로딩 완료 · 집주소별 초·중·고·Senior High 자동 대조':'검증 자료 로딩 실패 · Plano 집주소 자동 학교 강조 중단')+
+  '<br><b>2026–27 GIS 독립 검증: Frisco·Prosper 2곳 · 공식 Finder 연결 GIS: Plano·Lewisville 2곳(연도 불일치 가능) · Allen 주소표 공식 조회 검증 · CFB GuideK12 공식 주소 Finder는 주소 후보 선택 후 초·중·고 결과 2건 검증. 개별 호수와 상충하는 진학표는 학군 담당자 확인이 필요합니다.</b>';
+}
+
 function addFriscoBoundarySchools(){
  for(const f of state.zoneData.FISD||[]){
   if(isRetiredCampus({district:'FISD',name:f.properties?.school}))continue;
@@ -909,7 +933,7 @@ function drawBoundary(){
    note.appendChild(explain);
   }
   if(note&&s.district==='PISD'&&/\bJackson\b/i.test(s.name))note.innerHTML+='<br><b>Jackson Elementary 진학 경로 예외:</b> Coit Rd 동쪽은 Wilson Middle → Vines High → Plano Senior, 서쪽은 Frankford Middle → Shepton High → Plano West Senior입니다. 정확한 주소로 학군 공식 SchoolFinder를 확인하세요.';
- }else if(!state.zoneReady&&districtInfo(s.district)?.zoneKey){
+ }else if(!schoolSourceReady(s.district)&&districtInfo(s.district)?.zoneKey){
   if(note)note.textContent='배정구역 데이터를 불러오는 중입니다…';
  }else if(note){
   const source=window.SchoolBoundaryMatch.boundarySchoolSource(s.district);
@@ -971,15 +995,12 @@ async function drawSelectedRoute(operation=null){if(!map||!state.dest)return;con
 // Start both independent public static datasets together, but commit rows in
 // deterministic DFW-then-neighbor order before Leaflet and search UI initialize.
 function loadInitialDashboardSources(){
- const read=async response=>{
-  if(!response.ok)throw Error('HTTP '+response.status);
-  return response.json();
- };
  return Promise.allSettled([
-  fetch('./dfw-demographics.json',{cache:'default'}).then(read),
-  fetch('./dfw-outside-public.json',{cache:'default'}).then(read)
+  window.TxBoundedJson.requestJson('./dfw-demographics.json',{cache:'default'}),
+  window.TxBoundedJson.requestJson('./dfw-outside-public.json',{cache:'default'})
  ]);
 }
+
 document.addEventListener('DOMContentLoaded',async()=>{
  const [dfwResult,neighborResult]=await loadInitialDashboardSources();
  try{

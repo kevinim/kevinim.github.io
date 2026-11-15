@@ -117,9 +117,8 @@ async function geocodeAddress(address,signal,suggestion=null){
    body.set('magicKey',suggestion.magicKey);body.set('countryCode','USA');
    body.set('searchExtent',TEXAS_SUGGEST_EXTENT);body.set('location','-96.8,33.1');body.set('returnCollections','false');
   }
-  const response=await fetch('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates',{method:'POST',body,signal});
-  if(!response.ok)throw Error('주소 검색 서비스 HTTP '+response.status);
-  const json=await response.json();if(json.error)throw Error('주소 검색 서비스 오류');
+  const json=await window.TxBoundedJson.requestJson('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates',{method:'POST',body,signal});
+  if(json.error)throw Error('주소 검색 서비스 오류');
   return (json.candidates||[]).filter(c=>Number.isFinite(c.location?.x)&&Number.isFinite(c.location?.y)&&c.location.x>=-107&&c.location.x<=-93&&c.location.y>=25&&c.location.y<=37);
 }
 function homeDirections(reverse){
@@ -497,7 +496,7 @@ async function searchHome(event,suggestion=null){
     const best=candidates[0];el('homeSearch').disabled=false;if(!useHomeCandidate(best))return;
     const requestedZip=[...address.matchAll(/\b\d{5}(?:-\d{4})?\b/g)].at(-1),returnedZip=[...best.address.matchAll(/\b\d{5}(?:-\d{4})?\b/g)].at(-1);const zipWarning=requestedZip&&returnedZip&&requestedZip[0].slice(0,5)!==returnedZip[0].slice(0,5)?' 입력한 ZIP과 검색된 ZIP이 다릅니다.':'';const quality=home.geocodeQuality;
     el('homeStatus').textContent='자동 선택: '+best.address+' · 일치도 '+(Number.isFinite(best.score)?Math.round(best.score):'미확인')+'.'+zipWarning+(quality?.usableForSchoolCandidate?' 건물 단위 위치 후보입니다. 등록 자격은 학군에 확인하세요.':' 좌표 신뢰도 부족: '+(quality?.reason||'공식 주소 검색을 이용하세요.'));
-  }catch(error){if(error.name!=='AbortError'&&version===homeVersion)el('homeStatus').textContent='주소 검색에 실패했습니다. 연결 상태를 확인한 뒤 다시 시도하세요.'}
+  }catch(error){if(error.name!=='AbortError'&&version===homeVersion)el('homeStatus').textContent=error.code==='timeout'?'주소 검색 시간이 초과되었습니다. 다시 검색해 주세요.':'주소 검색에 실패했습니다. 연결 상태를 확인한 뒤 다시 시도하세요.'}
   finally{if(version===homeVersion)el('homeSearch').disabled=false}
 }
 async function calculateHomeCommute(){
