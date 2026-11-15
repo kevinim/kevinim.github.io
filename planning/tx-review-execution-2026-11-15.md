@@ -31,6 +31,8 @@ Plan: TX_Dashboard_Code_Review_Plan_2026-11-15.md, main baseline c4c3d0a085525e5
 - Preserve existing mixed line endings outside narrow edits. Extend the existing exact-byte JS allowlist with one exact T01 blob digest; historical baselines and security assertions remain enforced.
 - CI exposed a pre-existing stale McNeil click assertion after #313 removed three repurposed campuses from active choices. Keep the active Finch polygon test and explicitly assert McNeil/Eddins/Wolford are absent; do not restore retired schools or skip browser QA.
 - T02 reuses the existing provider asset for bounded reads to preserve the synchronous script dependency order. Exact legacy HTML assertions normalize only four reviewed cache-key changes; all other markup and CSP remain byte-pinned. New loader tests require the fresh guard on all five entry points.
+- Update existing audit/build/browser references to the new exact asset versions, without broadening URL/CSP/policy rules or performance budgets. The approved provider-added resource allowance still counts the same single guard asset.
+- CFB evidence rows may move into the existing compact-footnote index. Its browser check now requires original evidence content plus either readable inline text or a working link to that same evidence, instead of racing the footnote observer with an immediate innerText assertion.
 
 ## Remaining
 

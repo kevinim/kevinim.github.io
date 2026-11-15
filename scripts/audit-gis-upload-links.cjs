@@ -52,7 +52,7 @@ function auditSchoolBoundaryTrust(files, registry = DISTRICT_REGISTRY) {
   const legacyScript = files?.['features/reviewed-bootstrap.js'] || '';
   const uploadGuard = files?.['features/geojson-upload-guard.js'] || '';
   const match = files?.['school-boundary-match.js'] || '';
-  if (!page || !main || !page.includes('<script src="./dashboard-main.js?v=6"></script>') || !legacy || !legacyScript || !uploadGuard || !match) {
+  if (!page || !main || !page.includes('<script src="./dashboard-main.js?v=7"></script>') || !legacy || !legacyScript || !uploadGuard || !match) {
     errors.push('Missing required school boundary source files');
     return {errors, warnings, inventory: null};
   }
@@ -81,7 +81,7 @@ function auditSchoolBoundaryTrust(files, registry = DISTRICT_REGISTRY) {
       !source.includes('<script src="./trusted-link-policy.js?v=1"></script>'))
     errors.push('main official evidence-link is no longer verified by the exact-host HTTPS policy');
   if (!legacy.includes('src="./features/geojson-upload-guard.js?v=1"') ||
-      !legacy.includes('src="./features/reviewed-bootstrap.js?v=1"') ||
+      !legacy.includes('src="./features/reviewed-bootstrap.js?v=2"') ||
       !legacyScript.includes('function loadBoundaryFile(') ||
       !legacyScript.includes('SchoolGeoJSONGuard.assertFileSize') ||
       !legacyScript.includes('SchoolGeoJSONGuard.validate') ||
