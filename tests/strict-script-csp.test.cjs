@@ -21,7 +21,7 @@ const inlineScripts=html=>[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/scrip
 test('index.html uses zero-hash external same-origin main bootstrap',()=>{
  const html=read('index.html'),policy=csp(html),scripts=inlineScripts(html);
  assert.equal(scripts.length,0,'Main must have no inline executable scripts');
- assert.ok(html.includes('<script src="./dashboard-main.js?v=7"></script>'));
+ assert.ok(html.includes('<script src="./dashboard-main.js?v=8"></script>'));
  assert.doesNotMatch(policy,/'sha256-/);
  assert.ok(policy.includes("script-src 'self' https://unpkg.com;"));
  assert.ok(read('dashboard-main.js').includes('button[data-clear-school]'));
@@ -33,7 +33,7 @@ test('reviewed.html is external-script-only with no inline handlers',()=>{
  assert.match(policy,/script-src 'self' https:\/\/unpkg\.com;/);
  assert.doesNotMatch(policy,/'sha256-/);
  assert.ok(html.includes('<script src="./features/geojson-upload-guard.js?v=1"></script>'));
- assert.ok(html.includes('<script src="./features/reviewed-bootstrap.js?v=2"></script>'));
+ assert.ok(html.includes('<script src="./features/reviewed-bootstrap.js?v=3"></script>'));
  assert.doesNotMatch(html,/\s(?:onclick|onload|onerror|oninput|onchange|onsubmit)\s*=\s*["']/i);
  const src=read('features/reviewed-bootstrap.js');
  assert.ok(src.includes('SchoolGeoJSONGuard.assertFileSize'));
