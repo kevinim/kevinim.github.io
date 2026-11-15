@@ -10,6 +10,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   validate-pr:
@@ -61,3 +64,4 @@ jobs:
           name: noaa-storm-history-dfw-2024-2025
           path: data/noaa-storm-events-dfw-2024-2025.json
           if-no-files-found: warn
+

@@ -9,6 +9,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   validate-pr:
@@ -49,3 +52,4 @@ jobs:
           name: phase2a-fema-dfw-tract-snapshot
           path: data/phase2a-fema-nri-dfw-2025.geojson
           retention-days: 14
+

@@ -35,7 +35,7 @@ Plan: TX_Dashboard_Code_Review_Plan_2026-11-15.md, main baseline c4c3d0a085525e5
 - CFB evidence rows may move into the existing compact-footnote index. Its browser check now requires original evidence content plus either readable inline text or a working link to that same evidence, instead of racing the footnote observer with an immediate innerText assertion.
 - The curated public-preview builder must recognize the bounded neutral-data read and preserve cancellation/superseded-result guards when replacing Nominatim with Esri. A VM regression failed with the old transformation restoring destination A after edit to B, and passes with the generated operation signal and ownership check retained. The five public-promotion blockers remain unchanged.
 
-## T03–T07: implemented; integrated CI and repeated measurements pending
+## T03–T08: merged, deployed and verified
 
 - T02 PR #315 merged as 61617d738180a0d1a8cb13d09818e6f96bd64b95 after 52 successful workflows. Pages #43734979594 and production school-map smoke #43735051773 succeeded.
 - T03 preserves each Finder layer's source year and marks only explicitly checked McKinney elementary 2026-27 as current. Middle/high remain references. Campus clicks preserve disabled boundary toggles; late ZIP geometry cannot replace a viewport already claimed by the user or selected UAT city.
@@ -47,10 +47,13 @@ Plan: TX_Dashboard_Code_Review_Plan_2026-11-15.md, main baseline c4c3d0a085525e5
 - Cache keys are advanced for changed runtime assets. Exact HTML checks reverse only the three approved semantic-control changes and exact cache keys; the changed main script has an additional exact blob allowlist entry. Historical checks and CSP are retained.
 - Independent review found a permissions-audit bypass for inline/quoted permissions, then a commented block declaration. Both are now rejected or detected by one validated scanner; regression cases also cover unsupported aliases, merges, escaped keys and elevated trigger/credential quoting. All 101 current workflows audit with zero writers, errors or warnings.
 - Source failures remain visible even when the reference overlay is off, without drawing failed-source geometry or changing the user's switches. The disabled-overlay notice now instructs users to enable the appropriate setting rather than promising automatic activation.
-- After the first 53/62 successful workflows, obsolete auto-enable/writer-inventory assertions were corrected. The next run passed 61/62; its final hung-source browser assertion identified the failure-message priority above. Final CI rerun remains required before merge.
+- After the first 53/62 successful workflows, obsolete auto-enable/writer-inventory assertions were corrected. The next run passed 61/62; its final hung-source browser assertion identified the failure-message priority above. The final rerun passed all 62 workflows before merge.
 
 ## Remaining
 
-T07 measured browser evidence and CI queue/setup timing review; T08 integrated GitHub checks, merge, Pages deployment and live production smoke.
+T01–T08 are complete: PR #316 merged as ea0c73a975c15436ddfa46f1804ba6a80e2a42ca. Local regression selection passed 131 tests; all 62 final PR workflows passed. Pages deployment #43745562767 and production smoke #43745646090 succeeded. Post-merge workflows: 15 successful, three intentional duplicate smoke triggers skipped, no failures. Five-run measurements and CI timing evidence are recorded in planning/tx-performance-review-2026-11-15.md.
+
+Remaining operational follow-up is PR #310: review the incident-era queued Actions auditor against current main, add per-attempt main/open-PR protection refresh, reject incomplete metadata, and ensure read-only snapshot validation jobs have stale-PR cancellation coverage. Actual historical-run cancellation is separate from shipping this audit tool and requires an Actions cancellation capability unavailable in the connected GitHub API. No home addresses, school assignment gates or public-promotion conditions change.
 
 T01 changes do not authorize automatic school assignment, change data provenance, add paid services, store home addresses, or relax public-promotion gates.
+
