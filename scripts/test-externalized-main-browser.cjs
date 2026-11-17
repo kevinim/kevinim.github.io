@@ -217,6 +217,61 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
     }));
     assert.ok(picked.selected&&picked.text.includes(picked.selected),
       'school click and detail must survive JS extraction');
+    // Synthetic-only residential state: never infer campus assignment from ZIP
+    // or allow a high-grade nearby school to leak into an address-specific list.
+    await page.evaluate(()=>{
+      home={address:'SYNTHETIC ADDRESS - NOT A RESIDENCE',ll:[33.12,-96.72],
+        geocodeQuality:{usableForSchoolCandidate:false}};
+      state.selectedSchool=null;schoolFocusGroup.clearLayers();
+      renderHome();drawSchools();drawList();
+    });
+    await page.waitForFunction(()=>document.querySelector('#homeManualSchoolBridge')?.hidden===false,
+      null,{timeout:15000});
+    const unverified=await page.evaluate(()=>({
+      priorityVisible:!document.getElementById('homeAssignmentPriority').hidden,
+      summary:document.getElementById('homeAssignmentPriorityStatus').textContent,
+      schoolCount:document.querySelectorAll('#schoolList button.school').length,
+      markers:schoolGroup.getLayers().length,
+      notice:document.getElementById('schoolAddressNotice').textContent,
+      approved:window.ConditionalSchoolRelease.releaseSummary().currentYearResidentialDistrictApprovals,
+      officeTop:document.querySelector('.office-controls').getBoundingClientRect().top,
+      mainBottom:document.querySelector('.main').getBoundingClientRect().bottom
+    }));
+    assert.equal(unverified.priorityVisible,true,'address school evidence must be top-priority');
+    assert.equal(unverified.summary,'배정 미확인');
+    assert.equal(unverified.schoolCount,0,'ZIP campus list must be hidden until verified');
+    assert.equal(unverified.markers,0,'ZIP school markers must be hidden until verified');
+    assert.match(unverified.notice,/ZIP/);
+    assert.equal(unverified.approved,0,'No production district can auto-certify residential assignments');
+    if(width>=1060)assert.ok(unverified.officeTop>=unverified.mainBottom,
+      'Desktop commute card must come after map and school information');
+    await page.locator('#schoolScope').selectOption('all');
+    assert.equal(await page.locator('#schoolList button.school').count(),0,
+      'Changing school browse scope cannot reveal other ZIP campuses for an active address');
+    await page.locator('#homeManualSchoolBridge summary').click();
+    await page.locator('#homeManualDistrict').selectOption('LISD');
+    const available=await page.locator('#homeManualelementary option').count();
+    assert.ok(available>1,'District elementary directory must populate');
+    await page.locator('#homeManualelementary').selectOption({index:1});
+    await page.getByRole('button',{name:'직접 선택한 학교를 아래에 표시'}).click();
+    const manual=await page.evaluate(()=>({
+      count:document.querySelectorAll('#schoolList button.school').length,
+      selected:window.HomeSchoolManualBridge.selectedSchools(home).length,
+      status:document.getElementById('homeAssignmentPriorityStatus').textContent,
+      cards:document.querySelectorAll('#homeAssignmentPrioritySchools .home-assignment-school').length
+    }));
+    assert.equal(manual.count,1,'Only the user-chosen Finder campus appears');
+    assert.equal(manual.selected,1);
+    assert.equal(manual.cards,1,'Top priority summary includes the chosen school');
+    assert.match(manual.status,/검증 전/,'Manual selection cannot impersonate certified assignment');
+    await page.evaluate(()=>clearHome());
+    const restored=await page.evaluate(()=>({
+      priorityHidden:document.getElementById('homeAssignmentPriority').hidden,
+      count:document.querySelectorAll('#schoolList button.school').length,
+      noticeHidden:document.getElementById('schoolAddressNotice').hidden
+    }));
+    assert.ok(restored.priorityHidden&&restored.noticeHidden&&restored.count>0,
+      'Clearing address restores normal ZIP exploration and hides address warning');
     assert.ok(errors.every(x=>!/(ReferenceError|SyntaxError|not defined|Cannot access)/i.test(x)),
       'no bootstrap load-order errors: '+JSON.stringify(errors.slice(0,8)));
     console.log('PASS main extracted JS loads exactly once, map + ZIP + school click + address UI ready, width='+width);
