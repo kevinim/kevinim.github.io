@@ -21,7 +21,7 @@ test('six individual render-blocking stylesheets become exactly one linked asset
  assert.ok(links.length>=7);
  const peimsLinks=links.filter(link=>link[0].includes('./features/tea-peims-public-share-addon.css?v=2'));
  assert.equal(peimsLinks.length,1,'Exactly one independently reviewed PEIMS chart stylesheet');
- assert.equal(links.filter(link=>link[0].includes('./features/map-first-split.css?v=1')).length,1,
+ assert.equal(links.filter(link=>link[0].includes('./features/map-first-split.css?v=2')).length,1,
   'Exactly one separately audited Redfin-split stylesheet');
  assert.equal(links.length-peimsLinks.length,11,
   'Approved map-first layout adds one render stylesheet without undoing the six-file bundle');
