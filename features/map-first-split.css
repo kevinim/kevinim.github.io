@@ -90,3 +90,40 @@
 @media (prefers-reduced-motion:reduce){
  .shell>.main>.mapcol>.mapbox{scroll-behavior:auto}
 }
+
+/* Address-first UX: school assignment before commuting, without DOM reparenting.
+ * display:contents retains all input listeners, form semantics and IDs. */
+.shell{display:flex;flex-direction:column}
+.shell>.controls-grid{display:contents}
+.shell>.controls-grid>.home-controls{min-width:0;margin-bottom:14px}
+.shell>.controls-grid>.office-controls{order:90;min-width:0;margin-top:15px}
+.shell>.footer{order:100}
+@media(min-width:721px){
+ .shell>.controls-grid>.home-controls{width:100%}
+ .shell>.controls-grid>.office-controls{width:100%}
+}
+@media(max-width:720px){
+ .shell>.controls-grid>.office-controls{order:90}
+ .shell>.footer{order:100}
+}
+.home-assignment-priority{
+ margin-top:15px;padding:16px 17px;border-radius:12px;
+ border:1px solid #93b5e5;background:#eff6ff;color:#16355b;
+}
+.home-assignment-priority[hidden]{display:none!important}
+.home-assignment-priority-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.home-assignment-priority-head h3{font-size:17px;line-height:1.4;margin:0}
+.home-assignment-priority-status{font-weight:750;font-size:11px;padding:5px 9px;border-radius:999px;background:#dbeafe;color:#234f89}
+.home-assignment-priority-desc{margin:10px 0;line-height:1.6;font-size:13px}
+.home-assignment-priority-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:9px;margin:10px 0}
+.home-assignment-school{border:1px solid #b7cef0;background:#fff;padding:10px 12px;border-radius:9px;min-width:0}
+.home-assignment-school strong{display:block;overflow-wrap:anywhere}
+.home-assignment-school small{display:block;color:#425b7e;margin-top:6px;font-size:11px;line-height:1.45}
+.home-assignment-priority button{margin-top:9px;min-height:36px}
+.home-school-address-note{margin:10px 0;padding:10px 12px;border:1px solid #adc6eb;border-radius:8px;background:#eff6ff;color:#23466c;font-size:12px;line-height:1.6}
+.home-school-address-note[hidden]{display:none!important}
+html[data-theme="dark"] .home-assignment-priority{background:#142b44;border-color:#496c92;color:#ebf3ff}
+html[data-theme="dark"] .home-assignment-priority-status{background:#264866;color:#e1efff}
+html[data-theme="dark"] .home-assignment-school{background:#1b324e;border-color:#4b6584;color:#f2f7ff}
+html[data-theme="dark"] .home-assignment-school small{color:#c1d0e5}
+html[data-theme="dark"] .home-school-address-note{background:#172f48;color:#deebf8;border-color:#496c92}
