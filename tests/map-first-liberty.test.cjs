@@ -13,7 +13,7 @@ const layout=read('features/map-first-split.css');
 
 test('Liberty default is added to production only, with pinned lazy resources and narrow CSP policy',()=>{
  assert.match(html,/<option value="liberty">Liberty · OpenFreeMap<\/option>/);
- assert.match(html,/<script src="\.\/features\/map\/liberty-basemap\.js\?v=1"><\/script><script src="\.\/dashboard-main\.js\?v=10"><\/script>/);
+ assert.match(html,/<script src="\.\/features\/map\/liberty-basemap\.js\?v=2"><\/script><script src="\.\/dashboard-main\.js\?v=10"><\/script>/);
  assert.match(html,/worker-src 'self' blob:/);
  assert.match(html,/connect-src [^"]*https:\/\/tiles\.openfreemap\.org/);
  assert.match(html,/img-src [^"]*https:\/\/tiles\.openfreemap\.org/);
@@ -38,15 +38,15 @@ test('split layout keeps school list left, map right, and restores a single colu
  assert.match(html,/data-grade="B_PLUS"/);
 });
 
-function harness(layerFactory){
+function harness(layerFactory,{webgl2=true,removeThrows=false}={}){
  const map={
   layers:new Set(),
   hasLayer(layer){return this.layers.has(layer)},
-  removeLayer(layer){this.layers.delete(layer)}
+  removeLayer(layer){if(removeThrows)throw new TypeError("Cannot read properties of undefined (reading 'remove')");this.layers.delete(layer)}
  };
  const L={maplibreGL:layerFactory};
  const rootWindow={L,maplibregl:{}};
- const context={window:rootWindow,document:{head:{appendChild(){throw Error('No network expected')}},createElement(){throw Error('No network expected')}},setTimeout,clearTimeout,console};
+ const context={window:rootWindow,document:{head:{appendChild(){throw Error('No network expected')}},createElement(tag){if(tag==='canvas')return {getContext(type){return type==='webgl2'&&webgl2?{}:null}};throw Error('No network expected')}},setTimeout,clearTimeout,console};
  vm.runInNewContext(adapter,context,{filename:'liberty-basemap.js'});
  return {map,api:rootWindow.TXLibertyBasemap};
 }
@@ -72,4 +72,19 @@ test('Liberty adapter removes a partially created vector layer when WebGL fails'
  }));
  await assert.rejects(h.api.create(h.map),/WebGL map unavailable/);
  assert.equal(h.map.layers.size,0);
+});
+
+test('WebGL2-disabled environments fail before downloading vector assets or mounting a partial layer',async()=>{
+ let called=false;
+ const h=harness(()=>{called=true;throw new Error('should not initialize MapLibre')},{webgl2:false});
+ await assert.rejects(h.api.create(h.map),/requires WebGL2/);
+ assert.equal(called,false);
+ assert.equal(h.map.layers.size,0);
+});
+
+test('A half-initialized MapLibre layer cleanup error cannot mask the original startup failure',async()=>{
+ const h=harness(()=>({
+  addTo(map){map.layers.add(this);throw new Error('WebGL startup failed')}
+ }),{removeThrows:true});
+ await assert.rejects(h.api.create(h.map),/WebGL startup failed/);
 });
