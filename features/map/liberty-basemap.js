@@ -42,8 +42,17 @@
   }
   return dependencies;
  }
+ function webgl2Available(){
+  // Preflight before loading the substantial MapLibre assets: its v5 renderer
+  // requires WebGL2. Some headless/sandboxed browsers disable WebGL entirely.
+  try{
+   const canvas=document.createElement('canvas');
+   return !!canvas.getContext?.('webgl2');
+  }catch{return false;}
+ }
  async function create(map){
   if(!map||!root.L)throw new Error('Leaflet map unavailable');
+  if(!webgl2Available())throw new Error('Liberty requires WebGL2; OpenStreetMap fallback remains active');
   await ensureLoaded();
   let layer=null;
   try{
@@ -66,7 +75,13 @@
    });
    return layer;
   }catch(error){
-   if(layer&&map.hasLayer?.(layer))map.removeLayer(layer);
+   if(layer&&map.hasLayer?.(layer)){
+    // A failed WebGL constructor can leave the Leaflet adapter half-initialized.
+    // Its onRemove() may itself throw: preserve the real startup error so the
+    // caller can reliably retain the working OpenStreetMap fallback.
+    try{map.removeLayer(layer)}
+    catch(cleanupError){console.warn('Liberty partial layer cleanup failed:',cleanupError?.message||cleanupError)}
+   }
    throw error;
   }
  }
