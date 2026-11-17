@@ -165,7 +165,7 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  const approvedFn=basemapFn(lastApprovedJs),currentFn=basemapFn(js);
  assert.ok(approvedFn.startsWith('function setBaseMap')&&currentFn.startsWith('function setBaseMap'));
  let normalizedLibertyJs=replaceOnce(js,currentFn,approvedFn);
- normalizedLibertyJs=replaceOnce(normalizedLibertyJs,'let baseMapGeneration=0;\n','');
+ normalizedLibertyJs=replaceOnce(normalizedLibertyJs,'boundarySeq=0,baseMapGeneration=0;','boundarySeq=0;');
  normalizedLibertyJs=replaceOnce(normalizedLibertyJs,
   'setBaseMap(el(\'baseMap\')?.querySelector(\'option[value="liberty"]\')?\'liberty\':\'osm\');zipGroup=',
   'setBaseMap(\'osm\');zipGroup=');
