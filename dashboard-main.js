@@ -585,13 +585,66 @@ function syncMapSize(){
    schoolActiveMarkers.set(key,marker);
   }
  }
+
+/* An address is not a ZIP-school lookup. Campus location, historical GIS,
+ * and TEA grades never establish residential assignment. The official Finder
+ * manual selection is explicitly distinct from certified auto-assignment. */
+function addressSchoolView(){
+ const searchedHome=typeof home!=='undefined'?home:null;
+ if(!searchedHome)return null;
+ if(window.ConditionalSchoolRelease?.decide?.(searchedHome.assignment)?.allowed===true)
+  return {kind:'certified',schools:state.schools.filter(s=>homeSchoolMatches(s))};
+ const manual=window.HomeSchoolManualBridge?.selectedSchools?.(searchedHome);
+ const all=new Set(state.schools);
+ const schools=Array.isArray(manual)?[...new Set(manual.filter(s=>all.has(s)))]:[];
+ return {kind:schools.length?'manual':'unverified',schools};
+}
+function renderAddressSchoolPriority(){
+ const panel=el('homeAssignmentPriority');
+ if(!panel)return;
+ const view=addressSchoolView();
+ panel.hidden=!view;
+ if(!view)return;
+ const status=el('homeAssignmentPriorityStatus');
+ const desc=el('homeAssignmentPriorityDescription');
+ const cards=el('homeAssignmentPrioritySchools');
+ cards.replaceChildren();
+ if(view.kind==='certified'){
+  status.textContent='공식 검증 완료';
+  desc.textContent='이 주소의 공식 검증 배정학교만 표시합니다. 학교 건물의 ZIP은 실제 배정 구역과 다를 수 있습니다.';
+ }else if(view.kind==='manual'){
+  status.textContent='사용자 선택 · 검증 전';
+  desc.textContent='공식 Finder 결과를 직접 선택한 학교만 표시합니다. 이 대시보드가 주소 배정을 독립 인증한 것은 아닙니다. 같은 ZIP의 다른 학교는 숨겼습니다.';
+ }else{
+  status.textContent='배정 미확인';
+  desc.textContent='이 주소의 초·중·고 배정학교는 아직 자동 확인되지 않았습니다. ZIP 안에 위치한 다른 학교는 숨겼습니다. 공식 학군 검색기 결과를 확인한 뒤 직접 선택해 주세요.';
+ }
+ for(const school of view.schools){
+  const card=document.createElement('div');card.className='home-assignment-school';
+  const name=document.createElement('strong');name.textContent=school.name;
+  const meta=document.createElement('small');
+  const grade=typeof scoreRecord==='function'?scoreRecord(school.name,school.district)?.rating:null;
+  const level=school.type==='elementary'?'초등':school.type==='middle'?'중등':'고등';
+  meta.textContent=level+' · 2026 TEA '+(grade||'등급 미확인')+(view.kind==='manual'?' · 직접 선택':'');
+  card.append(name,meta);cards.appendChild(card);
+ }
+ const button=el('homeAssignmentPriorityFinder');
+ if(button)button.onclick=()=>{
+  const bridge=el('homeManualSchoolBridge');
+  if(bridge&&!bridge.hidden){
+   const details=bridge.querySelector('details.home-manual-school-details');
+   if(details)details.open=true;
+   bridge.scrollIntoView({behavior:'auto',block:'start'});
+  }else el('homeSchoolInfo')?.scrollIntoView({behavior:'auto',block:'start'});
+ };
+}
  function drawSchools(){
   if(!map)return;
-  const homeActive=typeof home!=='undefined'&&!!home&&window.ConditionalSchoolRelease?.decide?.(home.assignment)?.allowed===true;
+  const addressView=addressSchoolView(),homeActive=addressView?.kind==='certified';
   const legend=el('schoolLegend');
   if(legend){
    legend.classList.toggle('matching',homeActive);
-   const html=homeActive?'<span>집 주소 배정 후보</span><span>그 외 학교 · 배정 미확인</span>':'<span>초등</span><span>중등</span><span>고등</span><span>숫자 그룹을 누르면 확대</span>';
+   const html=addressView?'<span>'+(homeActive?'공식 검증 배정학교':'공식 Finder에서 직접 선택 · 배정 미인증')+'</span>':'<span>초등</span><span>중등</span><span>고등</span><span>숫자 그룹을 누르면 확대</span>';
    if(legend.innerHTML!==html)legend.innerHTML=html;
   }
   const notice=el('schoolMapStatus'),zoom=map.getZoom();
@@ -604,13 +657,12 @@ function syncMapSize(){
   // represent a collapsed/zero-size map until invalidateSize().
   const size=syncMapSize();
   const bounds=map.getBounds();
-  const eligible=state.schools.filter(s=>s.ll&&s.type!=='other'&&
-   (state.level==='all'||s.type===state.level)&&
-   schoolPassesRatingFilter(s));
-  const visible=eligible.filter(s=>bounds.contains(s.ll));
-  const homeCandidates=homeActive?state.schools.filter(s=>s.ll&&s.type!=='other'&&
-   (state.level==='all'||s.type===state.level)&&homeSchoolMatches(s)):[];
-  const displayed=[...new Set([...visible,...homeCandidates])];
+  // In address mode only verified/manual selections render, never ZIP campus points.
+  const eligible=addressView?addressView.schools.filter(s=>s.ll&&s.type!=='other')
+   :state.schools.filter(s=>s.ll&&s.type!=='other'&&
+    (state.level==='all'||s.type===state.level)&&schoolPassesRatingFilter(s));
+  const visible=addressView?eligible:eligible.filter(s=>bounds.contains(s.ll));
+  const displayed=visible;
   if(!size.x||!size.y){
    reconcileSchoolMarkerLayers(new Map());
    if(notice)notice.textContent='지도가 아직 화면에 배치되지 않아 학교 마커를 계산하지 않았습니다. 지도가 보이면 자동으로 다시 표시합니다.';
@@ -641,7 +693,11 @@ function syncMapSize(){
   }
   reconcileSchoolMarkerLayers(next);
   if(notice){
+   if(addressView){
+    notice.textContent=(addressView.kind==='certified'?'주소별 공식 검증 배정학교 ':'주소별 직접 선택 참고학교 ')+eligible.length+'개 표시 · 다른 ZIP 학교 숨김 · '+(addressView.kind==='certified'?'공식 검증':'배정 미인증');
+   }else{
    notice.textContent=(clusterMode?'학교 '+displayed.length+'개를 '+groups.length+'개 위치 그룹으로 표시 · 숫자를 눌러 확대 · ':compactMode?'학교 '+displayed.length+'개를 작은 점으로 표시 · 확대하면 등급 배지 · ':'학교 마커 '+displayed.length+'개 표시 · ')+'등록 '+state.schools.length+'개 · 필터 적합 '+eligible.length+'개 · 화면 내 '+visible.length+'개 · ZIP '+state.zip+' · Zoom '+zoom+' · 지도 '+size.x+'×'+size.y+' · 학교 위치는 배정 확정 정보가 아닙니다.'+(state.selectedSchool?' · 선택: '+state.selectedSchool.name+(Array.isArray(state.selectedSchool.ll)?' (노란색 학교 위치 마커)':' (학교 좌표 미확인)'):'');
+   }
   }
  }
 function drawHomeAssignmentMap(){
