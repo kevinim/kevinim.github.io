@@ -62,7 +62,7 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
       const mapcol=document.querySelector('.main>.mapcol').getBoundingClientRect();
       const mapbox=document.querySelector('.main>.mapcol>.mapbox').getBoundingClientRect();
       return {rail:{left:rail.left,right:rail.right,top:rail.top},
-        mapcol:{left:mapcol.left,top:mapcol.top},mapbox:{height:mapbox.height},
+        mapcol:{left:mapcol.left,top:mapcol.top},mapbox:{height:mapbox.height,top:mapbox.top},
         tiles:map.getContainer().querySelectorAll('.leaflet-tile').length};
     });
     if(width>=1060){
@@ -70,7 +70,7 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
         'Redfin desktop split puts the map to the right of the result/filter rail');
       assert.ok(layout.mapbox.height>=500,'Desktop map retains a large canvas');
     }else{
-      assert.ok(layout.mapcol.top<=layout.rail.top,
+      assert.ok(layout.mapbox.top<layout.rail.top,
         'Mobile map-first presentation keeps map above advanced rail controls');
     }
     assert.ok(layout.tiles>=0,'Leaflet map stays mounted when Liberty CDN fails');
