@@ -1039,7 +1039,8 @@ test('Allen school markers are automatic at wide zoom; independent FEMA quick to
  assert.ok(!html.includes('id="allenSchoolsShortcut"'),'Do not require user to click an Allen button');
  assert.ok(html.includes('id="hazardMapQuickToggle"'));
  assert.ok(html.includes('id="schoolMapStatus"'));
- assert.ok(html.includes('const eligible=state.schools.filter('));
+ assert.ok(html.includes('const eligible=addressView?addressView.schools.filter('),'Address mode must use only explicitly evidenced campus records');
+ assert.ok(html.includes(':state.schools.filter(s=>s.ll'),'Normal ZIP exploration must retain the original school marker source');
  assert.ok(html.includes('bounds.contains(s.ll)'));
  assert.ok(!html.includes('const visible=zoom<11?allenItems:items.slice(0,limit);'));
  assert.ok(html.includes('class="hazard-chip ifld"')&&html.includes('class="hazard-chip wfir"')&&html.includes('class="hazard-chip hrcn"'));
