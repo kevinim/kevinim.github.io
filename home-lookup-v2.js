@@ -109,7 +109,7 @@ function clearHome(){
   if(map&&homeMarker)map.removeLayer(homeMarker);homeMarker=null;
   if(typeof homeZoneGroup!=='undefined'&&homeZoneGroup)homeZoneGroup.clearLayers();
   el('homeCandidates').replaceChildren();el('homeResult').replaceChildren();el('homeSchoolInfo').replaceChildren();el('homeStatus').textContent='';if(homeRouteLayer)homeRouteLayer.clearLayers();
-  el('homeSearch').disabled=false;if(map){drawSchools();drawList()}
+  el('homeSearch').disabled=false;if(typeof renderAddressSchoolPriority==='function')renderAddressSchoolPriority();if(map){drawSchools();drawList()}
 }
 async function geocodeAddress(address,signal,suggestion=null){
   const body=new URLSearchParams({SingleLine:address,f:'json',outFields:'Match_addr,Addr_type,Region,Postal',maxLocations:'5',forStorage:'false'});
@@ -244,6 +244,7 @@ function renderHome(){
   el('homeResult').innerHTML=office?'<div class="home-actions"><button type="button" class="mini-btn" id="homeRoute">집에서 운전시간 계산</button> <a class="cardlink" href="'+escape(homeDirections(false))+'" target="_blank" rel="noopener">집 → 회사 Google ↗</a> <a class="cardlink" href="'+escape(homeDirections(true))+'" target="_blank" rel="noopener">회사 → 집 ↗</a><div id="homeRouteStatus" class="source" role="status">집 주소 기준 · 교통량 미반영</div></div>':'목적지를 입력하세요.';
   const route=el('homeRoute');if(route)route.onclick=calculateHomeCommute;
   if(typeof drawHomeAssignmentMap==='function')drawHomeAssignmentMap();
+  if(typeof renderAddressSchoolPriority==='function')renderAddressSchoolPriority();
 }
 async function checkHomeParcel(){
  if(!home)return;
@@ -430,12 +431,15 @@ function useHomeCandidate(candidate){
   if(homeMarker)map.removeLayer(homeMarker);
   homeMarker=L.marker(home.ll,{zIndexOffset:4000,icon:L.divIcon({className:'',html:'<svg class="house-pin" width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"><path d="M4 19L21 4l17 15h-4v17H8V19z" fill="white" stroke="#a72e2e" stroke-width="2"/><path d="M3 19L21 3l18 16-3 3L21 9 6 22z" fill="#d63737" stroke="white" stroke-width="1.5"/><path d="M18 36V24h7v12" fill="#d63737"/></svg>',iconSize:[42,42],iconAnchor:[21,37]}),title:'HOME'}).addTo(map).bindPopup('<b>HOME</b><br>'+escape(home.address));
   const matches=homeZipMatches(home.ll);
+  // Clear prior ZIP-school focus before showing assignment-specific evidence.
+  if(typeof state!=='undefined')state.selectedSchool=null;
+  if(typeof schoolFocusGroup!=='undefined')schoolFocusGroup?.clearLayers();
   if(matches.length===1)selectZip(matches[0].z,false);
   map.setView(home.ll,13);renderHome();drawSchools();drawList();
    if(typeof focusHomeAssignedSchools==='function')focusHomeAssignedSchools();el('homeStatus').textContent='검색 결과 위치를 지도에 표시했습니다. 주소와 핀을 확인하세요.';syncHomeClearVisibility();
-   // After a deliberate address selection, bring the map into view once.
-   // Never scroll on background redraws or imply any school assignment approval.
-   const chosenMap=el('map');
+   // Following a deliberate address selection, prioritize school assignment status.
+   // Never auto-scroll to unrelated ZIP campuses or imply approval.
+   const chosenMap=el('homeAssignmentPriority')||el('map');
    if(chosenMap&&typeof chosenMap.scrollIntoView==='function'&&typeof requestAnimationFrame==='function'){
     requestAnimationFrame(()=>{
      if(home&&chosenMap.isConnected){
