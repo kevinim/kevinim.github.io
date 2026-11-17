@@ -167,6 +167,9 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  let normalizedLibertyJs=replaceOnce(js,currentFn,approvedFn);
  normalizedLibertyJs=replaceOnce(normalizedLibertyJs,'boundarySeq=0,baseMapGeneration=0;','boundarySeq=0;');
  normalizedLibertyJs=replaceOnce(normalizedLibertyJs,
+  'if(window.ResizeObserver)new ResizeObserver(()=>{const before=map.getSize(),after=syncMapSize();if(before.x!==after.x||before.y!==after.y)requestAnimationFrame(()=>{drawSchools();drawAreaLabels()})}).observe(map.getContainer());',
+  'if(window.ResizeObserver)new ResizeObserver(()=>syncMapSize()).observe(map.getContainer());');
+ normalizedLibertyJs=replaceOnce(normalizedLibertyJs,
   'setBaseMap(el(\'baseMap\')?.querySelector(\'option[value="liberty"]\')?\'liberty\':\'osm\');zipGroup=',
   'setBaseMap(\'osm\');zipGroup=');
  const providerDigest=crypto.createHash('sha1').update('blob '+Buffer.byteLength(js)+'\0').update(js,'utf8').digest('hex');
