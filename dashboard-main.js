@@ -87,7 +87,8 @@ const el=id=>document.getElementById(id),fmt=v=>v==null?'미공개':Number(v).to
 function toast(s){let e=el('toast');e.textContent=s;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',4000)}
 let outsideData=null,isochroneData=null,isochroneLayer=null,countyData=null;
 state.heatScope='county';
-let map=null,zipGroup,schoolGroup,schoolFocusGroup,zoneGroup,homeZoneGroup,routeGroup,targetMarker,zipMarkers,areaLabels,placeNames={},baseTiles=null,baseErrors=0,activeBase='osm',boundarySeq=0;const col={elementary:'#315bd3',middle:'#078b7d',high:'#c08038'};
+let map=null,zipGroup,schoolGroup,schoolFocusGroup,zoneGroup,homeZoneGroup,routeGroup,targetMarker,zipMarkers,areaLabels,placeNames={},baseTiles=null,baseErrors=0,activeBase='osm',boundarySeq=0;
+let baseMapGeneration=0;const col={elementary:'#315bd3',middle:'#078b7d',high:'#c08038'};
 function ratingKey(n){return n.toLowerCase().replace(/\b(school|h s|h s\.|h\.s\.|el|ms|high school|middle school|elementary school)\b/g,s=>s.includes('high')||s==='h s'||s==='h.s.'?'high':s==='ms'?'middle':s==='el'?'elementary':'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ')}
 function canonical(n){return String(n||'').toLowerCase().replace(/\bh\.?\s*s\.?\b/g,'high').replace(/\bm\.?\s*s\.?\b/g,'middle').replace(/\bsr\.?\b/g,'senior').replace(/\b(?:elem|el)\b/g,'elementary').replace(/\bschool\b/g,'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ')}
 function scoreRecord(n,district=''){const key=district+'|'+canonical(n);const matches=state.ratingIndex?.get(key);return matches?.length===1?matches[0]:null}
@@ -179,25 +180,29 @@ for(const id of ['femaHazardEnabled','femaHazardType','nfhlEnabled','txwrapWHPEn
  el(id).addEventListener('change',()=>queueMicrotask(updateHazardShortcut));
 }
 updateHazardShortcut();el('historicOverlay').onchange=e=>{state.showHistoric=e.target.checked;drawBoundary();drawHomeAssignmentMap()};el('referenceBoundaryOverlay').onchange=e=>{state.showOldZones=e.target.checked;drawBoundary();drawHomeAssignmentMap()};el('levels').onclick=e=>{const b=e.target.closest('button');if(!b)return;state.level=b.dataset.v;[...el('levels').children].forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b))});clearSelectedSchoolIfFiltered();drawSchools();drawList()};el('schoolSearch').oninput=e=>{state.schoolQuery=e.target.value.toLowerCase();clearTimeout(schoolListSearchTimer);schoolListSearchTimer=setTimeout(drawList,140)};el('schoolSearchClear').onclick=()=>{clearTimeout(schoolListSearchTimer);el('schoolSearch').value='';state.schoolQuery='';drawList()};el('schoolList').addEventListener('click',event=>{const button=event.target?.closest?.('button.school[data-sid]');if(!button||!el('schoolList').contains(button))return;const idx=Number(button.dataset.sid);if(Number.isInteger(idx)&&state.schools[idx])schoolClicked(state.schools[idx],true)});el('calcCommute').onclick=calcCommute;el('destination').onkeydown=e=>{if(e.isComposing||e.keyCode===229)return;if(e.key==='Enter'&&!e.defaultPrevented&&el('destinationSuggestions')?.hidden!==false)calcCommute()};el('destination').oninput=()=>{invalidateZipCommute();el('officeSelect').value=(window.WorkplaceDestinations?.findByAddress(el('destination').value)?.id&&('saved:'+window.WorkplaceDestinations.findByAddress(el('destination').value).id))||Object.keys(OFFICES).find(k=>OFFICES[k].toLowerCase()===el('destination').value.trim().toLowerCase())||'custom';state.times={};state.dest=null;drawCommute();if(routeGroup)routeGroup.clearLayers();if(map&&targetMarker){map.removeLayer(targetMarker);targetMarker=null}showSavedCommute();if(typeof refreshHomeOffice==='function')refreshHomeOffice()};el('officeSelect').onchange=e=>{el('destination').value=OFFICES[e.target.value]||window.WorkplaceDestinations?.addressForChoice(e.target.value)||'';el('destination').oninput();if(e.target.value==='custom')el('destination').focus()};el('baseMap').onchange=e=>setBaseMap(e.target.value);
-loadSavedCommute();renderData();drawList();if(window.L){map=L.map('map',{zoomControl:true,preferCanvas:true,zoomAnimation:false}).setView([33.129,-96.785],11);setBaseMap('osm');zipGroup=L.featureGroup().addTo(map);schoolGroup=L.featureGroup().addTo(map);zoneGroup=L.featureGroup().addTo(map);homeZoneGroup=L.featureGroup().addTo(map);routeGroup=L.featureGroup().addTo(map);zipMarkers=L.featureGroup().addTo(map);areaLabels=L.layerGroup().addTo(map);schoolFocusGroup=L.featureGroup().addTo(map);window.createFemaHazardOverlay?.(map,document);window.healthcareOverlayController=window.initHealthcareMap?.(map,document);window.winterOverlayController=window.initWinterHazardMap?.(map,document);window.createNFHLFloodOverlay?.(map,document);window.createTxWrapWHPOverlay?.(map,document);window.createNoaaStormHistory?.(document);window.createCrimeCityMap?.(map,document);map.on('movestart',claimMapViewport);map.on('moveend',()=>{drawSchools();drawAreaLabels()});if(window.ResizeObserver)new ResizeObserver(()=>syncMapSize()).observe(map.getContainer());fetch('./county-scopes.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{countyData=data;drawZip();drawList()}).catch(e=>{console.error('카운티 비교자료 오류:',e);el('heatScope').value='all';state.heatScope='all';el('heatScope').disabled=true;el('heatScopeStatus').textContent='카운티 자료를 불러오지 못해 전체 범위로 비교합니다. 새로고침해 주세요.';drawZip()});fetch('./data/dfw-mena-ancestry-2024.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(obj=>{menaData=obj;drawDetail()}).catch(e=>console.error('중동·아랍계 조상 자료 오류:',e));fetch('./dfw-race-2024.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(obj=>{for(const d of DATA)Object.assign(d,obj.data[d.z]||{});drawZip();drawDetail();window.refreshCandidateComparisons?.()}).catch(e=>{console.error('인구 구성 자료 오류:',e);el('mapLoadStatus').textContent='인구 구성 자료를 불러오지 못했습니다. 새로고침해 주세요.'});fetch('./zcta-place-names.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{placeNames=data;for(const d of DATA)if(d.name.endsWith(' County')&&data[d.z])d.name=data[d.z];updatePlaceOptions();renderData();drawAreaLabels()}).catch(e=>console.error('지역명 자료를 불러오지 못했습니다:',e));loadZipShapes();Promise.all([loadBoundaryData(),loadSchools().then(loadRatings).then(loadExtra2026SchoolLocations)]).then(()=>{addFriscoBoundarySchools();addProsperCurrentSchools();window.schoolBoundaryAuditReady=true;renderSchoolBoundaryCoverageAudit()});setTimeout(()=>map.invalidateSize(),250)}else{el('map').innerHTML='<div style="padding:30px;color:#53647a">미리보기 또는 브라우저에서 지도 라이브러리 로딩에 실패했습니다. GitHub Pages 정식 주소를 이용하거나 브라우저 연결을 확인하세요. 아래 인구 비교표와 기본 학교 목록은 사용할 수 있습니다.</div>';el('mapLoadStatus').textContent='Leaflet 지도를 로드하지 못했습니다.';state.schools=FALLBACK_SCHOOLS.filter(s=>!isRetiredCampus(s));drawList();}}
+loadSavedCommute();renderData();drawList();if(window.L){map=L.map('map',{zoomControl:true,preferCanvas:true,zoomAnimation:false}).setView([33.129,-96.785],11);setBaseMap(el('baseMap')?.querySelector('option[value="liberty"]')?'liberty':'osm');zipGroup=L.featureGroup().addTo(map);schoolGroup=L.featureGroup().addTo(map);zoneGroup=L.featureGroup().addTo(map);homeZoneGroup=L.featureGroup().addTo(map);routeGroup=L.featureGroup().addTo(map);zipMarkers=L.featureGroup().addTo(map);areaLabels=L.layerGroup().addTo(map);schoolFocusGroup=L.featureGroup().addTo(map);window.createFemaHazardOverlay?.(map,document);window.healthcareOverlayController=window.initHealthcareMap?.(map,document);window.winterOverlayController=window.initWinterHazardMap?.(map,document);window.createNFHLFloodOverlay?.(map,document);window.createTxWrapWHPOverlay?.(map,document);window.createNoaaStormHistory?.(document);window.createCrimeCityMap?.(map,document);map.on('movestart',claimMapViewport);map.on('moveend',()=>{drawSchools();drawAreaLabels()});if(window.ResizeObserver)new ResizeObserver(()=>syncMapSize()).observe(map.getContainer());fetch('./county-scopes.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{countyData=data;drawZip();drawList()}).catch(e=>{console.error('카운티 비교자료 오류:',e);el('heatScope').value='all';state.heatScope='all';el('heatScope').disabled=true;el('heatScopeStatus').textContent='카운티 자료를 불러오지 못해 전체 범위로 비교합니다. 새로고침해 주세요.';drawZip()});fetch('./data/dfw-mena-ancestry-2024.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(obj=>{menaData=obj;drawDetail()}).catch(e=>console.error('중동·아랍계 조상 자료 오류:',e));fetch('./dfw-race-2024.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(obj=>{for(const d of DATA)Object.assign(d,obj.data[d.z]||{});drawZip();drawDetail();window.refreshCandidateComparisons?.()}).catch(e=>{console.error('인구 구성 자료 오류:',e);el('mapLoadStatus').textContent='인구 구성 자료를 불러오지 못했습니다. 새로고침해 주세요.'});fetch('./zcta-place-names.json').then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{placeNames=data;for(const d of DATA)if(d.name.endsWith(' County')&&data[d.z])d.name=data[d.z];updatePlaceOptions();renderData();drawAreaLabels()}).catch(e=>console.error('지역명 자료를 불러오지 못했습니다:',e));loadZipShapes();Promise.all([loadBoundaryData(),loadSchools().then(loadRatings).then(loadExtra2026SchoolLocations)]).then(()=>{addFriscoBoundarySchools();addProsperCurrentSchools();window.schoolBoundaryAuditReady=true;renderSchoolBoundaryCoverageAudit()});setTimeout(()=>map.invalidateSize(),250)}else{el('map').innerHTML='<div style="padding:30px;color:#53647a">미리보기 또는 브라우저에서 지도 라이브러리 로딩에 실패했습니다. GitHub Pages 정식 주소를 이용하거나 브라우저 연결을 확인하세요. 아래 인구 비교표와 기본 학교 목록은 사용할 수 있습니다.</div>';el('mapLoadStatus').textContent='Leaflet 지도를 로드하지 못했습니다.';state.schools=FALLBACK_SCHOOLS.filter(s=>!isRetiredCampus(s));drawList();}}
 
 function setBaseMap(choice, fallbackFrom=null){
  if(!map)return;
+ const generation=++baseMapGeneration;
  const sources={
    osm:{name:'OpenStreetMap',url:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',opts:{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',maxZoom:19}},
    esri:{name:'Esri Streets',url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',opts:{attribution:'Tiles &copy; Esri',maxZoom:18}}
  };
- choice=Object.hasOwn(sources,choice)?choice:'osm';
- const cfg=sources[choice],status=el('tileStatus');
+ const liberty=choice==='liberty'&&!!window.TXLibertyBasemap;
+ choice=liberty?'liberty':Object.hasOwn(sources,choice)?choice:'osm';
+ const cfg=liberty?sources.osm:sources[choice],status=el('tileStatus');
  if(baseTiles)map.removeLayer(baseTiles);
  activeBase=choice;baseErrors=0;el('baseMap').value=choice;
- status.hidden=!fallbackFrom;
- status.textContent=fallbackFrom ? fallbackFrom+' 타일 오류로 '+cfg.name+' 배경을 사용합니다. 일부 지도가 보이지 않으면 지도 배경을 직접 변경하세요.' : '';
+ status.hidden=!fallbackFrom&&!liberty;
+ status.textContent=liberty?'Liberty 벡터 지도를 불러오는 중입니다. 잠시 OpenStreetMap 배경으로 표시합니다.':
+  fallbackFrom ? fallbackFrom+' 타일 오류로 '+cfg.name+' 배경을 사용합니다. 일부 지도가 보이지 않으면 지도 배경을 직접 변경하세요.' : '';
  const layer=L.tileLayer(cfg.url,{...cfg.opts,keepBuffer:2});
  baseTiles=layer;
  layer.on('tileerror',()=>{
-   if(baseTiles!==layer)return;
+   if(baseTiles!==layer||generation!==baseMapGeneration)return;
    baseErrors++;
+   if(liberty)return; // Keep the visible OSM fallback until vector startup finishes.
    status.hidden=false;
    status.textContent=cfg.name+' 지도 타일을 불러오지 못했습니다. 연결을 확인하거나 다른 지도 배경을 선택하세요.';
    if(baseErrors===3 && !fallbackFrom){
@@ -205,6 +210,21 @@ function setBaseMap(choice, fallbackFrom=null){
    }
  });
  layer.addTo(map);
+ if(!liberty)return;
+ window.TXLibertyBasemap.create(map).then(vector=>{
+   if(generation!==baseMapGeneration){if(map.hasLayer(vector))map.removeLayer(vector);return}
+   baseTiles=vector;
+   if(map.hasLayer(layer))map.removeLayer(layer);
+   status.textContent='';
+   status.hidden=true;
+ }).catch(error=>{
+   if(generation!==baseMapGeneration)return;
+   console.warn('Liberty vector basemap unavailable; retaining OSM:',error?.message||error);
+   activeBase='osm';
+   el('baseMap').value='osm';
+   status.hidden=false;
+   status.textContent='Liberty 지도를 불러오지 못해 OpenStreetMap으로 전환했습니다. 지도 배경에서 다시 시도할 수 있습니다.';
+ });
 }
 async function loadRatings(){
  try{
