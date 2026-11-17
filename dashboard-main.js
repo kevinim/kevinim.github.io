@@ -99,6 +99,9 @@ function schoolPassesRatingFilter(s){
  if(filter==='rated')return record?.score!=null;
  if(filter==='unrated')return record?.rating==='Not Rated';
  if(filter==='unlinked')return !record;
+ // Threshold shortcuts use official TEA letter grades, never numeric scores.
+ if(filter==='B_PLUS')return ['A','B'].includes(record?.rating);
+ if(filter==='C_PLUS')return ['A','B','C'].includes(record?.rating);
  return ['A','B','C','D','F'].includes(filter)&&record?.rating===filter;
 }
 function clearSelectedSchoolIfFiltered(){
