@@ -185,7 +185,8 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  const helperStart=normalizedAddressJs.indexOf('/* An address is not a ZIP-school lookup.');
  const helperEnd=normalizedAddressJs.indexOf(' function drawSchools(){',helperStart);
  assert.ok(helperStart>0&&helperEnd>helperStart);
- normalizedAddressJs=replaceOnce(normalizedAddressJs,normalizedAddressJs.slice(helperStart,helperEnd),'');
+ assert.equal(normalizedAddressJs[helperStart-1],'\n','Expected exactly one scoped helper-introduction newline');
+ normalizedAddressJs=replaceOnce(normalizedAddressJs,normalizedAddressJs.slice(helperStart-1,helperEnd),'');
  const section=(text,start,end)=>{
   const first=text.indexOf(start),last=text.indexOf(end,first+start.length);
   assert.ok(first>0&&last>first,'Address-school approved function boundary '+start);
