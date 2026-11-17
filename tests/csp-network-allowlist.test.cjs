@@ -39,7 +39,7 @@ const mainImage=[
  'https://gis.texaswildfirerisk.com',
  'https://tiles.openfreemap.org'
 ];
-const reviewedImage=mainImage.filter(x=>!x.includes('arcgisonline.com')&&!x.includes('texaswildfirerisk.com')&&!x.includes('finalsite.net'));
+const reviewedImage=mainImage.filter(x=>!x.includes('arcgisonline.com')&&!x.includes('texaswildfirerisk.com')&&!x.includes('finalsite.net')&&!x.includes('openfreemap.org'));
 const get=(name,key)=>{
  const policy=extractCspMeta(read(name))?.value;
  assert.ok(policy,name+' must have source CSP');
