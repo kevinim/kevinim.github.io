@@ -49,7 +49,7 @@ test('ambiguous Carrollton 75007 does not silently pick CFB for LISD households'
 });
 
 test('McKinney postal city alone is not a school district, including 75072',()=>{
- const address='10016 Ransom Ridge Rd, McKinney, TX 75072';
+ const address='10016 Synthetic Ridge Rd, McKinney, TX 75072';
  const unverified=model(address,{status:'unavailable'});
  assert.equal(unverified.likely,'','A city name alone must not launch McKinney ISD finder');
  assert.ok(unverified.near.includes('FISD'),'Frisco must be an available district candidate');
