@@ -80,7 +80,8 @@ test('ZIP, county and all-school scopes retain prior filtering semantics',()=>{
 
 test('list search debounces, uses O(n) school indices, and delegates click listeners',()=>{
  assert.match(source,/schoolListSearchTimer=setTimeout\(drawList,140\)/);
- assert.match(source,/const scopeZips=schoolScopeZipCandidates\(\),schoolIndexes=new Map\(state\.schools\.map/);
+ assert.match(source,/const view=addressSchoolView\(\),scopeZips=schoolScopeZipCandidates\(\),schoolIndexes=new Map\(state\.schools\.map/);
+ assert.match(source,/let items=view\?view\.schools\.slice\(\):state\.schools\.filter/,'Address mode must bypass generic ZIP school list');
  assert.ok(source.includes('data-sid="${schoolIndexes.get(s)}"'));
  assert.doesNotMatch(source,/state\.schools\.indexOf\(s\)/);
  assert.match(source,/el\('schoolList'\)\.addEventListener\('click'/);
