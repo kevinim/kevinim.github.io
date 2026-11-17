@@ -162,7 +162,7 @@
     shell.className='home-manual-school-bridge';
     shell.hidden=true;
     const top=text('p','home-manual-school-note',
-      '집 주소 검색과 아래 학교 목록은 자동으로 연결되지 않습니다. 학교 목록은 학교 건물 위치 기준이며, 실제 배정학교가 아닙니다.');
+      '주소별 배정학교는 아직 자동 인증되지 않았습니다. 공식 학군 Finder 결과를 직접 선택하면 그 학교만 아래 목록과 지도에 표시됩니다. ZIP 안의 다른 학교는 표시하지 않습니다.');
     shell.appendChild(top);
     details=document.createElement('details');
     details.className='home-manual-school-details';
