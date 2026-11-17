@@ -12,8 +12,15 @@ const show=(sha,file)=>cp.execFileSync('git',['show',sha+':'+file],{cwd:root,enc
 const baseline='5a5b3a8fbe1b29ba71797525696d1f092821e6b7';
 const old=show(baseline,'index.html'),oldJs=show(baseline,'dashboard-main.js');
 const rawHtml=fs.readFileSync(path.join(root,'index.html'),'utf8');
+// Redfin split and Liberty pilot: undo only the five named additions before
+// comparing the rest of the protected historical HTML byte-for-byte.
+let normalizedMainHtml=rawHtml;
+for(const [next,prior] of [["https://gis.texaswildfirerisk.com https://tiles.openfreemap.org; connect-src 'self'","https://gis.texaswildfirerisk.com; connect-src 'self'"],["https://fueleconomy.gov https://tiles.openfreemap.org; font-src 'self' data:; worker-src 'self' blob:; object-src 'none'","https://fueleconomy.gov; font-src 'self' data:; object-src 'none'"],["<option value=\"liberty\">Liberty · OpenFreeMap</option><option value=\"osm\">OpenStreetMap</option>","<option value=\"osm\">OpenStreetMap</option>"],["<link rel=\"stylesheet\" href=\"./features/tea-peims-public-share-addon.css?v=2\">\n<link rel=\"stylesheet\" href=\"./features/map-first-split.css?v=1\">","<link rel=\"stylesheet\" href=\"./features/tea-peims-public-share-addon.css?v=2\">"],["<script src=\"./features/map/liberty-basemap.js?v=1\"></script><script src=\"./dashboard-main.js?v=10\"></script>","<script src=\"./dashboard-main.js?v=9\"></script>"]])
+ normalizedMainHtml=replaceOnce(normalizedMainHtml,next,prior);
+assert.equal(normalizedMainHtml,show('c12ab9860057e5d59b6f0e52e486b392f083da8a','index.html'),
+ 'Unreviewed main HTML changes beyond Liberty/split UX');
 // T02 cache keys change only these existing assets; every other HTML byte stays pinned.
-const cacheNormalizedHtml=[["features/commute/provider-requests.js?v=2","features/commute/provider-requests.js?v=1"],["dashboard-main.js?v=9","dashboard-main.js?v=6"],["district-registry.js?v=3","district-registry.js?v=2"],["texas-address-suggest.js?v=3","texas-address-suggest.js?v=2"],["home-lookup-v2.js?v=20","home-lookup-v2.js?v=18"],["features/dashboard-extras.js?v=3","features/dashboard-extras.js?v=2"]].reduce((text,[next,prior])=>text.replaceAll(next,prior),rawHtml);
+const cacheNormalizedHtml=[["features/commute/provider-requests.js?v=2","features/commute/provider-requests.js?v=1"],["dashboard-main.js?v=9","dashboard-main.js?v=6"],["district-registry.js?v=3","district-registry.js?v=2"],["texas-address-suggest.js?v=3","texas-address-suggest.js?v=2"],["home-lookup-v2.js?v=20","home-lookup-v2.js?v=18"],["features/dashboard-extras.js?v=3","features/dashboard-extras.js?v=2"]].reduce((text,[next,prior])=>text.replaceAll(next,prior),normalizedMainHtml);
 // T05 reverses only the three exact reviewed semantic-control changes.
 const html=[["<label for=\"zipSelect\">","<label>"],["<label for=\"metric\">","<label>"],["<div class=\"seg\" id=\"levels\" role=\"group\" aria-label=\"학교 단계\"><button class=\"active\" data-v=\"all\" type=\"button\" aria-pressed=\"true\">전체</button><button data-v=\"elementary\" type=\"button\" aria-pressed=\"false\">초등</button><button data-v=\"middle\" type=\"button\" aria-pressed=\"false\">중등</button><button data-v=\"high\" type=\"button\" aria-pressed=\"false\">고등</button></div>","<div class=\"seg\" id=\"levels\"><button class=\"active\" data-v=\"all\">전체</button><button data-v=\"elementary\">초등</button><button data-v=\"middle\">중등</button><button data-v=\"high\">고등</button></div>"]].reduce((text,[next,prior])=>replaceOnce(text,next,prior),cacheNormalizedHtml);
 const js=fs.readFileSync(path.join(root,'dashboard-main.js'),'utf8');
@@ -153,6 +160,15 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  perfP10=replaceOnce(perfP10,"tbody.querySelectorAll('tr').forEach(tr=>tr.onclick=()=>selectZip(tr.dataset.z))}","tableSelectedRow=tbody.querySelector('tr.sel')}");
  perfP10=replaceOnce(perfP10,"state.times[d.z]=sec/60});drawTable();drawCommute();","state.times[d.z]=sec/60});drawCommute();");
  perfP10=replaceOnce(perfP10,'async function loadZipShapes(){',"\nfunction updateTableSelection(){const tbody=el('compareTable')?.querySelector('tbody');if(!tbody)return;const previous=tableSelectedRow&&tbody.contains(tableSelectedRow)?tableSelectedRow:tbody.querySelector('tr.sel');previous?.classList.remove('sel');const next=tbody.querySelector('tr[data-z=\"'+state.zip+'\"]');next?.classList.add('sel');tableSelectedRow=next||null}\nasync function loadZipShapes(){");
+ const lastApprovedJs=show('c12ab9860057e5d59b6f0e52e486b392f083da8a','dashboard-main.js');
+ const basemapFn=text=>text.slice(text.indexOf('function setBaseMap(choice, fallbackFrom=null){'),text.indexOf('async function loadRatings(){'));
+ const approvedFn=basemapFn(lastApprovedJs),currentFn=basemapFn(js);
+ assert.ok(approvedFn.startsWith('function setBaseMap')&&currentFn.startsWith('function setBaseMap'));
+ let normalizedLibertyJs=replaceOnce(js,currentFn,approvedFn);
+ normalizedLibertyJs=replaceOnce(normalizedLibertyJs,'let baseMapGeneration=0;\n','');
+ normalizedLibertyJs=replaceOnce(normalizedLibertyJs,
+  'setBaseMap(el(\'baseMap\')?.querySelector(\'option[value="liberty"]\')?\'liberty\':\'osm\');zipGroup=',
+  'setBaseMap(\'osm\');zipGroup=');
  const providerDigest=crypto.createHash('sha1').update('blob '+Buffer.byteLength(js)+'\0').update(js,'utf8').digest('hex');
  // Only the two exact cumulative-grade branches may differ from the audited v8 JS.
  const gradeNormalizedJs=replaceOnce(js,
@@ -162,7 +178,7 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
   .update('blob '+Buffer.byteLength(gradeNormalizedJs)+'\0').update(gradeNormalizedJs,'utf8').digest('hex');
  // T01: exact reviewed commute-generation patch; school/GIS/rendering code stays pinned.
  // tests/commute-operation-lifecycle.test.cjs exercises late replies in both entry points.
- assert.ok(hash(js)===hash(perfP10)||providerDigest==='55d348a36821f5dfdf26a02ef2f0cd6569cf45e7'||providerDigest==='46f9c72552fc53cf127c51956bbd674fe379dc0f'||providerDigest==='1379614d8fc672c11bf192d7350c3fba0020ecda'||providerDigest==='4e5b9e31e025d57d59cec477686ef6373f7fbc69'||gradeNormalizedDigest==='4e5b9e31e025d57d59cec477686ef6373f7fbc69',
+ assert.ok(hash(js)===hash(perfP10)||providerDigest==='55d348a36821f5dfdf26a02ef2f0cd6569cf45e7'||providerDigest==='46f9c72552fc53cf127c51956bbd674fe379dc0f'||providerDigest==='1379614d8fc672c11bf192d7350c3fba0020ecda'||providerDigest==='4e5b9e31e025d57d59cec477686ef6373f7fbc69'||gradeNormalizedDigest==='4e5b9e31e025d57d59cec477686ef6373f7fbc69'||hash(normalizedLibertyJs)===hash(lastApprovedJs),
   'Dashboard must match either exact P10 baseline or audited bounded-provider integration blob');
  const legacy=show('4f741596a5a594897791d3b931ef39b374bf304e','index.html');
  const start=legacy.indexOf("<script>\r\n'use strict'"),end=legacy.indexOf('</script>',start);
