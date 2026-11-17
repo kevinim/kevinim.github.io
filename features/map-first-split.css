@@ -1,0 +1,92 @@
+/* Desktop search-results + map split, inspired by familiar real-estate browsing.
+ * Presentation-only: school/ZIP/GIS data, selection events and map layers stay in place.
+ * Kept separate from the audited first-render bundle for easy future tuning.
+ */
+:root{
+ --tx-rail-width: minmax(330px, 390px);
+ --tx-map-gap: 14px;
+ --tx-map-height: clamp(500px, 70vh, 860px);
+}
+@media (min-width: 1060px){
+ .shell{max-width:1900px;padding-inline:clamp(14px,1.6vw,28px)}
+ .shell>.main{
+  display:grid;
+  grid-template-columns:var(--tx-rail-width) minmax(0,1fr);
+  grid-template-rows:auto auto auto;
+  align-items:start;
+  gap:var(--tx-map-gap);
+ }
+ .shell>.main>.filter-panel{
+  grid-column:1;
+  grid-row:1;
+  min-width:0;
+ }
+ .shell>.main>.section{
+  grid-column:1;
+  grid-row:2;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:var(--tx-map-gap);
+  min-width:0;
+  margin:0;
+ }
+ .shell>.main>.section>.panel{width:100%;min-width:0}
+ .shell>.main>.detail{grid-column:1;grid-row:3;min-width:0}
+ .shell>.main>.mapcol{
+  grid-column:2;
+  grid-row:1 / 4;
+  display:flex;
+  flex-direction:column;
+  align-self:stretch;
+  height:100%;
+  min-width:0;
+  gap:14px;
+ }
+ .shell>.main>.mapcol>.mapbox{
+  position:sticky;
+  top:12px;
+  z-index:2;
+  width:100%;
+  min-width:0;
+  box-shadow:0 8px 24px rgba(18,37,62,.10);
+ }
+ .shell>.main>.mapcol>.mapbox>#map{height:var(--tx-map-height);min-height:500px}
+ .shell>.main>.section .school-list{max-height:490px;overflow-y:auto;overscroll-behavior:contain}
+ .shell>.main>.section .scroll-table{max-height:270px;overflow:auto}
+ .shell>.main>.filter-panel .filter-settings-group{padding-block:9px}
+ .shell>.main>.filter-panel .field{margin-bottom:10px}
+ .shell>.main>.filter-panel .check{margin-block:7px}
+ .shell>.main>.section .panel h2{margin-bottom:10px}
+ .shell>.main>.mapcol>.mapbox .maphead{
+  display:flex;
+  align-items:center;
+  gap:8px 12px;
+  padding:12px 16px;
+ }
+ .shell>.main>.mapcol>.mapbox .maphead h2{margin:0;font-size:16px}
+ .shell>.main>.mapcol>.mapbox .hazard-chip{font-size:11px;min-height:30px;padding:5px 8px}
+ .shell>.main>.mapcol>.mapbox .maphead .legend{margin-left:auto}
+}
+/* Keep map-first mobile DOM ordering from first-render-ui.bundle.css. */
+@media (max-width:1059px){
+ .shell>.main>.mapcol>.mapbox{position:static;min-width:0}
+ .shell>.main>.section{min-width:0}
+}
+@media (min-width:721px) and (max-width:1059px){
+ .shell>.main{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+ .shell>.main>.mapcol{grid-column:1;grid-row:1;display:flex;flex-direction:column;min-width:0}
+ .shell>.main>.mapcol>.mapbox>#map{height:clamp(420px,58vh,670px)}
+ .shell>.main>.filter-panel{grid-column:1;grid-row:2}
+ .shell>.main>.section{grid-column:1;grid-row:3}
+ .shell>.main>.detail{grid-column:1;grid-row:4}
+}
+@media (max-width:720px){
+ .shell>.main>.mapcol>.mapbox>#map{height:clamp(340px,53vh,530px)}
+ .shell>.main>.mapcol>.mapbox .maphead{padding:12px}
+ .shell>.main>.mapcol>.mapbox .maphead .hazard-chips{gap:4px}
+ .shell>.main>.mapcol>.mapbox .hazard-chip{min-height:34px}
+}
+@media (prefers-reduced-motion:reduce){
+ .shell>.main>.mapcol>.mapbox{scroll-behavior:auto}
+}

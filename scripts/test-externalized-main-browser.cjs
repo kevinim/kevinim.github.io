@@ -25,7 +25,7 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
     return route.abort();
    });
    let asset=0;
-   page.on('response',r=>{if(r.url().includes('/dashboard-main.js?v=9')&&r.status()===200)asset++});
+   page.on('response',r=>{if(r.url().includes('/dashboard-main.js?v=10')&&r.status()===200)asset++});
    try{
     await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});
     await page.waitForFunction(()=>typeof map!=='undefined'&&map&&typeof state!=='undefined'&&
@@ -53,6 +53,27 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
     const scriptPolicy=(b.policy||'').split(';').map(x=>x.trim()).find(x=>x.startsWith('script-src '));
    assert.ok((b.policy||'').includes("script-src-attr 'none'")&&scriptPolicy&&!scriptPolicy.includes('unsafe-inline'));
         assert.ok(b.markers>=0,'school layer object exists');
+    // This offline browser deliberately blocks external MapLibre/tiles.  The
+    // selected Liberty default must fail back to the existing Leaflet OSM map.
+    await page.waitForFunction(()=>document.querySelector('#baseMap')?.value==='osm',
+      null,{timeout:20000});
+    const layout=await page.evaluate(()=>{
+      const rail=document.querySelector('.main>.filter-panel').getBoundingClientRect();
+      const mapcol=document.querySelector('.main>.mapcol').getBoundingClientRect();
+      const mapbox=document.querySelector('.main>.mapcol>.mapbox').getBoundingClientRect();
+      return {rail:{left:rail.left,right:rail.right,top:rail.top},
+        mapcol:{left:mapcol.left,top:mapcol.top},mapbox:{height:mapbox.height,top:mapbox.top},
+        tiles:map.getContainer().querySelectorAll('.leaflet-tile').length};
+    });
+    if(width>=1060){
+      assert.ok(layout.mapcol.left>layout.rail.right,
+        'Redfin desktop split puts the map to the right of the result/filter rail');
+      assert.ok(layout.mapbox.height>=500,'Desktop map retains a large canvas');
+    }else{
+      assert.ok(layout.mapbox.top<layout.rail.top,
+        'Mobile map-first presentation keeps map above advanced rail controls');
+    }
+    assert.ok(layout.tiles>=0,'Leaflet map stays mounted when Liberty CDN fails');
 
     const selections=await page.locator('#zipSelect option').evaluateAll(
       elements=>elements.map(x=>x.value).filter(Boolean));

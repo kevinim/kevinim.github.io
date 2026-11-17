@@ -20,7 +20,8 @@ const mainConnect=[
  'https://gismaps.cityofallen.org',
  'https://hazards.fema.gov',
  'https://www.fueleconomy.gov',
- 'https://fueleconomy.gov'
+ 'https://fueleconomy.gov',
+ 'https://tiles.openfreemap.org'
 ];
 const reviewedConnect=[
  'https://nominatim.openstreetmap.org',
@@ -35,9 +36,10 @@ const mainImage=[
  'https://b.tile.openstreetmap.org',
  'https://c.tile.openstreetmap.org',
  'https://server.arcgisonline.com',
- 'https://gis.texaswildfirerisk.com'
+ 'https://gis.texaswildfirerisk.com',
+ 'https://tiles.openfreemap.org'
 ];
-const reviewedImage=mainImage.filter(x=>!x.includes('arcgisonline.com')&&!x.includes('texaswildfirerisk.com')&&!x.includes('finalsite.net'));
+const reviewedImage=mainImage.filter(x=>!x.includes('arcgisonline.com')&&!x.includes('texaswildfirerisk.com')&&!x.includes('finalsite.net')&&!x.includes('openfreemap.org'));
 const get=(name,key)=>{
  const policy=extractCspMeta(read(name))?.value;
  assert.ok(policy,name+' must have source CSP');
@@ -53,6 +55,8 @@ test('index and reviewed CSP expose only enumerated fetch and image origins',()=
   assert.deepEqual(get(page,'img-src'),["'self'",'data:','blob:',...img],page+' img-src drift');
   assert.deepEqual(get(page,'style-src'),["'self'","'unsafe-inline'",'https://unpkg.com']);
   assert.deepEqual(get(page,'font-src'),["'self'",'data:']);
+  if(page==='index.html')assert.deepEqual(get(page,'worker-src'),["'self'",'blob:']);
+  else assert.equal(get(page,'worker-src'),undefined);
   assert.deepEqual(get(page,'frame-src'),page==='index.html'?['https://app.guidek12.com']:["'none'"]);
   assert.deepEqual(get(page,'media-src'),["'none'"]);
   assert.deepEqual(get(page,'script-src-attr'),["'none'"]);
