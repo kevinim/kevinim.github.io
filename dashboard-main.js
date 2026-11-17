@@ -641,6 +641,9 @@ function renderAddressSchoolPriority(){
  function drawSchools(){
   if(!map)return;
   const addressView=addressSchoolView(),homeActive=addressView?.kind==='certified';
+  if(addressView&&state.selectedSchool&&!addressView.schools.includes(state.selectedSchool)){
+   state.selectedSchool=null;schoolFocusGroup?.clearLayers();drawDetail();
+  }
   const legend=el('schoolLegend');
   if(legend){
    legend.classList.toggle('matching',homeActive);
