@@ -87,8 +87,7 @@ const el=id=>document.getElementById(id),fmt=v=>v==null?'미공개':Number(v).to
 function toast(s){let e=el('toast');e.textContent=s;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',4000)}
 let outsideData=null,isochroneData=null,isochroneLayer=null,countyData=null;
 state.heatScope='county';
-let map=null,zipGroup,schoolGroup,schoolFocusGroup,zoneGroup,homeZoneGroup,routeGroup,targetMarker,zipMarkers,areaLabels,placeNames={},baseTiles=null,baseErrors=0,activeBase='osm',boundarySeq=0;
-let baseMapGeneration=0;const col={elementary:'#315bd3',middle:'#078b7d',high:'#c08038'};
+let map=null,zipGroup,schoolGroup,schoolFocusGroup,zoneGroup,homeZoneGroup,routeGroup,targetMarker,zipMarkers,areaLabels,placeNames={},baseTiles=null,baseErrors=0,activeBase='osm',boundarySeq=0,baseMapGeneration=0;const col={elementary:'#315bd3',middle:'#078b7d',high:'#c08038'};
 function ratingKey(n){return n.toLowerCase().replace(/\b(school|h s|h s\.|h\.s\.|el|ms|high school|middle school|elementary school)\b/g,s=>s.includes('high')||s==='h s'||s==='h.s.'?'high':s==='ms'?'middle':s==='el'?'elementary':'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ')}
 function canonical(n){return String(n||'').toLowerCase().replace(/\bh\.?\s*s\.?\b/g,'high').replace(/\bm\.?\s*s\.?\b/g,'middle').replace(/\bsr\.?\b/g,'senior').replace(/\b(?:elem|el)\b/g,'elementary').replace(/\bschool\b/g,'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ')}
 function scoreRecord(n,district=''){const key=district+'|'+canonical(n);const matches=state.ratingIndex?.get(key);return matches?.length===1?matches[0]:null}
