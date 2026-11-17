@@ -66,27 +66,36 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
     await page.waitForFunction(()=>state.ratingIndex?.size>0&&
       state.schools.some(s=>s.ll&&scoreRecord(s.name,s.district)?.rating==='A'),
       null,{timeout:40000});
-    for(const grade of ['A','B','C']){
+    for(const [grade,allowed] of [['A',['A']],['B_PLUS',['A','B']],['C_PLUS',['A','B','C']]]){
       await page.locator('#schoolGradeQuick button[data-grade="'+grade+'"]').click();
       const filter=await page.evaluate(()=>{
+        const eligible=state.ratingFilter==='A'?['A']:
+          state.ratingFilter==='B_PLUS'?['A','B']:['A','B','C'];
         const candidates=[...document.querySelectorAll('#schoolList button.school[data-sid]')];
         const layers=schoolGroup.getLayers();
+        const grades=layers.flatMap(m=>(m.options.schoolMembers||[]).map(s=>scoreRecord(s.name,s.district)?.rating));
         const mapBadges=layers.map(m=>m.getElement()?.querySelector('.school-map-grade-badge')?.textContent||'').filter(Boolean);
-        const mapRepresented=layers.every(m=>(m.options.schoolMembers||[]).every(s=>
-          scoreRecord(s.name,s.district)?.rating===state.ratingFilter));
         return {grade:state.ratingFilter,select:document.getElementById('ratingFilter').value,
-          schoolCount:candidates.length,allCorrect:candidates.every(b=>
-            scoreRecord(state.schools[Number(b.dataset.sid)].name,state.schools[Number(b.dataset.sid)].district)?.rating===state.ratingFilter),
-          badgesValid:mapBadges.every(b=>b===state.ratingFilter)&&mapRepresented,
+          schoolCount:candidates.length,allCorrect:candidates.every(b=>eligible.includes(
+            scoreRecord(state.schools[Number(b.dataset.sid)].name,state.schools[Number(b.dataset.sid)].district)?.rating)),
+          mapCorrect:grades.every(g=>eligible.includes(g)),
           pressed:document.querySelector('#schoolGradeQuick button.active')?.dataset.grade};
       });
-      assert.equal(filter.grade,grade,'Quick grade filter updates application state');
-      assert.equal(filter.select,grade,'Quick grade filter syncs dropdown');
-      assert.ok(filter.schoolCount>0,'Filtered campus list must contain '+grade+' schools');
-      assert.equal(filter.allCorrect,true,'Every filtered list school must have matching TEA grade');
-      assert.equal(filter.badgesValid,true,'All rendered map campus badges must match selected grade');
-      assert.equal(filter.pressed,grade,'Quick grade button remains active');
+      assert.equal(filter.grade,grade,'Minimum-grade shortcut updates application state');
+      assert.equal(filter.select,grade,'Minimum-grade shortcut syncs dropdown');
+      assert.ok(filter.schoolCount>0,'Filtered campus list must contain eligible '+grade+' schools');
+      assert.equal(filter.allCorrect,true,'Every listed campus must meet the minimum TEA grade');
+      assert.equal(filter.mapCorrect,true,'All represented map campuses meet the threshold');
+      assert.equal(filter.pressed,grade,'Minimum-grade shortcut remains pressed');
     }
+    await page.locator('#ratingFilter').selectOption('B');
+    const exactB=await page.evaluate(()=>({
+      grade:state.ratingFilter,pressed:document.querySelector('#schoolGradeQuick button.active')?.dataset.grade||null,
+      correct:[...document.querySelectorAll('#schoolList button.school[data-sid]')].every(b=>{
+        const s=state.schools[Number(b.dataset.sid)];return scoreRecord(s.name,s.district)?.rating==='B';
+      })}));
+    assert.deepEqual(exactB,{grade:'B',pressed:null,correct:true},
+      'Detailed grade B selection remains B-only and is distinct from B+ shortcut');
     // Regional view must group rather than overplot hundreds of 27px icons;
     // every eligible campus remains represented in one clickable group.
     const clutter=await page.evaluate(()=>{
@@ -163,12 +172,19 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
     assert.ok(Math.abs(focused.lat-chosen.ll[0])<0.002&&Math.abs(focused.lng-chosen.ll[1])<0.002,
       'Map centers actual campus coordinates, not entire attendance polygon');
     assert.ok(focused.zoom>=14,'Campus is zoomed to local building');
-    await page.locator('#schoolGradeQuick button[data-grade="B"]').click();
+    await page.locator('#schoolGradeQuick button[data-grade="B_PLUS"]').click();
+    const retained=await page.evaluate(()=>({
+      school:state.selectedSchool?.name||null,focus:schoolFocusGroup.getLayers().length,
+      grade:state.ratingFilter}));
+    assert.equal(retained.school,chosen.name,'Grade A campus remains selected when B+ threshold is active');
+    assert.ok(retained.focus>0,'Grade A highlight remains visible under B+ threshold');
+    assert.equal(retained.grade,'B_PLUS');
+    await page.locator('#ratingFilter').selectOption('B');
     const cleared=await page.evaluate(()=>({
       school:state.selectedSchool?.name||null,focus:schoolFocusGroup.getLayers().length,
       grade:state.ratingFilter}));
     assert.deepEqual(cleared,{school:null,focus:0,grade:'B'},
-      'Filtering away the selected campus must also remove its highlighted pin');
+      'Selecting exact grade B clears a selected grade A campus and its highlighted pin');
     await page.locator('#schoolGradeQuick button[data-grade="all"]').click();
     assert.equal(await page.locator('#ratingFilter').inputValue(),'all');
     const school=page.locator('#schoolList button.school').first();
