@@ -62,8 +62,8 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
       });
       assert.ok(state.schoolControls.every(x=>x.inside),'All school settings should be grouped together at '+width);
        assert.equal(state.reviewedPeimsAddonLinks,1,'Exactly one reviewed PEIMS stylesheet at '+width);
-       assert.equal(state.styleLinks-state.reviewedPeimsAddonLinks,10,
-         'Six first-paint stylesheets should remain bundled at '+width);
+       assert.equal(state.styleLinks-state.reviewedPeimsAddonLinks,11,
+         'Six first-paint stylesheets remain bundled and one map-first layout is added at '+width);
        assert.equal(state.renderBundleLoaded,true,'Compiled CSS must load and contain rules at '+width);
        assert.equal(state.oldSourcesLinked,false,'No original CSS link should remain at '+width);
       assert.equal(state.privacyDisclosureClosed,true,'Detailed privacy notice must be closed by default at '+width);
@@ -76,6 +76,10 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
           'Map should appear before commute controls on mobile at '+width);
         assert.ok(state.mapBox.y<state.filterCard.y,
           'Map should appear before long filter settings on mobile at '+width);
+      }
+      if(width>=1060){
+        assert.ok(state.mapBox.x>state.filterCard.right,'Desktop map must sit right of filters/results at '+width);
+        assert.ok(state.mapBox.height>500,'Desktop map must be prominent at '+width);
       }
       assert.equal(await page.locator('#homeClear').isVisible(),false,'X initially hidden at '+width);
       await page.locator('#homeAddress').fill('3400 Legacy Dr, Plano, TX');
