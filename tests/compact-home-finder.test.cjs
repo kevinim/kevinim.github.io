@@ -10,6 +10,7 @@ const official={
  CFB:'https://www.cfbisd.edu/students/school-maps-locator-system',
  '057905':'https://www.dallasisd.org/departments/demographic-studies/find-your-school/schoolsite-locator-interactive-map',
  FISD:'https://www.friscoisd.org/page/2026-2027-zones/',
+ '043907':'https://portal.metrostudygis.com/arcgis/apps/webappviewer/index.html?id=ed198c434d47474b88709e98d1f0a125',
  AISD:'https://www.allenisd.org/page/findaschool',
  PROSPER:'https://www.prosper-isd.net/page/attendance-boundaries/',
  PISD:'https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder',
@@ -45,6 +46,24 @@ test('ambiguous Carrollton 75007 does not silently pick CFB for LISD households'
  assert.match(html,/id="homeFinderLaunch"[^>]*hidden/);
  const supported=model('123 Synthetic Drive, Carrollton, TX 75007',{status:'finder-current',district:'LISD'});
  assert.equal(supported.likely,'LISD');
+});
+
+test('McKinney postal city alone is not a school district, including 75072',()=>{
+ const address='10016 Synthetic Ridge Rd, McKinney, TX 75072';
+ const unverified=model(address,{status:'unavailable'});
+ assert.equal(unverified.likely,'','A city name alone must not launch McKinney ISD finder');
+ assert.ok(unverified.near.includes('FISD'),'Frisco must be an available district candidate');
+ assert.ok(unverified.near.includes('043907'),'McKinney ISD must remain a separate candidate');
+ assert.ok(unverified.near.includes('PROSPER'),'Prosper ISD must remain possible');
+ assert.match(unverified.why,/McKinney.*Frisco.*Prosper/);
+ const unsafeHtml=ctx.compactHomeFinderHtml(address,{status:'unavailable'});
+ assert.match(unsafeHtml,/<option value="" selected>학군 선택<\/option>/);
+ assert.match(unsafeHtml,/id="homeFinderLaunch"[^>]*hidden/);
+ const frisco=model(address,{status:'current',district:'FISD'});
+ assert.equal(frisco.likely,'FISD','Current Frisco source should override postal city');
+ assert.match(ctx.compactHomeFinderHtml(address,{status:'current',district:'FISD'}),/href="https:\/\/www\.friscoisd\.org\/page\/2026-2027-zones\//);
+ assert.equal(model(address,{status:'finder-current',district:'043907'}).likely,'043907');
+ assert.equal(model(address,{status:'conflict',matches:[{district:'FISD'},{district:'043907'}]}).likely,'');
 });
 
 test('single validated GIS district overrides city hint; conflicts never choose an ISD',()=>{
