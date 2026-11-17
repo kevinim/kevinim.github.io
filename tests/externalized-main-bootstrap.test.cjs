@@ -15,6 +15,20 @@ const rawHtml=fs.readFileSync(path.join(root,'index.html'),'utf8');
 // Redfin split and Liberty pilot: undo only the five named additions before
 // comparing the rest of the protected historical HTML byte-for-byte.
 let normalizedMainHtml=rawHtml;
+// Address-first UI: subtract ONLY exact approved main-page UI/cache deltas.
+const priorityElement=normalizedMainHtml.match(/<div id="homeCandidates"><\/div><section id="homeAssignmentPriority" class="home-assignment-priority"[\s\S]*?<\/section><\/div><div class="panel office-controls">/);
+assert.ok(priorityElement&&priorityElement[0].includes('id="homeAssignmentPrioritySchools"'),
+ 'Missing address-first priority panel');
+normalizedMainHtml=replaceOnce(normalizedMainHtml,priorityElement[0],
+ '<div id="homeCandidates"></div></div><div class="panel office-controls">');
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ '<div id="schoolAddressNotice" class="home-school-address-note" role="status" aria-live="polite" hidden></div>','');
+for(const [next,previous] of [
+ ['map-first-split.css?v=2','map-first-split.css?v=1'],
+ ['dashboard-main.js?v=11','dashboard-main.js?v=10'],
+ ['home-lookup-v2.js?v=21','home-lookup-v2.js?v=20'],
+ ['home-school-manual-bridge.js?v=2','home-school-manual-bridge.js?v=1']
+])normalizedMainHtml=replaceOnce(normalizedMainHtml,next,previous);
 for(const [next,prior] of [["https://gis.texaswildfirerisk.com https://tiles.openfreemap.org; connect-src 'self'","https://gis.texaswildfirerisk.com; connect-src 'self'"],["https://fueleconomy.gov https://tiles.openfreemap.org; font-src 'self' data:; worker-src 'self' blob:; object-src 'none'","https://fueleconomy.gov; font-src 'self' data:; object-src 'none'"],["<option value=\"liberty\">Liberty · OpenFreeMap</option><option value=\"osm\">OpenStreetMap</option>","<option value=\"osm\">OpenStreetMap</option>"],["<link rel=\"stylesheet\" href=\"./features/tea-peims-public-share-addon.css?v=2\">\n<link rel=\"stylesheet\" href=\"./features/map-first-split.css?v=1\">","<link rel=\"stylesheet\" href=\"./features/tea-peims-public-share-addon.css?v=2\">"],["<script src=\"./features/map/liberty-basemap.js?v=2\"></script><script src=\"./dashboard-main.js?v=10\"></script>","<script src=\"./dashboard-main.js?v=9\"></script>"]])
  normalizedMainHtml=replaceOnce(normalizedMainHtml,next,prior);
 assert.equal(normalizedMainHtml,show('c12ab9860057e5d59b6f0e52e486b392f083da8a','index.html'),
@@ -164,7 +178,30 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  const basemapFn=text=>text.slice(text.indexOf('function setBaseMap(choice, fallbackFrom=null){'),text.indexOf('async function loadRatings(){'));
  const approvedFn=basemapFn(lastApprovedJs),currentFn=basemapFn(js);
  assert.ok(approvedFn.startsWith('function setBaseMap')&&currentFn.startsWith('function setBaseMap'));
- let normalizedLibertyJs=replaceOnce(js,currentFn,approvedFn);
+ // Review separately: only address-school decision, panel, school marker and list
+ // code may differ from #319. All other executable bytes remain pinned.
+ const priorLiberty=show('02e7a159c05ae6402aced4a8265dc0444cd8aada','dashboard-main.js');
+ let normalizedAddressJs=js;
+ const helperStart=normalizedAddressJs.indexOf('/* An address is not a ZIP-school lookup.');
+ const helperEnd=normalizedAddressJs.indexOf(' function drawSchools(){',helperStart);
+ assert.ok(helperStart>0&&helperEnd>helperStart);
+ assert.equal(normalizedAddressJs[helperStart-1],'\n','Expected exactly one scoped helper-introduction newline');
+ normalizedAddressJs=replaceOnce(normalizedAddressJs,normalizedAddressJs.slice(helperStart-1,helperEnd),'');
+ const section=(text,start,end)=>{
+  const first=text.indexOf(start),last=text.indexOf(end,first+start.length);
+  assert.ok(first>0&&last>first,'Address-school approved function boundary '+start);
+  return text.slice(first,last);
+ };
+ for(const [start,end] of [
+  [' function drawSchools(){','function drawHomeAssignmentMap(){'],
+  ['function drawList(){','function zoneNameKey(']
+ ]){
+  normalizedAddressJs=replaceOnce(normalizedAddressJs,
+   section(normalizedAddressJs,start,end),section(priorLiberty,start,end));
+ }
+ assert.equal(hash(normalizedAddressJs),hash(priorLiberty),
+  'Only the explicitly scoped address-school helper/list/marker changes are allowed');
+ let normalizedLibertyJs=replaceOnce(normalizedAddressJs,currentFn,approvedFn);
  normalizedLibertyJs=replaceOnce(normalizedLibertyJs,'boundarySeq=0,baseMapGeneration=0;','boundarySeq=0;');
  normalizedLibertyJs=replaceOnce(normalizedLibertyJs,
   'if(window.ResizeObserver)new ResizeObserver(()=>{const before=map.getSize(),after=syncMapSize();if(before.x!==after.x||before.y!==after.y)requestAnimationFrame(()=>{drawSchools();drawAreaLabels()})}).observe(map.getContainer());',

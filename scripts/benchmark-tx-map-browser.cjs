@@ -24,7 +24,7 @@ const providerAdded=providerAllowance(candidateHtml,baselineHtml);
 // Explicitly reviewed one-time first-party map-first CSS and Liberty adapter.
 // No extra arbitrary requests get a blanket waiver.
 const mapFirstAdded=[
- './features/map-first-split.css?v=1',
+ './features/map-first-split.css?v=2',
  './features/map/liberty-basemap.js?v=1'
 ].filter(asset=>candidateHtml.includes(asset)&&!baselineHtml.includes(asset)).length;
 function local(url){

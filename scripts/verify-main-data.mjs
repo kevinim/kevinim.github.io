@@ -67,7 +67,7 @@ const test = (name, fn) => {
 
 const inlineScripts = [mainBootstrap];
 test('external main application bootstrap compiles with no inline HTML execution',()=>{
- assert.ok(pageHtml.includes('<script src="./dashboard-main.js?v=10"></script>'));
+ assert.ok(pageHtml.includes('<script src="./dashboard-main.js?v=11"></script>'));
  assert.equal([...pageHtml.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].filter(x=>!/\bsrc\s*=/.test(x[1])&&x[2].trim()).length,0);
  new Script(mainBootstrap,{filename:'dashboard-main.js'});
 });
@@ -278,7 +278,7 @@ test('P0 Plano senior-high home marker and map source legend are accurate',()=>{
  assert.ok(home.includes('schoolLevelMatchesAssignment(s,f.properties.gradeLevel)'));
  assert.ok(home.includes("result.district!==s.district)return false"));
  assert.ok(html.includes('./school-assignment.js?v=6'));
- assert.ok(html.includes('./home-lookup-v2.js?v=20'));
+ assert.ok(html.includes('./home-lookup-v2.js?v=21'));
  assert.ok(html.includes('현행 공식 Finder가 사용하는 플레이노·루이스빌 경계는 파란색'));
  assert.ok(html.includes('플레이노 저장본과 앨런 과거 GIS는 주황색 점선 참고'));
 });
@@ -1039,7 +1039,8 @@ test('Allen school markers are automatic at wide zoom; independent FEMA quick to
  assert.ok(!html.includes('id="allenSchoolsShortcut"'),'Do not require user to click an Allen button');
  assert.ok(html.includes('id="hazardMapQuickToggle"'));
  assert.ok(html.includes('id="schoolMapStatus"'));
- assert.ok(html.includes('const eligible=state.schools.filter('));
+ assert.ok(html.includes('const eligible=addressView?addressView.schools.filter('),'Address mode must use only explicitly evidenced campus records');
+ assert.ok(html.includes(':state.schools.filter(s=>s.ll'),'Normal ZIP exploration must retain the original school marker source');
  assert.ok(html.includes('bounds.contains(s.ll)'));
  assert.ok(!html.includes('const visible=zoom<11?allenItems:items.slice(0,limit);'));
  assert.ok(html.includes('class="hazard-chip ifld"')&&html.includes('class="hazard-chip wfir"')&&html.includes('class="hazard-chip hrcn"'));

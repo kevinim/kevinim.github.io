@@ -20,6 +20,15 @@
   ];
   const PRIORITY=['LISD','CFB','057905','AISD','043907','PISD','FISD','PROSPER'];
   let activeHome=null,panel=null,districtSelect=null,link=null,selects={},status=null,cards=null,details=null;
+  let appliedSchools=[];
+  function selectedSchools(current){
+    return current&&current===activeHome?appliedSchools.slice():[];
+  }
+  function notifyAddressFocus(){
+    try{if(typeof renderAddressSchoolPriority==='function')renderAddressSchoolPriority()}catch{}
+    try{if(typeof drawSchools==='function')drawSchools()}catch{}
+    try{if(typeof drawList==='function')drawList()}catch{}
+  }
   const byId=id=>document.getElementById(id);
   function catalog(schools,code,level){
     if(!Array.isArray(schools)||!/^[A-Z0-9]{3,8}$/.test(code||''))return [];
@@ -83,6 +92,7 @@
     syncLink();
   }
   function reset(){
+    appliedSchools=[];
     districtSelect.value='';
     for(const [level] of LEVELS)selects[level].value='';
     cards.replaceChildren();
@@ -90,6 +100,7 @@
     details.open=false;
     syncLink();
     fillSchools();
+    notifyAddressFocus();
   }
   function drawCards(){
     cards.replaceChildren();
@@ -103,9 +114,13 @@
       picked.push({school,label});
     }
     if(!picked.length){
+      appliedSchools=[];
+      notifyAddressFocus();
       status.textContent='공식 Finder에서 확인한 초·중·고 학교를 선택해 주세요.';
       return;
     }
+    appliedSchools=picked.map(x=>x.school);
+    notifyAddressFocus();
     status.textContent='학교 '+picked.length+'개를 참고 목록에 표시했습니다. 학군의 주소별 배정은 이 화면에서 독립 인증되지 않았습니다.';
     for(const {school,label} of picked){
       const card=document.createElement('article');
@@ -147,7 +162,7 @@
     shell.className='home-manual-school-bridge';
     shell.hidden=true;
     const top=text('p','home-manual-school-note',
-      '집 주소 검색과 아래 학교 목록은 자동으로 연결되지 않습니다. 학교 목록은 학교 건물 위치 기준이며, 실제 배정학교가 아닙니다.');
+      '주소별 배정학교는 아직 자동 인증되지 않았습니다. 공식 학군 Finder 결과를 직접 선택하면 그 학교만 아래 목록과 지도에 표시됩니다. ZIP 안의 다른 학교는 표시하지 않습니다.');
     shell.appendChild(top);
     details=document.createElement('details');
     details.className='home-manual-school-details';
@@ -161,7 +176,7 @@
     districtSelect.appendChild(option('','학군 직접 선택 (주소 ZIP으로 자동 지정하지 않음)'));
     refreshDistrictOptions();
     districtSelect.addEventListener('change',function(){
-      fillSchools();cards.replaceChildren();
+      fillSchools();cards.replaceChildren();appliedSchools=[];notifyAddressFocus();
       status.textContent='선택한 학군의 공식 결과를 확인한 후 학교를 선택하세요.';
     });
     body.appendChild(districtSelect);
@@ -178,16 +193,7 @@
     const actions=document.createElement('div');actions.className='home-manual-actions';
     const apply=text('button','mini-btn','직접 선택한 학교를 아래에 표시');
     apply.type='button';apply.addEventListener('click',drawCards);
-    const all=text('button','mini-btn','학교 위치 기준 전체 목록 보기');
-    all.type='button';
-    all.addEventListener('click',function(){
-      const scope=byId('schoolScope');
-      if(!scope)return;
-      scope.value='all';
-      scope.dispatchEvent(new Event('change',{bubbles:true}));
-      byId('schoolList')?.scrollIntoView({behavior:'auto',block:'start'});
-    });
-    actions.append(apply,all);body.appendChild(actions);
+    actions.append(apply);body.appendChild(actions);
     status=text('p','source','');
     status.setAttribute('role','status');status.setAttribute('aria-live','polite');
     body.appendChild(status);
@@ -199,5 +205,5 @@
     observer.observe(homeInfo,{childList:true});
     update();
   }
-  return Object.freeze({init,catalog,officialUrl});
+  return Object.freeze({init,catalog,officialUrl,selectedSchools});
 });
