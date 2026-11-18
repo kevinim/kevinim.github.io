@@ -112,7 +112,7 @@
    if(!main||$('regionCompare'))return;
    const section=n('details','region-compare');section.id='regionCompare';
    const summary=n('summary','region-compare-summary');summary.id='regionCompareTitle';
-   const summaryTitle=n('span','region-compare-summary-title','5. 지역 나란히 비교');
+   const summaryTitle=n('span','region-compare-summary-title','지역 나란히 비교');
    const summaryMeta=n('span','region-compare-summary-hint','Allen · Frisco · West Plano · 필요할 때 펼치기');
    summaryMeta.id='regionCompareSummaryMeta';
    const summaryArrow=n('span','region-compare-summary-chevron','열기');
@@ -146,8 +146,7 @@
    const status=n('p','region-compare-status','');status.id='regionCompareStatus';
    status.setAttribute('role','status');status.setAttribute('aria-live','polite');content.append(status);
    section.append(content);
-   const target=document.getElementById('txCompareSection');
-   if(target)target.appendChild(section);else if(quick)quick.after(section);else main.before(section);
+   if(quick)quick.after(section);else main.before(section);
    selectors.forEach((select,i)=>select.addEventListener('change',e=>choose(i,e.target.value)));
    toggle.addEventListener('click',()=>{
      if(showThird){showThird=false;announce('후보 A와 B를 비교합니다.')}
