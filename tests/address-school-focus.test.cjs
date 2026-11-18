@@ -124,6 +124,8 @@ test('production UI shows address-first panel and moves commute below map/result
  assert.match(html,/home-school-manual-bridge\.js\?v=3/);
  assert.match(css,/\.shell>\.controls-grid>\.office-controls\{order:90/);
  assert.match(css,/\.shell>\.footer\{order:100/);
+ assert.match(source,/GIS 기준 예상 배정학교/);
+ assert.match(source,/GIS 예상 학교 · 공식 확인 별도/);
  assert.match(source,/let items=view\?view\.schools\.slice\(\):state\.schools/);
  assert.match(source,/const eligible=addressView\?addressView\.schools/);
  assert.match(source,/role="status".*주소별 배정학교 미확인/);
