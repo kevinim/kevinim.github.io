@@ -638,7 +638,8 @@ function referenceCandidateSchoolLocations(view){
  const registry=new Set(state.schools),seen=new Set(),schools=[];
  for(const candidate of view.candidates||[]){
   const school=candidate.school;
-  if(!school||!registry.has(school)||seen.has(school))continue;
+  if(!school||!registry.has(school)||seen.has(school)||
+     (candidate.campusId&&school.id&&candidate.campusId!==school.id))continue;
   if(!Array.isArray(school.ll)||school.ll.length!==2||
      !school.ll.every(Number.isFinite))continue;
   seen.add(school);schools.push(school);
