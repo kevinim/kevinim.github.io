@@ -207,6 +207,12 @@ function renderHome(){
   // cannot provide polygons/highlights, and is hidden if release policy is missing.
   const referencePlan=window.ConditionalSchoolRelease&&window.SchoolReferencePreview?.plan(
     rawSchoolCandidate,DISTRICT_REGISTRY,window.TrustedLinkPolicy?.official);
+  // Current-year GIS can be disclosed as clearly labeled reference candidates,
+  // without promoting the source to a certified residential assignment.
+  // Keep this strictly in memory and never serialize a searched address.
+  home.schoolReferencePlan=referencePlan||null;
+  home.schoolSourceStatus=rawSchoolCandidate?.status||'unavailable';
+  home.schoolSourceDistrict=rawSchoolCandidate?.district||'';
   const referenceControl=referencePlan?.kind==='reference-only'
    ?'<div class="home-reference-control"><button id="homeReferencePreviewToggle" class="mini-btn" type="button" aria-controls="homeReferencePreviewResult" aria-expanded="'+(home.referencePreviewRequested?'true':'false')+'">GIS 참고 후보 직접 보기 · 실제 배정 미인증</button><div id="homeReferencePreviewResult" role="status" aria-live="polite"></div></div>'
    :'';
