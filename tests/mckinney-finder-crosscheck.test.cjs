@@ -15,8 +15,10 @@ function fixture(){
   {id:'043907102',district:'043907',name:'SYNTHETIC MIDDLE SCHOOL',type:'middle'},
   {id:'043907103',district:'043907',name:'SYNTHETIC HIGH SCHOOL',type:'high'}
  ];
+ const ratings=schools.map(s=>({id:s.id,district:s.district,name:s.name,
+  rating:'A',score:93}));
  return {geocodePrecise:true,sourceLive:true,
-  registry:{'043907':{official:SOURCE}},official:u=>u===SOURCE?u:null,schools,
+  registry:{'043907':{official:SOURCE}},official:u=>u===SOURCE?u:null,schools,ratings,
   raw:{district:'043907',status:'finder-current',features:[
    feature('elementary','SYNTHETIC ELEM',{campusId:'043907101'}),
    feature('middle','SYNTHETIC MIDDLE',{campusId:'043907102'}),
@@ -28,6 +30,9 @@ test('official Finder GIS + TEA campus identities are crosschecked without grant
  assert.equal(p.kind,'reference-only');
  assert.equal(p.complete,true);
  assert.equal(p.identityMatched,3);
+ assert.equal(p.directoryMatched,3);
+ assert.equal(p.candidates[0].identityKind,'TEA-campus-id');
+ assert.equal(p.candidates[0].verifiedRating,'A');
  assert.deepEqual(p.missing,[]);
  assert.deepEqual(p.candidates.map(c=>c.level),['elementary','middle','high']);
  assert.equal(p.candidates[0].yearStatus,'elementary-current-checked');
@@ -93,7 +98,10 @@ test('duplicate levels, missing schema and campus identity conflicts cannot be m
  f=fixture();f.raw.features[0].properties.campusId='043907999';
  // A missing ID join still allows unique normalised name comparison,
  // but never marks that provider ID as an independently verified campus.
- assert.equal(api.crosscheck(f).candidates[0].linked,true);
+ const sourceOnly=api.crosscheck(f).candidates[0];
+ assert.equal(sourceOnly.linked,true);
+ assert.equal(sourceOnly.identityKind,'TEA-name-only');
+ assert.equal(sourceOnly.teaCampusId,null,'A contradictory provider ID cannot become a verified TEA ID');
 });
 test('source never logs or persists residential address; existing hard NO-GO remains active',()=>{
  const fs=require('node:fs');
