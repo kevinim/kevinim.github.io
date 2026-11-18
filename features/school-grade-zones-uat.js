@@ -35,6 +35,7 @@
   const box=safeText('div','','school-grade-popup');
   box.append(safeText('strong',info.school));
   box.append(safeText('div','TEA 2026 예비 등급: '+info.rating+' / '+info.score));
+  box.append(safeText('div','GIS 경계 자료 기준연도: '+(info.gisVintage||'원본 GIS 학년도 미표기')));
   box.append(safeText('div',info.kind==='finder-2026-elementary'
      ?'McKinney 2026–27 공식 Finder 연결 초등 경계 (주소·배정 예외는 별도 확인)'
      :info.kind==='historical'?'Allen 2019–23 과거 경계 · 현재 배정 아님'

@@ -115,7 +115,8 @@
      if(!thresholdPass(record.rating,threshold))continue;
      if(kind!=='finder-2026-elementary'&&!showReference)continue;
      result.visible.push({feature,school:pureLabel(feature.properties.school),rating:record.rating,
-       score:record.score,campusId:record.id,kind,level,district,year:YEAR});
+       score:record.score,campusId:record.id,kind,level,district,year:YEAR,
+       gisVintage:gisVintageLabel(feature)});
    }
    for(const status of Object.keys(counters))result.campusCounts[status]=sets[status]?.size||0;
    return result;
@@ -178,6 +179,19 @@
    }
    return {groups,errors,inputPieces,mergedGroups,independentPieces};
  }
+ // Keep a boundary's vintage separate from the TEA campus rating year.
+ // An explicitly null GIS year must not inherit the Finder page's title year.
+ function gisVintageLabel(feature){
+   const p=feature?.properties||{};
+   if(Object.hasOwn(p,'sourceYearRaw')){
+     const raw=p.sourceYearRaw;
+     return typeof raw==='string'&&/^20[0-9]{2}[-–][0-9]{2}$/.test(raw.trim())
+       ?raw.trim():'원본 GIS 학년도 미표기';
+   }
+   const vintage=typeof p.sourceVintage==='string'?p.sourceVintage:'';
+   const years=vintage.match(/(?:19|20)[0-9]{2}(?:[-–](?:(?:19|20)[0-9]{2}|[0-9]{2}))?/g);
+   return years?.length?[...new Set(years)].join(', ').slice(0,80):'원본 GIS 학년도 미표기';
+ }
  function pureLabel(s){return String(s).trim().slice(0,130)}
- return {DISTRICTS,LEVELS,RANK,YEAR,normalizedName,thresholdPass,sourceKind,matchRating,matchRatingResult,dataAvailability,build,dissolveByCampus};
+ return {DISTRICTS,LEVELS,RANK,YEAR,normalizedName,thresholdPass,sourceKind,matchRating,matchRatingResult,dataAvailability,build,dissolveByCampus,gisVintageLabel};
 });

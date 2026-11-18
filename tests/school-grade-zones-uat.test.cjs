@@ -28,6 +28,25 @@ test('McKinney current-year elementary Finder has a narrow preview eligibility g
  assert.equal(core.sourceKind('043907','middle',mid,true),'reference-finder');
  assert.equal(core.build([mid],[{...record} ],()=>record,{district:'043907',level:'middle',threshold:'B',liveFinder:true}).visible.length,0);
 });
+test('GIS source year is independent of the 2026 TEA rating year',()=>{
+ const elem=rect('Test Elementary School','elementary');
+ const eligible=core.build([elem],[record],()=>record,{district:'043907',level:'elementary',liveFinder:true});
+ assert.equal(eligible.visible[0].year,2026);
+ assert.equal(eligible.visible[0].gisVintage,'2026–27');
+ const high=rect('SYNTHETIC HIGH','high');
+ high.properties.sourceYearRaw=null;
+ high.properties.sourceVintage='Finder 2026–27 home page heading';
+ assert.equal(core.gisVintageLabel(high),'원본 GIS 학년도 미표기',
+   'Finder header year must not certify undated high-school GIS');
+ high.properties.sourceYearRaw='2025-26';
+ assert.equal(core.gisVintageLabel(high),'2025-26');
+ const allen=rect('Norton Elementary School','elementary','AISD','');
+ assert.equal(core.gisVintageLabel(allen),'2023');
+ const unknown=rect('Hebron Valley Elementary','elementary','LISD','');
+ assert.equal(core.gisVintageLabel(unknown),'원본 GIS 학년도 미표기');
+ const ui=fs.readFileSync('features/school-grade-zones-uat.js','utf8');
+ assert.ok(ui.includes("box.append(safeText('div','GIS 경계 자료 기준연도: '"));
+});
 test('Allen old geometry remains reference-only even when school earns a new A',()=>{
  const f=rect('Norton Elementary School','elementary','AISD','');
  const r={id:'043901101',name:'Norton Elementary School',officialName:'NORTON EL',district:'AISD',rating:'A',score:96};
