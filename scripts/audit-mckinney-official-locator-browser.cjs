@@ -40,7 +40,7 @@ const VENDOR='https://portal.metrostudygis.com/arcgis/sharing/rest/content/items
    if(r.ok){
     const j=await r.json();vendor.json=true;
     const s=JSON.stringify(j);
-    vendor.hasSearchWidget=/widgets\\/Search\\/Widget|SearchWidget|widget-search/i.test(s);
+    vendor.hasSearchWidget=s.includes('widgets/Search/Widget')||s.includes('SearchWidget')||s.includes('widget-search');
    }
   }catch(e){vendor.error=String(e.message||e).slice(0,130)}
   console.log('MCKINNEY_2026_LOCATOR_DISCOVERY '+JSON.stringify({
