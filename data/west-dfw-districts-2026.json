@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "reviewedOn": "2026-11-08",
+  "reviewedOn": "2026-11-18",
   "schoolYear": "2026-27",
   "intent": "West DFW location and official district Finder navigation; not a school assignment GIS dataset.",
   "westCityCaution": "Westlake and Southlake have overlapping ISD boundaries. City/ZIP is not an assigned school, eligibility or attendance zone.",
@@ -50,7 +50,8 @@
       "officialUrl": "https://www.nisdtx.org/departments/facilities/attendance-boundaries",
       "boundaryStatus": "external-official-finder-only",
       "localSchoolPolygonCount": 0,
-      "notes": "Select 2026-27 in school zone locator; 2027-28 proposal is NOT current approved 2026-27 assignment."
+      "notes": "Use the official 2026–27 School Zone Locator year selector. The 2027–28 high-school zones were approved November 9, 2026, but apply to NEXT school year, not 2026–27.",
+      "dataNote": "기존 NWISD ArcGIS 초·중·고 참고 레이어의 최종 편집 시점은 2022년입니다. 정확한 학년도와 현재 구역 일치 여부, 재사용 허가가 미확인되어 이 대시보드에 GIS 경계를 아직 표시하지 않습니다. 2026–27 공식 Finder에서 학년과 주소를 확인하세요."
     },
     {
       "code": "220906",
