@@ -45,6 +45,15 @@ const base=process.env.SITE_URL||'http://127.0.0.1:8765/';
    }
    assert.equal(first.ratingsReady,true,'TEA ratings must load');
    assert.equal(first.zoneReady,true,'Polygon loader must resolve without inventing coverage');
+   // Prosper official 2026-27 geometry must load from the existing static file;
+   // unlike old Allen zones, no opt-in historical toggle is needed.
+   await page.locator('#schoolGradeCity').selectOption('prosper');
+   const prosper=await page.evaluate(()=>window.__schoolGradeZonesUatDebug);
+   assert.equal(prosper.city,'prosper');
+   assert.equal(prosper.zoneReady,true,'Local Prosper official zone dataset must load');
+   assert.ok(prosper.drawn>=1,'Prosper official A/B zones must render without reference toggle');
+   assert.ok(prosper.schools>=1,'Prosper source campus and TEA ratings must join');
+   assert.match(await page.locator('#schoolGradeZoneDisclaimer').innerText(),/31개 배정구역/);
    // Allen is historical: default render must never silently paint old GIS as current.
    await page.locator('#schoolGradeCity').selectOption('allen');
    let status=await page.locator('#schoolGradeZoneStatus').innerText();

@@ -47,6 +47,30 @@ test('GIS source year is independent of the 2026 TEA rating year',()=>{
  const ui=fs.readFileSync('features/school-grade-zones-uat.js','utf8');
  assert.ok(ui.includes("box.append(safeText('div','GIS 경계 자료 기준연도: '"));
 });
+test('Prosper 2026-27 official 31-zone source is eligible by grade without reference override',()=>{
+ const f=rect('R Steve Folsom Elementary','elementary','PROSPER','043912101');
+ f.properties={...f.properties,sourceDistrict:'PROSPER',sourceVintage:'2026–27',
+   current:true,sourceYearConfirmed:true,schoolYear:'2026–27'};
+ const r={id:'043912101',district:'PROSPER',name:'R Steve Folsom Elementary',
+   officialName:'R STEVE FOLSOM EL',rating:'B',score:85};
+ const opts={district:'PROSPER',level:'elementary',threshold:'B'};
+ assert.equal(core.sourceKind('PROSPER','elementary',f),'official-2026-prosper');
+ const result=core.build([f],[r],()=>null,opts);
+ assert.equal(result.visible.length,1);
+ assert.equal(result.visible[0].kind,'official-2026-prosper');
+ assert.equal(result.visible[0].gisVintage,'2026–27');
+ assert.equal(core.build([f],[r],()=>null,{...opts,threshold:'A'}).visible.length,0);
+ const invalid=[
+  {current:false},{sourceYearConfirmed:false},{schoolYear:'2025–26'},
+  {sourceDistrict:'LISD'},{campusId:'043911101'}
+ ];
+ for(const change of invalid){
+  const altered=structuredClone(f);
+  Object.assign(altered.properties,change);
+  assert.equal(core.sourceKind('PROSPER','elementary',altered),'blocked');
+  assert.equal(core.build([altered],[r],()=>null,{...opts,showReference:true}).visible.length,0);
+ }
+});
 test('Allen old geometry remains reference-only even when school earns a new A',()=>{
  const f=rect('Norton Elementary School','elementary','AISD','');
  const r={id:'043901101',name:'Norton Elementary School',officialName:'NORTON EL',district:'AISD',rating:'A',score:96};
