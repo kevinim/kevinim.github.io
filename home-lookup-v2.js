@@ -231,21 +231,26 @@ function wireCompactHomeFinder(){
  const input=el('homeFinderDistrict'),link=el('homeFinderLaunch'),hint=el('homeFinderHint');
  if(!input||!link)return;
  // Never put a residence in HTML or link href before a deliberate user click.
- const button=document.createElement('button');button.type='button';
- button.id='mckinneyOfficialAddressSearch';button.className='mini-btn';
- button.textContent='선택 주소로 공식 검색 열기';button.hidden=true;
- link.insertAdjacentElement('afterend',button);
- const note=document.createElement('p');note.className='source';
- note.id='mckinneyAddressSearchPrivacy';note.hidden=true;
- note.textContent='클릭하면 선택한 주소가 MetroStudy 공식 검색기 URL에 전송됩니다. 검색 결과를 이 대시보드가 자동 수신하거나 확정 배정으로 인증하지 않습니다.';
- link.parentElement?.after(note);
+ // The existing picker unit harness has no DOM; preserve its change behavior.
+ const supportsDom=typeof document!=='undefined'&&typeof document.createElement==='function'&&
+  typeof link.insertAdjacentElement==='function';
+ const button=supportsDom?document.createElement('button'):null;
+ const note=supportsDom?document.createElement('p'):null;
+ if(button&&note){
+  button.type='button';button.id='mckinneyOfficialAddressSearch';
+  button.className='mini-btn';button.textContent='선택 주소로 공식 검색 열기';
+  button.hidden=true;link.insertAdjacentElement('afterend',button);
+  note.className='source';note.id='mckinneyAddressSearchPrivacy';note.hidden=true;
+  note.textContent='클릭하면 선택한 주소가 MetroStudy 공식 검색기 URL에 전송됩니다. 검색 결과를 이 대시보드가 자동 수신하거나 확정 배정으로 인증하지 않습니다.';
+  link.parentElement?.after(note);
+ }
  const canHandoff=()=>input.value==='043907'&&
   !!home?.address&&home.geocodeQuality?.usableForSchoolCandidate===true&&
   window.TrustedLinkPolicy?.official(OFFICIAL['043907'])===
   'https://portal.metrostudygis.com/arcgis/apps/webappviewer/index.html?id=ed198c434d47474b88709e98d1f0a125'&&
   typeof window.McKinneyFinderCrosscheck?.officialAddressHandoff==='function';
- const refresh=()=>{button.hidden=!canHandoff();note.hidden=!canHandoff()};
- button.addEventListener('click',()=>{
+ const refresh=()=>{if(button&&note){const allowed=canHandoff();button.hidden=!allowed;note.hidden=!allowed}};
+ button?.addEventListener('click',()=>{
   if(!canHandoff())return;
   const url=window.McKinneyFinderCrosscheck.officialAddressHandoff({
    district:input.value,
