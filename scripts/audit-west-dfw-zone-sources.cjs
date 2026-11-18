@@ -25,6 +25,14 @@ const KELLER_LAYERS=[
  [4,'intermediate','INT_NAME',7],
  [5,'middle','MID_NAME',7]
 ];
+// Metadata-only historical leads. Do not treat a 2022 data-last-edit timestamp as
+// a certified academic year, complete school inventory, or republishing license.
+const NORTHWEST_LAYERS=Object.freeze([
+ ['elementary','NWISD_Elementary_School_Attendance_Zones/FeatureServer/0','School_Boundary','2022-02-17'],
+ ['middle','NISD_New_Attendance_Zones/FeatureServer/2','MID_NAME','2022-11-17'],
+ ['high','NISD_New_Attendance_Zones/FeatureServer/1','HIGH_NAME','2022-11-17']
+]);
+const NORTHWEST_HOST='https://services3.arcgis.com/qnlpi19w6R1Ta48m/ArcGIS/rest/services/';
 function requireHttps(value,hostname){
  try{
   const u=new URL(value);
@@ -93,15 +101,33 @@ function validateManifest(manifest,ui,registry=REGISTRY.DISTRICT_REGISTRY){
  }
  const nw=byId.get('061911');
  if(nw.verifiedPolygonAcademicYear!=='2026-27'||
-    nw.mapStatus!=='current-official-finder-but-no-licensed-geojson')
+    nw.mapStatus!=='current-official-finder-but-no-licensed-geojson'||
+    nw.currentFinderUrl!=='https://www.nisdtx.org/schoolfinder'||
+    nw.futureYearApprovedUrl!=='https://www.nisdtx.org/departments/facilities/attendance-boundaries/2027-2028-boundaries'||
+    !Array.isArray(nw.historicalCandidateLayers)||
+    nw.historicalCandidateLayers.length!==3)
    throw Error('northwest_year_or_license_unverified');
+ const nwLayers=new Map(nw.historicalCandidateLayers.map(layer=>[layer.level,layer]));
+ if(nwLayers.size!==3)throw Error('northwest_reference_level_duplicate');
+ for(const [level,path,name,edit] of NORTHWEST_LAYERS){
+  const x=nwLayers.get(level);
+  if(!x||x.layerUrl!==NORTHWEST_HOST+path||
+     x.nameField!==name||x.dataLastEdit!==edit||
+     x.academicYearVerified!==null||
+     x.completeDistrictCoverageVerified!==false||
+     x.reusePermissionVerified!==false||
+     (level==='elementary'?
+       x.category!=='historical-reference-candidate':
+       x.category!=='historical-planning-reference-candidate'))
+   throw Error('northwest_historical_gis_cannot_be_promoted:'+level);
+ }
  const carroll=byId.get('220919'),gcisd=byId.get('220906');
  if(carroll.verifiedPolygonAcademicYear!==null||
    gcisd.verifiedPolygonAcademicYear!==null||
    gcisd.mapStatus!=='official-printable-maps-year-unconfirmed')
    throw Error('unverified_source_year_was_promoted_to_current');
  // CORS or unauthenticated read access is not a reproduction license.
- const sourceHosts=new Set([...Object.values(HOSTS),'arcgis.cityofkeller.com']);
+ const sourceHosts=new Set([...Object.values(HOSTS),'arcgis.cityofkeller.com','services3.arcgis.com']);
  for(const ev of manifest.evidence){
   if(typeof ev?.district!=='string'||!IDS.includes(ev.district)||
      typeof ev.status!=='string'||ev.status.length<10)
@@ -112,6 +138,9 @@ function validateManifest(manifest,ui,registry=REGISTRY.DISTRICT_REGISTRY){
    throw Error('west_boundary_evidence_domain_not_approved');
   if(u.hostname==='arcgis.cityofkeller.com'&&!ev.url.startsWith(KELLER_SERVICE+'/'))
    throw Error('west_boundary_evidence_arcgis_path_not_approved');
+  if(u.hostname==='services3.arcgis.com'&&
+     !NORTHWEST_LAYERS.some(([,path])=>ev.url===NORTHWEST_HOST+path))
+   throw Error('northwest_evidence_endpoint_not_approved');
  }
  return {status:'REUSE_BLOCKED_OFFICIAL_FINDER_ONLY',
   check:'static_provenance_not_live_school_enrollment',
@@ -123,6 +152,9 @@ function validateManifest(manifest,ui,registry=REGISTRY.DISTRICT_REGISTRY){
   }),
   keller:{layerCount:4,layerFeatureCountTotal:KELLER_LAYERS.reduce((sum,x)=>sum+x[3],0),
    verifiedVintage:'2018-19'},
+  northwest:{candidateLayers:NORTHWEST_LAYERS.length,academicYearVerifiedForCandidates:false,
+   historicalMetadataOnly:true,reusePermissionVerified:false,importedPolygonCount:0,
+   currentOfficialFinderYear:'2026-27',futureApprovedYear:'2027-28'},
   approvalRequired:[
    'current school-year campus polygons verified against district Finder',
    'source-specific reuse and redistribution rights',
@@ -150,4 +182,4 @@ if(require.main===module)try{main()}catch(err){
  process.stderr.write('West GIS evidence BLOCKED: '+err.message+'\n');
  process.exitCode=1;
 }
-module.exports={IDS,HOSTS,KELLER_SERVICE,KELLER_LAYERS,requireHttps,validateManifest};
+module.exports={IDS,HOSTS,KELLER_SERVICE,KELLER_LAYERS,NORTHWEST_LAYERS,NORTHWEST_HOST,requireHttps,validateManifest};
