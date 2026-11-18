@@ -37,11 +37,23 @@ test('observed layer feature counts cannot silently change',()=>{
 });
 test('2026-27 Northwest official Finder is not a distributable GeoJSON release',()=>{
  const p=copy(),d=p.districts.find(d=>d.code==='061911');
- assert.equal(d.verifiedPolygonAcademicYear,'2026-27');
+ assert.equal(d.verifiedPolygonAcademicYear,null);
+ assert.equal(d.verifiedOfficialFinderAcademicYear,'2026-27');
  assert.equal(d.verifiedRawPolygonEndpoint,null);
  assert.equal(d.reuseRights,'not-reviewed');
  d.reuseRights='approved';
  assert.throws(()=>check(p),/west_boundary_source_evidence_invalid/);
+});
+test('NW current school-year Finder date never becomes a verified GIS geometry year',()=>{
+ const original=copy(),d=original.districts.find(x=>x.code==='061911');
+ assert.equal(d.verifiedPolygonAcademicYear,null);
+ assert.equal(d.verifiedOfficialFinderAcademicYear,'2026-27');
+ const corrupted=copy();
+ corrupted.districts.find(x=>x.code==='061911').verifiedPolygonAcademicYear='2026-27';
+ assert.throws(()=>check(corrupted),/northwest_year_or_license_unverified/);
+ const missingFinder=copy();
+ missingFinder.districts.find(x=>x.code==='061911').verifiedOfficialFinderAcademicYear=null;
+ assert.throws(()=>check(missingFinder),/northwest_year_or_license_unverified/);
 });
 test('Northwest 2022 ArcGIS lead is recorded without licensed campus polygon promotion',()=>{
  const r=check(copy());
