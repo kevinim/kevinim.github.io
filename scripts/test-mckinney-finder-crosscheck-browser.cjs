@@ -60,7 +60,7 @@ async function main(){
       geocodeQuality:{usableForSchoolCandidate:true},parcel:{status:'idle'}};
     renderHome();drawSchools();drawList();
     const priority=document.getElementById('homeAssignmentPriority');
-    const link=[...priority.querySelectorAll('a')].find(a=>a.href.startsWith('https://www.mckinneyisd.net/'));
+    const link=[...priority.querySelectorAll('a')].find(a=>a.href.startsWith('https://portal.metrostudygis.com/arcgis/apps/webappviewer/'));
     return {
      visible:!priority.hidden,
      status:document.getElementById('homeAssignmentPriorityStatus').textContent,
