@@ -119,10 +119,12 @@ async function main(){
     window.__mckinneyRaw.features[1].properties.sourceYearRaw='2025-26';
     renderHome();drawSchools();drawList();
     return {status:document.getElementById('homeAssignmentPriorityStatus').textContent,
+      description:document.getElementById('homeAssignmentPriorityDescription').textContent,
       cards:document.querySelectorAll('#homeAssignmentPrioritySchools .home-assignment-school').length};
    });
    assert.equal(stale.cards,2,'Stale middle school source is removed; current E/H remain');
-   assert.match(stale.status,/배정 미확인|미인증/);
+   assert.match(stale.status,/GIS 기준 예상 배정학교 · 최종 확인 별도/);
+   assert.match(stale.description,/미확인 학교급: 중등/,'Stale middle grade must be disclosed');
    const wrong=await page.evaluate(()=>{
     window.__mckinneyRaw.district='FISD';
     renderHome();drawSchools();drawList();
