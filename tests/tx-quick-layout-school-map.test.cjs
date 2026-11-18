@@ -38,7 +38,7 @@ test('Redfin and comparison mount under distinct ordered hosts',()=>{
  assert.match(compare,/const RENDERER='\.\/features\/region-compare-renderer\.js\?v=1'/);
 });
 function candidateHarness(){
- const begin=main.indexOf('function referenceCandidateSchoolLocations(view){');
+ const begin=main.indexOf('function referenceCandidateSchoolRecords(view){');
  const end=main.indexOf('function renderAddressSchoolPriority(){',begin);
  assert.ok(begin>0&&end>begin,'isolated reference marker functions');
  const school={name:'BENNETT',district:'043907',type:'elementary',ll:[33.2,-96.65]};
