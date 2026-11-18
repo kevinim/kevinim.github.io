@@ -237,9 +237,33 @@ test('Allen official street name variants: suffix and direction, fail closed on 
   else unresolved++;
  }
  assert.equal(checked,1687);
- assert.equal(accepted,1680); // 3 overlapping source ranges + 4 published split-apartment rows are blocked
- assert.equal(unresolved,7);
- assert.ok(readText('index.html').includes('./allen-lookup.js?v=5'));
+ assert.equal(accepted,1683); // 3 matching-school overlaps resolve; 4 split-apartment rows still blocked
+ assert.equal(unresolved,4);
+ assert.ok(readText('index.html').includes('./allen-lookup.js?v=6'));
+});
+
+test('Allen repeated official street ranges agree on all four levels or fail closed',()=>{
+ for(const [address,schools] of [
+  ['101 North Arbor Ridge Drive, Allen, TX 75002',['Olson','Curtis','Lowery','Allen High School']],
+  ['420 Pennington Dr, Allen, TX 75002',['Chandler','Ford','Lowery','Allen High School']],
+  ['1005 Spencer St, Allen, TX 75002',['Norton','Ereckson','Lowery','Allen High School']]
+ ]){
+  const actual=matchAllenAddress(address,allenAddress.rows,true);
+  assert.ok(actual,address);assert.deepEqual(actual.slice(2),schools,address);
+ }
+ const conflict=[
+  ['Mock Ave','100 - 200','Evans','Curtis','Lowery','Allen High School'],
+  ['Mock Avenue','150 - 250','Boyd','Curtis','Lowery','Allen High School']
+ ];
+ assert.equal(matchAllenAddress('160 Mock Avenue, Allen, TX',conflict,true),null);
+ assert.equal(matchAllenAddress('160 Mock Avenue, Plano, TX',conflict,false),null);
+ const missing=[
+  ['Mock Ave','100 - 200','Evans','Curtis','Lowery','Allen High School'],
+  ['Mock Avenue','150 - 250','','Curtis','Lowery','Allen High School']
+ ];
+ assert.equal(matchAllenAddress('160 Mock Avenue, Allen, TX',missing,true),null);
+ assert.equal(allenAddress.schoolYear,null);
+ assert.equal(allenAddressAudit.academicYearExplicit,null);
 });
 
 test('P0 Allen four published split apartments halt automatic Frisco/Allen campus highlighting',()=>{
