@@ -41,6 +41,60 @@ async function run(){
    });
    assert.ok(allen.inside>0,'No Allen campus in selected ZIP bounds');
    assert.equal(allen.drawn,allen.inside,'Allen visible school markers regressed');
+   // McKinney regression: synthetic E/M/H GIS candidates must ALL show
+   // building pins, without turning reference data into certified enrollment.
+   // Runs against Pages-loaded code, uses no resident address or network lookup.
+   const mckinney=await page.evaluate(()=>{
+    const previous={assignmentFor:schoolAssignmentFor,schools:state.schools,
+     ratings:state.ratings,liveFinder:state.liveFinder['043907'],homeValue:home,
+     center:map.getCenter(),zoom:map.getZoom()};
+    try{
+     const names=[
+      ['elementary','BENNETT','DEAN AND MILDRED BENNETT EL','043907120','B',[33.186041,-96.717459]],
+      ['middle','DOWELL','DOWELL MIDDLE','043907043','A',[33.196628,-96.695767]],
+      ['high','BOYD','MCKINNEY BOYD H S','043907007','A',[33.202935,-96.678444]]
+     ];
+     const polygon={type:'MultiPolygon',coordinates:[[[[-96.8,33.1],[-96.6,33.1],
+      [-96.6,33.3],[-96.8,33.1]]]]};
+     const raw={district:'043907',status:'finder-current',features:names.map(
+      ([level,short])=>({type:'Feature',properties:{gradeLevel:level,school:short,
+       sourceYearRaw:level==='elementary'?'2026-27':null,
+       ...(level==='elementary'?{verifiedYear:'2026-27'}:{})},
+       geometry:polygon}))};
+     schoolAssignmentFor=()=>raw;
+     state.liveFinder['043907']=true;
+     state.schools=names.map(([type,,name,,,ll])=>({name,type,district:'043907',ll}));
+     state.ratings=names.map(([, ,name,id,rating])=>({id,name,district:'043907',
+      rating,score:rating==='A'?92:87}));
+     home={address:'SYNTHETIC TEST LOCATION — NOT A RESIDENCE',
+      ll:[33.19,-96.7],geocodeQuality:{usableForSchoolCandidate:true},
+      parcel:{status:'idle'}};
+     map.setView([33.19,-96.7],12,{animate:false});
+     renderHome();drawSchools();drawList();
+     const cards=[...document.querySelectorAll(
+      '#homeAssignmentPrioritySchools .home-assignment-school')];
+     const view=addressSchoolView();
+     return {labels:cards.map(c=>c.querySelector('strong')?.textContent),
+      buttons:cards.filter(c=>!!c.querySelector('button.home-school-map-button')).length,
+      pins:referenceCampusGroup?.getLayers().length||0,
+      linked:referenceCandidateSchoolLocations(view).map(s=>s.name),
+      certified:view.schools.length};
+    }finally{
+     schoolAssignmentFor=previous.assignmentFor;
+     state.schools=previous.schools;state.ratings=previous.ratings;
+     state.liveFinder['043907']=previous.liveFinder;
+     home=previous.homeValue;
+     map.setView(previous.center,previous.zoom,{animate:false});
+     renderHome();drawSchools();drawList();
+    }
+   });
+   assert.deepEqual(mckinney.labels,['BENNETT','DOWELL','BOYD'],
+    'Live McKinney E/M/H GIS reference cards are incomplete');
+   assert.equal(mckinney.buttons,3,'All three McKinney reference cards need map buttons');
+   assert.equal(mckinney.pins,3,'All three McKinney campus pins must render');
+   assert.deepEqual(mckinney.linked,
+    ['DEAN AND MILDRED BENNETT EL','DOWELL MIDDLE','MCKINNEY BOYD H S']);
+   assert.equal(mckinney.certified,0,'GIS references are not enrollment certification');
    // Official source-only CFB disclosure.
    if(await page.locator('#schoolDataDetails').count())await page.locator('#schoolDataDetails > summary').click();
    const cfb=page.locator('#cfbOfficialRezoningReference');
@@ -98,7 +152,7 @@ async function run(){
    assert.deepEqual(errors,[],'Live Pages browser page errors '+errors.join('; '));
    await page.screenshot({path:path.join(outdir,'track-b-live-'+width+'.png'),timeout:25000});
    report.checks.push({width,defaultDark:true,allen,cfbOfficialLinks:2,
-    dentonPdfCatalog:39,bellStatus:bell.status,cheekStatus:cheek.status,
+    dentonPdfCatalog:39,mckinneyPins:mckinney.pins,bellStatus:bell.status,cheekStatus:cheek.status,
     dallasSourceLayers:3,irvingModule:true,residentialGrants:0,mobileOverflowPx:sources.overflow});
    await page.close();
   }
