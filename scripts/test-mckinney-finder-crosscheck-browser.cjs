@@ -84,7 +84,7 @@ async function main(){
    assert.equal(overview.source,true);
    assert.match(overview.officialLink,/^https:\/\/portal\.metrostudygis\.com\/arcgis\/apps\/webappviewer\/index\.html\?id=ed198c434d47474b88709e98d1f0a125$/);
    assert.equal(overview.listCount,3,'Vetted GIS reference names appear as separate school-location rows');
-   assert.match(overview.railText,/GIS 참고 후보 · 배정 미인증/);
+   assert.match(overview.railText,/GIS 예상 학교 · 공식 확인 별도/);
    assert.equal(overview.verifiedCount,0,'GIS reference rows must not become residential assignments');
    assert.equal(overview.markers,0,'Reference names never become assigned-school markers');
    assert.equal(overview.conditional,'conditional-finder-only');
