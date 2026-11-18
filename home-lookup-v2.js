@@ -311,10 +311,10 @@ function renderHome(){
    schools:state.schools,ratings:state.ratings||[]
   })||null;
   const referenceControl=referencePlan?.kind==='reference-only'
-   ?'<div class="home-reference-control"><button id="homeReferencePreviewToggle" class="mini-btn" type="button" aria-controls="homeReferencePreviewResult" aria-expanded="'+(home.referencePreviewRequested?'true':'false')+'">GIS 참고 후보 직접 보기 · 실제 배정 미인증</button><div id="homeReferencePreviewResult" role="status" aria-live="polite"></div></div>'
+   ?'<div class="home-reference-control"><button id="homeReferencePreviewToggle" class="mini-btn" type="button" aria-controls="homeReferencePreviewResult" aria-expanded="'+(home.referencePreviewRequested?'true':'false')+'">GIS 경계·출처 상세 보기</button><div id="homeReferencePreviewResult" role="status" aria-live="polite"></div></div>'
    :'';
 
-  const schoolText=['conditional-finder-only','unavailable'].includes(home.assignment.status)?'<b>학교 자동 배정 미인증 · 공식 Finder 확인 필요</b>':assignmentHtml(home.assignment);
+  const schoolText=home.mckinneyCrosscheck?.kind==='reference-only'?'<b>GIS 기준 예상 학교는 주소 검색 결과에 자동 표시됩니다.</b> <span class="source">실제 등록·전학·배정 예외는 교육청 공식 Finder에서 최종 확인하세요.</span>':['conditional-finder-only','unavailable'].includes(home.assignment.status)?'<b>학교 자동 배정 미인증 · 공식 Finder 확인 필요</b>':assignmentHtml(home.assignment);
   const official=compactHomeFinderHtml(home.address,rawSchoolCandidate);
   const office=el('destination').value.trim();
   const parcel=home.parcel||{status:'idle'};
