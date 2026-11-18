@@ -132,6 +132,39 @@ async function main(){
    });
    assert.equal(wrong.state,'other-district');
    assert.equal(wrong.cards,0,'A McKinney postal city cannot force McKinney ISD');
+   // Screenshot regression: GIS BENNETT / DOWELL / BOYD cards must all link
+   // to the exact TEA-named school locations, not just the middle school.
+   // All records and coordinates below are fixed campus fixtures, no home data.
+   const linked=await page.evaluate(()=>{
+    const names=[
+     ['elementary','BENNETT','DEAN AND MILDRED BENNETT EL','043907120','B',[33.186041,-96.717459]],
+     ['middle','DOWELL','DOWELL MIDDLE','043907043','A',[33.196628,-96.695767]],
+     ['high','BOYD','MCKINNEY BOYD H S','043907007','A',[33.202935,-96.678444]]
+    ];
+    window.__mckinneyRaw.district='043907';
+    window.__mckinneyRaw.features=names.map(([level,short])=>({type:'Feature',
+     properties:{gradeLevel:level,school:short,sourceYearRaw:level==='elementary'?'2026-27':null,
+      ...(level==='elementary'?{verifiedYear:'2026-27'}:{})},
+     geometry:{type:'MultiPolygon',coordinates:[[[[-96.7,33.1],[-96.6,33.1],[-96.6,33.2],[-96.7,33.1]]]]}
+    }));
+    state.schools=names.map(([type,,name,id,,ll])=>({name,type,district:'043907',ll}));
+    state.ratings=names.map(([, ,name,id,rating])=>({id,name,district:'043907',rating,score:rating==='A'?92:87}));
+    renderHome();drawSchools();drawList();
+    const view=addressSchoolView();
+    const cards=[...document.querySelectorAll('#homeAssignmentPrioritySchools .home-assignment-school')];
+    return {labels:cards.map(c=>c.querySelector('strong')?.textContent),
+     mapButtons:cards.filter(c=>!!c.querySelector('button.home-school-map-button')).length,
+     pins:referenceCampusGroup?.getLayers().length||0,
+     linkedNames:referenceCandidateSchoolLocations(view).map(s=>s.name),
+     assigned:view.schools.length,
+     allSchoolMarkers:schoolGroup.getLayers().length};
+   });
+   assert.deepEqual(linked.labels,['BENNETT','DOWELL','BOYD']);
+   assert.equal(linked.mapButtons,3,'Every GIS card must have a campus map button');
+   assert.equal(linked.pins,3,'All E/M/H GIS reference campus markers visible');
+   assert.deepEqual(linked.linkedNames,['DEAN AND MILDRED BENNETT EL','DOWELL MIDDLE','MCKINNEY BOYD H S']);
+   assert.equal(linked.assigned,0,'GIS campus pins must not be certified residence assignments');
+   assert.equal(linked.allSchoolMarkers,0,'Reference pins must stay separate from residential assignment markers');
    await page.evaluate(()=>{
     schoolAssignmentFor=window.__mckinneyPriorAssignment;
     delete window.__mckinneyPriorAssignment;
