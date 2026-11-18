@@ -213,7 +213,8 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  for(const [start,end] of [
   ['function addressSchoolView(){',' function drawSchools(){'],
   [' function drawSchools(){','function drawHomeAssignmentMap(){'],
-  ['function drawList(){','function zoneNameKey(']
+  ['function drawList(){','function zoneNameKey('],
+  ['function focusHomeAssignedSchools(){','// Cache per-ZIP geometries']
  ]) reviewedReferenceJs=replaceRegion(reviewedReferenceJs,priorAddressRelease,start,end);
  assert.equal(hash(reviewedReferenceJs),hash(priorAddressRelease),
   'GIS candidate change cannot affect the already reviewed Leaflet/bootstrap/TEA code');
