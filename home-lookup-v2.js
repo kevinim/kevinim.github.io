@@ -285,6 +285,10 @@ function renderHome(){
   const zipText=matches.length?matches.map(d=>escape(d.z+' · '+d.name)).join(', '):'지도에 포함된 ZIP 경계를 확인하지 못했습니다.';
   // Conditional GO: historical reference GIS cannot authorize home assignment.
   const rawSchoolCandidate=schoolAssignmentFor(home);
+  // Keep Allen's undated street-table schools as informational reference only.
+  // ConditionalSchoolRelease.apply intentionally withholds any certification.
+  home.allenAddressReference=rawSchoolCandidate?.district==='AISD'&&rawSchoolCandidate.status==='unverified-year'&&
+    Array.isArray(rawSchoolCandidate.allen)?rawSchoolCandidate.allen:null;
   home.assignment=window.ConditionalSchoolRelease?.apply(rawSchoolCandidate)||
     {status:'conditional-finder-only',releaseScope:'informational-only'};
   // Reference-only research is separately opt-in, cannot set home.assignment,

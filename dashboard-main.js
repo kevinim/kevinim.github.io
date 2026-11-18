@@ -599,6 +599,31 @@ function addressSchoolView(){
  const schools=Array.isArray(manual)?[...new Set(manual.filter(s=>all.has(s)))]:[];
 
  if(schools.length)return {kind:'manual',schools};
+ // Allen's published street-range table lists four grade bands, but no
+ // explicit academic year. Make its schools visible as reference candidates,
+ // never as certified assignments or current-year GIS boundaries.
+ const allen=searchedHome.allenAddressReference;
+ if(searchedHome.schoolSourceDistrict==='AISD'&&searchedHome.schoolSourceStatus==='unverified-year'&&
+    Array.isArray(allen)&&allen.length>=6&&searchedHome.assignment?.status==='conditional-finder-only'){
+  const row=allen;
+  const specs=[
+   [2,'elementary','초등','K–6',false],
+   [3,'middle','중등','7–8',false],
+   [4,'high','9학년','9',true],
+   [5,'high','고등','10–12',false]
+  ];
+  const candidates=specs.map(([slot,level,levelText,grades,freshman])=>{
+   const name=String(row[slot]||'').trim();
+   const matches=name?state.schools.filter(s=>s.type===level&&
+    /freshman/i.test(s.name)===freshman&&
+    allenRowMatchesSchool(s,row,state.schools,canonical)):[];
+   return {name,school:matches.length===1?matches[0]:null,level,levelText,grades,
+    yearNote:'Allen 공식 주소표 학년도 미표기 · 현재 학년도 배정 미인증'};
+  }).filter(c=>c.name);
+  if(candidates.length)return {kind:'allen-reference',schools:[],candidates,
+   reference:{officialUrl:'https://www.allenisd.org/page/findaschool',
+    notice:'학교명은 Allen ISD 공개 주소표의 후보입니다. 학년도·건물·호수·전학 예외는 공식 교육청에 확인하세요.'}};
+ }
  // McKinney pilot: live Finder GIS is crossed with campus directory metadata.
  // This is never a verified residential enrollment result.
  const mc=searchedHome.mckinneyCrosscheck;
@@ -634,7 +659,7 @@ function addressSchoolView(){
  return {kind:'unverified',schools:[],reason:plan?.reason||'',sourceStatus:searchedHome.schoolSourceStatus||'unavailable'};
 }
 function referenceCandidateSchoolRecords(view){
- if(!['gis-reference','mckinney-reference'].includes(view?.kind))return [];
+ if(!['gis-reference','mckinney-reference','allen-reference'].includes(view?.kind))return [];
  const registry=new Set(state.schools),seen=new Set(),schools=[];
  for(const candidate of view.candidates||[]){
   const school=candidate.school;
@@ -653,7 +678,7 @@ let referenceCampusGroup=null;
 function drawReferenceCampusMarkers(view){
  if(!map)return 0;
  if(!state.showSchools||!home?.geocodeQuality?.usableForSchoolCandidate||
-    !['gis-reference','mckinney-reference'].includes(view?.kind)){
+    !['gis-reference','mckinney-reference','allen-reference'].includes(view?.kind)){
   referenceCampusGroup?.clearLayers();
   return 0;
  }
@@ -670,8 +695,8 @@ function drawReferenceCampusMarkers(view){
    iconSize:[48,52],iconAnchor:[24,46]
   });
   const marker=L.marker(school.ll,{icon,keyboard:true,zIndexOffset:2800,
-   title:'GIS 참고 학교 위치 · 배정 미인증 · '+school.name}).addTo(referenceCampusGroup);
-  marker.bindTooltip('GIS 후보 학교 위치 · '+escape(school.name)+' · 배정 미인증',
+   title:(view.kind==='allen-reference'?'Allen 주소표 참고 학교 위치':'GIS 참고 학교 위치')+' · 배정 미인증 · '+school.name}).addTo(referenceCampusGroup);
+  marker.bindTooltip((view.kind==='allen-reference'?'Allen 주소표 참고 학교 위치':'GIS 후보 학교 위치')+' · '+escape(school.name)+' · 배정 미인증',
    {direction:'top',offset:[0,-40],className:'tx-reference-campus-tooltip'});
   marker.on('click',()=>schoolClicked(school));
  }
@@ -705,6 +730,9 @@ function renderAddressSchoolPriority(){
       (view.liveCheck.warnings?.length?' · '+view.liveCheck.warnings.join(', '):''):
     view.liveCheck?.kind==='loading'?' · 공개 GIS 원본 자동 재조회 중입니다.':
     view.liveCheck?.kind==='unavailable'?' · 추가 조회 실패 · 공식 Finder로 확인하세요.':'');
+ }else if(view.kind==='allen-reference'){
+  status.textContent='Allen 공식 주소표 후보 · 학년도 미표기';
+  desc.textContent='Allen ISD 공개 주소표에서 검색 주소와 숫자 범위가 일치하는 학교명입니다. 초등 K–6, 중등 7–8, Lowery 9학년, Allen High 10–12학년을 구분합니다. 실제 2026–27 배정은 공식 검색기에서 확인해야 하며, 2019/2023 과거 경계는 자동 적용하지 않습니다.';
  }else if(view.kind==='gis-reference'){
   status.textContent='2026–27 GIS 후보 · 배정 미인증';
   const gaps=view.reference.missing?.length?' · 자료가 없는 학교급: '+view.reference.missing.join(', '):'';
@@ -715,8 +743,8 @@ function renderAddressSchoolPriority(){
  }
 
  const cardsToShow=view.kind==='mckinney-reference'?view.candidates:
-  view.kind==='gis-reference'
-   ?view.candidates.map(c=>({name:c.name,school:c.school,levelText:c.levelText,grades:c.grades}))
+  ['gis-reference','allen-reference'].includes(view.kind)
+   ?view.candidates.map(c=>({name:c.name,school:c.school,levelText:c.levelText,grades:c.grades,yearNote:c.yearNote}))
   :view.schools.map(s=>({name:s.name,school:s,
     levelText:s.type==='elementary'?'초등':s.type==='middle'?'중등':'고등',grades:''}));
  for(const entry of cardsToShow){
@@ -740,6 +768,7 @@ function renderAddressSchoolPriority(){
   const evidence=document.createElement('span');evidence.className='home-school-chip evidence';
   evidence.textContent=view.kind==='certified'?'주소 배정 검증':
    view.kind==='manual'?'공식 Finder 직접 선택':
+   view.kind==='allen-reference'?'공식 주소표 후보 · 학년도 미표기':
    ['gis-reference','mckinney-reference'].includes(view.kind)?'GIS 후보 · 배정 미인증':'확인 필요';
   chips.appendChild(evidence);
   if(school){
@@ -769,16 +798,16 @@ function renderAddressSchoolPriority(){
   cards.appendChild(card);
  }
 
- if(['gis-reference','mckinney-reference'].includes(view.kind)){
+ if(['gis-reference','mckinney-reference','allen-reference'].includes(view.kind)){
   const source=document.createElement('small');
-  source.textContent=view.kind==='mckinney-reference'?view.reference.notice:
+  source.textContent=['mckinney-reference','allen-reference'].includes(view.kind)?view.reference.notice:
    (view.reference.notices||[]).join(' ')||'주소별 예외·전학·모집정원은 공식 교육청에서 확인하세요.';
   cards.appendChild(source);
   const anchor=document.createElement('a');
   anchor.className='cardlink';
   anchor.href=view.reference.officialUrl;
   anchor.target='_blank';anchor.rel='noopener noreferrer';
-  anchor.textContent='2026–27 학군 공식 주소 검색기에서 최종 확인';
+  anchor.textContent=view.kind==='allen-reference'?'Allen 공식 주소표·학교 배정 확인':'2026–27 학군 공식 주소 검색기에서 최종 확인';
   cards.appendChild(anchor);
  }
  const button=el('homeAssignmentPriorityFinder');
@@ -802,7 +831,7 @@ function renderAddressSchoolPriority(){
   const legend=el('schoolLegend');
   if(legend){
    legend.classList.toggle('matching',homeActive);
-   const html=addressView?'<span>'+(homeActive?'공식 검증 배정학교':['gis-reference','mckinney-reference'].includes(addressView.kind)?'GIS 참고 후보 · 배정 미인증':'공식 Finder에서 직접 선택 · 배정 미인증')+'</span>':'<span>초등</span><span>중등</span><span>고등</span><span>숫자 그룹을 누르면 확대</span>';
+   const html=addressView?'<span>'+(homeActive?'공식 검증 배정학교':addressView.kind==='allen-reference'?'Allen 주소표 후보 · 학년도 미표기':['gis-reference','mckinney-reference'].includes(addressView.kind)?'GIS 참고 후보 · 배정 미인증':'공식 Finder에서 직접 선택 · 배정 미인증')+'</span>':'<span>초등</span><span>중등</span><span>고등</span><span>숫자 그룹을 누르면 확대</span>';
    if(legend.innerHTML!==html)legend.innerHTML=html;
   }
   const notice=el('schoolMapStatus'),zoom=map.getZoom();
@@ -852,8 +881,8 @@ function renderAddressSchoolPriority(){
   reconcileSchoolMarkerLayers(next);
   if(notice){
    if(addressView){
-    notice.textContent=['gis-reference','mckinney-reference'].includes(addressView.kind)
-     ?'GIS 참고 학교 위치 '+referenceMarkers+'개 표시 · 주소별 배정 미인증 · 집 핀과 학교 건물 좌표는 서로 다른 정보입니다.':
+    notice.textContent=['gis-reference','mckinney-reference','allen-reference'].includes(addressView.kind)
+     ?(addressView.kind==='allen-reference'?'Allen 공식 주소표 참고 학교 위치 ':'GIS 참고 학교 위치 ')+referenceMarkers+'개 표시 · 주소별 배정 미인증 · 집 핀과 학교 건물 좌표는 서로 다른 정보입니다.':
      (addressView.kind==='certified'?'주소별 공식 검증 배정학교 ':'주소별 직접 선택 참고학교 ')+eligible.length+'개 표시 · 다른 ZIP 학교 숨김 · '+(addressView.kind==='certified'?'공식 검증':'배정 미인증');
    }else{
    notice.textContent=(clusterMode?'학교 '+displayed.length+'개를 '+groups.length+'개 위치 그룹으로 표시 · 숫자를 눌러 확대 · ':compactMode?'학교 '+displayed.length+'개를 작은 점으로 표시 · 확대하면 등급 배지 · ':'학교 마커 '+displayed.length+'개 표시 · ')+'등록 '+state.schools.length+'개 · 필터 적합 '+eligible.length+'개 · 화면 내 '+visible.length+'개 · ZIP '+state.zip+' · Zoom '+zoom+' · 지도 '+size.x+'×'+size.y+' · 학교 위치는 배정 확정 정보가 아닙니다.'+(state.selectedSchool?' · 선택: '+state.selectedSchool.name+(Array.isArray(state.selectedSchool.ll)?' (노란색 학교 위치 마커)':' (학교 좌표 미확인)'):'');
@@ -942,7 +971,7 @@ function schoolWithinScope(s,zips=schoolScopeZipCandidates()){
   return inside;
  });
 }
-function drawList(){const view=addressSchoolView(),scopeZips=schoolScopeZipCandidates(),schoolIndexes=new Map(state.schools.map((s,i)=>[s,i]));let items=view?view.schools.slice():state.schools.filter(s=>schoolWithinScope(s,scopeZips)&&(state.level==='all'||s.type===state.level)&&schoolPassesRatingFilter(s)&&(!state.schoolQuery||s.name.toLowerCase().includes(state.schoolQuery)));const railReference=!!view&&['gis-reference','mckinney-reference'].includes(view.kind);if(railReference)items=referenceCandidateSchoolRecords(view);const box=el('schoolList');box.classList.toggle('broad',!view&&el('schoolScope').value!=='zip');const notice=el('schoolAddressNotice');if(notice){notice.hidden=!view;if(view)notice.textContent=view.kind==='certified'?'공식 검증된 배정학교만 표시합니다. 학교 건물의 ZIP은 배정 구역이 아닙니다.':view.kind==='manual'?'공식 Finder 결과를 직접 선택한 학교만 표시합니다. 주소별 배정은 독립 인증되지 않았습니다.':['gis-reference','mckinney-reference'].includes(view.kind)?'아래는 공식 GIS 경계와 학교 목록이 연결된 참고 후보입니다. 실제 배정학교로 인증되지 않았으며 ZIP 안의 다른 학교는 숨겼습니다.':'주소별 배정 미확인 · 같은 ZIP 안의 다른 학교를 모두 숨겼습니다. 위의 배정학교 확인 버튼을 사용하세요.';}const groups=[['elementary','초등학교'],['middle','중학교'],['high','고등학교'],['other','기타 학교']];box.innerHTML=items.length?'<div class="school-groups">'+groups.map(([type,label])=>{const group=items.filter(s=>(['elementary','middle','high'].includes(s.type)?s.type:'other')===type).sort((a,b)=>{const ar=scoreRecord(a.name,a.district),br=scoreRecord(b.name,b.district),order={'A':0,'B':1,'C':2,'D':3,'F':4};return (order[ar?.rating]??5)-(order[br?.rating]??5)||((br?.score??-1)-(ar?.score??-1))||a.name.localeCompare(b.name)});if(!group.length)return '';return `<section class="school-group"><h3>${label} · ${group.length}</h3>${group.map(s=>{const r=scoreRecord(s.name,s.district),grade=r&&['A','B','C','D','F'].includes(r.rating)?'grade-'+r.rating.toLowerCase():'nr',zone=schoolZoneInfo(s);return `<button class="school ${state.selectedSchool===s?'school-map-selected':''} ${typeof home!=='undefined'&&home&&view?.kind==='certified'&&homeSchoolMatches(s)?'home-match':''}" aria-pressed="${state.selectedSchool===s}" data-sid="${schoolIndexes.get(s)}"><span><b>${escape(s.name)}${view?(view.kind==='certified'?'<span class="match-label">공식 검증 배정학교</span>':railReference?'<span class="other-label">GIS 참고 후보 · 배정 미인증</span>':'<span class="other-label">직접 선택 · 배정 미인증</span>'):''}</b><small>${gradeTag(s)} · ${escape(s.districtName||s.district||'배정 학군 확인 필요')}${s.ll?' · 클릭하면 학교 위치 강조':' · 위치 미확인 · 클릭 시 주소 좌표 확인'}</small><small class="school-zone-label ${zone.kind}">${escape(zone.label)}</small></span><span class="score ${grade}">${escape(ratingText(r))}</span></button>`}).join('')}</section>`}).join('')+'</div>':view?'<div class="muted" role="status" style="padding:14px">'+(['gis-reference','mckinney-reference'].includes(view.kind)?'GIS 후보에 연결된 학교 목록이 없습니다. 집주소의 공식 배정은 교육청 Finder에서 확인하세요.':'주소별 배정학교 미확인 · ZIP 안에 있는 다른 학교를 배정학교로 표시하지 않습니다. 학군 공식 Finder에서 확인해 주세요.')+'</div>':'<div class="muted" style="padding:14px">검색 결과 없음</div>';el('schoolCount').textContent=view?(items.length?items.length+'개 · '+(view.kind==='certified'?'배정 검증':['gis-reference','mckinney-reference'].includes(view.kind)?'GIS 참고 후보':'직접 선택'):['gis-reference','mckinney-reference'].includes(view.kind)?'GIS 참고 후보 '+view.candidates.length+'개 · 배정 미확인':'배정 미확인'):items.length+'개 학교'}
+function drawList(){const view=addressSchoolView(),scopeZips=schoolScopeZipCandidates(),schoolIndexes=new Map(state.schools.map((s,i)=>[s,i]));let items=view?view.schools.slice():state.schools.filter(s=>schoolWithinScope(s,scopeZips)&&(state.level==='all'||s.type===state.level)&&schoolPassesRatingFilter(s)&&(!state.schoolQuery||s.name.toLowerCase().includes(state.schoolQuery)));const railReference=!!view&&['gis-reference','mckinney-reference','allen-reference'].includes(view.kind);if(railReference)items=referenceCandidateSchoolRecords(view);const box=el('schoolList');box.classList.toggle('broad',!view&&el('schoolScope').value!=='zip');const notice=el('schoolAddressNotice');if(notice){notice.hidden=!view;if(view)notice.textContent=view.kind==='certified'?'공식 검증된 배정학교만 표시합니다. 학교 건물의 ZIP은 배정 구역이 아닙니다.':view.kind==='manual'?'공식 Finder 결과를 직접 선택한 학교만 표시합니다. 주소별 배정은 독립 인증되지 않았습니다.':view.kind==='allen-reference'?'Allen 공식 주소표 학교명 후보입니다(학년도 미표기). 다른 ZIP 학교는 숨기며 실제 배정은 교육청에서 확인해야 합니다.':['gis-reference','mckinney-reference'].includes(view.kind)?'아래는 공식 GIS 경계와 학교 목록이 연결된 참고 후보입니다. 실제 배정학교로 인증되지 않았으며 ZIP 안의 다른 학교는 숨겼습니다.':'주소별 배정 미확인 · 같은 ZIP 안의 다른 학교를 모두 숨겼습니다. 위의 배정학교 확인 버튼을 사용하세요.';}const groups=[['elementary','초등학교'],['middle','중학교'],['high','고등학교'],['other','기타 학교']];box.innerHTML=items.length?'<div class="school-groups">'+groups.map(([type,label])=>{const group=items.filter(s=>(['elementary','middle','high'].includes(s.type)?s.type:'other')===type).sort((a,b)=>{const ar=scoreRecord(a.name,a.district),br=scoreRecord(b.name,b.district),order={'A':0,'B':1,'C':2,'D':3,'F':4};return (order[ar?.rating]??5)-(order[br?.rating]??5)||((br?.score??-1)-(ar?.score??-1))||a.name.localeCompare(b.name)});if(!group.length)return '';return `<section class="school-group"><h3>${label} · ${group.length}</h3>${group.map(s=>{const r=scoreRecord(s.name,s.district),grade=r&&['A','B','C','D','F'].includes(r.rating)?'grade-'+r.rating.toLowerCase():'nr',zone=schoolZoneInfo(s);return `<button class="school ${state.selectedSchool===s?'school-map-selected':''} ${typeof home!=='undefined'&&home&&view?.kind==='certified'&&homeSchoolMatches(s)?'home-match':''}" aria-pressed="${state.selectedSchool===s}" data-sid="${schoolIndexes.get(s)}"><span><b>${escape(s.name)}${view?(view.kind==='certified'?'<span class="match-label">공식 검증 배정학교</span>':railReference?'<span class="other-label">'+(view.kind==='allen-reference'?'공식 주소표 후보 · 학년도 미표기':'GIS 참고 후보 · 배정 미인증')+'</span>':'<span class="other-label">직접 선택 · 배정 미인증</span>'):''}</b><small>${gradeTag(s)} · ${escape(s.districtName||s.district||'배정 학군 확인 필요')}${s.ll?' · 클릭하면 학교 위치 강조':' · 위치 미확인 · 클릭 시 주소 좌표 확인'}</small><small class="school-zone-label ${zone.kind}">${escape(zone.label)}</small></span><span class="score ${grade}">${escape(ratingText(r))}</span></button>`}).join('')}</section>`}).join('')+'</div>':view?'<div class="muted" role="status" style="padding:14px">'+(['gis-reference','mckinney-reference','allen-reference'].includes(view.kind)?'공식 출처 후보에 연결된 학교 위치 정보가 없습니다. 집주소의 공식 배정은 교육청 Finder에서 확인하세요.':'주소별 배정학교 미확인 · ZIP 안에 있는 다른 학교를 배정학교로 표시하지 않습니다. 학군 공식 Finder에서 확인해 주세요.')+'</div>':'<div class="muted" style="padding:14px">검색 결과 없음</div>';el('schoolCount').textContent=view?(items.length?items.length+'개 · '+(view.kind==='certified'?'배정 검증':view.kind==='allen-reference'?'주소표 참고 후보':['gis-reference','mckinney-reference'].includes(view.kind)?'GIS 참고 후보':'직접 선택'):view.kind==='allen-reference'?'주소표 참고 후보 '+view.candidates.length+'개 · 배정 미확인':['gis-reference','mckinney-reference'].includes(view.kind)?'GIS 참고 후보 '+view.candidates.length+'개 · 배정 미확인':'배정 미확인'):items.length+'개 학교'}
 
 
 function zoneNameKey(name){
