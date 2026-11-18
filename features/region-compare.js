@@ -5,7 +5,7 @@
  * external services. All script paths are fixed same-origin sources.
  */
 (function(){
- const RENDERER='./features/region-compare-renderer.js?v=2';
+ const RENDERER='./features/region-compare-renderer.js?v=1';
  let loading=null;
  function element(tag,cls,content){
   const node=document.createElement(tag);
@@ -32,8 +32,7 @@
   status.setAttribute('aria-live','polite');
   content.appendChild(status);
   section.append(summary,content);
-  const target=document.getElementById('txCompareSection');
-  if(target)target.appendChild(section);else if(quick)quick.after(section);else main.before(section);
+  if(quick)quick.after(section);else main.before(section);
 
   function restore(message){
    section.id='regionCompare';summary.id='regionCompareTitle';
