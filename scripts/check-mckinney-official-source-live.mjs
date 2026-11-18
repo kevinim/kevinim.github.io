@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 // McKinney public official source-year/name crosscheck. No residential addresses.
 // Optional live network QA; NEVER certifies a house-to-enrollment assignment.
+import {readFileSync} from 'node:fs';
+const adopted=JSON.parse(readFileSync(new URL('../data/mckinney-2026-27-adopted-map-names.json',import.meta.url),'utf8'));
 const METRO='https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/23b28d101ba947498650f6c7b9ef251b/data?f=json';
 const ADOPTED='https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/4789/Misd/2b4531ec-510a-479a-b82f-d550714c8565/McKinney_ISD_Attendance_Zones_26_27.html?disposition=inline';
 const layers=[['Elementary Boundaries','ELEM_NAME','elementary'],['Middle Boundaries','MID_NAME','middle'],['High Boundaries','HIGH_NAME','high']];
@@ -45,9 +47,25 @@ if(names.elementary<15||names.middle!==5||names.high!==3){
 if(years.elementary.some(y=>y!=='2026-27')){
  console.error('MCKINNEY_SOURCE_LIVE_NO_GO: elementary vintage changed',JSON.stringify(years.elementary));process.exit(1)
 }
+// Independently adopted district 2026–27 PDF map campus-name audit: this is
+// a *name* comparison, NOT equivalence of GIS geometry or a residential result.
+const adoptedNames=Object.create(null);
+for(const level of ['elementary','middle','high']){
+ const expected=new Set((adopted.names?.[level]||[]).map(normal));
+ const actual=new Set(map.operationalLayers.find(x=>x.title===layers.find(x=>x[2]===level)[0])
+  ?.featureCollection?.layers?.[0]?.featureSet?.features?.map(x=>normal(x.attributes?.[layers.find(y=>y[2]===level)[1]]))||[]);
+ const missing=[...expected].filter(x=>!actual.has(x));
+ const unexpected=[...actual].filter(x=>!expected.has(x));
+ if(missing.length||unexpected.length||actual.size!==expected.size){
+  console.error('MCKINNEY_ADOPTED_MAP_NAMES_NO_GO '+JSON.stringify({level,expected:expected.size,
+    actual:actual.size,missing,unexpected}));process.exit(1)
+ }
+ adoptedNames[level]={adoptedPdf:adopted.sources[level],matched:actual.size,expected:expected.size};
+}
 const result={status:'SOURCE_SCHEMA_REVIEW',source:'McKinney live MetroStudy Finder + district-published 2026-27 interactive boundary map',
  levels:names,yearValues:years,
  nameAgreementCount:matches,comparedToOfficialHTML:true,
+ adoptedMapSchoolNames:adoptedNames,adoptedPdfGeometryEquivalenceCertified:false,
  independentResidenceFinderResponse:false,automaticEnrollmentCertified:false};
 console.log('MCKINNEY_PUBLIC_SOURCE_QA '+JSON.stringify(result));
 if(['middle','high'].some(level=>years[level].some(y=>y!=='2026-27')))
