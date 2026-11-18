@@ -602,9 +602,10 @@ function addressSchoolView(){
  // Allen's published street-range table lists four grade bands, but no
  // explicit academic year. Make its schools visible as reference candidates,
  // never as certified assignments or current-year GIS boundaries.
- const allen=searchedHome.assignment;
- if(allen?.district==='AISD'&&allen.status==='unverified-year'&&Array.isArray(allen.allen)&&allen.allen.length>=6){
-  const row=allen.allen;
+ const allen=searchedHome.allenAddressReference;
+ if(searchedHome.schoolSourceDistrict==='AISD'&&searchedHome.schoolSourceStatus==='unverified-year'&&
+    Array.isArray(allen)&&allen.length>=6&&searchedHome.assignment?.status==='conditional-finder-only'){
+  const row=allen;
   const specs=[
    [2,'elementary','초등','K–6',false],
    [3,'middle','중등','7–8',false],
