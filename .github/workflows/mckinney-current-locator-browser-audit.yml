@@ -1,0 +1,38 @@
+name: McKinney 2026-27 district School Locator link audit (no deploy)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/audit-mckinney-official-locator-browser.cjs'
+      - '.github/workflows/mckinney-current-locator-browser-audit.yml'
+      - 'district-registry.js'
+      - 'features/mckinney-official-handoff.js'
+      - 'home-lookup-v2.js'
+      - 'tests/mckinney-official-handoff.test.cjs'
+permissions:
+  contents: read
+concurrency:
+  group: tx-ci-mckinney-current-locator-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  public-locator-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Install isolated, pinned public Chrome browser
+        run: |
+          mkdir -p locator-audit-deps
+          cd locator-audit-deps
+          npm init -y >/dev/null
+          npm install --no-fund --no-audit --ignore-scripts playwright@1.65.0
+          ./node_modules/.bin/playwright install chromium
+      - name: Inspect current published 26-27 locator destination (no residential address)
+        env:
+          NODE_PATH: ${{ github.workspace }}/locator-audit-deps/node_modules
+        run: node scripts/audit-mckinney-official-locator-browser.cjs
