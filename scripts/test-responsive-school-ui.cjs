@@ -65,8 +65,8 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
       assert.ok(state.schoolControls.every(x=>x.inside),'All school settings should be grouped together at '+width);
        assert.equal(state.reviewedPeimsAddonLinks,1,'Exactly one reviewed PEIMS stylesheet at '+width);
        assert.ok(state.lazyVectorStyleLinks<=1,'Liberty CSS must load at most once at '+width);
-       assert.equal(state.styleLinks-state.reviewedPeimsAddonLinks-state.lazyVectorStyleLinks,11,
-         'Six first-paint stylesheets remain bundled and one map-first layout is added at '+width);
+       assert.equal(state.styleLinks-state.reviewedPeimsAddonLinks-state.lazyVectorStyleLinks,12,
+         'Six first-paint stylesheets remain bundled with map-first and six-section layouts at '+width);
        assert.equal(state.renderBundleLoaded,true,'Compiled CSS must load and contain rules at '+width);
        assert.equal(state.oldSourcesLinked,false,'No original CSS link should remain at '+width);
       assert.equal(state.privacyDisclosureClosed,true,'Detailed privacy notice must be closed by default at '+width);
@@ -77,8 +77,8 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
           'Map should follow address search, not appear above it at '+width);
         assert.ok(state.mapBox.y<state.officeCard.y,
           'Map should appear before commute controls on mobile at '+width);
-        assert.ok(state.mapBox.y<state.filterCard.y,
-          'Map should appear before long filter settings on mobile at '+width);
+        assert.ok(state.filterCard.y<=state.mapBox.y,
+          'School filters must precede map on mobile at '+width);
       }
       if(width>=1060){
         assert.ok(state.mapBox.x>state.filterCard.right,'Desktop map must sit right of filters/results at '+width);
@@ -117,7 +117,11 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
       if(!gb||!ab||!cb)issueList.push('missing settings card');
       else {
         if(gb.x<-1||gb.right>width+1)issueList.push('school card extends beyond viewport');
-        if(ab.bottom>gb.y+2)issueList.push('area/school cards overlap');
+        // The owner-approved school-first rail reverses the old area-before-school
+         // order. Reject actual rectangle intersection rather than reversed order.
+         const horizontal=Math.min(ab.right,gb.right)-Math.max(ab.x,gb.x);
+         const vertical=Math.min(ab.bottom,gb.bottom)-Math.max(ab.y,gb.y);
+         if(horizontal>2&&vertical>2)issueList.push('area/school cards overlap');
         if(gb.bottom>cb.y+2)issueList.push('school/commute cards overlap');
       }
       if(state.segments.some((r,i,a)=>i>0&&r.y===a[i-1].y&&r.x<a[i-1].right-2))issueList.push('school-type segmented buttons overlap');

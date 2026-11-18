@@ -15,6 +15,20 @@ const rawHtml=fs.readFileSync(path.join(root,'index.html'),'utf8');
 // Redfin split and Liberty pilot: undo only the five named additions before
 // comparing the rest of the protected historical HTML byte-for-byte.
 let normalizedMainHtml=rawHtml;
+
+/* The six-section UI is a presentation-only change. Subtract its EXACT
+ * reviewed additions before comparing historical protected HTML bytes. */
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ '<nav class="tx-jump-nav" aria-label="화면 섹션 바로가기"><a href="#homeForm">1 집주소</a><a href="#homeAssignmentPriority">2 배정학교</a><a href="#map">3 학교·지도</a><a href="#txRentSection">4 Redfin</a><a href="#txCompareSection">5 비교</a><a href="#txStatsSection">6 통계</a></nav>\\n'.replace('\\n','\n'),'');
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ '<section id="txRentSection" class="tx-layout-section" aria-label="4. Redfin 매물 검색"></section>\n'+
+ '<section id="txCompareSection" class="tx-layout-section" aria-label="5. 지역 나란히 비교"></section>\n'+
+ '<section id="txStatsSection" class="tx-layout-section tx-stats-section" aria-labelledby="txStatsTitle"><h2 id="txStatsTitle" class="tx-stats-title">6. 통계 및 상세 정보</h2></section>\n','');
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ '<link rel="stylesheet" href="./features/dashboard-quick-layout.css?v=1">\n','');
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ '<script src="./features/dashboard-quick-layout.js?v=1" defer></script>\n','');
+
 // One new self-hosted, review-scoped McKinney official Finder crosscheck module.
 // Strip only the exact new script tag when comparing to frozen historical HTML.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
@@ -201,7 +215,8 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  for(const [start,end] of [
   ['function addressSchoolView(){',' function drawSchools(){'],
   [' function drawSchools(){','function drawHomeAssignmentMap(){'],
-  ['function drawList(){','function zoneNameKey(']
+  ['function drawList(){','function zoneNameKey('],
+  ['function focusHomeAssignedSchools(){','// Cache per-ZIP geometries']
  ]) reviewedReferenceJs=replaceRegion(reviewedReferenceJs,priorAddressRelease,start,end);
  assert.equal(hash(reviewedReferenceJs),hash(priorAddressRelease),
   'GIS candidate change cannot affect the already reviewed Leaflet/bootstrap/TEA code');
