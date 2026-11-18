@@ -122,7 +122,8 @@
     const notice=el('p','area-qa-action-status','');
     notice.id='areaQaActionStatus';notice.setAttribute('role','status');notice.setAttribute('aria-live','polite');
     section.append(notice);
-    main.before(section);
+    const stats=document.getElementById('txStatsSection');
+    if(stats)stats.appendChild(section);else main.before(section);
     section.addEventListener('click',event=>{
       const button=event.target.closest('button[data-target]');
       if(button&&section.contains(button))onSummaryClick(button.dataset.target);
