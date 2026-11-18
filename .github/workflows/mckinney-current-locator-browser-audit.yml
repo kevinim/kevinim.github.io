@@ -1,14 +1,12 @@
 name: McKinney 2026-27 district School Locator link audit (no deploy)
+# Expensive full Chromium link inspection is intentionally manual-only.
+# The lightweight public URL/app-config source check remains automatic in
+# mckinney-official-finder-source-qa.yml to avoid duplicate CI queue load.
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - 'scripts/audit-mckinney-official-locator-browser.cjs'
-      - '.github/workflows/mckinney-current-locator-browser-audit.yml'
-      - 'district-registry.js'
-      - 'features/mckinney-official-handoff.js'
-      - 'home-lookup-v2.js'
-      - 'tests/mckinney-official-handoff.test.cjs'
+  workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 concurrency:
