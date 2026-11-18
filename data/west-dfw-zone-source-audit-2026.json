@@ -92,12 +92,12 @@
       "officialSource": "https://www.nisdtx.org/departments/facilities/attendance-boundaries",
       "addressLookupEvidence": "https://www.nisdtx.org/departments/facilities/attendance-boundaries/proposed-2026-2027-boundaries",
       "currentLocatorExists": true,
-      "verifiedPolygonAcademicYear": "2026-27",
+      "verifiedPolygonAcademicYear": null,
       "verifiedRawPolygonEndpoint": null,
       "candidateFormat": "official school-year selector + map; approved 2026–27 current in Finder",
       "reuseRights": "not-reviewed",
       "mapStatus": "current-official-finder-but-no-licensed-geojson",
-      "sourceNotes": "Northwest ISD board approved 2026–27 zones January 12, 2026; includes new Romer ES and Barksdale MS. A separate 2027–28 high-school boundary change was APPROVED November 9, 2026, but is not the 2026–27 assignment. The three public ArcGIS candidate layers below were last edited in 2022 and have not been confirmed as either 2022–23 official maps or equivalent to 2026–27. They are research references only, NOT current enrollment or licensed/rehostable school GIS.",
+      "sourceNotes": "Northwest ISD board approved 2026–27 zones January 12, 2026; includes new Romer ES and Barksdale MS. A separate 2027–28 high-school boundary change was APPROVED November 9, 2026, but is not the 2026–27 assignment. The three public ArcGIS candidate layers below were last edited in 2022 and have not been confirmed as either 2022–23 official maps or equivalent to 2026–27. They are research references only, NOT current enrollment or licensed/rehostable school GIS. The 2026–27 date belongs to the OFFICIAL FINDER, not to any of the three historical candidate GIS layers; the historical GIS academic year is unverified.",
       "currentFinderUrl": "https://www.nisdtx.org/schoolfinder",
       "futureYearApprovedUrl": "https://www.nisdtx.org/departments/facilities/attendance-boundaries/2027-2028-boundaries",
       "historicalCandidateLayers": [
@@ -134,7 +134,8 @@
           "completeDistrictCoverageVerified": false,
           "reusePermissionVerified": false
         }
-      ]
+      ],
+      "verifiedOfficialFinderAcademicYear": "2026-27"
     },
     {
       "code": "220906",

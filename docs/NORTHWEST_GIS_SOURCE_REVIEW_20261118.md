@@ -29,6 +29,8 @@ District-owned sources:
 
 Data contract: `data/west-dfw-zone-source-audit-2026.json` contains level, exact source URL, recorded *data-last-edit*, unknown academic year, completeness and rights flags. No feature coordinates or residence queries are stored.
 
+**Academic-year field correction:** `verifiedPolygonAcademicYear` for Northwest is `null` because none of the three GIS candidates has a verified academic-year/authorized geometry. The separately maintained `verifiedOfficialFinderAcademicYear` is `2026-27`; it refers **only** to the board-approved current operating Finder. The supplementary provenance census therefore reports Northwest geometry as `unverified`, not `2026-27`.
+
 Enforcement: `scripts/audit-west-dfw-zone-sources.cjs` pins the three exact source URLs and dates, refuses year inflation, forbidden source-host swaps, reuse approval assertions, partial-district inferred coverage, and any automatic polygon display/assignment. `tests/audit-west-dfw-zone-sources.test.cjs` has negative tests for each failure mode. West DFW integrated GitHub Actions executes these checks when relevant files change.
 
 User-facing: the existing West DFW note identifies 2022 as the *last edited date*, not a school-year publication date. The official 2026–27 Finder remains linked and no unsafe overlay is introduced.
