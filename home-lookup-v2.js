@@ -183,7 +183,7 @@ function showOfficialFinderWithoutGeocode(address,reason){
  // Address geocoding failure is not evidence that a home has no schools.
  // Preserve an explicit official-district lookup path without faking a match.
  const panel=el('homeCandidates');
- if(!panel)return;
+ if(!panel||typeof document.createElement!=='function')return;
  panel.replaceChildren();
  const status=document.createElement('p');
  status.className='source';
