@@ -31,7 +31,7 @@ jobs:
       - run: node scripts/build-first-render-css.cjs --check
       - run: node --test tests/school-grade-focus.test.cjs
       - run: node --test tests/school-list-spatial-cache.test.cjs
-      - run: node --test tests/school-marker-reuse.test.cjs
+      - run: node --test tests/school-marker-reuse.test.cjs tests/tx-quick-layout-school-map.test.cjs tests/address-school-focus.test.cjs
       - run: node --test tests/tx-first-load-cache.test.cjs
       - run: node --test tests/tx-zip-heatmap-scope.test.cjs
       - run: node --test tests/tx-table-repaint.test.cjs
