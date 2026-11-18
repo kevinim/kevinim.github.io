@@ -17,7 +17,10 @@ function harness(status='unverified-year'){
   {name:'ZIP School Not Assigned',type:'elementary',district:'AISD',ll:[33.12,-96.64]},
   {name:'Frisco Campus',type:'high',district:'FISD',ll:[33.13,-96.7]}
  ];
- const home={assignment:{district:'AISD',status,allen:row},geocodeQuality:{usableForSchoolCandidate:true}};
+ const home={assignment:{district:'AISD',status:status==='unverified-year'?'conditional-finder-only':status},
+  schoolSourceDistrict:'AISD',schoolSourceStatus:status,
+  allenAddressReference:status==='unverified-year'?row:null,
+  geocodeQuality:{usableForSchoolCandidate:true}};
  let manual=[];
  const context={home,state:{schools},canonical:name=>String(name).toLowerCase().replace(/[^a-z0-9 ]/g,''),
   allenRowMatchesSchool,
@@ -69,4 +72,7 @@ test('the address-first panel and list explicitly say unverified and preserve ta
  assert.match(source,/Allen 공식 주소표·학교 배정 확인/);
  assert.match(source,/const railReference=!!view&&\['gis-reference','mckinney-reference','allen-reference'\]/);
  assert.match(source,/2019\/2023 과거 경계는 자동 적용하지 않습니다/);
+ const homeSource=fs.readFileSync('home-lookup-v2.js','utf8');
+ assert.match(homeSource,/home\.allenAddressReference=rawSchoolCandidate/);
+ assert.match(source,/searchedHome\.assignment\?\.status==='conditional-finder-only'/);
 });
