@@ -35,6 +35,10 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<script src="./features/mckinney-finder-crosscheck.js?v=4"></script>','');
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<script src="./features/mckinney-live-address-lookup.js?v=2"></script>','');
+// Unwind only this PR's verified source-identity helper cache bump before the
+// immutable archival HTML byte comparison; do not relax any other HTML guard.
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ 'features/school-reference-preview.js?v=2','features/school-reference-preview.js?v=1');
 // Address-first UI: subtract ONLY exact approved main-page UI/cache deltas.
 const priorityElement=normalizedMainHtml.match(/<div id="homeCandidates"><\/div><section id="homeAssignmentPriority" class="home-assignment-priority"[\s\S]*?<\/section><\/div><div class="panel office-controls">/);
 assert.ok(priorityElement&&priorityElement[0].includes('id="homeAssignmentPrioritySchools"'),
