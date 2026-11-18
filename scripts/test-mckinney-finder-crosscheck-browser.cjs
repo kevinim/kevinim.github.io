@@ -78,13 +78,13 @@ async function main(){
     };
    });
    assert.equal(overview.visible,true,'McKinney official GIS evidence shown in address priority panel');
-   assert.match(overview.status,/GIS 후보 · 배정 미인증/);
+   assert.match(overview.status,/GIS 기준 예상 배정학교/);
    assert.equal(overview.count,3,'E/M/H source names are shown individually');
    assert.equal(overview.safe,true,'School name remains inert DOM text');
    assert.equal(overview.source,true);
    assert.match(overview.officialLink,/^https:\/\/portal\.metrostudygis\.com\/arcgis\/apps\/webappviewer\/index\.html\?id=ed198c434d47474b88709e98d1f0a125$/);
    assert.equal(overview.listCount,3,'Vetted GIS reference names appear as separate school-location rows');
-   assert.match(overview.railText,/GIS 참고 후보 · 배정 미인증/);
+   assert.match(overview.railText,/GIS 예상 학교 · 공식 확인 별도/);
    assert.equal(overview.verifiedCount,0,'GIS reference rows must not become residential assignments');
    assert.equal(overview.markers,0,'Reference names never become assigned-school markers');
    assert.equal(overview.conditional,'conditional-finder-only');
@@ -119,10 +119,12 @@ async function main(){
     window.__mckinneyRaw.features[1].properties.sourceYearRaw='2025-26';
     renderHome();drawSchools();drawList();
     return {status:document.getElementById('homeAssignmentPriorityStatus').textContent,
+      description:document.getElementById('homeAssignmentPriorityDescription').textContent,
       cards:document.querySelectorAll('#homeAssignmentPrioritySchools .home-assignment-school').length};
    });
    assert.equal(stale.cards,2,'Stale middle school source is removed; current E/H remain');
-   assert.match(stale.status,/배정 미확인|미인증/);
+   assert.match(stale.status,/GIS 기준 예상 배정학교/,'GIS estimate status persists during asynchronous source recheck');
+   assert.match(stale.description,/미확인 학교급: 중등/,'Stale middle grade must be disclosed');
    const wrong=await page.evaluate(()=>{
     window.__mckinneyRaw.district='FISD';
     renderHome();drawSchools();drawList();
