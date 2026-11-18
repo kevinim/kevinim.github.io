@@ -49,6 +49,29 @@ test('stale current-year elementary layer and missing source are blocked',()=>{
  const g=fixture();g.map.operationalLayers.pop();
  assert.equal(api.compare(g).code,'invalid-layer');
 });
+test('publisher planning-area duplicates above 300 do not masquerade as schema changes',()=>{
+ const f=fixture();
+ const rows=f.map.operationalLayers[0].featureCollection.layers[0].featureSet.features;
+ for(let i=0;i<310;i++)rows.push({attributes:{ELEM_NAME:'SYNTH ELEM',SCHL_YEAR:'2026-27'},
+  geometry:{rings:[[[0,0],[1,0],[1,1],[0,0]]]}});
+ assert.equal(api.compare(f).kind,'source-matched');
+});
+test('non-zoned placeholder entries are ignored but malformed named zones are rejected',()=>{
+ const f=fixture();
+ const rows=f.map.operationalLayers[0].featureCollection.layers[0].featureSet.features;
+ rows.push({attributes:{ELEM_NAME:''},geometry:{rings:[]}});
+ assert.equal(api.compare(f).kind,'source-matched');
+ rows.push({attributes:{ELEM_NAME:'SYNTH ELEM',SCHL_YEAR:'2026-27'},geometry:{rings:[]}});
+ assert.equal(api.compare(f).code,'invalid-layer');
+});
+test('large changed source and stale year on named zone still fail closed',()=>{
+ const f=fixture(),rows=f.map.operationalLayers[0].featureCollection.layers[0].featureSet.features;
+ rows.push({attributes:{ELEM_NAME:'SYNTH ELEM',SCHL_YEAR:'2025-26'},geometry:{rings:[[[0,0],[1,0],[1,1],[0,0]]]}});
+ assert.equal(api.compare(f).code,'stale-elementary');
+ const g=fixture(),huge=g.map.operationalLayers[0].featureCollection.layers[0].featureSet.features;
+ for(let i=0;i<5001;i++)huge.push({attributes:{ELEM_NAME:''},geometry:{rings:[]}});
+ assert.equal(api.compare(g).code,'invalid-layer');
+});
 test('fresh middle school different from the previously loaded GIS is a hard conflict',()=>{
  const f=fixture(),zones=f.convert();
  f.convert=()=>zones.map(x=>x.properties.gradeLevel==='middle'&&x.geometry.__selected?
