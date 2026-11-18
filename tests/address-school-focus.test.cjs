@@ -122,6 +122,7 @@ test('public GIS rail uses only linked current directory schools, never ZIP or t
  assert.equal(h.ctx.home.assignment.status,'conditional-finder-only');
  const rail=source.slice(source.indexOf('function drawList(){'),source.indexOf('function zoneNameKey('));
  assert.match(rail,/items=referenceCandidateSchoolLocations\(view\)/);
- assert.match(rail,/railReference\?'<span class="other-label">GIS 참고 후보 · 배정 미인증/);
+ assert.match(rail,/railReference\?'<span class="other-label">'\+\(view\.kind==='allen-reference'/);
+ assert.match(rail,/GIS 참고 후보 · 배정 미인증/);
  assert.match(rail,/view\?\.kind==='certified'&&homeSchoolMatches\(s\)/);
 });
