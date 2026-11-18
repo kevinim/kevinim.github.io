@@ -28,12 +28,6 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<link rel="stylesheet" href="./features/dashboard-quick-layout.css?v=1">\n','');
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<script src="./features/dashboard-quick-layout.js?v=1" defer></script>\n','');
-for(const [next,prior] of [
- ['dashboard-main.js?v=14','dashboard-main.js?v=13'],
- ['features/dfw-rent-map-uat.js?v=5','features/dfw-rent-map-uat.js?v=4'],
- ['features/region-compare.js?v=2','features/region-compare.js?v=1'],
- ['features/area-assessment.js?v=4','features/area-assessment.js?v=3']
-])normalizedMainHtml=replaceOnce(normalizedMainHtml,next,prior);
 
 // One new self-hosted, review-scoped McKinney official Finder crosscheck module.
 // Strip only the exact new script tag when comparing to frozen historical HTML.
