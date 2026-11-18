@@ -649,8 +649,15 @@ function addressSchoolView(){
    const key=zoneNameKey(c.school);
    const hits=level==='other'||!key?[]:state.schools.filter(s=>
     s.district===plan.district&&s.type===level&&zoneNameKey(s.name)===key);
+   // Official 2026–27 Prosper polygons carry TEA campus IDs. Refuse a
+   // contradictory campus ID and show its official TEA grade even when a
+   // separate building pin cannot be matched to the directory.
+   const campusId=plan.district==='PROSPER'&&/^043912[0-9]{3}$/.test(String(c.campusId||''))?String(c.campusId):null;
+   const ratingRows=campusId&&Array.isArray(state.ratings)?
+    state.ratings.filter(r=>r.district==='PROSPER'&&r.id===campusId):[];
+   const school=hits.length===1&&(!campusId||!hits[0].id||hits[0].id===campusId)?hits[0]:null;
    return {name:c.school,level,levelText:c.level,grades:c.grades||'',
-    school:hits.length===1?hits[0]:null};
+    school,campusId,verifiedRating:ratingRows.length===1?ratingRows[0].rating:null};
   });
   // Informational-only scope: reference cards and separate GIS-candidate campus
   // locations are allowed, but no enrollment assignment or certified polygons.
@@ -735,9 +742,16 @@ function renderAddressSchoolPriority(){
   status.textContent='Allen 공식 주소표 후보 · 학년도 미표기';
   desc.textContent='Allen ISD 공개 주소표에서 검색 주소와 숫자 범위가 일치하는 학교명입니다. 초등 K–6, 중등 7–8, Lowery 9학년, Allen High 10–12학년을 구분합니다. 실제 2026–27 배정은 공식 검색기에서 확인해야 하며, 2019/2023 과거 경계는 자동 적용하지 않습니다.';
  }else if(view.kind==='gis-reference'){
-  status.textContent='2026–27 GIS 후보 · 배정 미인증';
+  const prosper=view.reference?.district==='PROSPER';
+  const complete=prosper&&['초등','중등','고등'].every(l=>
+   view.candidates.filter(c=>c.levelText===l).length===1);
+  status.textContent=complete?
+   'Prosper 2026–27 공식 GIS 기준 예상 배정학교 · 실제 배정 미인증':
+   '2026–27 GIS 후보 · 배정 미인증';
   const gaps=view.reference.missing?.length?' · 자료가 없는 학교급: '+view.reference.missing.join(', '):'';
-  desc.textContent='집 위치가 포함된 2026–27 학교 경계의 참고 후보입니다. 주소별 배정 확정이 아닙니다.'+gaps;
+  desc.textContent=complete?
+   '선택한 집 주소의 위치를 공식 2026–27 초·중·고 경계에 대조해 예상 학교 3곳을 자동 표시했습니다. 공식 주소 검색 결과와 등록·전학 예외는 별도 확인이 필요합니다.':
+   '집 위치가 포함된 2026–27 학교 경계의 참고 후보입니다. 주소별 배정 확정이 아닙니다.'+gaps;
  }else{
   status.textContent=view.sourceStatus==='loading'?'학교 경계 자료 확인 중':view.sourceStatus==='error'?'학교 경계 자료 조회 실패':'배정 미확인';
   desc.textContent='이 주소에 대한 현재 학년도 학교 배정 결과를 자동으로 확인하지 못했습니다. 학교가 없다는 뜻이 아닙니다. '+(view.reason||'공식 학군 주소 검색기에서 확인해 주세요.')+' · ZIP 내 다른 학교는 표시하지 않습니다.';
@@ -745,7 +759,8 @@ function renderAddressSchoolPriority(){
 
  const cardsToShow=view.kind==='mckinney-reference'?view.candidates:
   ['gis-reference','allen-reference'].includes(view.kind)
-   ?view.candidates.map(c=>({name:c.name,school:c.school,levelText:c.levelText,grades:c.grades,yearNote:c.yearNote}))
+   ?view.candidates.map(c=>({name:c.name,school:c.school,levelText:c.levelText,grades:c.grades,yearNote:c.yearNote,
+     campusId:c.campusId,verifiedRating:c.verifiedRating}))
   :view.schools.map(s=>({name:s.name,school:s,
     levelText:s.type==='elementary'?'초등':s.type==='middle'?'중등':'고등',grades:''}));
  for(const entry of cardsToShow){
@@ -770,7 +785,9 @@ function renderAddressSchoolPriority(){
   evidence.textContent=view.kind==='certified'?'주소 배정 검증':
    view.kind==='manual'?'공식 Finder 직접 선택':
    view.kind==='allen-reference'?'공식 주소표 후보 · 학년도 미표기':
-   view.kind==='mckinney-reference'?'GIS 예상 학교 · 공식 확인 별도':view.kind==='gis-reference'?'GIS 후보 · 배정 미인증':'확인 필요';
+   view.kind==='mckinney-reference'?'GIS 예상 학교 · 공식 확인 별도':
+   view.kind==='gis-reference'&&view.reference?.district==='PROSPER'?'공식 GIS 예상 · 최종 배정 별도':
+   view.kind==='gis-reference'?'GIS 후보 · 배정 미인증':'확인 필요';
   chips.appendChild(evidence);
   if(school){
    const hasCampusPoint=Array.isArray(school.ll)&&school.ll.length===2&&school.ll.every(Number.isFinite);
