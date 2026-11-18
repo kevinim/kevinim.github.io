@@ -52,20 +52,20 @@
       "source": "https://www.nisdtx.org/departments/facilities/attendance-boundaries/proposed-2026-2027-boundaries",
       "futureSource": "https://www.nisdtx.org/departments/facilities/attendance-boundaries/2027-2028-boundaries",
       "status": "approved-current-official-finder-no-licensed-geojson",
-      "sourceYear": "2026-27 approved January 12, 2026; 2027-28 high-school proposal distinct",
+      "sourceYear": "2026-27 approved January 12, 2026; 2027-28 high-school boundaries approved November 9, 2026 (different year)",
       "lookupKind": "finder-guidance",
       "gradeScope": "elementary/middle/high; school-year selector required",
       "exceptionIds": [
         "romer-elem-open-2026",
         "barksdale-mid-open-2026",
         "grade-5-7-8-grandfathering",
-        "2027-28-proposal-not-current"
+        "2027-28-approved-for-future-year-not-current"
       ],
-      "note": "2026–27 공식 School Zone Locator에서 School Year를 반드시 2026–27로 선택하세요. Romer Elementary·Barksdale Middle 신설 및 2026–27 승인 재배정이 적용됩니다. 일부 5·7·8학년 기존 재학생 잔류 예외가 있습니다. 2027–28 고교 조정은 별도 제안안으로 2026–27 배정선이 아닙니다. 대시보드에는 학교별 승인 GIS가 미탑재되어 있습니다.",
+      "note": "2026–27 공식 School Zone Locator에서 School Year를 반드시 2026–27로 선택하세요. Romer Elementary·Barksdale Middle 신설 및 2026–27 승인 재배정이 적용됩니다. 일부 5·7·8학년 기존 재학생 잔류 예외가 있습니다. 2027–28 고교 조정은 2026년 11월 9일 승인되었으나 2026–27 배정에 적용되지 않습니다. 공개된 과거 ArcGIS 3개 레이어는 2022년 최종 편집 자료로 학년도·재사용 허가가 미확인되어 이 대시보드에 경계를 미탑재한 상태입니다. 정확한 배정은 2026–27 공식 Finder로 확인하세요.",
       "currentYearSchoolSpecificGeometryInDashboard": false,
       "verifiedIndividualResidentialAssignment": false,
       "sourceRedistributionRightsVerified": false,
-      "sourceFootnote": "2026–27 공식 School Zone Locator에서 School Year를 반드시 2026–27로 선택하세요. Romer Elementary·Barksdale Middle 신설 및 2026–27 승인 재배정이 적용됩니다. 일부 5·7·8학년 기존 재학생 잔류 예외가 있습니다. 2027–28 고교 조정은 별도 제안안으로 2026–27 배정선이 아닙니다. 대시보드에는 학교별 승인 GIS가 미탑재되어 있습니다."
+      "sourceFootnote": "2026–27 공식 School Zone Locator에서 School Year를 반드시 2026–27로 선택하세요. Romer Elementary·Barksdale Middle 신설 및 2026–27 승인 재배정이 적용됩니다. 일부 5·7·8학년 기존 재학생 잔류 예외가 있습니다. 2027–28 고교 조정은 2026년 11월 9일 승인되었으나 2026–27 배정에 적용되지 않습니다. 공개된 과거 ArcGIS 3개 레이어는 2022년 최종 편집 자료로 학년도·재사용 허가가 미확인되어 이 대시보드에 경계를 미탑재한 상태입니다. 정확한 배정은 2026–27 공식 Finder로 확인하세요."
     },
     {
       "code": "220906",
