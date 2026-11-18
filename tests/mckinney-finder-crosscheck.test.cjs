@@ -223,3 +223,31 @@ test('dashboard exposes click-only address handoff with explicit third-party add
  assert.equal(require('../features/conditional-school-release.js')
   .releaseSummary().currentYearResidentialDistrictApprovals,0);
 });
+
+test('25 adopted 2026-27 McKinney zoned-campus aliases link to exact TEA IDs without claiming residential assignment',()=>{
+ const adopted=require('../data/mckinney-2026-27-adopted-map-names.json');
+ const tea=require('../tea-ratings-2026.json').data;
+ const expected=new Map([["elementary|bennett","043907120"],["elementary|burks","043907105"],["elementary|finch","043907102"],["elementary|frazier","043907127"],["elementary|glen oaks","043907109"],["elementary|johnson","043907112"],["elementary|malvern","043907118"],["elementary|mcclure","043907126"],["elementary|mcgowen","043907123"],["elementary|minshew","043907121"],["elementary|press","043907124"],["elementary|slaughter","043907111"],["elementary|valley creek","043907108"],["elementary|vega","043907119"],["elementary|walker","043907115"],["elementary|webb","043907104"],["elementary|wilmeth","043907122"],["middle|cockrill","043907046"],["middle|dowell","043907043"],["middle|evans","043907045"],["middle|faubion","043907041"],["middle|johnson","043907044"],["high|boyd","043907007"],["high|mckinney","043907002"],["high|north","043907004"]]);
+ assert.equal(expected.size,25);
+ for(const level of ['elementary','middle','high']){
+  for(const short of adopted.names[level]){
+   const id=expected.get(level+'|'+short.toLowerCase());
+   assert.ok(id,'No approved alias '+level+' '+short);
+   const rating=tea.find(r=>r.id===id&&r.district==='043907');
+   assert.ok(rating,'No official TEA identity '+id);
+   const f=fixture();
+   f.raw.features=[feature(level,short,{campusId:null})];
+   f.schools=[{name:rating.name,district:'043907',type:level,ll:[33.18,-96.70]}];
+   f.ratings=[{...rating,type:level}];
+   const result=api.crosscheck(f);
+   assert.equal(result.kind,'reference-only',level+' '+short);
+   assert.equal(result.candidates.length,1,level+' '+short);
+   assert.equal(result.candidates[0].campusId,id,level+' '+short);
+   assert.equal(result.candidates[0].matchedSchool,f.schools[0],level+' '+short);
+   assert.equal(result.candidates[0].identityKind,'TEA-campus-id',level+' '+short);
+   assert.equal(result.independentOfficialAddressVerified,false);
+   f.raw.features[0].properties.campusId='043907999';
+   assert.equal(api.crosscheck(f).code,'identity-conflict',level+' '+short);
+  }
+ }
+});

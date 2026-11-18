@@ -12,8 +12,33 @@
  // Curated 2026 TEA campus identities for abbreviated district-published GIS
  // names. Never infer a campus from fuzzy suffix, ZIP, or city-level matching.
  const TEA_CAMPUS_ALIASES=Object.freeze({
-  'elementary|bennett':Object.freeze({id:'043907120',name:'DEAN AND MILDRED BENNETT EL'}),
-  'high|boyd':Object.freeze({id:'043907007',name:'MCKINNEY BOYD H S'})
+  // Exact McKinney ISD adopted 2026–27 attendance-map name -> TEA Campus ID.
+  // Only for same-level unique TEA/directory identity; not enrollment proof.
+  "elementary|bennett":Object.freeze({id:"043907120",name:"DEAN AND MILDRED BENNETT EL"}),
+  "elementary|burks":Object.freeze({id:"043907105",name:"BURKS EL"}),
+  "elementary|finch":Object.freeze({id:"043907102",name:"FINCH EL"}),
+  "elementary|frazier":Object.freeze({id:"043907127",name:"RUTH AND HAROLD FRAZIER EL"}),
+  "elementary|glen oaks":Object.freeze({id:"043907109",name:"GLEN OAKS EL"}),
+  "elementary|johnson":Object.freeze({id:"043907112",name:"REUBEN JOHNSON EL"}),
+  "elementary|malvern":Object.freeze({id:"043907118",name:"ALBERT & IOLA LEE DAVIS MALVERN EL"}),
+  "elementary|mcclure":Object.freeze({id:"043907126",name:"LIZZIE NELL CUNDIFF MCCLURE EL"}),
+  "elementary|mcgowen":Object.freeze({id:"043907123",name:"JESSE MCGOWEN EL"}),
+  "elementary|minshew":Object.freeze({id:"043907121",name:"GARY AND BOBBYE JACK MINSHEW EL"}),
+  "elementary|press":Object.freeze({id:"043907124",name:"NAOMI PRESS EL"}),
+  "elementary|slaughter":Object.freeze({id:"043907111",name:"SLAUGHTER EL"}),
+  "elementary|valley creek":Object.freeze({id:"043907108",name:"VALLEY CREEK EL"}),
+  "elementary|vega":Object.freeze({id:"043907119",name:"JOSE DE JESUS AND MARIA LUISA VEGA EL"}),
+  "elementary|walker":Object.freeze({id:"043907115",name:"ROY LEE WALKER EL"}),
+  "elementary|webb":Object.freeze({id:"043907104",name:"WEBB EL"}),
+  "elementary|wilmeth":Object.freeze({id:"043907122",name:"J B WILMETH EL"}),
+  "middle|cockrill":Object.freeze({id:"043907046",name:"DR JACK COCKRILL MIDDLE"}),
+  "middle|dowell":Object.freeze({id:"043907043",name:"DOWELL MIDDLE"}),
+  "middle|evans":Object.freeze({id:"043907045",name:"LEONARD EVANS JR MIDDLE"}),
+  "middle|faubion":Object.freeze({id:"043907041",name:"FAUBION MIDDLE"}),
+  "middle|johnson":Object.freeze({id:"043907044",name:"SCOTT MORGAN JOHNSON MIDDLE"}),
+  "high|boyd":Object.freeze({id:"043907007",name:"MCKINNEY BOYD H S"}),
+  "high|mckinney":Object.freeze({id:"043907002",name:"MCKINNEY H S"}),
+  "high|north":Object.freeze({id:"043907004",name:"MCKINNEY NORTH H S"}),
  });
  const SOURCE='McKinney ISD 2026–27 School Zone Finder 공개 GIS';
  // Both links are explicitly published district routes. The live Finder is

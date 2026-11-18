@@ -32,7 +32,7 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
 // One new self-hosted, review-scoped McKinney official Finder crosscheck module.
 // Strip only the exact new script tag when comparing to frozen historical HTML.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
- '<script src="./features/mckinney-finder-crosscheck.js?v=3"></script>','');
+ '<script src="./features/mckinney-finder-crosscheck.js?v=4"></script>','');
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<script src="./features/mckinney-live-address-lookup.js?v=2"></script>','');
 // Address-first UI: subtract ONLY exact approved main-page UI/cache deltas.
