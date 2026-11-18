@@ -197,3 +197,14 @@ The JSON reports missing *reason* states, including no known official parent rou
 ## Next work
 
 Continue detailed, current-year school assignment routing checks for the six official-inquiry districts in the third batch, then source the **1 remaining unregistered ISD**, not just favorite suburbs. For each, store TEA code, authority URL, last verification date, active year, grade, search/map/choice/inquiry type, GIS availability and licensing, missing reason and next action. Expand source boundaries to Hood and any cross-county overlap before labeling the DFW geographic denominator exhaustive. Confirm school-specific missing reasons with a browser source audit, including school-choice exceptions and transient failures.
+
+## 2026-11-18 official parent-source addendum — Chico ISD (249904)
+
+The final unregistered district in the fixed 11-county TEA administrative inventory now has a directly verified district-owned parent inquiry page:
+
+- https://www.chicoisdtx.net/District/Department/68-Enrollment-Registration
+- Chico ISD's official **Enrollment & Registration** page provides elementary, middle, high school enrollment contacts, the district-specific ASCENDER Parent Portal, and a separate nonresident transfer application. This is **official parent registration/inquiry**, **not an address-to-assigned-school lookup** or downloadable attendance GIS.
+- **Source year caveat:** its kindergarten eligibility text still refers to **2025**. The school registrar must confirm 2026–27 rules, unit/grade assignment and transfer exemptions; no synthetic year upgrade is allowed.
+- Reproducible additive evidence: `data/dfw-parent-source-chico-2026.json` (original November 9 batch-7 107/108 evidence remains immutable as a historical snapshot).
+
+The dashboard now registers **108/108 (100%) public ISD official parent navigation routes** in this 11-county TEA administrative proxy, including Chico's three source campuses. **DFW-wide official school-by-school GIS coverage and independently verified exact residential address/grade assignment remain unknown**, not 100%. Other 44 TEA non-ISD entities still have separate enrollment classifications, and geographic districtCounty is not actual building location.

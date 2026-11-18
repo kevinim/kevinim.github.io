@@ -283,7 +283,25 @@ function readNeighborDfwSupplement(root) {
   seen.add(e.teaCode);
   additions7.push({code:e.teaCode,status:'lookup-only',geometryYear:'no-certified-GIS',officialLookup:e.officialLandingUrl});
  }
- return [...neighbors,...additions,...additions4,...additions5,...additions6,...additions7];
+ // Chico's separate 2026-11-18 source is an official inquiry only. The
+ // batch-7 manifest is a preserved historical snapshot (107/108 at that time).
+ const chico=JSON.parse(fs.readFileSync(path.join(root,'data/dfw-parent-source-chico-2026.json'),'utf8'));
+ const c=DISTRICT_REGISTRY['249904'];
+ if(chico.schemaVersion!==1||chico.teaCode!=='249904'||seen.has('249904')||
+   chico.officialLandingUrl!=='https://www.chicoisdtx.net/District/Department/68-Enrollment-Registration'||chico.routeKind!=='official-inquiry'||
+   chico.host!=='www.chicoisdtx.net'||!c||c.official!==chico.officialLandingUrl||
+   c.officialNote!==chico.limitations||c.lookupKind!=='official-inquiry'||
+   c.zoneKey!==null||c.address!==null||c.currency!==null||
+   c.campusIdMatch!==false||official(chico.officialLandingUrl)!==chico.officialLandingUrl||
+   chico.verifiedCurrentYearAttendanceGIS!==false||
+   chico.verifiedIndividualAddressAssignment!==false||
+   chico.personalAddressSubmitted!==false||
+   chico.currentYearRegistrationIndependentlyVerified!==false||
+   chico.schoolAssignmentApiVerified!==false||
+   !/2025/.test(chico.observedDateCaution))
+   throw Error('unsafe_chico_parent_source');
+ return [...neighbors,...additions,...additions4,...additions5,...additions6,...additions7,
+   {code:chico.teaCode,status:'lookup-only',geometryYear:'no-certified-GIS',officialLookup:chico.officialLandingUrl}];
 
 }
 

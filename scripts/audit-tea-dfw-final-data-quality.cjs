@@ -111,7 +111,7 @@ function inspect(x){
        'texasworks_operator_location_crosswalk');
  check(matrix?.summary?.sourceCampusRows===2182&&
        matrix?.summary?.publicISDs===108&&
-       matrix?.summary?.publicISDsWithRegisteredParentRoute===107&&
+       matrix?.summary?.publicISDsWithRegisteredParentRoute===108&&
        matrix?.summary?.campusPolygonCoverageAllDFWPercent===null&&
        matrix?.summary?.exactAddressAssignmentCoveragePercent===null,
        'district_county_proxy_misrepresented_as_gis');

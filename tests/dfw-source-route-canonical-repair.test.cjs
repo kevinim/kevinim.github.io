@@ -44,13 +44,14 @@ test('no stale error-prone official URL remains in registry or parent evidence',
   assert.ok(!s.includes('https://www.midlothianisd.org/enrollment/school-boundaries'),p);
  }
 });
-test('107/108 public official parent sources preserved, Chico unverified and no assignment rate invented',()=>{
+test('108/108 official ISD parent inquiry links, no invented GIS or assignment coverage',()=>{
  const m=buildFromRepo();
  assert.deepEqual(read('data/dfw-school-coverage-matrix-2026.json'),m);
  assert.equal(m.summary.publicISDs,108);
- assert.equal(m.summary.publicISDsWithRegisteredParentRoute,107);
- assert.equal(m.summary.publicISDsMissingRegisteredParentRoute,1);
+ assert.equal(m.summary.publicISDsWithRegisteredParentRoute,108);
+ assert.equal(m.summary.publicISDsMissingRegisteredParentRoute,0);
  assert.equal(m.summary.campusPolygonCoverageAllDFWPercent,null);
  assert.equal(m.summary.exactAddressAssignmentCoveragePercent,null);
- assert.equal(m.districts.find(d=>d.code==='249904').parentGuidance.status,'not-verified');
+ assert.equal(m.districts.find(d=>d.code==='249904').parentGuidance.status,'registered-official-source');
+ assert.equal(m.districts.find(d=>d.code==='249904').geometry.confirmedCurrentYear,false);
 });

@@ -48,11 +48,11 @@ test('8 TEA districts, exact official HTTPS, finder vs inquiry, no invented GIS 
  assert.equal(finders,5);
  assert.equal(inquiries,3);
  assert.equal(count,54);
- assert.equal(matrix.summary.publicISDsWithRegisteredParentRoute,107);
- assert.equal(matrix.summary.publicISDsMissingRegisteredParentRoute,1);
- assert.equal(matrix.summary.registeredParentRouteRatePublicISDPercent,99.1);
- assert.equal(matrix.summary.publicISDCampusRowsWithRegisteredParentRoute,1938);
- assert.equal(matrix.summary.publicISDCampusRowsWithUnverifiedParentRoute,3);
+ assert.equal(matrix.summary.publicISDsWithRegisteredParentRoute,108);
+ assert.equal(matrix.summary.publicISDsMissingRegisteredParentRoute,0);
+ assert.equal(matrix.summary.registeredParentRouteRatePublicISDPercent,100);
+ assert.equal(matrix.summary.publicISDCampusRowsWithRegisteredParentRoute,1941);
+ assert.equal(matrix.summary.publicISDCampusRowsWithUnverifiedParentRoute,0);
  assert.equal(matrix.summary.campusPolygonCoverageAllDFWPercent,null);
  assert.equal(matrix.summary.exactAddressAssignmentCoveragePercent,null);
 });
