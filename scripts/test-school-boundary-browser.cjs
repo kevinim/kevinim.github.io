@@ -67,6 +67,7 @@ mkdirSync(out,{recursive:true});
    return matches.map(s=>({name:s.name,type:s.type,ll:s.ll}));
   });
   if(allen.length){
+   assert.equal(await page.locator('#referenceBoundaryOverlay').isChecked(),true,'Historical official reference boundaries are visible by default');
    await page.locator('#referenceBoundaryOverlay').uncheck();
    await page.evaluate(async name=>{
     const s=state.schools.find(x=>x.district==='AISD'&&x.name===name);
@@ -77,7 +78,7 @@ mkdirSync(out,{recursive:true});
    await page.locator('#referenceBoundaryOverlay').check();
    const stateAfter=await page.evaluate(()=>({layers:zoneGroup.getLayers().length,note:document.getElementById('zoneNotice').innerText}));
    assert.ok(stateAfter.layers>0,'old Allen attendance polygon renders after explicit reference opt-in');
-   assert.ok(/과거 GIS 경계/.test(stateAfter.note),'explicit 2019/2023 vintage disclaimer must remain');
+   assert.match(stateAfter.note,/공식 GIS 참고 경계 · 원본 표기 (?:2019|2023).*현재 배정 미인증/,'Actual Allen GIS update year and reference-only status must remain visible');
   }
   // A school whose campus pin is missing must show its verified polygon
   // synchronously, rather than waiting on an unrelated geocoding request.
