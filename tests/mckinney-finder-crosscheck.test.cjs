@@ -152,12 +152,9 @@ test('duplicate levels, missing schema and campus identity conflicts cannot be m
  f=fixture();f.schools.push({...f.schools[0]});
  assert.equal(api.crosscheck(f).code,'identity-conflict');
  f=fixture();f.raw.features[0].properties.campusId='043907999';
- // A missing ID join still allows unique normalised name comparison,
- // but never marks that provider ID as an independently verified campus.
- const sourceOnly=api.crosscheck(f).candidates[0];
- assert.equal(sourceOnly.linked,true);
- assert.equal(sourceOnly.identityKind,'TEA-name-only');
- assert.equal(sourceOnly.teaCampusId,null,'A contradictory provider ID cannot become a verified TEA ID');
+ // A contradictory valid-format provider ID now fails closed, rather than
+ // falling back to a same-named but different-ID directory location.
+ assert.equal(api.crosscheck(f).code,'identity-conflict');
 });
 test('publisher Campus ID format and district changes must fail closed',()=>{
  for(const bad of ['04390712','043906101','043907ABC','043907101\\n',43907101]){
