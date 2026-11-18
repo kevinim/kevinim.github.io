@@ -9,6 +9,9 @@ on:
       - 'tests/school-grade-data-states.test.cjs'
       - 'tests/school-grade-status-ui.test.cjs'
       - 'tests/school-source-currency.test.cjs'
+      - 'tests/mckinney-finder-crosscheck.test.cjs'
+      - 'features/mckinney-finder-crosscheck.js'
+      - 'scripts/test-mckinney-finder-crosscheck-browser.cjs'
       - 'tests/map-viewport-ownership.test.cjs'
       - 'tests/address-ime-controls.test.cjs'
       - 'scripts/test-review-controls-browser.cjs'
@@ -26,6 +29,9 @@ on:
       - 'tests/school-grade-data-states.test.cjs'
       - 'tests/school-grade-status-ui.test.cjs'
       - 'tests/school-source-currency.test.cjs'
+      - 'tests/mckinney-finder-crosscheck.test.cjs'
+      - 'features/mckinney-finder-crosscheck.js'
+      - 'scripts/test-mckinney-finder-crosscheck-browser.cjs'
       - 'tests/map-viewport-ownership.test.cjs'
       - 'tests/address-ime-controls.test.cjs'
       - 'scripts/test-review-controls-browser.cjs'
@@ -53,6 +59,8 @@ jobs:
       - run: |
           node --check features/school-grade-zones-uat-core.js
           node --check features/school-grade-zones-uat.js
+          node --check features/mckinney-finder-crosscheck.js
+          node --test tests/mckinney-finder-crosscheck.test.cjs
           node --test tests/school-grade-zones-uat.test.cjs tests/school-grade-data-states.test.cjs tests/school-grade-status-ui.test.cjs tests/school-source-currency.test.cjs tests/map-viewport-ownership.test.cjs tests/address-ime-controls.test.cjs
   browser:
     runs-on: ubuntu-latest
@@ -81,6 +89,7 @@ jobs:
         run: |
           node scripts/test-school-grade-zones-browser.cjs
           node scripts/test-review-controls-browser.cjs
+          node scripts/test-mckinney-finder-crosscheck-browser.cjs
       - name: Attach keyboard and zoom layout screenshots
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
