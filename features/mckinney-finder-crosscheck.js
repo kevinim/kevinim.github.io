@@ -73,8 +73,9 @@
    const byId=campusId?schools.filter(s=>s?.district===DISTRICT&&s.type===level&&s.id===campusId):[];
    const teaById=campusId?ratings.filter(x=>x?.district===DISTRICT&&x.id===campusId):[];
    const teaByName=ratings.filter(x=>x?.district===DISTRICT&&
+    (!x.type||x.type===level)&&
     (normalize(x.name)===key||normalize(x.officialName)===key));
-   if(byId.length>1||byName.length>1||teaById.length>1||teaByName.length>1||
+   if(byId.length>1||byName.length>1||teaById.length>1||
       (byId.length===1&&byName.length===1&&byId[0]!==byName[0])||
       (teaById.length===1&&teaByName.length===1&&teaById[0]!==teaByName[0]))
     return unavailable('McKinney GIS 학교 ID와 TEA 학교명이 서로 다른 기록을 가리키거나 중복되었습니다.','identity-conflict');
