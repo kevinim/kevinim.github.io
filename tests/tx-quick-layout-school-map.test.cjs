@@ -27,15 +27,15 @@ test('six-section home-first layout preserves original map, form, and filter IDs
  assert.match(css,/\.home-school-grade\.grade-c/);
  assert.match(css,/\.tx-reference-campus-pin/);
  assert.match(css,/@media\(max-width:720px\)/);
- assert.match(layout,/stats\.appendChild\(node\)/);
+ assert.match(layout,/stats\.appendChild\(node\)/);assert.match(layout,/MutationObserver/);
  assert.doesNotMatch(layout,/localStorage|sessionStorage|fetch\(|\.setView\(|\.fitBounds\(/);
 });
 test('Redfin and comparison mount under distinct ordered hosts',()=>{
- assert.match(rent,/target\.appendChild\(panel\)/);
- assert.match(compare,/target\.appendChild\(section\)/);
- assert.match(renderer,/target\.appendChild\(section\)/);
+ assert.match(rent,/mapBox\.before\(panel\)/);
+ assert.match(compare,/if\(quick\)quick\.after\(section\)/);
+ assert.match(renderer,/if\(quick\)quick\.after\(section\)/);
  assert.match(rent,/rentMapFilters/);
- assert.match(compare,/const RENDERER='\.\/features\/region-compare-renderer\.js\?v=2'/);
+ assert.match(compare,/const RENDERER='\.\/features\/region-compare-renderer\.js\?v=1'/);
 });
 function candidateHarness(){
  const begin=main.indexOf('function referenceCandidateSchoolLocations(view){');
