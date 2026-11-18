@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "auditedAtUtc": "2026-11-09",
+  "auditedAtUtc": "2026-11-18",
   "targetSchoolYear": "2026-27",
   "scope": "Source inventory and vintage validation only; NO GEOMETRY DOWNLOAD OR DEPLOYMENT.",
   "globalReleaseState": {
@@ -97,7 +97,44 @@
       "candidateFormat": "official school-year selector + map; approved 2026–27 current in Finder",
       "reuseRights": "not-reviewed",
       "mapStatus": "current-official-finder-but-no-licensed-geojson",
-      "sourceNotes": "Board-approved 2026–27 zones (January 12, 2026) visible in official school-year-selectable Finder; no extracted/re-distributable file verified. 2027–28 high school rezoning was a proposal as of audit; do not merge years."
+      "sourceNotes": "Northwest ISD board approved 2026–27 zones January 12, 2026; includes new Romer ES and Barksdale MS. A separate 2027–28 high-school boundary change was APPROVED November 9, 2026, but is not the 2026–27 assignment. The three public ArcGIS candidate layers below were last edited in 2022 and have not been confirmed as either 2022–23 official maps or equivalent to 2026–27. They are research references only, NOT current enrollment or licensed/rehostable school GIS.",
+      "currentFinderUrl": "https://www.nisdtx.org/schoolfinder",
+      "futureYearApprovedUrl": "https://www.nisdtx.org/departments/facilities/attendance-boundaries/2027-2028-boundaries",
+      "historicalCandidateLayers": [
+        {
+          "level": "elementary",
+          "layerUrl": "https://services3.arcgis.com/qnlpi19w6R1Ta48m/ArcGIS/rest/services/NWISD_Elementary_School_Attendance_Zones/FeatureServer/0",
+          "layerName": "NWISD Elementary School Attendance Zones",
+          "nameField": "School_Boundary",
+          "dataLastEdit": "2022-02-17",
+          "academicYearVerified": null,
+          "category": "historical-reference-candidate",
+          "completeDistrictCoverageVerified": false,
+          "reusePermissionVerified": false
+        },
+        {
+          "level": "middle",
+          "layerUrl": "https://services3.arcgis.com/qnlpi19w6R1Ta48m/ArcGIS/rest/services/NISD_New_Attendance_Zones/FeatureServer/2",
+          "layerName": "Middle School New Planning Area",
+          "nameField": "MID_NAME",
+          "dataLastEdit": "2022-11-17",
+          "academicYearVerified": null,
+          "category": "historical-planning-reference-candidate",
+          "completeDistrictCoverageVerified": false,
+          "reusePermissionVerified": false
+        },
+        {
+          "level": "high",
+          "layerUrl": "https://services3.arcgis.com/qnlpi19w6R1Ta48m/ArcGIS/rest/services/NISD_New_Attendance_Zones/FeatureServer/1",
+          "layerName": "High School New Planning Areas",
+          "nameField": "HIGH_NAME",
+          "dataLastEdit": "2022-11-17",
+          "academicYearVerified": null,
+          "category": "historical-planning-reference-candidate",
+          "completeDistrictCoverageVerified": false,
+          "reusePermissionVerified": false
+        }
+      ]
     },
     {
       "code": "220906",
@@ -150,6 +187,30 @@
       "district": "220906",
       "url": "https://www.gcisd.net/page/attendance-area-maps/",
       "status": "Printable campus attendance maps with caution; no year or GIS export verified"
+    },
+    {
+      "kind": "official-primary",
+      "district": "061911",
+      "url": "https://www.nisdtx.org/departments/facilities/attendance-boundaries/2027-2028-boundaries",
+      "status": "2027–28 high-school attendance boundaries were approved November 9, 2026; not the current 2026–27 boundary map"
+    },
+    {
+      "kind": "arcgis-public-metadata-historical-only",
+      "district": "061911",
+      "url": "https://services3.arcgis.com/qnlpi19w6R1Ta48m/ArcGIS/rest/services/NWISD_Elementary_School_Attendance_Zones/FeatureServer/0",
+      "status": "elementary polygon candidate edited 2022-02-17; academic year, completeness and reuse rights NOT verified"
+    },
+    {
+      "kind": "arcgis-public-metadata-historical-only",
+      "district": "061911",
+      "url": "https://services3.arcgis.com/qnlpi19w6R1Ta48m/ArcGIS/rest/services/NISD_New_Attendance_Zones/FeatureServer/2",
+      "status": "middle polygon candidate edited 2022-11-17; academic year, completeness and reuse rights NOT verified"
+    },
+    {
+      "kind": "arcgis-public-metadata-historical-only",
+      "district": "061911",
+      "url": "https://services3.arcgis.com/qnlpi19w6R1Ta48m/ArcGIS/rest/services/NISD_New_Attendance_Zones/FeatureServer/1",
+      "status": "high polygon candidate edited 2022-11-17; academic year, completeness and reuse rights NOT verified"
     }
   ]
 }

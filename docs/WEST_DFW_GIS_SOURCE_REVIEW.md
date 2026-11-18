@@ -1,5 +1,7 @@
 # West DFW school attendance GIS — provenance and release gate
 
+> **2026-11-18 Northwest update:** [Read the source-level research closeout](NORTHWEST_GIS_SOURCE_REVIEW_20261118.md). The three accessible NWISD ArcGIS polygon layers have **2022 last-edit dates (not proven academic-year labels)** and lack 2026–27 equivalence and reuse clearance. The district **approved** separate 2027–28 high-school zones on Nov 9, 2026 (no longer merely proposed). The dashboard still uses official 2026–27 Finder guidance, with zero NWISD GIS polygons ingested. Historical findings below describe the Nov 9 audit state. 
+
 **Checked 2026-11-09 UTC. Draft PR; local/source-only review. No school polygon downloaded, imported, rendered or deployed.**
 
 ## Current result
