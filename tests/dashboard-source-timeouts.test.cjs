@@ -56,11 +56,32 @@ test('one pending polygon does not hide a completed district readiness',async t=
 
 test('district source loader uses parsed JSON from TxBoundedJson, not Response.json()',async()=>{
  const h=context(url=>String(url).includes('static.friscoisd.org')
-  ?Promise.resolve(response({source:'synthetic-current'}))
+  ?Promise.resolve(response([{source:'synthetic-current'}]))
   :Promise.reject(new Error('unrelated GIS source offline')));
- h.run("convertFriscoZones=j=>j.source==='synthetic-current'?[{properties:{school:'SYNTHETIC'}}]:[]");
+ h.run("convertFriscoZones=j=>Array.isArray(j)&&j[0].source==='synthetic-current'?[{properties:{school:'SYNTHETIC'}}]:[]");
  await h.ctx.loadBoundaryData(['FISD']);
  assert.equal(h.run('state.zoneData.FISD.length'),1);
  assert.equal(h.run('state.sourceStatus.FISD.polygon'),'ready');
  assert.equal(h.run('state.zoneLoadErrors.FISD'),undefined);
+});
+
+test('McKinney live Finder polygon source JSON makes all E/M/H school levels ready',async()=>{
+ const zones=[
+  ...Array.from({length:17},(_,i)=>({properties:{gradeLevel:'elementary',school:'E'+i}})),
+  ...Array.from({length:5},(_,i)=>({properties:{gradeLevel:'middle',school:'M'+i}})),
+  ...Array.from({length:3},(_,i)=>({properties:{gradeLevel:'high',school:'H'+i}}))
+ ];
+ const raw={operationalLayers:[{title:'Elementary Boundaries',featureCollection:{
+  layers:[{featureSet:{features:Array.from({length:17},()=>({attributes:{SCHL_YEAR:'2026-27'}}))}}]
+ }}]};
+ const h=context(url=>String(url).includes('23b28d101ba947498650f6c7b9ef251b')
+  ?Promise.resolve(response(raw))
+  :Promise.reject(new Error('unrelated source not requested')));
+ h.ctx.__syntheticMcKinneyZones=zones;
+ h.run('convertMetrostudyZones=()=>__syntheticMcKinneyZones');
+ await h.ctx.loadBoundaryData(['043907']);
+ assert.equal(h.run("state.sourceStatus['043907'].polygon"),'ready');
+ assert.equal(h.run("state.liveFinder['043907']"),true);
+ assert.equal(h.run("state.zoneData['043907'].length"),25);
+ assert.equal(h.run("state.zoneLoadErrors['043907']"),undefined);
 });
