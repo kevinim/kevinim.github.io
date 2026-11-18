@@ -70,8 +70,8 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
         'Redfin desktop split puts the map to the right of the result/filter rail');
       assert.ok(layout.mapbox.height>=500,'Desktop map retains a large canvas');
     }else{
-      assert.ok(layout.mapbox.top<layout.rail.top,
-        'Mobile map-first presentation keeps map above advanced rail controls');
+      assert.ok(layout.mapbox.top>=layout.rail.top,
+        'Approved address-first mobile layout puts the school/filter rail before map');
     }
     assert.ok(layout.tiles>=0,'Leaflet map stays mounted when Liberty CDN fails');
 
