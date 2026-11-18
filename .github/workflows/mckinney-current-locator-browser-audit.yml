@@ -12,8 +12,8 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: tx-ci-mckinney-current-locator-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   public-locator-audit:
     runs-on: ubuntu-latest
