@@ -100,7 +100,8 @@ function validateManifest(manifest,ui,registry=REGISTRY.DISTRICT_REGISTRY){
    throw Error('keller_2018_19_layer_vintage_incorrect:'+id);
  }
  const nw=byId.get('061911');
- if(nw.verifiedPolygonAcademicYear!=='2026-27'||
+ if(nw.verifiedPolygonAcademicYear!==null||
+    nw.verifiedOfficialFinderAcademicYear!=='2026-27'||
     nw.mapStatus!=='current-official-finder-but-no-licensed-geojson'||
     nw.currentFinderUrl!=='https://www.nisdtx.org/schoolfinder'||
     nw.futureYearApprovedUrl!=='https://www.nisdtx.org/departments/facilities/attendance-boundaries/2027-2028-boundaries'||
