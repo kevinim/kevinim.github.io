@@ -69,6 +69,8 @@ async function main(){
      source:priority.textContent.includes('Campus ID')&&priority.textContent.includes('2026–27'),
      officialLink:link?.href,
      listCount:document.querySelectorAll('#schoolList button.school').length,
+     railText:document.getElementById('schoolList').textContent,
+     verifiedCount:addressSchoolView().schools.length,
      markers:schoolGroup.getLayers().length,
      conditional:home.assignment.status,
      docWidth:document.documentElement.scrollWidth,
@@ -81,7 +83,9 @@ async function main(){
    assert.equal(overview.safe,true,'School name remains inert DOM text');
    assert.equal(overview.source,true);
    assert.match(overview.officialLink,/^https:\/\/portal\.metrostudygis\.com\/arcgis\/apps\/webappviewer\/index\.html\?id=ed198c434d47474b88709e98d1f0a125$/);
-   assert.equal(overview.listCount,0,'Reference names never become assigned-school rows');
+   assert.equal(overview.listCount,3,'Vetted GIS reference names appear as separate school-location rows');
+   assert.match(overview.railText,/GIS 참고 후보 · 배정 미인증/);
+   assert.equal(overview.verifiedCount,0,'GIS reference rows must not become residential assignments');
    assert.equal(overview.markers,0,'Reference names never become assigned-school markers');
    assert.equal(overview.conditional,'conditional-finder-only');
    assert.ok(overview.docWidth<=overview.clientWidth+3,'Mobile/desktop width has no overflow');
