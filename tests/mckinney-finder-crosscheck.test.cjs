@@ -47,6 +47,41 @@ test('official Finder GIS + TEA campus identities are crosschecked without grant
  assert.equal(Object.hasOwn(p.candidates[0],'geometry'),false);
  assert.equal(Object.hasOwn(p.candidates[0],'address'),false);
 });
+test('McKinney Bennett/Dowell/Boyd short GIS labels link to unique official TEA campus locations',()=>{
+ const f=fixture();
+ // Production locations are imported by TEA+NCES, and can lack the ID on the
+ // directory object even though the 9-digit ID is present in the ratings.
+ f.schools=[
+  {name:'DEAN AND MILDRED BENNETT EL',type:'elementary',district:'043907',ll:[33.186041,-96.717459]},
+  {name:'DOWELL MIDDLE',type:'middle',district:'043907',ll:[33.196628,-96.695767]},
+  {name:'MCKINNEY BOYD H S',type:'high',district:'043907',ll:[33.202935,-96.678444]}
+ ];
+ f.ratings=[
+  {id:'043907120',name:'DEAN AND MILDRED BENNETT EL',district:'043907',rating:'B'},
+  {id:'043907043',name:'DOWELL MIDDLE',district:'043907',rating:'A'},
+  {id:'043907007',name:'MCKINNEY BOYD H S',district:'043907',rating:'A'}
+ ];
+ f.raw.features=[feature('elementary','BENNETT'),feature('middle','DOWELL'),feature('high','BOYD')];
+ const result=api.crosscheck(f);
+ assert.equal(result.kind,'reference-only');
+ assert.equal(result.independentOfficialAddressVerified,false);
+ assert.deepEqual(result.candidates.map(x=>x.matchedSchool?.name),f.schools.map(x=>x.name));
+ assert.deepEqual(result.candidates.map(x=>x.campusId),['043907120',null,'043907007']);
+ assert.deepEqual(result.candidates.map(x=>x.verifiedRating),['B',null,'A']);
+ assert.deepEqual(result.candidates.map(x=>x.level),['elementary','middle','high']);
+ assert.equal(result.directoryMatched,3);
+ // Conflicting publisher identity is never silently replaced with a local alias.
+ f.raw.features[0].properties.campusId='043907999';
+ assert.equal(api.crosscheck(f).code,'identity-conflict');
+ delete f.raw.features[0].properties.campusId;
+ f.schools.push({...f.schools[2]});
+ assert.equal(api.crosscheck(f).code,'identity-conflict');
+ f.schools.pop();
+ f.ratings[2].name='UNRELATED HIGH';
+ const unlinked=api.crosscheck(f);
+ assert.equal(unlinked.kind,'reference-only');
+ assert.equal(unlinked.candidates[2].matchedSchool,null,'Alias requires independently matching TEA school name');
+});
 test('the exact district-linked MetroStudy Finder is accepted; lookalike routes are not',()=>{
  const f=fixture();
  f.registry['043907'].official=FINDER;
