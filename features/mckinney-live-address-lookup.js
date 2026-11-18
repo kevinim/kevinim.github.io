@@ -8,6 +8,9 @@
 })(typeof window!=='undefined'?window:null,function(){
  const URL='https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/23b28d101ba947498650f6c7b9ef251b/data?f=json';
  const LEVELS=['elementary','middle','high'];
+ // The publisher's planning-area layers can contain non-zoned placeholders and
+ // many geometry pieces per school; source identity is checked after conversion.
+ const MAX_ZONE_PIECES=5000;
  const FIELDS=[['Elementary Boundaries','ELEM_NAME','elementary'],['Middle Boundaries','MID_NAME','middle'],['High Boundaries','HIGH_NAME','high']];
  const normal=s=>String(s||'').toLowerCase().replace(/\b(?:dr|doctor|elementary|elem|el|middle|mid|high|school|campus|hs|ms)\b/g,'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
  const year=s=>typeof s==='string'&&/^\d{4}[-–]\d{2}$/.test(s)?s.replace('–','-'):null;
@@ -24,16 +27,19 @@
   for(const [title,field,level] of FIELDS){
    const layers=map.operationalLayers.filter(l=>l?.title===title);
    const records=layers[0]?.featureCollection?.layers?.[0]?.featureSet?.features;
-   if(layers.length!==1||!Array.isArray(records)||!records.length||records.length>300||
-      records.some(f=>typeof f?.attributes?.[field]!=='string'||!f.attributes[field].trim()||
-       !Array.isArray(f?.geometry?.rings)||!f.geometry.rings.length))
-    return fail('source-conflict','invalid-layer','공식 '+level+' GIS 원본 구조가 변경됐습니다.');
-   if(level==='elementary'&&records.some(f=>f.attributes.SCHL_YEAR!=='2026-27'))
+   if(layers.length!==1||!Array.isArray(records)||!records.length||records.length>MAX_ZONE_PIECES)
+    return fail('source-conflict','invalid-layer','공식 '+level+' GIS 원본을 검증하지 못했습니다.');
+   // Keep the converter's intentional exclusion of nameless/unassigned pieces.
+   // Never ignore malformed geometry or a wrong school year on a named zone.
+   const named=records.filter(f=>typeof f?.attributes?.[field]==='string'&&f.attributes[field].trim());
+   if(!named.length||named.some(f=>!Array.isArray(f?.geometry?.rings)||!f.geometry.rings.length))
+    return fail('source-conflict','invalid-layer','공식 '+level+' GIS 유효 학교 경계를 검증하지 못했습니다.');
+   if(level==='elementary'&&named.some(f=>f.attributes.SCHL_YEAR!=='2026-27'))
     return fail('source-conflict','stale-elementary','초등 GIS 경계 학년도 불일치');
   }
   let zones;
   try{zones=convert(map)}catch{return fail('source-conflict','conversion-failed','공식 GIS 변환 실패')}
-  if(!Array.isArray(zones)||zones.length<23||zones.length>300)
+  if(!Array.isArray(zones)||zones.length<23||zones.length>MAX_ZONE_PIECES)
    return fail('source-conflict','invalid-conversion','공식 GIS 학교 구역 수 이상');
   for(const [level,min] of [['elementary',15],['middle',5],['high',3]]){
    const n=new Set(zones.filter(f=>f?.properties?.gradeLevel===level).map(f=>normal(f.properties.school))).size;

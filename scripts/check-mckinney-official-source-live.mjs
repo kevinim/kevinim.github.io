@@ -2,6 +2,7 @@
 // McKinney public official source-year/name crosscheck. No residential addresses.
 // Optional live network QA; NEVER certifies a house-to-enrollment assignment.
 import {readFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
 const adopted=JSON.parse(readFileSync(new URL('../data/mckinney-2026-27-adopted-map-names.json',import.meta.url),'utf8'));
 const METRO='https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/23b28d101ba947498650f6c7b9ef251b/data?f=json';
 const LOCATOR_CONFIG='https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/ed198c434d47474b88709e98d1f0a125/data?f=json';
@@ -67,6 +68,43 @@ for(const level of ['elementary','middle','high']){
  }
  adoptedNames[level]={adoptedPdf:adopted.sources[level],matched:actual.size,expected:expected.size};
 }
+// Execute the *production* raw-layer structure guard against the live source,
+// without any private residential point or claim about street-level placement.
+// Synthetic geometry is used ONLY to exercise the public data-shape contract;
+// actual school polygons and enrollment remain outside this check.
+const liveLookup=createRequire(import.meta.url)('../features/mckinney-live-address-lookup.js');
+const sourceZones=[];
+const selectedFeatures=[];
+const sourcePieceCounts={};
+for(const [layerTitle,field,level] of layers){
+ const raw=map.operationalLayers.find(x=>x.title===layerTitle)
+  ?.featureCollection?.layers?.[0]?.featureSet?.features||[];
+ sourcePieceCounts[level]=raw.length;
+ const unique=new Map();
+ for(const f of raw){
+  const name=f?.attributes?.[field];
+  if(typeof name!=='string'||!name.trim())continue;
+  const key=normal(name);
+  if(!unique.has(key))unique.set(key,f);
+ }
+ let first=true;
+ for(const f of unique.values()){
+  const zone={properties:{gradeLevel:level,school:f.attributes[field],campusId:null,
+   sourceYearRaw:f.attributes.SCHL_YEAR??null},geometry:{type:'Polygon',selected:first}};
+  sourceZones.push(zone);
+  if(first)selectedFeatures.push(zone);
+  first=false;
+ }
+}
+const structure=liveLookup.compare({map,point:[-96.6,33.18],
+ localCandidate:{district:'043907',status:'finder-current',features:selectedFeatures},
+ convert:()=>sourceZones,contains:(_point,geom)=>geom.selected===true});
+if(structure.kind!=='source-matched'){
+ console.error('MCKINNEY_LIVE_GIS_REQUERY_NO_GO '+JSON.stringify({code:structure.code,
+  sourcePieceCounts}));process.exit(1);
+}
+console.log('MCKINNEY_LIVE_GIS_REQUERY_SCHEMA_OK '+JSON.stringify({sourcePieceCounts,
+ countByLevel:names,actualAddressTested:false}));
 const result={status:'SOURCE_SCHEMA_REVIEW',source:'McKinney live MetroStudy Finder + district-published 2026-27 interactive boundary map',
  levels:names,yearValues:years,
  nameAgreementCount:matches,comparedToOfficialHTML:true,
