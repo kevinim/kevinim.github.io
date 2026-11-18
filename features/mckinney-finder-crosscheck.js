@@ -10,6 +10,12 @@
  const LEVELS=Object.freeze(['elementary','middle','high']);
  const LABELS=Object.freeze({elementary:'초등',middle:'중등',high:'고등'});
  const SOURCE='McKinney ISD 2026–27 School Zone Finder 공개 GIS';
+ // Both links are explicitly published district routes. The live Finder is
+ // MetroStudy, not on mckinneyisd.net; accept only these exact vetted URLs.
+ const OFFICIAL_ROUTES=new Set([
+  'https://www.mckinneyisd.net/page/attendance-zones-maps/',
+  'https://portal.metrostudygis.com/arcgis/apps/webappviewer/index.html?id=ed198c434d47474b88709e98d1f0a125'
+ ]);
  const normalize=value=>String(value||'').toLowerCase()
   .replace(/\b(?:dr|doctor|elementary|elem|el|middle|mid|high|school|campus|hs|ms)\b/g,'')
   .replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
@@ -30,7 +36,7 @@
    return unavailable('McKinney 공식 Finder의 현재 경계 데이터를 불러오지 못했습니다.','live-source-unavailable');
   const rawUrl=registry?.[DISTRICT]?.official;
   const safeUrl=typeof official==='function'?official(rawUrl):null;
-  if(typeof safeUrl!=='string'||!safeUrl.startsWith('https://www.mckinneyisd.net/'))
+  if(typeof safeUrl!=='string'||safeUrl!==rawUrl||!OFFICIAL_ROUTES.has(safeUrl))
    return unavailable('교육청 공식 주소 검색 링크를 안전하게 검증하지 못했습니다.','official-link-failed');
   if(!Array.isArray(raw.features)||raw.features.length===0||raw.features.length>12)
    return unavailable('공식 GIS의 학교 경계 정보가 누락되었거나 비정상적입니다.','invalid-features');
@@ -71,15 +77,20 @@
    const campusId=typeof p.campusId==='string'&&/^043907\d{3}$/.test(p.campusId)?p.campusId:null;
    const byName=schools.filter(s=>s?.district===DISTRICT&&s.type===level&&normalize(s.name)===key);
    const byId=campusId?schools.filter(s=>s?.district===DISTRICT&&s.type===level&&s.id===campusId):[];
-   const teaById=campusId?ratings.filter(x=>x?.district===DISTRICT&&x.id===campusId):[];
+   // TEA rating rows may not carry a level; normalized common names can
+   // collide across elementary/middle/high. Narrow name-only joins by the
+   // uniquely matched district campus ID before labeling them as TEA matches.
+   const matched=byId.length===1?byId[0]:byName.length===1?byName[0]:null;
+   const teaById=campusId?ratings.filter(x=>x?.district===DISTRICT&&x.id===campusId&&
+    (!x.type||x.type===level)):[];
    const teaByName=ratings.filter(x=>x?.district===DISTRICT&&
     (!x.type||x.type===level)&&
-    (normalize(x.name)===key||normalize(x.officialName)===key));
+    (normalize(x.name)===key||normalize(x.officialName)===key)&&
+    (x.type===level||(matched?.id&&x.id===matched.id)));
    if(byId.length>1||byName.length>1||teaById.length>1||
       (byId.length===1&&byName.length===1&&byId[0]!==byName[0])||
       (teaById.length===1&&teaByName.length===1&&teaById[0]!==teaByName[0]))
     return unavailable('McKinney GIS 학교 ID와 TEA 학교명이 서로 다른 기록을 가리키거나 중복되었습니다.','identity-conflict');
-   const matched=byId.length===1?byId[0]:byName.length===1?byName[0]:null;
    const ratingById=teaById.length===1?teaById[0]:null;
    const ratingByName=teaByName.length===1?teaByName[0]:null;
    const identityKind=ratingById?'TEA-campus-id':
