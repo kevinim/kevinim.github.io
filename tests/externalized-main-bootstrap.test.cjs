@@ -330,7 +330,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  expected=replaceOnce(expected,'<link rel="stylesheet" href="./features/first-fold-ux.css?v=1">',
   '<link rel="stylesheet" href="./features/first-fold-ux.css?v=1"><link rel="stylesheet" href="./features/school-reference-preview.css?v=1">');
  expected=replaceOnce(expected,'<script src="./features/conditional-school-release.js?v=1"></script>',
-  '<script src="./features/conditional-school-release.js?v=1"></script>\n<script src="./features/school-reference-preview.js?v=1"></script>');
+  '<script src="./features/conditional-school-release.js?v=1"></script>\n<script src="./features/school-reference-preview.js?v=2"></script>');
  // Performance release: the six adjacent CSS links are replaced, in-place,
  // by their exact ordered concatenation (separately checked in bundle QA).
  const oldCss=['theme-toggle.css','map-control-contrast.css','track-b-reference-warning.css',
