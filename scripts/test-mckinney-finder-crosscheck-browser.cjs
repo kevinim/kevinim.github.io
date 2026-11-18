@@ -123,7 +123,7 @@ async function main(){
       cards:document.querySelectorAll('#homeAssignmentPrioritySchools .home-assignment-school').length};
    });
    assert.equal(stale.cards,2,'Stale middle school source is removed; current E/H remain');
-   assert.match(stale.status,/GIS 기준 예상 배정학교 · 최종 확인 별도/);
+   assert.match(stale.status,/GIS 기준 예상 배정학교/,'GIS estimate status persists during asynchronous source recheck');
    assert.match(stale.description,/미확인 학교급: 중등/,'Stale middle grade must be disclosed');
    const wrong=await page.evaluate(()=>{
     window.__mckinneyRaw.district='FISD';
