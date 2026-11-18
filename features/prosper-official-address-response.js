@@ -69,7 +69,7 @@
    const code=normalizeCode(s?.schoolCode),p=zones.get(code);
    if(!p||usedCodes.has(code)||usedLevels.has(p.gradeLevel)||
     typeof s.schoolName!=='string'||!s.schoolName.trim()||
-    s.schoolName.length>150)return fail('unmatched-or-duplicate-official-school');
+    s.schoolName.length>150||/[<>\r\n]/.test(s.schoolName))return fail('unmatched-or-duplicate-official-school');
    usedCodes.add(code);usedLevels.add(p.gradeLevel);
    matched.push(Object.freeze({level:p.gradeLevel,schoolCode:code,
     campusId:p.campusId,officialName:s.schoolName.trim(),zoneName:p.school}));
