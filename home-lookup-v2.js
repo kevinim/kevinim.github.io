@@ -268,7 +268,7 @@ function renderHome(){
    raw:rawSchoolCandidate,geocodePrecise:home.geocodeQuality?.usableForSchoolCandidate===true,
    sourceLive:state.liveFinder?.['043907']===true,
    registry:DISTRICT_REGISTRY,official:window.TrustedLinkPolicy?.official,
-   schools:state.schools
+   schools:state.schools,ratings:state.ratings||[]
   })||null;
   const referenceControl=referencePlan?.kind==='reference-only'
    ?'<div class="home-reference-control"><button id="homeReferencePreviewToggle" class="mini-btn" type="button" aria-controls="homeReferencePreviewResult" aria-expanded="'+(home.referencePreviewRequested?'true':'false')+'">GIS 참고 후보 직접 보기 · 실제 배정 미인증</button><div id="homeReferencePreviewResult" role="status" aria-live="polite"></div></div>'
