@@ -61,13 +61,21 @@ test('missing year on middle/high is clearly not described as 2026–27 verified
  assert.equal(p.candidates[1].yearStatus,'year-not-on-feature');
  assert.match(p.candidates[1].yearNote,/학년도 미표기/);
 });
-test('older middle or high boundary aborts all school references',()=>{
+test('older middle or high boundary is removed but valid school levels remain with warning',()=>{
  for(const level of ['middle','high']){
   const f=fixture();
   f.raw.features.find(x=>x.properties.gradeLevel===level).properties.sourceYearRaw='2025-26';
   const p=api.crosscheck(f);
-  assert.equal(p.kind,'unavailable');assert.equal(p.code,'stale-source-year');
+  assert.equal(p.kind,'reference-only');
+  assert.equal(p.complete,false);
+  assert.equal(p.candidates.length,2);
+  assert.ok(!p.candidates.some(x=>x.level===level));
+  assert.ok(p.sourceWarnings.some(x=>x.includes('2025-26')));
+  assert.ok(p.missing.includes(level==='middle'?'중등':'고등'));
  }
+ const f=fixture();
+ f.raw.features.forEach(x=>x.properties.sourceYearRaw='2025-26');
+ assert.equal(api.crosscheck(f).code,'stale-source-year');
 });
 test('missing grade is explicitly disclosed rather than made up',()=>{
  const f=fixture();f.raw.features=f.raw.features.slice(0,2);
