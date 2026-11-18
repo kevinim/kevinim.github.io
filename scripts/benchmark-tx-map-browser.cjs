@@ -27,6 +27,11 @@ const mapFirstAdded=[
  './features/map-first-split.css?v=2',
  './features/map/liberty-basemap.js?v=1'
 ].filter(asset=>candidateHtml.includes(asset)&&!baselineHtml.includes(asset)).length;
+// Explicitly scoped additions to the address-first, source-preserving UI.
+const quickLayoutAdded=[
+ './features/dashboard-quick-layout.css?v=1',
+ './features/dashboard-quick-layout.js?v=1'
+].filter(asset=>candidateHtml.includes(asset)&&!baselineHtml.includes(asset)).length;
 function local(url){
  const parsed=new URL(url);
  return ['127.0.0.1','localhost'].includes(parsed.hostname);
@@ -147,8 +152,8 @@ function percent(base,next){
    // Only allow the audited guard if it is actually new relative to this baseline;
    // keep the existing +5 budget otherwise, and do not permit arbitrary addons.
 
-   assert.ok(after.resourceRequests<=before.resourceRequests+5+providerAdded+mapFirstAdded,
-    'Unexpected extra first-party asset requests beyond approved provider guard: '+JSON.stringify(row));
+   assert.ok(after.resourceRequests<=before.resourceRequests+5+providerAdded+mapFirstAdded+quickLayoutAdded,
+    'Unexpected extra first-party requests beyond reviewed provider and quick-layout assets: '+JSON.stringify(row));
    assert.ok(after.transferBytes<=before.transferBytes*1.2+262144,
     'Unexpected first-party resource byte growth: '+JSON.stringify(row));
   }
