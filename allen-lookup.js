@@ -72,6 +72,6 @@ if (typeof document !== 'undefined') {
   fetch('./allen-district-census-2026.geojson').then(r=>{if(!r.ok)throw Error('district data');return r.json()}).then(data=>{if(data.type!=='FeatureCollection'||!data.features?.length)throw Error('district format');allenDistrict=data;window.refreshCandidateComparisons?.();if(typeof refreshHomeSchools==='function')refreshHomeSchools()}).catch(error=>console.error('Allen district boundary:',error));
   fetch('./allen-address-schools.json').then(r => { if (!r.ok) throw Error('Allen address data'); return r.json(); }).then(data => {
     if (!Array.isArray(data.rows)) throw Error('Allen address data format');
-    allenRows = data.rows; window.refreshCandidateComparisons?.(); if (typeof refreshHomeSchools === 'function') refreshHomeSchools();
+    allenRows = data.rows; window.refreshCandidateComparisons?.(); if (typeof refreshHomeSchools === 'function') refreshHomeSchools(); if(typeof refreshAllenNoGeocodeReference==='function')refreshAllenNoGeocodeReference();
   }).catch(error => { allenRows = []; allenFailed = true; console.error('Allen address lookup:', error); window.refreshCandidateComparisons?.(); if (typeof refreshHomeSchools === 'function') refreshHomeSchools(); });
 }
