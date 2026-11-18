@@ -32,7 +32,7 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
 // One new self-hosted, review-scoped McKinney official Finder crosscheck module.
 // Strip only the exact new script tag when comparing to frozen historical HTML.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
- '<script src="./features/mckinney-finder-crosscheck.js?v=4"></script>','');
+ '<script src="./features/mckinney-finder-crosscheck.js?v=3"></script>','');
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<script src="./features/mckinney-live-address-lookup.js?v=2"></script>','');
 // Address-first UI: subtract ONLY exact approved main-page UI/cache deltas.
@@ -44,8 +44,9 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,priorityElement[0],
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<div id="schoolAddressNotice" class="home-school-address-note" role="status" aria-live="polite" hidden></div>','');
 for(const [next,previous] of [
+ ['<input type="checkbox" id="referenceBoundaryOverlay" checked>','<input type="checkbox" id="referenceBoundaryOverlay">'],
  ['map-first-split.css?v=2','map-first-split.css?v=1'],
- ['dashboard-main.js?v=16','dashboard-main.js?v=10'],
+ ['dashboard-main.js?v=17','dashboard-main.js?v=10'],
  ['home-lookup-v2.js?v=25','home-lookup-v2.js?v=20'],
  ['home-school-manual-bridge.js?v=3','home-school-manual-bridge.js?v=1']
 ])normalizedMainHtml=replaceOnce(normalizedMainHtml,next,previous);
@@ -211,7 +212,34 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
   assert.ok(i>0&&j>i&&bi>0&&bj>bi,'Scoped GIS candidate region present: '+start);
   return replaceOnce(candidate,candidate.slice(i,j),baseline.slice(bi,bj));
  };
+ const referencePolicyBaseline=show('4ff3091379d983a8aa2cacc3ff031928f3e99ff1','dashboard-main.js');
  let reviewedReferenceJs=js;
+ // Scope the 2026-11-18 owner-approved historical GIS display change to five
+ // exact fragments. The remaining main renderer must byte-match its PR parent.
+ for(const [newFragment,oldFragment] of [
+  [
+    "showHistoric:true,showOldZones:true,",
+    "showHistoric:true,showOldZones:false,"
+  ],
+  [
+    " const sourceVintage=[...new Set((match.features||[]).map(f=>f.properties?.sourceVintage).filter(Boolean))].join(', ');\n const value={...status,officialUrl,officialKind,officialNote,match,sourceVintage};",
+    " const value={...status,officialUrl,officialKind,officialNote,match};"
+  ],
+  [
+    "const vintage=zone.sourceVintage?'<div class=\"source\" data-boundary-source-vintage>GIS 원본 연도: '+escape(zone.sourceVintage)+(s.district==='AISD'?' · GIS 갱신연도(최초 공개일 미확인)':'')+' · '+(zone.kind==='current'?'공식 학년도 확인':zone.kind==='finder'?'공식 Finder 연결 · 현행성 별도 확인':'과거 참고 경계 · 현재 배정 미인증')+'</div>':'';",
+    ""
+  ],
+  [
+    "</span></div>${vintage}<div class=\"muted\">",
+    "</span></div><div class=\"muted\">"
+  ],
+  [
+    "공식 GIS 참고 경계 · 원본 표기 '+escape(yrs)+(s.district==='AISD'?' · 갱신연도(최초 공개일 미확인)':'')+' · 현재 배정 미인증</b> · 주황색 점선",
+    "과거 GIS 경계 '+escape(yrs)+' (현재 배정 보장 X)</b> · 주황색 점선"
+  ]
+])reviewedReferenceJs=replaceOnce(reviewedReferenceJs,newFragment,oldFragment);
+ assert.equal(hash(reviewedReferenceJs),hash(referencePolicyBaseline),
+  'Historical GIS default/year labels are the only changes outside the previously reviewed address-school regions');
  for(const [start,end] of [
   ['function addressSchoolView(){',' function drawSchools(){'],
   [' function drawSchools(){','function drawHomeAssignmentMap(){'],
