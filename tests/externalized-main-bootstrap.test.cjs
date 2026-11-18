@@ -15,6 +15,10 @@ const rawHtml=fs.readFileSync(path.join(root,'index.html'),'utf8');
 // Redfin split and Liberty pilot: undo only the five named additions before
 // comparing the rest of the protected historical HTML byte-for-byte.
 let normalizedMainHtml=rawHtml;
+// One new self-hosted, review-scoped McKinney official Finder crosscheck module.
+// Strip only the exact new script tag when comparing to frozen historical HTML.
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ '<script src="./features/mckinney-finder-crosscheck.js?v=1"></script>','');
 // Address-first UI: subtract ONLY exact approved main-page UI/cache deltas.
 const priorityElement=normalizedMainHtml.match(/<div id="homeCandidates"><\/div><section id="homeAssignmentPriority" class="home-assignment-priority"[\s\S]*?<\/section><\/div><div class="panel office-controls">/);
 assert.ok(priorityElement&&priorityElement[0].includes('id="homeAssignmentPrioritySchools"'),
