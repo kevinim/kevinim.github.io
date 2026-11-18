@@ -91,7 +91,7 @@ test('production UI shows address-first panel and moves commute below map/result
  assert.match(html,/map-first-split\.css\?v=2/);
  assert.match(html,/dashboard-main\.js\?v=13/);
  assert.match(html,/home-lookup-v2\.js\?v=24/);
- assert.match(html,/home-school-manual-bridge\.js\?v=2/);
+ assert.match(html,/home-school-manual-bridge\.js\?v=3/);
  assert.match(css,/\.shell>\.controls-grid>\.office-controls\{order:90/);
  assert.match(css,/\.shell>\.footer\{order:100/);
  assert.match(source,/let items=view\?view\.schools\.slice\(\):state\.schools/);
