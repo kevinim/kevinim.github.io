@@ -34,7 +34,7 @@
    return unavailable('교육청 공식 주소 검색 링크를 안전하게 검증하지 못했습니다.','official-link-failed');
   if(!Array.isArray(raw.features)||raw.features.length===0||raw.features.length>12)
    return unavailable('공식 GIS의 학교 경계 정보가 누락되었거나 비정상적입니다.','invalid-features');
-  const byLevel=new Map();
+  const byLevel=new Map(),excludedYears=new Map();
   for(const feature of raw.features){
    const p=feature?.properties,geom=feature?.geometry;
    const level=p?.gradeLevel,school=String(p?.school||'').trim();
@@ -45,8 +45,14 @@
    // SCHL_YEAR is provider metadata. Only elementary has an independent
    // feature-year verification gate in the current application.
    const year=cleanYear(p.sourceYearRaw)||cleanYear(p.sourceYear);
-   if((p.sourceYearRaw!=null&&!year)||year&&year!==YEAR)
-    return unavailable('GIS 학년도가 2026–27과 다르거나 출처 표기가 유효하지 않습니다.','stale-source-year');
+   if((p.sourceYearRaw!=null&&!year)||(year&&year!==YEAR)){
+    // Fail closed per school level rather than removing independently valid
+    // elementary/middle/high evidence from the entire result.
+    excludedYears.set(level,String(p.sourceYearRaw||p.sourceYear||'미표기'));
+    byLevel.delete(level);
+    continue;
+   }
+   if(excludedYears.has(level))continue;
    if(byLevel.has(level)){
     const prior=byLevel.get(level);
     if(normalize(prior.school)!==normalize(school)||prior.year!==year)
@@ -95,11 +101,16 @@
      yearStatus==='finder-year-labelled'?'2026–27 Finder 원문 표기 · 독립 대조 전':
       '학교급 GIS 자체 학년도 미표기 · 별도 확인 필요'}));
   }
-  if(!result.length)return unavailable('초·중·고 경계에서 확인 가능한 학교가 없습니다.','no-campus-match');
+  if(!result.length)return unavailable(
+   excludedYears.size?'초·중·고 GIS 원본 학년도 불일치로 확인 가능한 학교가 없습니다.':
+   '초·중·고 경계에서 확인 가능한 학교가 없습니다.',
+   excludedYears.size?'stale-source-year':'no-campus-match');
   const missing=LEVELS.filter(level=>!byLevel.has(level)).map(level=>LABELS[level]);
   return Object.freeze({kind:'reference-only',district:DISTRICT,
    source:SOURCE,sourceYear:'2026–27 Finder / 학교급별 표시 별도',officialUrl:safeUrl,
    candidates:Object.freeze(result),missing:Object.freeze(missing),
+   sourceWarnings:Object.freeze([...excludedYears].map(([level,year])=>
+    LABELS[level]+' GIS 원본 '+year+' : 2026–27로 인증되지 않아 제외')),
    identityMatched:result.filter(x=>x.identityKind==='TEA-campus-id').length,
    directoryMatched:result.filter(x=>x.linked).length,
    complete:result.length===3,independentOfficialAddressVerified:false,
