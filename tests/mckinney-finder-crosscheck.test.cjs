@@ -132,3 +132,38 @@ test('source never logs or persists residential address; existing hard NO-GO rem
  assert.equal(policy.releaseSummary().currentYearResidentialDistrictApprovals,0);
  assert.equal(policy.releaseSummary().automaticSchoolAssignment,'NO_GO');
 });
+
+test('one-click official locator URL pre-fills an explicitly selected public address only after consent',()=>{
+ const address='1400 Wilson Creek Pkwy, McKinney, TX 75069';
+ const allowed={district:'043907',officialUrl:FINDER,homeAddress:address,
+  usableForSchoolCandidate:true,explicitClick:true};
+ const destination=api.officialAddressHandoff(allowed);
+ assert.equal(typeof destination,'string');
+ const url=new URL(destination);
+ assert.equal(url.origin,'https://portal.metrostudygis.com');
+ assert.equal(url.pathname,'/arcgis/apps/webappviewer/index.html');
+ assert.equal(url.searchParams.get('id'),'ed198c434d47474b88709e98d1f0a125');
+ assert.equal(url.searchParams.get('find'),address);
+ assert.equal(url.searchParams.size,2,'No coordinates or tracking identifiers');
+ for(const change of [
+  {explicitClick:false},{usableForSchoolCandidate:false},{district:'FISD'},
+  {officialUrl:'https://evil.invalid/arcgis/apps/webappviewer/index.html?id=ed198c434d47474b88709e98d1f0a125'},
+  {officialUrl:SOURCE},{homeAddress:'McKinney, TX'},{homeAddress:'1421 Fake Road, NY'},
+  {homeAddress:'12 Main St, McKinney, TX\nextra'},{homeAddress:'A'.repeat(200)+' McKinney TX'}
+ ]){
+  assert.equal(api.officialAddressHandoff({...allowed,...change}),null,JSON.stringify(change).slice(0,50));
+ }
+});
+test('dashboard exposes click-only address handoff with explicit third-party address disclosure',()=>{
+ const fs=require('node:fs');
+ const s=fs.readFileSync('home-lookup-v2.js','utf8');
+ assert.match(s,/mckinneyOfficialAddressSearch/);
+ assert.match(s,/explicitClick:true/);
+ assert.match(s,/window\.open\(url,'_blank','noopener,noreferrer'\)/);
+ assert.match(s,/클릭하면 선택한 주소가 MetroStudy/);
+ assert.doesNotMatch(s.slice(s.indexOf('function wireCompactHomeFinder(){'),
+  s.indexOf('// Preserve advanced tools across a same-home asynchronous redraw.')),
+  /localStorage|sessionStorage|console\.log|fetch\(/);
+ assert.equal(require('../features/conditional-school-release.js')
+  .releaseSummary().currentYearResidentialDistrictApprovals,0);
+});
