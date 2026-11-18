@@ -72,6 +72,6 @@ test('source-vintage, campus-ID and duplicated GIS identifiers cannot be silentl
 test('untrusted response HTML is data only and never creates an enrollment grant',()=>{
  const p=payload();p.schools[0].schoolName='<img src=x onerror=alert(1)>';
  const r=api.verify(input,p,original);
+ assert.equal(r.status,'not-verified','active HTML markup is rejected by official-result adapter');
  assert.equal(r.enrollmentCertified,false);
- assert.equal(r.schools[2].officialName,p.schools[0].schoolName);
 });
