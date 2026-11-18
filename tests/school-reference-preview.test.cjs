@@ -56,6 +56,24 @@ test('explicit stale or unconfirmed school feature year cannot be elevated by di
  valid.properties.schoolYear='2026–27';
  assert.equal(plan({...candidate(),features:[valid]}).kind,'reference-only');
 });
+test('Prosper official GIS campus IDs are forwarded without upgrading residential certification',()=>{
+ const f=school('elementary','JUDY RUCKER EL');
+ Object.assign(f.properties,{sourceDistrict:'PROSPER',current:true,sourceYearConfirmed:true,
+  sourceVintage:'2026–27',schoolYear:'2026–27',campusId:'043912102',schoolCode:'102'});
+ const raw={district:'PROSPER',status:'current',features:[f]};
+ const result=plan(raw);
+ assert.equal(result.kind,'reference-only');
+ assert.equal(result.candidates[0].campusId,'043912102');
+ assert.equal(result.candidates[0].schoolCode,'102');
+ assert.equal(result.warning.includes('실제 배정 미인증')||result.warning.includes('실제 주소별 배정학교가 아닙니다'),true);
+ assert.equal(policy.apply(raw).status,'conditional-finder-only');
+ for(const patch of [{campusId:'043907102'},{schoolCode:'bad'},{sourceVintage:'2025–26'}]){
+  const changed={...f,properties:{...f.properties,...patch}};
+  assert.equal(plan({...raw,features:[changed]}).kind,'unavailable',
+   'Invalid Prosper source identity must not enter an address card');
+ }
+});
+
 test('Frisco Nelson and McKinney transfer exceptions must not be silently hidden',()=>{
  const nelson=candidate();
  nelson.features[1].properties.school='Nelson Middle School';
