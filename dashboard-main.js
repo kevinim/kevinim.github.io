@@ -647,9 +647,13 @@ function referenceCandidateSchoolLocations(view){
 let referenceCampusGroup=null;
 function drawReferenceCampusMarkers(view){
  if(!map)return 0;
+ if(!state.showSchools||!home?.geocodeQuality?.usableForSchoolCandidate||
+    !['gis-reference','mckinney-reference'].includes(view?.kind)){
+  referenceCampusGroup?.clearLayers();
+  return 0;
+ }
  if(!referenceCampusGroup)referenceCampusGroup=L.layerGroup().addTo(map);
  referenceCampusGroup.clearLayers();
- if(!state.showSchools||!home?.geocodeQuality?.usableForSchoolCandidate)return 0;
  const candidates=referenceCandidateSchoolLocations(view);
  for(const school of candidates){
   const rawRating=scoreRecord(school.name,school.district)?.rating;
