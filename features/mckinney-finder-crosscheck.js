@@ -81,7 +81,13 @@
    if(!item)continue;
    const p=item.properties;
    const key=normalize(item.school);
-   const campusId=typeof p.campusId==='string'&&/^043907\d{3}$/.test(p.campusId)?p.campusId:null;
+   // A present but malformed provider ID is not equivalent to a missing ID.
+   // Otherwise a changed source schema could silently fall through to an alias.
+   const providerId=p.campusId;
+   if(providerId!==null&&providerId!==undefined&&providerId!==''&&
+      (typeof providerId!=='string'||!/^043907[0-9]{3}$/.test(providerId)))
+    return unavailable('공식 GIS Campus ID 형식 또는 학군 코드가 일치하지 않습니다.','invalid-campus-id');
+   const campusId=providerId||null;
    const byName=schools.filter(s=>s?.district===DISTRICT&&s.type===level&&normalize(s.name)===key);
    const alias=TEA_CAMPUS_ALIASES[level+'|'+key]||null;
    if(alias&&campusId&&campusId!==alias.id)
@@ -111,6 +117,17 @@
     return unavailable('McKinney GIS 학교 ID와 TEA 학교명이 서로 다른 기록을 가리키거나 중복되었습니다.','identity-conflict');
    const ratingById=teaById.length===1?teaById[0]:null;
    const ratingByName=teaByName.length===1?teaByName[0]:null;
+   // Identity gate: neither a truncated GIS name nor a matching directory
+   // name can override a contradictory nine-digit ID. A same-ID directory
+   // row also must agree with its independently loaded official TEA name.
+   if(matched?.id&&resolvedCampusId&&matched.id!==resolvedCampusId)
+    return unavailable('학교 위치 기록의 Campus ID가 공식 TEA 기록과 일치하지 않습니다.','identity-conflict');
+   if(byId.length===1&&ratingById){
+    const officialNames=new Set([ratingById.name,ratingById.officialName]
+     .map(normalize).filter(Boolean));
+    if(officialNames.size&&!officialNames.has(normalize(byId[0].name)))
+     return unavailable('학교 위치 기록의 학교명이 공식 TEA Campus ID와 일치하지 않습니다.','identity-conflict');
+   }
    const identityKind=ratingById?'TEA-campus-id':
     ratingByName?'TEA-name-only':matched?'directory-name-only':'unlinked';
    const verifiedRating=ratingById&&/^[A-F]$|^Not Rated$/.test(ratingById.rating)?

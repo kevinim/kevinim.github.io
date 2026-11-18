@@ -152,12 +152,33 @@ test('duplicate levels, missing schema and campus identity conflicts cannot be m
  f=fixture();f.schools.push({...f.schools[0]});
  assert.equal(api.crosscheck(f).code,'identity-conflict');
  f=fixture();f.raw.features[0].properties.campusId='043907999';
- // A missing ID join still allows unique normalised name comparison,
- // but never marks that provider ID as an independently verified campus.
- const sourceOnly=api.crosscheck(f).candidates[0];
- assert.equal(sourceOnly.linked,true);
- assert.equal(sourceOnly.identityKind,'TEA-name-only');
- assert.equal(sourceOnly.teaCampusId,null,'A contradictory provider ID cannot become a verified TEA ID');
+ // A contradictory valid-format provider ID now fails closed, rather than
+ // falling back to a same-named but different-ID directory location.
+ assert.equal(api.crosscheck(f).code,'identity-conflict');
+});
+test('publisher Campus ID format and district changes must fail closed',()=>{
+ for(const bad of ['04390712','043906101','043907ABC','043907101\\n',43907101]){
+  const f=fixture();f.raw.features[0].properties.campusId=bad;
+  assert.equal(api.crosscheck(f).code,'invalid-campus-id',String(bad));
+ }
+ const absent=fixture();delete absent.raw.features[0].properties.campusId;
+ assert.equal(api.crosscheck(absent).kind,'reference-only','Missing ID is allowed but unverified');
+});
+test('conflicting directory Campus ID cannot use name-only match for a map pin',()=>{
+ const f=fixture();f.schools[0].id='043907999';
+ assert.equal(api.crosscheck(f).code,'identity-conflict');
+});
+test('directory record with correct ID but wrong TEA campus name fails closed',()=>{
+ const f=fixture();f.schools[0].name='UNRELATED ELEMENTARY';
+ assert.equal(api.crosscheck(f).code,'identity-conflict');
+});
+test('curated Bennett alias rejects mislabeled location despite unique campus name',()=>{
+ const f=fixture();
+ f.raw.features[0].properties.school='BENNETT';
+ delete f.raw.features[0].properties.campusId;
+ f.schools[0]={id:'043907999',district:'043907',name:'DEAN AND MILDRED BENNETT EL',type:'elementary',ll:[33.2,-96.7]};
+ f.ratings[0]={id:'043907120',district:'043907',name:'DEAN AND MILDRED BENNETT EL',rating:'B'};
+ assert.equal(api.crosscheck(f).code,'identity-conflict');
 });
 test('source never logs or persists residential address; existing hard NO-GO remains active',()=>{
  const fs=require('node:fs');

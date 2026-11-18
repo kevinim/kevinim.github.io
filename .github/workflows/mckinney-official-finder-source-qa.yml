@@ -12,6 +12,10 @@ on:
       - 'tests/mckinney-finder-crosscheck.test.cjs'
       - '.github/workflows/mckinney-official-finder-source-qa.yml'
   workflow_dispatch:
+  # Ongoing public-source integrity monitoring, not residential assignment QA.
+  # No home address or coordinate is transmitted by this workflow.
+  schedule:
+    - cron: '17 12 * * *'
 concurrency:
   group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
