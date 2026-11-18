@@ -80,7 +80,7 @@ async function main(){
    assert.equal(overview.count,3,'E/M/H source names are shown individually');
    assert.equal(overview.safe,true,'School name remains inert DOM text');
    assert.equal(overview.source,true);
-   assert.match(overview.officialLink,/^https:\/\/www\.mckinneyisd\.net\//);
+   assert.match(overview.officialLink,/^https:\/\/portal\.metrostudygis\.com\/arcgis\/apps\/webappviewer\/index\.html\?id=ed198c434d47474b88709e98d1f0a125$/);
    assert.equal(overview.listCount,0,'Reference names never become assigned-school rows');
    assert.equal(overview.markers,0,'Reference names never become assigned-school markers');
    assert.equal(overview.conditional,'conditional-finder-only');
