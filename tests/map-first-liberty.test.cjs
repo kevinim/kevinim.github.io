@@ -13,7 +13,7 @@ const layout=read('features/map-first-split.css');
 
 test('Liberty default is added to production only, with pinned lazy resources and narrow CSP policy',()=>{
  assert.match(html,/<option value="liberty">Liberty · OpenFreeMap<\/option>/);
- assert.match(html,/<script src="\.\/features\/map\/liberty-basemap\.js\?v=2"><\/script><script src="\.\/dashboard-main\.js\?v=10"><\/script>/);
+ assert.match(html,/<script src="\.\/features\/map\/liberty-basemap\.js\?v=2"><\/script><script src="\.\/dashboard-main\.js\?v=14"><\/script>/);
  assert.match(html,/worker-src 'self' blob:/);
  assert.match(html,/connect-src [^"]*https:\/\/tiles\.openfreemap\.org/);
  assert.match(html,/img-src [^"]*https:\/\/tiles\.openfreemap\.org/);
@@ -27,7 +27,7 @@ test('Liberty default is added to production only, with pinned lazy resources an
 });
 
 test('split layout keeps school list left, map right, and restores a single column on mobile',()=>{
- assert.match(html,/features\/map-first-split\.css\?v=1/);
+ assert.match(html,/features\/map-first-split\.css\?v=2/);
  assert.match(layout,/@media \(min-width: 1060px\)/);
  assert.match(layout,/\.shell>\.main>\.section\s*\{[\s\S]*?grid-column:1/);
  assert.match(layout,/\.shell>\.main>\.mapcol\s*\{[\s\S]*?grid-column:2/);
