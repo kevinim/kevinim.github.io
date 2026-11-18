@@ -52,7 +52,7 @@ async function main(){
     schoolAssignmentFor=()=>candidate;
     home={address:'SYNTHETIC TEST LOCATION',ll:[33.1,-96.8],
       geocodeQuality:{usableForSchoolCandidate:true},parcel:{status:'idle'}};
-    renderHome();
+    renderHome();drawSchools();drawList();
     const box=document.getElementById('homeSchoolInfo');
     const priority=document.getElementById('homeAssignmentPriority');
     return {hasToggle:!!box.querySelector('#homeReferencePreviewToggle'),
