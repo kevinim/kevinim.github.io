@@ -95,6 +95,68 @@ async function run(){
    assert.deepEqual(mckinney.linked,
     ['DEAN AND MILDRED BENNETT EL','DOWELL MIDDLE','MCKINNEY BOYD H S']);
    assert.equal(mckinney.certified,0,'GIS references are not enrollment certification');
+   // Prosper regression: exercise the actual Pages-loaded 2026-27 E/M/H
+   // district GIS and rendered address-first reference cards at both widths.
+   // Use a PUBLIC district office point, never a residential address.
+   await page.waitForFunction(()=>window.schoolBoundaryAuditReady===true&&
+    state.zoneData?.PROSPER?.length===31,null,{timeout:30000});
+   const prosper=await page.evaluate(()=>{
+    const zones=state.zoneData.PROSPER;
+    const counts={elementary:0,middle:0,high:0};
+    for(const zone of zones)counts[zone.properties.gradeLevel]++;
+    const codes=new Set(zones.map(z=>z.properties.campusId));
+    const linked=zones.filter(z=>state.ratings.some(r=>r.district==='PROSPER'&&
+     r.id===z.properties.campusId)).length;
+    const bridge=state.schools.find(s=>s.district==='PROSPER'&&
+     s.name==='Jim Bridges Middle School');
+    const bridgeMatch=bridge&&window.SchoolBoundaryMatch.findSchoolBoundary(
+     bridge,zones,(name,district)=>scoreRecord(name,district));
+    // District headquarters: 605 E 7th St, Prosper. The saved official
+    // Infofinder point-query fixture expects Rucker/Reynolds/Prosper.
+    const facility=[33.239374474268,-96.794813152773];
+    const matches=homeZoneMatches(facility,'PROSPER');
+    const expectedCodes=matches.map(z=>z.properties.schoolCode).sort();
+    const reference=window.SchoolReferencePreview?.plan(
+     {district:'PROSPER',status:'current',features:matches},
+     DISTRICT_REGISTRY,url=>window.TrustedLinkPolicy?.official(url));
+    const previousHome=home;
+    try{
+     home={address:'PUBLIC PROSPER ISD HQ — NOT A RESIDENCE',ll:facility,
+      geocodeQuality:{usableForSchoolCandidate:true},
+      assignment:{status:'conditional-finder-only'},
+      schoolReferencePlan:reference};
+     renderAddressSchoolPriority();
+     const view=addressSchoolView();
+     const cards=[...document.querySelectorAll(
+      '#homeAssignmentPrioritySchools .home-assignment-school')];
+     return {counts,uniqueCampuses:codes.size,teaLinked:linked,
+      bridgeHasNoFabricatedPin:!!bridge&&!Array.isArray(bridge.ll),
+      bridgeZoneMatched:bridgeMatch?.status==='matched'&&bridgeMatch.features.length===1,
+      expectedCodes,referenceKind:reference?.kind,
+      levels:reference?.candidates.map(c=>c.level).sort(),
+      cardNames:cards.map(c=>c.querySelector('strong')?.textContent),
+      referenceNames:reference?.candidates.map(c=>c.school),
+      certified:view?.schools.length,
+      cardBadges:cards.map(c=>c.querySelector('.home-school-grade')?.textContent),
+      warning:document.getElementById('homeAssignmentPriorityStatus')?.textContent};
+    }finally{
+     home=previousHome;renderAddressSchoolPriority();drawSchools();drawList();
+    }
+   });
+   assert.deepEqual(prosper.counts,{elementary:20,middle:7,high:4});
+   assert.equal(prosper.uniqueCampuses,31);
+   assert.equal(prosper.teaLinked,30,'New 2026-27 Bridges campus lacks a 2026 TEA rating');
+   assert.ok(prosper.bridgeHasNoFabricatedPin,'Never invent the new middle building location');
+   assert.ok(prosper.bridgeZoneMatched,'Bridges official 2026-27 middle zone must remain selectable');
+   assert.deepEqual(prosper.expectedCodes,['001','042','102'],
+    'District headquarters public point must map to all three official school codes');
+   assert.equal(prosper.referenceKind,'reference-only');
+   assert.deepEqual(prosper.levels,['고등','중등','초등']);
+   assert.deepEqual(prosper.cardNames,prosper.referenceNames,
+    'Actual Pages address-first school rail must render all three Prosper levels');
+   assert.equal(prosper.certified,0,'GIS reference must not become a residential assignment');
+   assert.match(prosper.warning,/배정 미인증/);
+   assert.equal(prosper.cardBadges.length,3,'Each level needs an explicit TEA grade badge');
    // Official source-only CFB disclosure.
    if(await page.locator('#schoolDataDetails').count())await page.locator('#schoolDataDetails > summary').click();
    const cfb=page.locator('#cfbOfficialRezoningReference');
@@ -152,7 +214,7 @@ async function run(){
    assert.deepEqual(errors,[],'Live Pages browser page errors '+errors.join('; '));
    await page.screenshot({path:path.join(outdir,'track-b-live-'+width+'.png'),timeout:25000});
    report.checks.push({width,defaultDark:true,allen,cfbOfficialLinks:2,
-    dentonPdfCatalog:39,mckinneyPins:mckinney.pins,bellStatus:bell.status,cheekStatus:cheek.status,
+    dentonPdfCatalog:39,mckinneyPins:mckinney.pins,prosperLevels:prosper.counts,prosperPublicSchoolCodes:prosper.expectedCodes,bellStatus:bell.status,cheekStatus:cheek.status,
     dallasSourceLayers:3,irvingModule:true,residentialGrants:0,mobileOverflowPx:sources.overflow});
    await page.close();
   }
