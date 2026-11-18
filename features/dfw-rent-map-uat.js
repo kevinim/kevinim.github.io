@@ -113,7 +113,7 @@
     panel.id='rentMapUatPanel';
     panel.setAttribute('aria-label',preview?'DFW 지도 방향 및 렌트 검색 UAT':'DFW 지도 방향 및 렌트 검색');
     panel.innerHTML=
-      '<div class="rent-map-heading"><div><span class="rent-map-eyebrow">'+(preview?'MAP & RENTALS · UAT':'MAP & RENTALS')+'</span><h2>4. Redfin 매물 검색</h2></div><span class="rent-map-chip">무료 · 원본 연결</span></div>'+
+      '<div class="rent-map-heading"><div><span class="rent-map-eyebrow">'+(preview?'MAP & RENTALS · UAT':'MAP & RENTALS')+'</span><h2>내가 보는 동네, 렌트 매물 연결</h2></div><span class="rent-map-chip">무료 · 원본 연결</span></div>'+
       '<p class="rent-map-desc">동네 위치를 먼저 확인하고, 선택한 ZIP의 실제 렌트 매물을 Redfin에서 바로 엽니다. 링크·주소를 복사할 필요가 없습니다.</p>'+
       '<div class="rent-map-layout"><div class="rent-map-discovery"><div class="rent-map-small-heading">지도에서 지역 찾기</div>'+
       '<div id="rentMapFocus" class="rent-map-focus" role="group" aria-label="지도 중심 이동"></div>'+
@@ -159,8 +159,7 @@
       for(const id of ['rentMapDogs','rentMapCats','rentMapParking','rentMapLaundry','rentMapFurnished','rentMapPool','rentMapAC','rentMapDishwasher'])$(id).checked=false;
       updateSearchLinks();
     });
-    const target=document.getElementById('txRentSection');
-    if(target)target.appendChild(panel);else mapBox.after(panel);
+    mapBox.before(panel);
     $('zipSelect')?.addEventListener('change',updateSearchLinks);
     const zipLabel=$('k-zip'),areaLabel=$('k-area');
     if(window.MutationObserver&&zipLabel) {
