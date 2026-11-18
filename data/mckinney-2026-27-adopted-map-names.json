@@ -1,0 +1,50 @@
+{
+  "district": "043907",
+  "schoolYear": "2026-27",
+  "adoptedDate": "2025-12-15",
+  "scope": "Distinct zoned campus names in adopted official paper maps; not digital GIS geometry or residence results.",
+  "sources": {
+    "elementary": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/4789/Misd/b2f99756-732e-4163-b354-c039c8cf40c3/2026-2027-Adopted-Elementary-Map.pdf?disposition=inline",
+    "middle": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/4789/Misd/9580498b-1e54-4758-8122-fe7c21f6d0b6/2026-2027-Adopted-Middle-Map.pdf?disposition=inline",
+    "high": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/4789/Misd/226041a9-b7e8-4da2-a695-8571e2ad8af8/2026-2027-Adopted-High-Map.pdf?disposition=inline"
+  },
+  "names": {
+    "elementary": [
+      "BENNETT",
+      "BURKS",
+      "FINCH",
+      "FRAZIER",
+      "GLEN OAKS",
+      "JOHNSON",
+      "MALVERN",
+      "MCCLURE",
+      "MCGOWEN",
+      "MINSHEW",
+      "PRESS",
+      "SLAUGHTER",
+      "VALLEY CREEK",
+      "VEGA",
+      "WALKER",
+      "WEBB",
+      "WILMETH"
+    ],
+    "middle": [
+      "COCKRILL",
+      "DOWELL",
+      "EVANS",
+      "FAUBION",
+      "JOHNSON"
+    ],
+    "high": [
+      "BOYD",
+      "MCKINNEY",
+      "NORTH"
+    ]
+  },
+  "restrictions": [
+    "Some academy campuses appear as points but do not have zoned polygons.",
+    "Adopted PDFs attest the year and campus names only, not equivalence of MetroStudy coordinates.",
+    "Actual address+unit+grade eligibility requires school district official Finder; zero residential holdout certifications.",
+    "No school year inferred from vendor fields that are absent."
+  ]
+}

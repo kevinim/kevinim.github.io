@@ -12,6 +12,7 @@
  const SOURCE='McKinney ISD 2026–27 School Zone Finder 공개 GIS';
  // Both links are explicitly published district routes. The live Finder is
  // MetroStudy, not on mckinneyisd.net; accept only these exact vetted URLs.
+ const CURRENT_FINDER_URL='https://portal.metrostudygis.com/arcgis/apps/webappviewer/index.html?id=ed198c434d47474b88709e98d1f0a125';
  const OFFICIAL_ROUTES=new Set([
   'https://www.mckinneyisd.net/page/attendance-zones-maps/',
   'https://portal.metrostudygis.com/arcgis/apps/webappviewer/index.html?id=ed198c434d47474b88709e98d1f0a125'
@@ -128,5 +129,18 @@
    complete:result.length===3,independentOfficialAddressVerified:false,
    notice:'공식 Finder의 공개 GIS 경계와 주소 위치를 대조한 참고 후보이며, 공식 주소 검색 결과를 별도로 독립 확인한 배정학교는 아닙니다. 2026–27 전학·잔류·예외 등록은 교육청에 확인하세요.'});
  }
- return Object.freeze({crosscheck});
+ // ArcGIS Web AppBuilder's documented find= parameter opens an official
+ // address search. It cannot return the school results to this origin.
+ // Building this URL never fetches or persists a residential address.
+ function officialAddressHandoff({district,officialUrl,homeAddress,usableForSchoolCandidate,explicitClick}={}){
+  if(district!==DISTRICT||officialUrl!==CURRENT_FINDER_URL||explicitClick!==true||
+     usableForSchoolCandidate!==true||typeof homeAddress!=='string')return null;
+  const address=homeAddress.trim();
+  if(address.length<12||address.length>180||!/\d/.test(address)||
+     !/\b(?:TX|Texas)\b/i.test(address)||/[\u0000-\u001f\u007f]/.test(address))return null;
+  const url=new URL(CURRENT_FINDER_URL);
+  url.searchParams.set('find',address);
+  return url.toString().length<=1024?url.toString():null;
+ }
+ return Object.freeze({crosscheck,officialAddressHandoff});
 });

@@ -85,6 +85,32 @@ async function main(){
    assert.equal(overview.markers,0,'Reference names never become assigned-school markers');
    assert.equal(overview.conditional,'conditional-finder-only');
    assert.ok(overview.docWidth<=overview.clientWidth+3,'Mobile/desktop width has no overflow');
+   // The new handoff must be user-initiated; only a public facility is used
+   // in this synthetic browser check, and window.open is intercepted locally.
+   const handoff=await page.evaluate(()=>{
+    home.address='1400 Wilson Creek Pkwy, McKinney, TX 75069';
+    renderHome();
+    const selector=document.getElementById('homeFinderDistrict');
+    selector.value='043907';
+    selector.dispatchEvent(new Event('change',{bubbles:true}));
+    const button=document.getElementById('mckinneyOfficialAddressSearch');
+    const basic=document.getElementById('homeFinderLaunch');
+    const untouched=!basic.href.includes('&find=');
+    const disclosure=document.getElementById('mckinneyAddressSearchPrivacy');
+    let opened=null;
+    window.open=(url,target,features)=>{opened={url,target,features};return null};
+    if(button&&!button.hidden)button.click();
+    return {buttonVisible:!!button&&!button.hidden,disclosure:disclosure?.textContent,
+     untouched,opened,assignment:home.assignment?.status};
+   });
+   assert.equal(handoff.buttonVisible,true,'Precise selected McKinney address has an optional official search button');
+   assert.match(handoff.disclosure,/주소가 MetroStudy/);
+   assert.equal(handoff.untouched,true,'Normal Finder link never contains private address');
+   assert.equal(handoff.opened?.target,'_blank');
+   assert.equal(handoff.opened?.features,'noopener,noreferrer');
+   assert.equal(new URL(handoff.opened.url).searchParams.get('find'),
+    '1400 Wilson Creek Pkwy, McKinney, TX 75069');
+   assert.equal(handoff.assignment,'conditional-finder-only','Opening locator must not certify the assigned campus');
    const stale=await page.evaluate(()=>{
     window.__mckinneyRaw.features[1].properties.sourceYearRaw='2025-26';
     renderHome();drawSchools();drawList();
