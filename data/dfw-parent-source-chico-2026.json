@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-11-18",
+  "teaCode": "249904",
+  "name": "CHICO ISD",
+  "host": "www.chicoisdtx.net",
+  "officialLandingUrl": "https://www.chicoisdtx.net/District/Department/68-Enrollment-Registration",
+  "routeKind": "official-inquiry",
+  "sourceObservation": "District-hosted Enrollment & Registration page lists Chico Elementary, Middle and High registration office contacts, links the district-specific ASCENDER parent portal, and separates outside-district transfer applications.",
+  "limitations": "Chico ISD 공식 Enrollment & Registration에서 초·중·고 등록 부서 연락처, ASCENDER 등록 및 학군 밖 전학 신청을 제공합니다. 원문 유치원 자격에는 2025년 날짜가 남아 있어 2026–27 학년도 적용과 주소·학년별 배정은 학교 등록담당자에게 직접 확인해야 합니다. 공개 주소별 자동 배정 Finder나 인증 GIS 경계는 확인되지 않았습니다.",
+  "observedDateCaution": "2025 kindergarten-entry year remains on the official enrollment landing page; current-year enrollment not independently proven",
+  "verifiedCurrentYearAttendanceGIS": false,
+  "verifiedIndividualAddressAssignment": false,
+  "personalAddressSubmitted": false,
+  "currentYearRegistrationIndependentlyVerified": false,
+  "schoolAssignmentApiVerified": false
+}

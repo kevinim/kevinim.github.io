@@ -2,12 +2,12 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const {load,audit}=require('../scripts/audit-dfw-comprehensive.cjs');
 const fresh=()=>load();
-test('2026 preliminary TEA 11-county school-by-school census and 107 source routes',()=>{
+test('2026 preliminary TEA 11-county census and 108 official parent routes',()=>{
  const r=audit(fresh());
  assert.equal(r.status,'PASS',r.errors.join('\n'));
  assert.equal(r.summary.dfwRows,2182);
- assert.equal(r.summary.registeredParentRoutes,107);
- assert.equal(r.summary.unregisteredPublicISDs,1);
+ assert.equal(r.summary.registeredParentRoutes,108);
+ assert.equal(r.summary.unregisteredPublicISDs,0);
  assert.equal(r.summary.currentYearDashboardPolygonReferenceDistricts,2);
  assert.equal(r.summary.addressAssignmentCoveragePercent,null);
 });
@@ -32,10 +32,10 @@ test('10 district year and rezoning disclaimers cannot drift from public UI',()=
  r.parentGuidance.yearCaution='no future year warning';
  assert.match(audit(d).errors.join('|'),/grade_year_caveat_mismatch_061911/);
 });
-test('unregistered school districts cannot masquerade as checked',()=>{
+test('fabricated Chico district registration URL is rejected against provenance',()=>{
  const d=fresh(),r=d.matrix.districts.find(x=>x.code==='249904');
  r.parentGuidance.officialUrl='https://example.com/';
- assert.match(audit(d).errors.join('|'),/missing_route_claimed_verified_249904/);
+ assert.match(audit(d).errors.join('|'),/provenance_url_mismatch_249904|registry_url_crosswalk_249904/);
 });
 test('supplemental source cannot retroactively claim certified GIS/address',()=>{
  const d=fresh();d.batches[3].evidence[0].verifiedCurrentYearAttendanceGIS=true;
@@ -52,9 +52,12 @@ test('any legacy evidence declaring personal address submission cannot pass',()=
  assert.match(audit(d).errors.join('|'),/supplemental_false_certification/);
 });
 
-test('only Chico ISD remains missing after the 22 district source batch',()=>{
+test('all 108 ISD parent routes registered after Chico independent source addendum',()=>{
  const d=fresh(),r=d.matrix.districts.find(x=>x.code==='249904');
- assert.equal(r.parentGuidance.status,'not-verified');
+ assert.equal(r.parentGuidance.status,'registered-official-source');
  assert.equal(r.teaCampusRecords,3);
  assert.equal(audit(d).status,'PASS');
+ assert.equal(audit(d).summary.unregisteredPublicISDs,0);
+ const tampered=fresh();tampered.chico.verifiedIndividualAddressAssignment=true;
+ assert.match(audit(tampered).errors.join('|'),/unreviewed_chico_parent_route/);
 });

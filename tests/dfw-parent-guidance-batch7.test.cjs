@@ -38,19 +38,22 @@ test('22 additional official ISD parent routes have no fabricated assignment or 
   rows+=d.teaCampusRecords;
  }
  assert.equal(rows,58);
- assert.equal(m.summary.publicISDsWithRegisteredParentRoute,107);
- assert.equal(m.summary.publicISDsMissingRegisteredParentRoute,1);
- assert.equal(m.summary.registeredParentRouteRatePublicISDPercent,99.1);
- assert.equal(m.summary.publicISDCampusRowsWithRegisteredParentRoute,1938);
- assert.equal(m.summary.publicISDCampusRowsWithUnverifiedParentRoute,3);
+ assert.equal(m.summary.publicISDsWithRegisteredParentRoute,108);
+ assert.equal(m.summary.publicISDsMissingRegisteredParentRoute,0);
+ assert.equal(m.summary.registeredParentRouteRatePublicISDPercent,100);
+ assert.equal(m.summary.publicISDCampusRowsWithRegisteredParentRoute,1941);
+ assert.equal(m.summary.publicISDCampusRowsWithUnverifiedParentRoute,0);
  assert.equal(m.summary.campusPolygonCoverageAllDFWPercent,null);
  assert.equal(m.summary.exactAddressAssignmentCoveragePercent,null);
 });
-test('Chico remains unverified and misleading years are explicitly flagged',()=>{
+test('batch 7 historically lacked Chico, but official inquiry is now registered',()=>{
  const chico=m.districts.find(d=>d.code==='249904');
  assert.equal(chico.teaCampusRecords,3);
- assert.equal(chico.parentGuidance.status,'not-verified');
- assert.equal(DISTRICT_REGISTRY['249904'],undefined);
+ assert.equal(chico.parentGuidance.status,'registered-official-source');
+ assert.equal(chico.parentGuidance.lookupType,'official-inquiry');
+ assert.equal(DISTRICT_REGISTRY['249904'].official,chico.parentGuidance.officialUrl);
+ assert.equal(chico.geometry.confirmedCurrentYear,false);
+ assert.match(chico.parentGuidance.yearCaution,/2025/);
  assert.deepEqual(source.unverifiedDistricts.map(x=>x.teaCode),['249904']);
  assert.match(DISTRICT_REGISTRY['184901'].officialNote,/2025–26/);
  assert.match(DISTRICT_REGISTRY['249901'].officialNote,/2027–28/);

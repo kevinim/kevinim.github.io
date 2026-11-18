@@ -233,6 +233,8 @@ const DISTRICT_REGISTRY={
   lookupKind:"official-inquiry",official:"https://www.milfordisd.org/",officialNote:"교육청 홈페이지에서 해당 학군 ASCENDER Parent Portal로 이동합니다. 해당 링크는 학교별 주소검색기가 아닙니다.",label:{}},
  '184911':{en:"Garner",ko:"가너",zoneKey:null,currency:null,address:null,campusIdMatch:false,
   lookupKind:"official-inquiry",official:"https://www.garnerisd.net/registration",officialNote:"공식 등록 페이지는 매년 거주증빙과 보호자 예외 서류를 확인합니다. 이는 공개 주소별 학교검색이 아닙니다.",label:{}},
+ '249904':{en:"Chico",ko:"치코",zoneKey:null,currency:null,address:null,campusIdMatch:false,
+  lookupKind:"official-inquiry",official:"https://www.chicoisdtx.net/District/Department/68-Enrollment-Registration",officialNote:"Chico ISD 공식 Enrollment & Registration에서 초·중·고 등록 부서 연락처, ASCENDER 등록 및 학군 밖 전학 신청을 제공합니다. 원문 유치원 자격에는 2025년 날짜가 남아 있어 2026–27 학년도 적용과 주소·학년별 배정은 학교 등록담당자에게 직접 확인해야 합니다. 공개 주소별 자동 배정 Finder나 인증 GIS 경계는 확인되지 않았습니다.",label:{}},
  '249908':{en:"Slidell",ko:"슬라이델",zoneKey:null,currency:null,address:null,campusIdMatch:false,
   lookupKind:"official-inquiry",official:"https://www.slidellisd.net/parents",officialNote:"2026–27 공식 신규·재학생 등록과 거주증빙에 관한 안내입니다. 학교별 현행 GIS 또는 개별 주소 배정 검증은 별도로 필요합니다.",label:{}},
  CFB:{en:'CFB',ko:'캐럴턴–파머스브랜치',zoneKey:null,currency:null,address:null,campusIdMatch:false,

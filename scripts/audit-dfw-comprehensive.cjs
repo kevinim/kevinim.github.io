@@ -16,6 +16,7 @@ function load(rootPath=root){
   matrix:read('data/dfw-school-coverage-matrix-2026.json'),
   base:read('school-data-provenance.json'),
   mck:read('data/mckinney-2026-27-provenance.json'),
+  chico:read('data/dfw-parent-source-chico-2026.json'),
   west:read('data/west-dfw-zone-source-audit-2026.json'),
   neighbor:read('data/dfw-neighbor-official-school-links-2026.json'),
   batches:[3,4,5,6,7].map(n=>read('data/dfw-parent-source-evidence-batch'+n+'-2026.json')),
@@ -27,7 +28,7 @@ const total=rows=>rows.reduce((n,x)=>n+x.teaCampusRecords,0);
 function audit(d){
  const errors=[],warnings=[];
  const requireCheck=(ok,id)=>{if(!ok)errors.push(id)};
- const {tea,matrix:m,registry,base,mck,west,neighbor,batches,grade}=d;
+ const {tea,matrix:m,registry,base,mck,chico,west,neighbor,batches,grade}=d;
  const scope=new Set(COUNTIES);
  const observed=new Map(),ids=new Set();
  requireCheck(tea.status==='preliminary'&&tea.year===2026,'source_tea_vintage_changed');
@@ -61,11 +62,11 @@ function audit(d){
  const linked=isds.filter(x=>x.parentGuidance.status==='registered-official-source');
  const missing=isds.filter(x=>x.parentGuidance.status==='not-verified');
  requireCheck(isds.length===108&&others.length===44,'isd_vs_other_lea_denominator_changed');
- requireCheck(linked.length===107&&missing.length===1,'linked_district_denominator_changed');
- requireCheck(total(linked)===1938&&total(missing)===3&&total(others)===241,'linked_campus_denominator_changed');
- requireCheck(m.summary.publicISDsWithRegisteredParentRoute===107&&
-  m.summary.publicISDsMissingRegisteredParentRoute===1&&
-  m.summary.registeredParentRouteRatePublicISDPercent===99.1,'snapshot_link_coverage_inconsistent');
+ requireCheck(linked.length===108&&missing.length===0,'linked_district_denominator_changed');
+ requireCheck(total(linked)===1941&&total(missing)===0&&total(others)===241,'linked_campus_denominator_changed');
+ requireCheck(m.summary.publicISDsWithRegisteredParentRoute===108&&
+  m.summary.publicISDsMissingRegisteredParentRoute===0&&
+  m.summary.registeredParentRouteRatePublicISDPercent===100,'snapshot_link_coverage_inconsistent');
  requireCheck(m.summary.campusPolygonCoverageAllDFWPercent===null&&
   m.summary.exactAddressAssignmentCoveragePercent===null,'invented_dfw_gis_or_address_coverage');
  const reasonCounts={};
@@ -104,8 +105,23 @@ function audit(d){
    sources.push({code:r.teaCode,url:r.officialLandingUrl,kind:r.routeKind});
   }
  }
+ // Separate 2026-11-18 evidence resolves the historical Chico 107/108 batch gap.
+ requireCheck(chico?.schemaVersion===1&&chico.teaCode==='249904'&&
+  chico.officialLandingUrl==='https://www.chicoisdtx.net/District/Department/68-Enrollment-Registration'&&
+  chico.routeKind==='official-inquiry'&&
+  chico.host==='www.chicoisdtx.net'&&
+  chico.verifiedCurrentYearAttendanceGIS===false&&
+  chico.verifiedIndividualAddressAssignment===false&&
+  chico.personalAddressSubmitted===false&&
+  chico.currentYearRegistrationIndependentlyVerified===false&&
+  chico.schoolAssignmentApiVerified===false&&
+  chico.limitations===registry['249904']?.officialNote&&
+  /2025/.test(chico.observedDateCaution)&&
+  !['address','street','unit','resident','email','phone','rawFinderResponse'].some(k=>Object.hasOwn(chico,k)),
+  'unreviewed_chico_parent_route');
+ sources.push({code:chico.teaCode,url:chico.officialLandingUrl,kind:chico.routeKind});
  const seen=new Set(),urls=new Set(),typeCounts={};
- requireCheck(sources.length===107,'provenance_source_count');
+ requireCheck(sources.length===108,'provenance_source_count');
  for(const src of sources){
   if(seen.has(src.code))errors.push('duplicate_registered_provenance_'+src.code);
   seen.add(src.code);
@@ -123,7 +139,7 @@ function audit(d){
    warnings.push('McKinney district landing and third-party locator differ; no live household address proof');
   }else requireCheck(src.url===row.parentGuidance.officialUrl,'provenance_url_mismatch_'+src.code);
  }
- requireCheck(seen.size===107,'registered_provenance_missing_or_duplicate');
+ requireCheck(seen.size===108,'registered_provenance_missing_or_duplicate');
  for(const r of linked){
   requireCheck(seen.has(r.code),'registered_route_lacks_source_'+r.code);
   const d=registry[r.parentGuidance.registryKey||r.code];

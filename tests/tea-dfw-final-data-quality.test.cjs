@@ -19,7 +19,7 @@ test('cross-file school data quality is ready for published metrics only, with e
  assert.equal(r.ethnicity.wholeSchoolSevenGroupSharesVerified,6);
  assert.equal(r.ethnicity.fullPublicEnrollmentDenominators,2126);
  assert.equal(r.geographic.sourceRowsByAdministrativeCounty,2182);
- assert.equal(r.geographic.officialDistrictParentRoutes,107);
+ assert.equal(r.geographic.officialDistrictParentRoutes,108);
  assert.equal(r.geographic.publicDistrictCount,108);
  assert.deepEqual(r.geographic.texasworksOperatorLocality,{local:6,nonLocal:34,pending:1,pendingCampusIds:['061806029']});
  assert.deepEqual([r.operating2026_27.transitionEntries,r.operating2026_27.archivedNotCurrentAssignments,

@@ -73,13 +73,13 @@ test('old city GIS, printable maps and current official Finder are not equivalen
   assert.ok(!('studentAddress' in x));
  }
 });
-test('district source quality update cannot alter district route totals or endorse missing boundary as 0%',()=>{
+test('district source quality uses final 108 ISD parent routes without treating missing boundaries as 0%',()=>{
  const s=matrix.summary;
  assert.equal(s.publicISDs,108);
- assert.equal(s.publicISDsWithRegisteredParentRoute,107);
- assert.equal(s.publicISDsMissingRegisteredParentRoute,1);
- assert.equal(s.publicISDCampusRowsWithRegisteredParentRoute,1938);
- assert.equal(s.publicISDCampusRowsWithUnverifiedParentRoute,3);
+ assert.equal(s.publicISDsWithRegisteredParentRoute,108);
+ assert.equal(s.publicISDsMissingRegisteredParentRoute,0);
+ assert.equal(s.publicISDCampusRowsWithRegisteredParentRoute,1941);
+ assert.equal(s.publicISDCampusRowsWithUnverifiedParentRoute,0);
  assert.equal(s.campusPolygonCoverageAllDFWPercent,null);
  assert.equal(s.exactAddressAssignmentCoveragePercent,null);
 });
