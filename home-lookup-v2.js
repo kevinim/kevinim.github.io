@@ -230,12 +230,43 @@ function showOfficialFinderWithoutGeocode(address,reason){
 function wireCompactHomeFinder(){
  const input=el('homeFinderDistrict'),link=el('homeFinderLaunch'),hint=el('homeFinderHint');
  if(!input||!link)return;
+ // Never put a residence in HTML or link href before a deliberate user click.
+ const button=document.createElement('button');button.type='button';
+ button.id='mckinneyOfficialAddressSearch';button.className='mini-btn';
+ button.textContent='선택 주소로 공식 검색 열기';button.hidden=true;
+ link.insertAdjacentElement('afterend',button);
+ const note=document.createElement('p');note.className='source';
+ note.id='mckinneyAddressSearchPrivacy';note.hidden=true;
+ note.textContent='클릭하면 선택한 주소가 MetroStudy 공식 검색기 URL에 전송됩니다. 검색 결과를 이 대시보드가 자동 수신하거나 확정 배정으로 인증하지 않습니다.';
+ link.parentElement?.after(note);
+ const canHandoff=()=>input.value==='043907'&&
+  !!home?.address&&home.geocodeQuality?.usableForSchoolCandidate===true&&
+  window.TrustedLinkPolicy?.official(OFFICIAL['043907'])===
+  'https://portal.metrostudygis.com/arcgis/apps/webappviewer/index.html?id=ed198c434d47474b88709e98d1f0a125'&&
+  typeof window.McKinneyFinderCrosscheck?.officialAddressHandoff==='function';
+ const refresh=()=>{button.hidden=!canHandoff();note.hidden=!canHandoff()};
+ button.addEventListener('click',()=>{
+  if(!canHandoff())return;
+  const url=window.McKinneyFinderCrosscheck.officialAddressHandoff({
+   district:input.value,
+   officialUrl:window.TrustedLinkPolicy.official(OFFICIAL['043907']),
+   homeAddress:home.address,
+   usableForSchoolCandidate:home.geocodeQuality.usableForSchoolCandidate,
+   explicitClick:true
+  });
+  if(!url){note.textContent='주소 형식 확인이 필요합니다. 공식 검색기에서 주소를 다시 입력하세요.';return}
+  // Explicit first-party click is the only moment the chosen residence may
+  // be sent to the vendor; never log, cache, prefetch, or persist the URL.
+  window.open(url,'_blank','noopener,noreferrer');
+ });
  input.addEventListener('change',()=>{
   const code=input.value,href=code&&DISTRICT_REGISTRY[code]?window.TrustedLinkPolicy?.official(OFFICIAL[code]):null;
   if(href){link.href=href;link.hidden=false;link.style.display='inline-flex';link.textContent=DISTRICT_REGISTRY[code]?.lookupKind==='official-inquiry'?'공식 안내 열기 ↗':'공식 검색기 열기 ↗'}
   else{link.hidden=true;link.style.display='none';link.removeAttribute('href')}
   if(hint)hint.textContent='선택한 학군의 공식 자료에서 주소·학년을 확인하세요. 아직 배정 미확인 상태입니다.';
+  refresh();
  });
+ refresh();
 }
 
 // Preserve advanced tools across a same-home asynchronous redraw.
