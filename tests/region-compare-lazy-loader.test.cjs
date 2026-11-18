@@ -5,7 +5,7 @@ const vm=require('node:vm');
 const fs=require('node:fs');
 const path=require('node:path');
 const loader=fs.readFileSync(path.join(__dirname,'..','features/region-compare.js'),'utf8');
-const EXPECTED='./features/region-compare-renderer.js?v=2';
+const EXPECTED='./features/region-compare-renderer.js?v=1';
 
 function harness(){
  class Node{
@@ -101,7 +101,7 @@ test('renderer mounting failure restores original safe panel rather than empty s
  assert.equal(h.scripts[0].parentNode,null);
 });
 test('script URL is immutable; no untrusted URL, dynamic HTML or address persistence',()=>{
- assert.match(loader,/const RENDERER='\.\/features\/region-compare-renderer\.js\?v=2'/);
+ assert.match(loader,/const RENDERER='\.\/features\/region-compare-renderer\.js\?v=1'/);
  assert.match(loader,/script\.src=RENDERER/);
  assert.doesNotMatch(loader,/innerHTML|eval\(|new Function|localStorage|sessionStorage|location\.search|window\.location/);
  assert.doesNotMatch(loader,/fetch\(|\.setView\(|\.fitBounds\(|schoolGroup\.clearLayers/);
