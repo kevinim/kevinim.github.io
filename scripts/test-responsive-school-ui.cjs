@@ -117,7 +117,7 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
       if(!gb||!ab||!cb)issueList.push('missing settings card');
       else {
         if(gb.x<-1||gb.right>width+1)issueList.push('school card extends beyond viewport');
-        if(ab.bottom>gb.y+2)issueList.push('area/school cards overlap');
+        if(gb.bottom>ab.y+2)issueList.push('school/area cards overlap');
         if(gb.bottom>cb.y+2)issueList.push('school/commute cards overlap');
       }
       if(state.segments.some((r,i,a)=>i>0&&r.y===a[i-1].y&&r.x<a[i-1].right-2))issueList.push('school-type segmented buttons overlap');
