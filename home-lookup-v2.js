@@ -38,9 +38,18 @@ function homeZoneMatches(ll,district){
   });
 }
 function schoolAssignmentFor(item){
- if(!item?.geocodeQuality?.usableForSchoolCandidate)return {status:'needs-address-verification'};
- const split=allenSplitApartmentException(item.typedAddress)||allenSplitApartmentException(item.address);
+ // Allen's official street-number table does not require a geocoded point.
+ // Always exclude apartment split exceptions before showing any campus names.
+ const split=allenSplitApartmentException(item?.typedAddress)||allenSplitApartmentException(item?.address);
  if(split)return {status:'apartment-split-review',district:'AISD',exception:split};
+ if(!item?.geocodeQuality?.usableForSchoolCandidate){
+  // No city-centroid inference: accept only the typed Allen/TX street address
+  // with an unambiguous official school chain, strictly as a reference.
+  const typed=String(item?.typedAddress||'').trim();
+  const row=typed?window.allenAssignment?.(typed,null):null;
+  return row?{district:'AISD',status:'unverified-year',allen:row,locationUnverified:true}
+   :{status:'needs-address-verification'};
+ }
  // Every polygon district in the registry is checked; no per-district list here.
  const polygons=Object.entries(DISTRICT_REGISTRY).map(([code,d])=>({district:code,status:districtPolygonStatus(code,state.liveFinder),features:d.address==='frisco'?homeFriscoMatches(item.ll):d.address==='polygon'?homeZoneMatches(item.ll,d.zoneKey):[]})).filter(p=>p.status);
  const found=resolveAssignment({polygons,allen:window.allenAssignment?.(item.address,item.ll),ready:state.zoneReady&&!window.allenAssignmentLoading?.(),failed:!!state.assignmentLoadFailed||!!window.allenAssignmentFailed?.()});
@@ -105,7 +114,7 @@ function clearDallasReference(){if(dallasReferenceLayer&&map)map.removeLayer(dal
 function clearHome(){
   invalidateZipCommute();
   clearIrvingReference();clearDallasReference();
-  homeVersion++;homeRequest?.abort();homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;mckinneyLiveRequest?.abort();mckinneyLiveRequest=null;home=null;homeCandidates=[];
+  homeVersion++;failedGeocodeAllenAddress='';homeRequest?.abort();homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;mckinneyLiveRequest?.abort();mckinneyLiveRequest=null;home=null;homeCandidates=[];
   if(map&&homeMarker)map.removeLayer(homeMarker);homeMarker=null;
   if(typeof homeZoneGroup!=='undefined'&&homeZoneGroup)homeZoneGroup.clearLayers();
   el('homeCandidates').replaceChildren();el('homeResult').replaceChildren();el('homeSchoolInfo').replaceChildren();el('homeStatus').textContent='';if(homeRouteLayer)homeRouteLayer.clearLayers();
@@ -179,7 +188,58 @@ function compactHomeFinderHtml(address,raw){
  '<a id="homeFinderLaunch" class="btn" style="display:'+(url?'inline-flex':'none')+';align-items:center;justify-content:center;width:auto;min-height:38px;padding:9px 12px;background:#3158cd;color:#fff;text-decoration:none" target="_blank" rel="noopener noreferrer"'+(url?' href="'+escape(url)+'"':' hidden')+'>공식 검색기 열기 ↗</a></div>'+
  '<div id="homeFinderHint" class="source">'+escape(m.why)+' · 실제 배정은 공식 학군에서 주소로 확인</div></div>';
 }
+let failedGeocodeAllenAddress='';
+function renderAllenStreetReferenceWithoutGeocode(address){
+ const panel=el('homeAssignmentPriority'),status=el('homeAssignmentPriorityStatus');
+ const desc=el('homeAssignmentPriorityDescription'),cards=el('homeAssignmentPrioritySchools');
+ if(!panel||!status||!desc||!cards||home)return false;
+ const split=allenSplitApartmentException(address);
+ const row=split?null:window.allenAssignment?.(address,null);
+ if(!row&&!split){panel.hidden=true;return false}
+ panel.hidden=false;cards.replaceChildren();
+ if(split){
+  status.textContent='학군 분할 아파트 · 건물·호수 확인 필요';
+  desc.textContent=split.note+' 공식 주소표만으로 학교를 정할 수 없습니다.';
+ }else{
+  status.textContent='Allen 공식 주소표 후보 · 지도 주소 좌표 미확인';
+  desc.textContent='지도 좌표 조회는 실패했지만 입력한 Allen 주소의 도로명·번지가 공식 표와 일치합니다. 초·중·9학년·고등학교 참고 후보이며 공식 자료 학년도는 미표기입니다. 입학 자격을 인증하지 않습니다.';
+  for(const [idx,levelText,grades,level] of [
+   [2,'초등','K–6','elementary'],[3,'중등','7–8','middle'],
+   [4,'9학년','9','high'],[5,'고등','10–12','high']
+  ]){
+   const name=String(row[idx]||'').trim();if(!name)continue;
+   const card=document.createElement('div');card.className='home-assignment-school';
+   const heading=document.createElement('div');heading.className='home-school-main';
+   const title=document.createElement('strong');title.textContent=name;
+   const freshman=idx===4,meta=(state.schools||[]).filter(s=>
+    s.district==='AISD'&&s.type===level&&
+    /freshman/i.test(s.name)===freshman&&allenRowMatchesSchool(s,row,state.schools,canonical));
+   const grade=meta.length===1?scoreRecord(meta[0].name,'AISD')?.rating:null;
+   const letter=['A','B','C','D','F'].includes(grade)?grade:grade==='Not Rated'?'NR':'—';
+   const badge=document.createElement('span');badge.className='home-school-grade grade-'+(letter==='—'?'unknown':letter.toLowerCase());
+   badge.textContent=letter;badge.setAttribute('aria-label',letter==='—'?'TEA 2026 등급 미연결':'TEA 2026 등급 '+letter);
+   heading.append(title,badge);card.appendChild(heading);
+   const note=document.createElement('div');note.className='home-school-chips';
+   const chip=document.createElement('span');chip.className='home-school-chip';chip.textContent=levelText+' · '+grades;note.appendChild(chip);
+   const evidence=document.createElement('span');evidence.className='home-school-chip evidence';evidence.textContent='Allen 공식 주소표 참고';note.appendChild(evidence);
+   card.appendChild(note);cards.appendChild(card);
+  }
+ }
+ const official=document.createElement('a');official.className='cardlink';
+ official.href='https://www.allenisd.org/page/findaschool';
+ official.target='_blank';official.rel='noopener noreferrer';
+ official.textContent='Allen ISD 공식 주소표에서 확인';
+ cards.appendChild(official);
+ const finder=el('homeAssignmentPriorityFinder');
+ if(finder)finder.onclick=()=>el('homeCandidates')?.scrollIntoView({behavior:'auto',block:'start'});
+ return !!row;
+}
+function refreshAllenNoGeocodeReference(){
+ if(failedGeocodeAllenAddress&&!home)
+  renderAllenStreetReferenceWithoutGeocode(failedGeocodeAllenAddress);
+}
 function showOfficialFinderWithoutGeocode(address,reason){
+ failedGeocodeAllenAddress=String(address||'').trim();
  // Address geocoding failure is not evidence that a home has no schools.
  // Preserve an explicit official-district lookup path without faking a match.
  const panel=el('homeCandidates');
@@ -226,6 +286,8 @@ function showOfficialFinderWithoutGeocode(address,reason){
  row.append(select,link);wrapper.append(label,row,hint);
  panel.append(status,wrapper);
  wireCompactHomeFinder();
+ if(renderAllenStreetReferenceWithoutGeocode(address))
+  el('homeStatus').textContent='지도 주소 검색은 실패했으나 Allen 공식 주소표에서 학교 후보를 찾았습니다. 지도 좌표와 실제 등록 자격은 미확인입니다.';
 }
 function wireCompactHomeFinder(){
  const input=el('homeFinderDistrict'),link=el('homeFinderLaunch'),hint=el('homeFinderHint');
@@ -314,7 +376,9 @@ function renderHome(){
    ?'<div class="home-reference-control"><button id="homeReferencePreviewToggle" class="mini-btn" type="button" aria-controls="homeReferencePreviewResult" aria-expanded="'+(home.referencePreviewRequested?'true':'false')+'">GIS 경계·출처 상세 보기</button><div id="homeReferencePreviewResult" role="status" aria-live="polite"></div></div>'
    :'';
 
-  const schoolText=home.mckinneyCrosscheck?.kind==='reference-only'?'<b>GIS 기준 예상 학교는 주소 검색 결과에 자동 표시됩니다.</b> <span class="source">실제 등록·전학·배정 예외는 교육청 공식 Finder에서 최종 확인하세요.</span>':['conditional-finder-only','unavailable'].includes(home.assignment.status)?'<b>학교 자동 배정 미인증 · 공식 Finder 확인 필요</b>':assignmentHtml(home.assignment);
+  const schoolText=home.allenAddressReference
+   ?'<b>Allen 공식 주소표에서 초·중·9학년·고등학교 후보를 찾았습니다.</b><br><span class="source">공식 주소표 학년도 미표기 · 입학 자격은 별도 확인'+(rawSchoolCandidate.locationUnverified?' · 집 주소 지도 좌표 미확인':'')+'. 아래 학교 카드를 먼저 확인하세요.</span>'
+   :home.mckinneyCrosscheck?.kind==='reference-only'?'<b>GIS 기준 예상 학교는 주소 검색 결과에 자동 표시됩니다.</b> <span class="source">실제 등록·전학·배정 예외는 교육청 공식 Finder에서 최종 확인하세요.</span>':['conditional-finder-only','unavailable'].includes(home.assignment.status)?'<b>학교 자동 배정 미인증 · 공식 Finder 확인 필요</b>':assignmentHtml(home.assignment);
   const official=compactHomeFinderHtml(home.address,rawSchoolCandidate);
   const office=el('destination').value.trim();
   const parcel=home.parcel||{status:'idle'};

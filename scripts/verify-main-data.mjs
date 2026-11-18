@@ -239,7 +239,7 @@ test('Allen official street name variants: suffix and direction, fail closed on 
  assert.equal(checked,1687);
  assert.equal(accepted,1683); // 3 matching-school overlaps resolve; 4 split-apartment rows still blocked
  assert.equal(unresolved,4);
- assert.ok(readText('index.html').includes('./allen-lookup.js?v=6'));
+ assert.ok(readText('index.html').includes('./allen-lookup.js?v=7'));
 });
 
 test('Allen repeated official street ranges agree on all four levels or fail closed',()=>{
@@ -284,7 +284,7 @@ test('P0 Allen four published split apartments halt automatic Frisco/Allen campu
  assert.equal(allenSplitApartmentException('123 Main Street, Allen, TX'),null);
  const app=(readText('home-lookup-v2.js')+' '+readText('district-registry.js')),cmp=readText('candidate-compare.js');
  assert.ok(app.includes("status:'apartment-split-review'"));
- assert.ok(app.includes('allenSplitApartmentException(item.typedAddress)||allenSplitApartmentException(item.address)'));
+ assert.ok(app.includes('allenSplitApartmentException(item?.typedAddress)||allenSplitApartmentException(item?.address)'));
  assert.ok(app.includes("if(result.status==='apartment-split-review')"));
  assert.ok(app.includes('학군 경계가 건물·호수에 따라 갈리는 주소'));
  assert.ok(app.includes("typedAddress:candidate.savedTypedAddress||"));
@@ -302,7 +302,7 @@ test('P0 Plano senior-high home marker and map source legend are accurate',()=>{
  assert.ok(home.includes('schoolLevelMatchesAssignment(s,f.properties.gradeLevel)'));
  assert.ok(home.includes("result.district!==s.district)return false"));
  assert.ok(html.includes('./school-assignment.js?v=6'));
- assert.ok(html.includes('./home-lookup-v2.js?v=26'));
+ assert.ok(html.includes('./home-lookup-v2.js?v=27'));
  assert.ok(html.includes('현행 공식 Finder가 사용하는 플레이노·루이스빌 경계는 파란색'));
  assert.ok(html.includes('플레이노 저장본과 앨런 과거 GIS는 주황색 점선 참고'));
 });
