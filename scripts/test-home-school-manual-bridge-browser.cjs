@@ -58,6 +58,54 @@ const assert=require('node:assert/strict');
         assert.equal(state1.link,url,'no address appended to district official URL');
         assert.equal(state1.csp.length,0,'no CSP violation');
         if(width===390)assert.ok(state1.width<=width+5,'mobile overflow '+state1.width);
+        // Newly loaded McKinney public GIS may offer a form prefill, but no
+        // campus should enter the displayed school list until user review.
+        await page.evaluate(()=>{
+          const levels=['elementary','middle','high'];
+          window.__prefillSyntheticSchools=levels.map((level,i)=>({
+            id:'043907'+String(991+i),district:'043907',type:level,
+            name:'SYNTHETIC MCKINNEY '+level
+          }));
+          state.schools.push(...window.__prefillSyntheticSchools);
+          home={address:'123 Synthetic Lane, McKinney, TX 75069',
+            ll:[33.18,-96.65],geocodeQuality:{usableForSchoolCandidate:true},
+            mckinneyCrosscheck:{kind:'reference-only',district:'043907',
+              independentOfficialAddressVerified:false,
+              candidates:window.__prefillSyntheticSchools.map(s=>({
+                level:s.type,school:s.name,matchedSchool:s,linked:true,
+                campusId:s.id,sourceYear:'2026-27'
+              }))}};
+          document.getElementById('homeSchoolInfo').replaceChildren(document.createElement('div'));
+        });
+        await page.waitForFunction(()=>document.getElementById('homeManualMckinneyPrefill')?.hidden===false,
+          {timeout:15000});
+        const before=await page.locator('.home-manual-school-card').count();
+        assert.equal(before,0,'New address must reset earlier manual reference cards');
+        await page.locator('#homeManualMckinneyPrefill').click();
+        const reviewed=await page.locator('#homeManualSchoolBridge').evaluate(el=>({
+          selected:['elementary','middle','high'].map(level=>
+            document.getElementById('homeManual'+level).selectedOptions[0].textContent),
+          cards:el.querySelectorAll('.home-manual-school-card').length,
+          notice:el.querySelector('[role="status"]')?.textContent||'',
+          district:document.getElementById('homeManualDistrict').value,
+          assignment:home.assignment,
+          overflow:document.documentElement.scrollWidth>window.innerWidth+5
+        }));
+        assert.equal(reviewed.district,'043907');
+        assert.ok(reviewed.selected.every(x=>x.startsWith('SYNTHETIC MCKINNEY')));
+        assert.equal(reviewed.cards,0,'GIS prefill must not show school markers or cards without review');
+        assert.match(reviewed.notice,/미인증|인증이 아닙니다/);
+        assert.equal(reviewed.assignment,undefined,'GIS prefill cannot modify residential assignment state');
+        if(width===390)assert.equal(reviewed.overflow,false);
+        await page.getByRole('button',{name:'직접 선택한 학교를 아래에 표시'}).click();
+        assert.equal(await page.locator('.home-manual-school-card').count(),3);
+        await page.evaluate(()=>{
+          for(const item of window.__prefillSyntheticSchools){
+            const idx=state.schools.indexOf(item);
+            if(idx>=0)state.schools.splice(idx,1);
+          }
+          delete window.__prefillSyntheticSchools;
+        });
         await page.evaluate(()=>{
           home=null;
           document.getElementById('homeSchoolInfo').replaceChildren();
