@@ -54,13 +54,24 @@ async function main(){
       geocodeQuality:{usableForSchoolCandidate:true},parcel:{status:'idle'}};
     renderHome();
     const box=document.getElementById('homeSchoolInfo');
+    const priority=document.getElementById('homeAssignmentPriority');
     return {hasToggle:!!box.querySelector('#homeReferencePreviewToggle'),
       containsSchool:box.textContent.includes('SYNTHETIC HIGH'),
       homeStatus:home.assignment.status,
+      previewVisible:!priority.hidden,
+      referenceNameVisible:priority.textContent.includes('SYNTHETIC HIGH'),
+      referenceLabel:document.getElementById('homeAssignmentPriorityStatus').textContent,
+      unsafeHtmlInjected:!!priority.querySelector('img'),
+      homeSchoolListCount:document.querySelectorAll('#schoolList button.school').length,
       noAssignedMarker:!homeSchoolMatches({district:'FISD',type:'high',name:'SYNTHETIC HIGH'})};
    });
    assert.equal(before.hasToggle,true);
-   assert.equal(before.containsSchool,false,'Preview must never auto-display reference names');
+   assert.equal(before.containsSchool,false,'Advanced opt-in preview remains closed');
+   assert.equal(before.previewVisible,true,'Address-first evidence panel must be visible');
+   assert.equal(before.referenceNameVisible,true,'Current-year source may show text-only candidates');
+   assert.match(before.referenceLabel,/GIS 후보 · 배정 미인증/);
+   assert.equal(before.unsafeHtmlInjected,false,'GIS school names are DOM text, never raw markup');
+   assert.equal(before.homeSchoolListCount,0,'Text-only GIS references must not produce residential school list');
    assert.equal(before.homeStatus,'conditional-finder-only');
    assert.equal(before.noAssignedMarker,true);
    await page.locator('#homeReferencePreviewToggle').click();
@@ -99,7 +110,8 @@ async function main(){
       geocodeQuality:{usableForSchoolCandidate:true},parcel:{status:'idle'}};
     try{renderHome()}finally{schoolAssignmentFor=original}
     return {noToggle:!document.getElementById('homeReferencePreviewToggle'),
-      noPreview:!document.getElementById('homeSchoolInfo').textContent.includes('SYNTHETIC HIGH'),
+      noPreview:!document.getElementById('homeSchoolInfo').textContent.includes('SYNTHETIC HIGH')&&
+        !document.getElementById('homeAssignmentPriority').textContent.includes('SYNTHETIC HIGH'),
       homeStatus:home.assignment.status};
    });
    assert.equal(hardBlock.noToggle,true);
