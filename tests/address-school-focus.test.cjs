@@ -103,7 +103,7 @@ test('production UI shows address-first panel and moves commute below map/result
 });
 
 test('public GIS rail uses only linked current directory schools, never ZIP or the assignment list',()=>{
- const h=setup(),direct={name:'GIS ELEM',district:'043907',type:'elementary',ll:[33.1,-96.6]};
+ const h=setup(),direct={id:'043907101',name:'GIS ELEM',district:'043907',type:'elementary',ll:[33.1,-96.6]};
  h.ctx.state.schools.push(direct);
  h.home.mckinneyCrosscheck={kind:'reference-only',district:'043907',
    independentOfficialAddressVerified:false,sourceYear:'2026-27',
@@ -113,6 +113,9 @@ test('public GIS rail uses only linked current directory schools, never ZIP or t
  assert.equal(view.kind,'mckinney-reference');
  assert.equal(view.schools.length,0);
  assert.deepEqual(h.ctx.referenceCandidateSchoolLocations(view).map(s=>s.name),['GIS ELEM']);
+ view.candidates[0].campusId='043907999';
+ assert.equal(h.ctx.referenceCandidateSchoolLocations(view).length,0,'Provider Campus ID conflict is excluded from GIS rail');
+ delete view.candidates[0].campusId;
  h.ctx.state.schools=[h.assigned,h.zipOnly,h.outside];
  assert.equal(h.ctx.referenceCandidateSchoolLocations(view).length,0,
    'removed campus cannot remain in reference school rail');
