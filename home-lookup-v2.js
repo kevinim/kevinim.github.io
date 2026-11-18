@@ -1,7 +1,7 @@
 'use strict';
 // Addresses and coordinates are held in memory only. Geocoding is triggered by submit.
 let irvingReferenceLayer=null,dallasReferenceLayer=null;
-let home=null,homeMarker=null,homeCandidates=[],homeRequest=null,homeRouteRequest=null,homeParcelRequest=null,homeOfficialRequest=null,homeVersion=0,homeRouteLayer=null,homeAutocomplete=null;
+let home=null,homeMarker=null,homeCandidates=[],homeRequest=null,homeRouteRequest=null,homeParcelRequest=null,homeOfficialRequest=null,mckinneyLiveRequest=null,homeVersion=0,homeRouteLayer=null,homeAutocomplete=null;
 
 function ringContains(point,ring){
   let inside=false;
@@ -105,7 +105,7 @@ function clearDallasReference(){if(dallasReferenceLayer&&map)map.removeLayer(dal
 function clearHome(){
   invalidateZipCommute();
   clearIrvingReference();clearDallasReference();
-  homeVersion++;homeRequest?.abort();homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;home=null;homeCandidates=[];
+  homeVersion++;homeRequest?.abort();homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;mckinneyLiveRequest?.abort();mckinneyLiveRequest=null;home=null;homeCandidates=[];
   if(map&&homeMarker)map.removeLayer(homeMarker);homeMarker=null;
   if(typeof homeZoneGroup!=='undefined'&&homeZoneGroup)homeZoneGroup.clearLayers();
   el('homeCandidates').replaceChildren();el('homeResult').replaceChildren();el('homeSchoolInfo').replaceChildren();el('homeStatus').textContent='';if(homeRouteLayer)homeRouteLayer.clearLayers();
@@ -482,11 +482,36 @@ function wireOfficialReviewPanel(item){
 }
 
 function refreshHomeOffice(){if(!home)return;invalidateZipCommute();homeVersion++;homeRouteRequest?.abort();if(homeRouteLayer)homeRouteLayer.clearLayers();renderHome()}
-function refreshHomeSchools(){if(home){invalidateZipCommute();homeVersion++;homeRouteRequest?.abort();renderHome();drawSchools()}}
+// Re-query the district-linked public WebMap once per explicitly selected,
+// precisely geocoded residence. No household coordinates enter the GET URL.
+function startMcKinneyLiveLookup(){
+ if(!home||home.mckinneyLiveCheck||!window.McKinneyLiveAddressLookup||
+    !home.geocodeQuality?.usableForSchoolCandidate||state.liveFinder?.['043907']!==true)return;
+ const candidate=schoolAssignmentFor(home);
+ if(candidate?.district!=='043907'||candidate.status!=='finder-current')return;
+ const selected=home,controller=new AbortController();
+ mckinneyLiveRequest?.abort();mckinneyLiveRequest=controller;
+ selected.mckinneyLiveCheck={kind:'loading'};renderAddressSchoolPriority();
+ window.McKinneyLiveAddressLookup.lookup({
+  point:[selected.ll[1],selected.ll[0]],localCandidate:candidate,
+  requestJson:(url,options)=>window.TxBoundedJson.requestJson(url,options),
+  convert:data=>convertMetrostudyZones(data,MCKINNEY_FINDER),
+  contains:geometryContains,signal:controller.signal
+ }).then(result=>{
+  if(home!==selected||controller.signal.aborted)return;
+  selected.mckinneyLiveCheck=result;renderAddressSchoolPriority();drawSchools();drawList();
+ }).catch(error=>{
+  if(home!==selected||controller.signal.aborted||error?.name==='AbortError')return;
+  selected.mckinneyLiveCheck={kind:'unavailable',code:'network-unavailable',
+   reason:'McKinney 공개 GIS 재조회 실패 · 공식 검색기에서 최종 확인하세요.'};
+  renderAddressSchoolPriority();
+ }).finally(()=>{if(mckinneyLiveRequest===controller)mckinneyLiveRequest=null});
+}
+function refreshHomeSchools(){if(home){invalidateZipCommute();homeVersion++;homeRouteRequest?.abort();renderHome();startMcKinneyLiveLookup();drawSchools()}}
 function useHomeCandidate(candidate){
   clearIrvingReference();clearDallasReference();
   if(!map){el('homeStatus').textContent='지도가 아직 준비되지 않았습니다. 잠시 후 주소 검색을 다시 눌러 주세요.';return false}
-  invalidateZipCommute();homeVersion++;homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;
+  invalidateZipCommute();homeVersion++;homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;mckinneyLiveRequest?.abort();mckinneyLiveRequest=null;
   home={address:candidate.address,typedAddress:candidate.savedTypedAddress||el('homeAddress').value.trim(),ll:[candidate.location.y,candidate.location.x],geocodeQuality:candidate.savedGeocodeQuality||assessResidentialGeocode(el('homeAddress').value.trim(),candidate),parcel:candidate.savedParcel||{status:'idle'},officialReview:candidate.savedOfficialReview||null,officialDraft:candidate.savedOfficialDraft||null};
   // Fetch the static jurisdiction layer only for a searched Carrollton-area
   // address. Never include coordinates/address in the network URL; no stored PII.
@@ -503,7 +528,7 @@ function useHomeCandidate(candidate){
   if(typeof state!=='undefined')state.selectedSchool=null;
   if(typeof schoolFocusGroup!=='undefined')schoolFocusGroup?.clearLayers();
   if(matches.length===1)selectZip(matches[0].z,false);
-  map.setView(home.ll,13);renderHome();drawSchools();drawList();
+  map.setView(home.ll,13);renderHome();startMcKinneyLiveLookup();drawSchools();drawList();
    if(typeof focusHomeAssignedSchools==='function')focusHomeAssignedSchools();el('homeStatus').textContent='검색 결과 위치를 지도에 표시했습니다. 주소와 핀을 확인하세요.';syncHomeClearVisibility();
    // Following a deliberate address selection, prioritize school assignment status.
    // Never auto-scroll to unrelated ZIP campuses or imply approval.
