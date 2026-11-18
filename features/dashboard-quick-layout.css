@@ -1,0 +1,119 @@
+/* TX address-first navigation and school/map overview. Visual-only.
+   Do not change enrollment evidence, school GIS, marker source or viewport ownership. */
+.shell{display:flex;flex-direction:column}
+.shell>.heading{order:0}
+.shell>.tx-jump-nav{order:1}
+.shell>.controls-grid{display:contents}
+.shell>.controls-grid>.home-controls{order:2;width:100%;height:auto}
+.shell>#cfbOfficialFinderPanel{order:2}
+.shell>.main{order:3}
+.shell>#txRentSection{order:4}
+.shell>#txCompareSection{order:5}
+.shell>#txStatsSection{order:6}
+.shell>.controls-grid>.office-controls{order:7;width:100%;height:auto}
+.shell>.footer{order:9}
+.tx-jump-nav{display:flex;gap:7px;flex-wrap:wrap;margin:3px 0 13px}
+.tx-jump-nav a{display:inline-flex;align-items:center;min-height:34px;padding:6px 10px;
+ border:1px solid #a6bfdc;border-radius:9px;background:#eef5ff;color:#24476b;text-decoration:none;
+ font-size:12px;font-weight:750}
+.tx-jump-nav a:hover,.tx-jump-nav a:focus-visible{background:#dceafa;outline-offset:2px}
+.tx-layout-section{min-width:0;width:100%;margin:0 0 15px;scroll-margin-top:16px}
+.tx-layout-section:empty{display:none}
+.tx-layout-section .rent-map-uat{margin-bottom:0}
+.tx-layout-section .region-compare{margin-bottom:0}
+.tx-stats-section>.tx-stats-title{margin:0 0 12px;font-size:18px}
+.tx-stats-section>.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 15px}
+.tx-stats-section>.detail,.tx-stats-section>.zip-insights,
+.tx-stats-section>.panel,.tx-stats-section>.area-qa{margin-bottom:12px;width:100%}
+.tx-stats-section>.detail{min-height:0}
+.shell>.main>.filter-panel{display:flex;flex-direction:column;gap:3px}
+.shell>.main>.filter-panel>h2{order:0}
+.shell>.main>.filter-panel>.school-settings{order:1}
+.shell>.main>.filter-panel>.area-settings{order:2}
+.shell>.main>.filter-panel>.commute-settings{order:80}
+.shell>.main>.filter-panel>details,.shell>.main>.filter-panel>hr{order:90}
+.shell>.main>.filter-panel>.school-settings .settings-group-note{margin:5px 0}
+.home-assignment-priority{scroll-margin-top:14px}
+.home-assignment-priority-head h3{font-size:18px}
+.home-assignment-priority-desc{margin:7px 0 11px;max-width:106ch;font-size:12px}
+.home-assignment-priority-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:stretch}
+.home-assignment-school{display:flex;flex-direction:column;gap:8px;padding:13px 14px}
+.home-school-main{display:flex;justify-content:space-between;align-items:start;gap:10px}
+.home-school-main>strong{font-size:15px;line-height:1.3;font-weight:850;overflow-wrap:anywhere}
+.home-school-grade{display:inline-grid;place-items:center;flex:0 0 auto;min-width:45px;height:45px;
+ padding:0 6px;border-radius:13px;background:#e8eef6;border:2px solid #9cabbf;color:#314560;
+ font-size:21px;line-height:1;font-weight:900}
+.home-school-grade.grade-a{background:#def8ea;border-color:#168357;color:#106340}
+.home-school-grade.grade-b{background:#e1eeff;border-color:#256ac1;color:#154b92}
+.home-school-grade.grade-c{background:#fff1ce;border-color:#c28011;color:#825509}
+.home-school-grade.grade-d,.home-school-grade.grade-f{background:#fff0ec;border-color:#bb5144;color:#8a2e2a}
+.home-school-grade.grade-nr,.home-school-grade.grade-unknown{background:#eef1f5;border-color:#98a4b4;color:#526274;font-size:14px}
+.home-school-chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.home-school-chip{display:inline-flex;align-items:center;padding:4px 7px;min-height:25px;
+ font-size:10px;font-weight:800;border-radius:999px;color:#405775;background:#e7edf5}
+.home-school-chip.evidence{background:#fdf1d9;color:#795112;border:1px solid #e6c58c}
+.home-school-map-button{font:inherit;font-weight:800;font-size:10px;color:#125c9b;
+ border:1px solid #a3c5ea;border-radius:7px;padding:5px 8px;min-height:29px;
+ background:#ecf5ff;cursor:pointer;margin:0!important}
+.home-school-map-button:hover{background:#dcefff}
+.home-school-map-button:focus-visible{outline:3px solid #facc15;outline-offset:2px}
+.home-school-evidence{font-size:10px;color:#576b83;line-height:1.5;margin-top:auto}
+.home-school-evidence summary{cursor:pointer;font-weight:700}
+.home-school-evidence p{margin:6px 0 0;overflow-wrap:anywhere}
+.home-assignment-priority-cards>a,.home-assignment-priority-cards>small{grid-column:1/-1}
+.tx-reference-campus-icon{background:transparent!important;border:0!important}
+.tx-reference-campus-pin{position:relative;width:44px;height:44px;display:flex;align-items:center;
+ justify-content:center;gap:2px;border:3px dashed #f5a623;border-radius:50% 50% 50% 10px;
+ transform:rotate(-45deg);background:#17344d;color:white;box-shadow:0 2px 11px #111a2a8c}
+.tx-reference-campus-pin>span,.tx-reference-campus-pin>strong{transform:rotate(45deg)}
+.tx-reference-campus-pin strong{font-size:17px}
+.tx-reference-campus-level{font-size:11px;font-weight:800}
+.tx-reference-campus-pin.grade-a{background:#0e694f}
+.tx-reference-campus-pin.grade-b{background:#245d9d}
+.tx-reference-campus-pin.grade-c{background:#855e12}
+.tx-reference-campus-pin.grade-d,.tx-reference-campus-pin.grade-f{background:#923e32}
+.tx-reference-campus-tooltip{font-size:12px;font-weight:750}
+html[data-theme="dark"] .tx-jump-nav a{background:#1d3450;border-color:#456b90;color:#e0f0ff}
+html[data-theme="dark"] .tx-jump-nav a:hover{background:#2a4768}
+html[data-theme="dark"] .home-school-grade.grade-a{background:#164f3b;color:#b8f9da;border-color:#44c898}
+html[data-theme="dark"] .home-school-grade.grade-b{background:#203d6d;color:#d3e5ff;border-color:#6daaff}
+html[data-theme="dark"] .home-school-grade.grade-c{background:#593f15;color:#ffe6a8;border-color:#d5a83c}
+html[data-theme="dark"] .home-school-grade.grade-d,
+html[data-theme="dark"] .home-school-grade.grade-f{background:#5a2c28;color:#ffddd3;border-color:#e18873}
+html[data-theme="dark"] .home-school-grade.grade-unknown,
+html[data-theme="dark"] .home-school-grade.grade-nr{background:#324254;color:#dce5f0;border-color:#6b839b}
+html[data-theme="dark"] .home-school-chip{background:#2d435e;color:#e8f0fd}
+html[data-theme="dark"] .home-school-chip.evidence{background:#4b3c27;color:#ffe6aa;border-color:#806c42}
+html[data-theme="dark"] .home-school-map-button{background:#233d60;color:#d9eaff;border-color:#527aa3}
+html[data-theme="dark"] .home-school-evidence{color:#bbcee4}
+@media(min-width:1060px){
+ .shell>.main{grid-template-columns:minmax(305px,370px) minmax(0,1fr)}
+ .shell>.main>.filter-panel{grid-column:1;grid-row:1}
+ .shell>.main>.section{grid-column:1;grid-row:2}
+ .shell>.main>.mapcol{grid-column:2;grid-row:1/3}
+ .shell>.main>.mapcol>.mapbox{top:12px}
+}
+@media(max-width:1059px){
+ .tx-stats-section>.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .home-assignment-priority-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:720px){
+ .shell>.heading{order:0}
+ .shell>.tx-jump-nav{order:1}
+ .shell>.controls-grid>.home-controls{order:2}
+ .shell>.main{order:3;display:flex;flex-direction:column;gap:12px}
+ .shell>.main>.filter-panel{order:1;width:100%}
+ .shell>.main>.mapcol{display:contents}
+ .shell>.main>.mapcol>.mapbox{order:2;width:100%}
+ .shell>.main>.section{order:3;width:100%}
+ .shell>.main>.mapcol>.zip-insights{order:4}
+ .shell>.main>.detail{order:5}
+ .shell>#txRentSection{order:4}
+ .shell>#txCompareSection{order:5}
+ .shell>#txStatsSection{order:6}
+ .shell>.controls-grid>.office-controls{order:7}
+ .shell>.footer{order:9}
+ .home-assignment-priority-cards{grid-template-columns:1fr}
+ .tx-stats-section>.kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+}
+@media(max-width:380px){.tx-stats-section>.kpis{grid-template-columns:1fr}}
