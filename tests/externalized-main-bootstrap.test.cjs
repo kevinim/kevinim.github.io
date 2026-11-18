@@ -44,8 +44,9 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,priorityElement[0],
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<div id="schoolAddressNotice" class="home-school-address-note" role="status" aria-live="polite" hidden></div>','');
 for(const [next,previous] of [
+ ['<input type="checkbox" id="referenceBoundaryOverlay" checked>','<input type="checkbox" id="referenceBoundaryOverlay">'],
  ['map-first-split.css?v=2','map-first-split.css?v=1'],
- ['dashboard-main.js?v=16','dashboard-main.js?v=10'],
+ ['dashboard-main.js?v=17','dashboard-main.js?v=10'],
  ['home-lookup-v2.js?v=25','home-lookup-v2.js?v=20'],
  ['home-school-manual-bridge.js?v=3','home-school-manual-bridge.js?v=1']
 ])normalizedMainHtml=replaceOnce(normalizedMainHtml,next,previous);
