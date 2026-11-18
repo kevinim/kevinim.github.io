@@ -19,8 +19,31 @@
     ['high','고등학교']
   ];
   const PRIORITY=['LISD','CFB','057905','AISD','043907','PISD','FISD','PROSPER'];
-  let activeHome=null,panel=null,districtSelect=null,link=null,selects={},status=null,cards=null,details=null;
+  let activeHome=null,panel=null,districtSelect=null,link=null,selects={},status=null,cards=null,details=null,suggestButton=null;
   let appliedSchools=[];
+  // In-memory GIS-to-form convenience only. This never queries the official
+  // residential Finder result and never applies a school to the map.
+  function previewSuggestions(current,schools){
+    const reference=current?.mckinneyCrosscheck;
+    if(reference?.kind!=='reference-only'||reference.district!=='043907'||
+       reference.independentOfficialAddressVerified!==false||
+       !Array.isArray(reference.candidates)||!Array.isArray(schools))return [];
+    const levels=new Set(),indices=new Set(),result=[];
+    for(const candidate of reference.candidates){
+      const level=candidate?.level,school=candidate?.matchedSchool;
+      if(!LEVELS.some(([key])=>key===level)||candidate.linked!==true||
+         candidate.sourceYear&&candidate.sourceYear!=='2026-27'||!school||
+         school.district!=='043907'||school.type!==level||
+         typeof school.id!=='string'||!/^043907\\d{3}$/.test(school.id))continue;
+      const index=schools.indexOf(school);
+      if(index<0||(candidate.campusId&&candidate.campusId!==school.id))continue;
+      // Conflicting matches cannot be used to prefill any school.
+      if(levels.has(level)||indices.has(index))return [];
+      levels.add(level);indices.add(index);
+      result.push({level,index,name:school.name});
+    }
+    return LEVELS.flatMap(([level])=>result.filter(x=>x.level===level));
+  }
   function selectedSchools(current){
     return current&&current===activeHome?appliedSchools.slice():[];
   }
@@ -153,6 +176,8 @@
       if(current)refreshDistrictOptions();
       reset();
     }
+    if(suggestButton)suggestButton.hidden=!current||
+      previewSuggestions(current,campusList()).length===0;
   }
   function init(){
     const list=byId('schoolList'),homeInfo=byId('homeSchoolInfo');
@@ -164,6 +189,30 @@
     const top=text('p','home-manual-school-note',
       '주소별 배정학교는 아직 자동 인증되지 않았습니다. 공식 학군 Finder 결과를 직접 선택하면 그 학교만 아래 목록과 지도에 표시됩니다. ZIP 안의 다른 학교는 표시하지 않습니다.');
     shell.appendChild(top);
+    suggestButton=text('button','mini-btn',
+      'GIS 참고 후보를 초·중·고 선택란에 채우기 (배정 미인증)');
+    suggestButton.id='homeManualMckinneyPrefill';
+    suggestButton.type='button';suggestButton.hidden=true;
+    suggestButton.addEventListener('click',function(){
+      const matches=previewSuggestions(activeHome,campusList());
+      if(!matches.length)return;
+      districtSelect.value='043907';
+      if(districtSelect.value!=='043907')return;
+      fillSchools();
+      for(const match of matches){
+        const control=selects[match.level],value=String(match.index);
+        if(!control||![...control.options].some(o=>o.value===value)){
+          status.textContent='학교 목록이 갱신됐습니다. 공식 Finder에서 직접 확인해 주세요.';
+          return;
+        }
+        control.value=value;
+      }
+      appliedSchools=[];cards.replaceChildren();details.open=true;
+      status.textContent='GIS 참고 후보 '+matches.length+
+        '개를 선택란에만 채웠습니다. 공식 2026–27 Finder에서 해당 주소의 초·중·고 결과와 각각 대조한 후 아래 표시 버튼을 누르세요. 이 기능은 배정 인증이 아닙니다.';
+      notifyAddressFocus();
+    });
+    shell.appendChild(suggestButton);
     details=document.createElement('details');
     details.className='home-manual-school-details';
     details.appendChild(text('summary','','공식 배정 결과를 확인한 뒤 초·중·고 학교를 아래에 표시'));
@@ -205,5 +254,5 @@
     observer.observe(homeInfo,{childList:true});
     update();
   }
-  return Object.freeze({init,catalog,officialUrl,selectedSchools});
+  return Object.freeze({init,catalog,officialUrl,selectedSchools,previewSuggestions});
 });
