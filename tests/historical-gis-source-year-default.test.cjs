@@ -14,7 +14,7 @@ test('historical official reference boundaries are on by default, but user can o
  assert.match(main,/state\.showOldZones=e\.target\.checked;drawBoundary\(\)/);
  assert.match(main,/historical&&!state\.showOldZones/);
  assert.match(main,/finderLinked\?'#285ac0':'#d37125'/);
- assert.match(html,/<script src="\.\/dashboard-main\.js\?v=18"><\/script>/);
+ assert.match(html,/<script src="\.\/dashboard-main\.js\?v=19"><\/script>/);
 });
 
 test('Allen official city GIS shows 2023 elementary and middle, 2019 high, never current approval',()=>{
