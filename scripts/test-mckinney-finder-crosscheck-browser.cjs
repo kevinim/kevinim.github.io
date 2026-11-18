@@ -78,7 +78,7 @@ async function main(){
     };
    });
    assert.equal(overview.visible,true,'McKinney official GIS evidence shown in address priority panel');
-   assert.match(overview.status,/GIS 후보 · 배정 미인증/);
+   assert.match(overview.status,/GIS 기준 예상 배정학교/);
    assert.equal(overview.count,3,'E/M/H source names are shown individually');
    assert.equal(overview.safe,true,'School name remains inert DOM text');
    assert.equal(overview.source,true);
