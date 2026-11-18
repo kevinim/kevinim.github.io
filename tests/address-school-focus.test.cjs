@@ -89,7 +89,7 @@ test('production UI shows address-first panel and moves commute below map/result
  assert.match(html,/id="homeAssignmentPriority"/);
  assert.match(html,/id="schoolAddressNotice"/);
  assert.match(html,/map-first-split\.css\?v=2/);
- assert.match(html,/dashboard-main\.js\?v=13/);
+ assert.match(html,/dashboard-main\.js\?v=14/);
  assert.match(html,/home-lookup-v2\.js\?v=24/);
  assert.match(html,/home-school-manual-bridge\.js\?v=3/);
  assert.match(css,/\.shell>\.controls-grid>\.office-controls\{order:90/);
@@ -100,4 +100,28 @@ test('production UI shows address-first panel and moves commute below map/result
  assert.match(manual,/selectedSchools\(current\)/);
  assert.doesNotMatch(source.slice(begin,source.indexOf(' function drawSchools(){',end)),/innerHTML\s*=/,
   'Priority school names must be DOM text nodes, never raw HTML injection');
+});
+
+test('public GIS rail uses only linked current directory schools, never ZIP or the assignment list',()=>{
+ const h=setup(),direct={id:'043907101',name:'GIS ELEM',district:'043907',type:'elementary',ll:[33.1,-96.6]};
+ h.ctx.state.schools.push(direct);
+ h.home.mckinneyCrosscheck={kind:'reference-only',district:'043907',
+   independentOfficialAddressVerified:false,sourceYear:'2026-27',
+   candidates:[{school:'GIS ELEM',level:'elementary',levelText:'초등',
+     matchedSchool:direct},{school:'UNLINKED HIGH',level:'high',matchedSchool:null}]};
+ const view=h.view();
+ assert.equal(view.kind,'mckinney-reference');
+ assert.equal(view.schools.length,0);
+ assert.deepEqual(Array.from(h.ctx.referenceCandidateSchoolLocations(view),s=>s.name),['GIS ELEM']);
+ view.candidates[0].campusId='043907999';
+ assert.equal(h.ctx.referenceCandidateSchoolLocations(view).length,0,'Provider Campus ID conflict is excluded from GIS rail');
+ delete view.candidates[0].campusId;
+ h.ctx.state.schools=[h.assigned,h.zipOnly,h.outside];
+ assert.equal(h.ctx.referenceCandidateSchoolLocations(view).length,0,
+   'removed campus cannot remain in reference school rail');
+ assert.equal(h.ctx.home.assignment.status,'conditional-finder-only');
+ const rail=source.slice(source.indexOf('function drawList(){'),source.indexOf('function zoneNameKey('));
+ assert.match(rail,/items=referenceCandidateSchoolLocations\(view\)/);
+ assert.match(rail,/railReference\?'<span class="other-label">GIS 참고 후보 · 배정 미인증/);
+ assert.match(rail,/view\?\.kind==='certified'&&homeSchoolMatches\(s\)/);
 });
