@@ -261,6 +261,15 @@ function renderHome(){
   home.schoolReferencePlan=referencePlan||null;
   home.schoolSourceStatus=rawSchoolCandidate?.status||'unavailable';
   home.schoolSourceDistrict=rawSchoolCandidate?.district||'';
+  // McKinney pilot: cross-check the currently loaded district-linked Finder
+  // layers, grade-by-grade, against the verified campus directory. This never
+  // constitutes a direct residence-enrollment grant or a Finder UI API response.
+  home.mckinneyCrosscheck=window.McKinneyFinderCrosscheck?.crosscheck({
+   raw:rawSchoolCandidate,geocodePrecise:home.geocodeQuality?.usableForSchoolCandidate===true,
+   sourceLive:state.liveFinder?.['043907']===true,
+   registry:DISTRICT_REGISTRY,official:window.TrustedLinkPolicy?.official,
+   schools:state.schools
+  })||null;
   const referenceControl=referencePlan?.kind==='reference-only'
    ?'<div class="home-reference-control"><button id="homeReferencePreviewToggle" class="mini-btn" type="button" aria-controls="homeReferencePreviewResult" aria-expanded="'+(home.referencePreviewRequested?'true':'false')+'">GIS 참고 후보 직접 보기 · 실제 배정 미인증</button><div id="homeReferencePreviewResult" role="status" aria-live="polite"></div></div>'
    :'';
