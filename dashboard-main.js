@@ -602,10 +602,13 @@ function addressSchoolView(){
  // McKinney pilot: live Finder GIS is crossed with campus directory metadata.
  // This is never a verified residential enrollment result.
  const mc=searchedHome.mckinneyCrosscheck;
+ const liveCheck=searchedHome.mckinneyLiveCheck||null;
+ if(liveCheck?.kind==='source-conflict')return {kind:'unverified',schools:[],
+  reason:liveCheck.reason+' · 공식 Finder 주소 검색 결과를 다시 확인하세요.',sourceStatus:'error'};
  if(mc?.kind==='reference-only')return {kind:'mckinney-reference',schools:[],
   candidates:mc.candidates.map(c=>({name:c.school,school:c.matchedSchool||null,
    levelText:c.levelText,grades:'',yearNote:c.yearNote,campusId:c.campusId,verifiedRating:c.verifiedRating,identityKind:c.identityKind})),
-  reference:mc};
+  reference:mc,liveCheck};
  if(mc?.kind==='unavailable'&&searchedHome.schoolSourceDistrict==='043907')
   return {kind:'unverified',schools:[],reason:mc.reason,sourceStatus:mc.code};
  // Current-year official GIS zones may identify *reference candidates*, not
@@ -648,10 +651,17 @@ function renderAddressSchoolPriority(){
   desc.textContent='공식 Finder 결과를 직접 선택한 학교만 표시합니다. 이 대시보드가 주소 배정을 독립 인증한 것은 아닙니다. 같은 ZIP의 다른 학교는 숨겼습니다.';
 
  }else if(view.kind==='mckinney-reference'){
-  status.textContent='McKinney Finder GIS 후보 · 배정 미인증';
+  status.textContent=view.liveCheck?.kind==='source-matched'?'McKinney 공식 GIS 자동 재조회 일치 · 배정 미인증':
+   view.liveCheck?.kind==='loading'?'McKinney 공식 GIS 재조회 중 · 배정 미인증':
+   'McKinney Finder GIS 후보 · 배정 미인증';
   const missing=view.reference.missing?.length?' · 미확인 학교급: '+view.reference.missing.join(', '):'';
   desc.textContent=view.reference.source+' · 공개 학교 경계·캠퍼스 ID를 집 지도 좌표와 교차 대조한 참고 후보입니다. 공식 검색기 화면의 주소별 결과와 별도로 검증하지 않았으므로 배정 확정이 아닙니다.'+missing+
-   (view.reference.sourceWarnings?.length?' · '+view.reference.sourceWarnings.join(' · '):'');
+   (view.reference.sourceWarnings?.length?' · '+view.reference.sourceWarnings.join(' · '):'')+
+   (view.liveCheck?.kind==='source-matched'?' · '+view.liveCheck.notice+
+      (view.liveCheck.warnings?.length?' · '+view.liveCheck.warnings.join(', '):''):
+    view.liveCheck?.kind==='loading'?' · 공식 공개 GIS 원본을 자동 재조회하여 기존 결과와 교차검증 중입니다.':
+    view.liveCheck?.kind==='unavailable'?' · GIS 추가 조회 실패 · 공식 Finder를 직접 확인하세요.':'');
+  // independentOfficialAddressVerified is false: source agreement is not an official address-result response.
  }else if(view.kind==='gis-reference'){
   status.textContent='2026–27 GIS 후보 · 배정 미인증';
   const gaps=view.reference.missing?.length?' · 자료가 없는 학교급: '+view.reference.missing.join(', '):'';

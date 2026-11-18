@@ -4,6 +4,10 @@ on:
     branches: [main]
     paths:
       - 'features/mckinney-finder-crosscheck.js'
+      - 'features/mckinney-live-address-lookup.js'
+      - 'tests/mckinney-live-address-lookup.test.cjs'
+      - 'home-lookup-v2.js'
+      - 'dashboard-main.js'
       - 'scripts/check-mckinney-official-source-live.mjs'
       - 'tests/mckinney-finder-crosscheck.test.cjs'
       - '.github/workflows/mckinney-official-finder-source-qa.yml'
@@ -25,6 +29,6 @@ jobs:
         with:
           node-version: '22'
       - name: Synthetic campus identity and year checks
-        run: node --test tests/mckinney-finder-crosscheck.test.cjs
+        run: node --test tests/mckinney-finder-crosscheck.test.cjs tests/mckinney-live-address-lookup.test.cjs
       - name: Review publisher's live Finder web map and district's 2026-27 map
         run: node scripts/check-mckinney-official-source-live.mjs
