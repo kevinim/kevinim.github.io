@@ -30,7 +30,7 @@ try{
 if(!Array.isArray(map?.operationalLayers)||!html.includes('McKinney ISD Attendance Zones')){
  console.error('MCKINNEY_SOURCE_LIVE_NO_GO: unknown official source format');process.exit(1)
 }
-if(!JSON.stringify(locator).includes('widgets/Search/Widget')){
+if(!['widgets/Search/Widget','SearchWidget','widget-search'].some(tag=>JSON.stringify(locator).includes(tag))){
  console.error('MCKINNEY_LOCATOR_WIDGET_NO_GO: published official 26-27 locator no longer exposes enabled Search widget');process.exit(1)
 }
 const names=Object.create(null),years=Object.create(null),matches=Object.create(null);
