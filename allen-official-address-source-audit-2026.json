@@ -93,5 +93,26 @@
     "apartmentSourceRowsBlocked": 4,
     "totalUnmatchedAtPublishedRangeStart": 7,
     "notes": "All 1,687 parseable source ranges checked at their numeric starting address: 1,680 unique school matches, three duplicate/overlapping ranges return null, four school-year-undated split-apartment source rows stay quarantined."
+  },
+  "overlapReferenceRepair20261118": {
+    "reviewed": "2026-11-18",
+    "source": "https://www.allenisd.org/page/findaschool",
+    "rule": "Identical four-campus overlap ranges may show advisory candidates only. Missing/different campus rows fail closed.",
+    "cachedParseableSourceRows": 1687,
+    "previousUniqueStartMatches": 1680,
+    "nowUniqueOrIdenticalSchoolStartMatches": 1683,
+    "splitApartmentSourceRowsStillBlocked": 4,
+    "overlappingRowsResolved": [
+      "North Arbor Ridge Dr",
+      "Pennington Dr",
+      "Spencer St"
+    ],
+    "malformedSourceRowsStillExcluded": [
+      "Moss Haven PL 2009 – 202-216",
+      "Crestview Heights 2050 Peak St"
+    ],
+    "explicitAcademicYear": null,
+    "certifiedResidentialEnrollment": false,
+    "certified2026_27GIS": false
   }
 }

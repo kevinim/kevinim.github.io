@@ -46,8 +46,14 @@ function matchAllenAddress(address, rows, inDistrict) {
     return !!range && number>=+range[1] && number<=+(range[2]||range[1])
        && (!range[3] || number%2===0);
   });
-  // Conflicting or duplicated source ranges are explicitly unverified.
-  return matches.length===1?matches[0]:null;
+  // An overlapping official street range is an informational candidate only
+  // when every matching source row lists the same four campuses. Conflicting
+  // or missing schools fail closed. Enrollment and source year stay unverified.
+  if(matches.length===1)return matches[0];
+  if(matches.length<2)return null;
+  const chains=matches.map(r=>r.slice(2,6).map(v=>String(v||'').trim().toUpperCase()));
+  return chains.every(chain=>chain.length===4&&chain.every((name,i)=>name&&name===chains[0][i]))
+    ?matches[0]:null;
 }
 if (typeof module !== 'undefined') module.exports = { matchAllenAddress, normalizeAllenStreet };
 if (typeof document !== 'undefined') {

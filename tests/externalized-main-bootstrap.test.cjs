@@ -47,6 +47,7 @@ for(const [next,previous] of [
  ['<input type="checkbox" id="referenceBoundaryOverlay" checked>','<input type="checkbox" id="referenceBoundaryOverlay">'],
  ['map-first-split.css?v=2','map-first-split.css?v=1'],
  ['dashboard-main.js?v=17','dashboard-main.js?v=10'],
+ ['allen-lookup.js?v=6','allen-lookup.js?v=5'],
  ['home-lookup-v2.js?v=25','home-lookup-v2.js?v=20'],
  ['home-school-manual-bridge.js?v=3','home-school-manual-bridge.js?v=1']
 ])normalizedMainHtml=replaceOnce(normalizedMainHtml,next,previous);
