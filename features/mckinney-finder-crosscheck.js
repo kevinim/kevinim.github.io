@@ -85,7 +85,7 @@
    // Otherwise a changed source schema could silently fall through to an alias.
    const providerId=p.campusId;
    if(providerId!==null&&providerId!==undefined&&providerId!==''&&
-      (typeof providerId!=='string'||!/^043907\\d{3}$/.test(providerId)))
+      (typeof providerId!=='string'||!/^043907[0-9]{3}$/.test(providerId)))
     return unavailable('공식 GIS Campus ID 형식 또는 학군 코드가 일치하지 않습니다.','invalid-campus-id');
    const campusId=providerId||null;
    const byName=schools.filter(s=>s?.district===DISTRICT&&s.type===level&&normalize(s.name)===key);
