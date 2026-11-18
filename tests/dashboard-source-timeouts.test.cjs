@@ -53,3 +53,14 @@ test('one pending polygon does not hide a completed district readiness',async t=
  assert.equal(h.run('state.zoneReady'),false);
  t.mock.timers.tick(20000);await flush();
 });
+
+test('district source loader uses parsed JSON from TxBoundedJson, not Response.json()',async()=>{
+ const h=context(url=>String(url).includes('static.friscoisd.org')
+  ?Promise.resolve(response({source:'synthetic-current'}))
+  :Promise.reject(new Error('unrelated GIS source offline')));
+ h.run("convertFriscoZones=j=>j.source==='synthetic-current'?[{properties:{school:'SYNTHETIC'}}]:[]");
+ await h.ctx.loadBoundaryData(['FISD']);
+ assert.equal(h.run('state.zoneData.FISD.length'),1);
+ assert.equal(h.run('state.sourceStatus.FISD.polygon'),'ready');
+ assert.equal(h.run('state.zoneLoadErrors.FISD'),undefined);
+});
