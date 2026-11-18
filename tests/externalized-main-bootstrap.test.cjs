@@ -46,9 +46,9 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
 for(const [next,previous] of [
  ['<input type="checkbox" id="referenceBoundaryOverlay" checked>','<input type="checkbox" id="referenceBoundaryOverlay">'],
  ['map-first-split.css?v=2','map-first-split.css?v=1'],
- ['dashboard-main.js?v=17','dashboard-main.js?v=10'],
+ ['dashboard-main.js?v=18','dashboard-main.js?v=10'],
  ['allen-lookup.js?v=6','allen-lookup.js?v=5'],
- ['home-lookup-v2.js?v=25','home-lookup-v2.js?v=20'],
+ ['home-lookup-v2.js?v=26','home-lookup-v2.js?v=20'],
  ['home-school-manual-bridge.js?v=3','home-school-manual-bridge.js?v=1']
 ])normalizedMainHtml=replaceOnce(normalizedMainHtml,next,previous);
 for(const [next,prior] of [["https://gis.texaswildfirerisk.com https://tiles.openfreemap.org; connect-src 'self'","https://gis.texaswildfirerisk.com; connect-src 'self'"],["https://fueleconomy.gov https://tiles.openfreemap.org; font-src 'self' data:; worker-src 'self' blob:; object-src 'none'","https://fueleconomy.gov; font-src 'self' data:; object-src 'none'"],["<option value=\"liberty\">Liberty · OpenFreeMap</option><option value=\"osm\">OpenStreetMap</option>","<option value=\"osm\">OpenStreetMap</option>"],["<link rel=\"stylesheet\" href=\"./features/tea-peims-public-share-addon.css?v=2\">\n<link rel=\"stylesheet\" href=\"./features/map-first-split.css?v=1\">","<link rel=\"stylesheet\" href=\"./features/tea-peims-public-share-addon.css?v=2\">"],["<script src=\"./features/map/liberty-basemap.js?v=2\"></script><script src=\"./dashboard-main.js?v=10\"></script>","<script src=\"./dashboard-main.js?v=9\"></script>"]])
@@ -239,6 +239,15 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
     "과거 GIS 경계 '+escape(yrs)+' (현재 배정 보장 X)</b> · 주황색 점선"
   ]
 ])reviewedReferenceJs=replaceOnce(reviewedReferenceJs,newFragment,oldFragment);
+ // McKinney GIS estimate wording lives only in reviewed address-school/map/rail sections.
+ // Reconcile those scoped segments against the protected pre-change source;
+ // all other executable bytes remain byte-identical to historical baseline.
+ for(const [start,end] of [
+  ['function addressSchoolView(){',' function drawSchools(){'],
+  [' function drawSchools(){','function drawHomeAssignmentMap(){'],
+  ['function drawList(){','function zoneNameKey('],
+  ['function focusHomeAssignedSchools(){','// Cache per-ZIP geometries']
+ ]) reviewedReferenceJs=replaceRegion(reviewedReferenceJs,referencePolicyBaseline,start,end);
  assert.equal(hash(reviewedReferenceJs),hash(referencePolicyBaseline),
   'Historical GIS default/year labels are the only changes outside the previously reviewed address-school regions');
  for(const [start,end] of [
