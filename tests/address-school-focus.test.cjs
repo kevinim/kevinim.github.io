@@ -80,6 +80,34 @@ test('certified district source, when independently authorized, takes precedence
  assert.equal(h.view().kind,'certified');
  assert.deepEqual(Array.from(h.view().schools,s=>s.name),['ASSIGNED_E']);
 });
+test('Prosper current-year GIS-listed new middle campus stays in school rail without a fabricated building pin',()=>{
+ const h=setup();
+ const noPoint={name:'Jim Bridges Middle School',district:'PROSPER',type:'middle',
+   address:'3225 East Frontier Parkway, Prosper, TX 75078',ll:null};
+ const withPoint={name:'Prosper High School',district:'PROSPER',type:'high',ll:[33.24,-96.79]};
+ const wrongDistrict={name:'Jim Bridges Middle School',district:'FISD',type:'middle',ll:[33.1,-96.7]};
+ h.ctx.state.schools.push(noPoint,withPoint,wrongDistrict);
+ h.home.schoolReferencePlan={kind:'reference-only',year:'2026–27',district:'PROSPER',
+   source:'Prosper official 2026–27 GIS',candidates:[
+    {school:'Jim Bridges Middle School',level:'중등'},
+    {school:'Prosper High School',level:'고등'},
+    {school:'NOT IN CATALOG',level:'초등'}]};
+ const view=h.view();
+ assert.equal(view.kind,'gis-reference');
+ assert.deepEqual(Array.from(h.ctx.referenceCandidateSchoolRecords(view),s=>s.name),
+   ['Jim Bridges Middle School','Prosper High School']);
+ assert.deepEqual(Array.from(h.ctx.referenceCandidateSchoolLocations(view),s=>s.name),
+   ['Prosper High School'],'Map markers require real building coordinates');
+ assert.equal(view.schools.length,0,'Reference is never certified residence assignment');
+ assert.equal(view.candidates[0].school,noPoint);
+ h.ctx.state.schools.splice(h.ctx.state.schools.indexOf(noPoint),1);
+ assert.deepEqual(Array.from(h.ctx.referenceCandidateSchoolRecords(view),s=>s.name),
+   ['Prosper High School'],'Orphaned school object must never remain in rail');
+ const rail=source.slice(source.indexOf('function drawList(){'),source.indexOf('function zoneNameKey('));
+ assert.match(rail,/if\(railReference\)items=referenceCandidateSchoolRecords\(view\)/);
+ assert.match(source,/mapButton\.textContent=hasCampusPoint\?'지도 위치 보기':'배정구역 참고 보기'/);
+});
+
 test('clearing address restores general ZIP exploration',()=>{
  const h=setup();
  h.ctx.home=null;
@@ -113,6 +141,7 @@ test('public GIS rail uses only linked current directory schools, never ZIP or t
  assert.equal(view.kind,'mckinney-reference');
  assert.equal(view.schools.length,0);
  assert.deepEqual(Array.from(h.ctx.referenceCandidateSchoolLocations(view),s=>s.name),['GIS ELEM']);
+ assert.deepEqual(Array.from(h.ctx.referenceCandidateSchoolRecords(view),s=>s.name),['GIS ELEM']);
  view.candidates[0].campusId='043907999';
  assert.equal(h.ctx.referenceCandidateSchoolLocations(view).length,0,'Provider Campus ID conflict is excluded from GIS rail');
  delete view.candidates[0].campusId;
