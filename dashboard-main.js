@@ -650,7 +650,8 @@ function renderAddressSchoolPriority(){
  }else if(view.kind==='mckinney-reference'){
   status.textContent='McKinney Finder GIS 후보 · 배정 미인증';
   const missing=view.reference.missing?.length?' · 미확인 학교급: '+view.reference.missing.join(', '):'';
-  desc.textContent=view.reference.source+' · 공개 학교 경계·캠퍼스 ID를 집 지도 좌표와 교차 대조한 참고 후보입니다. 공식 검색기 화면의 주소별 결과와 별도로 검증하지 않았으므로 배정 확정이 아닙니다.'+missing;
+  desc.textContent=view.reference.source+' · 공개 학교 경계·캠퍼스 ID를 집 지도 좌표와 교차 대조한 참고 후보입니다. 공식 검색기 화면의 주소별 결과와 별도로 검증하지 않았으므로 배정 확정이 아닙니다.'+missing+
+   (view.reference.sourceWarnings?.length?' · '+view.reference.sourceWarnings.join(' · '):'');
  }else if(view.kind==='gis-reference'){
   status.textContent='2026–27 GIS 후보 · 배정 미인증';
   const gaps=view.reference.missing?.length?' · 자료가 없는 학교급: '+view.reference.missing.join(', '):'';
