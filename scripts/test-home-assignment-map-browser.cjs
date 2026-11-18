@@ -55,6 +55,48 @@ async function run(){
    assert.equal(result.loaded.source,'conditional-hold');
    assert.equal(result.blocked,0,'unverified address cannot draw zones');
    assert.equal(result.cleared,0,'clear removes map overlays');
+   // Allen reference-only school rail: real campus directory, synthetic in-memory
+   // source row, and actual Conditional GO release policy; no geocoding/PII.
+   await page.waitForFunction(()=>typeof state!=='undefined'&&state.schools.filter(s=>s.district==='AISD').length>=20,
+    null,{timeout:30000});
+   const allen=await page.evaluate(()=>{
+    const row=['Synthetic Reference St','1','Evans','Ereckson','Lowery','Allen High School'];
+    const unapproved=window.ConditionalSchoolRelease.apply({district:'AISD',status:'unverified-year',allen:row});
+    home={address:'SYNTHETIC ALLEN PUBLIC QA',ll:[33.11,-96.68],
+     geocodeQuality:{usableForSchoolCandidate:true},assignment:unapproved,
+     schoolSourceDistrict:'AISD',schoolSourceStatus:'unverified-year',allenAddressReference:row};
+    state.showSchools=true;
+    renderAddressSchoolPriority();drawSchools();drawList();
+    const initial={
+     kind:addressSchoolView()?.kind,release:home.assignment.status,
+     cards:document.getElementById('homeAssignmentPrioritySchools').querySelectorAll('.home-assignment-school').length,
+     names:[...document.getElementById('homeAssignmentPrioritySchools').querySelectorAll('.home-school-main strong')].map(x=>x.textContent),
+     status:document.getElementById('homeAssignmentPriorityStatus').textContent,
+     rail:document.getElementById('schoolAddressNotice').textContent,
+     mapPins:referenceCampusGroup?.getLayers().length||0,
+     autoZones:homeZoneGroup.getLayers().length
+    };
+    home.schoolSourceStatus='conflict';home.assignment={district:'AISD',status:'conflict'};
+    home.allenAddressReference=null;renderAddressSchoolPriority();drawSchools();drawList();
+    const blocked={kind:addressSchoolView()?.kind,
+     cards:document.getElementById('homeAssignmentPrioritySchools').querySelectorAll('.home-assignment-school').length,
+     pins:referenceCampusGroup?.getLayers().length||0};
+    home=null;renderAddressSchoolPriority();drawSchools();drawList();
+    return {initial,blocked};
+   });
+   assert.equal(allen.initial.kind,'allen-reference','Allen street-table reference must reach address-first UI');
+   assert.equal(allen.initial.release,'conditional-finder-only','Allen school assignment must remain uncertified');
+   assert.equal(allen.initial.cards,4,'Show E/M/freshman/high reference school cards');
+   assert.deepEqual(allen.initial.names,['Evans','Ereckson','Lowery','Allen High School']);
+   assert.match(allen.initial.status,/학년도 미표기/);
+   assert.match(allen.initial.rail,/배정은 교육청에서 확인/);
+   assert.ok(allen.initial.mapPins>=3,'Map must show linked Allen campus location pins');
+   assert.equal(allen.initial.autoZones,0,'No 2019/2023 GIS as current home zone');
+   assert.equal(allen.blocked.kind,'unverified');
+   assert.equal(allen.blocked.cards,0);
+   assert.equal(allen.blocked.pins,0);
+   console.log('PASS Allen reference-only E/M/9/10–12 address rail at '+width+'px');
+
    console.log('PASS home auto-school overlay at '+width+'px (synthetic geometry only)');
    await page.close();
   }
