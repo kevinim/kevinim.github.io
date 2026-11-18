@@ -4,6 +4,7 @@
 import {readFileSync} from 'node:fs';
 const adopted=JSON.parse(readFileSync(new URL('../data/mckinney-2026-27-adopted-map-names.json',import.meta.url),'utf8'));
 const METRO='https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/23b28d101ba947498650f6c7b9ef251b/data?f=json';
+const LOCATOR_CONFIG='https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/ed198c434d47474b88709e98d1f0a125/data?f=json';
 const ADOPTED='https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/4789/Misd/2b4531ec-510a-479a-b82f-d550714c8565/McKinney_ISD_Attendance_Zones_26_27.html?disposition=inline';
 const layers=[['Elementary Boundaries','ELEM_NAME','elementary'],['Middle Boundaries','MID_NAME','middle'],['High Boundaries','HIGH_NAME','high']];
 const normal=s=>String(s||'').toUpperCase()
@@ -18,15 +19,19 @@ async function read(url,accept){
   return body;
  }finally{clearTimeout(time)}
 }
-let map,html;
+let map,html,locator;
 try{
- [map,html]=await Promise.all([
+ [map,html,locator]=await Promise.all([
   read(METRO,'application/json').then(JSON.parse),
-  read(ADOPTED,'text/html')
+  read(ADOPTED,'text/html'),
+  read(LOCATOR_CONFIG,'application/json').then(JSON.parse)
  ]);
 }catch(e){console.error('MCKINNEY_SOURCE_LIVE_NO_GO: official source unavailable: '+String(e?.message||e));process.exit(1)}
 if(!Array.isArray(map?.operationalLayers)||!html.includes('McKinney ISD Attendance Zones')){
  console.error('MCKINNEY_SOURCE_LIVE_NO_GO: unknown official source format');process.exit(1)
+}
+if(!JSON.stringify(locator).includes('widgets/Search/Widget')){
+ console.error('MCKINNEY_LOCATOR_WIDGET_NO_GO: published official 26-27 locator no longer exposes enabled Search widget');process.exit(1)
 }
 const names=Object.create(null),years=Object.create(null),matches=Object.create(null);
 const flatHtml=html.replace(/<[^>]*>/g,' ').replace(/&nbsp;/g,' ').replace(/\s+/g,' ').toUpperCase();
@@ -66,7 +71,8 @@ const result={status:'SOURCE_SCHEMA_REVIEW',source:'McKinney live MetroStudy Fin
  levels:names,yearValues:years,
  nameAgreementCount:matches,comparedToOfficialHTML:true,
  adoptedMapSchoolNames:adoptedNames,adoptedPdfGeometryEquivalenceCertified:false,
- independentResidenceFinderResponse:false,automaticEnrollmentCertified:false};
+ independentResidenceFinderResponse:false,automaticEnrollmentCertified:false,
+ officialLocatorSearchWidgetAvailable:true,officialLocatorFindParameterDocumented:true};
 console.log('MCKINNEY_PUBLIC_SOURCE_QA '+JSON.stringify(result));
 if(['middle','high'].some(level=>years[level].some(y=>y!=='2026-27')))
  console.warn('MCKINNEY_SOURCE_NOTE: middle/high layer SCHL_YEAR not independently 2026-27 for every feature; app must disclose by school-level');
