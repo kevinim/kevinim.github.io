@@ -34,7 +34,7 @@
       if(!LEVELS.some(([key])=>key===level)||candidate.linked!==true||
          candidate.sourceYear&&candidate.sourceYear!=='2026-27'||!school||
          school.district!=='043907'||school.type!==level||
-         typeof school.id!=='string'||!/^043907\\d{3}$/.test(school.id))continue;
+         typeof school.id!=='string'||!/^043907\d{3}$/.test(school.id))continue;
       const index=schools.indexOf(school);
       if(index<0||(candidate.campusId&&candidate.campusId!==school.id))continue;
       // Conflicting matches cannot be used to prefill any school.
