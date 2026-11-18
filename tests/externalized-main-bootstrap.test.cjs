@@ -181,7 +181,25 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  // Review separately: only address-school decision, panel, school marker and list
  // code may differ from #319. All other executable bytes remain pinned.
  const priorLiberty=show('02e7a159c05ae6402aced4a8265dc0444cd8aada','dashboard-main.js');
- let normalizedAddressJs=js;
+ // Reviewed current-year GIS text candidate additions may touch only the
+ // decision/priority card and existing list/map notices. Prove all other
+ // executable bytes are unchanged versus the already merged baseline.
+ const priorAddressRelease=show('7a6e90e0c443aea92995ad07654b09269c71a63e','dashboard-main.js');
+ const replaceRegion=(candidate,baseline,start,end)=>{
+  const i=candidate.indexOf(start),j=candidate.indexOf(end,i+start.length);
+  const bi=baseline.indexOf(start),bj=baseline.indexOf(end,bi+start.length);
+  assert.ok(i>0&&j>i&&bi>0&&bj>bi,'Scoped GIS candidate region present: '+start);
+  return replaceOnce(candidate,candidate.slice(i,j),baseline.slice(bi,bj));
+ };
+ let reviewedReferenceJs=js;
+ for(const [start,end] of [
+  ['function addressSchoolView(){',' function drawSchools(){'],
+  [' function drawSchools(){','function drawHomeAssignmentMap(){'],
+  ['function drawList(){','function zoneNameKey(']
+ ]) reviewedReferenceJs=replaceRegion(reviewedReferenceJs,priorAddressRelease,start,end);
+ assert.equal(hash(reviewedReferenceJs),hash(priorAddressRelease),
+  'GIS candidate change cannot affect the already reviewed Leaflet/bootstrap/TEA code');
+ let normalizedAddressJs=reviewedReferenceJs;
  const helperStart=normalizedAddressJs.indexOf('/* An address is not a ZIP-school lookup.');
  const helperEnd=normalizedAddressJs.indexOf(' function drawSchools(){',helperStart);
  assert.ok(helperStart>0&&helperEnd>helperStart);
