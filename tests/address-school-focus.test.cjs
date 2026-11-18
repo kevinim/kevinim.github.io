@@ -89,8 +89,8 @@ test('production UI shows address-first panel and moves commute below map/result
  assert.match(html,/id="homeAssignmentPriority"/);
  assert.match(html,/id="schoolAddressNotice"/);
  assert.match(html,/map-first-split\.css\?v=2/);
- assert.match(html,/dashboard-main\.js\?v=14/);
- assert.match(html,/home-lookup-v2\.js\?v=24/);
+ assert.match(html,/dashboard-main\.js\?v=15/);
+ assert.match(html,/home-lookup-v2\.js\?v=25/);
  assert.match(html,/home-school-manual-bridge\.js\?v=3/);
  assert.match(css,/\.shell>\.controls-grid>\.office-controls\{order:90/);
  assert.match(css,/\.shell>\.footer\{order:100/);
@@ -122,6 +122,7 @@ test('public GIS rail uses only linked current directory schools, never ZIP or t
  assert.equal(h.ctx.home.assignment.status,'conditional-finder-only');
  const rail=source.slice(source.indexOf('function drawList(){'),source.indexOf('function zoneNameKey('));
  assert.match(rail,/items=referenceCandidateSchoolLocations\(view\)/);
- assert.match(rail,/railReference\?'<span class="other-label">GIS 참고 후보 · 배정 미인증/);
+ assert.match(rail,/railReference\?'<span class="other-label">'\+\(view\.kind==='allen-reference'/);
+ assert.match(rail,/GIS 참고 후보 · 배정 미인증/);
  assert.match(rail,/view\?\.kind==='certified'&&homeSchoolMatches\(s\)/);
 });
