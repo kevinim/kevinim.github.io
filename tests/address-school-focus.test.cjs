@@ -23,7 +23,8 @@ function setup(){
    ConditionalSchoolRelease:{decide:()=>({allowed:verified})},
    HomeSchoolManualBridge:{selectedSchools:current=>current===home?picked:[]}
   },
-  homeSchoolMatches:s=>s===assigned
+  homeSchoolMatches:s=>s===assigned,
+  zoneNameKey:name=>String(name||'').toLowerCase().replace(/\\b(?:elementary|middle|high|school)\\b/g,'').replace(/[^a-z0-9]+/g,' ').trim()
  };
  vm.runInNewContext(fn,ctx);
  return {ctx,home,assigned,zipOnly,outside,setVerified:x=>verified=x,setPicked:x=>picked=x,
@@ -39,6 +40,32 @@ test('ZIP campus is never interpreted as assigned after address lookup',()=>{
  assert.equal(h.view().schools[0],h.assigned,'Manual Finder selection outside ZIP school filter is retained');
  assert.ok(!h.view().schools.includes(h.zipOnly),'Nearby A school must be hidden even if grade filter is A');
 });
+test('2026–27 official GIS candidates appear as text evidence, NEVER as assignment markers',()=>{
+ const h=setup();
+ h.home.schoolReferencePlan={
+  kind:'reference-only',year:'2026–27',district:'PISD',
+  source:'unapproved district',candidates:[{school:'ASSIGNED_E',level:'초등'}]
+ };
+ assert.equal(h.view().kind,'unverified','No unreviewed district/year source is allowed');
+ h.home.schoolReferencePlan={
+  kind:'reference-only',year:'2026–27',district:'FISD',
+  source:'Frisco ISD 2026–27 GIS',officialUrl:'https://www.friscoisd.org/page/2026-2027-zones/',
+  candidates:[{school:'ASSIGNED_E',level:'초등',grades:'K–5'},
+    {school:'UNMATCHED MIDDLE',level:'중등',grades:'6–8'}],
+  missing:['고등'],notices:[]
+ };
+ const v=h.view();
+ assert.equal(v.kind,'gis-reference');
+ assert.equal(v.candidates.length,2,'Current-year source names appear even if the campus catalog is incomplete');
+ assert.equal(v.schools.length,0,'No home school markers or certified list without independent E2E Finder grant');
+ assert.equal(v.candidates[0].school,null,'A school in a different district must never be linked to Frisco');
+ h.home.schoolReferencePlan={...h.home.schoolReferencePlan,district:'FISD',year:'2025–26'};
+ assert.equal(h.view().kind,'unverified','Stale GIS is never displayed as current');
+ h.home.schoolReferencePlan={kind:'unavailable',reason:'경계 자료 없음'};
+ assert.equal(h.view().kind,'unverified');
+ assert.match(h.view().reason,/경계 자료/);
+});
+
 test('selected campus must be a current exact directory object and attached to this home',()=>{
  const h=setup();
  h.setPicked([h.assigned,h.assigned,{name:'GHOST',district:'PISD'}]);
@@ -62,8 +89,8 @@ test('production UI shows address-first panel and moves commute below map/result
  assert.match(html,/id="homeAssignmentPriority"/);
  assert.match(html,/id="schoolAddressNotice"/);
  assert.match(html,/map-first-split\.css\?v=2/);
- assert.match(html,/dashboard-main\.js\?v=11/);
- assert.match(html,/home-lookup-v2\.js\?v=21/);
+ assert.match(html,/dashboard-main\.js\?v=13/);
+ assert.match(html,/home-lookup-v2\.js\?v=24/);
  assert.match(html,/home-school-manual-bridge\.js\?v=2/);
  assert.match(css,/\.shell>\.controls-grid>\.office-controls\{order:90/);
  assert.match(css,/\.shell>\.footer\{order:100/);

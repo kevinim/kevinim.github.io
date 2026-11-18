@@ -179,6 +179,54 @@ function compactHomeFinderHtml(address,raw){
  '<a id="homeFinderLaunch" class="btn" style="display:'+(url?'inline-flex':'none')+';align-items:center;justify-content:center;width:auto;min-height:38px;padding:9px 12px;background:#3158cd;color:#fff;text-decoration:none" target="_blank" rel="noopener noreferrer"'+(url?' href="'+escape(url)+'"':' hidden')+'>공식 검색기 열기 ↗</a></div>'+
  '<div id="homeFinderHint" class="source">'+escape(m.why)+' · 실제 배정은 공식 학군에서 주소로 확인</div></div>';
 }
+function showOfficialFinderWithoutGeocode(address,reason){
+ // Address geocoding failure is not evidence that a home has no schools.
+ // Preserve an explicit official-district lookup path without faking a match.
+ const panel=el('homeCandidates');
+ if(!panel||typeof document.createElement!=='function')return;
+ panel.replaceChildren();
+ const status=document.createElement('p');
+ status.className='source';
+ status.setAttribute('role','status');
+ status.textContent=reason+' 학교가 없는 지역이라는 뜻은 아닙니다. 해당 학군의 공식 주소 검색기로 다시 확인하세요.';
+ const model=compactHomeFinderModel(address,{status:'unavailable'});
+ const wrapper=document.createElement('div');wrapper.className='field';
+ const label=document.createElement('label');label.htmlFor='homeFinderDistrict';
+ label.textContent='학군별 공식 주소 검색';
+ const row=document.createElement('div');
+ row.style.display='flex';row.style.flexWrap='wrap';row.style.gap='8px';
+ const select=document.createElement('select');
+ select.id='homeFinderDistrict';
+ select.setAttribute('aria-label','공식 검색 학군 선택');
+ select.style.flex='1 1 190px';
+ const placeholder=document.createElement('option');
+ placeholder.value='';placeholder.textContent='학군 선택';
+ select.appendChild(placeholder);
+ for(const [labelText,keys] of [['이 지역의 확인 후보',model.near],['다른 학군',model.other]]){
+  if(!keys.length)continue;
+  const group=document.createElement('optgroup');group.label=labelText;
+  for(const code of keys){
+   const option=document.createElement('option');
+   option.value=code;option.textContent=districtName(code,'ko')||code;
+   group.appendChild(option);
+  }
+  select.appendChild(group);
+ }
+ select.value=model.likely||'';
+ const link=document.createElement('a');link.id='homeFinderLaunch';
+ link.className='btn';link.target='_blank';link.rel='noopener noreferrer';
+ link.textContent='공식 검색기 열기';
+ link.hidden=!model.likely;
+ if(model.likely){
+  const href=window.TrustedLinkPolicy?.official(OFFICIAL[model.likely]);
+  if(href)link.href=href;else link.hidden=true;
+ }
+ const hint=document.createElement('p');hint.id='homeFinderHint';hint.className='source';
+ hint.textContent=model.why+' · 우편주소의 도시명이 학교 학군을 확정하지 않습니다.';
+ row.append(select,link);wrapper.append(label,row,hint);
+ panel.append(status,wrapper);
+ wireCompactHomeFinder();
+}
 function wireCompactHomeFinder(){
  const input=el('homeFinderDistrict'),link=el('homeFinderLaunch'),hint=el('homeFinderHint');
  if(!input||!link)return;
@@ -207,6 +255,21 @@ function renderHome(){
   // cannot provide polygons/highlights, and is hidden if release policy is missing.
   const referencePlan=window.ConditionalSchoolRelease&&window.SchoolReferencePreview?.plan(
     rawSchoolCandidate,DISTRICT_REGISTRY,window.TrustedLinkPolicy?.official);
+  // Current-year GIS can be disclosed as clearly labeled reference candidates,
+  // without promoting the source to a certified residential assignment.
+  // Keep this strictly in memory and never serialize a searched address.
+  home.schoolReferencePlan=referencePlan||null;
+  home.schoolSourceStatus=rawSchoolCandidate?.status||'unavailable';
+  home.schoolSourceDistrict=rawSchoolCandidate?.district||'';
+  // McKinney pilot: cross-check the currently loaded district-linked Finder
+  // layers, grade-by-grade, against the verified campus directory. This never
+  // constitutes a direct residence-enrollment grant or a Finder UI API response.
+  home.mckinneyCrosscheck=window.McKinneyFinderCrosscheck?.crosscheck({
+   raw:rawSchoolCandidate,geocodePrecise:home.geocodeQuality?.usableForSchoolCandidate===true,
+   sourceLive:state.liveFinder?.['043907']===true,
+   registry:DISTRICT_REGISTRY,official:window.TrustedLinkPolicy?.official,
+   schools:state.schools,ratings:state.ratings||[]
+  })||null;
   const referenceControl=referencePlan?.kind==='reference-only'
    ?'<div class="home-reference-control"><button id="homeReferencePreviewToggle" class="mini-btn" type="button" aria-controls="homeReferencePreviewResult" aria-expanded="'+(home.referencePreviewRequested?'true':'false')+'">GIS 참고 후보 직접 보기 · 실제 배정 미인증</button><div id="homeReferencePreviewResult" role="status" aria-live="polite"></div></div>'
    :'';
@@ -496,7 +559,7 @@ async function searchHome(event,suggestion=null){
     const result=await geocodeAddress(address,homeRequest.signal,suggestion);if(version!==homeVersion)return;
     const {candidates,requiresSelection}=rankTexasHomeCandidates(address,result);
     homeCandidates=candidates;
-    if(!candidates.length){el('homeStatus').textContent='텍사스 주소를 찾지 못했습니다. 도시와 TX, ZIP을 포함해 다시 입력하세요.';return}
+    if(!candidates.length){el('homeStatus').textContent='텍사스 주소를 찾지 못했습니다. 도시와 TX, ZIP을 포함해 다시 입력하세요.';showOfficialFinderWithoutGeocode(address,'주소 검색 결과가 없습니다.');return}
     if(requiresSelection){
      showHomeCandidateChoices(candidates);
      el('homeStatus').textContent='서로 비슷한 주소 '+candidates.length+'개를 확인했습니다. 아래에서 정확한 집 주소를 선택하세요.';
@@ -505,7 +568,7 @@ async function searchHome(event,suggestion=null){
     const best=candidates[0];el('homeSearch').disabled=false;if(!useHomeCandidate(best))return;
     const requestedZip=[...address.matchAll(/\b\d{5}(?:-\d{4})?\b/g)].at(-1),returnedZip=[...best.address.matchAll(/\b\d{5}(?:-\d{4})?\b/g)].at(-1);const zipWarning=requestedZip&&returnedZip&&requestedZip[0].slice(0,5)!==returnedZip[0].slice(0,5)?' 입력한 ZIP과 검색된 ZIP이 다릅니다.':'';const quality=home.geocodeQuality;
     el('homeStatus').textContent='자동 선택: '+best.address+' · 일치도 '+(Number.isFinite(best.score)?Math.round(best.score):'미확인')+'.'+zipWarning+(quality?.usableForSchoolCandidate?' 건물 단위 위치 후보입니다. 등록 자격은 학군에 확인하세요.':' 좌표 신뢰도 부족: '+(quality?.reason||'공식 주소 검색을 이용하세요.'));
-  }catch(error){if(error.name!=='AbortError'&&version===homeVersion)el('homeStatus').textContent=error.code==='timeout'?'주소 검색 시간이 초과되었습니다. 다시 검색해 주세요.':'주소 검색에 실패했습니다. 연결 상태를 확인한 뒤 다시 시도하세요.'}
+  }catch(error){if(error.name!=='AbortError'&&version===homeVersion){el('homeStatus').textContent=error.code==='timeout'?'주소 검색 시간이 초과되었습니다. 다시 검색해 주세요.':'주소 검색에 실패했습니다. 연결 상태를 확인한 뒤 다시 시도하세요.';showOfficialFinderWithoutGeocode(address,'주소 지오코딩 서비스가 응답하지 않았습니다.');}}
   finally{if(version===homeVersion)el('homeSearch').disabled=false}
 }
 async function calculateHomeCommute(){

@@ -66,6 +66,33 @@ test('McKinney postal city alone is not a school district, including 75072',()=>
  assert.equal(model(address,{status:'conflict',matches:[{district:'FISD'},{district:'043907'}]}).likely,'');
 });
 
+test('geocoder failure keeps official district search available instead of showing no schools',()=>{
+ const created=[];
+ ctx.document={createElement(tag){
+  const e={tag,children:[],textContent:'',style:{},innerHTML:null,
+   setAttribute(name,value){this[name]=value},
+   append(...items){this.children.push(...items)},
+   appendChild(item){this.children.push(item)}};
+  created.push(e);return e;
+ }};
+ const panel={children:[],replaceChildren(){this.children=[]},append(...items){this.children.push(...items)}};
+ nodes.homeCandidates=panel;
+ try{
+  ctx.showOfficialFinderWithoutGeocode('123 Synthetic Ridge Dr, McKinney, TX 75072','주소 검색 실패');
+  assert.equal(panel.children.length,2);
+  assert.match(panel.children[0].textContent,/학교가 없는 지역이라는 뜻은 아닙니다/);
+  const wrapper=panel.children[1],row=wrapper.children[1],select=row.children[0],link=row.children[1];
+  assert.equal(select.id,'homeFinderDistrict');
+  assert.equal(select.value,'','A McKinney mailing city cannot silently preselect one ISD');
+  const nearby=select.children[1];
+  assert.ok(nearby.children.some(o=>o.value==='FISD'));
+  assert.ok(nearby.children.some(o=>o.value==='043907'));
+  assert.ok(nearby.children.some(o=>o.value==='PROSPER'));
+  assert.equal(link.hidden,true,'No wrong-district finder link before ISD selection');
+  assert.ok(created.every(e=>e.innerHTML===null),'No new HTML injection sink permitted');
+ }finally{delete nodes.homeCandidates;delete ctx.document}
+});
+
 test('single validated GIS district overrides city hint; conflicts never choose an ISD',()=>{
  assert.equal(model('123 Example Road, Carrollton, TX 75010',{status:'finder-current',district:'CFB'}).likely,'CFB');
  const r=model('123 Example Road, Carrollton, TX 75010',{status:'conflict',matches:[{district:'LISD'},{district:'CFB'}]});

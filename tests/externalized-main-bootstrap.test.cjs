@@ -15,6 +15,10 @@ const rawHtml=fs.readFileSync(path.join(root,'index.html'),'utf8');
 // Redfin split and Liberty pilot: undo only the five named additions before
 // comparing the rest of the protected historical HTML byte-for-byte.
 let normalizedMainHtml=rawHtml;
+// One new self-hosted, review-scoped McKinney official Finder crosscheck module.
+// Strip only the exact new script tag when comparing to frozen historical HTML.
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ '<script src="./features/mckinney-finder-crosscheck.js?v=1"></script>','');
 // Address-first UI: subtract ONLY exact approved main-page UI/cache deltas.
 const priorityElement=normalizedMainHtml.match(/<div id="homeCandidates"><\/div><section id="homeAssignmentPriority" class="home-assignment-priority"[\s\S]*?<\/section><\/div><div class="panel office-controls">/);
 assert.ok(priorityElement&&priorityElement[0].includes('id="homeAssignmentPrioritySchools"'),
@@ -25,8 +29,8 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<div id="schoolAddressNotice" class="home-school-address-note" role="status" aria-live="polite" hidden></div>','');
 for(const [next,previous] of [
  ['map-first-split.css?v=2','map-first-split.css?v=1'],
- ['dashboard-main.js?v=11','dashboard-main.js?v=10'],
- ['home-lookup-v2.js?v=22','home-lookup-v2.js?v=20'],
+ ['dashboard-main.js?v=13','dashboard-main.js?v=10'],
+ ['home-lookup-v2.js?v=24','home-lookup-v2.js?v=20'],
  ['home-school-manual-bridge.js?v=2','home-school-manual-bridge.js?v=1']
 ])normalizedMainHtml=replaceOnce(normalizedMainHtml,next,previous);
 for(const [next,prior] of [["https://gis.texaswildfirerisk.com https://tiles.openfreemap.org; connect-src 'self'","https://gis.texaswildfirerisk.com; connect-src 'self'"],["https://fueleconomy.gov https://tiles.openfreemap.org; font-src 'self' data:; worker-src 'self' blob:; object-src 'none'","https://fueleconomy.gov; font-src 'self' data:; object-src 'none'"],["<option value=\"liberty\">Liberty · OpenFreeMap</option><option value=\"osm\">OpenStreetMap</option>","<option value=\"osm\">OpenStreetMap</option>"],["<link rel=\"stylesheet\" href=\"./features/tea-peims-public-share-addon.css?v=2\">\n<link rel=\"stylesheet\" href=\"./features/map-first-split.css?v=1\">","<link rel=\"stylesheet\" href=\"./features/tea-peims-public-share-addon.css?v=2\">"],["<script src=\"./features/map/liberty-basemap.js?v=2\"></script><script src=\"./dashboard-main.js?v=10\"></script>","<script src=\"./dashboard-main.js?v=9\"></script>"]])
@@ -181,7 +185,25 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  // Review separately: only address-school decision, panel, school marker and list
  // code may differ from #319. All other executable bytes remain pinned.
  const priorLiberty=show('02e7a159c05ae6402aced4a8265dc0444cd8aada','dashboard-main.js');
- let normalizedAddressJs=js;
+ // Reviewed current-year GIS text candidate additions may touch only the
+ // decision/priority card and existing list/map notices. Prove all other
+ // executable bytes are unchanged versus the already merged baseline.
+ const priorAddressRelease=show('7a6e90e0c443aea92995ad07654b09269c71a63e','dashboard-main.js');
+ const replaceRegion=(candidate,baseline,start,end)=>{
+  const i=candidate.indexOf(start),j=candidate.indexOf(end,i+start.length);
+  const bi=baseline.indexOf(start),bj=baseline.indexOf(end,bi+start.length);
+  assert.ok(i>0&&j>i&&bi>0&&bj>bi,'Scoped GIS candidate region present: '+start);
+  return replaceOnce(candidate,candidate.slice(i,j),baseline.slice(bi,bj));
+ };
+ let reviewedReferenceJs=js;
+ for(const [start,end] of [
+  ['function addressSchoolView(){',' function drawSchools(){'],
+  [' function drawSchools(){','function drawHomeAssignmentMap(){'],
+  ['function drawList(){','function zoneNameKey(']
+ ]) reviewedReferenceJs=replaceRegion(reviewedReferenceJs,priorAddressRelease,start,end);
+ assert.equal(hash(reviewedReferenceJs),hash(priorAddressRelease),
+  'GIS candidate change cannot affect the already reviewed Leaflet/bootstrap/TEA code');
+ let normalizedAddressJs=reviewedReferenceJs;
  const helperStart=normalizedAddressJs.indexOf('/* An address is not a ZIP-school lookup.');
  const helperEnd=normalizedAddressJs.indexOf(' function drawSchools(){',helperStart);
  assert.ok(helperStart>0&&helperEnd>helperStart);
