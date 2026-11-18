@@ -43,6 +43,39 @@ test('2026-27 Northwest official Finder is not a distributable GeoJSON release',
  d.reuseRights='approved';
  assert.throws(()=>check(p),/west_boundary_source_evidence_invalid/);
 });
+test('Northwest 2022 ArcGIS lead is recorded without licensed campus polygon promotion',()=>{
+ const r=check(copy());
+ assert.equal(r.northwest.candidateLayers,3);
+ assert.equal(r.northwest.currentOfficialFinderYear,'2026-27');
+ assert.equal(r.northwest.futureApprovedYear,'2027-28');
+ assert.equal(r.northwest.academicYearVerifiedForCandidates,false);
+ assert.equal(r.northwest.importedPolygonCount,0);
+ assert.equal(r.northwest.reusePermissionVerified,false);
+ const nw=source.districts.find(d=>d.code==='061911');
+ assert.deepEqual(nw.historicalCandidateLayers.map(x=>x.dataLastEdit),
+  ['2022-02-17','2022-11-17','2022-11-17']);
+ assert.equal(ui.districts.find(d=>d.code==='061911').localSchoolPolygonCount,0);
+});
+test('Northwest GIS cannot be silently promoted by year/rights/changed host or newer future boundary',()=>{
+ const examples=[
+  d=>{d.historicalCandidateLayers[0].academicYearVerified='2026-27';},
+  d=>{d.historicalCandidateLayers[1].reusePermissionVerified=true;},
+  d=>{d.historicalCandidateLayers[2].completeDistrictCoverageVerified=true;},
+  d=>{d.historicalCandidateLayers[0].layerUrl='https://evil.example.com/FeatureServer/0';},
+  d=>{d.historicalCandidateLayers[0].dataLastEdit='2026-11-18';},
+  d=>{d.historicalCandidateLayers.push({...d.historicalCandidateLayers[0]});},
+  d=>{d.futureYearApprovedUrl='https://www.nisdtx.org/schoolfinder';}
+ ];
+ for(const change of examples){
+  const p=copy();change(p.districts.find(d=>d.code==='061911'));
+  assert.throws(()=>check(p),/northwest_(historical_gis_cannot_be_promoted|year_or_license_unverified)/);
+ }
+ const p=copy();
+ p.evidence.push({kind:'arcgis',district:'061911',
+  url:'https://services3.arcgis.com/qnlpi19w6R1Ta48m/ArcGIS/rest/services/NotApproved/FeatureServer/0',
+  status:'attacker-controlled URL within same trusted host'});
+ assert.throws(()=>check(p),/northwest_evidence_endpoint_not_approved/);
+});
 test('Carroll enrollment year and GCISD printable maps cannot claim current polygon evidence',()=>{
  const p=copy();
  p.districts.find(d=>d.code==='220919').verifiedPolygonAcademicYear='2026-27';
