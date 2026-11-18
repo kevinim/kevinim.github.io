@@ -189,8 +189,41 @@ function showOfficialFinderWithoutGeocode(address,reason){
  status.className='source';
  status.setAttribute('role','status');
  status.textContent=reason+' 학교가 없는 지역이라는 뜻은 아닙니다. 해당 학군의 공식 주소 검색기로 다시 확인하세요.';
- const wrapper=document.createElement('div');
- wrapper.innerHTML=compactHomeFinderHtml(address,{status:'unavailable'});
+ const model=compactHomeFinderModel(address,{status:'unavailable'});
+ const wrapper=document.createElement('div');wrapper.className='field';
+ const label=document.createElement('label');label.htmlFor='homeFinderDistrict';
+ label.textContent='학군별 공식 주소 검색';
+ const row=document.createElement('div');
+ row.style.display='flex';row.style.flexWrap='wrap';row.style.gap='8px';
+ const select=document.createElement('select');
+ select.id='homeFinderDistrict';
+ select.setAttribute('aria-label','공식 검색 학군 선택');
+ select.style.flex='1 1 190px';
+ const placeholder=document.createElement('option');
+ placeholder.value='';placeholder.textContent='학군 선택';
+ select.appendChild(placeholder);
+ for(const [labelText,keys] of [['이 지역의 확인 후보',model.near],['다른 학군',model.other]]){
+  if(!keys.length)continue;
+  const group=document.createElement('optgroup');group.label=labelText;
+  for(const code of keys){
+   const option=document.createElement('option');
+   option.value=code;option.textContent=districtName(code,'ko')||code;
+   group.appendChild(option);
+  }
+  select.appendChild(group);
+ }
+ select.value=model.likely||'';
+ const link=document.createElement('a');link.id='homeFinderLaunch';
+ link.className='btn';link.target='_blank';link.rel='noopener noreferrer';
+ link.textContent='공식 검색기 열기';
+ link.hidden=!model.likely;
+ if(model.likely){
+  const href=window.TrustedLinkPolicy?.official(OFFICIAL[model.likely]);
+  if(href)link.href=href;else link.hidden=true;
+ }
+ const hint=document.createElement('p');hint.id='homeFinderHint';hint.className='source';
+ hint.textContent=model.why+' · 우편주소의 도시명이 학교 학군을 확정하지 않습니다.';
+ row.append(select,link);wrapper.append(label,row,hint);
  panel.append(status,wrapper);
  wireCompactHomeFinder();
 }
