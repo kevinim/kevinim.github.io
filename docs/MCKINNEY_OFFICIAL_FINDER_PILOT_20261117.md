@@ -46,3 +46,9 @@ Goal: Address search → official current school GIS match → TEA campus identi
 The user requested **McKinney first**, so all official auto-assignment promotion work is limited to McKinney ISD. Existing PR #322's generic Frisco/Prosper informational display remains separate from this pilot. The approved release does not include further districts until the McKinney audit finishes.
 
 If live source QA or CI fails, keep draft, document the failure and correct the source/consumer; do not bypass the checks. No production claim before the current GitHub Pages output is checked and verified.
+
+## 2026-11-18 McKinney campus identity coverage update
+
+The McKinney GIS label-to-TEA campus mapping now covers all 25 standard zoned campuses published on the district's adopted 2026–27 maps: 17 elementary, 5 middle, 3 high. The mapping requires exact year/level/ID identity gates and never infers schools from ZIP or nearest campus. A 25-campus parameterized test rejects conflicting publisher IDs. This improves which school cards and pins can be linked automatically after address geocoding.
+
+**Release boundary remains unchanged:** the displayed E/M/H schools are point-in-GIS *reference candidates*. Zero independently observed residential address-to-official-Finder E/M/H response triples are recorded, and production residential enrollment certification remains NO-GO. Middle/high GIS feature year is not explicitly recorded; their 2026–27 adopted map names have been checked, not feature geometry equivalence. Never claim legally confirmed address assignments from this mapping alone.
