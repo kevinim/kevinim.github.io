@@ -101,3 +101,24 @@ test('production UI shows address-first panel and moves commute below map/result
  assert.doesNotMatch(source.slice(begin,source.indexOf(' function drawSchools(){',end)),/innerHTML\s*=/,
   'Priority school names must be DOM text nodes, never raw HTML injection');
 });
+
+test('public GIS rail uses only linked current directory schools, never ZIP or the assignment list',()=>{
+ const h=setup(),direct={name:'GIS ELEM',district:'043907',type:'elementary',ll:[33.1,-96.6]};
+ h.ctx.state.schools.push(direct);
+ h.home.mckinneyCrosscheck={kind:'reference-only',district:'043907',
+   independentOfficialAddressVerified:false,sourceYear:'2026-27',
+   candidates:[{school:'GIS ELEM',level:'elementary',levelText:'초등',
+     matchedSchool:direct},{school:'UNLINKED HIGH',level:'high',matchedSchool:null}]};
+ const view=h.view();
+ assert.equal(view.kind,'mckinney-reference');
+ assert.equal(view.schools.length,0);
+ assert.deepEqual(h.ctx.referenceCandidateSchoolLocations(view).map(s=>s.name),['GIS ELEM']);
+ h.ctx.state.schools=[h.assigned,h.zipOnly,h.outside];
+ assert.equal(h.ctx.referenceCandidateSchoolLocations(view).length,0,
+   'removed campus cannot remain in reference school rail');
+ assert.equal(h.ctx.home.assignment.status,'conditional-finder-only');
+ const rail=source.slice(source.indexOf('function drawList(){'),source.indexOf('function zoneNameKey('));
+ assert.match(rail,/items=referenceCandidateSchoolLocations\(view\)/);
+ assert.match(rail,/railReference\?'<span class="other-label">GIS 참고 후보 · 배정 미인증/);
+ assert.match(rail,/view\?\.kind==='certified'&&homeSchoolMatches\(s\)/);
+});
