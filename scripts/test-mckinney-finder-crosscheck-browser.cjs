@@ -91,7 +91,7 @@ async function main(){
     return {status:document.getElementById('homeAssignmentPriorityStatus').textContent,
       cards:document.querySelectorAll('#homeAssignmentPrioritySchools .home-assignment-school').length};
    });
-   assert.equal(stale.cards,0,'Stale middle school source cannot display candidate');
+   assert.equal(stale.cards,2,'Stale middle school source is removed; current E/H remain');
    assert.match(stale.status,/배정 미확인|미인증/);
    const wrong=await page.evaluate(()=>{
     window.__mckinneyRaw.district='FISD';
