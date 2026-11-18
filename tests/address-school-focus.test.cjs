@@ -1,5 +1,7 @@
 'use strict';
 const test=require('node:test');
+// Reuse the existing address-school CI job; do not create a duplicate workflow.
+require('./prosper-official-address-response.test.cjs');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
