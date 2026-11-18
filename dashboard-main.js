@@ -776,7 +776,8 @@ function renderAddressSchoolPriority(){
   if(!map)return;
   const addressView=addressSchoolView(),homeActive=addressView?.kind==='certified';
   const referenceMarkers=drawReferenceCampusMarkers(addressView);
-  if(addressView&&state.selectedSchool&&!addressView.schools.includes(state.selectedSchool)){
+  if(addressView&&state.selectedSchool&&!addressView.schools.includes(state.selectedSchool)&&
+     !referenceCandidateSchoolLocations(addressView).includes(state.selectedSchool)){
    state.selectedSchool=null;schoolFocusGroup?.clearLayers();drawDetail();
   }
   const legend=el('schoolLegend');
@@ -881,6 +882,7 @@ function focusHomeAssignedSchools(){
  const view=addressSchoolView();
  const approved=window.ConditionalSchoolRelease?.decide?.(home.assignment)?.allowed===true;
  const schools=approved?state.schools.filter(s=>s.ll&&homeSchoolMatches(s)):
+  view?.kind==='manual'?view.schools.filter(s=>Array.isArray(s.ll)&&s.ll.length===2&&s.ll.every(Number.isFinite)):
   referenceCandidateSchoolLocations(view);
  if(!schools.length||schools.length>12)return;
  const all=[home.ll,...schools.map(s=>s.ll)];
