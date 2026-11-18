@@ -18,7 +18,7 @@
  const unavailable=(reason,code)=>Object.freeze({kind:'unavailable',district:DISTRICT,
   code:code||'source-unavailable',reason:String(reason||'공식 검색기로 다시 확인하세요.'),
   candidates:Object.freeze([])});
- function crosscheck({raw,geocodePrecise=false,sourceLive=false,registry=null,official=null,schools=[]}={}){
+ function crosscheck({raw,geocodePrecise=false,sourceLive=false,registry=null,official=null,schools=[],ratings=[]}={}){
   if(!geocodePrecise)return unavailable('정확한 집주소의 지오코딩이 확인되지 않았습니다. 공식 Finder에서 주소를 다시 선택하세요.','imprecise-address');
   if(raw?.status==='apartment-split-review'||raw?.status==='needs-address-verification')
    return unavailable('집·호수 단위 위치가 검증되지 않았습니다. 공식 Finder에서 세부 주소를 확인하세요.','address-exception');
@@ -65,9 +65,20 @@
    const campusId=typeof p.campusId==='string'&&/^043907\d{3}$/.test(p.campusId)?p.campusId:null;
    const byName=schools.filter(s=>s?.district===DISTRICT&&s.type===level&&normalize(s.name)===key);
    const byId=campusId?schools.filter(s=>s?.district===DISTRICT&&s.type===level&&s.id===campusId):[];
-   if(byId.length>1||byName.length>1||byId.length===1&&byName.length===1&&byId[0]!==byName[0])
-    return unavailable('McKinney 학교 ID와 이름이 서로 다르거나 중복되었습니다.','identity-conflict');
+   const teaById=campusId?ratings.filter(x=>x?.district===DISTRICT&&x.id===campusId):[];
+   const teaByName=ratings.filter(x=>x?.district===DISTRICT&&
+    (normalize(x.name)===key||normalize(x.officialName)===key));
+   if(byId.length>1||byName.length>1||teaById.length>1||teaByName.length>1||
+      (byId.length===1&&byName.length===1&&byId[0]!==byName[0])||
+      (teaById.length===1&&teaByName.length===1&&teaById[0]!==teaByName[0]))
+    return unavailable('McKinney GIS 학교 ID와 TEA 학교명이 서로 다른 기록을 가리키거나 중복되었습니다.','identity-conflict');
    const matched=byId.length===1?byId[0]:byName.length===1?byName[0]:null;
+   const ratingById=teaById.length===1?teaById[0]:null;
+   const ratingByName=teaByName.length===1?teaByName[0]:null;
+   const identityKind=ratingById?'TEA-campus-id':
+    ratingByName?'TEA-name-only':matched?'directory-name-only':'unlinked';
+   const verifiedRating=ratingById&&/^[A-F]$|^Not Rated$/.test(ratingById.rating)?
+    ratingById.rating:null;
    // Do not expose raw ArcGIS attributes, coordinates or any address in UI.
    const linked=!!matched;
    const yearStatus=item.year===YEAR?
@@ -78,6 +89,7 @@
    sourceNames.add(itemKey);
    result.push(Object.freeze({school:item.school,level,levelText:LABELS[level],
     campusId:campusId||null,matchedSchool:matched||null,linked,
+    identityKind,verifiedRating,teaCampusId:ratingById?.id||null,
     yearStatus,sourceYear:item.year||null,
     yearNote:yearStatus==='elementary-current-checked'?'2026–27 초등 GIS 학년도 확인':
      yearStatus==='finder-year-labelled'?'2026–27 Finder 원문 표기 · 독립 대조 전':
@@ -88,7 +100,8 @@
   return Object.freeze({kind:'reference-only',district:DISTRICT,
    source:SOURCE,sourceYear:'2026–27 Finder / 학교급별 표시 별도',officialUrl:safeUrl,
    candidates:Object.freeze(result),missing:Object.freeze(missing),
-   identityMatched:result.filter(x=>x.linked).length,
+   identityMatched:result.filter(x=>x.identityKind==='TEA-campus-id').length,
+   directoryMatched:result.filter(x=>x.linked).length,
    complete:result.length===3,independentOfficialAddressVerified:false,
    notice:'공식 Finder의 공개 GIS 경계와 주소 위치를 대조한 참고 후보이며, 공식 주소 검색 결과를 별도로 독립 확인한 배정학교는 아닙니다. 2026–27 전학·잔류·예외 등록은 교육청에 확인하세요.'});
  }
