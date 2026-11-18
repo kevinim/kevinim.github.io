@@ -39,3 +39,47 @@ test('manual references cannot bypass existing school assignment certification',
  assert.match(source,/schoolClicked\(school,true\)/);
  assert.match(source,/panel\.hidden=!current/);
 });
+
+test('current McKinney GIS candidates can prefill only matching in-memory district campuses',()=>{
+ const schools=['elementary','middle','high'].map((level,i)=>({
+  id:'043907'+String(991+i),district:'043907',type:level,name:'SYNTHETIC '+level
+ }));
+ const home={mckinneyCrosscheck:{kind:'reference-only',district:'043907',
+  independentOfficialAddressVerified:false,candidates:schools.map(s=>({
+   level:s.type,school:s.name,linked:true,matchedSchool:s,
+   campusId:s.id,sourceYear:s.type==='high'?null:'2026-27'
+  }))}};
+ assert.deepEqual(bridge.previewSuggestions(home,schools).map(s=>s.level),
+  ['elementary','middle','high']);
+ assert.deepEqual(bridge.previewSuggestions(home,schools).map(s=>s.index),[0,1,2]);
+ assert.deepEqual(bridge.selectedSchools(home),[]);
+ assert.equal(Object.hasOwn(home,'assignment'),false);
+});
+
+test('wrong district, publisher status, stale year and mismatched Campus ID cannot prefill',()=>{
+ const school={id:'043907991',district:'043907',type:'elementary',name:'SYNTHETIC ELEM'};
+ const reference={kind:'reference-only',district:'043907',
+  independentOfficialAddressVerified:false,candidates:[{
+   level:'elementary',matchedSchool:school,linked:true,
+   campusId:school.id,sourceYear:'2026-27'}]};
+ const home={mckinneyCrosscheck:reference};
+ assert.equal(bridge.previewSuggestions(home,[school]).length,1);
+ assert.deepEqual(bridge.previewSuggestions({mckinneyCrosscheck:{...reference,district:'FISD'}},[school]),[]);
+ assert.deepEqual(bridge.previewSuggestions({mckinneyCrosscheck:{...reference,kind:'source-matched'}},[school]),[]);
+ assert.deepEqual(bridge.previewSuggestions({mckinneyCrosscheck:{...reference,independentOfficialAddressVerified:true}},[school]),[]);
+ for(const changed of [{sourceYear:'2025-26'},{campusId:'043907999'},{linked:false}]){
+  const candidate={...reference.candidates[0],...changed};
+  assert.deepEqual(bridge.previewSuggestions({mckinneyCrosscheck:{...reference,candidates:[candidate]}},[school]),[]);
+ }
+ assert.deepEqual(bridge.previewSuggestions(home,[{...school}]),[],
+  'cloned/untrusted school object cannot masquerade as loaded directory record');
+});
+
+test('duplicate grade levels and unrelated school candidates fail closed for manual prefill',()=>{
+ const s={id:'043907991',district:'043907',type:'elementary',name:'SYNTHETIC'};
+ const another={id:'043907992',district:'043907',type:'elementary',name:'SYNTHETIC B'};
+ const c=school=>({level:'elementary',matchedSchool:school,linked:true,campusId:school.id});
+ assert.deepEqual(bridge.previewSuggestions({mckinneyCrosscheck:{kind:'reference-only',
+   district:'043907',independentOfficialAddressVerified:false,candidates:[c(s),c(another)]}},
+   [s,another]),[]);
+});
