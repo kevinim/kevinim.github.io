@@ -3,6 +3,7 @@ const test=require('node:test');
 const assert=require('node:assert/strict');
 const api=require('../features/mckinney-finder-crosscheck.js');
 const SOURCE='https://www.mckinneyisd.net/page/attendance-zones-maps/';
+const FINDER='https://portal.metrostudygis.com/arcgis/apps/webappviewer/index.html?id=ed198c434d47474b88709e98d1f0a125';
 function feature(level,school,overrides={}){
  return {type:'Feature',properties:{gradeLevel:level,school,
    sourceYearRaw:'2026-27',sourceYear:'2026-27',
@@ -46,6 +47,18 @@ test('official Finder GIS + TEA campus identities are crosschecked without grant
  assert.equal(Object.hasOwn(p.candidates[0],'geometry'),false);
  assert.equal(Object.hasOwn(p.candidates[0],'address'),false);
 });
+test('the exact district-linked MetroStudy Finder is accepted; lookalike routes are not',()=>{
+ const f=fixture();
+ f.registry['043907'].official=FINDER;
+ f.official=u=>u===FINDER?u:null;
+ const accepted=api.crosscheck(f);
+ assert.equal(accepted.kind,'reference-only');
+ assert.equal(accepted.officialUrl,FINDER);
+ f.registry['043907'].official='https://www.mckinneyisd.net/page/other-finder/';
+ f.official=u=>u;
+ assert.equal(api.crosscheck(f).code,'official-link-failed');
+});
+
 test('McKinney mailing city never overrides Frisco ISD GIS source',()=>{
  const f=fixture();f.raw.district='FISD';
  const p=api.crosscheck(f);
