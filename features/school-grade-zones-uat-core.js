@@ -12,6 +12,7 @@
  const YEAR=2026;
  const DISTRICTS=Object.freeze({
    mckinney:{name:'McKinney ISD',ids:['043907'],center:[33.197,-96.618],zoom:11},
+   prosper:{name:'Prosper ISD',ids:['PROSPER'],center:[33.24,-96.80],zoom:11},
    allen:{name:'Allen ISD',ids:['AISD'],center:[33.11,-96.675],zoom:11},
    carrollton:{name:'Carrollton 일대 (CFB + LISD)',ids:['CFB','LISD'],center:[32.987,-96.885],zoom:11}
  });
@@ -42,6 +43,12 @@
      return p.yearVerified2627===true&&p.verifiedYear==='2026-27'&&year.includes('2026-27')
        ?'finder-2026-elementary':'blocked';
    }
+   // Prosper 31-campus Infofinder i zones were source-checked for 2026-27.
+   // Only those actual, year-confirmed district features may be color-filled.
+   if(district==='PROSPER')return p.sourceDistrict==='PROSPER'&&p.current===true&&
+     p.sourceYearConfirmed===true&&p.schoolYear==='2026–27'&&
+     p.sourceVintage==='2026–27'&&/^043912[0-9]{3}$/.test(String(p.campusId||''))
+       ?'official-2026-prosper':'blocked';
    // GIS polygons are 2019-23 in Allen; no current-address claim possible.
    if(district==='AISD')return p.current===false&&/2019|2022|2023/.test(year)
        ?'historical':'blocked';
@@ -113,7 +120,7 @@
      if(joined.status!=='rated')continue;
      const record=joined.record;
      if(!thresholdPass(record.rating,threshold))continue;
-     if(kind!=='finder-2026-elementary'&&!showReference)continue;
+     if(!['finder-2026-elementary','official-2026-prosper'].includes(kind)&&!showReference)continue;
      result.visible.push({feature,school:pureLabel(feature.properties.school),rating:record.rating,
        score:record.score,campusId:record.id,kind,level,district,year:YEAR,
        gisVintage:gisVintageLabel(feature)});

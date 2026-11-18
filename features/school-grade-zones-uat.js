@@ -10,6 +10,7 @@
  const districtURLs=Object.freeze({
   '043907':'https://www.mckinneyisd.net/page/attendance-zones-maps/',
   AISD:'https://www.allenisd.org/page/findaschool',
+  PROSPER:'https://www.prosper-isd.net/page/attendance-boundaries/',
   LISD:'https://www.lisd.net/resources/families/school-locator',
   CFB:'https://www.cfbisd.edu/students/school-maps-locator-system'
  });
@@ -38,6 +39,7 @@
   box.append(safeText('div','GIS 경계 자료 기준연도: '+(info.gisVintage||'원본 GIS 학년도 미표기')));
   box.append(safeText('div',info.kind==='finder-2026-elementary'
      ?'McKinney 2026–27 공식 Finder 연결 초등 경계 (주소·배정 예외는 별도 확인)'
+     :info.kind==='official-2026-prosper'?'Prosper 2026–27 공식 Infofinder 경계 · 실제 거주지·학년·등록 예외는 별도 확인'
      :info.kind==='historical'?'Allen 2019–23 과거 경계 · 현재 배정 아님'
      :'공식 Finder 연계 참고 경계 · 해당 학제 학년도 독립 확인 전'));
   box.append(infoLink('https://txschools.gov/?view=school&id='+encodeURIComponent(info.campusId)+'&lng=en','TEA 학교 등급 원문'));
@@ -67,6 +69,8 @@
  function cityDetails(){
   if(ui.city==='mckinney')
    return 'McKinney: 초등 2026–27 공식 Finder 연동선만 우선 표시합니다. 중·고등은 연도 독립 검증 전 참고 구역입니다. 정확한 거주지 배정은 공식 조회가 필요합니다.';
+  if(ui.city==='prosper')
+   return 'Prosper: 2026–27 공식 Infofinder 31개 배정구역(초등 20·중등 7·고등 4)을 기준으로 색칠합니다. 실제 주소·아파트·프로그램 예외는 Prosper ISD에서 확인하세요.';
   if(ui.city==='allen')
    return 'Allen: 보유한 2019–23 학교별 GIS는 과거 자료입니다. 우수 학교가 있다고 현행 배정구역을 확정할 수 없습니다.';
   return 'Carrollton: CFB는 승인된 학교별 경계가 없으며, LISD는 연도 미확인·일부 2025–26 GIS 참고선만 있습니다. 도시에 포함된 다른 학군도 자동으로 덮지 않습니다.';
@@ -108,7 +112,7 @@
   const outlines=core.dissolveByCampus(selected,window.polygonClipping,dissolveCache);
   if(ui.enabled){
    for(const item of outlines.groups){
-    const current=item.kind==='finder-2026-elementary';
+    const current=['finder-2026-elementary','official-2026-prosper'].includes(item.kind);
     const palette={A:'#10886f',B:'#306cc4',C:'#bf842b'};
     const color=palette[item.rating];
     const layerSource=item.feature||{type:'FeatureCollection',features:item.fallback};
@@ -161,7 +165,7 @@
    '<p class="sg-desc">선택 학제의 A/B/C 등급 학교에 연결된 경계만 색칠합니다. 같은 학교에 속하는 자잘한 내부 경계선은 합치고 바깥 윤곽만 표시합니다. ZIP·학교 위치가 아닌 학군 출처의 폴리곤을 사용합니다.</p>'+
    '<p class="sg-marker-scope-note" id="schoolGradeMarkerScope" role="note">학교 구역을 확인하고 있습니다.</p>'+
    '<div class="sg-filters">'+
-   '<label>지역 <select id="schoolGradeCity"><option value="mckinney">McKinney</option><option value="allen">Allen</option><option value="carrollton">Carrollton (CFB + LISD)</option></select></label>'+
+   '<label>지역 <select id="schoolGradeCity"><option value="mckinney">McKinney</option><option value="prosper">Prosper</option><option value="allen">Allen</option><option value="carrollton">Carrollton (CFB + LISD)</option></select></label>'+
    '<label>학교 학제 <select id="schoolGradeLevel"><option value="elementary">초등학교</option><option value="middle">중학교</option><option value="high">고등학교</option></select></label>'+
    '<label>최소 학교 등급 <select id="schoolGradeThreshold"><option value="A">A 등급만</option><option value="B" selected>B 등급 이상 (A+B)</option><option value="C">C 등급 이상 (A+B+C)</option></select></label>'+
    '<div class="sg-toggles"><label><input id="schoolGradeIncludeReference" type="checkbox">과거·학년도 미확인 참고 경계도 표시 (점선)</label>'+
