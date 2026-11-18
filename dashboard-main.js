@@ -1077,7 +1077,7 @@ async function loadBoundaryData(onlyDistricts=null){
     }
     const j=await zoneFetch(x.url,{cache:'no-store'});
    // The bounded reader returns parsed JSON, not a fetch Response.
-   if(!j||typeof j!=='object'||Array.isArray(j)||j.error)throw Error('GIS JSON 형식 오류');
+   if(!j||typeof j!=='object'||j.error)throw Error('GIS JSON 형식 오류');
    if(state.sourceStatus[x.district]!==revision)return null;
    if(x.district==='FISD')state.zoneData.FISD=convertFriscoZones(j);
    else if(x.district==='LISD'){state.zoneData.LISD=convertMetrostudyZones(j,LEWISVILLE_FINDER);if(state.zoneData.LISD.length<19)throw Error('Incomplete Lewisville Finder map');state.liveFinder.LISD=true;}
