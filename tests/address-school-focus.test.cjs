@@ -110,6 +110,25 @@ test('Prosper current-year GIS-listed new middle campus stays in school rail wit
  assert.match(source,/mapButton\.textContent=hasCampusPoint\?'지도 위치 보기':'배정구역 참고 보기'/);
 });
 
+test('Prosper official GIS school cards use 9-digit campus identity for TEA grades',()=>{
+ const h=setup();
+ const school={id:'043912102',name:'JUDY RUCKER EL',district:'PROSPER',type:'elementary',ll:null};
+ h.ctx.state.schools.push(school);
+ h.ctx.state.ratings=[{id:'043912102',district:'PROSPER',rating:'A'}];
+ h.home.schoolReferencePlan={kind:'reference-only',year:'2026–27',district:'PROSPER',
+  candidates:[{school:'JUDY RUCKER EL',level:'초등',campusId:'043912102',schoolCode:'102'}]};
+ const view=h.view();
+ assert.equal(view.kind,'gis-reference');
+ assert.equal(view.schools.length,0,'An official GIS zone must never grant enrollment');
+ assert.equal(view.candidates[0].campusId,'043912102');
+ assert.equal(view.candidates[0].verifiedRating,'A');
+ assert.equal(view.candidates[0].school,school);
+ school.id='043912999';
+ assert.equal(h.view().candidates[0].school,null,'Contradictory school directory ID must not be linked');
+ assert.equal(h.view().candidates[0].verifiedRating,'A','Rating is tied to source-audited campus ID, not an arbitrary pin');
+ assert.match(source,/Prosper 2026–27 공식 GIS 기준 예상 배정학교/);
+});
+
 test('clearing address restores general ZIP exploration',()=>{
  const h=setup();
  h.ctx.home=null;
@@ -119,7 +138,7 @@ test('production UI shows address-first panel and moves commute below map/result
  assert.match(html,/id="homeAssignmentPriority"/);
  assert.match(html,/id="schoolAddressNotice"/);
  assert.match(html,/map-first-split\.css\?v=2/);
- assert.match(html,/dashboard-main\.js\?v=18/);
+ assert.match(html,/dashboard-main\.js\?v=19/);
  assert.match(html,/home-lookup-v2\.js\?v=27/);
  assert.match(html,/home-school-manual-bridge\.js\?v=3/);
  assert.match(css,/\.shell>\.controls-grid>\.office-controls\{order:90/);

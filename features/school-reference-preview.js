@@ -57,7 +57,18 @@
    if(seen.has(key))return blocked('같은 학교·학년 후보가 중복되어 표시하지 않습니다.');
    seen.add(key);
    const grades=typeof p.grades==='string'&&p.grades.length<=40?p.grades.trim():'';
-   candidates.push(Object.freeze({school,level:LEVEL[p.gradeLevel],grades}));
+   // Preserve only source-audited 2026–27 Prosper campus identities.
+   // School zone evidence remains distinct from residential enrollment.
+   const officialProsper=raw.district==='PROSPER'&&
+    p.sourceDistrict==='PROSPER'&&p.current===true&&
+    p.sourceYearConfirmed===true&&p.sourceVintage==='2026–27'&&
+    p.schoolYear==='2026–27'&&
+    /^043912[0-9]{3}$/.test(String(p.campusId||''))&&
+    /^[0-9]{3}$/.test(String(p.schoolCode||''));
+   if(raw.district==='PROSPER'&&p.campusId!=null&&!officialProsper)
+    return blocked('Prosper 공식 GIS 캠퍼스 번호 또는 학교 코드가 일치하지 않습니다.');
+   candidates.push(Object.freeze({school,level:LEVEL[p.gradeLevel],grades,
+    ...(officialProsper?{campusId:String(p.campusId),schoolCode:String(p.schoolCode)}:{})}));
   }
   const covered=new Set(features.map(f=>f.properties.gradeLevel));
   const missing=['elementary','middle','high'].filter(level=>!covered.has(level)&&!(level==='high'&&covered.has('senior'))).map(l=>LEVEL[l]);
