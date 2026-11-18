@@ -604,7 +604,7 @@ function addressSchoolView(){
  const mc=searchedHome.mckinneyCrosscheck;
  if(mc?.kind==='reference-only')return {kind:'mckinney-reference',schools:[],
   candidates:mc.candidates.map(c=>({name:c.school,school:c.matchedSchool||null,
-   levelText:c.levelText,grades:'',yearNote:c.yearNote,campusId:c.campusId})),
+   levelText:c.levelText,grades:'',yearNote:c.yearNote,campusId:c.campusId,verifiedRating:c.verifiedRating,identityKind:c.identityKind})),
   reference:mc};
  if(mc?.kind==='unavailable'&&searchedHome.schoolSourceDistrict==='043907')
   return {kind:'unverified',schools:[],reason:mc.reason,sourceStatus:mc.code};
@@ -670,10 +670,14 @@ function renderAddressSchoolPriority(){
   const name=document.createElement('strong');name.textContent=entry.name;
   const meta=document.createElement('small');
   const school=entry.school;
-  const grade=school&&typeof scoreRecord==='function'?scoreRecord(school.name,school.district)?.rating:null;
-  
+  const grade=entry.verifiedRating||(
+   school&&typeof scoreRecord==='function'?scoreRecord(school.name,school.district)?.rating:null);
+  const identity=entry.identityKind==='TEA-campus-id'?' · TEA Campus ID 대조':
+   entry.identityKind==='TEA-name-only'?' · TEA 학교명 대조(번호 미확인)':
+   entry.identityKind==='directory-name-only'?' · 학교명 대조(번호 미확인)':'';
   meta.textContent=entry.levelText+(entry.grades?' · '+entry.grades:'')+
-   (school?' · 2026 TEA '+(grade||'등급 미확인'):' · 학교 기록 연결 미확인')+
+   (grade?' · 2026 TEA '+grade:' · TEA 등급 미연결')+
+   identity+
    (entry.yearNote?' · '+entry.yearNote:'')+
    (view.kind==='manual'?' · 직접 선택':['gis-reference','mckinney-reference'].includes(view.kind)?' · GIS 후보':'');
   card.append(name,meta);cards.appendChild(card);
