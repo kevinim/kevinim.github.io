@@ -112,7 +112,7 @@ test('public GIS rail uses only linked current directory schools, never ZIP or t
  const view=h.view();
  assert.equal(view.kind,'mckinney-reference');
  assert.equal(view.schools.length,0);
- assert.deepEqual(h.ctx.referenceCandidateSchoolLocations(view).map(s=>s.name),['GIS ELEM']);
+ assert.deepEqual(Array.from(h.ctx.referenceCandidateSchoolLocations(view),s=>s.name),['GIS ELEM']);
  view.candidates[0].campusId='043907999';
  assert.equal(h.ctx.referenceCandidateSchoolLocations(view).length,0,'Provider Campus ID conflict is excluded from GIS rail');
  delete view.candidates[0].campusId;
