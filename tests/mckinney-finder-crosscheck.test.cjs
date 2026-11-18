@@ -67,7 +67,7 @@ test('McKinney Bennett/Dowell/Boyd short GIS labels link to unique official TEA 
  assert.equal(result.independentOfficialAddressVerified,false);
  assert.deepEqual(result.candidates.map(x=>x.matchedSchool?.name),f.schools.map(x=>x.name));
  assert.deepEqual(result.candidates.map(x=>x.campusId),['043907120','043907043','043907007']);
- assert.deepEqual(result.candidates.map(x=>x.verifiedRating),['B',null,'A']);
+ assert.deepEqual(result.candidates.map(x=>x.verifiedRating),['B','A','A']);
  assert.deepEqual(result.candidates.map(x=>x.level),['elementary','middle','high']);
  assert.equal(result.directoryMatched,3);
  // Conflicting publisher identity is never silently replaced with a local alias.
