@@ -9,6 +9,12 @@
  const DISTRICT='043907', YEAR='2026-27';
  const LEVELS=Object.freeze(['elementary','middle','high']);
  const LABELS=Object.freeze({elementary:'초등',middle:'중등',high:'고등'});
+ // Curated 2026 TEA campus identities for abbreviated district-published GIS
+ // names. Never infer a campus from fuzzy suffix, ZIP, or city-level matching.
+ const TEA_CAMPUS_ALIASES=Object.freeze({
+  'elementary|bennett':Object.freeze({id:'043907120',name:'DEAN AND MILDRED BENNETT EL'}),
+  'high|boyd':Object.freeze({id:'043907007',name:'MCKINNEY BOYD H S'})
+ });
  const SOURCE='McKinney ISD 2026–27 School Zone Finder 공개 GIS';
  // Both links are explicitly published district routes. The live Finder is
  // MetroStudy, not on mckinneyisd.net; accept only these exact vetted URLs.
@@ -77,18 +83,29 @@
    const key=normalize(item.school);
    const campusId=typeof p.campusId==='string'&&/^043907\d{3}$/.test(p.campusId)?p.campusId:null;
    const byName=schools.filter(s=>s?.district===DISTRICT&&s.type===level&&normalize(s.name)===key);
-   const byId=campusId?schools.filter(s=>s?.district===DISTRICT&&s.type===level&&s.id===campusId):[];
-   // TEA rating rows may not carry a level; normalized common names can
-   // collide across elementary/middle/high. Narrow name-only joins by the
-   // uniquely matched district campus ID before labeling them as TEA matches.
-   const matched=byId.length===1?byId[0]:byName.length===1?byName[0]:null;
-   const teaById=campusId?ratings.filter(x=>x?.district===DISTRICT&&x.id===campusId&&
+   const alias=TEA_CAMPUS_ALIASES[level+'|'+key]||null;
+   if(alias&&campusId&&campusId!==alias.id)
+    return unavailable('공식 GIS Campus ID와 독립 검증된 TEA 학교 ID가 충돌합니다.','identity-conflict');
+   const aliasRatings=alias?ratings.filter(x=>x?.district===DISTRICT&&x.id===alias.id&&
+    normalize(x.name)===normalize(alias.name)&&(!x.type||x.type===level)):[];
+   // An exact, unique TEA record is required before using a curated alias.
+   const byAlias=aliasRatings.length===1?schools.filter(s=>s?.district===DISTRICT&&
+    s.type===level&&normalize(s.name)===normalize(alias.name)):[];
+   const resolvedCampusId=campusId||(aliasRatings.length===1?alias.id:null);
+   const byId=resolvedCampusId?schools.filter(s=>s?.district===DISTRICT&&s.type===level&&s.id===resolvedCampusId):[];
+   // Some location-directory entries have no campus ID but use the exact TEA
+   // official name. Cross-link only when the TEA 9-digit ID and one directory
+   // record agree; these are campus locations, never enrollment assertions.
+   const directoryMatches=new Set([...byId,...byName,...byAlias]);
+   const matched=directoryMatches.size===1?[...directoryMatches][0]:null;
+   const teaById=resolvedCampusId?ratings.filter(x=>x?.district===DISTRICT&&x.id===resolvedCampusId&&
     (!x.type||x.type===level)):[];
    const teaByName=ratings.filter(x=>x?.district===DISTRICT&&
     (!x.type||x.type===level)&&
     (normalize(x.name)===key||normalize(x.officialName)===key)&&
     (x.type===level||(matched?.id&&x.id===matched.id)));
-   if(byId.length>1||byName.length>1||teaById.length>1||
+   if(byId.length>1||byName.length>1||byAlias.length>1||aliasRatings.length>1||
+      directoryMatches.size>1||teaById.length>1||
       (byId.length===1&&byName.length===1&&byId[0]!==byName[0])||
       (teaById.length===1&&teaByName.length===1&&teaById[0]!==teaByName[0]))
     return unavailable('McKinney GIS 학교 ID와 TEA 학교명이 서로 다른 기록을 가리키거나 중복되었습니다.','identity-conflict');
@@ -107,7 +124,7 @@
    if(sourceNames.has(itemKey))return unavailable('공식 GIS 학교명이 중복되었습니다.','duplicated-school');
    sourceNames.add(itemKey);
    result.push(Object.freeze({school:item.school,level,levelText:LABELS[level],
-    campusId:campusId||null,matchedSchool:matched||null,linked,
+    campusId:resolvedCampusId||null,matchedSchool:matched||null,linked,
     identityKind,verifiedRating,teaCampusId:ratingById?.id||null,
     yearStatus,sourceYear:item.year||null,
     yearNote:yearStatus==='elementary-current-checked'?'2026–27 초등 GIS 학년도 확인':
