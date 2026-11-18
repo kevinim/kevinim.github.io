@@ -120,6 +120,9 @@ test('west DFW supplemental provenance records all four lookup-only ISDs without
   assert.deepEqual(new Set(rows.map(r=>r.code)),new Set(['220919','220907','061911','220906']));
   assert.ok(rows.every(r=>r.status==='lookup-only'));
   assert.ok(rows.every(r=>validHttps(r.officialLookup)));
+  // Finder year 2026–27 is not a licensed/verified 2026–27 campus polygon year.
+  assert.equal(rows.find(r=>r.code==='061911').geometryYear,'unverified');
+  assert.equal(rows.find(r=>r.code==='220907').geometryYear,'2018-19');
 });
 
 test('DFW supplemental provenance accounts for 97 strictly non-GIS official lookup/map/choice entries',()=>{
