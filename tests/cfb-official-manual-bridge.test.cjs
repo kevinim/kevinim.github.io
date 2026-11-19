@@ -45,7 +45,7 @@ test('UI is an explicit, labeled user-selected bridge, not a claimed automatic s
  assert.match(html,/id="cfbManualElementary"/);
  assert.match(html,/id="cfbManualMiddle"/);
  assert.match(html,/id="cfbManualHigh"/);
- assert.match(html,/features\/cfb-official-bridge\.js\?v=2/);
+ assert.match(html,/features\/cfb-official-bridge\.js\?v=3/);
  assert.doesNotMatch(script,/fetch\(|XMLHttpRequest|\.postMessage\(|localStorage|sessionStorage|document\.querySelector\([^)]*iframe/);
  assert.doesNotMatch(script,/APPROVED_AUTO_DISTRICTS|home\.assignment\s*=|resolveAssignment\(/);
 });
@@ -74,8 +74,24 @@ test('unknown school fails closed, home input invalidates old manual selections'
  assert.match(el.cfbManualStatus.textContent,/일치하지 않습니다/);
  el.cfbManualElementary.value='Carrollton Elementary';
  el.cfbManualApply.click();
- assert.equal(el.cfbManualSchoolCards.children.length,1);
+ assert.equal(el.cfbManualSchoolCards.children.length,3,'A single user-confirmed grade displays two explicitly missing grades');
+ assert.match(el.cfbManualSchoolCards.children[1].children[0].textContent,/미확인/);
+ assert.match(el.cfbManualStatus.textContent,/1\/3개/);
  el.homeAddress.events.input();
  assert.equal(el.cfbManualSchoolCards.children.length,0);
  assert.equal(el.cfbManualElementary.value,'');
+});
+
+
+test('invalid re-apply clears stale CFB school cards even when validation fails',()=>{
+ const {elements:el}=setup();
+ el.cfbManualElementary.value='Carrollton Elementary';
+ el.cfbManualMiddle.value='Perry Middle School';
+ el.cfbManualHigh.value='Newman Smith High School';
+ el.cfbManualApply.click();
+ assert.equal(el.cfbManualSchoolCards.children.length,3);
+ el.cfbManualElementary.value='Not a CFB campus';
+ el.cfbManualApply.click();
+ assert.equal(el.cfbManualSchoolCards.children.length,0,'old school names must not survive an invalid re-apply');
+ assert.match(el.cfbManualStatus.textContent,/일치하지 않습니다/);
 });
