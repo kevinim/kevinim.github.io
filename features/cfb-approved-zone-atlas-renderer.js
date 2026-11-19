@@ -6,6 +6,7 @@
  const AREA_CHANGES='./data/cfb-rezoning-boundary-review-targets-2026.json';
  const VERIFIED_SAMPLES='./tests/cfb-official-resident-finder-verified-2026-11-07.json';
  const CONFLICTS='./data/cfb-ag03-official-narrative-evidence-2025.json';
+ const CITY_HISTORICAL='./data/cfb-historical-city-gis-links-2020.json';
  const ALLOWED_IMG_HOST='resources.finalsite.net';
  const sourceUrl=value=>{
   try {
@@ -68,6 +69,40 @@
   }
   return seen.size===2?value.discrepancies:null;
  }
+// Only manually opened, publisher-hosted 2020 GIS references. No geometry fetch,
+ // student address transmission, old-school auto assignment or assumed license.
+ const CITY_HIST_ROOT='https://services7.arcgis.com/o731hPfw3YndegMz/arcgis/rest/services/';
+ const CITY_HIST_EXPECTED=[
+  ['elementary','초등학교','ElementarySchoolZones/FeatureServer/0',20,74.09,'2020-03-23T18:20:00Z'],
+  ['middle','중학교','MiddleSchoolZones/FeatureServer/0',6,98.62,'2020-03-23T18:39:00Z'],
+  ['high','고등학교','HighSchoolZones/FeatureServer/0',4,99.53,'2020-03-23T18:52:00Z']
+ ];
+ function validateHistoricCityGIS(m){
+  if(m?.schemaVersion!==1||m.district!=='CFB'||m.teaDistrictId!=='057903'||
+     m.sourceOwner!=='City of Carrollton, Texas'||m.sourceDataLastEditedYear!==2020||
+     m.academicYearVerified!==null||m.linkedOnly!==true||
+     m.geometryRehosted!==false||m.autoAddressSchoolAssignmentAllowed!==false||
+     m.currentAcademicYearClaimAllowed!==false||m.redistributionRightsVerified!==false||
+     m.historicDistrictNameField!=='SCHOOLDISTRICT'||
+     m.historicDistrictName!=='Carrollton-Farmers Branch ISD'||
+     m.datasetServiceDirectory!==CITY_HIST_ROOT.slice(0,-1)||
+     m.citySourcePage!=='https://www.cityofcarrollton.com/about-us/about-the-city/city-maps'||
+     m.currentFinder!=='https://www.cfbisd.edu/students/school-maps-locator-system'||
+     !Array.isArray(m.closedAfterHistoricalBaseline)||m.closedAfterHistoricalBaseline.length!==4||
+     !['Central Elementary','Furneaux Elementary','McCoy Elementary','Long Middle School']
+       .every(x=>m.closedAfterHistoricalBaseline.includes(x))||
+     !Array.isArray(m.layers)||m.layers.length!==3)return null;
+  const rows=new Map(m.layers.map(x=>[x?.level,x]));
+  if(rows.size!==3)return null;
+  for(const [level,label,segment,count,coverage,edited] of CITY_HIST_EXPECTED){
+   const x=rows.get(level);
+   if(!x||x.label!==label||x.uri!==CITY_HIST_ROOT+segment||
+      x.cfbFeatureCountIn2020Snapshot!==count||
+      x.cfb2025DistrictAreaCoveredPercent!==coverage||
+      x.lastDataEditUtc!==edited||x.current!==false)return null;
+  }
+  return CITY_HIST_EXPECTED.map(([level])=>rows.get(level));
+ }
  function setup(){
   const parent=document.getElementById('cfbOfficialFinderPanel');
   if(!parent||document.getElementById('cfbAtlas'))return;
@@ -93,7 +128,12 @@
   const sourceLink=node('a',{cls:'cardlink',text:'CFB 공식 승인·재배정 설명 열기',href:'https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning'});
   const finderLink=node('a',{cls:'cardlink',text:'현재 공식 주소 Finder 열기',href:'https://www.cfbisd.edu/students/school-maps-locator-system'});
   const sources=node('div',{cls:'cfb-atlas-sources'},[sourceLink,finderLink]);
-  content.append(status,buttons,mapNote,imageWrap,conflictWarning,conflictDetails,areas,fixture,sources);
+  const historicDetails=node('details',{id:'cfbAtlasHistoricalGIS',cls:'cfb-atlas-evidence'});
+  historicDetails.appendChild(element('summary',null,'시 정부 학교별 과거 GIS 원본 · 2020년 최종 수정'));
+  const historicBody=node('div',{id:'cfbAtlasHistoricalGISLinks',cls:'cfb-atlas-evidence-list',
+   text:'과거 GIS 원본 출처를 검증하고 있습니다.'});
+  historicDetails.appendChild(historicBody);
+  content.append(status,buttons,mapNote,imageWrap,conflictWarning,conflictDetails,areas,fixture,historicDetails,sources);
   details.append(summary,content);
   const next=document.getElementById('cfbOfficialManualBridge');
   if(next&&next.parentNode===parent)parent.insertBefore(details,next);
@@ -150,6 +190,26 @@
     }else{
      conflictList.appendChild(node('p',{text:'공식 충돌 근거를 검증하지 못했습니다. 해당 지역의 학교 선택을 확정하지 말고 공식 Finder를 이용하세요.'}));
     }
+    try{
+     const historic=validateHistoricCityGIS(await fetchJson(CITY_HISTORICAL));
+     if(!historic)throw Error('CFB historical GIS source manifest invalid');
+     historicBody.replaceChildren();
+     historicBody.appendChild(node('p',{cls:'cfb-atlas-caution',text:
+      '시 정부 ArcGIS에서 2020년 최종 수정한 학교별 경계입니다. 실제 적용 학년도는 확인되지 않았고, 2025년 학군 재배정과 폐교 4곳을 반영하지 않습니다. 초등은 2025–26 학군 전체 면적 대비 약 74%만 확인되었습니다. 현재 집 주소 배정과 무관한 과거 참고 자료입니다.'}));
+     for(const layer of historic){
+      const line=node('div',{cls:'cfb-atlas-historic-link'});
+      line.appendChild(node('a',{cls:'cardlink',href:layer.uri,
+       text:layer.label+' 과거 ArcGIS 원본 보기 · 2020 최종 수정'}));
+      line.appendChild(node('p',{cls:'source',text:
+       '시 GIS의 CFB 표기 구역 '+layer.cfbFeatureCountIn2020Snapshot+
+       '개 · 기준 학년도 미확인 · 타 학군 구역도 포함될 수 있음 · 현행 배정 아님'}));
+      historicBody.appendChild(line);
+     }
+     historicBody.appendChild(node('p',{cls:'source',text:
+      '이 링크는 시 정부 원본 서비스로만 연결합니다. GIS를 복사·재배포하거나 주소별 학교를 추정하지 않습니다.'}));
+    }catch(_error){
+     historicBody.textContent='과거 시 GIS 출처가 검증되지 않아 링크를 표시하지 않습니다. 현재 CFB 공식 School Search를 이용하세요.';
+    }
     const disputedWoodlake=!!conflictRows?.some(x=>x.id==='CFB25_CONFLICT_FURNEAUX');
     const areaData=await fetchJson(AREA_CHANGES);
     if(areaData?.districtCode==='CFB'&&Array.isArray(areaData.targets)){
@@ -199,7 +259,7 @@
    }
   });
  }
- if(typeof module!=='undefined'&&module.exports)module.exports={validateManifest,sourceUrl,validConflictLedger};
+ if(typeof module!=='undefined'&&module.exports)module.exports={validateManifest,sourceUrl,validConflictLedger,validateHistoricCityGIS};
  if(typeof document!=='undefined'){
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});
   else setup();

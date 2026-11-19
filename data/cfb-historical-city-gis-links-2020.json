@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "district": "CFB",
+  "teaDistrictId": "057903",
+  "reviewedAt": "2026-11-18",
+  "sourceOwner": "City of Carrollton, Texas",
+  "citySourcePage": "https://www.cityofcarrollton.com/about-us/about-the-city/city-maps",
+  "datasetServiceDirectory": "https://services7.arcgis.com/o731hPfw3YndegMz/arcgis/rest/services",
+  "sourceDataLastEditedYear": 2020,
+  "academicYearVerified": null,
+  "linkedOnly": true,
+  "geometryRehosted": false,
+  "autoAddressSchoolAssignmentAllowed": false,
+  "currentAcademicYearClaimAllowed": false,
+  "redistributionRightsVerified": false,
+  "conditions": "Publisher layer links are public GIS research references. 2020 is metadata data-last-edit, not a verified 2020-21 school year. Official CFBISD March 2025 rezoning supersedes some zones and closed four campuses. Layers can contain other school districts; filter to the exact CFBISD SCHOOLDISTRICT attribute. Do not equate feature presence with current residency school assignment.",
+  "currentFinder": "https://www.cfbisd.edu/students/school-maps-locator-system",
+  "approvedRezone": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning",
+  "cityGisDataRequest": "https://www.cityofcarrollton.com/government/city-manager-s-office/city-secretary/make-an-open-records-request",
+  "historicDistrictNameField": "SCHOOLDISTRICT",
+  "historicDistrictName": "Carrollton-Farmers Branch ISD",
+  "closedAfterHistoricalBaseline": [
+    "Central Elementary",
+    "Furneaux Elementary",
+    "McCoy Elementary",
+    "Long Middle School"
+  ],
+  "coverageComparisonReference": "2025–26 Texas Legislative Council CFBISD jurisdiction; area intersection of 2020 city records, not a guarantee for any home",
+  "layers": [
+    {
+      "level": "elementary",
+      "label": "초등학교",
+      "uri": "https://services7.arcgis.com/o731hPfw3YndegMz/arcgis/rest/services/ElementarySchoolZones/FeatureServer/0",
+      "cfbFeatureCountIn2020Snapshot": 20,
+      "cfb2025DistrictAreaCoveredPercent": 74.09,
+      "lastDataEditUtc": "2020-03-23T18:20:00Z",
+      "current": false
+    },
+    {
+      "level": "middle",
+      "label": "중학교",
+      "uri": "https://services7.arcgis.com/o731hPfw3YndegMz/arcgis/rest/services/MiddleSchoolZones/FeatureServer/0",
+      "cfbFeatureCountIn2020Snapshot": 6,
+      "cfb2025DistrictAreaCoveredPercent": 98.62,
+      "lastDataEditUtc": "2020-03-23T18:39:00Z",
+      "current": false
+    },
+    {
+      "level": "high",
+      "label": "고등학교",
+      "uri": "https://services7.arcgis.com/o731hPfw3YndegMz/arcgis/rest/services/HighSchoolZones/FeatureServer/0",
+      "cfbFeatureCountIn2020Snapshot": 4,
+      "cfb2025DistrictAreaCoveredPercent": 99.53,
+      "lastDataEditUtc": "2020-03-23T18:52:00Z",
+      "current": false
+    }
+  ]
+}

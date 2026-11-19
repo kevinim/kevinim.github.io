@@ -3,7 +3,7 @@
 // Preserve the source-validated atlas renderer byte-for-byte in a separate file.
 // Its code and public evidence files load only after the visitor opens this panel.
 (function(){
- const RENDERER='./features/cfb-approved-zone-atlas-renderer.js?v=1';
+ const RENDERER='./features/cfb-approved-zone-atlas-renderer.js?v=2';
  let request=null;
  function el(tag,cls,text){
   const node=document.createElement(tag);
