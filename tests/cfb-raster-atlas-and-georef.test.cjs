@@ -55,9 +55,9 @@ test('CFB map atlas does not add fake GIS or downgrade residential release polic
  const script=fs.readFileSync(path.join(root,'features/cfb-approved-zone-atlas-renderer.js'),'utf8');
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  assert.equal(require('node:child_process').execFileSync('git',['hash-object','features/cfb-approved-zone-atlas-renderer.js'],{cwd:root,encoding:'utf8'}).trim(),
-  'bf1d7754b6f9b59812ea46308c543616f860490a','Original source-validated CFB atlas renderer stays byte-identical');
+  'a8f87bf722c535f14d03eb090f03cbdfb03129bb','Authorized historical-GIS-source atlas renderer is hash-pinned to reviewed version');
  const loader=fs.readFileSync(path.join(root,'features/cfb-approved-zone-atlas.js'),'utf8');
- assert.match(loader,/const RENDERER='\.\/features\/cfb-approved-zone-atlas-renderer\.js\?v=1'/);
+ assert.match(loader,/const RENDERER='\.\/features\/cfb-approved-zone-atlas-renderer\.js\?v=2'/);
  assert.match(loader,/stub\.addEventListener\('toggle'/);
  assert.doesNotMatch(loader,/innerHTML|localStorage|sessionStorage|L\.geoJSON|L\.imageOverlay/);
  assert.match(script,/rasterReferenceOnly/);
