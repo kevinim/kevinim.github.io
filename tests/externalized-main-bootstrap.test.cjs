@@ -53,6 +53,8 @@ for(const [next,previous] of [
  ['dashboard-main.js?v=19','dashboard-main.js?v=10'],
  ['allen-lookup.js?v=7','allen-lookup.js?v=5'],
  ['home-lookup-v2.js?v=27','home-lookup-v2.js?v=20'],
+ ['features/dashboard-extras.css?v=5','features/dashboard-extras.css?v=4'],
+ ['cfb-official-bridge.js?v=3','cfb-official-bridge.js?v=2'],
  ['home-school-manual-bridge.js?v=3','home-school-manual-bridge.js?v=1']
 ])normalizedMainHtml=replaceOnce(normalizedMainHtml,next,previous);
 for(const [next,prior] of [["https://gis.texaswildfirerisk.com https://tiles.openfreemap.org; connect-src 'self'","https://gis.texaswildfirerisk.com; connect-src 'self'"],["https://fueleconomy.gov https://tiles.openfreemap.org; font-src 'self' data:; worker-src 'self' blob:; object-src 'none'","https://fueleconomy.gov; font-src 'self' data:; object-src 'none'"],["<option value=\"liberty\">Liberty · OpenFreeMap</option><option value=\"osm\">OpenStreetMap</option>","<option value=\"osm\">OpenStreetMap</option>"],["<link rel=\"stylesheet\" href=\"./features/tea-peims-public-share-addon.css?v=2\">\n<link rel=\"stylesheet\" href=\"./features/map-first-split.css?v=1\">","<link rel=\"stylesheet\" href=\"./features/tea-peims-public-share-addon.css?v=2\">"],["<script src=\"./features/map/liberty-basemap.js?v=2\"></script><script src=\"./dashboard-main.js?v=10\"></script>","<script src=\"./dashboard-main.js?v=9\"></script>"]])
@@ -329,7 +331,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  expected=replaceOnce(expected,'<link rel="stylesheet" href="./features/cfb-official-inline.css?v=1">',
   '<link rel="stylesheet" href="./features/cfb-official-inline.css?v=2">\n<link rel="stylesheet" href="./features/cfb-approved-zone-atlas.css?v=1">');
  expected=replaceOnce(expected,'<script src="./features/cfb-official-bridge.js?v=1" defer></script></body></html>',
-  '<script src="./features/cfb-official-bridge.js?v=2" defer></script><script src="./features/cfb-zone-overlay.js?v=1" defer></script><script src="./features/cfb-approved-zone-atlas.js?v=1" defer></script><script src="./features/cfb-district-jurisdiction.js?v=1" defer></script></body></html>');
+  '<script src="./features/cfb-official-bridge.js?v=3" defer></script><script src="./features/cfb-zone-overlay.js?v=1" defer></script><script src="./features/cfb-approved-zone-atlas.js?v=1" defer></script><script src="./features/cfb-district-jurisdiction.js?v=1" defer></script></body></html>');
  // Track A: retain the strict CFB atlas and bootstrap exact-byte baseline.
  expected=replaceOnce(expected,'<link rel="stylesheet" href="./features/first-fold-ux.css?v=1">',
   '<link rel="stylesheet" href="./features/first-fold-ux.css?v=1"><link rel="stylesheet" href="./features/school-reference-preview.css?v=1">');

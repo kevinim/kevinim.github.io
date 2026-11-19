@@ -49,8 +49,10 @@ test('dashboard wiring uses reusable autocomplete and no fixed personal office d
  const dashboard=fs.readFileSync(path.join(__dirname,'../dashboard-main.js'),'utf8');
  const suggest=fs.readFileSync(path.join(__dirname,'../texas-address-suggest.js'),'utf8');
  assert.match(html,/features\/commute\/workplace-destinations\.js/);
- assert.match(html,/features\/dashboard-extras\.css\?v=4/);
- assert.match(fs.readFileSync(path.join(__dirname,'../features/dashboard-extras.css'),'utf8'),/\.workplaces-panel/);
+ assert.match(html,/features\/dashboard-extras\.css\?v=5/);
+ const css=fs.readFileSync(path.join(__dirname,'../features/dashboard-extras.css'),'utf8');
+ assert.match(css,/\.workplaces-panel/);
+ assert.match(css,/#workplaceSuggestions\s*\{[^}]*position:static/,'Address suggestions must not overlay Save or Cancel');
  assert.match(html,/id="destination" value=""/);
  assert.match(dashboard,/WorkplaceDestinations\?\.addressForChoice/);
  assert.match(suggest,/optionIdPrefix/);
