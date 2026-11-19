@@ -27,7 +27,7 @@ function setup(){
 }
 test('new CFB module is local-origin, separate from home and global school assignment',()=>{
  assert.match(html,/features\/cfb-zone-overlay\.js\?v=1/);
- assert.match(html,/features\/cfb-official-bridge\.js\?v=2/);
+ assert.match(html,/features\/cfb-official-bridge\.js\?v=3/);
  assert.match(html,/features\/cfb-official-inline\.css\?v=2/);
  assert.match(bridge,/showZone\(s\)/);
  assert.doesNotMatch(source,/fetch\(|XMLHttpRequest|localStorage|sessionStorage|postMessage|home\.assignment\s*=|APPROVED_AUTO_DISTRICTS\s*=/);
