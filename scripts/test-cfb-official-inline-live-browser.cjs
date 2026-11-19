@@ -91,7 +91,8 @@ async function main(){
    await page.locator('.cfb-manual-campus').first().waitFor({timeout:10000});
    const cardCount=await page.locator('#cfbManualSchoolCards .cfb-manual-card').count();
    const markerCount=await page.locator('.cfb-manual-campus').count();
-   assert.equal(cardCount,1,'manual campus bridge must show one actual CFB school card');
+   assert.equal(cardCount,3,'manual school bridge must show one verified selection and two missing slots');
+   assert.equal(await page.locator('#cfbManualSchoolCards .cfb-manual-missing').count(),2);
    assert.ok(markerCount>=1,'manual campus bridge must show native map point');
    await page.locator('#homeAddress').dispatchEvent('input');
    assert.equal(await page.locator('#cfbManualSchoolCards .cfb-manual-card').count(),0,
