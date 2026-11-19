@@ -78,6 +78,29 @@ async function main(){
    assert.equal(result.containsSourceWarning,true);
    assert.ok(result.panelScrollWidth<=result.panelWidth+12,
     'Denton PDF selector overflow at '+width+'px: '+JSON.stringify(result));
+   // A verified 2024-25 school-building point may be highlighted, never a
+   // residence attendance polygon. The eight unresolved site points must not move the map.
+   await page.waitForFunction(()=>window.DentonCampusMarkerInfo?.loadState==='ready',null,{timeout:30000});
+   await page.locator('#dentonPdfCampusSelect').selectOption('061901007');
+   await page.locator('#dentonPdfShowCampusMap').click();
+   const focused=await page.evaluate(()=>({
+    campusId:state.selectedSchool?.id,
+    note:document.getElementById('dentonPdfMapStatus').textContent,
+    polygons:zoneGroup.getLayers().length
+   }));
+   assert.equal(focused.campusId,'061901007','Guyer historic reviewed marker selection');
+   assert.match(focused.note,/2024–25.*교차검증/);
+   assert.equal(focused.polygons,0,'School marker is not a Denton attendance boundary');
+   await page.locator('#dentonPdfCampusSelect').selectOption('061901003');
+   await page.locator('#dentonPdfShowCampusMap').click();
+   const blocked=await page.evaluate(()=>({
+    campusId:state.selectedSchool?.id,
+    note:document.getElementById('dentonPdfMapStatus').textContent,
+    polygons:zoneGroup.getLayers().length
+   }));
+   assert.equal(blocked.campusId,'061901007','Unverified Denton High point must not replace selection');
+   assert.match(blocked.note,/좌표.*이동을 중단/);
+   assert.equal(blocked.polygons,0);
    const dir=path.join(ROOT,'artifacts','denton-browser');fs.mkdirSync(dir,{recursive:true});
    await page.locator('#dentonPdfZoneDirectory').screenshot({
     path:path.join(dir,'denton-39-official-pdf-sources-'+width+'px.png'),
