@@ -107,7 +107,7 @@ test('Denton Nov 9 existing GIS records request is sent, but neither reply nor v
  assert.equal(q.channel,'email');
  assert.equal(q.sentEvidence,'confirmed-in-connected-Sent-mailbox-2026-11-12');
  assert.equal(q.publicReceiptAvailable,false);
- assert.equal(q.receivedResponseAsOf,'not-observed-in-connected-inbox-search-2026-11-12');
+ assert.equal(q.receivedResponseAsOf,'not-observed-in-connected-inbox-search-2026-11-18');
  assert.equal(q.districtOriginalVectorReceived,false);
  assert.equal(q.licensingConsentVerified,false);
  assert.match(q.feeAuthority,/No paid request/);

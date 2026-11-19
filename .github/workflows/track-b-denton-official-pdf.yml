@@ -4,6 +4,9 @@ on:
     branches: [main]
     paths:
       - 'denton-official-zone-references.js'
+      - 'data/denton-2026-27-gis-source-disposition.json'
+      - 'scripts/check-denton-geopdf-status.cjs'
+      - 'tests/denton-geopdf-provenance-and-panel.test.cjs'
       - 'index.html'
       - 'features/track-b-reference-warning.css'
       - 'tests/denton-official-zone-references.test.cjs'
@@ -37,7 +40,8 @@ jobs:
         run: |
           node --check denton-official-zone-references.js
           node --check scripts/test-track-b-denton-pdf-browser.cjs
-          node --test tests/denton-official-zone-references.test.cjs tests/conditional-school-release.test.cjs
+          node scripts/check-denton-geopdf-status.cjs
+          node --test tests/denton-geopdf-provenance-and-panel.test.cjs tests/denton-eight-point-and-gis-disposition.test.cjs tests/denton-official-zone-references.test.cjs tests/conditional-school-release.test.cjs
       - name: Exact existing app bootstrap and CSP unchanged
         run: node --test tests/externalized-main-bootstrap.test.cjs tests/csp-network-allowlist.test.cjs tests/trusted-outbound-links.test.cjs
   browser:

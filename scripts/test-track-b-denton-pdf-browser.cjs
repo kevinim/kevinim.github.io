@@ -36,7 +36,26 @@ async function main(){
    // The module supplies official source references regardless of NCES marker status. Verify the honest
    // official-source directory UI instead of injecting synthetic markers.
    await page.locator('#schoolDataDetails > summary').click();
-   await page.locator('#dentonPdfZoneDirectory summary').click();
+   await page.locator('#dentonPdfZoneDirectory > summary').click();
+   const geoPdf=page.locator('#dentonGeoPdfResearchStatus');
+   await geoPdf.waitFor({state:'attached',timeout:12000});
+   assert.equal(await geoPdf.evaluate(x=>x.open),false,'Staging source panel must remain collapsed by default');
+   await geoPdf.locator('summary').click();
+   const evidence=await geoPdf.innerText();
+   assert.match(evidence,/39개 학교별 후보 도형/);
+   assert.match(evidence,/폴리곤은 0개/);
+   assert.match(evidence,/2028–29/);
+   const originalGeoPdfs=geoPdf.locator('a');
+   assert.equal(await originalGeoPdfs.count(),3,'Elementary, middle, high official GeoPDF originals');
+   const api=await page.evaluate(()=>window.DentonZonePdfReference.ALL);
+   for(const [i,level] of ['elementary','middle','high'].entries()){
+    assert.equal(await originalGeoPdfs.nth(i).getAttribute('href'),api[level]);
+    assert.equal(await originalGeoPdfs.nth(i).getAttribute('rel'),'noopener noreferrer');
+    assert.equal(await originalGeoPdfs.nth(i).getAttribute('target'),'_blank');
+   }
+   assert.equal(await page.evaluate(()=>zoneGroup.getLayers().length),0,
+    'Viewing official original PDF sources must never create Denton GIS features');
+   await geoPdf.locator('summary').click();
    await page.locator('#dentonPdfCampusSelect').selectOption('061901127');
    const result=await page.evaluate(()=>{
     const a=document.getElementById('dentonPdfCampusLink');

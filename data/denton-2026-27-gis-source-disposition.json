@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "district": "061901",
   "schoolYear": "2026-27",
-  "checkedOn": "2026-11-12",
+  "checkedOn": "2026-11-18",
   "scope": "Publicly discoverable, safely attributable Denton ISD school-specific attendance polygons (not administrative district boundaries or campus points)",
   "officialCurrentYearPdfCount": 39,
   "expectedCampusGradeCounts": {
@@ -14,13 +14,13 @@
   "currentYearSchoolPolygonsAcquired": false,
   "publishCurrentYearGeometry": false,
   "officialAddressAssignmentCertified": false,
-  "directGISAcquisitionOutcome": "no approved 2026–27 campus polygon FeatureServer, shapefile or GeoJSON verified among examined sources",
+  "directGISAcquisitionOutcome": "No district-original GIS export licensed for 2026–27 was obtained. However three official 2026–27 aggregate PDFs are spatially referenced GeoPDFs containing native vector drawing paths; 39 campus GIS candidate polygons were previously derived in QA-only staging, NOT published.",
   "sources": [
     {
       "kind": "current-district-campus-pdfs",
       "url": "https://www.dentonisd.org/families/attendance-zones",
       "status": "confirmed-current-PDF-reference",
-      "details": "Official 2026–27 school-specific maps for 39 campuses; image/PDF references only, no GIS coordinates/feature geometry",
+      "details": "39 individual 2026–27 official school PDFs and three aggregate GeoPDFs, whose native embedded spatial references and drawing paths were used to derive 39 E/M/H staging-only candidate polygons. No authorized or certified production GIS polygons.",
       "usableAsCurrentCampusPolygon": false
     },
     {
@@ -71,6 +71,13 @@
       "status": "proposal-for-2028-29-not-current",
       "details": "Denton ISD explicitly says the high/middle attendance plan is proposed for 2028–29 only, with no 2026–27 or 2027–28 changes; never treat its map or school forecasts as current 2026–27 assignment polygons",
       "usableAsCurrentCampusPolygon": false
+    },
+    {
+      "kind": "town-of-flower-mound-partial-municipal-school-assignment-attribute-gis",
+      "url": "https://gismaps.flower-mound.com/wafmp/rest/services/Basemap/SchoolAttendance_MS/MapServer/0",
+      "status": "municipal-polygon-attributes-local-town-extent-year-unverified",
+      "details": "Flower Mound MapServer has polygon geometry and School_District, Elementary, Middle and High attribute fields. It is explicitly restricted to the Town of Flower Mound extent, includes several ISDs, and does not identify verified source school year or 2026–27 Denton-wide changes. This is a separate municipal reference lead, not 39-campus Denton GIS.",
+      "usableAsCurrentCampusPolygon": false
     }
   ],
   "releaseGate": {
@@ -93,10 +100,52 @@
     "requested": "existing 2026-27 elementary/middle/high attendance-zone vector GIS, campus IDs, effective year, spatial reference, split-zone exceptions, and redistribution terms",
     "sentEvidence": "confirmed-in-connected-Sent-mailbox-2026-11-12",
     "publicReceiptAvailable": false,
-    "receivedResponseAsOf": "not-observed-in-connected-inbox-search-2026-11-12",
+    "receivedResponseAsOf": "not-observed-in-connected-inbox-search-2026-11-18",
     "publicPrivacyGuard": "No owner email address, Gmail message IDs, subject or private link in repository",
     "licensingConsentVerified": false,
     "districtOriginalVectorReceived": false,
     "feeAuthority": "No paid request or vendor service without express approval"
+  },
+  "geoPdfDerivedStaging": {
+    "status": "DERIVED_FROM_OFFICIAL_2026_27_GEOPDF_QA_ONLY",
+    "currentOfficialSchoolYear": "2026-27",
+    "source": "https://www.dentonisd.org/families/attendance-zones",
+    "schoolPdfRosterCount": 39,
+    "aggregatePdfReferences": [
+      {
+        "level": "elementary",
+        "url": "https://resources.finalsite.net/images/v1777570580/dentonisdorg/t3wht3nvxuf01iatrebo/AllElementaryMap_26-27.pdf",
+        "expectedCandidatePolygons": 26
+      },
+      {
+        "level": "middle",
+        "url": "https://resources.finalsite.net/images/v1777570133/dentonisdorg/q7tnltynklrfsfhmsisi/AllMiddleSchoolZoneMaps_26-27.pdf",
+        "expectedCandidatePolygons": 9
+      },
+      {
+        "level": "high",
+        "url": "https://resources.finalsite.net/images/v1777570662/dentonisdorg/j5syiqjmelhlufew9q6a/AllHighSchoolZoneMaps_26-27.pdf",
+        "expectedCandidatePolygons": 4
+      }
+    ],
+    "nativeGeopdfSpatialReference": "NAD83 Texas North Central EPSG:2276 (PDF viewport GEO control points); derived local WGS84 EPSG:4326",
+    "priorQualityEvidenceUrl": "https://github.com/kevinim/kevinim.github.io/actions/runs/42691734933",
+    "priorQualityEvidenceDate": "2026-11-09",
+    "previousStagingCandidateCount": 39,
+    "previousStagingValidCampusIdMatches": 39,
+    "historicalPublicStreetFinderGradeMatches": 9,
+    "historicalPublicStreetFinderGradeQueries": 9,
+    "previousNearBoundaryPointMeters": 73.2,
+    "previousNearBoundaryParcelMeters": 20.6,
+    "nearBoundaryParcelIsNoGo": true,
+    "independentAddressBoundaryCertified": false,
+    "exactCurrentYearBoardApprovedPdfSource": true,
+    "schoolYearProvenanceNotOriginalDistrictGIS": true,
+    "derivativeRedistributionLicenseVerified": false,
+    "cityPartialLegacyGisCannotCompleteDistrict": true,
+    "currentDashboardPolygonCount": 0,
+    "automaticAddressSchoolAssignmentAllowed": false,
+    "publicationApproved": false,
+    "warning": "39/39 is a past QA-only candidate topology and campus-ID check, NOT released 2026–27 attendance GIS or a live acceptance rate."
   }
 }
