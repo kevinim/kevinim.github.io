@@ -64,5 +64,5 @@ test('historical GIS is only a passive resource linked by CFB official atlas',()
  assert.match(source,/2020년 최종 수정/);
  assert.match(source,/validateHistoricCityGIS/);
  assert.match(source,/noopener noreferrer/);
- assert.doesNotMatch(source,/L\\.geoJSON|L\\.imageOverlay|fetch\\(layer\\.uri|APPROVED_AUTO_DISTRICTS|localStorage|sessionStorage|\\.innerHTML\\s*=/);
+ assert.doesNotMatch(source,/L\.geoJSON|L\.imageOverlay|fetch\(layer\.uri|APPROVED_AUTO_DISTRICTS|localStorage|sessionStorage|\.innerHTML\s*=/);
 });
