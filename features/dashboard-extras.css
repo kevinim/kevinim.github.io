@@ -248,6 +248,18 @@
 .office-controls .commute-address-autocomplete{position:relative;z-index:1100}
 .office-controls .commute-address-autocomplete input{width:100%;min-width:0;padding-right:35px}
 .office-controls .commute-address-autocomplete .home-suggestion-list{z-index:1300}
+/* Unlike the destination dropdown, the editable workplace form must keep the
+   Save/Cancel actions reachable while asynchronous suggestions are visible. */
+.office-controls .workplaces-panel #workplaceSuggestions{
+  position:static;
+  inset:auto;
+  width:100%;
+  max-height:190px;
+  overflow-y:auto;
+  margin-top:5px;
+  box-sizing:border-box;
+}
+
 .workplace-clear{position:absolute;right:5px;top:50%;transform:translateY(-50%);width:28px;height:28px;border:0;border-radius:7px;background:transparent;color:#66758d;font-size:22px;line-height:1}
 .workplace-clear:hover,.workplace-clear:focus-visible{background:#e8eefb;color:#17345f;outline:2px solid #5675bc}
 .workplace-clear[hidden]{display:none}
