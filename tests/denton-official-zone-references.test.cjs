@@ -43,7 +43,7 @@ test('host and path validation refuses cross-district URLs and query injection',
 test('browser-facing module is loaded before main dashboard and has no automatic home assignment',()=>{
  const fs=require('node:fs'),html=fs.readFileSync('index.html','utf8');
  const app=fs.readFileSync('dashboard-main.js','utf8');
- assert.ok(html.includes('<script src="./denton-official-zone-references.js?v=1"></script>'));
+ assert.ok(html.includes('<script src="./denton-official-zone-references.js?v=2"></script>'));
  assert.ok(html.indexOf('denton-official-zone-references.js')<html.indexOf('dashboard-main.js'));
  assert.ok(html.includes('id="dentonPdfZoneDirectory"'));
  assert.match(html,/GIS와 배정 미인증/);
@@ -51,4 +51,22 @@ test('browser-facing module is loaded before main dashboard and has no automatic
  const gate=require('../features/conditional-school-release.js');
  assert.equal(gate.releaseSummary().currentYearResidentialDistrictApprovals,0);
  assert.ok(!app.includes('denton-polygon-estimate'));
+});
+
+
+test('Denton PDF map highlight requires uniquely reviewed historical campus location',()=>{
+ const school={id:'061901007',district:'061901',type:'high',
+  name:'Guyer High School',campusPointReview:'two-source-historical',ll:[33.136371,-97.102314]};
+ const ready={state:'historical-two-source'},blocked={state:'historical-exception'};
+ assert.equal(d.reviewedMapCampus(school.id,[school],ready),school);
+ assert.equal(d.reviewedMapCampus(school.id,[school],blocked),null);
+ assert.equal(d.reviewedMapCampus(school.id,[school],{state:'loading'}),null);
+ assert.equal(d.reviewedMapCampus(school.id,[school,school],ready),null,'duplicate ID matches fail closed');
+ assert.equal(d.reviewedMapCampus(school.id,[{...school,district:'CFB'}],ready),null);
+ assert.equal(d.reviewedMapCampus(school.id,[{...school,type:'elementary'}],ready),null);
+ assert.equal(d.reviewedMapCampus(school.id,[{...school,campusPointReview:'unreviewed-historical'}],ready),null);
+ assert.equal(d.reviewedMapCampus(school.id,[{...school,ll:[null,-97.1]}],ready),null);
+ assert.equal(d.reviewedMapCampus('061901003',[{...school,id:'061901003'}],blocked),null,
+  'Denton High is an unresolved site-coordinate exception');
+ assert.equal(d.reviewedMapCampus('061901120',[school],ready),null,'Paloma Creek retired zone is not mapped');
 });
