@@ -36,7 +36,7 @@ async function main(){
    // The module supplies official source references regardless of NCES marker status. Verify the honest
    // official-source directory UI instead of injecting synthetic markers.
    await page.locator('#schoolDataDetails > summary').click();
-   await page.locator('#dentonPdfZoneDirectory summary').click();
+   await page.locator('#dentonPdfZoneDirectory > summary').click();
    const geoPdf=page.locator('#dentonGeoPdfResearchStatus');
    await geoPdf.waitFor({state:'attached',timeout:12000});
    assert.equal(await geoPdf.evaluate(x=>x.open),false,'Staging source panel must remain collapsed by default');
