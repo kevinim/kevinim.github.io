@@ -5,6 +5,10 @@ on:
     paths:
       - '.github/workflows/denton-pdf-vector-poc.yml'
       - 'docs/DENTON_2026_GEOPDF_TO_GEOJSON_POC.md'
+      - 'data/denton-2026-27-gis-source-disposition.json'
+      - 'denton-official-zone-references.js'
+      - 'scripts/check-denton-geopdf-status.cjs'
+      - 'tests/denton-geopdf-provenance-and-panel.test.cjs'
       - 'scripts/denton_*.py'
       - 'scripts/verify_denton_geopdf_staging.py'
       - 'tests/test_denton_*.py'
@@ -30,6 +34,10 @@ jobs:
           python-version: '3.12'
       - name: Install free pinned PyMuPDF
         run: python -m pip install --disable-pip-version-check --no-cache-dir pymupdf==1.26.7 numpy==2.2.6 pyproj==3.7.2 shapely==2.1.2
+      - name: Confirm 39-staging source provenance, publisher URLs and NO-GO release before source retrieval
+        run: |
+          node scripts/check-denton-geopdf-status.cjs
+          node --test tests/denton-geopdf-provenance-and-panel.test.cjs
       - name: Synthetic path extraction and no-GeoJSON safety tests
         run: python -m unittest discover -s tests -p 'test_denton_pdf_vector_poc.py' -v
       - name: Test conservative 250m street-to-derived-boundary uncertainty guard (synthetic only)
