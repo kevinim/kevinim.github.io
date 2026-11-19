@@ -167,7 +167,7 @@ async function run(){
    assert.match(await cfb.innerText(),/학교별 검증 GIS 폴리곤이 연결되지 않았으며/);
    // Public Denton 39-school official PDF references, exact campus ID.
    const zone=page.locator('#dentonPdfZoneDirectory');
-   await zone.locator('summary').click();
+   await zone.locator(':scope > summary').click();
    assert.equal(await page.locator('#dentonPdfCampusSelect option').count(),40);
    await page.locator('#dentonPdfCampusSelect').selectOption('061901127');
    const bellPdf=await page.locator('#dentonPdfCampusLink').getAttribute('href');
