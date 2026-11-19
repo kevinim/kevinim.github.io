@@ -5,7 +5,7 @@ const vm=require('node:vm');
 const fs=require('node:fs');
 const path=require('node:path');
 const loader=fs.readFileSync(path.join(__dirname,'..','features/cfb-approved-zone-atlas.js'),'utf8');
-const EXPECTED='./features/cfb-approved-zone-atlas-renderer.js?v=1';
+const EXPECTED='./features/cfb-approved-zone-atlas-renderer.js?v=2';
 function setup(){
  class Element {
   constructor(tag){this.tagName=tag;this.parentNode=null;this.children=[];this.isConnected=false;this.dataset={};this.events={};this.open=false;this.textContent='';this.id='';}
@@ -95,7 +95,7 @@ test('network error restores source warning and allows another explicit expansio
  assert.equal(h.scripts.length,2,'Retry only follows an explicit second opening');
 });
 test('script source fixed; no dynamic URL, executable HTML or client persistence',()=>{
- assert.match(loader,/const RENDERER='\.\/features\/cfb-approved-zone-atlas-renderer\.js\?v=1'/);
+ assert.match(loader,/const RENDERER='\.\/features\/cfb-approved-zone-atlas-renderer\.js\?v=2'/);
  assert.doesNotMatch(loader,/innerHTML|eval\(|new Function|localStorage|sessionStorage|location\.search/);
  assert.match(loader,/script\.src=RENDERER/);
 });
