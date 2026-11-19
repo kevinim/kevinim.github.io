@@ -55,6 +55,10 @@
   return grade+' · 위치 '+(Array.isArray(s.ll)&&s.ll.length===2?'참고 좌표 있음':'미확인');
  }
  function apply(){
+  // Never leave old school cards or markers visible after a failed re-apply.
+  clearMarkers();
+  clearZone();
+  const cards=byId('cfbManualSchoolCards');cards?.replaceChildren();
   const selections=[];
   for(const [level,id,label] of LEVELS){
    const value=byId(id)?.value||'';if(!value)continue;
@@ -63,10 +67,18 @@
    selections.push({school:s,label});
   }
   if(!selections.length){status('공식 Finder에서 확인된 학교를 하나 이상 선택해 주세요.');return}
-  clearMarkers();
-  const cards=byId('cfbManualSchoolCards');cards?.replaceChildren();
   const locations=[];
-  for(const {school:s,label} of selections){
+  const chosen=new Map(selections.map(({school})=>[school.type,school]));
+  for(const [level,,label] of LEVELS){
+   const s=chosen.get(level);
+   if(!s){
+    const card=document.createElement('div');card.className='cfb-manual-card cfb-manual-missing';
+    const title=document.createElement('strong');title.textContent=label+'학교 · 미확인';
+    const detail=document.createElement('p');detail.className='source';
+    detail.textContent='CFB 공식 Finder에서 해당 학교급을 확인한 후 선택하세요. 근처 학교로 추정하지 않습니다.';
+    card.append(title,detail);cards?.appendChild(card);
+    continue;
+   }
    const card=document.createElement('div');card.className='cfb-manual-card';
    const title=document.createElement('strong');title.textContent=label+'학교 · '+s.name;
    const detail=document.createElement('p');detail.className='source';
@@ -94,7 +106,9 @@
    else map.setView(locations[0].ll,13);
   }
   if(selections.length===1)showZone(selections[0].school);else clearZone();
-  status('학교 '+selections.length+'곳을 기존 TEA 목록에 연결했습니다. 이것은 사용자가 직접 선택한 정보이며 주소별 배정 자동 검증이나 현행 배정 폴리곤을 의미하지 않습니다.');
+  const missing=LEVELS.length-selections.length;
+  status((missing?'확인된 학교 '+selections.length+'/3개 · 미확인 '+missing+'개 학교급은 공식 Finder에서 확인하세요. ':'초·중·고 3개 학교 모두 선택되었습니다. ')+
+   '사용자가 직접 선택한 참고 정보이며 주소별 배정 자동 검증이나 현행 배정 폴리곤을 의미하지 않습니다.');
  }
  function init(){
   const panel=byId('cfbOfficialFinderPanel');
