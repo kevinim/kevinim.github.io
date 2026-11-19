@@ -74,6 +74,25 @@ async function main(){
     assert.equal(await link.getAttribute('rel'),'noopener noreferrer');
    }
    await conflictDetails.locator('summary').click();
+   const historic=page.locator('#cfbAtlasHistoricalGIS');
+   assert.equal(await historic.evaluate(el=>el.open),false,'Old city GIS source links stay collapsed by default');
+   await page.locator('#cfbAtlasHistoricalGISLinks a').first().waitFor({state:'attached',timeout:12000});
+   await historic.locator('summary').click();
+   const historicNotice=await page.locator('#cfbAtlasHistoricalGISLinks').innerText();
+   assert.match(historicNotice,/2020년 최종 수정/);
+   assert.match(historicNotice,/약 74%/);
+   assert.match(historicNotice,/배정과 무관한 과거 참고 자료/);
+   const historicalLinks=page.locator('#cfbAtlasHistoricalGISLinks a');
+   assert.equal(await historicalLinks.count(),3,'City of Carrollton 2020 has E, M, H references');
+   const expected=['ElementarySchoolZones','MiddleSchoolZones','HighSchoolZones'];
+   for(let i=0;i<3;i++){
+    const href=await historicalLinks.nth(i).getAttribute('href');
+    assert.equal(href,'https://services7.arcgis.com/o731hPfw3YndegMz/arcgis/rest/services/'+expected[i]+'/FeatureServer/0');
+    assert.equal(await historicalLinks.nth(i).getAttribute('rel'),'noopener noreferrer');
+    assert.equal(await historicalLinks.nth(i).getAttribute('target'),'_blank');
+   }
+   await historic.locator('summary').click();
+   assert.equal(remoteImages,0,'Historical GIS source links must never fetch raw geometry or imagery');
    for(const [level,slug] of [['elementary','elementary-zones.jpg'],['middle','middleschoolproposed-02.png'],['high','highschoolproposed-02.png']]){
     await page.locator('#cfbAtlasBands button[data-level="'+level+'"]').click();
     await page.waitForFunction(n=>document.querySelector('#cfbAtlasImageWrap img')?.src.includes(n),slug);
