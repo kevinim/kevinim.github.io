@@ -91,8 +91,21 @@ async function main(){
    await page.locator('.cfb-manual-campus').first().waitFor({timeout:10000});
    const cardCount=await page.locator('#cfbManualSchoolCards .cfb-manual-card').count();
    const markerCount=await page.locator('.cfb-manual-campus').count();
-   assert.equal(cardCount,3,'manual school bridge must show one verified selection and two missing slots');
-   assert.equal(await page.locator('#cfbManualSchoolCards .cfb-manual-missing').count(),2);
+   // The PR tests the candidate locally while the live-origin smoke targets
+   // the *already deployed* main site. During review it can still serve v2.
+   // After deploy v3 is mandatory, and this same test verifies its 3 slots.
+   const deployedBridgeVersion=await page.evaluate(()=>{
+    const src=[...document.querySelectorAll('script[src]')]
+     .map(el=>el.getAttribute('src')||'')
+     .find(value=>value.includes('/cfb-official-bridge.js?'))||'';
+    return Number(new URL(src,location.href).searchParams.get('v'));
+   });
+   if(!liveBase)assert.equal(deployedBridgeVersion,3,'local candidate must load reviewed v3');
+   assert.ok([2,3].includes(deployedBridgeVersion),'unknown deployed CFB bridge version');
+   const expectedCards=deployedBridgeVersion===3?3:1;
+   assert.equal(cardCount,expectedCards,'CFB card count must match the deployed bridge version');
+   assert.equal(await page.locator('#cfbManualSchoolCards .cfb-manual-missing').count(),
+    deployedBridgeVersion===3?2:0,'missing grade slots should exist only in v3');
    assert.ok(markerCount>=1,'manual campus bridge must show native map point');
    await page.locator('#homeAddress').dispatchEvent('input');
    assert.equal(await page.locator('#cfbManualSchoolCards .cfb-manual-card').count(),0,
