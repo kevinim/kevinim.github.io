@@ -4,7 +4,7 @@
  * household address access, additional fetches or user-derived script paths.
  */
 (function(){
- const SOURCE='./features/dfw-school-coverage-renderer.js?v=1';
+ const SOURCE='./features/dfw-school-coverage-renderer.js?v=2';
  let loading=null;
  function loadRenderer(){
   if(loading)return loading;
