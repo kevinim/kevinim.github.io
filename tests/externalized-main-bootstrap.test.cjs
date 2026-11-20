@@ -64,6 +64,11 @@ for(const [next,previous] of [
 ])normalizedMainHtml=replaceOnce(normalizedMainHtml,next,previous);
 for(const [next,prior] of [["https://gis.texaswildfirerisk.com https://tiles.openfreemap.org; connect-src 'self'","https://gis.texaswildfirerisk.com; connect-src 'self'"],["https://fueleconomy.gov https://tiles.openfreemap.org; font-src 'self' data:; worker-src 'self' blob:; object-src 'none'","https://fueleconomy.gov; font-src 'self' data:; object-src 'none'"],["<option value=\"liberty\">Liberty · OpenFreeMap</option><option value=\"osm\">OpenStreetMap</option>","<option value=\"osm\">OpenStreetMap</option>"],["<link rel=\"stylesheet\" href=\"./features/tea-peims-public-share-addon.css?v=2\">\n<link rel=\"stylesheet\" href=\"./features/map-first-split.css?v=1\">","<link rel=\"stylesheet\" href=\"./features/tea-peims-public-share-addon.css?v=2\">"],["<script src=\"./features/map/liberty-basemap.js?v=2\"></script><script src=\"./dashboard-main.js?v=10\"></script>","<script src=\"./dashboard-main.js?v=9\"></script>"]])
  normalizedMainHtml=replaceOnce(normalizedMainHtml,next,prior);
+// Normalize only the newly approved CFB/Denton school source panel cache key
+// before comparing the old immutable HTML baseline; all other bytes stay pinned.
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ './features/dfw-school-coverage-panel.js?v=3',
+ './features/dfw-school-coverage-panel.js?v=2');
 assert.equal(normalizedMainHtml,show('c12ab9860057e5d59b6f0e52e486b392f083da8a','index.html'),
  'Unreviewed main HTML changes beyond Liberty/split UX');
 // T02 cache keys change only these existing assets; every other HTML byte stays pinned.
