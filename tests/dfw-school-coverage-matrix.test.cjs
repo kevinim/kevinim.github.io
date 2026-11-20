@@ -149,11 +149,11 @@ test('HTML loads optional coverage UI without modifying inline CSP bootstrap',()
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  assert.ok(html.includes('id="dfwSchoolCoveragePanel"'));
  assert.ok(html.includes('id="dfwSchoolCoverageContent"'));
- assert.ok(html.includes('./features/dfw-school-coverage-panel.js?v=2'));
+ assert.ok(html.includes('./features/dfw-school-coverage-panel.js?v=3'));
  assert.ok(html.includes('./features/dfw-school-coverage-panel.css?v=1'));
  assert.ok(html.includes('src="./school-zone-ui.js?v=1"'));
  const ui=fs.readFileSync(path.join(root,'features/dfw-school-coverage-renderer.js'),'utf8');
- assert.ok(fs.readFileSync(path.join(root,'features/dfw-school-coverage-panel.js'),'utf8').includes("./features/dfw-school-coverage-renderer.js?v=1"));
+ assert.ok(fs.readFileSync(path.join(root,'features/dfw-school-coverage-panel.js'),'utf8').includes("./features/dfw-school-coverage-renderer.js?v=2"));
  assert.equal(require('node:child_process').execFileSync('git',['hash-object','features/dfw-school-coverage-renderer.js'],{cwd:root,encoding:'utf8'}).trim(),
   'eab27739b4e2adc1dacb0123a0227d3a2a924862','Reviewed DFW renderer including CFB/Denton public-source disclosure must remain byte-for-byte pinned');
  assert.ok(ui.includes('document.createElement'));
