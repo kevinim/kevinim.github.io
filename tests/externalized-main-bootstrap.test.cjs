@@ -35,6 +35,10 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<script src="./features/mckinney-finder-crosscheck.js?v=4"></script>','');
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<script src="./features/mckinney-live-address-lookup.js?v=2"></script>','');
+// New self-hosted future-year source-status disclosure only; remove its exact tag
+// before historical HTML byte comparison, keeping every other script pinned.
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ '<script src="./features/prosper-boundary-years.js?v=1"></script>','');
 // Unwind only this PR's verified source-identity helper cache bump before the
 // immutable archival HTML byte comparison; do not relax any other HTML guard.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
@@ -50,7 +54,7 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
 for(const [next,previous] of [
  ['<input type="checkbox" id="referenceBoundaryOverlay" checked>','<input type="checkbox" id="referenceBoundaryOverlay">'],
  ['map-first-split.css?v=2','map-first-split.css?v=1'],
- ['dashboard-main.js?v=20','dashboard-main.js?v=10'],
+ ['dashboard-main.js?v=21','dashboard-main.js?v=10'],
  ['allen-lookup.js?v=7','allen-lookup.js?v=5'],
  ['home-lookup-v2.js?v=27','home-lookup-v2.js?v=20'],
  ['denton-official-zone-references.js?v=2','denton-official-zone-references.js?v=1'],

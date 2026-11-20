@@ -2,6 +2,7 @@
 const test=require('node:test');
 // Reuse the existing address-school CI job; do not create a duplicate workflow.
 require('./prosper-official-address-response.test.cjs');
+require('./prosper-boundary-years.test.cjs');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
@@ -138,7 +139,7 @@ test('production UI shows address-first panel and moves commute below map/result
  assert.match(html,/id="homeAssignmentPriority"/);
  assert.match(html,/id="schoolAddressNotice"/);
  assert.match(html,/map-first-split\.css\?v=2/);
- assert.match(html,/dashboard-main\.js\?v=20/);
+ assert.match(html,/dashboard-main\.js\?v=21/);
  assert.match(html,/home-lookup-v2\.js\?v=27/);
  assert.match(html,/home-school-manual-bridge\.js\?v=3/);
  assert.match(css,/\.shell>\.controls-grid>\.office-controls\{order:90/);
