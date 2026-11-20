@@ -746,11 +746,11 @@ function renderAddressSchoolPriority(){
   const complete=prosper&&['초등','중등','고등'].every(l=>
    view.candidates.filter(c=>c.levelText===l).length===1);
   status.textContent=complete?
-   'Prosper 2026–27 공식 GIS 기준 예상 배정학교 · 실제 배정 미인증':
+   'Prosper 2026–27 공식 GIS 기반 참고 학교 · 실제 배정 미인증':
    '2026–27 GIS 후보 · 배정 미인증';
   const gaps=view.reference.missing?.length?' · 자료가 없는 학교급: '+view.reference.missing.join(', '):'';
   desc.textContent=complete?
-   '선택한 집 주소의 위치를 공식 2026–27 초·중·고 경계에 대조해 예상 학교 3곳을 자동 표시했습니다. 공식 주소 검색 결과와 등록·전학 예외는 별도 확인이 필요합니다.':
+   '선택한 집 주소의 위치를 공식 2026–27 GIS 초·중·고 경계에 대조해 참고 학교 3곳과 점선 경계를 자동 표시합니다. 공식 주소 검색 결과가 아니며 등록·전학·건물별 예외는 별도 확인해야 합니다.':
    '집 위치가 포함된 2026–27 학교 경계의 참고 후보입니다. 주소별 배정 확정이 아닙니다.'+gaps;
  }else{
   status.textContent=view.sourceStatus==='loading'?'학교 경계 자료 확인 중':view.sourceStatus==='error'?'학교 경계 자료 조회 실패':'배정 미확인';
@@ -907,6 +907,56 @@ function renderAddressSchoolPriority(){
    }
   }
  }
+// Owner-approved informational GIS overlay (2026-11-20).
+// Separate from certified residence assignment; never alter home.assignment.
+function prosperReferenceZonePlan(selected,raw){
+ const plan=selected?.schoolReferencePlan;
+ if(!selected?.geocodeQuality?.usableForSchoolCandidate||
+    plan?.kind!=='reference-only'||plan.district!=='PROSPER'||plan.year!=='2026–27'||
+    !Array.isArray(plan.missing)||plan.missing.length!==0||
+    !Array.isArray(plan.candidates)||plan.candidates.length!==3||
+    raw?.district!=='PROSPER'||raw.status!=='current'||
+    !Array.isArray(raw.features)||raw.features.length!==3)return null;
+ const expected=new Map(),seen=new Set();
+ const levels={'초등':'elementary','중등':'middle','고등':'high'};
+ for(const item of plan.candidates){
+  const level=levels[item?.level];
+  if(!level||expected.has(level)||typeof item.school!=='string'||
+     !/^043912[0-9]{3}$/.test(String(item.campusId||''))||
+     !/^[0-9]{3}$/.test(String(item.schoolCode||'')))return null;
+  expected.set(level,item);
+ }
+ if(expected.size!==3)return null;
+ for(const feature of raw.features){
+  const p=feature?.properties,g=feature?.geometry;
+  const item=expected.get(p?.gradeLevel);
+  if(feature?.type!=='Feature'||!item||seen.has(p.gradeLevel)||
+     !['Polygon','MultiPolygon'].includes(g?.type)||!Array.isArray(g.coordinates)||!g.coordinates.length||
+     p.sourceDistrict!=='PROSPER'||p.current!==true||p.sourceYearConfirmed!==true||
+     p.schoolYear!=='2026–27'||p.sourceVintage!=='2026–27'||
+     p.school!==item.school||String(p.campusId)!==item.campusId||
+     String(p.schoolCode)!==item.schoolCode)return null;
+  seen.add(p.gradeLevel);
+ }
+ return seen.size===3?raw.features:null;
+}
+let prosperReferenceZoneGroup=null;
+function drawProsperAddressReferenceZones(selected){
+ prosperReferenceZoneGroup?.clearLayers();
+ const raw=selected&&typeof schoolAssignmentFor==='function'?schoolAssignmentFor(selected):null;
+ const features=prosperReferenceZonePlan(selected,raw);
+ if(!features||!map)return false;
+ if(!prosperReferenceZoneGroup)prosperReferenceZoneGroup=L.layerGroup().addTo(map);
+ const colors={elementary:'#12a394',middle:'#4387d1',high:'#c7833b'};
+ for(const feature of features){
+  const level=feature.properties.gradeLevel,school=feature.properties.school;
+  // Non-interactive dashed outlines distinguish GIS references from certified zones.
+  L.geoJSON(feature,{interactive:false,style:{
+   color:colors[level],weight:2,dashArray:'6 5',fillColor:colors[level],fillOpacity:.055
+  }}).addTo(prosperReferenceZoneGroup);
+ }
+ return true;
+}
 function drawHomeAssignmentMap(){
  if(!map||!homeZoneGroup)return;
  homeZoneGroup.clearLayers();
@@ -914,6 +964,17 @@ function drawHomeAssignmentMap(){
  const status=el('homeMapAssignmentStatus');
  if(!selected){if(status)status.textContent='';return;}
  const assignment=selected.assignment;
+ // Public 2026–27 Prosper GIS is authorized for a labelled REFERENCE overlay,
+ // not a verified address-specific enrollment decision. No third-party request.
+ const referenceVisible=drawProsperAddressReferenceZones(selected);
+ if(referenceVisible){
+  if(status){
+   status.textContent='Prosper 2026–27 공식 GIS 기반 초·중·고 참고 경계 3개 표시 · 실제 주소별 배정 미인증 · 아파트·전학·학년 예외는 공식 검색기에서 확인하세요.';
+   status.dataset.evidence='prosper-2026-gis-reference';
+   status.dataset.visible='true';
+  }
+  return;
+ }
  // Do not promote source-backed reference GIS into residential enrollment.
  if(window.ConditionalSchoolRelease?.decide?.(assignment)?.allowed!==true){
   if(status){
