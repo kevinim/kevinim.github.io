@@ -828,6 +828,11 @@ function renderAddressSchoolPriority(){
   anchor.textContent=view.kind==='allen-reference'?'Allen 공식 주소표·학교 배정 확인':'2026–27 학군 공식 주소 검색기에서 최종 확인';
   cards.appendChild(anchor);
  }
+ // The future-year board vote, obtainable GIS and address-lookup API are
+ // distinct. Surface source status only for Prosper, without altering the
+ // certified assignment gate or transcribing a private residential address.
+ if(home?.schoolSourceDistrict==='PROSPER'||view?.reference?.district==='PROSPER')
+  window.ProsperBoundaryYears?.render?.(cards,'PROSPER');
  const button=el('homeAssignmentPriorityFinder');
  if(button)button.onclick=()=>{
   const bridge=el('homeManualSchoolBridge');
