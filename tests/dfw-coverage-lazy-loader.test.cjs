@@ -5,7 +5,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
 const loader=fs.readFileSync(path.join(__dirname,'..','features/dfw-school-coverage-panel.js'),'utf8');
-const RENDERER='./features/dfw-school-coverage-renderer.js?v=1';
+const RENDERER='./features/dfw-school-coverage-renderer.js?v=2';
 
 function setup(){
  const mount={textContent:''},handlers={},scripts=[];
