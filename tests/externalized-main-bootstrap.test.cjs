@@ -402,7 +402,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  // Independently sourced TexasWorks physical-campuses explanation: cache-bust
  // only the existing collapsed, lazily loaded coverage JS module.
  approvedHtml=replaceOnce(approvedHtml,'./features/dfw-school-coverage-panel.js?v=1',
-  './features/dfw-school-coverage-panel.js?v=2');
+  './features/dfw-school-coverage-panel.js?v=3');
  // Source-only CFB 2025-26 conflict disclosure; still no auto-assignment.
  approvedHtml=replaceOnce(approvedHtml,'./features/cfb-approved-zone-atlas.js?v=1',
   './features/cfb-approved-zone-atlas.js?v=2');
