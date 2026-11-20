@@ -126,7 +126,7 @@ test('Prosper official GIS school cards use 9-digit campus identity for TEA grad
  school.id='043912999';
  assert.equal(h.view().candidates[0].school,null,'Contradictory school directory ID must not be linked');
  assert.equal(h.view().candidates[0].verifiedRating,'A','Rating is tied to source-audited campus ID, not an arbitrary pin');
- assert.match(source,/Prosper 2026–27 공식 GIS 기준 예상 배정학교/);
+ assert.match(source,/Prosper 2026–27 공식 GIS 기반 참고 학교/);
 });
 
 test('clearing address restores general ZIP exploration',()=>{
@@ -138,7 +138,7 @@ test('production UI shows address-first panel and moves commute below map/result
  assert.match(html,/id="homeAssignmentPriority"/);
  assert.match(html,/id="schoolAddressNotice"/);
  assert.match(html,/map-first-split\.css\?v=2/);
- assert.match(html,/dashboard-main\.js\?v=19/);
+ assert.match(html,/dashboard-main\.js\?v=20/);
  assert.match(html,/home-lookup-v2\.js\?v=27/);
  assert.match(html,/home-school-manual-bridge\.js\?v=3/);
  assert.match(css,/\.shell>\.controls-grid>\.office-controls\{order:90/);
@@ -177,4 +177,49 @@ test('public GIS rail uses only linked current directory schools, never ZIP or t
  assert.match(rail,/railReference\?'<span class="other-label">'\+\(view\.kind==='allen-reference'/);
  assert.match(rail,/GIS 참고 후보 · 배정 미인증/);
  assert.match(rail,/view\?\.kind==='certified'&&homeSchoolMatches\(s\)/);
+});
+
+
+test('owner-authorized Prosper reference GIS outlines require exact source/year and all E/M/H campus identities',()=>{
+ const begin=source.indexOf('function prosperReferenceZonePlan(');
+ const end=source.indexOf('let prosperReferenceZoneGroup=',begin);
+ assert.ok(begin>0&&end>begin,'independent Prosper reference planner must exist');
+ const harness={};
+ vm.runInNewContext(source.slice(begin,end),harness,{timeout:1000});
+ const official=JSON.parse(fs.readFileSync('prosper-attendance-2026.geojson','utf8'));
+ const features=['elementary','middle','high'].map(level=>
+  official.features.find(f=>f.properties.gradeLevel===level));
+ assert.ok(features.every(Boolean));
+ const raw={district:'PROSPER',status:'current',features};
+ const plan={
+  kind:'reference-only',district:'PROSPER',year:'2026–27',missing:[],
+  candidates:features.map(f=>({
+   level:{elementary:'초등',middle:'중등',high:'고등'}[f.properties.gradeLevel],
+   school:f.properties.school,campusId:f.properties.campusId,
+   schoolCode:f.properties.schoolCode
+  }))
+ };
+ const selected={geocodeQuality:{usableForSchoolCandidate:true},schoolReferencePlan:plan};
+ assert.equal(harness.prosperReferenceZonePlan(selected,raw).length,3);
+ assert.equal(harness.prosperReferenceZonePlan({...selected,geocodeQuality:{usableForSchoolCandidate:false}},raw),null);
+ assert.equal(harness.prosperReferenceZonePlan(selected,{...raw,status:'boundary-review'}),null);
+ assert.equal(harness.prosperReferenceZonePlan(selected,{...raw,district:'FISD'}),null);
+ assert.equal(harness.prosperReferenceZonePlan({...selected,schoolReferencePlan:{...plan,year:'2025–26'}},raw),null);
+ assert.equal(harness.prosperReferenceZonePlan({...selected,schoolReferencePlan:{...plan,missing:['고등']}},raw),null);
+ assert.equal(harness.prosperReferenceZonePlan(selected,{...raw,features:features.slice(0,2)}),null);
+ assert.equal(harness.prosperReferenceZonePlan(selected,{...raw,features:[features[0],features[0],features[2]]}),null);
+ assert.equal(harness.prosperReferenceZonePlan(selected,{...raw,features:[
+  {...features[0],properties:{...features[0].properties,campusId:'043912999'}},
+  features[1],features[2]
+ ]}),null);
+ assert.equal(harness.prosperReferenceZonePlan(selected,{...raw,features:[
+  {...features[0],properties:{...features[0].properties,sourceVintage:'2025–26'}},
+  features[1],features[2]
+ ]}),null);
+ assert.match(source,/const referenceVisible=drawProsperAddressReferenceZones\(selected\)/);
+ assert.match(source,/prosperReferenceZoneGroup\?\.clearLayers\(\)/);
+ assert.match(source,/status\.dataset\.evidence='prosper-2026-gis-reference'/);
+ // The certificate gate remains untouched, and the reference shapes are never
+ // copied into home.assignment or the certified school list.
+ assert.match(source,/if\(window\.ConditionalSchoolRelease\?\.decide\?\.\(assignment\)\?\.allowed!==true\)/);
 });
