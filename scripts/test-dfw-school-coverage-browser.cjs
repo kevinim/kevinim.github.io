@@ -13,13 +13,14 @@ fs.mkdirSync(folder,{recursive:true});
  try{
   for(const width of [390,1366]){
    const page=await browser.newPage({viewport:{width,height:900},deviceScaleFactor:1});
-   const errors=[],csp=[],requests=[],localityRequests=[],rendererRequests=[],publicSourceRequests=[];
+   const errors=[],csp=[],requests=[],localityRequests=[],rendererRequests=[],publicSourceRequests=[],vintageSourceRequests=[];
    page.on('pageerror',e=>errors.push(String(e.message||e)));
    page.on('request',r=>{
     if(r.url().includes('dfw-school-coverage-matrix-2026.json'))requests.push(r.url());
      if(r.url().includes('/features/dfw-school-coverage-renderer.js'))rendererRequests.push(r.url());
     if(r.url().includes('tea-texasworks-locality-2026.json'))localityRequests.push(r.url());
      if(r.url().includes('dfw-cfb-denton-public-source-status-20261120.json'))publicSourceRequests.push(r.url());
+     if(r.url().includes('dfw-plano-lewisville-source-vintage-20261120.json'))vintageSourceRequests.push(r.url());
    });
    await page.addInitScript(()=>{
     document.addEventListener('securitypolicyviolation',e=>{
@@ -34,12 +35,14 @@ fs.mkdirSync(folder,{recursive:true});
      assert.equal(requests.length,0,'large coverage file must lazy-load, not block initial map');
     assert.equal(localityRequests.length,0,'TexasWorks physical-locality evidence must also lazy-load');
     assert.equal(publicSourceRequests.length,0,'CFB/Denton public source evidence must also lazy-load');
+    assert.equal(vintageSourceRequests.length,0,'Plano/Lewisville vintage evidence must never block initial map');
     await page.locator('#dfwSchoolCoveragePanel > summary').click();
     await page.locator('#dfwSchoolCoverageContent .dfw-coverage-stats').waitFor({timeout:45000});
     assert.equal(rendererRequests.length,1,'Opening panel should load the approved same-origin JS renderer exactly once');
      assert.equal(requests.length,1,'opening panel should request coverage dataset once');
     assert.equal(localityRequests.length,1,'TexasWorks physical-locality evidence must load only when panel opens');
     assert.equal(publicSourceRequests.length,1,'CFB/Denton public source evidence loads once after panel expands');
+    assert.equal(vintageSourceRequests.length,1,'Plano/Lewisville status loads only on expansion');
     const summary=await page.locator('#dfwSchoolCoverageContent .dfw-coverage-stats').innerText();
     assert.match(summary,/108\/108/,'official ISD parent navigation denominator must appear');
     assert.match(summary,/100%/);
@@ -102,6 +105,37 @@ fs.mkdirSync(folder,{recursive:true});
     await page.locator('[data-district-code="057903"]').click();
     assert.equal(await rows.count(),1,'CFB quick-find should restore the source row');
     assert.match(await rows.first().innerText(),/CARROLLTON-FARMERS BRANCH/);
+    await page.locator('[data-district-code="043910"]').click();
+    assert.equal(await rows.count(),1,'Plano quick source should isolate official district');
+    assert.match(await rows.first().innerText(),/PLANO ISD/);
+    const planoEvidence=rows.first().locator('details.dfw-source-disposition');
+    assert.equal(await planoEvidence.count(),1);
+    await planoEvidence.locator('summary').click();
+    const planoText=await planoEvidence.innerText();
+    assert.match(planoText,/2026–27/);
+    assert.match(planoText,/2025–26/);
+    assert.match(planoText,/2019–20/);
+    assert.match(planoText,/초44·중11·고6·Senior High 3/);
+    assert.match(planoText,/Jackson Elementary/);
+    assert.match(planoText,/확정 배정/);
+    assert.equal(await planoEvidence.locator('a').getAttribute('href'),
+      'https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder');
+    await page.locator('[data-district-code="061902"]').click();
+    assert.equal(await rows.count(),1,'Lewisville quick-find shows one district');
+    assert.match(await rows.first().innerText(),/LEWISVILLE ISD/);
+    const lisdEvidence=rows.first().locator('details.dfw-source-disposition');
+    assert.equal(await lisdEvidence.count(),1);
+    await lisdEvidence.locator('summary').click();
+    const lisdText=await lisdEvidence.innerText();
+    assert.match(lisdText,/2026–27/);
+    assert.match(lisdText,/고등학교 2025–26/);
+    assert.match(lisdText,/174행/);
+    assert.match(lisdText,/Budget Suites/);
+    assert.match(lisdText,/4단계/);
+    assert.match(lisdText,/Find an Apartment/);
+    assert.match(lisdText,/미인증/);
+    assert.equal(await lisdEvidence.locator('a').getAttribute('href'),
+      'https://www.lisd.net/resources/families/school-locator');
     await page.locator('#dfwSchoolCoverageContent input[type=search]').fill('');
     await page.locator('#dfwSchoolCoverageContent select').selectOption('all');
     await page.locator('#dfwSchoolCoverageContent input[type=search]').fill('UPLIFT');
