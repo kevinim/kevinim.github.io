@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-11-20",
+  "districtReplyRequired": false,
+  "schoolAddressOfficialCertification": false,
+  "geometryReuseAuthorizationInferred": false,
+  "reason": "Public source metadata and district parent locator are not the same as certified current-year school-zone vectors, an official address-specific result or redistribution rights.",
+  "districts": [
+    {
+      "code": "043910",
+      "key": "PISD",
+      "name": "Plano ISD",
+      "inventoryCampusRecords": 69,
+      "locatorYear": "2026–27",
+      "locatorSource": "https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder",
+      "locatorInteractiveResultReadByDashboard": false,
+      "districtFinderMapService": "https://services4.arcgis.com/uBV8NRVfoRJv7qWn/arcgis/rest/services/Plano_ISD_School_Districts/FeatureServer",
+      "sourceFieldYear": "2025–26",
+      "verifiedFor2026_27": false,
+      "displayReferenceOnly": true,
+      "mapSourceKinds": [
+        "district-finder-linked",
+        "city-open-data-historical"
+      ],
+      "servicePolygonCounts": {
+        "elementary": 44,
+        "middle": 11,
+        "high": 6,
+        "senior": 3,
+        "total": 64
+      },
+      "linkedAppCampusCount": 62,
+      "loadedAppCampusCount": 63,
+      "linkedRateMeaning": "school-name reference linkage only; not school assignment accuracy",
+      "officialFeederSource": "https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/attendance-boundary-descriptions",
+      "officialFeederPaths": 11,
+      "referenceInteriorGeometrySamples": 2200,
+      "referenceInteriorDiscrepancies": 0,
+      "districtIndependentResidentialAddressConfirmed": 0,
+      "cityHistoricalZones": {
+        "sourceLastEditedOn": "2020-01",
+        "sourceAcademicYear": "2019–20",
+        "current": false,
+        "officialSource": "https://maps.planogis.org/arcgiswad/rest/services/OpenData/SchoolAttendanceZones/FeatureServer"
+      },
+      "specialCase": "Jackson Elementary feeder split east/west of Coit Rd; 4 Plano grade bands including senior high must not be flattened to a single E/M/H certification.",
+      "missingReason": "The 2026–27 official SchoolFinder links source layers named 2025–26; no independent official house-address result or proof of unchanged 2026–27 GIS revision. City GIS is 2019–20 historical.",
+      "userGuidance": "2025–26 도형은 참고용이며 2026–27 배정 확정 자료가 아닙니다. 학교급·주소·Senior High 및 Jackson split은 공식 SchoolFinder에서 확인하십시오.",
+      "currentResidentialAutomaticAssignmentCertified": false,
+      "sourceGeometryRightsIndependentlyConfirmed": false
+    },
+    {
+      "code": "061902",
+      "key": "LISD",
+      "name": "Lewisville ISD",
+      "inventoryCampusRecords": 57,
+      "locatorYear": "2026–27",
+      "locatorSource": "https://www.lisd.net/resources/families/school-locator",
+      "locatorInteractiveResultReadByDashboard": false,
+      "districtFinderMapService": "https://portal.metrostudygis.com/arcgis/sharing/rest/content/items/03c099e24d304c4fa0f4ce8a76c10062/data?f=json",
+      "sourceFieldYear": "high 2025–26; elementary/middle unverified",
+      "verifiedFor2026_27": false,
+      "displayReferenceOnly": true,
+      "mapSourceKinds": [
+        "district-2026-27-web-map",
+        "mixed-year-finder-source"
+      ],
+      "featureCountMixedMultipart": 696,
+      "linkedAppCampusCount": 53,
+      "loadedAppCampusCount": 54,
+      "linkedRateMeaning": "school-name reference linkage only; not school assignment accuracy",
+      "infofinderLayerNames": [
+        "25-26 SY Elementary",
+        "25-26 SY Middle Schools",
+        "25-26 SY High School",
+        "25-26 SY 9th & 10 th grade"
+      ],
+      "apartmentEvidence": {
+        "rows": 174,
+        "uniqueNames": 173,
+        "referencePolygonPointMatches": 173,
+        "conflicts": 1,
+        "schoolYearVerified": false,
+        "oneConflictingName": "Budget Suites of America",
+        "conflictStreetAddress": "5289 S HIGHWAY 121",
+        "conflictingGradeLevels": 4
+      },
+      "apartmentLocatorDedicated": true,
+      "specialCase": "Use the official Find an Apartment tool for multi-unit residences. One Budget Suites record at 5289 S Highway 121 conflicts between public apartment table and polygon map for E/M/9th/high; do not decide one source automatically.",
+      "missingReason": "2026–27 official parent locator is published, but linked high-school zone source says 2025–26 and elementary/middle year remains unverified. Apartment table has an unresolved 4-level same-publisher contradiction.",
+      "userGuidance": "2026–27 검색기는 공식입니다. 도형 학년도와 아파트 호수별 배정은 미확인입니다. 아파트는 공식 Find an Apartment에서 확인하십시오.",
+      "currentResidentialAutomaticAssignmentCertified": false,
+      "sourceGeometryRightsIndependentlyConfirmed": false
+    }
+  ]
+}
