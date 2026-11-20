@@ -5,6 +5,7 @@
 (function(){
  const FILE='./data/dfw-school-coverage-matrix-2026.json';
  const LOCALITY_FILE='./data/tea-texasworks-locality-2026.json';
+ const PUBLIC_SOURCE_FILE='./data/dfw-cfb-denton-public-source-status-20261120.json';
  const priorityLabel={P0:'P0 · 공식 안내 조사',P1:'P1 · 원본/제도 점검',P2:'P2 · 보완'};
  const reasonLabels={
   'official-parent-lookup-not-yet-verified':'학군 공식 확인 경로 미등록',
@@ -50,10 +51,44 @@
      if(validTexasWorks(extra,data.districts.find(x=>x.code==='061806')))locality=extra;
     }
    }catch(_error){/* Failed evidence fetch means unknown, never location-certified. */}
-   render(mount,data,locality);
+   // Source research and official address certification are separate dimensions.
+   let publicSources=null;
+   try{
+    const proofResponse=await fetch(PUBLIC_SOURCE_FILE,{cache:'force-cache'});
+    if(proofResponse.ok)publicSources=validPublicSources(await proofResponse.json());
+   }catch(_error){/* No new source metadata must not disrupt the base list. */}
+   render(mount,data,locality,publicSources);
   }catch(error){
    mount.replaceChildren(el('p',null,'학군 연결 현황을 불러올 수 없습니다. 페이지 새로고침 후 다시 열어주세요. ('+error.message+')'));
   }
+ }
+ function validPublicSources(data){
+  if(data?.schemaVersion!==1||data.reviewedOn!=='2026-11-20'||
+     data.districtReplyRequired!==false||data.exactAddressAutoAssignmentCertified!==false||
+     !Array.isArray(data.entries)||data.entries.length!==2)return null;
+  const rows=new Map();
+  for(const e of data.entries){
+   if(!['057903','061901'].includes(e?.code)||rows.has(e.code)||
+      e.researchPass!=='public-sources-inventoried'||e.currentYearCertifiedCampusPolygons!==0||
+      e.officialResidenceLookupAutoIntegrated!==false||e.sourceGeometryRightsConfirmed!==false||
+      e.currentOfficialSchoolLookup?.available!==true||
+      e.currentOfficialSchoolLookup?.readsResultsIntoDashboard!==false)return null;
+   if(e.code==='057903'&&
+      (e.approvedBoundaryRaster?.count!==3||e.historicalMunicipalGIS?.cfbFeatureCount!==30||
+       e.historicalMunicipalGIS?.sourceLastEditedYear!==2020||
+       e.historicalMunicipalGIS?.academicYearConfirmed!==false||
+       e.currentParentLookupSchoolYear!=='2026–27'))return null;
+   if(e.code==='061901'&&
+      (e.officialPdfMaps?.count!==39||
+       e.officialPdfMaps?.grades?.elementary!==26||
+       e.officialPdfMaps?.grades?.middle!==9||
+       e.officialPdfMaps?.grades?.high!==4||
+       e.qaOnlyDerivedShapes?.count!==39||e.qaOnlyDerivedShapes?.published!==false||
+       e.qaOnlyDerivedShapes?.nearBoundaryPublicParcelMeters!==20.6||
+       e.qaOnlyDerivedShapes?.uncertainEdgeGuardMeters!==100))return null;
+   rows.set(e.code,e);
+  }
+  return rows.size===2?rows:null;
  }
  function validTexasWorks(extra,district){
   if(!extra||extra.schemaVersion!==1||extra.districtId!=='061806'||
@@ -75,7 +110,7 @@
    counts[1]===extra.counts?.operatorAddressOutside11CountyMSA&&
    counts[2]===extra.counts?.pendingExactCampusCrosswalk;
  }
- function render(mount,data,locality){
+ function render(mount,data,locality,publicSources){
   mount.replaceChildren();
   const s=data.summary;
   const stats=el('div','dfw-coverage-stats');
@@ -102,7 +137,19 @@
   }
   const input=el('input');input.type='search';
   input.setAttribute('aria-label','학군명·카운티 검색');input.placeholder='학군명·카운티 검색';
-  controls.append(select,input);mount.appendChild(controls);
+  controls.append(select,input);
+  for(const [code,title] of [['057903','CFB 자료'],['061901','Denton 자료']]){
+   const jump=el('button','dfw-coverage-more',title);
+   jump.type='button';jump.dataset.districtCode=code;
+   jump.addEventListener('click',()=>{
+    const district=data.districts.find(d=>d.code===code);
+    if(!district)return;
+    select.value='all';input.value=district.code;shown=20;display();
+    wrap.scrollIntoView?.({block:'nearest',behavior:'auto'});
+   });
+   controls.appendChild(jump);
+  }
+  mount.appendChild(controls);
   const label=el('p','dfw-coverage-help');
   label.setAttribute('role','status');label.setAttribute('aria-live','polite');
   mount.appendChild(label);
@@ -160,6 +207,31 @@
     if(zone.vintageMode==='historical-2019-2023-reference')geometryText+=' · 과거자료';
     else if(zone.vintageMode?.includes('not-confirmed')||zone.vintageMode?.includes('mixed-vintages'))geometryText+=' · 연도 미확정';
     const gis=el('td',null,geometryText);
+    const proof=publicSources?.get(d.code);
+    if(proof){
+     const detail=el('details','dfw-source-disposition');
+     detail.appendChild(el('summary',null,'공개자료 조사 완료 · 현행 학교별 GIS 미확보'));
+     if(d.code==='057903'){
+      detail.appendChild(el('p',null,
+       '2025–26 교육청 승인 지도 3장(래스터) · 2026–27 공식 Finder·진학표 · 2020년 최종 수정 시 GIS 30개(초20/중6/고4). 2020은 GIS 수정연도이며 인증된 학년도가 아닙니다.'));
+      detail.appendChild(el('p',null,
+       'McCoy/Blanton·Furneaux/Woodlake/Woodland 공식 문구 충돌 · 현행 학교별 GIS 0개 · 자동 주소 배정 미인증.'));
+     }else{
+      detail.appendChild(el('p',null,
+       '2026–27 교육청 공식 PDF 39개(초26/중9/고4) · PDF 추출 후보 39개는 QA 전용, 지도 배포 0개.'));
+      detail.appendChild(el('p',null,
+       '경계 인접 공공 필지 20.6m 사례가 100m 불확실성 기준에 미달 · 자동 주소 배정 미인증.'));
+     }
+     detail.appendChild(el('p',null,
+      '공식 원본 공개 ≠ 재배포 허가 ≠ 주소별 배정 인증. 교육청 회신 대기 없이 공개자료 조사는 마감.'));
+     const link=safeLink(proof.currentOfficialSchoolLookup.sourceUrl);
+     if(link){
+      const anchor=el('a',null,'학군 공식 주소 검색기');
+      anchor.href=link;anchor.target='_blank';anchor.rel='noopener noreferrer';
+      detail.appendChild(anchor);
+     }
+     gis.appendChild(detail);
+    }
     row.append(name,n,route,gis);body.appendChild(row);
    }
    more.hidden=page.length>=matching.length;

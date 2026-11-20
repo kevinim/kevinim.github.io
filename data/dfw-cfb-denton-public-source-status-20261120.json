@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-11-20",
+  "methodology": "Public-source inventory closeout only. Does not constitute school-year residency assignment or rights to republish geospatial features.",
+  "districtReplyRequired": false,
+  "exactAddressAutoAssignmentCertified": false,
+  "entries": [
+    {
+      "code": "057903",
+      "district": "CFB",
+      "name": "Carrollton-Farmers Branch ISD",
+      "researchPass": "public-sources-inventoried",
+      "currentReferenceSchoolYear": "2025–26",
+      "currentParentLookupSchoolYear": "2026–27",
+      "approvedBoundaryRaster": {
+        "count": 3,
+        "grades": {
+          "elementary": 1,
+          "middle": 1,
+          "high": 1
+        },
+        "sourceYear": "2025–26",
+        "boardApprovedOn": "2025-03-06",
+        "sourceUrl": "https://www.cfbisd.edu/departments/facility-support-services/facility-planning-advisory-group/2025-2026-rezoning"
+      },
+      "historicalMunicipalGIS": {
+        "sourceLastEditedYear": 2020,
+        "academicYearConfirmed": false,
+        "cfbFeatureCount": 30,
+        "grades": {
+          "elementary": 20,
+          "middle": 6,
+          "high": 4
+        },
+        "current": false,
+        "ingested": false,
+        "sourceUrl": "https://www.cityofcarrollton.com/about-us/about-the-city/city-maps"
+      },
+      "currentOfficialSchoolLookup": {
+        "available": true,
+        "browserEmbeddedOnClick": true,
+        "readsResultsIntoDashboard": false,
+        "sourceUrl": "https://www.cfbisd.edu/students/school-maps-locator-system"
+      },
+      "currentSchoolYearFeeder": {
+        "available": true,
+        "year": "2026–27",
+        "addressAssignment": false,
+        "sourceUrl": "https://www.cfbisd.edu/enrollment-page/frequently-asked-questions-about-enrollment"
+      },
+      "currentYearCertifiedCampusPolygons": 0,
+      "officialResidenceLookupAutoIntegrated": false,
+      "publicReferenceUIAvailable": true,
+      "sourceGeometryRightsConfirmed": false,
+      "evidenceConflict": "Parks of Carrollton/McCoy/Blanton and Furneaux/Woodlake/Woodland narrative conflicts; do not resolve from approximate geometry.",
+      "blockingReason": "No district-certified current campus vectors, and historic municipal GIS predates March 2025 rezoning; 2020 is an ArcGIS last edit date, not a school-year certification.",
+      "missingAction": "Keep official SchoolSearch and source atlas. Mark current school-level GIS unavailable and household assignment not verified; advance to next ISD."
+    },
+    {
+      "code": "061901",
+      "district": "DENTON",
+      "name": "Denton ISD",
+      "researchPass": "public-sources-inventoried",
+      "currentReferenceSchoolYear": "2026–27",
+      "currentParentLookupSchoolYear": "2026–27",
+      "officialPdfMaps": {
+        "count": 39,
+        "grades": {
+          "elementary": 26,
+          "middle": 9,
+          "high": 4
+        },
+        "sourceYear": "2026–27",
+        "sourceUrl": "https://www.dentonisd.org/families/attendance-zones"
+      },
+      "historicalMunicipalGIS": null,
+      "currentOfficialSchoolLookup": {
+        "available": true,
+        "browserEmbeddedOnClick": false,
+        "readsResultsIntoDashboard": false,
+        "sourceUrl": "https://webquery-2-denton-tx.etstack.io/"
+      },
+      "currentSchoolYearFeeder": null,
+      "qaOnlyDerivedShapes": {
+        "count": 39,
+        "source": "2026–27 georeferenced publisher PDFs",
+        "published": false,
+        "nearBoundaryPublicParcelMeters": 20.6,
+        "uncertainEdgeGuardMeters": 100,
+        "independentFinderSamplesPassed": 9,
+        "independentFinderSamplesTotal": 9
+      },
+      "currentYearCertifiedCampusPolygons": 0,
+      "officialResidenceLookupAutoIntegrated": false,
+      "publicReferenceUIAvailable": true,
+      "sourceGeometryRightsConfirmed": false,
+      "evidenceConflict": "Public parcel within 20.6m of PDF-derived middle school boundary fails 100m holdout buffer. Eight historical campus point exceptions remain separate.",
+      "blockingReason": "Original GIS reuse terms unavailable; PDF derivatives are QA-only, not certified parcel boundaries. Approved March 2026 elementary rezoning must be preserved.",
+      "missingAction": "Use 39 official PDF links and the official residential School Locator. Do not publish or reclassify 39 staged polygons as certified school boundaries. Move on without district replies.",
+      "approvedRezoneUrl": "https://www.dentonisd.org/families/attendance-zones/attendance-boundary-modification-26-27"
+    }
+  ]
+}

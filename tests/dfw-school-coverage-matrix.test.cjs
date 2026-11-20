@@ -155,9 +155,79 @@ test('HTML loads optional coverage UI without modifying inline CSP bootstrap',()
  const ui=fs.readFileSync(path.join(root,'features/dfw-school-coverage-renderer.js'),'utf8');
  assert.ok(fs.readFileSync(path.join(root,'features/dfw-school-coverage-panel.js'),'utf8').includes("./features/dfw-school-coverage-renderer.js?v=1"));
  assert.equal(require('node:child_process').execFileSync('git',['hash-object','features/dfw-school-coverage-renderer.js'],{cwd:root,encoding:'utf8'}).trim(),
-  '9becc61e4a9ead1112af007e43033bc5066b27f3','Original vetted DFW coverage renderer must remain byte-for-byte identical');
+  'eab27739b4e2adc1dacb0123a0227d3a2a924862','Reviewed DFW renderer including CFB/Denton public-source disclosure must remain byte-for-byte pinned');
  assert.ok(ui.includes('document.createElement'));
  assert.ok(!ui.includes('.innerHTML'));
  assert.ok(ui.includes('window.TrustedLinkPolicy?.official?.(url)'));
  assert.ok(ui.includes('panel.open&&!started'));
+});
+
+
+test('CFB and Denton public-source research is explicit, year-labelled, and not a GIS or enrollment grant',()=>{
+ const evidence=load('data/dfw-cfb-denton-public-source-status-20261120.json');
+ assert.equal(evidence.schemaVersion,1);
+ assert.equal(evidence.reviewedOn,'2026-11-20');
+ assert.equal(evidence.districtReplyRequired,false);
+ assert.equal(evidence.exactAddressAutoAssignmentCertified,false);
+ assert.equal(evidence.entries.length,2);
+ assert.deepEqual(evidence.entries.map(x=>x.code),['057903','061901']);
+ for(const row of evidence.entries){
+  assert.equal(row.researchPass,'public-sources-inventoried');
+  assert.equal(row.currentYearCertifiedCampusPolygons,0);
+  assert.equal(row.officialResidenceLookupAutoIntegrated,false);
+  assert.equal(row.sourceGeometryRightsConfirmed,false);
+  assert.equal(row.currentOfficialSchoolLookup.readsResultsIntoDashboard,false);
+  assert.equal(row.currentOfficialSchoolLookup.available,true);
+  assert.equal(byCode(row.code).parentGuidance.status,'registered-official-source');
+ }
+ const cfb=evidence.entries[0],denton=evidence.entries[1];
+ assert.equal(cfb.currentReferenceSchoolYear,'2025–26');
+ assert.equal(cfb.currentParentLookupSchoolYear,'2026–27');
+ assert.equal(cfb.approvedBoundaryRaster.boardApprovedOn,'2025-03-06');
+ assert.equal(cfb.approvedBoundaryRaster.count,3);
+ assert.equal(cfb.historicalMunicipalGIS.sourceLastEditedYear,2020);
+ assert.equal(cfb.historicalMunicipalGIS.academicYearConfirmed,false);
+ assert.equal(cfb.historicalMunicipalGIS.current,false);
+ assert.equal(cfb.historicalMunicipalGIS.ingested,false);
+ assert.equal(cfb.historicalMunicipalGIS.cfbFeatureCount,30);
+ assert.deepEqual(cfb.historicalMunicipalGIS.grades,{elementary:20,middle:6,high:4});
+ assert.equal(denton.currentReferenceSchoolYear,'2026–27');
+ assert.deepEqual(denton.officialPdfMaps.grades,{elementary:26,middle:9,high:4});
+ assert.equal(denton.officialPdfMaps.count,39);
+ assert.equal(denton.qaOnlyDerivedShapes.count,39);
+ assert.equal(denton.qaOnlyDerivedShapes.published,false);
+ assert.equal(denton.qaOnlyDerivedShapes.nearBoundaryPublicParcelMeters,20.6);
+ assert.equal(denton.qaOnlyDerivedShapes.uncertainEdgeGuardMeters,100);
+ assert.equal(denton.qaOnlyDerivedShapes.independentFinderSamplesPassed,9);
+ assert.equal(denton.qaOnlyDerivedShapes.independentFinderSamplesTotal,9);
+ assert.equal(denton.currentYearCertifiedCampusPolygons,0);
+});
+
+test('malformed evidence cannot upgrade school geometry and coverage panel remains lazy',()=>{
+ const vm=require('node:vm');
+ const source=fs.readFileSync(path.join(root,'features/dfw-school-coverage-renderer.js'),'utf8');
+ const start=source.indexOf(' function validPublicSources(data){');
+ const end=source.indexOf(' function validTexasWorks(extra,district){',start);
+ assert.ok(start>0&&end>start);
+ const scope={};
+ vm.runInNewContext(source.slice(start,end),scope,{timeout:1000});
+ const evidence=load('data/dfw-cfb-denton-public-source-status-20261120.json');
+ const valid=scope.validPublicSources(evidence);
+ assert.equal(valid.size,2);
+ assert.equal(valid.get('057903').district,'CFB');
+ assert.equal(valid.get('061901').district,'DENTON');
+ const modified=(fn)=>{const copy=JSON.parse(JSON.stringify(evidence));fn(copy);return copy};
+ assert.equal(scope.validPublicSources(modified(x=>x.districtReplyRequired=true)),null);
+ assert.equal(scope.validPublicSources(modified(x=>x.entries[0].sourceGeometryRightsConfirmed=true)),null);
+ assert.equal(scope.validPublicSources(modified(x=>x.entries[1].qaOnlyDerivedShapes.published=true)),null);
+ assert.equal(scope.validPublicSources(modified(x=>x.entries[1].officialPdfMaps.count=38)),null);
+ assert.equal(scope.validPublicSources(modified(x=>x.entries[0].historicalMunicipalGIS.academicYearConfirmed=true)),null);
+ assert.equal(scope.validPublicSources(modified(x=>x.entries[0].currentYearCertifiedCampusPolygons=30)),null);
+ assert.equal(scope.validPublicSources(modified(x=>x.entries.push(x.entries[0]))),null);
+ assert.match(source,/PUBLIC_SOURCE_FILE='\.\/data\/dfw-cfb-denton-public-source-status-20261120\.json'/);
+ assert.match(source,/공개자료 조사 완료 · 현행 학교별 GIS 미확보/);
+ assert.match(source,/const link=safeLink\(proof\.currentOfficialSchoolLookup\.sourceUrl\)/);
+ assert.doesNotMatch(source,/innerHTML\s*=|eval\s*\(/);
+ const policy=fs.readFileSync(path.join(root,'features/conditional-school-release.js'),'utf8');
+ assert.match(policy,/APPROVED_AUTO_DISTRICTS\s*=\s*Object\.freeze\(\{\}\)/);
 });
