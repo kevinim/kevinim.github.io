@@ -229,5 +229,5 @@ test('malformed evidence cannot upgrade school geometry and coverage panel remai
  assert.match(source,/const link=safeLink\(proof\.currentOfficialSchoolLookup\.sourceUrl\)/);
  assert.doesNotMatch(source,/innerHTML\s*=|eval\s*\(/);
  const policy=fs.readFileSync(path.join(root,'features/conditional-school-release.js'),'utf8');
- assert.match(policy,/APPROVED_AUTO_DISTRICTS = Object\.freeze\(\{\}\)/);
+ assert.match(policy,/APPROVED_AUTO_DISTRICTS\s*=\s*Object\.freeze\(\{\}\)/);
 });
