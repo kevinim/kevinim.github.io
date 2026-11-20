@@ -840,6 +840,8 @@ function renderAddressSchoolPriority(){
 }
  function drawSchools(){
   if(!map)return;
+  // Clear temporary GIS outlines on a new/cleared address.
+  if(!home)prosperReferenceZoneGroup?.clearLayers();
   const addressView=addressSchoolView(),homeActive=addressView?.kind==='certified';
   const referenceMarkers=drawReferenceCampusMarkers(addressView);
   if(addressView&&state.selectedSchool&&!addressView.schools.includes(state.selectedSchool)&&
@@ -960,6 +962,7 @@ function drawProsperAddressReferenceZones(selected){
 function drawHomeAssignmentMap(){
  if(!map||!homeZoneGroup)return;
  homeZoneGroup.clearLayers();
+ prosperReferenceZoneGroup?.clearLayers();
  const selected=typeof home!=='undefined'&&home?home:null;
  const status=el('homeMapAssignmentStatus');
  if(!selected){if(status)status.textContent='';return;}
