@@ -53,6 +53,17 @@
     'Paloma Creek Elementary는 2026–27 일반 배정에서 제외되었습니다. 2025–26 배정선을 사용하지 마세요.':
     '이것은 교육청의 공식 PDF 지도 참고자료이며 대시보드 내 학교별 GIS 폴리곤이 아닙니다. 실제 집 주소·학년별 배정은 공식 School Locator에서 확인하세요.'};
  }
+ // A campus point is a building-location reference, never a zoned household.
+ // Require exact Denton campus ID, grade, independently reviewed historic point
+ // and a unique current in-memory school object. Exclude 8 coordinate exceptions.
+ function reviewedMapCampus(id,schools,pointStatus){
+  const row=typeof id==='string'?index.get(id):null;
+  if(!row||pointStatus?.state!=='historical-two-source'||!Array.isArray(schools))return null;
+  const match=schools.filter(s=>s?.district===DISTRICT&&s.id===id&&
+   s.type===row.level&&s.campusPointReview==='two-source-historical'&&
+   Array.isArray(s.ll)&&s.ll.length===2&&s.ll.every(Number.isFinite));
+  return match.length===1?match[0]:null;
+ }
  function append(note,s,id,doc){
   if(!note||typeof note.appendChild!=='function')return false;
   const item=lookup(s,id);if(!item)return false;
@@ -88,16 +99,38 @@
    }
    choice.appendChild(group);
   }
+  const mapButton=d.createElement('button');
+  mapButton.id='dentonPdfShowCampusMap';mapButton.type='button';
+  mapButton.className='mini-btn';mapButton.hidden=true;
+  mapButton.textContent='지도에서 학교 건물 위치 보기 (배정 아님)';
+  const mapStatus=d.createElement('p');mapStatus.id='dentonPdfMapStatus';
+  mapStatus.className='source';mapStatus.setAttribute('role','status');
+  mapStatus.setAttribute('aria-live','polite');
+  link.insertAdjacentElement('afterend',mapButton);
+  mapButton.insertAdjacentElement('afterend',mapStatus);
   choice.addEventListener('change',()=>{
    const r=index.get(choice.value);const item=r?lookup({district:DISTRICT,type:r.level},r.id):null;
+   mapStatus.textContent='';mapButton.hidden=!item;
    if(!item){link.hidden=true;link.removeAttribute('href');link.textContent='';return}
    link.href=item.url;link.hidden=false;
    link.textContent='Denton '+YEAR+' · '+r.name+' 공식 경계 PDF 열기';
   });
+  mapButton.addEventListener('click',()=>{
+   const id=choice.value;
+   const pointStatus=root?.DentonCampusMarkerInfo?.statusFor?.(id);
+   const schools=typeof state!=='undefined'?state?.schools:null;
+   const selected=reviewedMapCampus(id,schools,pointStatus);
+   if(!selected||typeof schoolClicked!=='function'){
+    mapStatus.textContent='이 학교의 건물 마커는 독립 검증된 좌표가 없어 지도 이동을 중단했습니다. 공식 PDF와 School Locator를 확인하세요.';
+    return;
+   }
+   schoolClicked(selected,true);
+   mapStatus.textContent='2024–25 TEA/NCES 두 출처로 교차검증된 학교 건물 위치를 강조했습니다. 2026–27 주택 배정구역이나 입학 자격이 아닙니다.';
+  });
   addGeoPdfSourcePanel(d,choice.closest?.('#dentonPdfZoneDirectory')||d.getElementById('dentonPdfZoneDirectory'));
   link.hidden=true;link.removeAttribute('href');return true;
  }
- const api=Object.freeze({DISTRICT,YEAR,SOURCE,LOCATOR,REZONE,ALL,ROWS,GEOPDF_STATUS,validPdf,lookup,append,mount,addGeoPdfSourcePanel});
+ const api=Object.freeze({DISTRICT,YEAR,SOURCE,LOCATOR,REZONE,ALL,ROWS,GEOPDF_STATUS,validPdf,lookup,reviewedMapCampus,append,mount,addGeoPdfSourcePanel});
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root){
   root.DentonZonePdfReference=api;
