@@ -149,13 +149,13 @@ test('HTML loads optional coverage UI without modifying inline CSP bootstrap',()
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  assert.ok(html.includes('id="dfwSchoolCoveragePanel"'));
  assert.ok(html.includes('id="dfwSchoolCoverageContent"'));
- assert.ok(html.includes('./features/dfw-school-coverage-panel.js?v=3'));
+ assert.ok(html.includes('./features/dfw-school-coverage-panel.js?v=4'));
  assert.ok(html.includes('./features/dfw-school-coverage-panel.css?v=1'));
  assert.ok(html.includes('src="./school-zone-ui.js?v=1"'));
  const ui=fs.readFileSync(path.join(root,'features/dfw-school-coverage-renderer.js'),'utf8');
- assert.ok(fs.readFileSync(path.join(root,'features/dfw-school-coverage-panel.js'),'utf8').includes("./features/dfw-school-coverage-renderer.js?v=2"));
+ assert.ok(fs.readFileSync(path.join(root,'features/dfw-school-coverage-panel.js'),'utf8').includes("./features/dfw-school-coverage-renderer.js?v=3"));
  assert.equal(require('node:child_process').execFileSync('git',['hash-object','features/dfw-school-coverage-renderer.js'],{cwd:root,encoding:'utf8'}).trim(),
-  'eab27739b4e2adc1dacb0123a0227d3a2a924862','Reviewed DFW renderer including CFB/Denton public-source disclosure must remain byte-for-byte pinned');
+  '395908c0ef258c2a8b416a7b911b95c5984505ed','Reviewed DFW renderer including CFB/Denton public-source disclosure must remain byte-for-byte pinned');
  assert.ok(ui.includes('document.createElement'));
  assert.ok(!ui.includes('.innerHTML'));
  assert.ok(ui.includes('window.TrustedLinkPolicy?.official?.(url)'));
@@ -230,4 +230,70 @@ test('malformed evidence cannot upgrade school geometry and coverage panel remai
  assert.doesNotMatch(source,/innerHTML\s*=|eval\s*\(/);
  const policy=fs.readFileSync(path.join(root,'features/conditional-school-release.js'),'utf8');
  assert.match(policy,/APPROVED_AUTO_DISTRICTS\s*=\s*Object\.freeze\(\{\}\)/);
+});
+
+
+test('Plano/Lewisville source vintages, 4-grade Plano and apartment exception are not enrollment grants',()=>{
+ const d=load('data/dfw-plano-lewisville-source-vintage-20261120.json');
+ assert.equal(d.schemaVersion,1);
+ assert.equal(d.reviewedOn,'2026-11-20');
+ assert.equal(d.districtReplyRequired,false);
+ assert.equal(d.schoolAddressOfficialCertification,false);
+ assert.equal(d.geometryReuseAuthorizationInferred,false);
+ assert.deepEqual(d.districts.map(x=>x.code),['043910','061902']);
+ const [plano,lisd]=d.districts;
+ for(const x of d.districts){
+  assert.equal(x.locatorYear,'2026–27');
+  assert.equal(x.verifiedFor2026_27,false);
+  assert.equal(x.displayReferenceOnly,true);
+  assert.equal(x.locatorInteractiveResultReadByDashboard,false);
+  assert.equal(x.currentResidentialAutomaticAssignmentCertified,false);
+  assert.equal(x.sourceGeometryRightsIndependentlyConfirmed,false);
+  assert.equal(byCode(x.code).geometry.confirmedCurrentYear,false);
+ }
+ assert.equal(plano.sourceFieldYear,'2025–26');
+ assert.deepEqual(plano.servicePolygonCounts,{elementary:44,middle:11,high:6,senior:3,total:64});
+ assert.equal(plano.cityHistoricalZones.sourceAcademicYear,'2019–20');
+ assert.equal(plano.cityHistoricalZones.sourceLastEditedOn,'2020-01');
+ assert.equal(plano.districtIndependentResidentialAddressConfirmed,0);
+ assert.equal(plano.linkedAppCampusCount,62);
+ assert.equal(plano.loadedAppCampusCount,63);
+ assert.match(plano.specialCase,/Coit Rd/);
+ assert.equal(lisd.sourceFieldYear,'high 2025–26; elementary/middle unverified');
+ assert.equal(lisd.featureCountMixedMultipart,696);
+ assert.equal(lisd.linkedAppCampusCount,53);
+ assert.equal(lisd.loadedAppCampusCount,54);
+ assert.deepEqual([lisd.apartmentEvidence.rows,lisd.apartmentEvidence.referencePolygonPointMatches,lisd.apartmentEvidence.conflicts],[174,173,1]);
+ assert.equal(lisd.apartmentEvidence.conflictingGradeLevels,4);
+ assert.equal(lisd.apartmentEvidence.schoolYearVerified,false);
+ assert.match(lisd.specialCase,/5289/);
+});
+
+test('Plano/Lewisville optional vintages are independently fail-closed without modifying certificate gate',()=>{
+ const vm=require('node:vm');
+ const source=fs.readFileSync(path.join(root,'features/dfw-school-coverage-renderer.js'),'utf8');
+ const start=source.indexOf(' function validPlanoLewisvilleSources(data){');
+ const end=source.indexOf(' function validTexasWorks(extra,district){',start);
+ assert.ok(start>0&&end>start);
+ const ctx={};
+ vm.runInNewContext(source.slice(start,end),ctx,{timeout:1000});
+ const manifest=load('data/dfw-plano-lewisville-source-vintage-20261120.json');
+ const result=ctx.validPlanoLewisvilleSources(manifest);
+ assert.equal(result.size,2);
+ assert.equal(result.get('043910').key,'PISD');
+ assert.equal(result.get('061902').key,'LISD');
+ const mutation=fn=>{const copy=structuredClone(manifest);fn(copy);return copy};
+ assert.equal(ctx.validPlanoLewisvilleSources(mutation(x=>x.districtReplyRequired=true)),null);
+ assert.equal(ctx.validPlanoLewisvilleSources(mutation(x=>x.geometryReuseAuthorizationInferred=true)),null);
+ assert.equal(ctx.validPlanoLewisvilleSources(mutation(x=>x.districts[0].verifiedFor2026_27=true)),null);
+ assert.equal(ctx.validPlanoLewisvilleSources(mutation(x=>x.districts[1].apartmentEvidence.conflicts=0)),null);
+ assert.equal(ctx.validPlanoLewisvilleSources(mutation(x=>x.districts[1].apartmentEvidence.schoolYearVerified=true)),null);
+ assert.equal(ctx.validPlanoLewisvilleSources(mutation(x=>x.districts[0].servicePolygonCounts.senior=0)),null);
+ assert.equal(ctx.validPlanoLewisvilleSources(mutation(x=>x.districts.push(x.districts[0]))),null);
+ assert.match(source,/const PLANO_LEWISVILLE_FILE='\.\/data\/dfw-plano-lewisville-source-vintage-20261120\.json'/);
+ assert.match(source,/공식 검색기 운영 · GIS 학년도 미검증/);
+ assert.match(source,/const url=safeLink\(vintage\.locatorSource\)/);
+ assert.doesNotMatch(source,/innerHTML\s*=|eval\s*\(/);
+ const gate=require('../features/conditional-school-release.js');
+ assert.equal(gate.releaseSummary().currentYearResidentialDistrictApprovals,0);
 });

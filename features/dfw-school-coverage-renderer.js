@@ -6,6 +6,7 @@
  const FILE='./data/dfw-school-coverage-matrix-2026.json';
  const LOCALITY_FILE='./data/tea-texasworks-locality-2026.json';
  const PUBLIC_SOURCE_FILE='./data/dfw-cfb-denton-public-source-status-20261120.json';
+ const PLANO_LEWISVILLE_FILE='./data/dfw-plano-lewisville-source-vintage-20261120.json';
  const priorityLabel={P0:'P0 · 공식 안내 조사',P1:'P1 · 원본/제도 점검',P2:'P2 · 보완'};
  const reasonLabels={
   'official-parent-lookup-not-yet-verified':'학군 공식 확인 경로 미등록',
@@ -57,7 +58,12 @@
     const proofResponse=await fetch(PUBLIC_SOURCE_FILE,{cache:'force-cache'});
     if(proofResponse.ok)publicSources=validPublicSources(await proofResponse.json());
    }catch(_error){/* No new source metadata must not disrupt the base list. */}
-   render(mount,data,locality,publicSources);
+   let vintageSources=null;
+   try{
+    const vintageResponse=await fetch(PLANO_LEWISVILLE_FILE,{cache:'force-cache'});
+    if(vintageResponse.ok)vintageSources=validPlanoLewisvilleSources(await vintageResponse.json());
+   }catch(_error){/* Missing vintage evidence never upgrades a district. */}
+   render(mount,data,locality,publicSources,vintageSources);
   }catch(error){
    mount.replaceChildren(el('p',null,'학군 연결 현황을 불러올 수 없습니다. 페이지 새로고침 후 다시 열어주세요. ('+error.message+')'));
   }
@@ -90,6 +96,47 @@
   }
   return rows.size===2?rows:null;
  }
+ function validPlanoLewisvilleSources(data){
+  if(data?.schemaVersion!==1||data.reviewedOn!=='2026-11-20'||
+     data.districtReplyRequired!==false||data.schoolAddressOfficialCertification!==false||
+     data.geometryReuseAuthorizationInferred!==false||!Array.isArray(data.districts)||
+     data.districts.length!==2)return null;
+  const rows=new Map();
+  for(const entry of data.districts){
+   if(!entry||!['043910','061902'].includes(entry.code)||rows.has(entry.code)||
+      entry.locatorYear!=='2026–27'||entry.verifiedFor2026_27!==false||
+      entry.displayReferenceOnly!==true||entry.locatorInteractiveResultReadByDashboard!==false||
+      entry.currentResidentialAutomaticAssignmentCertified!==false||
+      entry.sourceGeometryRightsIndependentlyConfirmed!==false)return null;
+   if(entry.code==='043910'&&
+      (entry.key!=='PISD'||entry.inventoryCampusRecords!==69||
+       entry.sourceFieldYear!=='2025–26'||
+       entry.servicePolygonCounts?.total!==64||
+       entry.servicePolygonCounts?.elementary!==44||
+       entry.servicePolygonCounts?.middle!==11||
+       entry.servicePolygonCounts?.high!==6||
+       entry.servicePolygonCounts?.senior!==3||
+       entry.linkedAppCampusCount!==62||entry.loadedAppCampusCount!==63||
+       entry.cityHistoricalZones?.sourceAcademicYear!=='2019–20'||
+       entry.cityHistoricalZones?.sourceLastEditedOn!=='2020-01'||
+       entry.cityHistoricalZones?.current!==false||
+       entry.districtIndependentResidentialAddressConfirmed!==0))return null;
+   if(entry.code==='061902'&&
+      (entry.key!=='LISD'||entry.inventoryCampusRecords!==57||
+       entry.featureCountMixedMultipart!==696||
+       entry.linkedAppCampusCount!==53||entry.loadedAppCampusCount!==54||
+       entry.sourceFieldYear!=='high 2025–26; elementary/middle unverified'||
+       entry.apartmentEvidence?.rows!==174||
+       entry.apartmentEvidence?.uniqueNames!==173||
+       entry.apartmentEvidence?.referencePolygonPointMatches!==173||
+       entry.apartmentEvidence?.conflicts!==1||
+       entry.apartmentEvidence?.conflictingGradeLevels!==4||
+       entry.apartmentEvidence?.schoolYearVerified!==false||
+       entry.apartmentLocatorDedicated!==true))return null;
+   rows.set(entry.code,entry);
+  }
+  return rows.size===2?rows:null;
+ }
  function validTexasWorks(extra,district){
   if(!extra||extra.schemaVersion!==1||extra.districtId!=='061806'||
      !district||district.name!=='TEXAS WORKS'||extra.inventoryCount!==district.teaCampusRecords||
@@ -110,7 +157,7 @@
    counts[1]===extra.counts?.operatorAddressOutside11CountyMSA&&
    counts[2]===extra.counts?.pendingExactCampusCrosswalk;
  }
- function render(mount,data,locality,publicSources){
+ function render(mount,data,locality,publicSources,vintageSources){
   mount.replaceChildren();
   const s=data.summary;
   const stats=el('div','dfw-coverage-stats');
@@ -138,7 +185,7 @@
   const input=el('input');input.type='search';
   input.setAttribute('aria-label','학군명·카운티 검색');input.placeholder='학군명·카운티 검색';
   controls.append(select,input);
-  for(const [code,title] of [['057903','CFB 자료'],['061901','Denton 자료']]){
+  for(const [code,title] of [['057903','CFB 자료'],['061901','Denton 자료'],['043910','Plano 연도'],['061902','Lewisville 연도']]){
    const jump=el('button','dfw-coverage-more',title);
    jump.type='button';jump.dataset.districtCode=code;
    jump.addEventListener('click',()=>{
@@ -228,6 +275,35 @@
      if(link){
       const anchor=el('a',null,'학군 공식 주소 검색기');
       anchor.href=link;anchor.target='_blank';anchor.rel='noopener noreferrer';
+      detail.appendChild(anchor);
+     }
+     gis.appendChild(detail);
+    }
+    const vintage=vintageSources?.get(d.code);
+    if(vintage){
+     const detail=el('details','dfw-source-disposition');
+     detail.appendChild(el('summary',null,'공식 검색기 운영 · GIS 학년도 미검증'));
+     if(d.code==='043910'){
+      detail.appendChild(el('p',null,
+       'Plano 2026–27 공식 SchoolFinder는 2025–26 표기 ArcGIS 64개 구역(초44·중11·고6·Senior High 3)에 연결됩니다. 앱 학교명 참고 연결은 62/63이며 주소별 공식 배정 검증률이 아닙니다.'));
+      detail.appendChild(el('p',null,
+       '시 정부의 별도 OpenData GIS는 2019–20 자료(2020년 1월 최종 수정)입니다. 이 구역을 2026–27 현행 경계로 취급하지 않습니다.'));
+      detail.appendChild(el('p',null,
+       'Plano는 Senior High 단계가 별도로 있고 Jackson Elementary는 Coit Road 동·서쪽 진학 경로가 나뉩니다. 학교급별 공식 SchoolFinder 재확인이 필요합니다.'));
+     }else{
+      detail.appendChild(el('p',null,
+       'Lewisville 2026–27 공식 School Locator 운영 중. 연결 도형은 고등학교 2025–26, 초·중학교 적용 연도 미확인입니다. 앱 참고 학교명 연결 53/54는 배정 검증률이 아닙니다.'));
+      detail.appendChild(el('p',null,
+       '공개 아파트 목록 174행 중 1건(Budget Suites of America, 5289 S Highway 121)은 지도 경계와 초·중·9학년·고등 4단계가 충돌합니다. 어느 쪽도 자동 확정하지 않습니다.'));
+      detail.appendChild(el('p',null,
+       '아파트 주소는 공식 Find an Apartment 기능으로 별도 조회해야 합니다. 건물·호수별 차이와 실제 학년도는 미인증입니다.'));
+     }
+     detail.appendChild(el('p',null,
+      '2026–27 공식 검색기 공개 ≠ 연결 도형의 현행 연도 검증 ≠ 주소별 확정 배정 ≠ 데이터 재배포 허가. 교육청 회신을 기다리지 않습니다.'));
+     const url=safeLink(vintage.locatorSource);
+     if(url){
+      const anchor=el('a',null,d.code==='043910'?'Plano 공식 SchoolFinder':'Lewisville 공식 School Locator');
+      anchor.href=url;anchor.target='_blank';anchor.rel='noopener noreferrer';
       detail.appendChild(anchor);
      }
      gis.appendChild(detail);
