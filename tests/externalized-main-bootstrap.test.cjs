@@ -35,6 +35,10 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<script src="./features/mckinney-finder-crosscheck.js?v=4"></script>','');
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<script src="./features/mckinney-live-address-lookup.js?v=2"></script>','');
+// New self-hosted future-year source-status disclosure only; remove its exact tag
+// before historical HTML byte comparison, keeping every other script pinned.
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ '<script src="./features/prosper-boundary-years.js?v=1"></script>','');
 // Unwind only this PR's verified source-identity helper cache bump before the
 // immutable archival HTML byte comparison; do not relax any other HTML guard.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
