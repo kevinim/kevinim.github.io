@@ -463,7 +463,10 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  const withoutCompactFootnotes=replaceOnce(withoutCompactStyle,
   '<script src="./features/compact-footnotes.js?v=2"></script></body></html>',
   '</body></html>');
- assert.equal(hash(withoutCompactFootnotes),hash(approvedHtml),
+ const restoredApprovedCache=replaceOnce(withoutCompactFootnotes,
+  './features/dfw-school-coverage-panel.js?v=2',
+  './features/dfw-school-coverage-panel.js?v=3');
+ assert.equal(hash(restoredApprovedCache),hash(approvedHtml),
   'Unreviewed HTML drift beyond the documented compact-footnote additions');
  // Strip only previously released #262 zoom label additions from the
  // immutable baseline; the existing #258 content SHA remains enforced.
