@@ -51,7 +51,7 @@ test('network failure is visible, fail-closed and retryable on the next expansio
  assert.equal(h.scripts[1].src,RENDERER);
 });
 test('renderer injection is fixed, never built from user input or unsafe markup',()=>{
- assert.match(loader,/const SOURCE='\.\/features\/dfw-school-coverage-renderer\.js\?v=1'/);
+ assert.match(loader,/const SOURCE='\.\/features\/dfw-school-coverage-renderer\.js\?v=2'/);
  assert.doesNotMatch(loader,/innerHTML|eval\(|new Function|location\.search/);
  assert.match(loader,/panel\.addEventListener\('toggle'/);
 });
