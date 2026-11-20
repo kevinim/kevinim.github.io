@@ -249,6 +249,8 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  // McKinney GIS estimate wording lives only in reviewed address-school/map/rail sections.
  // Reconcile those scoped segments against the protected pre-change source;
  // all other executable bytes remain byte-identical to historical baseline.
+ reviewedReferenceJs=replaceRegion(reviewedReferenceJs,referencePolicyBaseline,
+  'function drawHomeAssignmentMap(){','// Run only upon an explicit address selection');
  for(const [start,end] of [
   ['function addressSchoolView(){',' function drawSchools(){'],
   [' function drawSchools(){','function drawHomeAssignmentMap(){'],
