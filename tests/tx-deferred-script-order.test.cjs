@@ -6,11 +6,11 @@ const path=require('node:path');
 const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8');
 const scripts=[...html.matchAll(/<script\b[^>]*\bsrc="([^"]+)"[^>]*><\/script>/g)];
 test('TX dashboard preserves deployed synchronous and deferred script dependency order',()=>{
- assert.equal(scripts.length,71,'Unexpected script inventory; review dependency ordering before bundling');
+ assert.equal(scripts.length,72,'Unexpected script inventory; review dependency ordering before bundling');
  assert.match(scripts[0][1],/features\/theme-toggle\.js/);
  assert.doesNotMatch(scripts[0][0],/\sdefer\b/);
  assert.equal(scripts.slice(1).filter(m=>/\sdefer\b/.test(m[0])).length,14,'14 reviewed, late CFB/TEA and Map-First addons remain deferred');
- assert.equal(scripts.slice(1).filter(m=>!/\sdefer\b/.test(m[0])).length,56,'Two reviewed McKinney source modules are synchronous and ordered');
+ assert.equal(scripts.slice(1).filter(m=>!/\sdefer\b/.test(m[0])).length,57,'Reviewed Prosper year status and McKinney sources are synchronous and ordered');
  assert.ok(scripts.every(m=>!/\sasync\b/.test(m[0])),'Never async-load dependent school modules');
  assert.equal(scripts.map(m=>m[1]).length,new Set(scripts.map(m=>m[1])).size,'No duplicate JS');
 });
@@ -22,6 +22,7 @@ test('Leaflet and shared GIS modules evaluate before main bootstrap',()=>{
  assert.ok(index('district-registry.js')<index('dashboard-main.js'));
  assert.ok(index('school-reference-preview.js')<index('mckinney-finder-crosscheck.js')&&index('mckinney-finder-crosscheck.js')<index('mckinney-live-address-lookup.js')&&index('mckinney-live-address-lookup.js')<index('dashboard-main.js'),'McKinney module must load before the address renderer');
  assert.ok(index('school-boundary-match.js')<index('dashboard-main.js'));
+ assert.ok(index('school-reference-preview.js')<index('prosper-boundary-years.js')&&index('prosper-boundary-years.js')<index('dashboard-main.js'),'Prosper year-status model must be available before address cards render');
  assert.ok(index('area-label-hierarchy.js')<index('dashboard-main.js'));
  assert.ok(index('provider-requests.js')>index('area-label-hierarchy.js')&&index('provider-requests.js')<index('dashboard-main.js'),'Provider guard must load before routes');
  assert.ok(index('provider-requests.js')<index('liberty-basemap.js')&&index('liberty-basemap.js')<index('dashboard-main.js'),'Pinned Liberty adapter must precede main without disturbing provider guard');
