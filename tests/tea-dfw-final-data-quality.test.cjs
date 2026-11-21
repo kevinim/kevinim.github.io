@@ -118,3 +118,16 @@ test('per-campus corruption, protected-count disclosure and fabricated full-scho
  noLongerListed.ethnicity.campuses['061902118'].counts.pacific={status:'published',count:0};
  assert(inspect(noLongerListed).errors.includes('peims_current_per_cell_integrity'));
 });
+
+
+test('every individual PEIMS source value stays pinned to the original independently reviewed Git blob',()=>{
+ const r=inspect(source);
+ assert.equal(r.ethnicity.reviewedSourceBlobMatches,true);
+ assert.equal(source.ethnicitySourceBlobSha,'10166ec14ff1458377aa68c1419d95435da1d28c');
+ const changed=copy();
+ changed.ethnicitySourceBlobSha='0000000000000000000000000000000000000000';
+ assert(inspect(changed).errors.includes('peims_reviewed_original_blob_drift'));
+ const invalidReview=copy();
+ invalidReview.peims.reviewedUpstream.headBlobSha='0000000000000000000000000000000000000000';
+ assert(inspect(invalidReview).errors.includes('peims_reviewed_original_blob_drift'));
+});
