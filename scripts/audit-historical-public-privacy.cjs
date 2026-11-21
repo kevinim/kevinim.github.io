@@ -29,6 +29,8 @@ function git(root, args) {
 }
 
 function refKind(name) {
+  // PR head refs are fetched as separate read-only remote tracking refs in CI.
+  if (name.startsWith('refs/remotes/sec02-pull/')) return 'pullRefs';
   if (name.startsWith('refs/remotes/')) return 'remoteBranches';
   if (name.startsWith('refs/heads/')) return 'localBranches';
   if (name.startsWith('refs/tags/')) return 'tags';
