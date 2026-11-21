@@ -38,6 +38,7 @@ test('filename patterns detect known retired family dataset only', () => {
 });
 test('classifies local refs without disclosing their names', () => {
   assert.equal(refKind('refs/remotes/origin/main'), 'remoteBranches');
+  assert.equal(refKind('refs/remotes/sec02-pull/381'), 'pullRefs');
   assert.equal(refKind('refs/heads/main'), 'localBranches');
   assert.equal(refKind('refs/pull/42/head'), 'pullRefs');
   assert.equal(refKind('refs/tags/v1'), 'tags');
