@@ -27,7 +27,6 @@
   '043912042':'Prosper ISD 2026–27 신규 등록: Reynolds Middle 구역의 신규 학생은 공사 기간 Rushing Middle로 안내됩니다.',
   '043912046':'Prosper ISD 2026–27 신규 등록: Moseley Middle 구역의 신규 학생은 Rushing Middle로 안내됩니다.'
  });
- const PROSPER_MONITORED=Object.freeze(new Set(['Bryant','Johnson','Hall']));
  const PROSPER_CLOSED_SOURCE='https://www.prosper-isd.net/page/closed-to-enrollment';
  const REASONS=Object.freeze({
   'needs-address-verification':'주소 위치 정밀도가 충분하지 않습니다.',
