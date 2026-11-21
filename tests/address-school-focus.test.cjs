@@ -69,6 +69,36 @@ test('2026–27 official GIS candidates appear as text evidence, NEVER as assign
  assert.match(h.view().reason,/경계 자료/);
 });
 
+test('Plano/Lewisville live Finder GIS can populate only source-year-warning reference cards',()=>{
+ const h=setup();
+ const original={
+  kind:'reference-only',district:'PISD',year:'GIS 원본 2025–26',
+  referenceOnlyFinderVintage:true,
+  officialUrl:'https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder',
+  candidates:[{school:'ASSIGNED_E',level:'초등',yearNote:'GIS 2025–26'},
+   {school:'ZIP_ONLY',level:'중등',yearNote:'GIS 2025–26'}]
+ };
+ h.home.schoolReferencePlan=original;
+ let view=h.view();
+ assert.equal(view.kind,'gis-reference');
+ assert.equal(view.schools.length,0,'Reference cards must not become assigned schools');
+ assert.equal(view.candidates[0].school,h.assigned);
+ assert.equal(view.candidates[0].yearNote,'GIS 2025–26');
+ assert.equal(h.ctx.referenceCandidateSchoolLocations(view).length,2);
+ h.home.schoolReferencePlan={...original,referenceOnlyFinderVintage:false};
+ assert.equal(h.view().kind,'unverified','Require explicit mixed-vintage safety bit');
+ h.home.schoolReferencePlan={...original,district:'AISD'};
+ assert.equal(h.view().kind,'unverified','Other districts cannot spoof vintage approval');
+ const lisd={name:'LISD SCHOOL',district:'LISD',type:'elementary',ll:[33.1,-96.8]};
+ h.ctx.state.schools.push(lisd);
+ h.home.schoolReferencePlan={...original,district:'LISD',
+  candidates:[{school:'LISD SCHOOL',level:'초등',yearNote:'적용 학년도 미확인'}]};
+ view=h.view();
+ assert.equal(view.kind,'gis-reference');
+ assert.equal(view.candidates[0].school,lisd);
+ assert.equal(view.candidates[0].yearNote,'적용 학년도 미확인');
+ assert.equal(view.schools.length,0);
+});
 test('selected campus must be a current exact directory object and attached to this home',()=>{
  const h=setup();
  h.setPicked([h.assigned,h.assigned,{name:'GHOST',district:'PISD'}]);
