@@ -56,6 +56,50 @@ test('explicit stale or unconfirmed school feature year cannot be elevated by di
  valid.properties.schoolYear='2026–27';
  assert.equal(plan({...candidate(),features:[valid]}).kind,'reference-only');
 });
+test('Plano current Finder publishes vintage-labeled four-level GIS references without official enrollment',()=>{
+ const features=['elementary','middle','high','senior'].map(level=>{
+  const f=school(level,'PLANO '+level.toUpperCase());
+  Object.assign(f.properties,{sourceDistrict:'PISD',currentFinderSource:true,
+   yearVerified2627:false,sourceVintage:'Current district Finder (source layer 2025–26)'});
+  return f;
+ });
+ const raw={district:'PISD',status:'finder-current',features};
+ const p=plan(raw);
+ assert.equal(p.kind,'reference-only');
+ assert.equal(p.referenceOnlyFinderVintage,true);
+ assert.match(p.year,/2025–26/);
+ assert.deepEqual(p.candidates.map(c=>c.level),['초등','중등','고등','Senior High']);
+ assert.ok(p.candidates.every(c=>/2025–26/.test(c.yearNote)));
+ assert.equal(p.missing.length,0);
+ assert.equal(policy.apply(raw).status,'conditional-finder-only');
+ for(const patch of [{sourceDistrict:'BAD'},{sourceVintage:'2026–27'},
+  {currentFinderSource:false},{yearVerified2627:true}]){
+  const changed={...features[0],properties:{...features[0].properties,...patch}};
+  assert.equal(plan({...raw,features:[changed,...features.slice(1)]}).kind,'unavailable');
+ }
+ assert.equal(plan({...raw,status:'reference'}).kind,'unavailable','cached GIS not live');
+ assert.equal(plan({...raw,status:'finder-boundary-review'}).kind,'unavailable','near-edge not safe');
+});
+test('Lewisville mixed-year Finder GIS may show only explicit levels and never certify apartments',()=>{
+ const features=['elementary','middle','high'].map(level=>{
+  const f=school(level,'LISD '+level.toUpperCase());
+  Object.assign(f.properties,{
+   yearVerified2627:false,verifiedYear:null,
+   sourceYear:level==='high'?'2025-26':null,
+   sourceVintage:level==='high'?'공식 검색기 연결 · 고등 레이어 2025–26 표기':'공식 검색기 연결 · 학년도 미확인'});
+  return f;
+ });
+ const raw={district:'LISD',status:'finder-current',features};
+ const p=plan(raw);
+ assert.equal(p.kind,'reference-only');
+ assert.equal(p.referenceOnlyFinderVintage,true);
+ assert.ok(p.notices.some(x=>/아파트/.test(x)));
+ assert.ok(p.candidates[2].yearNote.includes('2025–26'));
+ assert.equal(policy.apply(raw).status,'conditional-finder-only');
+ assert.equal(plan({...raw,status:'reference'}).kind,'unavailable');
+ const tampered={...features[2],properties:{...features[2].properties,sourceYear:'2027-28'}};
+ assert.equal(plan({...raw,features:[...features.slice(0,2),tampered]}).kind,'unavailable');
+});
 test('Prosper official GIS campus IDs are forwarded without upgrading residential certification',()=>{
  const f=school('elementary','JUDY RUCKER EL');
  Object.assign(f.properties,{sourceDistrict:'PROSPER',current:true,sourceYearConfirmed:true,

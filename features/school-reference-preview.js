@@ -11,6 +11,14 @@
   PROSPER:{status:'current',currency:'always',year:'2026–27',source:'Prosper ISD 공식 학교별 경계'},
   '043907':{status:'finder-current',currency:'live',year:'2026–27',source:'McKinney ISD 공식 Finder 연결 경계'}
  });
+ // Current district-operated Finders whose linked *geometry* is not proved
+ // equivalent to 2026–27. Live references only, never a current-year grant.
+ const FINDER_VINTAGE=Object.freeze({
+  PISD:{status:'finder-current',currency:'finder',year:'GIS 원본 2025–26',
+   source:'Plano ISD SchoolFinder 연결 원본(2025–26 레이어)'},
+  LISD:{status:'finder-current',currency:'finder',year:'고등 2025–26 / 초·중 적용년도 미확인',
+   source:'Lewisville ISD School Locator 연결 GIS'}
+ });
  const LEVEL=Object.freeze({elementary:'초등',middle:'중등',high:'고등',senior:'Senior High'});
  const REASONS=Object.freeze({
   'needs-address-verification':'주소 위치 정밀도가 충분하지 않습니다.',
@@ -31,7 +39,8 @@
  function plan(raw,registry,official){
   if(!raw||typeof raw!=='object')return blocked('학교 자료가 없습니다.');
   if(Object.hasOwn(REASONS,raw.status))return blocked(REASONS[raw.status]);
-  const cfg=CURRENT[raw.district],entry=registry?.[raw.district];
+  const cfg=CURRENT[raw.district]||FINDER_VINTAGE[raw.district],entry=registry?.[raw.district];
+  const vintageLimited=Object.prototype.hasOwnProperty.call(FINDER_VINTAGE,raw.district);
   if(!cfg||!entry||raw.status!==cfg.status||entry.currency!==cfg.currency)
    return blocked('현행 학교별 GIS 출처를 독립 확인하지 못했습니다.');
   const safeUrl=typeof official==='function'?official(entry.official):null;
@@ -51,7 +60,21 @@
    // Even a source registered as current cannot promote a feature that
    // explicitly identifies itself as older, proposed or unverified.
    const vintage=String(p.schoolYear||p.sourceVintage||'').replace(/[–—]/g,'-').trim();
-   if((vintage&&vintage!=='2026-27')||p.current===false||p.sourceYearConfirmed===false)
+   if(vintageLimited){
+    // The live Finder must yield precisely the expected publisher-mapped
+    // older/uncertain source. A cached/future/altered schema fails closed.
+    const accepted=raw.district==='PISD'
+     ?p.sourceDistrict==='PISD'&&p.currentFinderSource===true&&
+       p.yearVerified2627===false&&
+       p.sourceVintage==='Current district Finder (source layer 2025–26)'
+     :p.yearVerified2627===false&&p.verifiedYear==null&&
+       p.sourceVintage===(p.gradeLevel==='high'
+        ?'공식 검색기 연결 · 고등 레이어 2025–26 표기'
+        :'공식 검색기 연결 · 학년도 미확인')&&
+       (p.sourceYear==null||p.sourceYear==='2025-26');
+    if(!accepted||p.current===true||p.sourceYearConfirmed===true||p.schoolYear)
+     return blocked('공식 Finder 연결 GIS 원본의 학년도·출처가 변경되어 참고 표시를 중단했습니다.');
+   }else if((vintage&&vintage!=='2026-27')||p.current===false||p.sourceYearConfirmed===false)
     return blocked('해당 학교 도형의 출처 학년도가 현행으로 검증되지 않았습니다.');
    const school=p.school.trim(),key=p.gradeLevel+'|'+school.toLocaleLowerCase('en-US');
    if(seen.has(key))return blocked('같은 학교·학년 후보가 중복되어 표시하지 않습니다.');
@@ -67,12 +90,21 @@
     /^[0-9]{3}$/.test(String(p.schoolCode||''));
    if(raw.district==='PROSPER'&&p.campusId!=null&&!officialProsper)
     return blocked('Prosper 공식 GIS 캠퍼스 번호 또는 학교 코드가 일치하지 않습니다.');
+   const yearNote=raw.district==='PISD'?'공식 SchoolFinder 연결 · 원본 GIS 레이어 2025–26':
+    raw.district==='LISD'?(p.gradeLevel==='high'?'고등 GIS 2025–26 표기 · 주소 배정 미확인':
+     '초·중 GIS 적용 학년도 미확인 · 주소 배정 미확인'):'';
    candidates.push(Object.freeze({school,level:LEVEL[p.gradeLevel],grades,
+    ...(yearNote?{yearNote}:{}),
     ...(officialProsper?{campusId:String(p.campusId),schoolCode:String(p.schoolCode)}:{})}));
   }
   const covered=new Set(features.map(f=>f.properties.gradeLevel));
   const missing=['elementary','middle','high'].filter(level=>!covered.has(level)&&!(level==='high'&&covered.has('senior'))).map(l=>LEVEL[l]);
+  if(raw.district==='PISD'&&!covered.has('senior'))missing.push('Senior High');
   const notices=[];
+  if(raw.district==='PISD')
+   notices.push('Plano: GIS 원본은 2025–26 명칭입니다. 9–10학년 High와 11–12학년 Senior High를 따로 확인하고 Jackson/Coit Rd 분리 진학을 공식 Finder에서 검증하세요.');
+  if(raw.district==='LISD')
+   notices.push('Lewisville: 고등 GIS 2025–26 표기, 초·중 적용 학년도 미확인. 9학년 및 아파트·호수는 별도의 공식 Find an Apartment에서 확인해야 합니다.');
   // Frisco's own 2026–27 locator warns that *new* students inside Nelson's
   // attendance zone may be assigned to Wester because Nelson is at capacity.
   // Reference names must never conceal that enrollment-specific exception.
@@ -84,11 +116,14 @@
    notices.push('McKinney ISD: 기존 학생의 전학·잔류(grandfathering) 승인에 따라 실제 등록 학교가 경계 후보와 달라질 수 있습니다.');
   return Object.freeze({
    kind:'reference-only',district:raw.district,source:cfg.source,year:cfg.year,
+   referenceOnlyFinderVintage:vintageLimited,
    officialUrl:safeUrl,
    candidates:Object.freeze(candidates),
    missing:Object.freeze(missing),
    notices:Object.freeze(notices),
-   warning:'GIS 위치 참고 후보이며 실제 주소별 배정학교가 아닙니다. 배정·전학·학년·아파트 예외는 공식 Finder에서 확인하세요.'
+   warning:vintageLimited
+    ?'공식 검색기에 연결된 연도 불확실 GIS 참고 후보입니다. 2026–27 주소별 배정 인증이 아니며 아파트·학년·진학 예외는 공식 Finder에서 확인하세요.'
+    :'GIS 위치 참고 후보이며 실제 주소별 배정학교가 아닙니다. 배정·전학·학년·아파트 예외는 공식 Finder에서 확인하세요.'
   });
  }
  function render(target,model){
