@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "createdForSchoolYear": "2026–27",
   "baselineCommit": "8dda561a9dfa2a77ce578db81033f85725d4f05a",
-  "updatedOn": "2026-11-08",
+  "updatedOn": "2026-11-21",
   "validationMode": "local-files-only",
   "note": "Pinned Git blob hashes are file-integrity baselines, not proof of district assignment accuracy or source-year currency. Refresh hashes only after review of new source evidence.",
   "assets": [
@@ -80,11 +80,13 @@
     },
     {
       "path": "allen-attendance-historical.geojson",
-      "gitBlobSha": "5486f7c71d9f95dd4c6f9d99c01ed992df1c8474",
+      "gitBlobSha": "6f941a125443a6819df7e5a2c93cd06fbee10400",
       "kind": "features",
       "district": "AISD",
       "assurance": "historical-only",
-      "expectedCount": 20
+      "expectedCount": 20,
+      "observedAt": "2026-11-21",
+      "review": "City of Allen 2023 elementary/middle and 2019 high source queried at original WGS84 vertex precision; six conflicting non-residential sample point classifications now agree with City public ArcGIS; still historical-only."
     },
     {
       "path": "plano-attendance-2019.geojson",
