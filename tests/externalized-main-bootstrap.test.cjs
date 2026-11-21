@@ -14,7 +14,20 @@ const old=show(baseline,'index.html'),oldJs=show(baseline,'dashboard-main.js');
 const rawHtml=fs.readFileSync(path.join(root,'index.html'),'utf8');
 // Redfin split and Liberty pilot: undo only the five named additions before
 // comparing the rest of the protected historical HTML byte-for-byte.
-let normalizedMainHtml=rawHtml.replace('./home-lookup-v2.js?v=28','./home-lookup-v2.js?v=27')
+// P3 reviewed cache bust: reverse only the two existing first-party Area
+// Intelligence source references before the immutable HTML baseline check.
+// A missing/duplicate token or any other markup drift still fails closed.
+const regionalCacheRefs=[
+ ['./features/area-assessment-core.js?v=4','./features/area-assessment-core.js?v=3'],
+ ['./features/area-assessment.js?v=4','./features/area-assessment.js?v=3']
+];
+let normalizedMainHtml=rawHtml;
+for(const [newRef,oldRef] of regionalCacheRefs){
+ assert.equal(normalizedMainHtml.split(newRef).length,2,
+  'Exactly one reviewed P3 cache reference required: '+newRef);
+ normalizedMainHtml=normalizedMainHtml.replace(newRef,oldRef);
+}
+normalizedMainHtml=normalizedMainHtml.replace('./home-lookup-v2.js?v=28','./home-lookup-v2.js?v=27')
  .replace('./official-school-review.js?v=2','./official-school-review.js?v=1');
 
 /* The six-section UI is a presentation-only change. Subtract its EXACT
