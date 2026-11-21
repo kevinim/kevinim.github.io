@@ -8,11 +8,14 @@
   const items=[
     {id:'schools',title:'학교 현황',target:'schools'},
     {id:'hazards',title:'자연재해 기록',target:'hazards'},
+    {id:'healthcare',title:'응급 의료 접근성',target:'healthcare'},
+    {id:'winter',title:'겨울 기상·전력',target:'winter'},
     {id:'crime',title:'도시 범죄 신고율',target:'crime'},
     {id:'commute',title:'통근 기준시간',target:'commute'}
   ];
   const rows={};
   let countyIndex=null,noaaRows=null,loadError=false,paintScheduled=false;
+  let healthcareData=null,healthcareError=false,healthcareStarted=false;
   let dataDeadline=0,lastZip='',countyObserver=null;
   function el(tag,cls,text){
     const n=document.createElement(tag);
@@ -27,7 +30,7 @@
     const row=rows[id];if(!row)return;
     const status=fact?.status||'loading';
     const display=status==='available'?'자료 확인':status==='mixed'?'관할 혼재':
-      status==='empty'?'소재 0곳':status==='unknown'?'확인 필요':'확인 중';
+      status==='empty'?'소재 0곳':status==='reference'?'지도 참고':status==='unknown'?'확인 필요':'확인 중';
     row.status.textContent=display;
     row.status.dataset.state=status;
     row.summary.textContent=fact?.message||unavailable||'자료 불러오는 중…';
@@ -59,6 +62,19 @@
     countyObserver.observe(select,{childList:true});
     window.setTimeout(()=>{countyObserver?.disconnect();countyObserver=null},12000);
   }
+  function selectNearbyHospital(){
+    const select=$('hospitalCity');if(!select)return;
+    const choose=()=>{
+      if(!Array.from(select.options).some(o=>o.value==='__nearby__'))return false;
+      select.value='__nearby__';
+      select.dispatchEvent(new Event('change',{bubbles:true}));
+      return true;
+    };
+    if(choose())return;
+    const observer=new MutationObserver(()=>{if(choose())observer.disconnect()});
+    observer.observe(select,{childList:true});
+    window.setTimeout(()=>observer.disconnect(),12000);
+  }
   function onSummaryClick(target){
     const map=document.querySelector('.mapbox');
     if(target==='schools'){
@@ -73,6 +89,20 @@
       const button=document.querySelector('#hazardMapQuickToggle button[data-hazard="ifld"]');
       if(button&&button.getAttribute('aria-pressed')!=='true')button.click();
       showAction('NOAA는 2024–25 카운티 과거 기록이며, 켜진 지도는 별개인 FEMA 2025 홍수 상대 위험도입니다. NOAA 상세 패널을 열었습니다.');
+      scrollTo(map||panel);
+    }else if(target==='healthcare'){
+      void loadHealthcareSnapshot();
+      const panel=$('healthcarePanel');if(panel)panel.open=true;
+      selectNearbyHospital();
+      const button=$('healthcareMapQuickToggle');
+      if(button&&button.getAttribute('aria-pressed')!=='true')button.click();
+      showAction('CMS 2026 병원과 Census 추정 좌표의 ZIP 대표점 직선거리 참고입니다. 실제 운영 중인 최단거리 응급실이나 운전시간은 검증되지 않았습니다.');
+      scrollTo(panel||map);
+    }else if(target==='winter'){
+      const panel=$('gridResiliencePanel');if(panel)panel.open=true;
+      const button=$('winterMapQuickToggle');
+      if(button&&button.getAttribute('aria-pressed')!=='true')button.click();
+      showAction('FEMA 2025 Census tract 겨울 기상 상대위험을 표시합니다. EIA 텍사스 전체 정전 통계와 별개이며, 집주소별 정전 가능성은 알 수 없습니다.');
       scrollTo(map||panel);
     }else if(target==='crime'){
       const panel=$('crimePanel');if(panel)panel.open=true;
@@ -157,6 +187,21 @@
     if(!name)return {status:'unknown',message:'해당 ZIP의 대표 카운티 자료 없음'};
     return core.summarizeNoaa(noaaRows,name);
   }
+  function healthcareFact(zip){
+    if(healthcareError)return {status:'unknown',message:'CMS 병원 위치 참고자료를 확인하지 못했습니다'};
+    if(!healthcareData)return null;
+    try{
+      const z=typeof getZip==='function'?getZip():null;
+      if(z?.z!==zip||!Array.isArray(z.ll)||z.ll.length!==2)
+        return {status:'unknown',message:'선택 ZIP의 대표 좌표 미확인 · 병원 상세에서 도시별 목록 확인'};
+      const ranker=window.HospitalNearbyReference?.rankNearbyCMS;
+      if(typeof ranker!=='function')throw Error('CMS ranker missing');
+      return core.summarizeHealthcareReference(ranker(healthcareData,z.ll,{edOnly:true,limit:1}));
+    }catch(e){
+      console.warn('Regional hospital reference unavailable:',e);
+      return {status:'unknown',message:'CMS 병원 근접도 검증 실패 · 상세 목록 확인'};
+    }
+  }
   function crimeFact(zip){
     try{
       const data=typeof crimeZipData!=='undefined'?crimeZipData:null;
@@ -182,6 +227,8 @@
       zip?(title||zip)+' · ZIP 기준':'지역 미선택';
     setFact('schools',schoolFact(zip),'학교 위치·평가 자료 확인 중');
     setFact('hazards',hazardFact(zip),'카운티 NOAA 자료 확인 중');
+    setFact('healthcare',healthcareFact(zip),'CMS 위치자료는 이 섹션이 보이면 확인합니다');
+    setFact('winter',core.summarizeWinterReference());
     setFact('crime',crimeFact(zip),'FBI 도시 자료 확인 중');
     const minutes=typeof state!=='undefined'?state.times?.[zip]:null;
     setFact('commute',core.summarizeCommute(minutes,Boolean($('destination')?.value?.trim())));
@@ -208,6 +255,34 @@
     }
     schedule();
   }
+  async function loadHealthcareSnapshot(){
+    if(healthcareStarted)return;
+    healthcareStarted=true;
+    try{
+      const res=await fetch('./data/healthcare/cms-dfw-census-points-2026.json',{cache:'force-cache'});
+      if(!res.ok)throw Error('CMS snapshot HTTP '+res.status);
+      const data=await res.json();
+      const ranker=window.HospitalNearbyReference?.rankNearbyCMS;
+      if(typeof ranker!=='function'||!data?.metadata?.snapshotDate)
+        throw Error('CMS reference module or provenance missing');
+      // Validates the exact point dataset before it enters the overview UI.
+      ranker(data,[33.014302,-96.791507],{edOnly:true,limit:1});
+      healthcareData=data;
+    }catch(e){
+      healthcareError=true;console.warn('Regional hospital snapshot unavailable:',e);
+    }
+    schedule();
+  }
+  function initHealthcareLazy(){
+    const section=$('areaQuickAssessment');if(!section)return;
+    if(typeof IntersectionObserver!=='function'){void loadHealthcareSnapshot();return}
+    const observer=new IntersectionObserver(entries=>{
+      if(entries.some(e=>e.isIntersecting)){
+        observer.disconnect();void loadHealthcareSnapshot();
+      }
+    },{rootMargin:'700px'});
+    observer.observe(section);
+  }
   function init(){
     mount();if(!$('areaQuickAssessment'))return;
     dataDeadline=Date.now()+12000;
@@ -218,7 +293,7 @@
     for(const id of ['officeSelect','destination','zipSelect'])
       $(id)?.addEventListener('change',schedule);
     $('destination')?.addEventListener('input',schedule);
-    render();loadRegionSnapshot();
+    render();loadRegionSnapshot();initHealthcareLazy();
     window.setTimeout(schedule,12500);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});
