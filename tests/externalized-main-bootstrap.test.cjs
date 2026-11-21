@@ -15,7 +15,7 @@ const rawHtml=fs.readFileSync(path.join(root,'index.html'),'utf8');
 // Redfin split and Liberty pilot: undo only the five named additions before
 // comparing the rest of the protected historical HTML byte-for-byte.
 let normalizedMainHtml=rawHtml.replace('./home-lookup-v2.js?v=28','./home-lookup-v2.js?v=27')
- .replace('./official-school-review.js?v=2','./official-school-review.js?v=1');
+ .replace('./official-school-review.js?v=3','./official-school-review.js?v=1');
 
 /* The six-section UI is a presentation-only change. Subtract its EXACT
  * reviewed additions before comparing historical protected HTML bytes. */
