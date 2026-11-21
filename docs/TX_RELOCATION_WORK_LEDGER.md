@@ -26,7 +26,7 @@
 | TX-P1-02 | P1 | GIS 미탑재 학교/교육청 확대 | **4개 학군 공개 출처·UI 배포 / 실제 새 폴리곤 미완료** | #366 Mesquite/Wylie/Rockwall/Richardson 공식 GIS/PDF 링크와 출처/연도·권리 불확실성 표시. 신규 학교별 탑재 폴리곤 0. 다른 100개 미표시 ISD 순차 검증, 공식 연도/권리/학교코드 정합성 확인 후 지도 레이어만 공개. CFB/Denton 공개 조사 완료는 GIS 인증 완료 아님 | #366, Issue #125 |
 | TX-P2-01 | P2 | TEA 2026 / PEIMS 2025–26 공개 원본 데이터 품질 | **완료 — 2026-11-11 공개 원본 스냅샷의 무결성 기준** | 2,282/2,282 학교 ID 대조; PEIMS 15,974/15,974 공개/마스킹/미표시 셀 상태 대조, 0건 기존 원본 불일치. 최종 데이터 QA가 전수 재계산하고 이전 독립 대조 Git blob 고정. **새 온라인 원본 재다운로드는 별도 새 버전 작업** | 병합·Pages 성공 PR #365, PR #369, docs/TEA_DFW_FINAL_DATA_QUALITY_20261112.md |
 | TX-P2-02 | P2 (외부 공개 전 필수) | Production 공개 보안 | **진행 중 / 외부 공개 NO-GO** | 보안 작업 장부 SEC-01–SEC-11 확인, 실무 변경·테스트·운영 설정 증거 기록. 가족 UAT 유지. 외부 공개/로그인/소스 분리 등은 별도 릴리스 게이트를 통과해야 함. Security tracker PR #377은 미병합 초안 | PR #377, PUBLIC_RELEASE_SECURITY.md, docs/PUBLIC_SECURITY_REMAINDERS_2026-11-13.md |
-| TX-P3-01 | P3 | 지역 분석: 의료·교통·재난·전력·범죄 근거 | **응급시설 직선거리·겨울 출처 연결 코드 병합 / 후속 데이터 미완료** | #367 44/44 CI 통과·main d12fabbb 병합; Pages 배포 성공 (Run 44931479215). 실제 ED 자동차 접근시간·운영 여부, 경로별 NTTA 요금, 주소별 정전기록, P43 범죄 공개 지도는 미완료. 직선거리를 ETA로 표시 금지 | #367, HANDOFF.md P40–P43 |
+| TX-P3-01 | P3 | 지역 분석: 의료·교통·재난·전력·범죄 근거 | **6개 카드 P3 기본 UI 배포·실사이트 검증 완료 / 근거 데이터 4개 확장 과제 미완료** | #367: 최종 head 73 success, 1 skipped; main d12fabbb, Pages 44931479215 성공. #388 무료 Live Pages QA: 6개 카드·CMS 직선거리·FEMA 겨울·Allen 마커·390/1280px, JS SHA-256 검증 44931769693 성공. 실제 ED 15/30분 운전권·운영, 지역별 utility outage, NTTA/TEXpress 자동견적, 경찰 원천 비교가능성은 **미완료**; ZIP 직선거리를 ETA로 표시하지 않음 | PR #367, #388, Issue #375, HANDOFF.md P40–P43 |
 
 ## 사용 가능한 근거와 외부 제약 (P2 완료와 혼동 금지)
 
@@ -90,6 +90,15 @@
 - **#366** four additional ISD public GIS/PDF source candidates: main merged; source info only, no new campus polygons.
 - **#382** Allen historical polygon source precision: main merged eb069018, Pages 44929741854 success, source-origin 20 polygons retained; current-year lookup separate.
 - **#384** Prosper new-student exception note merged in main 44b9fe94, production map smoke 44930846346 success.
-- **#367** regional assessment clinical emergency straight-line and winter reference links: 44/44 PR CI PASS, merged d12fabbb, Pages run 44931479215 SUCCESS as of this ledger revision. No per-address emergency ETA or outage probability claimed.
+- **#367** P3 healthcare/winter reference: 73 CI success / 1 skipped, merged d12fabbb, Pages run 44931479215 SUCCESS. **#388** free deployed-site 6-card/Allen/health/winter smoke run 44931769693 SUCCESS, merged 53d07601. No per-address emergency ETA or outage probability claimed.
 - **#377 / #381** documentation and historical-privacy audit PRs explicitly require manual owner approval for merging. SEC-02 has four reachable retired-history objects; count audit is not remediation. Public Production remains NO-GO.
 - **#383** refreshes this canonical ledger; source-year/CORS/license/independent exact-address official data gates remain separate, without relabeling unverifiable schools.
+
+
+### 2026-11-21 — TX-P3-01 release validation and outstanding sources
+- **UI release completed:** #367 main `d12fabbb`; Pages build `44931479215` succeeded. Existing GitHub Actions workflow extended by #388, and **live** site `44931769693` passed JS SHA parity, Allen school markers, CSP/FEMA and P3 six-card/CMS/winter map on 390px and 1280px. This is not proof that higher-precision datasets exist.
+- **Outstanding P41:** 104 CMS facilities; 83 Census interpolated locations; 21 unmapped; 67 mapped CMS ED-flagged; 34 exact trauma matches. No verified latest 24-hour ED entrance, complete pediatric/freestanding provider universe or 15/30-minute route access. [P3 issue #375](https://github.com/kevinim/kevinim.github.io/issues/375).
+- **Outstanding P42:** FEMA 2025 NRI winter *hazard* 1,734 tracts and EIA 2024–25 **Texas statewide** reliability are available, not verified address-to-utility or historical local outage times. EIA Form 861 utility report acquisition/normalization and legal service-area attribution still required. No PUCT restricted GIS republication.
+- **Outstanding P40:** route-specific official auto toll quotes, TEXpress time-variable tolls and AM/PM measured congestion remain unimplemented. Existing per-direction manual NTTA quote and fuel/parking model preserved.
+- **Outstanding P43:** 5,465 source-native aggregate groups for Dallas/Fort Worth/Frisco/Plano/McKinney have incompatible periods/offense definitions. Allen and nearby city gaps remain. No new neighborhood crime heatmap/safety score without separate owner authorization.
+- **Next sequence:** P41 facility coverage/access → P42 utility data & spatial attribution → P43 comparability/permission → P40 traffic/toll automation (lower priority). Use [Issue #375](https://github.com/kevinim/kevinim.github.io/issues/375) for detailed acceptance criteria. Missing sources get explicit unavailable labels; do not wait for school-district email responses.
