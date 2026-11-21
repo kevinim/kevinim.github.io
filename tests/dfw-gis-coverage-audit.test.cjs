@@ -14,7 +14,7 @@ test('all 108 public ISDs reconcile one-to-one with the existing official-parent
  assert.equal(audit.summary.observedPublicISDs,108);
  assert.equal(audit.summary.officialParentEntryRegistered,108);
  for(const row of audit.districts){
-  assert.match(row.teaCode,/^\\d{6}$/);
+  assert.match(row.teaCode,/^\d{6}$/);
   const base=index.get(row.teaCode);
   assert.ok(base,'unrecognized source district '+row.teaCode);
   assert.equal(row.isd,base.name,row.teaCode+' name');
