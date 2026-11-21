@@ -27,7 +27,7 @@ for(const [newRef,oldRef] of regionalCacheRefs){
  normalizedMainHtml=normalizedMainHtml.replace(newRef,oldRef);
 }
 normalizedMainHtml=normalizedMainHtml.replace('./home-lookup-v2.js?v=28','./home-lookup-v2.js?v=27')
- .replace('./official-school-review.js?v=2','./official-school-review.js?v=1');
+ .replace('./official-school-review.js?v=3','./official-school-review.js?v=1');
 
 /* The six-section UI is a presentation-only change. Subtract its EXACT
  * reviewed additions before comparing historical protected HTML bytes. */
