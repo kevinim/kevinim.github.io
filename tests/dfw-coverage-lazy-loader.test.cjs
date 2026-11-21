@@ -5,7 +5,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
 const loader=fs.readFileSync(path.join(__dirname,'..','features/dfw-school-coverage-panel.js'),'utf8');
-const RENDERER='./features/dfw-school-coverage-renderer.js?v=3';
+const RENDERER='./features/dfw-school-coverage-renderer.js?v=4';
 
 function setup(){
  const mount={textContent:''},handlers={},scripts=[];
@@ -51,7 +51,7 @@ test('network failure is visible, fail-closed and retryable on the next expansio
  assert.equal(h.scripts[1].src,RENDERER);
 });
 test('renderer injection is fixed, never built from user input or unsafe markup',()=>{
- assert.match(loader,/const SOURCE='\.\/features\/dfw-school-coverage-renderer\.js\?v=3'/);
+ assert.match(loader,/const SOURCE='\.\/features\/dfw-school-coverage-renderer\.js\?v=4'/);
  assert.doesNotMatch(loader,/innerHTML|eval\(|new Function|location\.search/);
  assert.match(loader,/panel\.addEventListener\('toggle'/);
 });
