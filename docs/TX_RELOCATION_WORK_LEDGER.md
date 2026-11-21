@@ -23,7 +23,7 @@
 | TX-P0-01 | P0 | 주소 → 해당 학년의 공식 초·중·고 배정 학교 | **참고 UI 배포 완료 / 공식 인증 미완료** | #368 Plano E/M/High/Senior 및 Lewisville E/M/H 원본연도 경고를 표시. #384 Prosper 새 등록 학생 입학 예외 안내. 학교별 실제 street+unit+year+grade 공식 자동 API가 허용·독립 검증되지 않아 배정 인증 0개. 공식 Finder 링크/사용자 수동 대조 제공, 임의 GIS로 인증 금지 | #368 #384, Issue #125 |
 | TX-P0-02 | P0 | DFW 전체 GIS 출처·커버리지 장부 | **108-ISD 현황 감사 완료 / 실탑재 확대 미완료** | #364 108개 ISD 공식 안내·원본 대조·기본 GIS 6, 선택형 GIS 2, 미표시 100, 현행 연도 확인 소스 2, 공식 거주지 자동 인증 0. PR CI/Pages/라이브 지도 검사 완료; 학교별 정확한 GIS 탑재와 경계 품질은 P1 별도 | #364 main ff27840c, Pages 44928830393, live 44928909341 |
 | TX-P1-01 | P1 | 이미 표시된 학군 지도 정확성/토폴로지 | **Allen 정밀도 수정 배포 / 전체 독립 검증 진행 중** | #379 토폴로지 감사, #382 Allen 원본 정밀도 경계 20개/5,668 꼭짓점 복원 및 6곳 공개 좌표 QA. Prosper 31개 학교 지오메트리 대조. 기타 학군의 공식 소스 연도·학교 ID·경계/주거지 예외 검증 유지, 과거 경계를 현행 공식 배정으로 승격 금지 | #379 #382, Issue #376 |
-| TX-P1-02 | P1 | GIS 미탑재 학교/교육청 확대 | **4개 학군 공개 출처·UI 배포 / 실제 새 폴리곤 미완료** | #366 Mesquite/Wylie/Rockwall/Richardson 공식 GIS/PDF 링크와 출처/연도·권리 불확실성 표시. 신규 학교별 탑재 폴리곤 0. 다른 100개 미표시 ISD 순차 검증, 공식 연도/권리/학교코드 정합성 확인 후 지도 레이어만 공개. CFB/Denton 공개 조사 완료는 GIS 인증 완료 아님 | #366, Issue #125 |
+| TX-P1-02 | P1 | GIS 미탑재 학교/교육청 확대 | **공식 출처 UI #366 배포 완료, 폴리곤 확대 미완료 / Wylie·Rockwall 오류 수정 PR #387 진행 중** | 108 ISD 중 기본 GIS 6, 클릭형 2, 미표시 100. #366 main 2d722f1 Pages+live smoke 확인. #387은 Collin Wylie 043914에 연결된 Abilene 동명이교 PDF 제거, Rockwall 2026–27/2023–24 표기 충돌 '학년도 미확인' 처리, renderer/CI 캐시 정정. 신규 폴리곤 0, 공식 주소 배정 0. Mesquite year/rights, CFB/Denton 및 전국 100개 현행 GIS 조사 계속 | #366, #387, Issue #125 |
 | TX-P2-01 | P2 | TEA 2026 / PEIMS 2025–26 공개 원본 데이터 품질 | **완료 — 2026-11-11 공개 원본 스냅샷의 무결성 기준** | 2,282/2,282 학교 ID 대조; PEIMS 15,974/15,974 공개/마스킹/미표시 셀 상태 대조, 0건 기존 원본 불일치. 최종 데이터 QA가 전수 재계산하고 이전 독립 대조 Git blob 고정. **새 온라인 원본 재다운로드는 별도 새 버전 작업** | 병합·Pages 성공 PR #365, PR #369, docs/TEA_DFW_FINAL_DATA_QUALITY_20261112.md |
 | TX-P2-02 | P2 (외부 공개 전 필수) | Production 공개 보안 | **진행 중 / 외부 공개 NO-GO** | 보안 작업 장부 SEC-01–SEC-11 확인, 실무 변경·테스트·운영 설정 증거 기록. 가족 UAT 유지. 외부 공개/로그인/소스 분리 등은 별도 릴리스 게이트를 통과해야 함. Security tracker PR #377은 미병합 초안 | PR #377, PUBLIC_RELEASE_SECURITY.md, docs/PUBLIC_SECURITY_REMAINDERS_2026-11-13.md |
 | TX-P3-01 | P3 | 지역 분석: 의료·교통·재난·전력·범죄 근거 | **6개 카드 P3 기본 UI 배포·실사이트 검증 완료 / 근거 데이터 4개 확장 과제 미완료** | #367: 최종 head 73 success, 1 skipped; main d12fabbb, Pages 44931479215 성공. #388 무료 Live Pages QA: 6개 카드·CMS 직선거리·FEMA 겨울·Allen 마커·390/1280px, JS SHA-256 검증 44931769693 성공. 실제 ED 15/30분 운전권·운영, 지역별 utility outage, NTTA/TEXpress 자동견적, 경찰 원천 비교가능성은 **미완료**; ZIP 직선거리를 ETA로 표시하지 않음 | PR #367, #388, Issue #375, HANDOFF.md P40–P43 |
@@ -61,6 +61,7 @@
 ## 변경 이력
 
 | 날짜 (EST) | 변경 | 실행 근거 |
+| 2026-11-21 EST | #387 Wylie 동명 교육청 PDF 오등록 삭제, Rockwall 지도 연도 충돌 출처 신뢰도 하향, 소스 검증/캐시 강화. 최종 CI/Pages 배포 전까지 incomplete. | PR #387, Issue #125 |
 | --- | --- | --- |
 | 2026-11-21 | #366 이전 통합 HEAD b6a95de에서 52/52 CI 통과. #368 동시 병합으로 index/UAT/immutable tests/ledger 6개 겹침 발생. Plano/Lewisville v22/v3와 DFW panel v5 양쪽 보존 재통합, 새 HEAD CI 재실행 필요. 학교별 신규 폴리곤 0, 미배포. | PR #366 #368, Issue #125 |
 | 2026-11-21 12:05 EST | TX-P0-02 108개 ISD GIS 표시 분류 및 공식 링크 전수 대조 검사 추가. 6개 기본+2개 클릭형+100개 미탑재, 2개 현행 GIS, 주소 배정 인증 0개. P0-02는 학교별 실측·독립 검증 미완료로 계속 추적 | PR #364; data/dfw-gis-coverage-audit-20261121.json; tests/dfw-gis-coverage-audit.test.cjs |

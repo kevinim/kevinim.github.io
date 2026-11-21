@@ -37,16 +37,37 @@ test('Mesquite polygon schema is a candidate only, not current school assignment
  assert.equal(m.sourceSchoolYear,null);
  assert.equal(m.sourceLastEdited,null);
 });
-test('published boundary PDFs are not silently promoted to live vectors',()=>{
- for(const x of manifest.districts.slice(1)){
-  assert.equal(x.publisherGIS,null);
-  assert.equal(typeof x.sourceDocument,'string');
-  assert.equal(x.sourceReuseRightsVerified,false);
-  assert.equal(x.installedSchoolPolygons,0);
- }
- assert.equal(manifest.districts[1].sourceSchoolYear,'2026-27');
- assert.equal(manifest.districts[2].sourceSchoolYear,'2026-27');
- assert.equal(manifest.districts[3].sourceSchoolYear,null);
+test('Wylie Collin County is not silently swapped with Abilene Wylie ISD',()=>{
+ const w=manifest.districts[1];
+ assert.equal(w.code,'043914');
+ assert.equal(w.sourceKind,'district-current-maps-feeder-only');
+ assert.equal(w.publisher,'Wylie ISD (southern Collin County)');
+ assert.equal(w.officialParent,'https://www.wylieisd.net/our-district/district-profile/district-maps');
+ assert.equal(w.sourceContextUrl,'https://www.wylieisd.net/our-district/rezoning-2025-26');
+ assert.equal(w.sourceDocument,null);
+ assert.equal(w.sourceSchoolYear,null);
+ assert.match(w.sourceYearEvidence,/Abilene/);
+ assert.match(w.notes,/Buffalo Gap/);
+ assert.doesNotMatch(JSON.stringify(manifest),/files-backend\.assets\.thrillshare\.com/);
+ assert.equal(w.publisherGIS,null);
+ assert.equal(w.installedSchoolPolygons,0);
+});
+test('Rockwall PDF source is preserved but conflicting year is unverified',()=>{
+ const x=manifest.districts[2];
+ assert.equal(x.sourceKind,'district-pdf-conflicting-year-label');
+ assert.equal(x.sourceSchoolYear,null);
+ assert.match(x.sourceYearEvidence,/2023-24/);
+ assert.match(x.sourceYearEvidence,/2026-27/);
+ assert.equal(x.sourceDocument,'https://resources.finalsite.net/images/v1746561842/rockwallisdcom/xu447xmnec7gsjl7ekfh/2026-2027ZoningwithnewMS.pdf');
+ assert.equal(x.installedSchoolPolygons,0);
+ assert.equal(x.liveSchoolAssignmentCertified,false);
+});
+test('Richardson has an independent historical map, but not a certified source year',()=>{
+ const x=manifest.districts[3];
+ assert.equal(x.publisherGIS,null);
+ assert.match(x.sourceDocument,/web\.risd\.org\/home/);
+ assert.equal(x.sourceSchoolYear,null);
+ assert.equal(x.installedSchoolPolygons,0);
  const schoolRelease=fs.readFileSync(path.join(__dirname,'../features/conditional-school-release.js'),'utf8');
  assert.match(schoolRelease,/APPROVED_AUTO_DISTRICTS\s*=\s*Object\.freeze\(\{\}\)/);
 });
@@ -70,7 +91,12 @@ test('lazy coverage renderer validates candidate sources fail closed before disp
  assert.equal(ctx.validNextGISSources(changed(x=>x.districts[0].installedSchoolPolygons=51)),null);
  assert.equal(ctx.validNextGISSources(changed(x=>x.districts[0].publisherGIS='https://evil.test/fake')),null);
  assert.equal(ctx.validNextGISSources(changed(x=>x.districts.push(x.districts[0]))),null);
- assert.match(renderer,/NEXT_GIS_FILE='\.\/data\/dfw-next-gis-source-candidates-20261121\.json'/);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[1].sourceDocument='https://files-backend.assets.thrillshare.com/fake.pdf')),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[1].sourceSchoolYear='2026-27')),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[1].officialParent='https://www.wyliebulldogs.org')),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[2].sourceSchoolYear='2026-27')),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[2].sourceYearEvidence='2026-27')),null);
+ assert.match(renderer,/NEXT_GIS_FILE='\.\/data\/dfw-next-gis-source-candidates-20261121\.json\?v=2'/);
  assert.match(renderer,/newEvidence=nextGIS\?\.get\(d\.code\)/);
  assert.match(renderer,/GIS 후보 발견 · 지도 미탑재/);
  assert.doesNotMatch(renderer,/innerHTML\s*=|eval\s*\(/);
@@ -79,6 +105,10 @@ test('only exact city-publisher GIS domain is an approved new source link',()=>{
  const {official}=require('../trusted-link-policy.js');
  assert.equal(official('https://gisservice.cityofmesquite.com/arcgis/rest/services/onlinemaps/neighborhood_vitality/MapServer/6'),
   manifest.districts[0].publisherGIS);
+ assert.equal(official('https://www.mesquiteisd.org/189249_2'),manifest.districts[0].officialParent);
+ assert.equal(official('https://www.wylieisd.net/our-district/district-profile/district-maps'),manifest.districts[1].officialParent);
+ assert.equal(official('https://www.wyliebulldogs.org/article/2594492'),null);
+ assert.equal(official('https://www.mesquiteisd.org.evil.test/'),null);
  assert.equal(official('https://gisservice.cityofmesquite.com.evil.test/'),null);
  assert.equal(official('https://evil.test/'),null);
 });
