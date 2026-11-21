@@ -68,7 +68,7 @@ for(const [next,prior] of [["https://gis.texaswildfirerisk.com https://tiles.ope
 // Normalize only the newly approved CFB/Denton school source panel cache key
 // before comparing the old immutable HTML baseline; all other bytes stay pinned.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
- './features/dfw-school-coverage-panel.js?v=4',
+ './features/dfw-school-coverage-panel.js?v=5',
  './features/dfw-school-coverage-panel.js?v=2');
 assert.equal(normalizedMainHtml,show('c12ab9860057e5d59b6f0e52e486b392f083da8a','index.html'),
  'Unreviewed main HTML changes beyond Liberty/split UX');
@@ -410,7 +410,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  // Independently sourced TexasWorks physical-campuses explanation: cache-bust
  // only the existing collapsed, lazily loaded coverage JS module.
  approvedHtml=replaceOnce(approvedHtml,'./features/dfw-school-coverage-panel.js?v=1',
-  './features/dfw-school-coverage-panel.js?v=4');
+  './features/dfw-school-coverage-panel.js?v=5');
  // Source-only CFB 2025-26 conflict disclosure; still no auto-assignment.
  approvedHtml=replaceOnce(approvedHtml,'./features/cfb-approved-zone-atlas.js?v=1',
   './features/cfb-approved-zone-atlas.js?v=2');
@@ -468,7 +468,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
   '</body></html>');
  const restoredApprovedCache=replaceOnce(withoutCompactFootnotes,
   './features/dfw-school-coverage-panel.js?v=2',
-  './features/dfw-school-coverage-panel.js?v=4');
+  './features/dfw-school-coverage-panel.js?v=5');
  assert.equal(hash(restoredApprovedCache),hash(approvedHtml),
   'Unreviewed HTML drift beyond the documented compact-footnote additions');
  // Strip only previously released #262 zoom label additions from the

@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-11-21",
+  "scope": "New DFW unconfigured-ISD GIS-source intake; published references only, no geometry copied, no household addresses queried.",
+  "schoolAssignmentCertified": false,
+  "publicGeometryHosted": false,
+  "geometryRedistributionApproved": false,
+  "districts": [
+    {
+      "code": "057914",
+      "name": "Mesquite ISD",
+      "inventoryCampuses": 51,
+      "sourceKind": "municipal-attendance-polygon",
+      "publisher": "City of Mesquite",
+      "publisherGIS": "https://gisservice.cityofmesquite.com/arcgis/rest/services/onlinemaps/neighborhood_vitality/MapServer/6",
+      "officialParent": "https://mesquiteisd.org/attendance-zones",
+      "sourceGeometry": "esriGeometryPolygon",
+      "schoolAttributes": [
+        "ES_ZONE",
+        "MS_Zone",
+        "HS_Zone"
+      ],
+      "sourceSchoolYear": null,
+      "sourceLastEdited": null,
+      "sourceReuseRightsVerified": false,
+      "installedSchoolPolygons": 0,
+      "liveSchoolAssignmentCertified": false,
+      "notes": "Municipal layer combines ES/MS/HS zone labels within polygon features. City service does not state a verified 2026-27 school year, districtwide coverage, campus IDs or reuse license. Mesquite ISD provides separate current address locator; do not equate either with independent address-specific assignment."
+    },
+    {
+      "code": "043914",
+      "name": "Wylie ISD",
+      "inventoryCampuses": 22,
+      "sourceKind": "district-2026-27-pdf",
+      "publisher": "Wylie ISD",
+      "publisherGIS": null,
+      "officialParent": "https://www.wylieisd.net/our-district/rezoning-2025-26",
+      "sourceDocument": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/5327/Wisd/9eaeab1f-77e5-4f95-9897-d3238ca30cca/2026-27-Attendance-Zones.pdf?disposition=inline",
+      "sourceSchoolYear": "2026-27",
+      "sourceLastEdited": null,
+      "sourceReuseRightsVerified": false,
+      "installedSchoolPolygons": 0,
+      "liveSchoolAssignmentCertified": false,
+      "notes": "District 2026-27 attendance-zone PDF exists; no verified ingestible school-specific GIS polygon endpoint. Intermediate/junior-high feeder rules and exceptions must remain separate."
+    },
+    {
+      "code": "199901",
+      "name": "Rockwall ISD",
+      "inventoryCampuses": 23,
+      "sourceKind": "district-2026-27-pdf",
+      "publisher": "Rockwall ISD",
+      "publisherGIS": null,
+      "officialParent": "https://www.rockwallisd.com/new-student/new-student/school-attendance-areas",
+      "sourceDocument": "https://resources.finalsite.net/images/v1746561842/rockwallisdcom/xu447xmnec7gsjl7ekfh/2026-2027ZoningwithnewMS.pdf",
+      "sourceSchoolYear": "2026-27",
+      "sourceLastEdited": null,
+      "sourceReuseRightsVerified": false,
+      "installedSchoolPolygons": 0,
+      "liveSchoolAssignmentCertified": false,
+      "notes": "District's 2026-27 zoning map is published, but no licensed machine-readable campus polygons or address lookup result is integrated. Do not confuse Rockwall County district-boundary GIS with school-specific zones."
+    },
+    {
+      "code": "057916",
+      "name": "Richardson ISD",
+      "inventoryCampuses": 51,
+      "sourceKind": "district-historical-pdf-plus-finder",
+      "publisher": "Richardson ISD",
+      "publisherGIS": null,
+      "officialParent": "https://web.risd.org/home/schools/",
+      "sourceDocument": "https://web.risd.org/home/wp-content/uploads/2024/03/OnlineProjectResizeMp.pdf",
+      "sourceSchoolYear": null,
+      "sourceLastEdited": null,
+      "sourceReuseRightsVerified": false,
+      "installedSchoolPolygons": 0,
+      "liveSchoolAssignmentCertified": false,
+      "notes": "Historical district map and current parent locator pathway exist; the 2024 PDF's date is not proof of its attendance academic year, and 2026-27 individual-zone GIS is not independently verified."
+    }
+  ]
+}
