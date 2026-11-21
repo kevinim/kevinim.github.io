@@ -97,6 +97,43 @@ async function run(){
    assert.equal(allen.blocked.pins,0);
    console.log('PASS Allen reference-only E/M/9/10–12 address rail at '+width+'px');
 
+   // Synthetic residence-school review UI: no actual home address, API, or
+   // fabricated school assignments. Verify visible four-step Plano flow.
+   await page.evaluate(()=>{
+    const labels={elementary:'Haun Elementary',middle:'Robinson Middle',
+     high:'Jasper High',senior:'Plano West Senior High'};
+    const raw={district:'PISD',status:'finder-current',
+     features:Object.entries(labels).map(([gradeLevel,school])=>({
+      type:'Feature',properties:{gradeLevel,school},geometry:{
+       type:'Polygon',coordinates:[[[0,0],[1,0],[1,1],[0,0]]]}
+     }))};
+    window.__reviewSyntheticItem={geocodeQuality:{usableForSchoolCandidate:true},
+     assignment:{status:'conditional-finder-only',district:'PISD'}};
+    window.HomeResidentialSchoolCheck.mount(document.getElementById('homeAssignmentPriority'),
+     window.__reviewSyntheticItem,raw,DISTRICT_REGISTRY,window.TrustedLinkPolicy.official);
+   });
+   const review=page.locator('#homeResidentialSchoolCrosscheck');
+   await review.waitFor();
+   assert.equal(await review.getByRole('link',{name:'학군 공식 주소 검색기 열기'}).getAttribute('href'),
+    'https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder');
+   const expected=[
+    ['초등','Haun Elementary'],['중등','Robinson Middle'],
+    ['고등','Jasper High'],['Senior High','Plano West Senior High']
+   ];
+   for(const [level,name] of expected)
+    await review.locator('input[aria-label="공식 검색기 '+level+' 학교명"]').fill(name);
+   await review.locator('select[aria-label="공식 검색기 결과 학년도"]').selectOption('2026–27');
+   await review.locator('input[type=checkbox]').check();
+   await review.getByRole('button',{name:'학교급별 결과 비교'}).click();
+   assert.match(await review.locator('[role=status]').innerText(),/4\/4개 일치/);
+   assert.match(await review.locator('[role=status]').innerText(),/독립 검증 아님/);
+   assert.equal(await page.evaluate(()=>window.__reviewSyntheticItem.assignment.status),
+    'conditional-finder-only','manual results must never write home.assignment');
+   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+5),
+    'new school comparison must not horizontally overflow at '+width+' px');
+   await page.evaluate(()=>document.getElementById('homeResidentialSchoolCrosscheck')?.remove());
+   await page.evaluate(()=>delete window.__reviewSyntheticItem);
+   console.log('PASS address-first synthetic E/M/High/Senior comparison at '+width+'px');
    console.log('PASS home auto-school overlay at '+width+'px (synthetic geometry only)');
    await page.close();
   }

@@ -114,6 +114,7 @@ function clearDallasReference(){if(dallasReferenceLayer&&map)map.removeLayer(dal
 function clearHome(){
   invalidateZipCommute();
   clearIrvingReference();clearDallasReference();
+  document.getElementById('homeResidentialSchoolCrosscheck')?.remove?.();
   homeVersion++;failedGeocodeAllenAddress='';homeRequest?.abort();homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;mckinneyLiveRequest?.abort();mckinneyLiveRequest=null;home=null;homeCandidates=[];
   if(map&&homeMarker)map.removeLayer(homeMarker);homeMarker=null;
   if(typeof homeZoneGroup!=='undefined'&&homeZoneGroup)homeZoneGroup.clearLayers();
@@ -417,6 +418,12 @@ function renderHome(){
   const route=el('homeRoute');if(route)route.onclick=calculateHomeCommute;
   if(typeof drawHomeAssignmentMap==='function')drawHomeAssignmentMap();
   if(typeof renderAddressSchoolPriority==='function')renderAddressSchoolPriority();
+  // Address-first, user-transcribed E/M/H (+ 9th/Senior High) crosscheck.
+  // Never changes the certified school assignment or transmits a residence.
+  window.HomeResidentialSchoolCheck?.mount?.(
+   el('homeAssignmentPriority'),home,rawSchoolCandidate,DISTRICT_REGISTRY,
+   window.TrustedLinkPolicy?.official
+  );
 }
 async function checkHomeParcel(){
  if(!home)return;

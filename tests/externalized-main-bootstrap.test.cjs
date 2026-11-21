@@ -14,7 +14,8 @@ const old=show(baseline,'index.html'),oldJs=show(baseline,'dashboard-main.js');
 const rawHtml=fs.readFileSync(path.join(root,'index.html'),'utf8');
 // Redfin split and Liberty pilot: undo only the five named additions before
 // comparing the rest of the protected historical HTML byte-for-byte.
-let normalizedMainHtml=rawHtml;
+let normalizedMainHtml=rawHtml.replace('./home-lookup-v2.js?v=28','./home-lookup-v2.js?v=27')
+ .replace('./official-school-review.js?v=2','./official-school-review.js?v=1');
 
 /* The six-section UI is a presentation-only change. Subtract its EXACT
  * reviewed additions before comparing historical protected HTML bytes. */
@@ -370,6 +371,8 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  const previousLabelStyle=".area-label{pointer-events:none}.area-label span{display:block;text-align:center;white-space:nowrap;background:rgba(255,255,255,.94);border:1px solid #8194ae;border-radius:6px;padding:3px 6px;color:#172d4a;font-size:11px;font-weight:750;line-height:1.15;box-shadow:0 1px 4px #1b355044}.area-label.selected span{background:#173b78;border-color:#fff;color:white}\r\n";
  const approvedLabelScript="<script src=\"./features/map/area-label-hierarchy.js?v=1\"></script><script src=\"./dashboard-main.js?v=6\"></script>";
  assert.equal(html.split(approvedLabelStyle).length,2,'Exact zoom label style added once');
+ // 'html' was already normalized to the approved pre-crosscheck
+ // v27/v1 cache pins at the top of this test. Keep one canonical reversal.
  const providerNormalizedHtml=replaceOnce(html,'<script src="./features/commute/provider-requests.js?v=1"></script>','');
  assert.equal(providerNormalizedHtml.split(approvedLabelScript).length,2,'Exact zoom label runtime added once');
  // The workplace release changes exactly four reviewed HTML anchors; do
