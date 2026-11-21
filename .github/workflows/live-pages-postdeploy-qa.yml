@@ -1,11 +1,19 @@
 name: Live Pages postdeployment security and school regression
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/live-pages-postdeploy-qa.yml'
+      - 'features/area-assessment-core.js'
+      - 'features/area-assessment.js'
+      - 'scripts/test-area-assessment-browser.cjs'
   pull_request:
     branches: [main]
     paths:
       - 'scripts/test-live-pages-postdeploy.cjs'
       - '.github/workflows/live-pages-postdeploy-qa.yml'
+      - 'scripts/test-area-assessment-browser.cjs'
   workflow_dispatch:
 
 concurrency:
@@ -39,10 +47,39 @@ jobs:
           NODE_PATH: ${{ github.workspace }}/live-pages-qa-tmp/node_modules
           DASHBOARD_BASE_URL: https://kevinim.github.io/
         run: node scripts/test-live-pages-postdeploy.cjs
+      - name: Confirm P3 javascript served by Pages matches exact checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="$(sha256sum features/area-assessment.js | cut -d' ' -f1)"
+          matched=0
+          for i in $(seq 1 18); do
+            if curl --fail --location --silent --show-error --max-time 12 \
+              "https://kevinim.github.io/features/area-assessment.js?v=4&liveqa=$i" \
+              -o /tmp/p3-live.js; then
+              actual="$(sha256sum /tmp/p3-live.js | cut -d' ' -f1)"
+              if [[ "$actual" == "$expected" ]]; then
+                matched=1
+                break
+              fi
+            fi
+            sleep 10
+          done
+          if [[ "$matched" != 1 ]]; then
+            echo "Deployed P3 JS mismatch: checkout and live Pages are not the same version"
+            exit 1
+          fi
+      - name: Test REAL deployed P3 regional cards, CMS and winter maps at 390px and 1280px
+        env:
+          NODE_PATH: ${{ github.workspace }}/live-pages-qa-tmp/node_modules
+          DASHBOARD_BASE_URL: https://kevinim.github.io/
+        run: node scripts/test-area-assessment-browser.cjs
       - name: Archive live QA report/screenshots
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: live-pages-postdeployment-QA
-          path: artifacts/live-postdeploy/
+          path: |
+            artifacts/live-postdeploy/
+            artifacts/area-assessment/
           if-no-files-found: warn
