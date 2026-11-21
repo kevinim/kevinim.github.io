@@ -22,6 +22,11 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+      - name: Fetch published PR head refs without printing source names or SHAs
+        run: |
+          # Fetches Git objects only: never checks out or executes PR code.
+          git fetch --quiet --no-tags origin '+refs/pull/*/head:refs/remotes/sec02-pull/*' >/dev/null 2>&1
+          test "$(git for-each-ref --format='%(refname)' refs/remotes/sec02-pull | wc -l)" -gt 0
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: '24'
