@@ -114,7 +114,7 @@ async function run(){
    });
    const review=page.locator('#homeResidentialSchoolCrosscheck');
    await review.waitFor();
-   assert.equal(await review.locator('a').getAttribute('href'),
+   assert.equal(await review.getByRole('link',{name:'학군 공식 주소 검색기 열기'}).getAttribute('href'),
     'https://www.pisd.edu/district-resources/schools-facilities/schools-other-facilities/schoolfinder');
    const expected=[
     ['초등','Haun Elementary'],['중등','Robinson Middle'],
