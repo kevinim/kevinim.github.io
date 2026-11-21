@@ -102,7 +102,7 @@ function auditRepo(root, {execGit = git} = {}) {
     },
     auditLimits: [
       'does_not_inspect_file_contents_or_unrecognized_personal_data',
-      'does_not_fetch_all_github_pull_request_refs',
+      'pr_merge_refs_or_unfetched_history_may_be_outside_local_scope',
       'does_not_enumerate_forks_clones_caches_or_unreachable_git_objects',
       'does_not_determine_whether_any_credential_was_compromised',
       'does_not_prove_deleted_public_assets_are_inaccessible_from_all_urls'
