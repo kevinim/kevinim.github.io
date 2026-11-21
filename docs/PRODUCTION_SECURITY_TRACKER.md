@@ -13,6 +13,18 @@
 5. After each step, record **implementation status vs verified/deployed status**, evidence URLs, blockers, next action, current main SHA, and the checked date in the Issue. Update this tracker in the same reviewed PR or a small documentation PR.
 6. Report **done / unfinished / blocked / next step** at the end of every work session; never imply ongoing asynchronous work. Reconcile conflicts if other agents have changed a file or PR. **Do not claim an update to this canonical tracker is live until its PR is merged.**
 
+### Standing trigger — “남은 건 뭐죠?” / “남은 작업 진행해주세요”
+
+When the owner asks these or similar questions **about Production security**, treat the request as a **status check plus permission to continue the highest-priority safe, already-approved work during the current session** — not as a request for a static list only.
+
+1. Re-check actual GitHub main/PR/Issue/CI/host evidence before quoting task counts. Label **implemented**, **tested**, **deployed**, and **owner-approved** separately, including genuine blockers.
+2. Present a compact status snapshot, then **perform the highest-priority actionable unfinished task** (audit, code change, tests, documentation, isolated draft PR as appropriate) without waiting for a second “진행” request. Do not claim success until the tool confirms the result.
+3. Re-run applicable checks; update the same GitHub Issue and this tracker with the exact SHA, PR, observed verification, status transition, next task, and remaining blocker. If no safe actionable task exists, record the root cause and concrete alternative rather than inventing completion.
+4. Finish every session with **이번 완료 / 현재 미완료 / 차단 원인 / 다음 우선순위 / main 병합·배포 여부**. Explicitly say if work is staged only on a Draft PR.
+5. Never silently change live production, login/auth policy, DNS, repository visibility, Git history, billing, or provider agreements. These require fresh specific owner authorization. No background or scheduled continuation is implied: work resumes on each user request.
+
+For a **general TX project** “남은 건 뭐죠?” request, first reconcile separate workstreams (address→E/M/H, DFW GIS, school-map accuracy, TEA, security, regional features) against their own records; do **not** mark those as complete or copy them into this security ledger. Prioritize and work within the user's referenced scope, or if none specified, report cross-workstream status and perform a safe highest-priority action with appropriate evidence.
+
 **Security ledger scope only:** address→school assignment, DFW GIS coverage and TEA data quality have separate product release gates; their pending rights and actual-residence correctness still affect public release, but this tracker is not a duplicate of those full product backlogs.
 
 ## 1. Environment boundaries
