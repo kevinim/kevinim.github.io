@@ -14,6 +14,7 @@ on:
       - 'data/school-data-release-lock.json'
       - 'scripts/school-polygon-linkage-*.cjs'
       - 'tests/school-polygon-linkage-topology.test.cjs'
+      - 'tests/allen-historical-original-precision.test.cjs'
       - 'tests/school-polygon-linkage-audit.test.cjs'
       - 'tests/verify-school-linkage-baseline.test.cjs'
       - 'data/school-polygon-linkage-baseline.json'
@@ -57,7 +58,7 @@ jobs:
           node --check scripts/school-polygon-linkage-browser.cjs
           node --check scripts/school-polygon-linkage-topology.cjs
           node --check scripts/verify-school-linkage-baseline.cjs
-          node --test tests/school-polygon-linkage-audit.test.cjs tests/verify-school-linkage-baseline.test.cjs tests/school-polygon-linkage-topology.test.cjs
+          node --test tests/school-polygon-linkage-audit.test.cjs tests/verify-school-linkage-baseline.test.cjs tests/school-polygon-linkage-topology.test.cjs tests/allen-historical-original-precision.test.cjs
       - name: Sample pinned Allen and Prosper polygon topology (no GIS alteration)
         run: node scripts/school-polygon-linkage-topology.cjs
       - name: Install isolated Chromium only

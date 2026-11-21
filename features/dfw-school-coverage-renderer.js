@@ -7,6 +7,7 @@
  const LOCALITY_FILE='./data/tea-texasworks-locality-2026.json';
  const PUBLIC_SOURCE_FILE='./data/dfw-cfb-denton-public-source-status-20261120.json';
  const PLANO_LEWISVILLE_FILE='./data/dfw-plano-lewisville-source-vintage-20261120.json';
+ const NEXT_GIS_FILE='./data/dfw-next-gis-source-candidates-20261121.json';
  const priorityLabel={P0:'P0 · 공식 안내 조사',P1:'P1 · 원본/제도 점검',P2:'P2 · 보완'};
  const reasonLabels={
   'official-parent-lookup-not-yet-verified':'학군 공식 확인 경로 미등록',
@@ -63,7 +64,12 @@
     const vintageResponse=await fetch(PLANO_LEWISVILLE_FILE,{cache:'force-cache'});
     if(vintageResponse.ok)vintageSources=validPlanoLewisvilleSources(await vintageResponse.json());
    }catch(_error){/* Missing vintage evidence never upgrades a district. */}
-   render(mount,data,locality,publicSources,vintageSources);
+   let nextGIS=null;
+   try{
+    const gisResponse=await fetch(NEXT_GIS_FILE,{cache:'force-cache'});
+    if(gisResponse.ok)nextGIS=validNextGISSources(await gisResponse.json());
+   }catch(_error){/* New candidate sources are optional and never grant assignment. */}
+   render(mount,data,locality,publicSources,vintageSources,nextGIS);
   }catch(error){
    mount.replaceChildren(el('p',null,'학군 연결 현황을 불러올 수 없습니다. 페이지 새로고침 후 다시 열어주세요. ('+error.message+')'));
   }
@@ -137,6 +143,33 @@
   }
   return rows.size===2?rows:null;
  }
+ function validNextGISSources(data){
+  const known=['057914','043914','199901','057916'];
+  if(data?.schemaVersion!==1||data.reviewedOn!=='2026-11-21'||
+     data.schoolAssignmentCertified!==false||data.publicGeometryHosted!==false||
+     data.geometryRedistributionApproved!==false||
+     !Array.isArray(data.districts)||data.districts.length!==4)return null;
+  const out=new Map();
+  for(const d of data.districts){
+   if(!d||!known.includes(d.code)||out.has(d.code)||!Number.isSafeInteger(d.inventoryCampuses)||
+      d.installedSchoolPolygons!==0||d.liveSchoolAssignmentCertified!==false||
+      d.sourceReuseRightsVerified!==false||
+      typeof d.officialParent!=='string'||!d.officialParent.startsWith('https://')||
+      typeof d.notes!=='string'||d.notes.length>1000)return null;
+   if(d.code==='057914'&&
+      (d.inventoryCampuses!==51||d.sourceKind!=='municipal-attendance-polygon'||
+       d.publisherGIS!=='https://gisservice.cityofmesquite.com/arcgis/rest/services/onlinemaps/neighborhood_vitality/MapServer/6'||
+       d.sourceGeometry!=='esriGeometryPolygon'||
+       JSON.stringify(d.schoolAttributes)!=='["ES_ZONE","MS_Zone","HS_Zone"]'||
+       d.sourceSchoolYear!==null||d.sourceLastEdited!==null))return null;
+   if(d.code!=='057914'&&
+      (d.publisherGIS!==null||typeof d.sourceDocument!=='string'||!d.sourceDocument.startsWith('https://')||
+       d.sourceKind!==(d.code==='057916'?'district-historical-pdf-plus-finder':'district-2026-27-pdf')||
+       d.sourceSchoolYear!==(d.code==='057916'?null:'2026-27')))return null;
+   out.set(d.code,d);
+  }
+  return known.every(code=>out.has(code))?out:null;
+ }
  function validTexasWorks(extra,district){
   if(!extra||extra.schemaVersion!==1||extra.districtId!=='061806'||
      !district||district.name!=='TEXAS WORKS'||extra.inventoryCount!==district.teaCampusRecords||
@@ -157,7 +190,7 @@
    counts[1]===extra.counts?.operatorAddressOutside11CountyMSA&&
    counts[2]===extra.counts?.pendingExactCampusCrosswalk;
  }
- function render(mount,data,locality,publicSources,vintageSources){
+ function render(mount,data,locality,publicSources,vintageSources,nextGIS){
   mount.replaceChildren();
   const s=data.summary;
   const stats=el('div','dfw-coverage-stats');
@@ -185,7 +218,7 @@
   const input=el('input');input.type='search';
   input.setAttribute('aria-label','학군명·카운티 검색');input.placeholder='학군명·카운티 검색';
   controls.append(select,input);
-  for(const [code,title] of [['057903','CFB 자료'],['061901','Denton 자료'],['043910','Plano 연도'],['061902','Lewisville 연도']]){
+  for(const [code,title] of [['057903','CFB 자료'],['061901','Denton 자료'],['043910','Plano 연도'],['061902','Lewisville 연도'],['057914','Mesquite GIS'],['043914','Wylie 지도'],['199901','Rockwall 지도'],['057916','Richardson 지도']]){
    const jump=el('button','dfw-coverage-more',title);
    jump.type='button';jump.dataset.districtCode=code;
    jump.addEventListener('click',()=>{
@@ -214,6 +247,7 @@
   const foot=el('p','dfw-coverage-help',
    '기존 7개 학군의 GIS 숫자는 과거 브라우저 검증 최소치일 뿐, 학년도·주소별 배정 보증이 아닙니다. 다른 학군은 GIS 확인 전까지 수치를 표시하지 않습니다.');
   mount.appendChild(foot);
+  mount.appendChild(el('p','dfw-coverage-help','추가 4개 학군의 공개 GIS/지도 원본이 조사되었으나 2026–27 자동 배정 GIS가 새로 탑재된 것은 아닙니다.'));
   const byCode=new Map(data.districts.map(d=>[d.code,d]));
   let shown=20;
   const safeLink=url=>{
@@ -305,6 +339,26 @@
       const anchor=el('a',null,d.code==='043910'?'Plano 공식 SchoolFinder':'Lewisville 공식 School Locator');
       anchor.href=url;anchor.target='_blank';anchor.rel='noopener noreferrer';
       detail.appendChild(anchor);
+     }
+     gis.appendChild(detail);
+    }
+    const newEvidence=nextGIS?.get(d.code);
+    if(newEvidence){
+     const detail=el('details','dfw-source-disposition');
+     detail.appendChild(el('summary',null,
+      d.code==='057914'?'시정부 학교별 GIS 후보 발견 · 지도 미탑재':'공식 경계 참고자료 확보 · 지도 GIS 미탑재'));
+     const schoolYear=newEvidence.sourceSchoolYear||'학년도 미확인';
+     detail.appendChild(el('p',null,
+      '출처: '+newEvidence.publisher+' · '+schoolYear+' · 2026–27 주소 배정 미인증 · 앱 학교별 폴리곤 0개'));
+     if(d.code==='057914'){
+      detail.appendChild(el('p',null,
+       '시 GIS 도형에서 초·중·고 구역명(ES_ZONE / MS_Zone / HS_Zone)을 확인했습니다. 전체 구역·캠퍼스 ID·현행 연도·재사용 조건은 미검증입니다.'));
+     }
+     detail.appendChild(el('p',null,newEvidence.notes));
+     const sourceUrl=safeLink(newEvidence.publisherGIS)||safeLink(newEvidence.officialParent);
+     if(sourceUrl){
+      const a=el('a',null,d.code==='057914'?'시정부 GIS 원본 열기':'학군 공식 자료 열기');
+      a.href=sourceUrl;a.target='_blank';a.rel='noopener noreferrer';detail.appendChild(a);
      }
      gis.appendChild(detail);
     }

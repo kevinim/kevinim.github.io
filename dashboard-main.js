@@ -641,8 +641,10 @@ function addressSchoolView(){
  // an enrollment grant. The school directory match must be one-to-one by
  // district + level + normalized campus name; never infer from ZIP or proximity.
  const plan=searchedHome.schoolReferencePlan;
- if(plan?.kind==='reference-only'&&plan.year==='2026–27'&&
-    ['FISD','PROSPER','043907'].includes(plan.district)&&Array.isArray(plan.candidates)){
+ if(plan?.kind==='reference-only'&&
+    ((plan.year==='2026–27'&&['FISD','PROSPER','043907'].includes(plan.district))||
+     (plan.referenceOnlyFinderVintage===true&&['PISD','LISD'].includes(plan.district)))&&
+    Array.isArray(plan.candidates)){
   const levelMap={'초등':'elementary','중등':'middle','고등':'high','Senior High':'high'};
   const candidates=plan.candidates.map(c=>{
    const level=levelMap[c.level]||'other';
@@ -657,6 +659,7 @@ function addressSchoolView(){
     state.ratings.filter(r=>r.district==='PROSPER'&&r.id===campusId):[];
    const school=hits.length===1&&(!campusId||!hits[0].id||hits[0].id===campusId)?hits[0]:null;
    return {name:c.school,level,levelText:c.level,grades:c.grades||'',
+    yearNote:typeof c.yearNote==='string'?c.yearNote:'',
     school,campusId,verifiedRating:ratingRows.length===1?ratingRows[0].rating:null};
   });
   // Informational-only scope: reference cards and separate GIS-candidate campus
@@ -742,15 +745,18 @@ function renderAddressSchoolPriority(){
   status.textContent='Allen 공식 주소표 후보 · 학년도 미표기';
   desc.textContent='Allen ISD 공개 주소표에서 검색 주소와 숫자 범위가 일치하는 학교명입니다. 초등 K–6, 중등 7–8, Lowery 9학년, Allen High 10–12학년을 구분합니다. 실제 2026–27 배정은 공식 검색기에서 확인해야 하며, 2019/2023 과거 경계는 자동 적용하지 않습니다.';
  }else if(view.kind==='gis-reference'){
+  const vintageLinked=view.reference?.referenceOnlyFinderVintage===true;
   const prosper=view.reference?.district==='PROSPER';
   const complete=prosper&&['초등','중등','고등'].every(l=>
    view.candidates.filter(c=>c.levelText===l).length===1);
-  status.textContent=complete?
-   'Prosper 2026–27 공식 GIS 기반 참고 학교 · 실제 배정 미인증':
+  status.textContent=vintageLinked?
+   '공식 Finder 연결 GIS 참고 후보 · 원본 학년도 미검증':
+   complete?'Prosper 2026–27 공식 GIS 기반 참고 학교 · 실제 배정 미인증':
    '2026–27 GIS 후보 · 배정 미인증';
   const gaps=view.reference.missing?.length?' · 자료가 없는 학교급: '+view.reference.missing.join(', '):'';
-  desc.textContent=complete?
-   '선택한 집 주소의 위치를 공식 2026–27 GIS 초·중·고 경계에 대조해 참고 학교 3곳과 점선 경계를 자동 표시합니다. 공식 주소 검색 결과가 아니며 등록·전학·건물별 예외는 별도 확인해야 합니다.':
+  desc.textContent=vintageLinked?
+   '선택한 주소의 정밀 위치와 현행 공식 Finder에 연결된 GIS를 대조한 참고 후보입니다. 원본 GIS 학년도는 2026–27로 독립 확인되지 않았고 실제 공식 주소 조회 결과도 아닙니다. '+(view.reference.notices||[]).join(' ')+gaps:
+   complete?'선택한 집 주소의 위치를 공식 2026–27 GIS 초·중·고 경계에 대조해 참고 학교 3곳과 점선 경계를 자동 표시합니다. 공식 주소 검색 결과가 아니며 등록·전학·건물별 예외는 별도 확인해야 합니다.':
    '집 위치가 포함된 2026–27 학교 경계의 참고 후보입니다. 주소별 배정 확정이 아닙니다.'+gaps;
  }else{
   status.textContent=view.sourceStatus==='loading'?'학교 경계 자료 확인 중':view.sourceStatus==='error'?'학교 경계 자료 조회 실패':'배정 미확인';
@@ -787,6 +793,7 @@ function renderAddressSchoolPriority(){
    view.kind==='allen-reference'?'공식 주소표 후보 · 학년도 미표기':
    view.kind==='mckinney-reference'?'GIS 예상 학교 · 공식 확인 별도':
    view.kind==='gis-reference'&&view.reference?.district==='PROSPER'?'공식 GIS 예상 · 최종 배정 별도':
+   view.kind==='gis-reference'&&view.reference?.referenceOnlyFinderVintage===true?'구연도/불명확 GIS 참고 · 배정 미인증':
    view.kind==='gis-reference'?'GIS 후보 · 배정 미인증':'확인 필요';
   chips.appendChild(evidence);
   if(school){

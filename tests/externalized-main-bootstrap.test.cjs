@@ -14,7 +14,19 @@ const old=show(baseline,'index.html'),oldJs=show(baseline,'dashboard-main.js');
 const rawHtml=fs.readFileSync(path.join(root,'index.html'),'utf8');
 // Redfin split and Liberty pilot: undo only the five named additions before
 // comparing the rest of the protected historical HTML byte-for-byte.
-let normalizedMainHtml=rawHtml.replace('./home-lookup-v2.js?v=28','./home-lookup-v2.js?v=27')
+// P3 reviewed cache bump: normalize only these two first-party references
+// before the existing exact-byte historical bootstrap review.
+const regionalCacheRefs=[
+ ['./features/area-assessment-core.js?v=4','./features/area-assessment-core.js?v=3'],
+ ['./features/area-assessment.js?v=4','./features/area-assessment.js?v=3']
+];
+let normalizedMainHtml=rawHtml;
+for(const [newRef,oldRef] of regionalCacheRefs){
+ assert.equal(normalizedMainHtml.split(newRef).length,2,
+  'Exactly one reviewed P3 cache reference required: '+newRef);
+ normalizedMainHtml=normalizedMainHtml.replace(newRef,oldRef);
+}
+normalizedMainHtml=normalizedMainHtml.replace('./home-lookup-v2.js?v=28','./home-lookup-v2.js?v=27')
  .replace('./official-school-review.js?v=2','./official-school-review.js?v=1');
 
 /* The six-section UI is a presentation-only change. Subtract its EXACT
@@ -43,7 +55,7 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
 // Unwind only this PR's verified source-identity helper cache bump before the
 // immutable archival HTML byte comparison; do not relax any other HTML guard.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
- 'features/school-reference-preview.js?v=2','features/school-reference-preview.js?v=1');
+ 'features/school-reference-preview.js?v=4','features/school-reference-preview.js?v=1');
 // Address-first UI: subtract ONLY exact approved main-page UI/cache deltas.
 const priorityElement=normalizedMainHtml.match(/<div id="homeCandidates"><\/div><section id="homeAssignmentPriority" class="home-assignment-priority"[\s\S]*?<\/section><\/div><div class="panel office-controls">/);
 assert.ok(priorityElement&&priorityElement[0].includes('id="homeAssignmentPrioritySchools"'),
@@ -55,7 +67,7 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
 for(const [next,previous] of [
  ['<input type="checkbox" id="referenceBoundaryOverlay" checked>','<input type="checkbox" id="referenceBoundaryOverlay">'],
  ['map-first-split.css?v=2','map-first-split.css?v=1'],
- ['dashboard-main.js?v=21','dashboard-main.js?v=10'],
+ ['dashboard-main.js?v=22','dashboard-main.js?v=10'],
  ['allen-lookup.js?v=7','allen-lookup.js?v=5'],
  ['home-lookup-v2.js?v=27','home-lookup-v2.js?v=20'],
  ['denton-official-zone-references.js?v=2','denton-official-zone-references.js?v=1'],
@@ -68,7 +80,7 @@ for(const [next,prior] of [["https://gis.texaswildfirerisk.com https://tiles.ope
 // Normalize only the newly approved CFB/Denton school source panel cache key
 // before comparing the old immutable HTML baseline; all other bytes stay pinned.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
- './features/dfw-school-coverage-panel.js?v=4',
+ './features/dfw-school-coverage-panel.js?v=5',
  './features/dfw-school-coverage-panel.js?v=2');
 assert.equal(normalizedMainHtml,show('c12ab9860057e5d59b6f0e52e486b392f083da8a','index.html'),
  'Unreviewed main HTML changes beyond Liberty/split UX');
@@ -349,7 +361,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  expected=replaceOnce(expected,'<link rel="stylesheet" href="./features/first-fold-ux.css?v=1">',
   '<link rel="stylesheet" href="./features/first-fold-ux.css?v=1"><link rel="stylesheet" href="./features/school-reference-preview.css?v=1">');
  expected=replaceOnce(expected,'<script src="./features/conditional-school-release.js?v=1"></script>',
-  '<script src="./features/conditional-school-release.js?v=1"></script>\n<script src="./features/school-reference-preview.js?v=2"></script>');
+  '<script src="./features/conditional-school-release.js?v=1"></script>\n<script src="./features/school-reference-preview.js?v=4"></script>');
  // Performance release: the six adjacent CSS links are replaced, in-place,
  // by their exact ordered concatenation (separately checked in bundle QA).
  const oldCss=['theme-toggle.css','map-control-contrast.css','track-b-reference-warning.css',
@@ -410,7 +422,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  // Independently sourced TexasWorks physical-campuses explanation: cache-bust
  // only the existing collapsed, lazily loaded coverage JS module.
  approvedHtml=replaceOnce(approvedHtml,'./features/dfw-school-coverage-panel.js?v=1',
-  './features/dfw-school-coverage-panel.js?v=4');
+  './features/dfw-school-coverage-panel.js?v=5');
  // Source-only CFB 2025-26 conflict disclosure; still no auto-assignment.
  approvedHtml=replaceOnce(approvedHtml,'./features/cfb-approved-zone-atlas.js?v=1',
   './features/cfb-approved-zone-atlas.js?v=2');
@@ -468,7 +480,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
   '</body></html>');
  const restoredApprovedCache=replaceOnce(withoutCompactFootnotes,
   './features/dfw-school-coverage-panel.js?v=2',
-  './features/dfw-school-coverage-panel.js?v=4');
+  './features/dfw-school-coverage-panel.js?v=5');
  assert.equal(hash(restoredApprovedCache),hash(approvedHtml),
   'Unreviewed HTML drift beyond the documented compact-footnote additions');
  // Strip only previously released #262 zoom label additions from the
