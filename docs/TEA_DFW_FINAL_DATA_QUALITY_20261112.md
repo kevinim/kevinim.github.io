@@ -73,3 +73,17 @@ node scripts/audit-tea-dfw-final-data-quality.cjs
 Review `.github/workflows/tea-dfw-final-data-quality-qa.yml`: extra negative checks reject fabricated scores, unmasked suppressed percentages, nonlocal campus promotion, false 2026–27 closure/opening, fake year/grade evidence, unconfirmed 14 STAAR causes, and stale Production integration metadata. No third-party geocoding, no address input, no paid service, no new school polygons, no TEA/PEIMS source count changes, no current-year assignment grants.
 
 **What remains externally unresolved, not a code/test defect:** official or operator campus-location source identity for TexasWorks Early; individual official STAAR row-absence reasons for the 14; new-school future official TEA ratings/IDs; entire DFW physical school location validation; current 2026–27 exact residential school-zone GIS authority. Keep these labelled and never claim total completeness based on this QA's green CI alone.
+
+
+## P2 closeout gate: complete integrity checking of all available published records (2026-11-21)
+
+The TEA **data-quality** task and TEA **data-availability** limitations must be reported separately. This gate does **not** relax masked-cell protections, school-zone restrictions, or the source-year policy.
+
+- **Repository snapshot coverage:** 2,282/2,282 2026 TEA campus identities and academic-source joins; 2,282/2,282 2025–26 PEIMS campus count profiles; 15,974/15,974 individual ethnicity slots.
+- **New delivered-data guard (#365):** the final QA runner loads the actual dashboard ethnicity source and recomputes 8,277 published cells, 5,141 masked cells, 2,556 absent/unlisted cells and 6 complete seven-group campuses, rather than trusting only an earlier audit summary. Each complete seven-group profile must reconcile with its independent public PEIMS denominator. Negative tests deliberately tamper a public value, expose a protected count, fabricate whole-school composition and replace an unlisted cell with zero.
+- **CI:** the existing final TEA workflow now triggers on changes to the source ethnicity JSON and runs the 2,282-campus TEA/PEIMS tests along with the cross-file audit; no additional workflow or external provider is added.
+- **P2 done criterion:** exact PR-head checks pass; merged main includes this checker; Pages serves the existing school-data snapshots; the evidence is described as **2026-11-11 publisher-checked snapshots with 2026-11-21 internal revalidation**, not as a newly fetched November 21 source CSV.
+- **Not missing QA work:** 5,141 protected cells and 2,556 unlisted cells are official source disclosure limitations; 14 missing-STAAR-row causal explanations are not individually documented by TEA. Keep all such cells explicitly suppressed, not-listed or not-in-source until publisher updates. No guesses.
+- **Separate tasks:** physical campus locations, household assignments, school-zone GIS and the TexasWorks operator-name crosswalk are not TEA academic/PEIMS parity. Public-record QA does not certify those systems.
+
+After merge, mark **P2 TEA data-quality QA: complete for the public source snapshot**, with an explicit dated publisher-refresh caveat. Never claim that every academic/ethnicity value is available for every campus.

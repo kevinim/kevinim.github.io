@@ -89,3 +89,32 @@ test('14 missing STAAR row explanations remain unresolved; no fabricated zero va
  s.staar.campuses[c.campusId].reading.value=0;
  assert(inspect(s).errors.includes('staar_absent_not_zero'));
 });
+
+
+test('recompute every published, masked and unlisted ethnicity cell rather than trusting only historical totals',()=>{
+ const r=inspect(source);
+ assert.equal(r.status,'PASS_WITH_KNOWN_LIMITATIONS');
+ assert.deepEqual({
+  cells:r.ethnicity.sourceCellsRecomputed,
+  published:r.ethnicity.sourcePublishedRecomputed,
+  masked:r.ethnicity.sourceMaskedRecomputed,
+  unlisted:r.ethnicity.sourceUnlistedRecomputed,
+  full:r.ethnicity.sourceFullyPublicCampusRecomputed,
+  invalid:r.ethnicity.invalidIndividualCells
+ },{cells:15974,published:8277,masked:5141,unlisted:2556,full:6,invalid:0});
+});
+test('per-campus corruption, protected-count disclosure and fabricated full-school denominator fail closed',()=>{
+ const altered=copy();
+ altered.ethnicity.campuses['043901001'].counts.asian.count++;
+ assert(inspect(altered).errors.includes('peims_current_full_share_denominator'));
+ const suppressed=copy();
+ suppressed.ethnicity.campuses['061902118'].counts.multi.count=12;
+ assert(inspect(suppressed).errors.includes('peims_current_per_cell_integrity'));
+ const fabricated=copy();
+ fabricated.peims.campuses['061902118'].raceShareStatus='full-seven-verified';
+ fabricated.peims.campuses['061902118'].officialPeimsEnrollment=1000;
+ assert(inspect(fabricated).errors.includes('peims_current_partial_not_whole_share'));
+ const noLongerListed=copy();
+ noLongerListed.ethnicity.campuses['061902118'].counts.pacific={status:'published',count:0};
+ assert(inspect(noLongerListed).errors.includes('peims_current_per_cell_integrity'));
+});
