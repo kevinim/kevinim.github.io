@@ -71,3 +71,13 @@
 - Exact final CI/merge SHA/Pages smoke must be filled after GitHub verifies this new head; do not assume deployed.
 
 - P0-02 source audit #364 is now merged into main ff27840c1. Address official assignment remains 0 certified districts; no change to gate.
+
+
+### 2026-11-21 — Prosper new student exception and Allen topology follow-up
+
+- **TX-P0-01**: #368 Plano/Lewisville current-Finder linked **reference-only** card UX merged; not independent residence certification. Prosper 2026–27 new student policy has been verified against the official district [Closed to Enrollment](https://www.prosper-isd.net/page/closed-to-enrollment). New preview note implementation PR is in progress; it never substitutes zoned GIS candidate, preserves kindergarten exception and returning student rule, and retains 0 certified residential districts. Final required CI/Pages are needed before marking UI done.
+- **TX-P0-02**: 108 ISD source/render-mode inventory PR #364 merged. 108/108 parent guide entries are distinct from actual zone geometry; districtwide actual household validation is still zero.
+- **TX-P1-01**: Allen original historical municipal GIS geometry precision restored in PR #382, exact-head CI passed and merged (E/M source year 2023, H 2019; 20 shapes, vertices 787→5,668, 6 public source point comparisons). Must separately confirm Pages/live to declare released. Original 2026–27 residential grant unchanged.
+- **TX-P1-01 Prosper**: independently re-decoded official Infofinder polygons; 31/31 school features, 1,706/1,706 vertices exact, 0 delta. The 293 cross-grade sampled map-footprint discrepancies come from official published GIS rather than local conversion; land-use/residential assignment classification still pending. Do not adjust official boundary shapes speculatively.
+- **TX-P1-02**: PR #366 next GIS intake still separate. A source-link or 2026–27 PDF alone is not a rendered campus polygon; check actual merge/Pages evidence after CI before upgrading its status.
+- Do not release external public production: SEC tracker / explicit external-public launch gate remains separate from UAT Pages.
