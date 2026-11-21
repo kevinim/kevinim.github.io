@@ -417,6 +417,12 @@ function renderHome(){
   const route=el('homeRoute');if(route)route.onclick=calculateHomeCommute;
   if(typeof drawHomeAssignmentMap==='function')drawHomeAssignmentMap();
   if(typeof renderAddressSchoolPriority==='function')renderAddressSchoolPriority();
+  // Address-first, user-transcribed E/M/H (+ 9th/Senior High) crosscheck.
+  // Never changes the certified school assignment or transmits a residence.
+  window.HomeResidentialSchoolCheck?.mount?.(
+   el('homeAssignmentPriority'),home,rawSchoolCandidate,DISTRICT_REGISTRY,
+   window.TrustedLinkPolicy?.official
+  );
 }
 async function checkHomeParcel(){
  if(!home)return;
