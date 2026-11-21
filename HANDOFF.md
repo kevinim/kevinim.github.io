@@ -1,3 +1,5 @@
+> **Current status entrypoint (2026-11-21):** [TX relocation outstanding-work ledger](docs/TX_RELOCATION_WORK_LEDGER.md). Before reporting "what's left" or beginning a new task, reconcile its stable TX-P0/P1/P2/P3 IDs with live `main`, PRs, checks and Pages deployments. Update the ledger in the same PR when task status changes. Closed/merged PRs alone are not deployed-status proof. The old snapshots and roadmaps below are context, not a live work queue. Respect separate security tracker PR #377 and project-scoped release gates.
+
 # TX Relocation Dashboard — Agent Handoff / Future Roadmap
 
 ## Standing product decision — 2026-11-09: DFW-wide school assignment coverage
