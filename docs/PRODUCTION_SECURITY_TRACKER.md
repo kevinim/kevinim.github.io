@@ -57,7 +57,7 @@ Scope note: the **11 SEC objectives below have 0 DONE** in this initial baseline
 | SEC-01 | P0 | Private source → sanitized public artifact | **미착수** | [#370](https://github.com/kevinim/kevinim.github.io/issues/370) | Preview builder + migration inventory exist; no actual private source/curated production separation |
 | SEC-02 | P0 | Historical personal exposure review / remediation | **차단됨** | [#139](https://github.com/kevinim/kevinim.github.io/issues/139) | Three retired live assets previously return 404; historical Git/refs/forks risk open; destructive cleanup requires separate owner authorization |
 | SEC-03 | P0 | Public external API contracts, quotas, provider resilience | **차단됨** | [#74](https://github.com/kevinim/kevinim.github.io/issues/74) | Client retry/fail-closed handling and source audit exist; global Nominatim/OSRM limits and public provider entitlement not proven |
-| SEC-04 | P0 | Dataset/public GIS/ratings/Redfin redistribution rights | **미착수** | [#371](https://github.com/kevinim/kevinim.github.io/issues/371), [#254](https://github.com/kevinim/kevinim.github.io/issues/254) | Source/provenance inventories exist; per-asset written allow/exclude decision not finished |
+| SEC-04 | P0 | Dataset/public GIS/ratings/Redfin redistribution rights | **일부 구현** | [#371](https://github.com/kevinim/kevinim.github.io/issues/371), [#254](https://github.com/kevinim/kevinim.github.io/issues/254) | [PR #385](https://github.com/kevinim/kevinim.github.io/pull/385) audited 288 public-build data/media assets: approved 0, pending rights review 288; per-asset source and permission decisions unresolved |
 | SEC-05 | P0 | Address/coordinate transfer/privacy notices | **일부 구현** | [#74](https://github.com/kevinim/kevinim.github.io/issues/74), [#77](https://github.com/kevinim/kevinim.github.io/issues/77) | Current notices and audit checks exist; all public entrypoints/providers/privacy-policy review required |
 | SEC-06 | P1 | Enforced Production HTTP security headers | **일부 구현** | [#87](https://github.com/kevinim/kevinim.github.io/issues/87) | Meta CSP and live-header read-only audit exist; separate host with enforced HTTP CSP / frame-ancestors etc. absent |
 | SEC-07 | P1 | XSS, third-party dependencies, hostile-data browser QA | **일부 구현** | [#87](https://github.com/kevinim/kevinim.github.io/issues/87), [#77](https://github.com/kevinim/kevinim.github.io/issues/77) | Automated guards exist; complete final-build source→sink/legacy entrypoint, vendor and browser review missing |
@@ -66,7 +66,7 @@ Scope note: the **11 SEC objectives below have 0 DONE** in this initial baseline
 | SEC-10 | P1 | Real backup, cutover and rollback rehearsal | **미착수** | [#374](https://github.com/kevinim/kevinim.github.io/issues/374) | Synthetic four-file drill exists; real owner-controlled private backup/restore test absent |
 | SEC-11 | P2 | Ongoing security monitoring and incident response | **일부 구현** | [#77](https://github.com/kevinim/kevinim.github.io/issues/77), [#311](https://github.com/kevinim/kevinim.github.io/issues/311) | Scheduled security/privacy checks exist; alert ownership, real incident/rollback playbook and Actions queue reliability require verification |
 
-**Initial rollup:** DONE **0** / 미착수 **5** / 일부 구현 **4** / 차단됨 **2** / 진행 중 **0** / 검증 대기 **0**. These counts describe whole-objective completion, **not** the number of implemented controls.
+**Revalidated rollup (2026-11-21):** DONE **0** / 미착수 **4** / 일부 구현 **5** / 차단됨 **2** / 진행 중 **0** / 검증 대기 **0**. Earlier initial snapshot was 5/4/2; SEC-04 moved to partial after CI, not to completed. These counts describe whole-objective completion, **not** the number of implemented controls.
 
 ### Individual closure criteria (in addition to linked Issue checklists)
 
@@ -104,6 +104,13 @@ Scope note: the **11 SEC objectives below have 0 DONE** in this initial baseline
 - **SEC-02 remains 차단됨 / BLOCKED for public promotion**: accessible Git history still includes known retired asset evidence. Generic older JS/HTML embedded values, credential owner checks, PR merge refs, copies and user-approved remediation strategy are still unresolved. No history rewrite is authorized.
 - **Next safe action:** reconcile [SEC-01/#370](https://github.com/kevinim/kevinim.github.io/issues/370) clean private source + sanitized public distribution, document authorized incident/credential check and residual-risk decision in [Issue #139](https://github.com/kevinim/kevinim.github.io/issues/139).
 - **Do not claim** four historical Git objects equal four unique sensitive files, people or current live URLs. Existing family Pages is unchanged; **Public Production NO-GO**.
+
+## 4B. Recorded continuation — 2026-11-21, SEC-04 data redistribution audit
+
+- Implementation: [PR #385](https://github.com/kevinim/kevinim.github.io/pull/385) on `main` baseline `44b9fe94c1ebb489fff486bd0148746a28d04a53` adds zero-presumed-approval rights registry, isolated read-only CI and synthetic negative tests. **Not merged or deployed.**
+- Exact candidate verified by [CI run 44931349209](https://github.com/kevinim/kevinim.github.io/actions/runs/44931349209): `dist/public-preview` built; **288 data/media assets** reviewed by scanner, **0 explicitly approved**, **288 pending**, 0 restricted/excluded recorded. This is an **absence of documented licenses**, NOT an allegation 288 files are unlawful.
+- **SEC-04 status PARTIAL:** automated audit gate is implemented and tested, but per-asset publisher rights, redistribution/license scope, attribution, embedded datasets, browser-fetched providers and final review are still missing. Exact public Production remains **NO-GO**.
+- **Next:** use local itemized ignored audit report to reconcile these 288 files to official provenance, enter evidence-backed decisions per asset, remove or link-out assets without adequate permission, run strict `--assert-ready` and recheck source-separated artifact, legal terms, security and user GO. Do not forge approval flags.
 
 ## 5. Work dependencies and change policy
 
