@@ -61,8 +61,8 @@
 ## 변경 이력
 
 | 날짜 (EST) | 변경 | 실행 근거 |
-| 2026-11-21 12:xx EST | #366 이전 통합 HEAD b6a95de에서 52/52 CI 통과. #368 동시 병합으로 index/UAT/immutable tests/ledger 6개 겹침 발생. Plano/Lewisville v22/v3와 DFW panel v5 양쪽 보존 재통합, 새 HEAD CI 재실행 필요. 학교별 신규 폴리곤 0, 미배포. | PR #366 #368, Issue #125 |
 | --- | --- | --- |
+| 2026-11-21 | #366 이전 통합 HEAD b6a95de에서 52/52 CI 통과. #368 동시 병합으로 index/UAT/immutable tests/ledger 6개 겹침 발생. Plano/Lewisville v22/v3와 DFW panel v5 양쪽 보존 재통합, 새 HEAD CI 재실행 필요. 학교별 신규 폴리곤 0, 미배포. | PR #366 #368, Issue #125 |
 | 2026-11-21 12:05 EST | TX-P0-02 108개 ISD GIS 표시 분류 및 공식 링크 전수 대조 검사 추가. 6개 기본+2개 클릭형+100개 미탑재, 2개 현행 GIS, 주소 배정 인증 0개. P0-02는 학교별 실측·독립 검증 미완료로 계속 추적 | PR #364; data/dfw-gis-coverage-audit-20261121.json; tests/dfw-gis-coverage-audit.test.cjs |
 | 2026-11-21 10:50 EST | #379 Allen/Prosper 토폴로지 QA가 main에 병합되었음을 재확인. TX-P1-01은 공식 원천 대조 단계가 남아 진행 중 | main 58b61e2d, PR #379 |
 | 2026-11-21 | 통합 장부 최초 작성. P2 TEA QA는 완료(스냅샷 기준), GIS/배정/보안/분석은 개별 진행 항목으로 분리 | main fc64c4dc, PR #365/#369 (merged), 열린 #364/#366/#367/#368/#377/#379 |
