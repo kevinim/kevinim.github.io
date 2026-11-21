@@ -8,6 +8,9 @@ on:
       - 'data/school-polygon-linkage-baseline.json'
       - 'data/dfw-school-coverage-matrix-2026.json'
       - 'data/dfw-next-gis-source-candidates-20261121.json'
+      - 'data/dfw-gis-coverage-audit-20261121.json'
+      - 'docs/DFW_GIS_COVERAGE_AUDIT_20261121.md'
+      - 'tests/dfw-gis-coverage-audit.test.cjs'
       - 'data/tea-texasworks-locality-2026.json'
       - 'scripts/build-dfw-school-coverage-matrix.cjs'
       - 'tests/dfw-school-coverage-matrix.test.cjs'
@@ -46,7 +49,7 @@ jobs:
           node --check features/dfw-school-coverage-renderer.js
           node --check scripts/test-dfw-school-coverage-browser.cjs
           node scripts/build-dfw-school-coverage-matrix.cjs --check
-          node --test tests/dfw-school-coverage-matrix.test.cjs tests/dfw-next-gis-source-candidates.test.cjs tests/tea-texasworks-physical-locality-panel.test.cjs tests/dfw-coverage-lazy-loader.test.cjs tests/strict-script-csp.test.cjs tests/school-zone-ui.test.cjs
+          node --test tests/dfw-gis-coverage-audit.test.cjs tests/dfw-school-coverage-matrix.test.cjs tests/dfw-next-gis-source-candidates.test.cjs tests/tea-texasworks-physical-locality-panel.test.cjs tests/dfw-coverage-lazy-loader.test.cjs tests/strict-script-csp.test.cjs tests/school-zone-ui.test.cjs
 
   dashboard-browser:
     name: Collapsed DFW coverage panel on mobile and desktop
