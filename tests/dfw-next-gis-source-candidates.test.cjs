@@ -50,3 +50,35 @@ test('published boundary PDFs are not silently promoted to live vectors',()=>{
  const schoolRelease=fs.readFileSync(path.join(__dirname,'../features/conditional-school-release.js'),'utf8');
  assert.match(schoolRelease,/APPROVED_AUTO_DISTRICTS\s*=\s*Object\.freeze\(\{\}\)/);
 });
+
+test('lazy coverage renderer validates candidate sources fail closed before displaying',()=>{
+ const vm=require('node:vm');
+ const renderer=fs.readFileSync(path.join(__dirname,'../features/dfw-school-coverage-renderer.js'),'utf8');
+ const a=renderer.indexOf(' function validNextGISSources(data){');
+ const b=renderer.indexOf(' function validTexasWorks(extra,district){',a);
+ assert.ok(a>0&&b>a);
+ const ctx={};
+ vm.runInNewContext(renderer.slice(a,b),ctx,{timeout:1000});
+ const valid=ctx.validNextGISSources(manifest);
+ assert.equal(valid.size,4);
+ assert.equal(valid.get('057914').sourceKind,'municipal-attendance-polygon');
+ const changed=fn=>{const v=structuredClone(manifest);fn(v);return v};
+ assert.equal(ctx.validNextGISSources(changed(x=>x.schoolAssignmentCertified=true)),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.publicGeometryHosted=true)),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.geometryRedistributionApproved=true)),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[0].sourceSchoolYear='2026-27')),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[0].installedSchoolPolygons=51)),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[0].publisherGIS='https://evil.test/fake')),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts.push(x.districts[0]))),null);
+ assert.match(renderer,/NEXT_GIS_FILE='\.\/data\/dfw-next-gis-source-candidates-20261121\.json'/);
+ assert.match(renderer,/newEvidence=nextGIS\?\.get\(d\.code\)/);
+ assert.match(renderer,/GIS 후보 발견 · 지도 미탑재/);
+ assert.doesNotMatch(renderer,/innerHTML\s*=|eval\s*\(/);
+});
+test('only exact city-publisher GIS domain is an approved new source link',()=>{
+ const {official}=require('../trusted-link-policy.js');
+ assert.equal(official('https://gisservice.cityofmesquite.com/arcgis/rest/services/onlinemaps/neighborhood_vitality/MapServer/6'),
+  manifest.districts[0].publisherGIS);
+ assert.equal(official('https://gisservice.cityofmesquite.com.evil.test/'),null);
+ assert.equal(official('https://evil.test/'),null);
+});
