@@ -1,7 +1,7 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const {summarizeSchools,summarizeNoaa,summarizeCrime,summarizeCommute}=require('../features/area-assessment-core.js');
+const {summarizeSchools,summarizeNoaa,summarizeCrime,summarizeCommute,summarizeHealthcareReference,summarizeWinterReference}=require('../features/area-assessment-core.js');
 const root=path.join(__dirname,'..');
 test('school summary only counts located and verified A/B campuses, not assigned schools',()=>{
   const campuses=[{name:'A',ll:[33,-96]},{name:'B',ll:[33.1,-96]},{name:'C',ll:[33.2,-96]},{name:'unlocated'}];
@@ -49,6 +49,28 @@ test('commute summary shows only the user-calculated travel time, no fixed offic
   assert.equal(summarizeCommute(40,false).status,'unknown');
   assert.equal(summarizeCommute(-1,true).status,'unknown');
 });
+test('CMS closest *matched* emergency-service reference is never described as routed ED access',()=>{
+ const valid={records:[{name:'Example Medical Center',emergencyServices:true,distanceMiles:2.37}],
+   totalFacilitiesCount:104,approximateLocationsCount:83,missingLocationsCount:21,rankedCount:67};
+ const result=summarizeHealthcareReference(valid);
+ assert.equal(result.status,'available');
+ assert.equal(result.distanceMiles,2.37);
+ assert.match(result.message,/직선 약 2.4마일.*운전시간 아님/);
+ assert.doesNotMatch(result.message,/15분|30분|24시간|가장 가까운 운영/);
+ for(const bad of [
+   null,{}, {...valid,records:[]},
+   {...valid,records:[{...valid.records[0],distanceMiles:NaN}]},
+   {...valid,records:[{...valid.records[0],emergencyServices:false}]},
+   {...valid,missingLocationsCount:20}
+ ]) assert.equal(summarizeHealthcareReference(bad).status,'unknown');
+});
+test('FEMA winter preview is tract map context, not a neighborhood power-outage score',()=>{
+ const r=summarizeWinterReference();
+ assert.equal(r.status,'reference');
+ assert.match(r.message,/2025 Census tract/);
+ assert.match(r.message,/정전 확률 미확인/);
+ assert.doesNotMatch(r.message,/주소별 정전.*[0-9]+%/);
+});
 test('visible assessment is placed across the main width before the map',()=>{
   const src=fs.readFileSync(path.join(root,'features/area-assessment.js'),'utf8');
   assert.match(src,/document\.querySelector\('\.main'\)/);
@@ -69,11 +91,13 @@ test('main page keeps legacy data-binding IDs but loads standalone assessment',(
 
 test('every quick check labels its real data geography and snapshot year',()=>{
  const {regionEvidenceMeta}=require('../features/area-assessment-core.js');
- for(const id of ['schools','hazards','crime','commute'])
+ for(const id of ['schools','hazards','healthcare','winter','crime','commute'])
    assert.ok(regionEvidenceMeta(id).length>12,id);
  assert.match(regionEvidenceMeta('schools'),/2026.*배정 아님/);
  assert.match(regionEvidenceMeta('hazards'),/2024–25.*카운티.*FEMA/);
  assert.match(regionEvidenceMeta('crime'),/2025.*도시.*ZIP 범죄율 아님/);
+ assert.match(regionEvidenceMeta('healthcare'),/2026.*Census.*운전시간 확인 불가/);
+ assert.match(regionEvidenceMeta('winter'),/2025 Census tract.*정전 위험 예측 아님/);
  assert.doesNotMatch(regionEvidenceMeta('commute'),/JPM|jpm/);
 });
 test('new UI does not silently claim a NOAA county report equals the FEMA risk layer',()=>{
@@ -82,5 +106,9 @@ test('new UI does not silently claim a NOAA county report equals the FEMA risk l
  assert.match(ui,/FEMA 2025 홍수 상대 위험도/);
  assert.match(ui,/noaaStormHistoryPanel/);
  assert.match(ui,/areaQaActionStatus/);
+ assert.match(ui,/healthcareMapQuickToggle/);
+ assert.match(ui,/winterMapQuickToggle/);
+ assert.match(ui,/IntersectionObserver/);
+ assert.match(ui,/summarizeHealthcareReference/);
  assert.doesNotMatch(ui,/schoolGroup\.(?:clearLayers|addLayer)|map\.fitBounds|map\.setView/);
 });
