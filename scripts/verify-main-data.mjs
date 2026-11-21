@@ -302,7 +302,7 @@ test('P0 Plano senior-high home marker and map source legend are accurate',()=>{
  assert.ok(home.includes('schoolLevelMatchesAssignment(s,f.properties.gradeLevel)'));
  assert.ok(home.includes("result.district!==s.district)return false"));
  assert.ok(html.includes('./school-assignment.js?v=6'));
- assert.ok(html.includes('./home-lookup-v2.js?v=27'));
+ assert.ok(html.includes('./home-lookup-v2.js?v=28'));
  assert.ok(html.includes('현행 공식 Finder가 사용하는 플레이노·루이스빌 경계는 파란색'));
  assert.ok(html.includes('플레이노 저장본과 앨런 과거 GIS는 주황색 점선 참고'));
 });
@@ -736,7 +736,7 @@ test('official manual result only checks user transcription, never upgrades old 
  assert.ok(h.includes('officialReviewPanelHtml(home)'));
  assert.ok(h.includes('wireOfficialReviewPanel(home)'));
  assert.ok(h.includes('homeOfficialRequest?.abort()'));
- assert.ok(html.includes('official-school-review.js?v=1'));
+ assert.ok(html.includes('official-school-review.js?v=2'));
  assert.ok(readText('candidate-compare.js').includes('savedOfficialReview:item.officialReview'));
 });
 test('P0 home geocoding rejects uncertain TX and does not silently choose a tied home',()=>{
