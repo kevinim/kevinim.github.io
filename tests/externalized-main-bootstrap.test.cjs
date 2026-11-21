@@ -371,7 +371,12 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  const previousLabelStyle=".area-label{pointer-events:none}.area-label span{display:block;text-align:center;white-space:nowrap;background:rgba(255,255,255,.94);border:1px solid #8194ae;border-radius:6px;padding:3px 6px;color:#172d4a;font-size:11px;font-weight:750;line-height:1.15;box-shadow:0 1px 4px #1b355044}.area-label.selected span{background:#173b78;border-color:#fff;color:white}\r\n";
  const approvedLabelScript="<script src=\"./features/map/area-label-hierarchy.js?v=1\"></script><script src=\"./dashboard-main.js?v=6\"></script>";
  assert.equal(html.split(approvedLabelStyle).length,2,'Exact zoom label style added once');
- const providerNormalizedHtml=replaceOnce(html,'<script src="./features/commute/provider-requests.js?v=1"></script>','');
+ // New source review and address handler are audited separately; subtract
+ // only these two explicitly approved cache pins before the old HTML snapshot.
+ const reviewedCrosscheckAssets=replaceOnce(replaceOnce(html,
+  './home-lookup-v2.js?v=28','./home-lookup-v2.js?v=27'),
+  './official-school-review.js?v=2','./official-school-review.js?v=1');
+ const providerNormalizedHtml=replaceOnce(reviewedCrosscheckAssets,'<script src="./features/commute/provider-requests.js?v=1"></script>','');
  assert.equal(providerNormalizedHtml.split(approvedLabelScript).length,2,'Exact zoom label runtime added once');
  // The workplace release changes exactly four reviewed HTML anchors; do
  // not accept arbitrary diff or regenerate hashes from untrusted actual HTML.
