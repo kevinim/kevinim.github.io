@@ -114,6 +114,7 @@ function clearDallasReference(){if(dallasReferenceLayer&&map)map.removeLayer(dal
 function clearHome(){
   invalidateZipCommute();
   clearIrvingReference();clearDallasReference();
+  document.getElementById('homeResidentialSchoolCrosscheck')?.remove();
   homeVersion++;failedGeocodeAllenAddress='';homeRequest?.abort();homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;mckinneyLiveRequest?.abort();mckinneyLiveRequest=null;home=null;homeCandidates=[];
   if(map&&homeMarker)map.removeLayer(homeMarker);homeMarker=null;
   if(typeof homeZoneGroup!=='undefined'&&homeZoneGroup)homeZoneGroup.clearLayers();
