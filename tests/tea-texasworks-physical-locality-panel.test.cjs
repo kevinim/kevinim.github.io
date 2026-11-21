@@ -68,5 +68,5 @@ test('coverage UI has resilient lazy, validated source evidence and no unsafe HT
  assert(!ui.includes('.innerHTML'),'textContent and DOM nodes only');
  assert.match(browser,/texasworks-physical-locality/);
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
- assert.match(html,/\.\/features\/dfw-school-coverage-panel\.js\?v=5/);
+ assert.match(html,/\.\/features\/dfw-school-coverage-panel\.js\?v=6/);
 });
