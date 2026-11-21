@@ -105,6 +105,10 @@ test('only exact city-publisher GIS domain is an approved new source link',()=>{
  const {official}=require('../trusted-link-policy.js');
  assert.equal(official('https://gisservice.cityofmesquite.com/arcgis/rest/services/onlinemaps/neighborhood_vitality/MapServer/6'),
   manifest.districts[0].publisherGIS);
+ assert.equal(official('https://www.mesquiteisd.org/189249_2'),manifest.districts[0].officialParent);
+ assert.equal(official('https://www.wylieisd.net/our-district/district-profile/district-maps'),manifest.districts[1].officialParent);
+ assert.equal(official('https://www.wyliebulldogs.org/article/2594492'),null);
+ assert.equal(official('https://www.mesquiteisd.org.evil.test/'),null);
  assert.equal(official('https://gisservice.cityofmesquite.com.evil.test/'),null);
  assert.equal(official('https://evil.test/'),null);
 });
