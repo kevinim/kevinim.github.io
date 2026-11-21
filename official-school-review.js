@@ -161,6 +161,12 @@ function mountResidentialSchoolReview(after,item,raw,registry,official){
  state.residenceType=state.residenceType||'house';
  state.exactAddressReviewed=state.exactAddressReviewed===true;
  item.residentialSchoolReview=state;
+ const invalidateReview=()=>{
+  state.result=null;
+  const output=host.querySelector('[role="status"]');
+  if(output)output.textContent='입력 내용 변경 · 다시 비교해야 합니다. 독립 인증 아님';
+  for(const label of host.querySelectorAll('[data-crosscheck-level]'))label.textContent='';
+ };
  const d=document,el=(tag,cls,txt)=>{
   const node=d.createElement(tag);if(cls)node.className=cls;
   if(txt!==undefined)node.textContent=String(txt);
@@ -194,7 +200,7 @@ function mountResidentialSchoolReview(after,item,raw,registry,official){
   const option=el('option',null,label);option.value=v;yearSelect.appendChild(option);
  }
  yearSelect.value=state.schoolYear;
- yearSelect.onchange=()=>{state.schoolYear=yearSelect.value;state.result=null};
+ yearSelect.onchange=()=>{state.schoolYear=yearSelect.value;invalidateReview()};
  yearRow.append(yearLabel,yearSelect);details.appendChild(yearRow);
  const typeRow=el('div','field'),typeLabel=el('label',null,'주거 형태');
  const typeSelect=el('select');typeSelect.setAttribute('aria-label','주거 형태');
@@ -202,7 +208,7 @@ function mountResidentialSchoolReview(after,item,raw,registry,official){
   const option=el('option',null,label);option.value=v;typeSelect.appendChild(option);
  }
  typeSelect.value=state.residenceType;
- typeSelect.onchange=()=>{state.residenceType=typeSelect.value;state.result=null};
+ typeSelect.onchange=()=>{state.residenceType=typeSelect.value;invalidateReview()};
  typeRow.append(typeLabel,typeSelect);details.appendChild(typeRow);
  const fields=new Map();
  for(const c of model.candidates){
@@ -213,7 +219,7 @@ function mountResidentialSchoolReview(after,item,raw,registry,official){
   const input=el('input');input.type='text';input.maxLength=130;input.autocomplete='off';
   input.setAttribute('aria-label','공식 검색기 '+c.label+' 학교명');
   input.placeholder=c.label+' 학교 이름';input.value=state.schools[c.level]||'';
-  input.oninput=()=>{state.schools[c.level]=input.value;state.result=null};
+  input.oninput=()=>{state.schools[c.level]=input.value;invalidateReview()};
   row.append(title,hint,label,input);
   const status=el('span','source');status.setAttribute('data-crosscheck-level',c.level);
   const rowResult=state.result?.results?.find(x=>x.level===c.level);
@@ -226,7 +232,7 @@ function mountResidentialSchoolReview(after,item,raw,registry,official){
  const confirmation=el('label','source');
  const checkbox=el('input');checkbox.type='checkbox';
  checkbox.checked=state.exactAddressReviewed;
- checkbox.onchange=()=>{state.exactAddressReviewed=checkbox.checked;state.result=null};
+ checkbox.onchange=()=>{state.exactAddressReviewed=checkbox.checked;invalidateReview()};
  confirmation.append(checkbox,d.createTextNode(' 공식 검색기에서 동일한 주소·필요한 호수·학년도를 직접 확인했습니다.'));
  details.appendChild(confirmation);
  const button=el('button','mini-btn','학교급별 결과 비교');button.type='button';
