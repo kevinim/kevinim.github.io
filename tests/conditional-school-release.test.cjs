@@ -156,7 +156,7 @@ test('home address UI exposes official comparison without persistence or new una
  const mod=fs.readFileSync(path.join(root,'official-school-review.js'),'utf8');
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  assert.match(src,/window\.HomeResidentialSchoolCheck\?\.mount\?\.\(/);
- assert.match(src,/document\.getElementById\('homeResidentialSchoolCrosscheck'\)\?\.remove\(\)/);
+ assert.match(src,/document\.getElementById\('homeResidentialSchoolCrosscheck'\)\?\.remove\?\.\(\)/);
  assert.match(html,/official-school-review\.js\?v=2/);
  assert.match(html,/home-lookup-v2\.js\?v=28/);
  assert.ok(html.indexOf('official-school-review.js?v=2')<html.indexOf('home-lookup-v2.js?v=28'));
