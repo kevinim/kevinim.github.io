@@ -43,7 +43,7 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
 // Unwind only this PR's verified source-identity helper cache bump before the
 // immutable archival HTML byte comparison; do not relax any other HTML guard.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
- 'features/school-reference-preview.js?v=2','features/school-reference-preview.js?v=1');
+ 'features/school-reference-preview.js?v=3','features/school-reference-preview.js?v=1');
 // Address-first UI: subtract ONLY exact approved main-page UI/cache deltas.
 const priorityElement=normalizedMainHtml.match(/<div id="homeCandidates"><\/div><section id="homeAssignmentPriority" class="home-assignment-priority"[\s\S]*?<\/section><\/div><div class="panel office-controls">/);
 assert.ok(priorityElement&&priorityElement[0].includes('id="homeAssignmentPrioritySchools"'),
@@ -55,7 +55,7 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
 for(const [next,previous] of [
  ['<input type="checkbox" id="referenceBoundaryOverlay" checked>','<input type="checkbox" id="referenceBoundaryOverlay">'],
  ['map-first-split.css?v=2','map-first-split.css?v=1'],
- ['dashboard-main.js?v=21','dashboard-main.js?v=10'],
+ ['dashboard-main.js?v=22','dashboard-main.js?v=10'],
  ['allen-lookup.js?v=7','allen-lookup.js?v=5'],
  ['home-lookup-v2.js?v=27','home-lookup-v2.js?v=20'],
  ['denton-official-zone-references.js?v=2','denton-official-zone-references.js?v=1'],
@@ -349,7 +349,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  expected=replaceOnce(expected,'<link rel="stylesheet" href="./features/first-fold-ux.css?v=1">',
   '<link rel="stylesheet" href="./features/first-fold-ux.css?v=1"><link rel="stylesheet" href="./features/school-reference-preview.css?v=1">');
  expected=replaceOnce(expected,'<script src="./features/conditional-school-release.js?v=1"></script>',
-  '<script src="./features/conditional-school-release.js?v=1"></script>\n<script src="./features/school-reference-preview.js?v=2"></script>');
+  '<script src="./features/conditional-school-release.js?v=1"></script>\n<script src="./features/school-reference-preview.js?v=3"></script>');
  // Performance release: the six adjacent CSS links are replaced, in-place,
  // by their exact ordered concatenation (separately checked in bundle QA).
  const oldCss=['theme-toggle.css','map-control-contrast.css','track-b-reference-warning.css',

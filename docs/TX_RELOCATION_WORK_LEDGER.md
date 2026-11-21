@@ -23,7 +23,7 @@
 | TX-P0-01 | P0 | 주소 → 해당 학년의 공식 초·중·고 배정 학교 | **진행 중 / 공식 인증 미완료** | 주소 + 학년 + 학년도별 공식 Finder 결과·예외 경로 확보, 초중고 레벨 누락·ZIP 오연결·아파트 예외를 독립 검증. 단순 GIS 참조 카드는 배정 인증으로 승격 금지. Plano/Lewisville 참조 UX PR 검증 후 계속 공식 소스 연동 조사 | Issue #125, PR #368, HANDOFF.md |
 | TX-P0-02 | P0 | DFW 전체 GIS 출처·커버리지 장부 | **108-ISD 1차 전수조사 완료 / 학교별 실측은 진행 중** | 108개 학군과 원본 링크 전수 대조 및 GIS 렌더링 유형(기본 6, 클릭 2, 미탑재 100) 확인. 기존 공개 2026–27 GIS 2개, 독립 거주지 인증 0개. **전체 학교별 폴리곤 연결 수·경계 정확성은 아직 미측정**이며 TX-P1-01/02로 이어 진행. GIS 소스 존재와 지도 실제 표시를 구분 | PR #364의 108-ISD GIS 현황표 / 테스트 / main·Pages 증거 확인, docs/DFW_GIS_COVERAGE_AUDIT_20261121.md |
 | TX-P1-01 | P1 | 이미 표시된 학군 지도 정확성/토폴로지 | **진행 중** | 공식 공개 원천과 경계·학교 ID·학년·소스 연도 교차확인, 겹침/구멍/누락/엣지/마커 회귀 테스트, 패치한 데이터만 조건부 배포 | Issue #376, PR #379, BOUNDARIES.md |
-| TX-P1-02 | P1 | GIS 미탑재 학교/교육청 확대 | **진행 중 — 4개 학군 출처·UI 코드 QA 재검증** | GIS/PDF/official Finder 등 공개 자료 조사, 실제 사용 가능한 범위만 연결. Mesquite/Wylie/Rockwall/Richardson 자료 연계 PR #366은 **GIS 원본 탐색·UI**이며 학교별 polygon 탑재 완료는 아님. 필수 `verify` 게이트를 위해 2026-11-21 최신 `main`을 branch에 충돌 없이 통합함. 최종 HEAD 필수 CI→병합→Pages live 확인 필요; source 연도 명시 | PR #366, #364, Issue #125 |
+| TX-P1-02 | P1 | GIS 미탑재 학교/교육청 확대 | **진행 중 — 신규 4학군 출처 UI 병합 검증 중** | GIS/PDF/official Finder 등 공개 자료 조사, 실제 사용 가능한 범위만 연결. Mesquite/Wylie/Rockwall/Richardson 자료 연계 PR #366은 **GIS 원본 탐색·UI**이며 학교별 polygon 탑재 완료는 아님. 대시보드에 소스 연도 명시. #366 52/52 성공 HEAD 이후 #368 동시 병합 충돌로 통합 재검증 필요 | PR #366, #364 |
 | TX-P2-01 | P2 | TEA 2026 / PEIMS 2025–26 공개 원본 데이터 품질 | **완료 — 2026-11-11 공개 원본 스냅샷의 무결성 기준** | 2,282/2,282 학교 ID 대조; PEIMS 15,974/15,974 공개/마스킹/미표시 셀 상태 대조, 0건 기존 원본 불일치. 최종 데이터 QA가 전수 재계산하고 이전 독립 대조 Git blob 고정. **새 온라인 원본 재다운로드는 별도 새 버전 작업** | 병합·Pages 성공 PR #365, PR #369, docs/TEA_DFW_FINAL_DATA_QUALITY_20261112.md |
 | TX-P2-02 | P2 (외부 공개 전 필수) | Production 공개 보안 | **진행 중 / 외부 공개 NO-GO** | 보안 작업 장부 SEC-01–SEC-11 확인, 실무 변경·테스트·운영 설정 증거 기록. 가족 UAT 유지. 외부 공개/로그인/소스 분리 등은 별도 릴리스 게이트를 통과해야 함. Security tracker PR #377은 미병합 초안 | PR #377, PUBLIC_RELEASE_SECURITY.md, docs/PUBLIC_SECURITY_REMAINDERS_2026-11-13.md |
 | TX-P3-01 | P3 | 지역 분석: 의료·교통·재난·전력·범죄 근거 | **일부 구현 / 진행 중** | PR #367 의료 직선거리·겨울근거 개선 검증. 병원 실제 응급실 운영·운전시간, NTTA/TEXpress 실제 요금, 주소별 정전 지역성 등은 근거 없는 정밀도 표현 금지. P43 범죄 소스 원본 준비와 공개 지도 출시는 별도 승인 | PR #367, HANDOFF.md P40–P43 |
@@ -39,7 +39,7 @@
 
 ## 2026-11-21 열린 관련 PR — 메인 반영 아님
 
-- **#364 (main 병합됨)** 108 ISD GIS 실탑재/연도별 현황 조사 (6 기본 GIS + 2 클릭형 + 100 미탑재). 이 PR에 108개 공립 ISD 정확한 ID/원본 링크/학교 수 연동 QA 추가. **병합·배포 완료 판정은 CI/Pages 실제 성공을 확인한 후만** 기록. 학교별 실측 GIS와 주소 배정은 별도.
+- **#364** 108 ISD GIS 실탑재/연도별 현황 조사 (6 기본 GIS + 2 클릭형 + 100 미탑재). 이 PR에 108개 공립 ISD 정확한 ID/원본 링크/학교 수 연동 QA 추가. **병합·배포 완료 판정은 CI/Pages 실제 성공을 확인한 후만** 기록. 학교별 실측 GIS와 주소 배정은 별도.
 - **#366** Mesquite/Wylie/Rockwall/Richardson 원천 탐색 + 안내 UI (학교별 polygon 탑재 아님).
 - **#367** 병원·겨울 위험 요약 고도화 (실제 응급실 운전시간이나 주소별 정전 확률 아님).
 - **#368** Plano/Lewisville 주소 기반 공식 GIS **참조** 학교 UI (배정 인증 아님).
@@ -61,8 +61,14 @@
 ## 변경 이력
 
 | 날짜 (EST) | 변경 | 실행 근거 |
-| 2026-11-21 12:05 EST | #366은 이전 HEAD에서 52/52 CI 성공했으나 `Required status check verify is expected`로 병합 거절. 새 main 커밋 4개와 PR 변경 15개 파일 **겹침 0** 대조 후 branch merge(2228adb2) 완료. 현재 새 HEAD CI 재검증 중, 지도 polygon 추가 0 · 미배포. 이 장부 업데이트 후 HEAD 기준 검사 필요. | PR #366, latest main 51737f7, Issue #125 |
+| 2026-11-21 12:xx EST | #366 이전 통합 HEAD b6a95de에서 52/52 CI 통과. #368 동시 병합으로 index/UAT/immutable tests/ledger 6개 겹침 발생. Plano/Lewisville v22/v3와 DFW panel v5 양쪽 보존 재통합, 새 HEAD CI 재실행 필요. 학교별 신규 폴리곤 0, 미배포. | PR #366 #368, Issue #125 |
 | --- | --- | --- |
 | 2026-11-21 12:05 EST | TX-P0-02 108개 ISD GIS 표시 분류 및 공식 링크 전수 대조 검사 추가. 6개 기본+2개 클릭형+100개 미탑재, 2개 현행 GIS, 주소 배정 인증 0개. P0-02는 학교별 실측·독립 검증 미완료로 계속 추적 | PR #364; data/dfw-gis-coverage-audit-20261121.json; tests/dfw-gis-coverage-audit.test.cjs |
 | 2026-11-21 10:50 EST | #379 Allen/Prosper 토폴로지 QA가 main에 병합되었음을 재확인. TX-P1-01은 공식 원천 대조 단계가 남아 진행 중 | main 58b61e2d, PR #379 |
 | 2026-11-21 | 통합 장부 최초 작성. P2 TEA QA는 완료(스냅샷 기준), GIS/배정/보안/분석은 개별 진행 항목으로 분리 | main fc64c4dc, PR #365/#369 (merged), 열린 #364/#366/#367/#368/#377/#379 |
+
+### 2026-11-21 12:06 EST — TX-P0-01 address reference release continuation
+- PR #368 (Plano/Lewisville): previous 51/51 CI passed; this branch synchronizes with latest main #380 ledger and #379 GIS audit. New head CI is required before merge. This change remains **reference-only**, no official residential enrollment grant.
+- Exact final CI/merge SHA/Pages smoke must be filled after GitHub verifies this new head; do not assume deployed.
+
+- P0-02 source audit #364 is now merged into main ff27840c1. Address official assignment remains 0 certified districts; no change to gate.
