@@ -7,7 +7,7 @@
  const LOCALITY_FILE='./data/tea-texasworks-locality-2026.json';
  const PUBLIC_SOURCE_FILE='./data/dfw-cfb-denton-public-source-status-20261120.json';
  const PLANO_LEWISVILLE_FILE='./data/dfw-plano-lewisville-source-vintage-20261120.json';
- const NEXT_GIS_FILE='./data/dfw-next-gis-source-candidates-20261121.json';
+ const NEXT_GIS_FILE='./data/dfw-next-gis-source-candidates-20261121.json?v=2';
  const priorityLabel={P0:'P0 · 공식 안내 조사',P1:'P1 · 원본/제도 점검',P2:'P2 · 보완'};
  const reasonLabels={
   'official-parent-lookup-not-yet-verified':'학군 공식 확인 경로 미등록',
@@ -156,16 +156,33 @@
       d.sourceReuseRightsVerified!==false||
       typeof d.officialParent!=='string'||!d.officialParent.startsWith('https://')||
       typeof d.notes!=='string'||d.notes.length>1000)return null;
-   if(d.code==='057914'&&
-      (d.inventoryCampuses!==51||d.sourceKind!=='municipal-attendance-polygon'||
+   if(d.code==='057914'){
+    if(d.inventoryCampuses!==51||d.sourceKind!=='municipal-attendance-polygon'||
        d.publisherGIS!=='https://gisservice.cityofmesquite.com/arcgis/rest/services/onlinemaps/neighborhood_vitality/MapServer/6'||
+       d.officialParent!=='https://www.mesquiteisd.org/189249_2'||
        d.sourceGeometry!=='esriGeometryPolygon'||
        JSON.stringify(d.schoolAttributes)!=='["ES_ZONE","MS_Zone","HS_Zone"]'||
-       d.sourceSchoolYear!==null||d.sourceLastEdited!==null))return null;
-   if(d.code!=='057914'&&
-      (d.publisherGIS!==null||typeof d.sourceDocument!=='string'||!d.sourceDocument.startsWith('https://')||
-       d.sourceKind!==(d.code==='057916'?'district-historical-pdf-plus-finder':'district-2026-27-pdf')||
-       d.sourceSchoolYear!==(d.code==='057916'?null:'2026-27')))return null;
+       d.sourceSchoolYear!==null||d.sourceLastEdited!==null)return null;
+   }else if(d.code==='043914'){
+    // The matching-name Abilene Wylie Bulldogs (Buffalo Gap Rd) is a DIFFERENT ISD.
+    if(d.inventoryCampuses!==22||d.sourceKind!=='district-current-maps-feeder-only'||
+       d.publisherGIS!==null||d.sourceDocument!==null||d.sourceSchoolYear!==null||
+       d.publisher!=='Wylie ISD (southern Collin County)'||
+       d.officialParent!=='https://www.wylieisd.net/our-district/district-profile/district-maps'||
+       d.sourceContextUrl!=='https://www.wylieisd.net/our-district/rezoning-2025-26'||
+       typeof d.sourceYearEvidence!=='string'||!d.sourceYearEvidence.includes('Abilene'))return null;
+   }else if(d.code==='199901'){
+    if(d.inventoryCampuses!==23||d.sourceKind!=='district-pdf-conflicting-year-label'||
+       d.publisherGIS!==null||d.sourceSchoolYear!==null||
+       d.sourceDocument!=='https://resources.finalsite.net/images/v1746561842/rockwallisdcom/xu447xmnec7gsjl7ekfh/2026-2027ZoningwithnewMS.pdf'||
+       d.officialParent!=='https://www.rockwallisd.com/new-student/new-student/school-attendance-areas'||
+       typeof d.sourceYearEvidence!=='string'||!d.sourceYearEvidence.includes('2023-24'))return null;
+   }else if(d.code==='057916'){
+    if(d.inventoryCampuses!==51||d.sourceKind!=='district-historical-pdf-plus-finder'||
+       d.publisherGIS!==null||d.sourceSchoolYear!==null||
+       d.officialParent!=='https://web.risd.org/home/schools/'||
+       d.sourceDocument!=='https://web.risd.org/home/wp-content/uploads/2024/03/OnlineProjectResizeMp.pdf')return null;
+   }
    out.set(d.code,d);
   }
   return known.every(code=>out.has(code))?out:null;
