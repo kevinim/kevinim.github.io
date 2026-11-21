@@ -43,7 +43,7 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
 // Unwind only this PR's verified source-identity helper cache bump before the
 // immutable archival HTML byte comparison; do not relax any other HTML guard.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
- 'features/school-reference-preview.js?v=3','features/school-reference-preview.js?v=1');
+ 'features/school-reference-preview.js?v=4','features/school-reference-preview.js?v=1');
 // Address-first UI: subtract ONLY exact approved main-page UI/cache deltas.
 const priorityElement=normalizedMainHtml.match(/<div id="homeCandidates"><\/div><section id="homeAssignmentPriority" class="home-assignment-priority"[\s\S]*?<\/section><\/div><div class="panel office-controls">/);
 assert.ok(priorityElement&&priorityElement[0].includes('id="homeAssignmentPrioritySchools"'),
@@ -349,7 +349,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  expected=replaceOnce(expected,'<link rel="stylesheet" href="./features/first-fold-ux.css?v=1">',
   '<link rel="stylesheet" href="./features/first-fold-ux.css?v=1"><link rel="stylesheet" href="./features/school-reference-preview.css?v=1">');
  expected=replaceOnce(expected,'<script src="./features/conditional-school-release.js?v=1"></script>',
-  '<script src="./features/conditional-school-release.js?v=1"></script>\n<script src="./features/school-reference-preview.js?v=3"></script>');
+  '<script src="./features/conditional-school-release.js?v=1"></script>\n<script src="./features/school-reference-preview.js?v=4"></script>');
  // Performance release: the six adjacent CSS links are replaced, in-place,
  // by their exact ordered concatenation (separately checked in bundle QA).
  const oldCss=['theme-toggle.css','map-control-contrast.css','track-b-reference-warning.css',
