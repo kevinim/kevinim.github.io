@@ -96,6 +96,14 @@ Scope note: the **11 SEC objectives below have 0 DONE** in this initial baseline
 - [Issue #139](https://github.com/kevinim/kevinim.github.io/issues/139) is OPEN; credential-pattern success is not a historical PII audit.
 - `deploy/environment-plan.json` is the explicit launch switch; it is **planning-only** with Public Production, Family UAT, and separate deploy disabled.
 
+## 4A. Recorded continuation — 2026-11-21, SEC-02 history audit
+
+- Latest validated GitHub analysis run: [SEC-02 job 136920884290](https://github.com/kevinim/kevinim.github.io/actions/runs/44928870698), exact Draft [PR #381](https://github.com/kevinim/kevinim.github.io/pull/381) head `4134bccfb5cda478297cd6165ed38bc600248ea8`. This is an **isolated draft change**, not merged or deployed.
+- The **read-only filename/path-only scanner and synthetic Git tests succeeded**. It examined **352 locally reachable ref tips** and observed **4 historical objects matching retired personalized dataset filename patterns**. The audit reads no file contents, prints no historical path or values, does not change history, and is not privacy clearance.
+- **SEC-02 remains 차단됨 / BLOCKED for public promotion**: prior Git objects remain reachable; fork/clone/cache/unfetched PR refs, old HTML/JS embedded values, actual credential review and owner-approved response remain unresolved. No Git history rewrite is authorized.
+- **Next safe action**: independently inventory publicly accessible PR refs/fork metadata without copying personal content into reports, and reconcile the approved clean-source/public-artifact path with [SEC-01/#370](https://github.com/kevinim/kevinim.github.io/issues/370). Record category-only evidence in [Issue #139](https://github.com/kevinim/kevinim.github.io/issues/139).
+- **Do not claim** the report's 4 historical Git objects equal 4 unique sensitive files, people, addresses, or current live URLs. Existing Pages remains unchanged and **Public Production NO-GO**.
+
 ## 5. Work dependencies and change policy
 
 **Recommended order:** SEC-02 privacy inventory (non-destructive) + SEC-01 clean separation → SEC-03/SEC-04 provider/data entitlement → SEC-05 disclosures → SEC-06/SEC-07 exact-build browser security → SEC-09 private UAT authorization → SEC-10 real rollback → SEC-08 separate Public Production GO gate → SEC-11 steady-state operation. Independent low-risk read-only audits may proceed in parallel but MUST NOT be labeled external release authorization.
