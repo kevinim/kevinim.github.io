@@ -65,3 +65,9 @@
 | 2026-11-21 12:05 EST | TX-P0-02 108개 ISD GIS 표시 분류 및 공식 링크 전수 대조 검사 추가. 6개 기본+2개 클릭형+100개 미탑재, 2개 현행 GIS, 주소 배정 인증 0개. P0-02는 학교별 실측·독립 검증 미완료로 계속 추적 | PR #364; data/dfw-gis-coverage-audit-20261121.json; tests/dfw-gis-coverage-audit.test.cjs |
 | 2026-11-21 10:50 EST | #379 Allen/Prosper 토폴로지 QA가 main에 병합되었음을 재확인. TX-P1-01은 공식 원천 대조 단계가 남아 진행 중 | main 58b61e2d, PR #379 |
 | 2026-11-21 | 통합 장부 최초 작성. P2 TEA QA는 완료(스냅샷 기준), GIS/배정/보안/분석은 개별 진행 항목으로 분리 | main fc64c4dc, PR #365/#369 (merged), 열린 #364/#366/#367/#368/#377/#379 |
+
+### 2026-11-21 12:06 EST — TX-P0-01 address reference release continuation
+- PR #368 (Plano/Lewisville): previous 51/51 CI passed; this branch synchronizes with latest main #380 ledger and #379 GIS audit. New head CI is required before merge. This change remains **reference-only**, no official residential enrollment grant.
+- Exact final CI/merge SHA/Pages smoke must be filled after GitHub verifies this new head; do not assume deployed.
+
+- P0-02 source audit #364 is now merged into main ff27840c1. Address official assignment remains 0 certified districts; no change to gate.
