@@ -14,6 +14,7 @@ const FILES=Object.freeze({
  accountability:'data/tea-accountability-2026-verified-batch.json',
  staar:'data/tea-staar-meets-2026-verified-batch.json',
  peims:'data/tea-peims-2025-26-statewide-parity-audit-2282.json',
+ ethnicity:'data/tea-ethnicity-2025-26-priority.json',
  progress:'data/tea-profile-progress-2026.json',
  legacy:'data/tea-2026-uat-progress.json',
  matrix:'data/dfw-school-coverage-matrix-2026.json',
@@ -26,7 +27,7 @@ function load(){return {...Object.fromEntries(Object.entries(FILES).map(([k,v])=
 function inspect(x){
  const errors=[];
  const check=(yes,code)=>{if(!yes)errors.push(code)};
- const {ratings,accountability,staar,peims,progress,legacy,matrix,locality,transitions,exceptions,lifecycle}=x;
+ const {ratings,accountability,staar,peims,ethnicity,progress,legacy,matrix,locality,transitions,exceptions,lifecycle}=x;
  const rows=Array.isArray(ratings?.data)?ratings.data:[];
  const ids=new Map(rows.map(r=>[r.id,r]));
  const a=accountability?.campuses||{},s=staar?.campuses||{},race=peims?.campuses||{};
@@ -87,6 +88,59 @@ function inspect(x){
  check(peims?.auditAsOf==='2026-11-11'&&
        typeof peims?.reviewedUpstream?.headBlobSha==='string'&&
        peims.reviewedUpstream.headBlobSha.length===40,'peims_source_audit_provenance');
+ // Recompute every public/masked/unlisted ethnicity cell from the delivered
+ // source data. A historical audit summary alone cannot detect corrupt
+ // individual dashboard cells or accidentally exposed protected values.
+ const raceKeys=['asian','black','hispanic','multi','native','pacific','white'];
+ const sourceRace=ethnicity?.campuses||{};
+ const raceStats={published:0,suppressed:0,notListed:0,fullSeven:0,invalidCells:0};
+ check(ethnicity?.schoolYear==='2025-26'&&
+       Object.keys(sourceRace).length===ids.size &&
+       Object.keys(sourceRace).every(id=>idSet.has(id)),
+       'peims_current_source_campus_identity');
+ for(const id of ids.keys()){
+  const row=sourceRace[id],audit=race[id],cells=row?.counts;
+  if(!row||!audit||!cells||Object.keys(cells).length!==7||
+     raceKeys.some(k=>!Object.hasOwn(cells,k))){
+   check(false,'peims_current_source_campus_identity');continue;
+  }
+  let full=true;
+  for(const k of raceKeys){
+   const c=cells[k],status=c?.status;
+   const valid=status==='published'
+     ? Number.isSafeInteger(c.count)&&c.count>=0&&!Object.hasOwn(c,'publishedMask')
+     : status==='suppressed'
+       ? !Object.hasOwn(c,'count')&&typeof c.publishedMask==='string'&&
+         /^(?:<\d+|-999|N\/A)$/.test(c.publishedMask)
+       : status==='not-listed'
+         ? !Object.hasOwn(c,'count')&&!Object.hasOwn(c,'publishedMask')
+         : false;
+   if(!valid)raceStats.invalidCells++;
+   if(status==='published')raceStats.published++;
+   else if(status==='suppressed')raceStats.suppressed++;
+   else if(status==='not-listed')raceStats.notListed++;
+   if(status!=='published')full=false;
+  }
+  if(full){
+   raceStats.fullSeven++;
+   const sum=raceKeys.reduce((n,k)=>n+cells[k].count,0);
+   check(audit.raceShareStatus==='full-seven-verified'&&
+         audit.genderSourceStatus==='both-public'&&
+         sum===audit.officialPeimsEnrollment,
+         'peims_current_full_share_denominator');
+  }else{
+   check(audit.raceShareStatus==='partial-counts-only'&&
+         !Object.hasOwn(audit,'officialPeimsEnrollment'),
+         'peims_current_partial_not_whole_share');
+  }
+ }
+ check(raceStats.invalidCells===0 &&
+       raceStats.published===p.exactPublishedRaceCells &&
+       raceStats.suppressed===p.suppressedRaceCells &&
+       raceStats.notListed===p.notListedRaceCells &&
+       raceStats.fullSeven===p.allSevenRaceGroupsPublished &&
+       raceStats.published+raceStats.suppressed+raceStats.notListed===p.raceSlots,
+       'peims_current_per_cell_integrity');
  const miss=exceptions?.positiveGradeNoSTAAR||[];
  const unclear=miss.filter(r=>['aea-registered','other-review'].includes(r.classification));
  check(exceptions?.totals?.staARowAbsent===110&&
@@ -148,7 +202,11 @@ function inspect(x){
   prohibitedUse:['complete_whole_school_ethnicity_shares_from_masked_cells','certified_residential_school_assignment','administrative_county_as_physical_campus_location'],
   academic:{inventory:ids.size,matchedAcademicRows:Object.keys(a).length,domainAllReported:domainsAll,staarAnyReported:staarAny,
    staARowsAbsent:staarMissing,officialScoreYear:2026,assessedSchoolYear:'2025-26',pairedOverallRatingWithNoOwnDomains:pairedOverall},
-  ethnicity:{raceSlots:p.raceSlots,exactOriginalCellsMatched:p.exactRawRaceCellMatches,mismatches:p.rawRaceCellMismatches,
+  ethnicity:{raceSlots:p.raceSlots,sourceCellsRecomputed:raceStats.published+raceStats.suppressed+raceStats.notListed,
+   sourcePublishedRecomputed:raceStats.published,sourceMaskedRecomputed:raceStats.suppressed,
+   sourceUnlistedRecomputed:raceStats.notListed,sourceFullyPublicCampusRecomputed:raceStats.fullSeven,
+   invalidIndividualCells:raceStats.invalidCells,
+   exactOriginalCellsMatched:p.exactRawRaceCellMatches,mismatches:p.rawRaceCellMismatches,
    publishedCells:p.exactPublishedRaceCells,maskedCells:p.suppressedRaceCells,unlistedCells:p.notListedRaceCells,
    wholeSchoolSevenGroupSharesVerified:p.fullShareGenderReconciled,fullPublicEnrollmentDenominators:p.genderTotalExact,
    sourceAuditAsOf:peims?.auditAsOf},
