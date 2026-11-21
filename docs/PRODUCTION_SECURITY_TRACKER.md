@@ -98,11 +98,12 @@ Scope note: the **11 SEC objectives below have 0 DONE** in this initial baseline
 
 ## 4A. Recorded continuation — 2026-11-21, SEC-02 history audit
 
-- Latest validated GitHub analysis run: [SEC-02 job 136920884290](https://github.com/kevinim/kevinim.github.io/actions/runs/44928870698), exact Draft [PR #381](https://github.com/kevinim/kevinim.github.io/pull/381) head `4134bccfb5cda478297cd6165ed38bc600248ea8`. This is an **isolated draft change**, not merged or deployed.
-- The **read-only filename/path-only scanner and synthetic Git tests succeeded**. It examined **352 locally reachable ref tips** and observed **4 historical objects matching retired personalized dataset filename patterns**. The audit reads no file contents, prints no historical path or values, does not change history, and is not privacy clearance.
-- **SEC-02 remains 차단됨 / BLOCKED for public promotion**: prior Git objects remain reachable; fork/clone/cache/unfetched PR refs, old HTML/JS embedded values, actual credential review and owner-approved response remain unresolved. No Git history rewrite is authorized.
-- **Next safe action**: independently inventory publicly accessible PR refs/fork metadata without copying personal content into reports, and reconcile the approved clean-source/public-artifact path with [SEC-01/#370](https://github.com/kevinim/kevinim.github.io/issues/370). Record category-only evidence in [Issue #139](https://github.com/kevinim/kevinim.github.io/issues/139).
-- **Do not claim** the report's 4 historical Git objects equal 4 unique sensitive files, people, addresses, or current live URLs. Existing Pages remains unchanged and **Public Production NO-GO**.
+- **Implementation and verification:** [PR #381](https://github.com/kevinim/kevinim.github.io/pull/381), exact head `1f1e34226a0c0920dcda3aedc2b8afcf6fd7d9dc`, is **Ready for review, NOT merged or deployed**. [SEC-02 Actions run 44929166663](https://github.com/kevinim/kevinim.github.io/actions/runs/44929166663) passed the synthetic tests, silent Git PR-head fetch, redacted history audit and unchanged-source check.
+- **Observed:** locally reachable Git ref tips scanned **709** after adding PR HEAD ref coverage, up from **352** on the initial branch-only audit. **4 historical Git objects** still match known retired personalized dataset filename patterns. No historical values, paths or SHAs are output; no history mutation. No result is a complete PII or credential audit.
+- **GitHub metadata checked:** the public repository API returned **361 pull refs** and `forks_count=0` at check time. These metadata counts are **not** evidence that no external clones, older forks, caches, PR merge refs or inaccessible historic material exist.
+- **SEC-02 remains 차단됨 / BLOCKED for public promotion**: accessible Git history still includes known retired asset evidence. Generic older JS/HTML embedded values, credential owner checks, PR merge refs, copies and user-approved remediation strategy are still unresolved. No history rewrite is authorized.
+- **Next safe action:** reconcile [SEC-01/#370](https://github.com/kevinim/kevinim.github.io/issues/370) clean private source + sanitized public distribution, document authorized incident/credential check and residual-risk decision in [Issue #139](https://github.com/kevinim/kevinim.github.io/issues/139).
+- **Do not claim** four historical Git objects equal four unique sensitive files, people or current live URLs. Existing family Pages is unchanged; **Public Production NO-GO**.
 
 ## 5. Work dependencies and change policy
 
