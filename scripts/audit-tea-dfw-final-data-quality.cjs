@@ -6,6 +6,7 @@
  * Never exports personal locations, suppressed counts or invented school IDs.
  */
 const fs=require('node:fs');
+const crypto=require('node:crypto');
 const path=require('node:path');
 const ROOT=path.resolve(__dirname,'..');
 const read=p=>JSON.parse(fs.readFileSync(path.join(ROOT,p),'utf8'));
@@ -22,12 +23,18 @@ const FILES=Object.freeze({
  transitions:'data/dfw-noncfb-campus-transition-evidence-2026.json',
  exceptions:'data/tea-2026-staar-missing-row-qa-exceptions.json'
 });
-function load(){return {...Object.fromEntries(Object.entries(FILES).map(([k,v])=>[k,read(v)])),
- lifecycle:require('../school-lifecycle.js')};}
+function load(){
+ const bytes=fs.readFileSync(path.join(ROOT,FILES.ethnicity));
+ // Git object identity, not a substitute for a newly fetched TEA publisher CSV.
+ const ethnicitySourceBlobSha=crypto.createHash('sha1')
+  .update('blob '+bytes.length+'\0').update(bytes).digest('hex');
+ return {...Object.fromEntries(Object.entries(FILES).map(([k,v])=>[k,read(v)])),
+  ethnicitySourceBlobSha,lifecycle:require('../school-lifecycle.js')};
+}
 function inspect(x){
  const errors=[];
  const check=(yes,code)=>{if(!yes)errors.push(code)};
- const {ratings,accountability,staar,peims,ethnicity,progress,legacy,matrix,locality,transitions,exceptions,lifecycle}=x;
+ const {ratings,accountability,staar,peims,ethnicity,ethnicitySourceBlobSha,progress,legacy,matrix,locality,transitions,exceptions,lifecycle}=x;
  const rows=Array.isArray(ratings?.data)?ratings.data:[];
  const ids=new Map(rows.map(r=>[r.id,r]));
  const a=accountability?.campuses||{},s=staar?.campuses||{},race=peims?.campuses||{};
@@ -88,6 +95,8 @@ function inspect(x){
  check(peims?.auditAsOf==='2026-11-11'&&
        typeof peims?.reviewedUpstream?.headBlobSha==='string'&&
        peims.reviewedUpstream.headBlobSha.length===40,'peims_source_audit_provenance');
+ check(ethnicitySourceBlobSha===peims?.reviewedUpstream?.headBlobSha,
+       'peims_reviewed_original_blob_drift');
  // Recompute every public/masked/unlisted ethnicity cell from the delivered
  // source data. A historical audit summary alone cannot detect corrupt
  // individual dashboard cells or accidentally exposed protected values.
@@ -206,6 +215,7 @@ function inspect(x){
    sourcePublishedRecomputed:raceStats.published,sourceMaskedRecomputed:raceStats.suppressed,
    sourceUnlistedRecomputed:raceStats.notListed,sourceFullyPublicCampusRecomputed:raceStats.fullSeven,
    invalidIndividualCells:raceStats.invalidCells,
+   reviewedSourceBlobMatches:ethnicitySourceBlobSha===peims?.reviewedUpstream?.headBlobSha,
    exactOriginalCellsMatched:p.exactRawRaceCellMatches,mismatches:p.rawRaceCellMismatches,
    publishedCells:p.exactPublishedRaceCells,maskedCells:p.suppressedRaceCells,unlistedCells:p.notListedRaceCells,
    wholeSchoolSevenGroupSharesVerified:p.fullShareGenderReconciled,fullPublicEnrollmentDenominators:p.genderTotalExact,

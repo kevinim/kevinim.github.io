@@ -87,3 +87,6 @@ The TEA **data-quality** task and TEA **data-availability** limitations must be 
 - **Separate tasks:** physical campus locations, household assignments, school-zone GIS and the TexasWorks operator-name crosswalk are not TEA academic/PEIMS parity. Public-record QA does not certify those systems.
 
 After merge, mark **P2 TEA data-quality QA: complete for the public source snapshot**, with an explicit dated publisher-refresh caveat. Never claim that every academic/ethnicity value is available for every campus.
+
+
+**Exact source-content lock (2026-11-21 follow-up):** the QA runner recomputes the standard Git object ID of the complete shipped PEIMS JSON bytes and compares it with the Git blob previously independently checked against TEA's original 2025–26 CSV (`10166ec14ff1458377aa68c1419d95435da1d28c`). This blocks any silent change to *any* published value (including a partial profile) unless a refreshed publisher parity audit updates the reviewed source identity. A matching Git blob proves repository snapshot identity, **not** a live 2026-11-21 publisher download or ongoing freshness. This is a consistency check, not an authentication/security signature.
