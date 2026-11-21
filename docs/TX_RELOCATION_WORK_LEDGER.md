@@ -72,3 +72,13 @@
 - Exact final CI/merge SHA/Pages smoke must be filled after GitHub verifies this new head; do not assume deployed.
 
 - P0-02 source audit #364 is now merged into main ff27840c1. Address official assignment remains 0 certified districts; no change to gate.
+
+
+### 2026-11-21 — GIS accuracy, Prosper enrollment exception and 108-ISD rollout (verified progression)
+
+- **TX-P0-01**: Plano/Lewisville reference-only address schools PR #368 merged into main; 0 districts carry independent official residential certification. Prosper 2026–27 Christie/Reynolds/Moseley new-entrant exception notice is implemented in pending PR #384, with exact official campus IDs, kindergarten and returning-student rules; CI and Pages pending. This never substitutes GIS zone candidates or `home.assignment`.
+- **TX-P0-02**: PR #364 108-ISD source/link/render-type census merged; 6 main map GIS + 2 opt-in + 100 without per-campus rendered zones, 2 confirmed current-year official GIS sources. This is NOT 108-district school assignment automation.
+- **TX-P1-01 Allen**: Original-precision historic municipal polygons (2019 H, 2023 E/M) PR #382 merged, Pages workflow #44929741854 passed. Live `allen-attendance-historical.geojson` inspected with 20 features / 5,668 vertices; six synthetic municipal source point fixtures uniquely reconciled; independent real residential certification still absent.
+- **TX-P1-01 Prosper**: 2026–27 live Infofinder source polygons compared end-to-end: 31/31 campuses, 1,706/1,706 identical vertices. Six synthetic location-lookup gap examples agreed with the same single/two-grade subset as map shapes; officially published GIS differences, not local conversion errors. Actual residential eligibility / land-use still unknown.
+- **TX-P1-02**: PR #366 approved next-source discovery for Mesquite/Wylie/Rockwall/Richardson merged; adds official source links/status to explorer, **not** current campus zone polygons.
+- Source/landlord privacy: no private residences in git; no CORS bypass, no new provider proxy. Public external production security launch is still a separate NO-GO gate.

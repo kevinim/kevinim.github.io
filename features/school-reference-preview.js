@@ -20,6 +20,14 @@
    source:'Lewisville ISD School Locator 연결 GIS'}
  });
  const LEVEL=Object.freeze({elementary:'초등',middle:'중등',high:'고등',senior:'Senior High'});
+ // Prosper ISD 2026–27 new-enrollment restrictions, NOT changes to published GIS zones.
+ // Exact campus IDs come from Prosper's official Infofinder i 31-campus dataset.
+ const PROSPER_CLOSED=Object.freeze({
+  '043912117':'Prosper ISD 2026–27 신규 등록: Christie Elementary 구역의 신규 학생은 유치원(K)을 제외하고 Thomson Elementary로 안내됩니다. K학년은 예외입니다.',
+  '043912042':'Prosper ISD 2026–27 신규 등록: Reynolds Middle 구역의 신규 학생은 공사 기간 Rushing Middle로 안내됩니다.',
+  '043912046':'Prosper ISD 2026–27 신규 등록: Moseley Middle 구역의 신규 학생은 Rushing Middle로 안내됩니다.'
+ });
+ const PROSPER_CLOSED_SOURCE='https://www.prosper-isd.net/page/closed-to-enrollment';
  const REASONS=Object.freeze({
   'needs-address-verification':'주소 위치 정밀도가 충분하지 않습니다.',
   'apartment-split-review':'아파트·건물별 배정 예외가 있어 참고 후보를 표시하지 않습니다.',
@@ -87,7 +95,8 @@
     p.sourceYearConfirmed===true&&p.sourceVintage==='2026–27'&&
     p.schoolYear==='2026–27'&&
     /^043912[0-9]{3}$/.test(String(p.campusId||''))&&
-    /^[0-9]{3}$/.test(String(p.schoolCode||''));
+    /^[0-9]{3}$/.test(String(p.schoolCode||''))&&
+    p.campusId==='043912'+p.schoolCode;
    if(raw.district==='PROSPER'&&p.campusId!=null&&!officialProsper)
     return blocked('Prosper 공식 GIS 캠퍼스 번호 또는 학교 코드가 일치하지 않습니다.');
    const yearNote=raw.district==='PISD'?'공식 SchoolFinder 연결 · 원본 GIS 레이어 2025–26':
@@ -105,6 +114,26 @@
    notices.push('Plano: GIS 원본은 2025–26 명칭입니다. 9–10학년 High와 11–12학년 Senior High를 따로 확인하고 Jackson/Coit Rd 분리 진학을 공식 Finder에서 검증하세요.');
   if(raw.district==='LISD')
    notices.push('Lewisville: 고등 GIS 2025–26 표기, 초·중 적용 학년도 미확인. 9학년 및 아파트·호수는 별도의 공식 Find an Apartment에서 확인해야 합니다.');
+  // Only source-audited ID-linked Prosper GIS candidate schools can trigger
+  // published capacity/registration notices. A zone shape never automatically
+  // changes into a school enrollment or a transfer-granted campus.
+  let capacityNoticeUrl=null;
+  if(raw.district==='PROSPER'){
+   let hasCapacityNotice=false;
+   for(const candidate of candidates){
+    const notice=PROSPER_CLOSED[candidate.campusId];
+    if(notice){
+     notices.push(notice);
+     hasCapacityNotice=true;
+    }
+   }
+   if(hasCapacityNotice){
+    notices.push('Prosper ISD: 퇴교 후 재등록하는 학생도 신규 등록으로 분류됩니다. 실제 학년·주소·기존 재학생 예외는 교육청 등록 담당자에게 확인하세요. GIS 경계상 후보학교는 변경하지 않습니다.');
+    const verifiedUrl=typeof official==='function'?official(PROSPER_CLOSED_SOURCE):null;
+    if(typeof verifiedUrl==='string'&&verifiedUrl===PROSPER_CLOSED_SOURCE)
+     capacityNoticeUrl=verifiedUrl;
+   }
+  }
   // Frisco's own 2026–27 locator warns that *new* students inside Nelson's
   // attendance zone may be assigned to Wester because Nelson is at capacity.
   // Reference names must never conceal that enrollment-specific exception.
@@ -121,6 +150,7 @@
    candidates:Object.freeze(candidates),
    missing:Object.freeze(missing),
    notices:Object.freeze(notices),
+   ...(capacityNoticeUrl?{capacityNoticeUrl}:{}),
    warning:vintageLimited
     ?'공식 검색기에 연결된 연도 불확실 GIS 참고 후보입니다. 2026–27 주소별 배정 인증이 아니며 아파트·학년·진학 예외는 공식 Finder에서 확인하세요.'
     :'GIS 위치 참고 후보이며 실제 주소별 배정학교가 아닙니다. 배정·전학·학년·아파트 예외는 공식 Finder에서 확인하세요.'
@@ -154,6 +184,13 @@
   if(model.missing.length)wrap.appendChild(node('p','school-reference-warning','표시 불완전: '+model.missing.join('·')+' 자료 미확인'));
   for(const note of model.notices||[])wrap.appendChild(node('p','school-reference-warning',note));
   wrap.appendChild(node('p','school-reference-warning',model.warning));
+  if(model.capacityNoticeUrl==='https://www.prosper-isd.net/page/closed-to-enrollment'){
+   const capacity=node('a','cardlink','Prosper ISD 2026–27 신규 등록 제한 공식 안내');
+   capacity.setAttribute('href',model.capacityNoticeUrl);
+   capacity.setAttribute('target','_blank');
+   capacity.setAttribute('rel','noopener noreferrer');
+   wrap.appendChild(capacity);
+  }
   const link=node('a','cardlink','공식 학교배정 확인하기');
   link.setAttribute('href',model.officialUrl);
   link.setAttribute('target','_blank');
