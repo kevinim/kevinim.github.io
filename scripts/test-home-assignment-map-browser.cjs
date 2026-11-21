@@ -169,6 +169,9 @@ async function run(){
    assert.equal(await lisd.getByRole('link',{name:'학군 공식 주소 검색기 열기'}).getAttribute('href'),
     'https://www.lisd.net/resources/families/school-locator');
    assert.match(await lisd.innerText(),/아파트는 공식 Find an Apartment/);
+   assert.match(await lisd.innerText(),/GIS 적용 연도 미확인/);
+   assert.equal(await lisd.locator('p.source[data-footnotes-keep]').count(),2,
+    'Source-year and official apartment warnings must never be hidden as footnotes');
    for(const [grade,name] of [['초등','SYNTHETIC LISD EL'],['중등','SYNTHETIC LISD MID'],
     ['9학년','SYNTHETIC LISD NINTH'],['고등','SYNTHETIC LISD HIGH']])
     await lisd.locator('input[aria-label="공식 검색기 '+grade+' 학교명"]').fill(name);
@@ -183,6 +186,8 @@ async function run(){
    assert.match(await lisd.locator('[role=status]').innerText(),/0\/4개 일치/);
    assert.equal(await lisd.locator('[data-crosscheck-level]').
     filter({hasText:'아파트용 공식 검색기에서 재확인 필요'}).count(),4);
+   assert.equal(await lisd.locator('[data-crosscheck-level]:visible').count(),4,
+    'Per-school apartment blockers must remain visible outside optional footnotes');
    const denied=await page.evaluate(()=>{
     const x=window.__lisdTest;
     const vals=Array.from({length:localStorage.length},(_,i)=>localStorage.getItem(localStorage.key(i)))
