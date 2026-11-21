@@ -52,16 +52,40 @@ const AreaAssessmentCore=(()=>{
     return {status:'available',minutes:Math.round(minutes),
       message:'선택 목적지 · ZIP 대표점 약 '+Math.round(minutes)+'분 (교통량 미반영)'};
   }
+  // CMS/Census points are approximate. The nearest *matched* facility is
+  // never certified as the nearest operating emergency room.
+  function summarizeHealthcareReference(ranking){
+    const found=ranking?.records?.[0];
+    if(!ranking||!Array.isArray(ranking.records)||
+       !Number.isInteger(ranking.totalFacilitiesCount)||ranking.totalFacilitiesCount<1||
+       !Number.isInteger(ranking.approximateLocationsCount)||ranking.approximateLocationsCount<0||
+       !Number.isInteger(ranking.missingLocationsCount)||ranking.missingLocationsCount<0||
+       ranking.approximateLocationsCount+ranking.missingLocationsCount!==ranking.totalFacilitiesCount||
+       !Number.isInteger(ranking.rankedCount)||ranking.rankedCount<0||
+       !found||found.emergencyServices!==true||typeof found.name!=='string'||!found.name.trim()||
+       !Number.isFinite(found.distanceMiles)||found.distanceMiles<0)
+      return {status:'unknown',message:'CMS 응급서비스 병원 거리 자료 확인 필요'};
+    return {status:'available',name:found.name,distanceMiles:found.distanceMiles,
+      rankedCount:ranking.rankedCount,missingLocationsCount:ranking.missingLocationsCount,
+      message:'CMS 응급서비스 표시 · '+found.name+' · ZIP 대표점 직선 약 '+
+        found.distanceMiles.toFixed(1)+'마일 (운전시간 아님)'};
+  }
+  function summarizeWinterReference(){
+    return {status:'reference',
+      message:'FEMA 2025 Census tract 한파·얼음폭풍·겨울기상 상대위험 지도 · 주소별 정전 확률 미확인'};
+  }
   function regionEvidenceMeta(id){
     const records={
       schools:'TEA 2026 예비 · ZIP 소재 학교 · 주소 배정 아님',
       hazards:'NOAA 2024–25 카운티 보고 · FEMA 지도는 별도 지표',
       crime:'FBI NIBRS 2025 · 도시 신고율 · ZIP 범죄율 아님',
+      healthcare:'CMS 2026 + Census 주소범위 추정 · 운영 중 응급실·운전시간 확인 불가',
+      winter:'FEMA NRI 2025 Census tract · 주소별 정전 위험 예측 아님',
       commute:'선택 목적지 도로망 직접 계산 · 실시간 교통 미반영'
     };
     return records[id]||'출처 확인 필요';
   }
-  return {summarizeSchools,summarizeNoaa,summarizeCrime,summarizeCommute,regionEvidenceMeta};
+  return {summarizeSchools,summarizeNoaa,summarizeCrime,summarizeCommute,summarizeHealthcareReference,summarizeWinterReference,regionEvidenceMeta};
 })();
 if(typeof window!=='undefined')window.AreaAssessmentCore=AreaAssessmentCore;
 if(typeof module!=='undefined'&&module.exports)module.exports=AreaAssessmentCore;
