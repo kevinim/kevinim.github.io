@@ -118,6 +118,48 @@ test('Prosper official GIS campus IDs are forwarded without upgrading residentia
  }
 });
 
+
+test('2026-27 Prosper new-student closures warn separately from current attendance geometry',()=>{
+ const examples=[
+  {id:'043912117',code:'117',name:'DAN CHRISTIE EL',from:'Christie',to:'Thomson'},
+  {id:'043912042',code:'042',name:'Reynolds Middle School',from:'Reynolds',to:'Rushing'},
+  {id:'043912046',code:'046',name:'Moseley Middle School',from:'Moseley',to:'Rushing'}
+ ];
+ for(const e of examples){
+  const grade=e.code==='117'?'elementary':'middle';
+  const f=school(grade,e.name);
+  Object.assign(f.properties,{sourceDistrict:'PROSPER',current:true,sourceYearConfirmed:true,
+   sourceVintage:'2026–27',schoolYear:'2026–27',campusId:e.id,schoolCode:e.code});
+  const raw={district:'PROSPER',status:'current',features:[f]};
+  const p=plan(raw);
+  assert.equal(p.kind,'reference-only');
+  assert.equal(p.candidates[0].school,e.name,'Do not substitute GIS school with enrollment placement');
+  assert.ok(p.notices.some(t=>t.includes(e.from)&&t.includes(e.to)),e.name);
+  assert.equal(p.capacityNoticeUrl,'https://www.prosper-isd.net/page/closed-to-enrollment');
+  assert.ok(p.notices.some(t=>t.includes('퇴교 후 재등록')));
+  assert.equal(policy.apply(raw).status,'conditional-finder-only');
+  assert.equal(policy.releaseSummary().currentYearResidentialDistrictApprovals,0);
+  if(e.code==='117')assert.ok(p.notices.some(t=>t.includes('유치원(K)')));
+  const modified={...f,properties:{...f.properties,sourceVintage:'2025–26'}};
+  assert.equal(plan({...raw,features:[modified]}).kind,'unavailable');
+  const badId={...f,properties:{...f.properties,campusId:'043912999'}};
+  assert.equal(plan({...raw,features:[badId]}).kind,'unavailable','campusId must agree with schoolCode');
+ }
+});
+test('Prosper unrelated schools never receive a false capacity closure notice',()=>{
+ const f=school('elementary','JUDY RUCKER EL');
+ Object.assign(f.properties,{sourceDistrict:'PROSPER',current:true,sourceYearConfirmed:true,
+  sourceVintage:'2026–27',schoolYear:'2026–27',campusId:'043912102',schoolCode:'102'});
+ const p=plan({district:'PROSPER',status:'current',features:[f]});
+ assert.equal(p.kind,'reference-only');
+ assert.equal(p.notices.length,0);
+ assert.ok(!('capacityNoticeUrl' in p));
+ const x=preview.plan({district:'PROSPER',status:'current',features:[
+  {...f,properties:{...f.properties,school:'DAN CHRISTIE EL',campusId:'043912117',schoolCode:'117'}}
+ ]},DISTRICT_REGISTRY,()=>null);
+ assert.equal(x.kind,'unavailable','untrusted official URL must not be accepted');
+});
+
 test('Frisco Nelson and McKinney transfer exceptions must not be silently hidden',()=>{
  const nelson=candidate();
  nelson.features[1].properties.school='Nelson Middle School';
