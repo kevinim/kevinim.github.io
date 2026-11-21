@@ -20,13 +20,13 @@
 
 | ID | 우선순위 | 항목 | 현재 판정 (작성 시) | 완료 조건과 바로 다음 조치 | 추적 근거 |
 | --- | --- | --- | --- | --- | --- |
-| TX-P0-01 | P0 | 주소 → 해당 학년의 공식 초·중·고 배정 학교 | **진행 중 / 공식 인증 미완료** | 주소 + 학년 + 학년도별 공식 Finder 결과·예외 경로 확보, 초중고 레벨 누락·ZIP 오연결·아파트 예외를 독립 검증. 단순 GIS 참조 카드는 배정 인증으로 승격 금지. Plano/Lewisville 참조 UX PR 검증 후 계속 공식 소스 연동 조사 | Issue #125, PR #368, HANDOFF.md |
-| TX-P0-02 | P0 | DFW 전체 GIS 출처·커버리지 장부 | **108-ISD 1차 전수조사 완료 / 학교별 실측은 진행 중** | 108개 학군과 원본 링크 전수 대조 및 GIS 렌더링 유형(기본 6, 클릭 2, 미탑재 100) 확인. 기존 공개 2026–27 GIS 2개, 독립 거주지 인증 0개. **전체 학교별 폴리곤 연결 수·경계 정확성은 아직 미측정**이며 TX-P1-01/02로 이어 진행. GIS 소스 존재와 지도 실제 표시를 구분 | PR #364의 108-ISD GIS 현황표 / 테스트 / main·Pages 증거 확인, docs/DFW_GIS_COVERAGE_AUDIT_20261121.md |
-| TX-P1-01 | P1 | 이미 표시된 학군 지도 정확성/토폴로지 | **진행 중** | 공식 공개 원천과 경계·학교 ID·학년·소스 연도 교차확인, 겹침/구멍/누락/엣지/마커 회귀 테스트, 패치한 데이터만 조건부 배포 | Issue #376, PR #379, BOUNDARIES.md |
-| TX-P1-02 | P1 | GIS 미탑재 학교/교육청 확대 | **진행 중 — 신규 4학군 출처 UI 병합 검증 중** | GIS/PDF/official Finder 등 공개 자료 조사, 실제 사용 가능한 범위만 연결. Mesquite/Wylie/Rockwall/Richardson 자료 연계 PR #366은 **GIS 원본 탐색·UI**이며 학교별 polygon 탑재 완료는 아님. 대시보드에 소스 연도 명시. #366 52/52 성공 HEAD 이후 #368 동시 병합 충돌로 통합 재검증 필요 | PR #366, #364 |
+| TX-P0-01 | P0 | 주소 → 해당 학년의 공식 초·중·고 배정 학교 | **참고 UI 배포 완료 / 공식 인증 미완료** | #368 Plano E/M/High/Senior 및 Lewisville E/M/H 원본연도 경고를 표시. #384 Prosper 새 등록 학생 입학 예외 안내. 학교별 실제 street+unit+year+grade 공식 자동 API가 허용·독립 검증되지 않아 배정 인증 0개. 공식 Finder 링크/사용자 수동 대조 제공, 임의 GIS로 인증 금지 | #368 #384, Issue #125 |
+| TX-P0-02 | P0 | DFW 전체 GIS 출처·커버리지 장부 | **108-ISD 현황 감사 완료 / 실탑재 확대 미완료** | #364 108개 ISD 공식 안내·원본 대조·기본 GIS 6, 선택형 GIS 2, 미표시 100, 현행 연도 확인 소스 2, 공식 거주지 자동 인증 0. PR CI/Pages/라이브 지도 검사 완료; 학교별 정확한 GIS 탑재와 경계 품질은 P1 별도 | #364 main ff27840c, Pages 44928830393, live 44928909341 |
+| TX-P1-01 | P1 | 이미 표시된 학군 지도 정확성/토폴로지 | **Allen 정밀도 수정 배포 / 전체 독립 검증 진행 중** | #379 토폴로지 감사, #382 Allen 원본 정밀도 경계 20개/5,668 꼭짓점 복원 및 6곳 공개 좌표 QA. Prosper 31개 학교 지오메트리 대조. 기타 학군의 공식 소스 연도·학교 ID·경계/주거지 예외 검증 유지, 과거 경계를 현행 공식 배정으로 승격 금지 | #379 #382, Issue #376 |
+| TX-P1-02 | P1 | GIS 미탑재 학교/교육청 확대 | **4개 학군 공개 출처·UI 배포 / 실제 새 폴리곤 미완료** | #366 Mesquite/Wylie/Rockwall/Richardson 공식 GIS/PDF 링크와 출처/연도·권리 불확실성 표시. 신규 학교별 탑재 폴리곤 0. 다른 100개 미표시 ISD 순차 검증, 공식 연도/권리/학교코드 정합성 확인 후 지도 레이어만 공개. CFB/Denton 공개 조사 완료는 GIS 인증 완료 아님 | #366, Issue #125 |
 | TX-P2-01 | P2 | TEA 2026 / PEIMS 2025–26 공개 원본 데이터 품질 | **완료 — 2026-11-11 공개 원본 스냅샷의 무결성 기준** | 2,282/2,282 학교 ID 대조; PEIMS 15,974/15,974 공개/마스킹/미표시 셀 상태 대조, 0건 기존 원본 불일치. 최종 데이터 QA가 전수 재계산하고 이전 독립 대조 Git blob 고정. **새 온라인 원본 재다운로드는 별도 새 버전 작업** | 병합·Pages 성공 PR #365, PR #369, docs/TEA_DFW_FINAL_DATA_QUALITY_20261112.md |
 | TX-P2-02 | P2 (외부 공개 전 필수) | Production 공개 보안 | **진행 중 / 외부 공개 NO-GO** | 보안 작업 장부 SEC-01–SEC-11 확인, 실무 변경·테스트·운영 설정 증거 기록. 가족 UAT 유지. 외부 공개/로그인/소스 분리 등은 별도 릴리스 게이트를 통과해야 함. Security tracker PR #377은 미병합 초안 | PR #377, PUBLIC_RELEASE_SECURITY.md, docs/PUBLIC_SECURITY_REMAINDERS_2026-11-13.md |
-| TX-P3-01 | P3 | 지역 분석: 의료·교통·재난·전력·범죄 근거 | **일부 구현 / 진행 중** | PR #367 의료 직선거리·겨울근거 개선 검증. 병원 실제 응급실 운영·운전시간, NTTA/TEXpress 실제 요금, 주소별 정전 지역성 등은 근거 없는 정밀도 표현 금지. P43 범죄 소스 원본 준비와 공개 지도 출시는 별도 승인 | PR #367, HANDOFF.md P40–P43 |
+| TX-P3-01 | P3 | 지역 분석: 의료·교통·재난·전력·범죄 근거 | **응급시설 직선거리·겨울 출처 연결 코드 병합 / 후속 데이터 미완료** | #367 44/44 CI 통과·main d12fabbb 병합; Pages 배포 성공 (Run 44931479215). 실제 ED 자동차 접근시간·운영 여부, 경로별 NTTA 요금, 주소별 정전기록, P43 범죄 공개 지도는 미완료. 직선거리를 ETA로 표시 금지 | #367, HANDOFF.md P40–P43 |
 
 ## 사용 가능한 근거와 외부 제약 (P2 완료와 혼동 금지)
 
@@ -82,3 +82,14 @@
 - **TX-P1-01 Prosper**: 2026–27 live Infofinder source polygons compared end-to-end: 31/31 campuses, 1,706/1,706 identical vertices. Six synthetic location-lookup gap examples agreed with the same single/two-grade subset as map shapes; officially published GIS differences, not local conversion errors. Actual residential eligibility / land-use still unknown.
 - **TX-P1-02**: PR #366 approved next-source discovery for Mesquite/Wylie/Rockwall/Richardson merged; adds official source links/status to explorer, **not** current campus zone polygons.
 - Source/landlord privacy: no private residences in git; no CORS bypass, no new provider proxy. Public external production security launch is still a separate NO-GO gate.
+
+## 2026-11-21 12:38 EST 실제 최신 릴리스 기록
+
+- **#364** GIS 108 ISD census: merged ff27840c, Pages 44928830393 + live smoke 44928909341 success. 6 primary + 2 opt-in references; 100 ISDs no dashboard school polygons.
+- **#368** Plano/Lewisville vintage-labeled GIS reference: merged 9cbe5a15, 51/51 CI PASS and Pages 44929326812 SUCCESS, live JS inspected. *Not legal residential assignment*.
+- **#366** four additional ISD public GIS/PDF source candidates: main merged; source info only, no new campus polygons.
+- **#382** Allen historical polygon source precision: main merged eb069018, Pages 44929741854 success, source-origin 20 polygons retained; current-year lookup separate.
+- **#384** Prosper new-student exception note merged in main 44b9fe94, production map smoke 44930846346 success.
+- **#367** regional assessment clinical emergency straight-line and winter reference links: 44/44 PR CI PASS, merged d12fabbb, Pages run 44931479215 SUCCESS as of this ledger revision. No per-address emergency ETA or outage probability claimed.
+- **#377 / #381** documentation and historical-privacy audit PRs explicitly require manual owner approval for merging. SEC-02 has four reachable retired-history objects; count audit is not remediation. Public Production remains NO-GO.
+- **#383** refreshes this canonical ledger; source-year/CORS/license/independent exact-address official data gates remain separate, without relabeling unverifiable schools.
