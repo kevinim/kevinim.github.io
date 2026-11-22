@@ -4,7 +4,7 @@
 const fs=require('node:fs');
 const path=require('node:path');
 const ROOT=path.resolve(__dirname,'..');
-const PAGES=['index.html','reviewed.html'];
+const PAGES=Object.freeze(['index.html','reviewed.html','redfin-uat.html','rent-map-uat.html','school-grade-uat.html']);
 const ADDRESS_SCRIPTS=[
  'home-lookup-v2.js','home-lookup.js','texas-address-suggest.js',
  'candidate-compare.js','collin-parcel-check.js','school-assignment.js'
@@ -25,6 +25,11 @@ function scanAssetReferences(html,root,page){
   const found=/\b(?:src|href)\s*=\s*["']([^"']+)["']/i.exec(tag);
   if(!found)continue;
   const url=found[1];
+  // A new inline scheme or insecure URL must never be skipped as an
+  // "external CDN" dependency. Existing HTTPS providers remain unchanged.
+  if(/^(?:javascript|data|blob|file|http):/i.test(url)||url.startsWith('//')){
+   errors.push(page+': unsafe static asset URL scheme');continue;
+  }
   if(!url.startsWith('./')&&!url.startsWith('/'))continue;
   let pathname;
   try{pathname=decodeURIComponent(url.split(/[?#]/,1)[0]);}
@@ -35,8 +40,21 @@ function scanAssetReferences(html,root,page){
   }
   const rel=path.relative(root,absolute).replace(/\\/g,'/');
   assets.push(rel);
-  if(!fs.existsSync(absolute)||!fs.statSync(absolute).isFile()){
-   errors.push(page+': missing referenced static asset '+rel);
+  if(!fs.existsSync(absolute)){
+   errors.push(page+': missing referenced static asset '+rel);continue;
+  }
+  // A symlinked script or stylesheet can resolve outside the audited
+  // publication directory even when its textual href appears harmless.
+  // Reject direct symlinks as well as paths through symlinked directories.
+  try{
+   const stat=fs.lstatSync(absolute);
+   const real=fs.realpathSync(absolute),realRoot=fs.realpathSync(root);
+   if(stat.isSymbolicLink()||(real!==realRoot&&!real.startsWith(realRoot+path.sep))){
+    errors.push(page+': unsafe symlink or external static asset target');continue;
+   }
+   if(!stat.isFile())errors.push(page+': referenced static asset is not a file '+rel);
+  }catch{
+   errors.push(page+': static asset target cannot be verified');
   }
  }
  return {errors,assets};
@@ -46,7 +64,18 @@ function audit(root=ROOT){
  for(const page of PAGES){
   const file=path.join(root,page);
   if(!fs.existsSync(file)){errors.push('missing public entrypoint '+page);continue;}
-  const result=scanAssetReferences(fs.readFileSync(file,'utf8'),root,page);
+  const html=fs.readFileSync(file,'utf8');
+  // Cover all public family/UAT entrypoints, not just the primary/legacy page.
+  // Meta CSP and notices are partial controls; they are not HTTP headers or auth.
+  if(!/<meta\s+http-equiv="Content-Security-Policy"\b/i.test(html))
+   errors.push(page+': missing document CSP declaration');
+  if(page==='reviewed.html'){
+   if(!html.includes('id="legacyPrivacyNotice"'))
+    errors.push(page+': missing legacy external-provider disclosure');
+  }else if(!html.includes('id="homePrivacy"')||!html.includes('id="destinationPrivacy"')){
+   errors.push(page+': missing address or destination external-provider disclosure');
+  }
+  const result=scanAssetReferences(html,root,page);
   errors.push(...result.errors);assets.push(...result.assets);
  }
  for(const file of ADDRESS_SCRIPTS){
