@@ -40,7 +40,13 @@ jobs:
           const r=require('./artifacts/security/public-data-rights-summary.json');
           if(r.status!=='BLOCKED_RIGHTS_REVIEW_REQUIRED' || r.rightsDecisions.pending===0 || r.publicProductionApproved!==false)
             process.exit(1);
+          const laneCount=Object.values(r.reviewLaneCounts||{}).reduce((a,b)=>a+b,0);
+          const extensionCount=Object.values(r.extensionCounts||{}).reduce((a,b)=>a+b,0);
+          if(laneCount!==r.dataAndMediaAssetCount || extensionCount!==r.dataAndMediaAssetCount ||
+             r.reviewLaneClassification!=='FILENAME_HEURISTIC_ONLY_NOT_PUBLISHER_OR_LICENSE_EVIDENCE')
+            process.exit(1);
           console.log('SEC04_EXPECTED_NO_GO verified; items=' + r.dataAndMediaAssetCount + '; rights pending=' + r.rightsDecisions.pending);
+          console.log('SEC04_REVIEW_LANE_COUNTS '+JSON.stringify(r.reviewLaneCounts));
           NODE
       - name: Confirm no tracked changes or publication
         run: git diff --exit-code
