@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const {DATA_EXT, validateRegistry, walkFiles, audit} =
+const {DATA_EXT, REVIEW_LANES, classifyReviewLane, validateRegistry, walkFiles, audit} =
   require('../scripts/audit-public-data-rights.cjs');
 
 const base = () => ({schemaVersion:1, defaultDecision:'pending', assets:{}});
@@ -90,4 +90,42 @@ test('symlink in bundle fails rather than being followed',()=>fixture(dir=>{
 test('missing entry HTML fails, avoiding empty fake passing bundles',()=>fixture(dir=>{
   fs.rmSync(path.join(dir,'index.html'));
   assert.throws(()=>audit(dir,base()),/distribution_index_missing/);
+}));
+
+test('candidate review lanes are deterministic routing hints, not legal approval',()=>{
+ const cases=[
+  ['data/tea-campus-enrichment-2026.json','tea_education_candidate'],
+  ['data/healthcare/cms-dfw-hospitals-2026.json','healthcare_candidate'],
+  ['data/noaa-storm-events-dfw-2024-2025.json','climate_disaster_candidate'],
+  ['data/cfb-approved-zone-raster-reference-2026.json','school_gis_candidate'],
+  ['data/dfw-school-coverage-matrix-2026.json','school_gis_candidate'],
+  ['data/zip-census-2024.json','area_demographics_candidate'],
+  ['data/redfin-rental-results.json','housing_parcel_candidate'],
+  ['data/unknown-asset.json','unclassified_needs_source_evidence']
+ ];
+ for(const [file,lane] of cases)assert.equal(classifyReviewLane(file),lane,file);
+ assert.equal(new Set(cases.map(x=>x[1])).size,REVIEW_LANES.length);
+});
+test('review lanes partition all assets with no per-file paths in uploaded summary',()=>fixture(dir=>{
+ const extra=[
+  'data/tea-campus-enrichment-2026.json',
+  'data/noaa-storm-events-dfw-2024-2025.json',
+  'data/cfb-school-zones.geojson',
+  'data/healthcare-cms-hospitals.json',
+  'data/zip-census.json',
+  'data/redfin-rental.json'
+ ];
+ for(const name of extra)fs.writeFileSync(path.join(dir,name),'{}');
+ const report=audit(dir,base());
+ const totals=Object.values(report.summary.reviewLaneCounts).reduce((a,b)=>a+b,0);
+ const extensions=Object.values(report.summary.extensionCounts).reduce((a,b)=>a+b,0);
+ assert.equal(totals,report.summary.dataAndMediaAssetCount);
+ assert.equal(extensions,report.summary.dataAndMediaAssetCount);
+ assert.equal(report.summary.status,'BLOCKED_RIGHTS_REVIEW_REQUIRED');
+ assert.equal(report.summary.rightsDecisions.pending,report.summary.dataAndMediaAssetCount);
+ assert.equal(report.summary.publicProductionApproved,false);
+ assert.equal(report.summary.reviewLaneClassification,'FILENAME_HEURISTIC_ONLY_NOT_PUBLISHER_OR_LICENSE_EVIDENCE');
+ for(const name of extra)assert.ok(!JSON.stringify(report.summary).includes(name),'CI summary must omit paths');
+ assert.ok(report.local.itemizedPaths.every(item=>item.reviewLane&&item.extension&&
+  item.publisherAndReuseRightsIndependentlyVerified===false));
 }));
