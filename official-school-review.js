@@ -99,7 +99,19 @@ function makeResidentialSchoolModel(raw,{precise=false,officialUrl=null}={}){
   precise:precise===true,sourceStatus:String(raw?.status||'unavailable'),
   status:!precise?'imprecise-address':!supported?'district-unknown':
    !RESIDENTIAL_REFERENCE_STATES.has(raw?.status)?'gis-reference-unavailable':'reference-only',
-  sourceSignature:JSON.stringify([district,raw?.status,candidates.map(x=>[x.level,x.schools,x.sourceVintage])]),
+  // Invalidate a prior manual result when source provenance or geocode quality
+  // changes even if the displayed school names remain identical.
+  sourceSignature:JSON.stringify([
+   district,raw?.status,precise===true,
+   typeof officialUrl==='string'?officialUrl:null,
+   candidates.map(x=>[x.level,x.schools,x.sourceVintage]),
+   allowed&&Array.isArray(raw?.features)?raw.features.map(f=>{
+    const p=f?.properties||{};
+    return [p.gradeLevel||null,p.school||null,p.schoolYear||null,
+     p.sourceYear||null,p.sourceVintage||null,p.verifiedYear||null,
+     p.yearVerified2627??null,p.campusId||null,p.sourceUrl||null];
+   }).sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b))):null
+  ]),
   independentOfficialResult:false,
   officialLookupIntegrated:false
  };
