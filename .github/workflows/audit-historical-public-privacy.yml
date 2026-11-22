@@ -1,0 +1,49 @@
+name: SEC-02 historical Git exposure inventory (redacted, no deploy)
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/audit-historical-public-privacy.cjs'
+      - 'tests/audit-historical-public-privacy.test.cjs'
+      - '.github/workflows/audit-historical-public-privacy.yml'
+      - 'docs/SEC02_HISTORICAL_PRIVACY_AUDIT_20261121.md'
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+permissions:
+  contents: read
+jobs:
+  redacted-history-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Fetch published PR head refs without printing source names or SHAs
+        run: |
+          # Fetches Git objects only: never checks out or executes PR code.
+          git fetch --quiet --no-tags origin '+refs/pull/*/head:refs/remotes/sec02-pull/*' >/dev/null 2>&1
+          test "$(git for-each-ref --format='%(refname)' refs/remotes/sec02-pull | wc -l)" -gt 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Compile-check and test synthetic history fixtures (no real PII)
+        run: |
+          node --check scripts/audit-historical-public-privacy.cjs
+          node --test tests/audit-historical-public-privacy.test.cjs
+      - name: Audit reachable local Git paths and ref tips (NO history mutations)
+        run: node scripts/audit-historical-public-privacy.cjs
+      - name: Assert audit had no tracked source changes
+        run: git diff --exit-code
+      - name: Upload summary counts only (no paths/SHAs/private values)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: sec02-redacted-history-audit
+          path: artifacts/security/sec02-history-summary.json
+          if-no-files-found: warn
+          retention-days: 14
