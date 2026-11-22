@@ -27,11 +27,49 @@ test('asset scanner fails closed for unsafe schemes and protocol-relative script
  const html='<script src="data:text/javascript,alert(1)"></script>'
   +'<script src="javascript:alert(1)"></script>'
   +'<script src="http://evil.example/x.js"></script>'
+  +'<script src="ftp://evil.example/x.js"></script>'
   +'<script src="//evil.example/x.js"></script>'
   +'<script src="https://unpkg.com/example.js"></script>';
  const result=scanAssetReferences(html,path.resolve(__dirname,'..'),'synthetic.html');
- assert.equal(result.errors.length,4);
+ assert.equal(result.errors.length,5);
  assert.ok(result.errors.every(x=>x.includes('unsafe static asset URL scheme')));
+});
+test('bare local script references cannot silently bypass the path scanner',()=>{
+ const root=path.resolve(__dirname,'..');
+ const missing=scanAssetReferences('<script src="not-published-entry.js"></script>',root,'synthetic.html');
+ assert.match(missing.errors.join(' '),/missing referenced static asset/);
+ const safe=scanAssetReferences('<script src="trusted-link-policy.js"></script>',root,'synthetic.html');
+ assert.deepEqual(safe.errors,[]);
+ assert.deepEqual(safe.assets,['trusted-link-policy.js']);
+});
+test('every public HTML entrypoint rejects external script or stylesheet lacking SRI',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'tx-remote-sri-check-'));
+ try{
+  fs.mkdirSync(path.join(root,'features'));
+  fs.writeFileSync(path.join(root,'features','theme-toggle.js'),
+   "const KEY='tx-dashboard-theme-v1';localStorage.setItem(KEY,next)");
+  for(const name of ['home-lookup-v2.js','home-lookup.js','texas-address-suggest.js',
+    'candidate-compare.js','collin-parcel-check.js','school-assignment.js'])
+   fs.writeFileSync(path.join(root,name),'// synthetic inert input');
+  const pages=['index.html','reviewed.html','redfin-uat.html','rent-map-uat.html','school-grade-uat.html'];
+  for(const page of pages){
+   const notice=page==='reviewed.html'?'id="legacyPrivacyNotice"':
+    'id="homePrivacy" id="destinationPrivacy"';
+   const bootstrap=page==='index.html'?'./home-lookup-v2.js?v=1 ./texas-address-suggest.js?v=1':'';
+   fs.writeFileSync(path.join(root,page),
+    '<meta http-equiv="Content-Security-Policy" content="default-src \'self\'">'
+     +notice+bootstrap+'<script src="https://unpkg.com/example.js"></script>');
+  }
+  const blocked=audit(root);
+  assert.equal(blocked.errors.filter(x=>/missing SRI\/crossorigin/.test(x)).length,5);
+  for(const page of pages){
+   const html=fs.readFileSync(path.join(root,page),'utf8');
+   fs.writeFileSync(path.join(root,page),html.replace(
+    '<script src="https://unpkg.com/example.js"></script>',
+    '<script src="https://unpkg.com/example.js" integrity="sha256-synthetic" crossorigin="anonymous"></script>'));
+  }
+  assert.deepEqual(audit(root).errors,[],'A synthetic CDN pin plus unchanged privacy guards should pass');
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
 });
 test('asset scanner rejects symlinked dependencies, including a link into an outside directory',()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'tx-symlink-check-'));
