@@ -15,7 +15,7 @@ test('all public entrypoint privacy notices and declared CSP are in the checked 
  const pages=['index.html','reviewed.html','redfin-uat.html','rent-map-uat.html','school-grade-uat.html'];
  for(const page of pages){
   const html=fs.readFileSync(path.join(__dirname,'..',page),'utf8');
-  assert.match(html,/<meta\\s+http-equiv="Content-Security-Policy"/i,page);
+  assert.match(html,/<meta\s+http-equiv="Content-Security-Policy"/i,page);
   if(page==='reviewed.html')assert.match(html,/id="legacyPrivacyNotice"/,page);
   else{
    assert.match(html,/id="homePrivacy"/,page);
