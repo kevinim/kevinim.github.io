@@ -1,0 +1,54 @@
+name: SEC-04 public build data rights inventory (no deploy)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/audit-public-data-rights.cjs'
+      - 'tests/audit-public-data-rights.test.cjs'
+      - 'deploy/public-data-rights.json'
+      - '.github/workflows/audit-public-data-rights.yml'
+      - 'docs/SEC04_PUBLIC_DATA_RIGHTS_REVIEW_20261121.md'
+  workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+permissions:
+  contents: read
+jobs:
+  asset-rights-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Syntax and synthetic negative rights tests
+        run: |
+          node --check scripts/audit-public-data-rights.cjs
+          node --test tests/audit-public-data-rights.test.cjs
+      - name: Build existing sanitized public preview (NOT DEPLOYED)
+        run: node scripts/verify-public-preview.cjs
+      - name: Enumerate every public build data and media item
+        run: node scripts/audit-public-data-rights.cjs
+      - name: Prove no unapproved rights are silently promoted to GO
+        run: |
+          node - <<'NODE'
+          const r=require('./artifacts/security/public-data-rights-summary.json');
+          if(r.status!=='BLOCKED_RIGHTS_REVIEW_REQUIRED' || r.rightsDecisions.pending===0 || r.publicProductionApproved!==false)
+            process.exit(1);
+          console.log('SEC04_EXPECTED_NO_GO verified; items=' + r.dataAndMediaAssetCount + '; rights pending=' + r.rightsDecisions.pending);
+          NODE
+      - name: Confirm no tracked changes or publication
+        run: git diff --exit-code
+      - name: Upload aggregate summary only; NEVER the local itemized paths
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: sec04-redacted-rights-summary
+          path: artifacts/security/public-data-rights-summary.json
+          if-no-files-found: warn
+          retention-days: 14
