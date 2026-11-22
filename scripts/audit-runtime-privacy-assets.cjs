@@ -67,7 +67,7 @@ function audit(root=ROOT){
   const html=fs.readFileSync(file,'utf8');
   // Cover all public family/UAT entrypoints, not just the primary/legacy page.
   // Meta CSP and notices are partial controls; they are not HTTP headers or auth.
-  if(!/<meta\s+http-equiv="Content-Security-Policy"\b/i.test(html))
+  if(!/<meta\s+http-equiv="Content-Security-Policy"(?:\s|>)/i.test(html))
    errors.push(page+': missing document CSP declaration');
   if(page==='reviewed.html'){
    if(!html.includes('id="legacyPrivacyNotice"'))
