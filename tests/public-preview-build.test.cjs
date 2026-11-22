@@ -1,9 +1,11 @@
 'use strict';
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
+const os=require('node:os');
+const path=require('node:path');
 const vm=require('node:vm');
 const test=require('node:test');
-const {sanitizeExtractedAssets,verifyExternalCspIntegrity,safeFiles}=require('../scripts/build-public-preview.cjs');
+const {sanitizeExtractedAssets,verifyExternalCspIntegrity,safeFiles,validatePreviewOutput}=require('../scripts/build-public-preview.cjs');
 const original=fs.readFileSync('index.html','utf8');
 const originalJs=fs.readFileSync('dashboard-main.js','utf8');
 const safe=sanitizeExtractedAssets(original,originalJs);
@@ -72,5 +74,40 @@ test('legacy uploaded-GeoJSON modules never ship in the curated public preview',
  const selected=safeFiles();
  for(const file of ['features/reviewed-bootstrap.js','features/geojson-upload-guard.js','dashboard-main.js']){
   assert.ok(!selected.includes(file),'privacy/release isolation required for '+file);
+ }
+});
+
+test('SEC-01 preview rebuild cannot erase unrelated source, repository or ancestor directories',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'tx-public-preview-output-'));
+ try{
+  fs.mkdirSync(path.join(root,'dist'));
+  assert.equal(validatePreviewOutput('dist/public-preview',root).out,
+   path.join(root,'dist','public-preview'));
+  assert.equal(validatePreviewOutput(path.join(root,'dist','public-preview'),root).out,
+   path.join(root,'dist','public-preview'));
+  for(const unsafe of ['.', 'data', 'features', 'dist', 'dist/..',
+   'dist/other', 'dist/public-preview/../other', '../outside']){
+   assert.throws(()=>validatePreviewOutput(unsafe,root),/exactly dist\/public-preview/,unsafe);
+  }
+  const target=path.join(root,'dist','public-preview');
+  fs.symlinkSync(os.tmpdir(),target,'dir');
+  assert.throws(()=>validatePreviewOutput('dist/public-preview',root),/Unsafe preview output target/);
+  fs.rmSync(target);
+  fs.writeFileSync(target,'synthetic existing file must not be overwritten');
+  assert.throws(()=>validatePreviewOutput('dist/public-preview',root),/Unsafe preview output target/);
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
+test('SEC-01 preview rebuild rejects a symlinked dist parent before recursively deleting output',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'tx-public-preview-parent-'));
+ const outside=fs.mkdtempSync(path.join(os.tmpdir(),'tx-public-preview-unrelated-'));
+ try{
+  fs.mkdirSync(path.join(outside,'public-preview'));
+  fs.writeFileSync(path.join(outside,'public-preview','must-survive.txt'),'fixture');
+  fs.symlinkSync(outside,path.join(root,'dist'),'dir');
+  assert.throws(()=>validatePreviewOutput('dist/public-preview',root),/Unsafe preview output parent/);
+  assert.equal(fs.readFileSync(path.join(outside,'public-preview','must-survive.txt'),'utf8'),'fixture');
+ }finally{
+  fs.rmSync(root,{recursive:true,force:true});
+  fs.rmSync(outside,{recursive:true,force:true});
  }
 });
