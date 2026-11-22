@@ -179,15 +179,40 @@ test('manual residence comparison requires explicit house/apartment choice befor
  assert.match(js,/residence-type-unconfirmed/);
 });
 
+test('manual school review invalidates on source URL, GIS vintage and precision drift, not school names alone',()=>{
+ const raw=syntheticResidential({elementary:'School A',middle:'School B',high:'School C'});
+ const opts={precise:true,officialUrl:'https://www.pisd.edu/finder'};
+ const a=makeResidentialSchoolModel(raw,opts);
+ const changedUrl=makeResidentialSchoolModel(raw,{...opts,officialUrl:'https://www.pisd.edu/new-finder'});
+ assert.notEqual(a.sourceSignature,changedUrl.sourceSignature,
+  'Official Finder link changes must invalidate a prior user-transcribed review');
+ const changedPrecision=makeResidentialSchoolModel(raw,{...opts,precise:false});
+ assert.notEqual(a.sourceSignature,changedPrecision.sourceSignature,
+  'Precision downgrade must invalidate a previous match');
+ const changedVintage=structuredClone(raw);
+ changedVintage.features[0].properties.sourceVintage='2025–26';
+ const b=makeResidentialSchoolModel(changedVintage,opts);
+ assert.notEqual(a.sourceSignature,b.sourceSignature,
+  'Changing source evidence cannot preserve a cached comparison merely because campus names are identical');
+ const reordered={...raw,features:raw.features.slice().reverse()};
+ assert.equal(a.sourceSignature,makeResidentialSchoolModel(reordered,opts).sourceSignature,
+  'Reordering equivalent independent GIS records must not invalidate a truthful comparison');
+ assert.equal(a.independentOfficialResult,false);
+ assert.equal(gate.releaseSummary().currentYearResidentialDistrictApprovals,0);
+ const ui=fs.readFileSync(path.join(root,'official-school-review.js'),'utf8');
+ assert.match(ui,/if\(state\.signature!==model\.sourceSignature\)/);
+ assert.match(ui,/state\.result=null;/);
+});
+
 test('home address UI exposes official comparison without persistence or new unauthorized remote API',()=>{
  const src=fs.readFileSync(path.join(root,'home-lookup-v2.js'),'utf8');
  const mod=fs.readFileSync(path.join(root,'official-school-review.js'),'utf8');
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  assert.match(src,/window\.HomeResidentialSchoolCheck\?\.mount\?\.\(/);
  assert.match(src,/document\.getElementById\('homeResidentialSchoolCrosscheck'\)\?\.remove\?\.\(\)/);
- assert.match(html,/official-school-review\.js\?v=4/);
+ assert.match(html,/official-school-review\.js\?v=5/);
  assert.match(html,/home-lookup-v2\.js\?v=28/);
- assert.ok(html.indexOf('official-school-review.js?v=4')<html.indexOf('home-lookup-v2.js?v=28'));
+ assert.ok(html.indexOf('official-school-review.js?v=5')<html.indexOf('home-lookup-v2.js?v=28'));
  assert.match(mod,/id='homeResidentialSchoolCrosscheck'/);
  assert.doesNotMatch(mod.slice(mod.indexOf('function makeResidentialSchoolModel')),/fetch\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage|innerHTML\s*=/);
  assert.match(mod,/user-transcribed-not-independent-official-address-result/);
