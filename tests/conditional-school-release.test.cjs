@@ -151,15 +151,39 @@ test('Lewisville apartment never auto-matches even when all four user-entered na
  assert.equal(house.certified,false);
 });
 
+test('manual residence comparison requires explicit house/apartment choice before reporting school matches',()=>{
+ const raw=syntheticResidential({elementary:'School A',middle:'School B',high:'School C'});
+ const model=makeResidentialSchoolModel(raw,{precise:true});
+ const base={exactAddressReviewed:true,schoolYear:'2026–27',
+  schools:{elementary:'School A',middle:'School B',high:'School C'}};
+ for(const invalid of [undefined,'',null,'unknown','condo']){
+  const report=compareResidentialSchoolReport(model,{...base,residenceType:invalid});
+  assert.equal(report.matches,0,'Missing/unsupported residence type must not default to house');
+  assert.equal(report.status,'not-independent-verification');
+  assert.equal(report.certified,false);
+  assert.deepEqual(report.results.map(x=>x.status),Array(3).fill('residence-type-unconfirmed'));
+ }
+ const house=compareResidentialSchoolReport(model,{...base,residenceType:'house'});
+ assert.equal(house.matches,3,'Explicit house selection preserves manual comparison');
+ assert.equal(house.certified,false);
+ const lisd=makeResidentialSchoolModel(syntheticResidential({elementary:'School A',middle:'School B',high:'School C'},'LISD'),{precise:true});
+ const apt=compareResidentialSchoolReport(lisd,{...base,residenceType:'apartment'});
+ assert.equal(apt.matches,0,'LISD apartments require the official apartment Finder');
+ assert.ok(apt.results.every(x=>x.status==='apartment-requires-official-locator'));
+ const js=fs.readFileSync(path.join(root,'official-school-review.js'),'utf8');
+ assert.match(js,/주거 형태를 선택하세요/);
+ assert.match(js,/residence-type-unconfirmed/);
+});
+
 test('home address UI exposes official comparison without persistence or new unauthorized remote API',()=>{
  const src=fs.readFileSync(path.join(root,'home-lookup-v2.js'),'utf8');
  const mod=fs.readFileSync(path.join(root,'official-school-review.js'),'utf8');
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  assert.match(src,/window\.HomeResidentialSchoolCheck\?\.mount\?\.\(/);
  assert.match(src,/document\.getElementById\('homeResidentialSchoolCrosscheck'\)\?\.remove\?\.\(\)/);
- assert.match(html,/official-school-review\.js\?v=3/);
+ assert.match(html,/official-school-review\.js\?v=4/);
  assert.match(html,/home-lookup-v2\.js\?v=28/);
- assert.ok(html.indexOf('official-school-review.js?v=3')<html.indexOf('home-lookup-v2.js?v=28'));
+ assert.ok(html.indexOf('official-school-review.js?v=4')<html.indexOf('home-lookup-v2.js?v=28'));
  assert.match(mod,/id='homeResidentialSchoolCrosscheck'/);
  assert.doesNotMatch(mod.slice(mod.indexOf('function makeResidentialSchoolModel')),/fetch\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage|innerHTML\s*=/);
  assert.match(mod,/user-transcribed-not-independent-official-address-result/);
