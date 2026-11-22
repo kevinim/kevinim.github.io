@@ -161,7 +161,8 @@ test('manual residence comparison requires explicit house/apartment choice befor
   assert.equal(report.matches,0,'Missing/unsupported residence type must not default to house');
   assert.equal(report.status,'not-independent-verification');
   assert.equal(report.certified,false);
-  assert.deepEqual(report.results.map(x=>x.status),Array(3).fill('residence-type-unconfirmed'));
+  assert.deepEqual(report.results.map(x=>x.status),[...Array(3).fill('residence-type-unconfirmed'),'not-entered'],
+   'Plano has a fourth Senior High level that was not entered in the synthetic fixture');
  }
  const house=compareResidentialSchoolReport(model,{...base,residenceType:'house'});
  assert.equal(house.matches,3,'Explicit house selection preserves manual comparison');
@@ -169,7 +170,10 @@ test('manual residence comparison requires explicit house/apartment choice befor
  const lisd=makeResidentialSchoolModel(syntheticResidential({elementary:'School A',middle:'School B',high:'School C'},'LISD'),{precise:true});
  const apt=compareResidentialSchoolReport(lisd,{...base,residenceType:'apartment'});
  assert.equal(apt.matches,0,'LISD apartments require the official apartment Finder');
- assert.ok(apt.results.every(x=>x.status==='apartment-requires-official-locator'));
+ assert.ok(apt.results.filter(x=>x.status!=='not-entered').every(
+  x=>x.status==='apartment-requires-official-locator'));
+ assert.equal(apt.results.filter(x=>x.status==='not-entered').length,1,
+  'Lewisville freshman grade remains deliberately unentered');
  const js=fs.readFileSync(path.join(root,'official-school-review.js'),'utf8');
  assert.match(js,/주거 형태를 선택하세요/);
  assert.match(js,/residence-type-unconfirmed/);
