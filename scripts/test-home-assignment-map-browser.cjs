@@ -125,6 +125,12 @@ async function run(){
    await review.locator('select[aria-label="공식 검색기 결과 학년도"]').selectOption('2026–27');
    await review.locator('input[type=checkbox]').check();
    await review.getByRole('button',{name:'학교급별 결과 비교'}).click();
+   assert.match(await review.locator('[role=status]').innerText(),/0\/4개 일치/,
+    'Missing residence type must not silently use house');
+   assert.equal(await review.locator('[data-crosscheck-level]').
+    filter({hasText:'주거 형태를 먼저 선택하세요'}).count(),4);
+   await review.locator('select[aria-label="주거 형태"]').selectOption('house');
+   await review.getByRole('button',{name:'학교급별 결과 비교'}).click();
    assert.match(await review.locator('[role=status]').innerText(),/4\/4개 일치/);
    assert.match(await review.locator('[role=status]').innerText(),/독립 검증 아님/);
    assert.equal(await page.evaluate(()=>window.__reviewSyntheticItem.assignment.status),
@@ -177,6 +183,10 @@ async function run(){
     await lisd.locator('input[aria-label="공식 검색기 '+grade+' 학교명"]').fill(name);
    await lisd.locator('select[aria-label="공식 검색기 결과 학년도"]').selectOption('2026–27');
    await lisd.locator('input[type=checkbox]').check();
+   await lisd.getByRole('button',{name:'학교급별 결과 비교'}).click();
+   assert.match(await lisd.locator('[role=status]').innerText(),/0\/4개 일치/,
+    'LISD missing residence type also blocks user-reported GIS matches');
+   await lisd.locator('select[aria-label="주거 형태"]').selectOption('house');
    await lisd.getByRole('button',{name:'학교급별 결과 비교'}).click();
    assert.match(await lisd.locator('[role=status]').innerText(),/4\/4개 일치/);
    assert.match(await lisd.locator('[role=status]').innerText(),/독립 검증 아님/);

@@ -110,6 +110,7 @@ function compareResidentialSchoolReport(model,reported){
  const names=reported.schools||{};
  const exact=reported.exactAddressReviewed===true;
  const year=reported.schoolYear==='2026–27';
+ const residenceKnown=reported.residenceType==='house'||reported.residenceType==='apartment';
  const apartment=reported.residenceType==='apartment';
  const results=model.candidates.map(c=>{
   const value=typeof names[c.level]==='string'?names[c.level].trim():'';
@@ -117,6 +118,9 @@ function compareResidentialSchoolReport(model,reported){
   if(value.length>130)return {level:c.level,status:'invalid-name'};
   if(!exact)return {level:c.level,status:'exact-address-unconfirmed'};
   if(!year)return {level:c.level,status:'year-unconfirmed'};
+  // A blank/unsupported residence type must not silently inherit 'house'.
+  // Unit-level exception handling depends on an explicit user choice.
+  if(!residenceKnown)return {level:c.level,status:'residence-type-unconfirmed'};
   if(!model.precise)return {level:c.level,status:'imprecise-address'};
   if(apartment&&model.district==='LISD')
    return {level:c.level,status:'apartment-requires-official-locator'};
@@ -158,7 +162,7 @@ function mountResidentialSchoolReview(after,item,raw,registry,official){
  }
  state.schools=state.schools||{};
  state.schoolYear=state.schoolYear||'';
- state.residenceType=state.residenceType||'house';
+ state.residenceType=['house','apartment'].includes(state.residenceType)?state.residenceType:'';
  state.exactAddressReviewed=state.exactAddressReviewed===true;
  item.residentialSchoolReview=state;
  const invalidateReview=()=>{
@@ -211,7 +215,7 @@ function mountResidentialSchoolReview(after,item,raw,registry,official){
  yearRow.append(yearLabel,yearSelect);details.appendChild(yearRow);
  const typeRow=el('div','field'),typeLabel=el('label',null,'주거 형태');
  const typeSelect=el('select');typeSelect.setAttribute('aria-label','주거 형태');
- for(const [v,label] of [['house','단독주택·일반 주소'],['apartment','아파트·공동주택']]){
+ for(const [v,label] of [['','주거 형태를 선택하세요'],['house','단독주택·일반 주소'],['apartment','아파트·공동주택']]){
   const option=el('option',null,label);option.value=v;typeSelect.appendChild(option);
  }
  typeSelect.value=state.residenceType;
@@ -235,6 +239,7 @@ function mountResidentialSchoolReview(after,item,raw,registry,official){
   status.textContent=rowResult?.status==='user-reported-match'?'사용자 입력과 GIS 참고 후보 일치':
    rowResult?.status==='user-reported-mismatch'?'불일치 · 공식 검색 결과를 우선 확인':
    rowResult?.status==='apartment-requires-official-locator'?'아파트별 공식 조회 필요':
+   rowResult?.status==='residence-type-unconfirmed'?'주거 형태를 선택해야 비교 가능':
    rowResult&&rowResult.status!=='not-entered'?'독립 확인 불가 · 확정 배정 아님':'';
   row.appendChild(status);details.appendChild(row);fields.set(c.level,input);
  }
@@ -267,6 +272,7 @@ function mountResidentialSchoolReview(after,item,raw,registry,official){
    if(label)label.textContent=one.status==='user-reported-match'?'사용자 입력과 GIS 참고 후보 일치':
     one.status==='user-reported-mismatch'?'불일치 · 공식 검색기 확인 필요':
     one.status==='not-entered'?'미입력':one.status==='apartment-requires-official-locator'?'아파트용 공식 검색기에서 재확인 필요':
+    one.status==='residence-type-unconfirmed'?'주거 형태를 먼저 선택하세요':
     '일치 여부 판단 불가 · 확인 필요';
   }
  };
