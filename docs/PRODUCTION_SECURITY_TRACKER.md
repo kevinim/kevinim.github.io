@@ -156,3 +156,12 @@ Only append **factual completed work**. If an agent has not edited GitHub or run
 - Continue to record exact SHA, CI, Pages, source and rights decisions in Issues #371/#378. **Never interpret a security documentation or audit merge as Public Production GO.**
 
 - **2026-11-23 same-day release confirmation:** consolidated SEC-04 [PR #402](https://github.com/kevinim/kevinim.github.io/pull/402) was squash-merged into existing Pages `main` as `3b3e65f40c886b38724b9e839afce48ecbd29a3b` after 5/5 exact-rebased-head GitHub CI. **Pages and post-deployment browser QA were pending at this note's creation**; verify current workflow status before calling the change live. This releases only fail-closed read-only evidence/candidate checks, **not** a licensed Public Production site. Current rights status remains **0 approved / 288 pending**.
+
+
+### 2026-11-23 — SEC-04 P0 missing-metadata structural triage (PR pending)
+
+- Baseline main at inspection: `f4a5c07b1fa657762bd0bdf383d7587df3e1fa50`, five main release/QA workflows successful; 0 open PRs before this branch.
+- Read-only diagnostic change to `scripts/reconcile-sec04-education-gis-queue.cjs`: the previously undifferentiated **30 unpinned build candidates with no recognized top-level source key** are now subdivided into root arrays, GeoJSON feature-property key hints, GeoJSON features without recognized key, nested key hints, no key detected, and not inspectable.
+- The existing exact-build crosswalk remains the source of the overall counts (288 public data/media candidates / 244 education-or-school-GIS filename candidates / 14 pinned source / 230 unpinned). **New subtype counts are not asserted until exact-head CI executes** and are not equivalent to source, copyright/license, terms, or data provenance verification.
+- Itemized file paths stay in the gitignored local output. Workflow artifacts and logs contain only category counts. Existing `decision=pending`, `redistributionRightsVerified=0`, `publicProductionApproved=false`, and `deployEnabled=false` are unchanged.
+- Acceptance: `node --check` plus focused negative/fixture tests, exact-build SEC-04 workflow, required `verify`; then review of the actual aggregate subtype counts and specific source-page/rights evidence on the next pass. **No separate Public Production launch authorization**.
