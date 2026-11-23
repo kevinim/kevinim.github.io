@@ -39,3 +39,13 @@ Do not set `PUBLIC_DATA_LICENSES_CONFIRMED=confirmed` merely to produce a green 
 4. After the future licensed manifest is reviewed, attach exact-build CI evidence and rerun strict rights audit, privacy/secret CSP/XSS/desktop/mobile checks, and real rollback in the **separate** Public Production release gate.
 
 **Release decision stays PUBLIC PRODUCTION NO-GO.** CI success for a deliberately blocked rights inventory proves the guard executes, not the site is licensed to be published.
+
+## 2026-11-22 SEC-04 review-queue update (candidate grouping only)
+
+The audited source classification now gives reviewers an **asset-by-asset local worksheet** (the ignored file `artifacts/security/public-data-rights-local.json`) and **redacted aggregate review-lane counts** in the CI-safe `public-data-rights-summary.json` artifact. The seven lanes are TEA/education candidate, school GIS candidate, climate/disaster candidate, healthcare candidate, housing/parcel candidate, area/demographics candidate, and unclassified. Extension counts independently reconcile the total. The CI check fails if either grouping does not account for every bundled data/media file.
+
+**Do not interpret these filename-based review queues as verified publishers, licenses, ownership, legal rights, source vintages, attribution evidence, or public release approval.** For example, a file named with a district or a federal agency is only a *candidate for review*, not a recognized license. The registry remains pending-by-default; all pending or excluded/restricted assets keep the strict `--assert-ready` check in NO-GO. Source/terms verification and the decision to link out or exclude a file are separate human review tasks.
+
+Review procedure: produce the sanitized preview in an isolated checkout, run `node scripts/audit-public-data-rights.cjs`, then inspect the **local only** itemized report by lane. For each file, identify the original publisher, actual source URL, authoritative terms that permit or restrict this site's intended redistribution, citation/attribution, snapshot year and any privacy or derivative-geometry restriction. Only a specific evidenced approval in `deploy/public-data-rights.json` can change rights decisions. Avoid uploading the itemized report, unknown paths, raw personal values, API tokens, or screenshots to public Actions/issues.
+
+The SEC-04 audit **does not cover embedded JSON in JavaScript/HTML or dynamic third-party runtime requests**. Those remain independent P0 checks, as does the license status for any new or changed build artifact.
