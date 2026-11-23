@@ -90,6 +90,35 @@ test('SEC-04 internal CFB raster QA worksheets stay in source but never ship in 
  assert.equal(selected.includes('schools.json'),true,'actual school data must not be accidentally removed');
 });
 
+test('SEC-04 exact 12 no-key candidate review keeps three browser assets and nine offline QA datasets out of public preview',()=>{
+ const selected=safeFiles();
+ const internalOnly=[
+  'data/cfb-ag03-official-finder-reconfirmed-public-samples-2026.json',
+  'data/cfb-ag03-zone-roster-review.json',
+  'data/cfb-geometry-source-triage-2026.json',
+  'data/denton-public-modelhome-finder-holdouts-2026.json',
+  'data/denton-public-residential-finder-holdouts-2026.json',
+  'data/dfw-incremental-school-approval-evidence-2026.json',
+  'data/school-data-release-lock.json',
+  'data/tea-cfb-lisd-academic-2026-verified-batch01.json',
+  'data/tea-cfb-lisd-academic-2026-verified-batch02.json'
+ ];
+ assert.equal(internalOnly.length,9);
+ for(const file of internalOnly){
+  assert.ok(fs.existsSync(file),'developer QA evidence must be retained: '+file);
+  assert.ok(!selected.includes(file),'developer-only QA record leaked into public build: '+file);
+ }
+ // These three are loaded by the Denton marker / West DFW panel browser modules.
+ for(const file of [
+  'data/denton-campus-public-points-2026.json',
+  'data/denton-eight-campus-coordinate-exceptions-2026.json',
+  'data/west-dfw-districts-2026.json'
+ ]){
+  assert.ok(fs.existsSync(file),'runtime source unexpectedly removed: '+file);
+  assert.ok(selected.includes(file),'runtime browser dependency must remain: '+file);
+ }
+});
+
 test('SEC-01 preview rebuild cannot erase unrelated source, repository or ancestor directories',()=>{
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'tx-public-preview-output-'));
  try{
