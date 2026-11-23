@@ -37,3 +37,23 @@ When a file lacks independent source terms, retain pending status and prefer a c
 2. Verify every actual official dataset license/version, provenance transformation and attribution before proposing `approved`, `excluded` or `restricted` changes to the rights manifest. Do not infer permission from website reachability, a published PDF or a web map.
 3. Continue per-file reviews in bounded groups (TEA/education, school-GIS, other data families), run this exact-build count and drift test after each data change.
 4. Preserve all Publication `NO-GO` flags until separate legitimate release gates, owner signoff and verified security controls complete.
+
+## Verified exact-build audit numbers — 2026-11-23
+
+Read-only [SEC-04 candidate crosswalk run #45203457265](https://github.com/kevinim/kevinim.github.io/actions/runs/45203457265) on PR #402 confirms the following for the current **sanitized preview**:
+
+| Classification | All candidates | Pinned source evidence in build | Missing pinned evidence |
+| --- | ---: | ---: | ---: |
+| Education/TEA filename candidate | 200 | 7 | 193 |
+| School-GIS filename candidate | 44 | 7 | 37 |
+| **Total** | **244** | **14** | **230** |
+
+- The original 15 pinned source records include **14 in the build and 1 not shipped**. All 14 in-build source files are byte-identical to the pinned repository originals (14 unchanged, 0 transformed). SHA equality is only provenance/version evidence, **not reuse authorization**.
+- Of the **230 without pinned source evidence**, **200** have a top-level JSON field that resembles `source`, `publisher`, `metadata`, `provenance`, or another provenance key; the actual value, official publisher and reuse entitlement remain **unverified**.
+- The other **30** lack these recognized **top-level key names**. Some could contain provenance in nested structures or companion documents; do **not** label them as necessarily unsourced or illegally republished.
+- All 244 files are enumerated only in the ignored, machine-readable local review queue with P0/P1/P2 priority labels. The CI-safe report shows totals only.
+- The complete static preview still contains **288** data/media files with **0 approved and 288 pending**. Rights registry remains unchanged, and `publicProductionApproved=false`.
+
+**Next exact tasks:** begin the 30 top-level-metadata-gap candidates, resolve each to an exact original source/reuse terms/source-year evidence (or classify as internal derived/reference only); proceed with the 200 source-key-bearing unpinned candidates by independent publisher verification; then review rights for the 14 pinned candidates. No dataset should be marked `approved` based on a field name, file checksum or official web page being reachable.
+
+All counts above are as of the PR #402 branch's unmerged build, **not a new live Pages release**.
