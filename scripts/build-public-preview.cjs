@@ -171,13 +171,23 @@ function sanitizeExtractedAssets(sourceHtml,sourceJs){
  return {html:publicHtml,js:publicJs};
 }
 
-// These are offline CFB raster/GCP audit worksheets, not browser runtime data.
-// Keep in development source and omit from the future sanitized public artifact.
-// Do not treat their exclusion as permission to publish remaining datasets.
+// Offline GIS, official-Finder holdout and TEA QA/evidence records are not
+// required by the browser. Retain them in developer source but never copy
+// them into a future sanitized public artifact. Browser-runtime data stays in.
+// This is not a rights approval for any remaining static or remote data.
 const INTERNAL_RESEARCH_ONLY=new Set([
  'data/cfb-ag02-high-gcps.json',
  'data/cfb-ag02-middle-gcps.json',
- 'data/cfb-ag03-contour-label-review.json'
+ 'data/cfb-ag03-contour-label-review.json',
+ 'data/cfb-ag03-official-finder-reconfirmed-public-samples-2026.json',
+ 'data/cfb-ag03-zone-roster-review.json',
+ 'data/cfb-geometry-source-triage-2026.json',
+ 'data/denton-public-modelhome-finder-holdouts-2026.json',
+ 'data/denton-public-residential-finder-holdouts-2026.json',
+ 'data/dfw-incremental-school-approval-evidence-2026.json',
+ 'data/school-data-release-lock.json',
+ 'data/tea-cfb-lisd-academic-2026-verified-batch01.json',
+ 'data/tea-cfb-lisd-academic-2026-verified-batch02.json'
 ]);
 
 function safeFiles(){
