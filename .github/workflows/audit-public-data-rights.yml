@@ -54,11 +54,15 @@ jobs:
           const r=require('./artifacts/security/sec04-education-gis-crosswalk-summary.json');
           const lanes=r.reviewLaneTotals;
           if(r.status!=='BLOCKED_EVIDENCE_AND_RIGHTS_REVIEW' ||
-             r.candidateCount!==241 ||
-             lanes.tea_education_candidate.total!==200 ||
-             lanes.school_gis_candidate.total!==41 ||
-             r.pinnedCandidateCount+r.candidatesWithoutPinnedEvidence!==241 ||
+             r.candidateCount!==232 ||
+             lanes.tea_education_candidate.total!==198 ||
+             lanes.school_gis_candidate.total!==34 ||
+             r.pinnedCandidateCount+r.candidatesWithoutPinnedEvidence!==232 ||
              Object.values(r.unpinnedCandidateMetadataSignals||{}).reduce((a,b)=>a+b,0)!==r.candidatesWithoutPinnedEvidence ||
+             r.unpinnedCandidateMetadataSignals.no_structured_source_fields!==18 ||
+             r.unpinnedMetadataGapSubtypes.no_source_key_found_manual_review!==3 ||
+             r.pinnedCandidateCount!==14 ||
+             r.pinnedRecordsNotInBuild!==1 ||
              r.sourceEvidenceRecordCount!==15 ||
              r.pinnedSourcesPresentInBuild>15 ||
              r.redistributionRightsVerified!==0 ||
