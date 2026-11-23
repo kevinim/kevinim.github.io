@@ -5,6 +5,11 @@ on:
     paths:
       - 'scripts/audit-public-data-rights.cjs'
       - 'tests/audit-public-data-rights.test.cjs'
+      - 'scripts/reconcile-sec04-education-gis-queue.cjs'
+      - 'tests/reconcile-sec04-education-gis-queue.test.cjs'
+      - 'deploy/sec04-education-gis-evidence.json'
+      - 'scripts/audit-sec04-education-gis-evidence.cjs'
+      - 'tests/audit-sec04-education-gis-evidence.test.cjs'
       - 'deploy/public-data-rights.json'
       - '.github/workflows/audit-public-data-rights.yml'
       - 'docs/SEC04_PUBLIC_DATA_RIGHTS_REVIEW_20261121.md'
@@ -34,6 +39,34 @@ jobs:
         run: node scripts/verify-public-preview.cjs
       - name: Enumerate every public build data and media item
         run: node scripts/audit-public-data-rights.cjs
+      - name: Test and reconcile exact education/GIS built assets against pinned source evidence
+        run: |
+          node --check scripts/reconcile-sec04-education-gis-queue.cjs
+          node --test tests/reconcile-sec04-education-gis-queue.test.cjs
+          node --test tests/audit-sec04-education-gis-evidence.test.cjs
+          node scripts/reconcile-sec04-education-gis-queue.cjs
+      - name: Assert all education/GIS candidates have a review row without granting rights
+        run: |
+          node - <<'NODE'
+          const r=require('./artifacts/security/sec04-education-gis-crosswalk-summary.json');
+          const lanes=r.reviewLaneTotals;
+          if(r.status!=='BLOCKED_EVIDENCE_AND_RIGHTS_REVIEW' ||
+             r.candidateCount!==244 ||
+             lanes.tea_education_candidate.total!==200 ||
+             lanes.school_gis_candidate.total!==44 ||
+             r.pinnedCandidateCount+r.candidatesWithoutPinnedEvidence!==244 ||
+             r.sourceEvidenceRecordCount!==15 ||
+             r.pinnedSourcesPresentInBuild>15 ||
+             r.redistributionRightsVerified!==0 ||
+             r.publicProductionApproved!==false)
+            process.exit(1);
+          console.log('SEC04_CROSSWALK_EXPECTED_NO_GO '+JSON.stringify({
+            candidates:r.candidateCount,pinned:r.pinnedCandidateCount,
+            needsSourceReview:r.candidatesWithoutPinnedEvidence,
+            sourceFieldSignals:r.embeddedSourceFieldSignals,
+            rightsApproved:0
+          }));
+          NODE
       - name: Prove no unapproved rights are silently promoted to GO
         run: |
           node - <<'NODE'
@@ -55,6 +88,8 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: sec04-redacted-rights-summary
-          path: artifacts/security/public-data-rights-summary.json
+          path: |
+            artifacts/security/public-data-rights-summary.json
+            artifacts/security/sec04-education-gis-crosswalk-summary.json
           if-no-files-found: warn
           retention-days: 14
