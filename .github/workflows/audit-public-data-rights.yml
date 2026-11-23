@@ -55,6 +55,7 @@ jobs:
              lanes.tea_education_candidate.total!==200 ||
              lanes.school_gis_candidate.total!==44 ||
              r.pinnedCandidateCount+r.candidatesWithoutPinnedEvidence!==244 ||
+             Object.values(r.unpinnedCandidateMetadataSignals||{}).reduce((a,b)=>a+b,0)!==r.candidatesWithoutPinnedEvidence ||
              r.sourceEvidenceRecordCount!==15 ||
              r.pinnedSourcesPresentInBuild>15 ||
              r.redistributionRightsVerified!==0 ||
@@ -63,7 +64,7 @@ jobs:
           console.log('SEC04_CROSSWALK_EXPECTED_NO_GO '+JSON.stringify({
             candidates:r.candidateCount,pinned:r.pinnedCandidateCount,
             needsSourceReview:r.candidatesWithoutPinnedEvidence,
-            sourceFieldSignals:r.embeddedSourceFieldSignals,
+            missingOrUnverifiedSourceSignals:r.unpinnedCandidateMetadataSignals,
             rightsApproved:0
           }));
           NODE
