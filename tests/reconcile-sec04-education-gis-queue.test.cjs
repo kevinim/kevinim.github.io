@@ -141,4 +141,4 @@ test('metadata gap subtypes distinguish arrays, GeoJSON feature properties, nest
  assert.equal(metadataGapSubtype(p('allen-school-more.geojson')),'geojson_feature_properties_need_review');
  change('tea-unreviewed.json','not-json');
  assert.equal(metadataGapSubtype(p('tea-unreviewed.json')),'not_inspectable_manual_review');
-});
+}));
