@@ -1,6 +1,6 @@
 # TX DFW — Production Security Tracker
 
-> **Canonical security release ledger (proposed until merged to `main`).**  
+> **Canonical security release ledger after PR #377 merge.** Older dated tables are historical snapshots; use the latest appended review and live GitHub evidence.  
 > Last audited: **2026-11-21 (America/New_York)**. Baseline `main`: `7775b89fcd42eeb38c224894e3a9b4594263e76e`.  
 > **Release decision: PUBLIC PRODUCTION NO-GO.** Creating this tracker, an Issue, a green CI run, or a Draft PR **never** authorizes deployment, visibility changes, history rewrites, paid services, or a public launch.
 
@@ -142,3 +142,15 @@ Use this format in the Issue and user-facing handoff:
 | Reviewed | Date and source revision |
 
 Only append **factual completed work**. If an agent has not edited GitHub or run a test, record `not executed` rather than promising a result.
+
+## 2026-11-23 release review — supersedes older PR-state snapshots
+
+**Owner instruction:** Review and safely merge currently open PRs to existing GitHub Pages. This does **not** approve separate Public Production launch, Cloudflare Pages/family authentication, paid services, repository visibility changes, historical Git rewrite, license grants, or exposure of family data.
+
+- **SEC-01 preview safety** PR #396, **SEC-04 fail-closed initial rights** PR #397, **SEC-02 redacted historical audit** PR #398 were merged and live-verified 2026-11-22. The known history pattern objects (**4**) and redistribution pending (**288**) are **not** remediated. See [Issue #378](https://github.com/kevinim/kevinim.github.io/issues/378) and [SEC-04 #371](https://github.com/kevinim/kevinim.github.io/issues/371).
+- **SEC-04 consolidated provenance crosswalk** [PR #402](https://github.com/kevinim/kevinim.github.io/pull/402) replaces closed/unmerged #399 and #401. On exact PR SHA `32f7be11aaa5644ce9111b4b600eab6c956281c7` **5/5 GitHub CI workflows passed**: exact sanitized preview has **288 media/data files; 244 education/GIS filename candidates (200+44); 14 with SHA-pinned source evidence and 230 without; among 230 unpinned, 200 have source-shaped top-level key names, 30 have none**. This is structural triage only, not publisher/license clearance. **0/288 rights approvals**, Public Production NO-GO. Verify merge and actual Pages/smoke separately.
+- **Security objective closure:** full SEC-01–SEC-11 remain **0/11 DONE**. Installed partial audits are not whole-objective closure. SEC-09 Cloudflare/family authentication is owner-deferred, not completed.
+- **TX address/school P0 UI correction** [PR #400](https://github.com/kevinim/kevinim.github.io/pull/400) squash-merged as `b50d0de0eb8a0ca213c185cff3d7f4fb08a6da90` after 7/7 exact-branch CI. It distinguishes Plano High (9–10) vs Senior High (11–12) missing-coverage warnings; it does **not** certify enrollment or school assignment. Verify Pages and postdeploy live checks separately.
+- **Autonomous design PR #392** is documentation, not evidence that a scheduled run can deploy.
+- Older dated descriptions of #381/#385 as open/unmerged are historical: both were superseded and closed **unmerged** after #398/#397 respectively.
+- Continue to record exact SHA, CI, Pages, source and rights decisions in Issues #371/#378. **Never interpret a security documentation or audit merge as Public Production GO.**
