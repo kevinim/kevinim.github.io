@@ -736,7 +736,7 @@ test('official manual result only checks user transcription, never upgrades old 
  assert.ok(h.includes('officialReviewPanelHtml(home)'));
  assert.ok(h.includes('wireOfficialReviewPanel(home)'));
  assert.ok(h.includes('homeOfficialRequest?.abort()'));
- assert.ok(html.includes('official-school-review.js?v=3'));
+ assert.ok(html.includes('official-school-review.js?v=5'));
  assert.ok(readText('candidate-compare.js').includes('savedOfficialReview:item.officialReview'));
 });
 test('P0 home geocoding rejects uncertain TX and does not silently choose a tied home',()=>{

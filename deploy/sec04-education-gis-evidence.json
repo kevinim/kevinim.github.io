@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-11-23",
+  "scope": "15 selected existing TEA/education and school GIS source/provenance files. NOT all 244 filename-triaged candidate assets, and NOT a verified redistribution decision.",
+  "sourceRightsPolicy": "No blanket approval: original publisher links and dataset availability do not constitute permission to rehost or adapt protected materials.",
+  "teaSourcePolicy": "https://tea.texas.gov/about-tea/welcome-and-overview/site-policies",
+  "teaDirectLinkPolicy": "https://tea.texas.gov/about-tea/welcome-and-overview/tea-website-linking-policy",
+  "thirdPartyArcgisPolicy": "https://doc.arcgis.com/en/arcgis-online/reference/access-use-constraints.htm",
+  "defaultDecision": "pending",
+  "records": [
+    {
+      "path": "data/tea-accountability-2026-verified-batch.json",
+      "sourceBlobSha": "67909466be96ed143a04e4ee1eb6b7f38f89ac33",
+      "group": "tea",
+      "metadataMarker": "2026 Campus Accountability Summary",
+      "sourcePage": "https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-accountability-rating-system",
+      "termsPage": "https://tea.texas.gov/about-tea/welcome-and-overview/site-policies",
+      "evidenceLevel": "publisher-site-and-dataset-portal-checked",
+      "rightsDecision": "pending",
+      "fileMatchedToIndependentlyLicensedDataset": false
+    },
+    {
+      "path": "data/tea-staar-meets-2026-verified-batch.json",
+      "sourceBlobSha": "d273e4da7dcd65fcd8fb6ad6563dc3ced5ec89bf",
+      "group": "tea",
+      "metadataMarker": "2026 Campus STAAR Performance",
+      "sourcePage": "https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-accountability-rating-system",
+      "termsPage": "https://tea.texas.gov/about-tea/welcome-and-overview/site-policies",
+      "evidenceLevel": "publisher-site-and-dataset-portal-checked",
+      "rightsDecision": "pending",
+      "fileMatchedToIndependentlyLicensedDataset": false
+    },
+    {
+      "path": "data/tea-peims-2025-26-statewide-parity-audit-2282.json",
+      "sourceBlobSha": "a36d22f85f0a01d6a4fbe6492cbf574d31f68577",
+      "group": "tea",
+      "metadataMarker": "Texas Education Agency",
+      "sourcePage": "https://tea.texas.gov/data-reports/school-performance/accountability-research/enrollment-trends",
+      "termsPage": "https://tea.texas.gov/about-tea/welcome-and-overview/site-policies",
+      "evidenceLevel": "publisher-site-checked-dataset-record-present",
+      "rightsDecision": "pending",
+      "fileMatchedToIndependentlyLicensedDataset": false
+    },
+    {
+      "path": "data/tea-allen-mckinney-campus-qa-2026.json",
+      "sourceBlobSha": "4a9d27c529257dc1540d4f9521db0d0439b24b8e",
+      "group": "tea",
+      "metadataMarker": "rptsvr1.tea.texas.gov",
+      "sourcePage": "https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-accountability-rating-system",
+      "termsPage": "https://tea.texas.gov/about-tea/welcome-and-overview/site-policies",
+      "evidenceLevel": "publisher-site-checked-dataset-record-present",
+      "rightsDecision": "pending",
+      "fileMatchedToIndependentlyLicensedDataset": false
+    },
+    {
+      "path": "data/tea-cfb-lisd-academic-2026-verified-batch01.json",
+      "sourceBlobSha": "1ae43b6dedf79d36e05995dd645105fcdae0ee4e",
+      "group": "tea",
+      "metadataMarker": "Texas Education Agency",
+      "sourcePage": "https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-accountability-rating-system",
+      "termsPage": "https://tea.texas.gov/about-tea/welcome-and-overview/site-policies",
+      "evidenceLevel": "publisher-site-checked-dataset-record-present",
+      "rightsDecision": "pending",
+      "fileMatchedToIndependentlyLicensedDataset": false
+    },
+    {
+      "path": "data/tea-2026-uat-progress.json",
+      "sourceBlobSha": "8ce1acc4e67316e1bf5ff7928be6197ed1ab3ed9",
+      "group": "tea",
+      "metadataMarker": "data/tea-accountability-2026-verified-batch.json",
+      "sourcePage": "https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-accountability-rating-system",
+      "termsPage": "https://tea.texas.gov/about-tea/welcome-and-overview/site-policies",
+      "evidenceLevel": "local-pipeline-record-only",
+      "rightsDecision": "pending",
+      "fileMatchedToIndependentlyLicensedDataset": false
+    },
+    {
+      "path": "data/tea-profile-progress-2026.json",
+      "sourceBlobSha": "325f80ede38da22efcad9362e6415911ab3080d9",
+      "group": "tea",
+      "metadataMarker": "tea-ratings-2026.json",
+      "sourcePage": "https://tea.texas.gov/school-and-district-leaders/accountability/academic-accountability/performance-reporting/2026-accountability-rating-system",
+      "termsPage": "https://tea.texas.gov/about-tea/welcome-and-overview/site-policies",
+      "evidenceLevel": "local-pipeline-record-only",
+      "rightsDecision": "pending",
+      "fileMatchedToIndependentlyLicensedDataset": false
+    },
+    {
+      "path": "data/denton-2026-27-gis-source-disposition.json",
+      "sourceBlobSha": "7931374c0dc9bb6dde7731904f84037b421c2e45",
+      "group": "gis",
+      "metadataMarker": "https://www.dentonisd.org/families/attendance-zones",
+      "sourcePage": "https://www.dentonisd.org/families/attendance-zones",
+      "termsPage": null,
+      "evidenceLevel": "official-current-pdf-list-confirmed-no-geometry-license",
+      "rightsDecision": "pending",
+      "fileMatchedToIndependentlyLicensedDataset": false
+    },
+    {
+      "path": "data/mckinney-2026-27-provenance.json",
+      "sourceBlobSha": "319f963cabf4fdb7cfe27155c810ce48a093b753",
+      "group": "gis",
+      "metadataMarker": "https://www.mckinneyisd.net/page/attendance-zones-maps/",
+      "sourcePage": "https://www.mckinneyisd.net/page/attendance-zones-maps/",
+      "termsPage": null,
+      "evidenceLevel": "official-zone-publication-confirmed-no-geometry-license",
+      "rightsDecision": "pending",
+      "fileMatchedToIndependentlyLicensedDataset": false
+    },
+    {
+      "path": "data/cfb-approved-zone-raster-reference-2026.json",
+      "sourceBlobSha": "3cf588c6d5808b976bb4d529390fc58f3ded5c49",
+      "group": "gis",
+      "metadataMarker": "https://www.cfbisd.edu/students/school-maps-locator-system",
+      "sourcePage": "https://www.cfbisd.edu/students/school-maps-locator-system",
+      "termsPage": "https://app.guidek12.com/ahsd/school_search/2022/terms_and_conditions.html",
+      "evidenceLevel": "original-source-reference-only",
+      "rightsDecision": "pending",
+      "fileMatchedToIndependentlyLicensedDataset": false
+    },
+    {
+      "path": "data/cfb-historical-city-gis-links-2020.json",
+      "sourceBlobSha": "4aa8e6bf367260ba92781b5de9ae35c84cf005ae",
+      "group": "gis",
+      "metadataMarker": "https://www.cityofcarrollton.com/about-us/about-the-city/city-maps",
+      "sourcePage": "https://www.cityofcarrollton.com/about-us/about-the-city/city-maps",
+      "termsPage": null,
+      "evidenceLevel": "historical-publisher-reference-no-verified-license",
+      "rightsDecision": "pending",
+      "fileMatchedToIndependentlyLicensedDataset": false
+    },
+    {
+      "path": "data/finder-derived-source-rights-2026.json",
+      "sourceBlobSha": "bb5dd9b1ceb4166525a58d3cc5c52b7241a45ff9",
+      "group": "gis",
+      "metadataMarker": "https://app.guidek12.com/ahsd/school_search/2022/terms_and_conditions.html",
+      "sourcePage": "https://www.cfbisd.edu/students/school-maps-locator-system",
+      "termsPage": "https://app.guidek12.com/ahsd/school_search/2022/terms_and_conditions.html",
+      "evidenceLevel": "service-terms-restrictions-reviewed-no-geometry-permission",
+      "rightsDecision": "pending",
+      "fileMatchedToIndependentlyLicensedDataset": false
+    },
+    {
+      "path": "data/carrollton-three-isd-boundaries-2025.geojson",
+      "sourceBlobSha": "33c45acffb2403af69d892dda37b1b78ae5915bb",
+      "group": "gis",
+      "metadataMarker": "2025–26 Texas Legislative Council: School Districts",
+      "sourcePage": "https://data.capitol.texas.gov/dataset/school-districts/resource/57fb5e91-c849-4a33-aaa4-ea073ca98f8f",
+      "termsPage": "https://data.capitol.texas.gov/dataset/school-districts/resource/57fb5e91-c849-4a33-aaa4-ea073ca98f8f",
+      "evidenceLevel": "source-resource-published-cc-by-derivation-check-pending",
+      "rightsDecision": "pending",
+      "fileMatchedToIndependentlyLicensedDataset": false
+    },
+    {
+      "path": "data/dfw-next-gis-source-candidates-20261121.json",
+      "sourceBlobSha": "bda8ad0fb8bbe4d8fa55e01e5a8612f368d49e31",
+      "group": "gis",
+      "metadataMarker": "https://gisservice.cityofmesquite.com",
+      "sourcePage": "https://www.mesquiteisd.org/189249_2",
+      "termsPage": null,
+      "evidenceLevel": "link-candidates-only-no-geometry-reuse-review",
+      "rightsDecision": "pending",
+      "fileMatchedToIndependentlyLicensedDataset": false
+    },
+    {
+      "path": "data/west-dfw-zone-source-audit-2026.json",
+      "sourceBlobSha": "5367eab8c1b606c872eb99b1392d6a9a911c1828",
+      "group": "gis",
+      "metadataMarker": "https://www.southlakecarroll.edu/",
+      "sourcePage": "https://www.southlakecarroll.edu/district-information/district-departments/student-services/online-enrollment-portal",
+      "termsPage": null,
+      "evidenceLevel": "link-candidates-only-no-geometry-reuse-review",
+      "rightsDecision": "pending",
+      "fileMatchedToIndependentlyLicensedDataset": false
+    }
+  ]
+}

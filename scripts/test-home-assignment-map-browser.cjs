@@ -125,10 +125,36 @@ async function run(){
    await review.locator('select[aria-label="공식 검색기 결과 학년도"]').selectOption('2026–27');
    await review.locator('input[type=checkbox]').check();
    await review.getByRole('button',{name:'학교급별 결과 비교'}).click();
+   assert.match(await review.locator('[role=status]').innerText(),/0\/4개 일치/,
+    'Missing residence type must not silently use house');
+   assert.equal(await review.locator('[data-crosscheck-level]').
+    filter({hasText:'주거 형태를 먼저 선택하세요'}).count(),4);
+   await review.locator('select[aria-label="주거 형태"]').selectOption('house');
+   await review.getByRole('button',{name:'학교급별 결과 비교'}).click();
    assert.match(await review.locator('[role=status]').innerText(),/4\/4개 일치/);
    assert.match(await review.locator('[role=status]').innerText(),/독립 검증 아님/);
    assert.equal(await page.evaluate(()=>window.__reviewSyntheticItem.assignment.status),
     'conditional-finder-only','manual results must never write home.assignment');
+   // Source vintage can change while the GIS school names remain identical.
+   // A previous 4/4 user review must not remain cached against new evidence.
+   const metadataDrift=await page.evaluate(()=>{
+    const names={elementary:'Haun Elementary',middle:'Robinson Middle',
+     high:'Jasper High',senior:'Plano West Senior High'};
+    const raw={district:'PISD',status:'finder-current',
+     features:Object.entries(names).map(([gradeLevel,school])=>({
+      type:'Feature',properties:{gradeLevel,school,sourceVintage:'updated reference evidence'},
+      geometry:{type:'Polygon',coordinates:[[[0,0],[1,0],[1,1],[0,0]]]}
+     }))};
+    window.HomeResidentialSchoolCheck.mount(document.getElementById('homeAssignmentPriority'),
+     window.__reviewSyntheticItem,raw,DISTRICT_REGISTRY,window.TrustedLinkPolicy.official);
+    return {result:window.__reviewSyntheticItem.residentialSchoolReview.result,
+     status:document.querySelector('#homeResidentialSchoolCrosscheck [role=status]').textContent};
+   });
+   assert.equal(metadataDrift.result,null,'Changed GIS source vintage must invalidate a cached matching result');
+   assert.match(metadataDrift.status,/직접 비교 전/);
+   await review.getByRole('button',{name:'학교급별 결과 비교'}).click();
+   assert.match(await review.locator('[role=status]').innerText(),/4\/4개 일치/,
+    'Current manual inputs can be re-compared; result remains uncertified');
    // P0 regression: stale comparison invalidates on edit, mismatch and GIS source drift.
    await review.locator('input[aria-label="공식 검색기 Senior High 학교명"]').fill('SYNTHETIC WRONG SENIOR');
    assert.match(await review.locator('[role=status]').innerText(),/다시 비교해야 합니다/);
@@ -177,6 +203,10 @@ async function run(){
     await lisd.locator('input[aria-label="공식 검색기 '+grade+' 학교명"]').fill(name);
    await lisd.locator('select[aria-label="공식 검색기 결과 학년도"]').selectOption('2026–27');
    await lisd.locator('input[type=checkbox]').check();
+   await lisd.getByRole('button',{name:'학교급별 결과 비교'}).click();
+   assert.match(await lisd.locator('[role=status]').innerText(),/0\/4개 일치/,
+    'LISD missing residence type also blocks user-reported GIS matches');
+   await lisd.locator('select[aria-label="주거 형태"]').selectOption('house');
    await lisd.getByRole('button',{name:'학교급별 결과 비교'}).click();
    assert.match(await lisd.locator('[role=status]').innerText(),/4\/4개 일치/);
    assert.match(await lisd.locator('[role=status]').innerText(),/독립 검증 아님/);
