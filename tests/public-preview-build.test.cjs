@@ -104,6 +104,8 @@ test('SEC-04 exact 12 no-key candidate review keeps three browser assets and nin
   'data/tea-cfb-lisd-academic-2026-verified-batch02.json'
  ];
  assert.equal(internalOnly.length,9);
+ assert.ok(selected.includes('data/tea-cfb-lisd-academic-2026-verified-batch01.json'),
+  'source-pinned TEA academic batch01 must remain until separately reviewed');
  for(const file of internalOnly){
   assert.ok(fs.existsSync(file),'developer QA evidence must be retained: '+file);
   assert.ok(!selected.includes(file),'developer-only QA record leaked into public build: '+file);
