@@ -161,3 +161,10 @@ Per run report:
 - [ ] Future automatic low-risk merging — **not approved and not part of current scope**.
 
 This design documentation is staged in **Draft PR #392**, not merged into `main`. Current publicly accessible family Pages remains unchanged; separate Public Production remains NO-GO.
+
+## 2026-11-23 review and current operating status
+
+- This is an **operating design**, not proof that an automation can keep running indefinitely, deliver asynchronously, or merge changes without human authorization. The linked ChatGPT daily scheduled task is a separate existing service. The original task label in the 2026-11-21 baseline can differ from the present UI title; use the stable ID in this document and inspect its current settings when necessary.
+- The owner explicitly authorized review and release of the currently open, CI-green PRs on 2026-11-23. This **one-time owner request** does not change the default scheduled-task policy: future automation runs still stage PRs for owner review unless separately authorized.
+- Source audit tools merged through [#402](https://github.com/kevinim/kevinim.github.io/pull/402) and Plano High/Senior UI fix merged through [#400](https://github.com/kevinim/kevinim.github.io/pull/400). Previous references to #381/#385 being open are historical; both were closed unmerged after their audits were consolidated via #398/#397. Always restore live state before acting.
+- Separate Cloudflare Pages/family authentication, a new public-production host, billed services, source-visibility changes and Git history rewrites remain **outside this design's execution authorization**; Public Production is still **NO-GO**.
