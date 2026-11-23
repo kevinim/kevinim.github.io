@@ -25,6 +25,49 @@ function metadataSignal(file){
    ? 'source_shaped_field_present_unverified':'no_structured_source_fields';
  }catch{return 'invalid_json_or_unreadable'}
 }
+
+/** Diagnostic subtypes for candidates with no TOP-LEVEL source key.
+ * File names and raw source values remain local; these are structural hints only.
+ * Never use a subtype to approve redistribution or certify an origin.
+ */
+const GAP_SUBTYPES=Object.freeze([
+ 'root_array_manual_review',
+ 'geojson_feature_property_source_key_unverified',
+ 'geojson_feature_properties_need_review',
+ 'nested_source_key_unverified',
+ 'no_source_key_found_manual_review',
+ 'not_inspectable_manual_review'
+]);
+const SOURCE_KEY=/^(?:source|sources|sourceurl|sourceurls|publisher|attribution|license|metadata|provenance|origin|citation|retrievedfrom|rawsources|sourcedata)$/i;
+function metadataGapSubtype(file){
+ if(!/\.(?:json|geojson)$/i.test(file))return 'not_inspectable_manual_review';
+ try{
+  if(fs.statSync(file).size>5_000_000)return 'not_inspectable_manual_review';
+  const data=JSON.parse(fs.readFileSync(file,'utf8'));
+  if(Array.isArray(data))return 'root_array_manual_review';
+  if(!data||typeof data!=='object')return 'not_inspectable_manual_review';
+  if(data.type==='FeatureCollection'&&Array.isArray(data.features)){
+   const hasKey=data.features.slice(0,3).some(feature=>
+    feature&&typeof feature==='object'&&
+    feature.properties&&typeof feature.properties==='object'&&
+    Object.keys(feature.properties).some(k=>SOURCE_KEY.test(k)));
+   return hasKey?'geojson_feature_property_source_key_unverified':
+    'geojson_feature_properties_need_review';
+  }
+  const seen=new Set();
+  function nestedKey(value,depth){
+   if(!value||typeof value!=='object'||depth>3||seen.has(value))return false;
+   seen.add(value);
+   if(Array.isArray(value))
+    return value.slice(0,3).some(item=>nestedKey(item,depth+1));
+   return Object.entries(value).slice(0,100).some(([key,item])=>
+    (depth>0&&SOURCE_KEY.test(key))||nestedKey(item,depth+1));
+  }
+  return nestedKey(data,0)?'nested_source_key_unverified':
+   'no_source_key_found_manual_review';
+ }catch{return 'not_inspectable_manual_review'}
+}
+
 function reconcile(root,bundleDir,registry,manifest){
  validateManifest(manifest);
  const rights=audit(bundleDir,registry);
@@ -44,6 +87,7 @@ function reconcile(root,bundleDir,registry,manifest){
   invalid_json_or_unreadable:0,
  };
  const unpinnedSignals=Object.fromEntries(Object.keys(signals).map(x=>[x,0]));
+ const metadataGapSubtypes=Object.fromEntries(GAP_SUBTYPES.map(x=>[x,0]));
  let byteIdentical=0,transformed=0,pinnedCount=0;
  const localQueue=candidates.map(item=>{
   const rec=byPath.get(item.path);
@@ -64,6 +108,9 @@ function reconcile(root,bundleDir,registry,manifest){
   const signal=metadataSignal(path.join(bundleDir,item.path));
   signals[signal]++;
   if(!pinnedSource)unpinnedSignals[signal]++;
+  const metadataGapSubtypeResult=!pinnedSource&&signal==='no_structured_source_fields'
+   ?metadataGapSubtype(path.join(bundleDir,item.path)):null;
+  if(metadataGapSubtypeResult)metadataGapSubtypes[metadataGapSubtypeResult]++;
   return {
    relativeBuildPath:item.path,
    reviewLane:item.reviewLane,
@@ -74,6 +121,7 @@ function reconcile(root,bundleDir,registry,manifest){
     signal==='source_shaped_field_present_unverified'?'P1_VALIDATE_SOURCE_METADATA':
     'P0_SOURCE_FILE_MANUAL_INSPECTION',
    embeddedSourceKeySignal:signal,
+   metadataGapSubtype:metadataGapSubtypeResult,
    rightsDecision:item.decision,
    redistributionPermissionEstablished:false,
    sourceByteIdentity
@@ -98,6 +146,7 @@ function reconcile(root,bundleDir,registry,manifest){
   candidatesWithoutPinnedEvidence:candidates.length-pinnedCount,
   embeddedSourceFieldSignals:signals,
   unpinnedCandidateMetadataSignals:unpinnedSignals,
+  unpinnedMetadataGapSubtypes:metadataGapSubtypes,
   rightsDecisions:rights.summary.rightsDecisions,
   redistributionRightsVerified:0,
   publicProductionApproved:false,
@@ -115,6 +164,7 @@ function reconcile(root,bundleDir,registry,manifest){
     Object.values(laneCounts).reduce((a,x)=>a+x.total,0)!==candidates.length||
     Object.values(signals).reduce((a,x)=>a+x,0)!==candidates.length||
     Object.values(unpinnedSignals).reduce((a,x)=>a+x,0)!==candidates.length-pinnedCount||
+    Object.values(metadataGapSubtypes).reduce((a,x)=>a+x,0)!==unpinnedSignals.no_structured_source_fields||
     !all.every(x=>x.decision==='pending')||
     rights.summary.status!=='BLOCKED_RIGHTS_REVIEW_REQUIRED')
   throw Error('SEC04_CROSSWALK_INVARIANT_FAILED');
@@ -138,6 +188,7 @@ function main(root=process.cwd()){
   pinned:result.summary.pinnedCandidateCount,
   needsEvidence:result.summary.candidatesWithoutPinnedEvidence,
   unpinnedSourceSignals:result.summary.unpinnedCandidateMetadataSignals,
+  unpinnedMetadataGapSubtypes:result.summary.unpinnedMetadataGapSubtypes,
   lanes:result.summary.reviewLaneTotals,
   bytes:{identical:result.summary.pinnedCandidateByteIdentical,
     transformed:result.summary.pinnedCandidateByteTransformed},
@@ -152,4 +203,4 @@ if(require.main===module){
   process.exitCode=2;
  }
 }
-module.exports={CANDIDATES,metadataSignal,reconcile,main};
+module.exports={CANDIDATES,GAP_SUBTYPES,metadataSignal,metadataGapSubtype,reconcile,main};

@@ -109,3 +109,19 @@
 - Baseline main `bf310c5f9bbfc43a760ae9688e160fedd22a3ee3`. Narrow change in `features/school-reference-preview.js` plus synthetic regression `tests/school-reference-preview.test.cjs` on `agent/tx-p0-plano-high-senior-coverage-20261123`.
 - Previously a Senior High polygon could suppress the missing High alert. For Plano 9–10 High and 11–12 Senior High are separate levels; each missing layer must now be independently reported. This is **reference-only GIS coverage UI**, not verified street/unit/grade/year enrollment or new GIS polygons. Source: Plano ISD current SchoolFinder-linked GIS (source layer named 2025–26; exact year independent certification unresolved). No new data copied or source rights asserted.
 - CI and PR evidence to be recorded on Issue #378 and #125 at exact PR HEAD. **Main merge and Pages deployment require per-PR owner authorization**. Public Production remains NO-GO.
+
+
+### 2026-11-23 — TX-P2-02 / SEC-04 scoped follow-up
+
+- Last live baseline checked: `main f4a5c07b1fa657762bd0bdf383d7587df3e1fa50`, Pages run `45212038482` and post-deploy school-map smoke `45212189082` successful, open PRs 0 before work began.
+- This scoped P0 security/data-rights diagnostic adds deeper **structural review subtypes** for the 30 education/GIS preview files without top-level source fields. This is a triage improvement only; exact subtype counts are pending branch CI. 0/288 redistribution rights established, independent residential enrollment certification 0 ISDs, and separate Public Production NO-GO.
+- No new school polygons, enrollment claims, provider workarounds, confidential fields, hosting changes, Cloudflare/family authentication, or live runtime modifications.
+- Continue #378 and #371 with exact-head PR QA and source-by-source legal/evidence review; separate parent-school/GIS milestones are not cleared by this audit.
+
+
+#### Exact-head CI evidence for metadata-gap subtype pass (2026-11-23 UTC)
+
+- Tested code head `9e2e2dcdef128683c56a3560ad6d9f8533d3e501`: [SEC-04 exact-build rights inventory 45234041413](https://github.com/kevinim/kevinim.github.io/actions/runs/45234041413) **SUCCESS**, unit tests 11+7+5 = 23 passed, none failed; [required main JS/data `verify` 45234041343](https://github.com/kevinim/kevinim.github.io/actions/runs/45234041343) **SUCCESS**; [public preview security/browser QA 45234041251](https://github.com/kevinim/kevinim.github.io/actions/runs/45234041251) **SUCCESS** (full-history Gitleaks job skipped, not falsely counted as run).
+- Exact sanitized build: **30/30** previously no-top-level-source-key unpinned candidates classified: **13 nested source-shaped key hints**, **2 GeoJSON feature-property records without recognized source keys**, **15 files with no recognized source key**, **0 root arrays / key-bearing GeoJSON / uninspectable**.
+- Full counters unchanged: 288 static data/media candidates, 244 education/school GIS filename candidates, 14 Git-pinned source records (byte-identical), **230 source evidence gaps, 0 independently approved redistribution rights**.
+- This PR remains a *read-only audit plus documentation change*. It neither closes SEC-04 nor approves any currently pending dataset. Main Pages release remains unchanged; no family auth or separate Public Production deployment.
