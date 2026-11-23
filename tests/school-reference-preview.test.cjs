@@ -56,6 +56,50 @@ test('explicit stale or unconfirmed school feature year cannot be elevated by di
  valid.properties.schoolYear='2026–27';
  assert.equal(plan({...candidate(),features:[valid]}).kind,'reference-only');
 });
+test('Plano current Finder publishes vintage-labeled four-level GIS references without official enrollment',()=>{
+ const features=['elementary','middle','high','senior'].map(level=>{
+  const f=school(level,'PLANO '+level.toUpperCase());
+  Object.assign(f.properties,{sourceDistrict:'PISD',currentFinderSource:true,
+   yearVerified2627:false,sourceVintage:'Current district Finder (source layer 2025–26)'});
+  return f;
+ });
+ const raw={district:'PISD',status:'finder-current',features};
+ const p=plan(raw);
+ assert.equal(p.kind,'reference-only');
+ assert.equal(p.referenceOnlyFinderVintage,true);
+ assert.match(p.year,/2025–26/);
+ assert.deepEqual(p.candidates.map(c=>c.level),['초등','중등','고등','Senior High']);
+ assert.ok(p.candidates.every(c=>/2025–26/.test(c.yearNote)));
+ assert.equal(p.missing.length,0);
+ assert.equal(policy.apply(raw).status,'conditional-finder-only');
+ for(const patch of [{sourceDistrict:'BAD'},{sourceVintage:'2026–27'},
+  {currentFinderSource:false},{yearVerified2627:true}]){
+  const changed={...features[0],properties:{...features[0].properties,...patch}};
+  assert.equal(plan({...raw,features:[changed,...features.slice(1)]}).kind,'unavailable');
+ }
+ assert.equal(plan({...raw,status:'reference'}).kind,'unavailable','cached GIS not live');
+ assert.equal(plan({...raw,status:'finder-boundary-review'}).kind,'unavailable','near-edge not safe');
+});
+test('Lewisville mixed-year Finder GIS may show only explicit levels and never certify apartments',()=>{
+ const features=['elementary','middle','high'].map(level=>{
+  const f=school(level,'LISD '+level.toUpperCase());
+  Object.assign(f.properties,{
+   yearVerified2627:false,verifiedYear:null,
+   sourceYear:level==='high'?'2025-26':null,
+   sourceVintage:level==='high'?'공식 검색기 연결 · 고등 레이어 2025–26 표기':'공식 검색기 연결 · 학년도 미확인'});
+  return f;
+ });
+ const raw={district:'LISD',status:'finder-current',features};
+ const p=plan(raw);
+ assert.equal(p.kind,'reference-only');
+ assert.equal(p.referenceOnlyFinderVintage,true);
+ assert.ok(p.notices.some(x=>/아파트/.test(x)));
+ assert.ok(p.candidates[2].yearNote.includes('2025–26'));
+ assert.equal(policy.apply(raw).status,'conditional-finder-only');
+ assert.equal(plan({...raw,status:'reference'}).kind,'unavailable');
+ const tampered={...features[2],properties:{...features[2].properties,sourceYear:'2027-28'}};
+ assert.equal(plan({...raw,features:[...features.slice(0,2),tampered]}).kind,'unavailable');
+});
 test('Prosper official GIS campus IDs are forwarded without upgrading residential certification',()=>{
  const f=school('elementary','JUDY RUCKER EL');
  Object.assign(f.properties,{sourceDistrict:'PROSPER',current:true,sourceYearConfirmed:true,
@@ -72,6 +116,48 @@ test('Prosper official GIS campus IDs are forwarded without upgrading residentia
   assert.equal(plan({...raw,features:[changed]}).kind,'unavailable',
    'Invalid Prosper source identity must not enter an address card');
  }
+});
+
+
+test('2026-27 Prosper new-student closures warn separately from current attendance geometry',()=>{
+ const examples=[
+  {id:'043912117',code:'117',name:'DAN CHRISTIE EL',from:'Christie',to:'Thomson'},
+  {id:'043912042',code:'042',name:'Reynolds Middle School',from:'Reynolds',to:'Rushing'},
+  {id:'043912046',code:'046',name:'Moseley Middle School',from:'Moseley',to:'Rushing'}
+ ];
+ for(const e of examples){
+  const grade=e.code==='117'?'elementary':'middle';
+  const f=school(grade,e.name);
+  Object.assign(f.properties,{sourceDistrict:'PROSPER',current:true,sourceYearConfirmed:true,
+   sourceVintage:'2026–27',schoolYear:'2026–27',campusId:e.id,schoolCode:e.code});
+  const raw={district:'PROSPER',status:'current',features:[f]};
+  const p=plan(raw);
+  assert.equal(p.kind,'reference-only');
+  assert.equal(p.candidates[0].school,e.name,'Do not substitute GIS school with enrollment placement');
+  assert.ok(p.notices.some(t=>t.includes(e.from)&&t.includes(e.to)),e.name);
+  assert.equal(p.capacityNoticeUrl,'https://www.prosper-isd.net/page/closed-to-enrollment');
+  assert.ok(p.notices.some(t=>t.includes('퇴교 후 재등록')));
+  assert.equal(policy.apply(raw).status,'conditional-finder-only');
+  assert.equal(policy.releaseSummary().currentYearResidentialDistrictApprovals,0);
+  if(e.code==='117')assert.ok(p.notices.some(t=>t.includes('유치원(K)')));
+  const modified={...f,properties:{...f.properties,sourceVintage:'2025–26'}};
+  assert.equal(plan({...raw,features:[modified]}).kind,'unavailable');
+  const badId={...f,properties:{...f.properties,campusId:'043912999'}};
+  assert.equal(plan({...raw,features:[badId]}).kind,'unavailable','campusId must agree with schoolCode');
+ }
+});
+test('Prosper unrelated schools never receive a false capacity closure notice',()=>{
+ const f=school('elementary','JUDY RUCKER EL');
+ Object.assign(f.properties,{sourceDistrict:'PROSPER',current:true,sourceYearConfirmed:true,
+  sourceVintage:'2026–27',schoolYear:'2026–27',campusId:'043912102',schoolCode:'102'});
+ const p=plan({district:'PROSPER',status:'current',features:[f]});
+ assert.equal(p.kind,'reference-only');
+ assert.equal(p.notices.length,0);
+ assert.ok(!('capacityNoticeUrl' in p));
+ const x=preview.plan({district:'PROSPER',status:'current',features:[
+  {...f,properties:{...f.properties,school:'DAN CHRISTIE EL',campusId:'043912117',schoolCode:'117'}}
+ ]},DISTRICT_REGISTRY,()=>null);
+ assert.equal(x.kind,'unavailable','untrusted official URL must not be accepted');
 });
 
 test('Frisco Nelson and McKinney transfer exceptions must not be silently hidden',()=>{
@@ -97,4 +183,25 @@ test('preview is not part of the locked residential assignment or map matching p
  assert.match(src,/home\.referencePreviewRequested=true/);
  assert.match(src,/const result=home\.assignment/);
  assert.doesNotMatch(src,/home\.assignment\s*=\s*referencePlan/);
+});
+
+test('Plano 9–10 High and 11–12 Senior High must each be present independently',()=>{
+ const make=level=>{
+  const f=school(level,'SYNTHETIC PLANO '+level);
+  Object.assign(f.properties,{sourceDistrict:'PISD',currentFinderSource:true,
+   yearVerified2627:false,sourceVintage:'Current district Finder (source layer 2025–26)'});
+  return f;
+ };
+ const raw={district:'PISD',status:'finder-current'};
+ const seniorOnly=plan({...raw,features:['elementary','middle','senior'].map(make)});
+ assert.equal(seniorOnly.kind,'reference-only');
+ assert.deepEqual(seniorOnly.missing,['고등'],'Senior cannot fill missing 9–10 High');
+ assert.ok(seniorOnly.notices.some(n=>n.includes('9–10')&&n.includes('11–12')));
+ const highOnly=plan({...raw,features:['elementary','middle','high'].map(make)});
+ assert.deepEqual(highOnly.missing,['Senior High'],'9–10 High cannot fill 11–12 Senior');
+ const both=plan({...raw,features:['elementary','middle','high','senior'].map(make)});
+ assert.deepEqual(both.missing,[]);
+ assert.equal(both.referenceOnlyFinderVintage,true);
+ assert.equal(policy.apply({...raw,features:['elementary','middle','senior'].map(make)}).status,'conditional-finder-only');
+ assert.equal(policy.releaseSummary().currentYearResidentialDistrictApprovals,0);
 });

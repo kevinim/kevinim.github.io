@@ -125,10 +125,128 @@ async function run(){
    await review.locator('select[aria-label="공식 검색기 결과 학년도"]').selectOption('2026–27');
    await review.locator('input[type=checkbox]').check();
    await review.getByRole('button',{name:'학교급별 결과 비교'}).click();
+   assert.match(await review.locator('[role=status]').innerText(),/0\/4개 일치/,
+    'Missing residence type must not silently use house');
+   assert.equal(await review.locator('[data-crosscheck-level]').
+    filter({hasText:'주거 형태를 먼저 선택하세요'}).count(),4);
+   await review.locator('select[aria-label="주거 형태"]').selectOption('house');
+   await review.getByRole('button',{name:'학교급별 결과 비교'}).click();
    assert.match(await review.locator('[role=status]').innerText(),/4\/4개 일치/);
    assert.match(await review.locator('[role=status]').innerText(),/독립 검증 아님/);
    assert.equal(await page.evaluate(()=>window.__reviewSyntheticItem.assignment.status),
     'conditional-finder-only','manual results must never write home.assignment');
+   // Source vintage can change while the GIS school names remain identical.
+   // A previous 4/4 user review must not remain cached against new evidence.
+   const metadataDrift=await page.evaluate(()=>{
+    const names={elementary:'Haun Elementary',middle:'Robinson Middle',
+     high:'Jasper High',senior:'Plano West Senior High'};
+    const raw={district:'PISD',status:'finder-current',
+     features:Object.entries(names).map(([gradeLevel,school])=>({
+      type:'Feature',properties:{gradeLevel,school,sourceVintage:'updated reference evidence'},
+      geometry:{type:'Polygon',coordinates:[[[0,0],[1,0],[1,1],[0,0]]]}
+     }))};
+    window.HomeResidentialSchoolCheck.mount(document.getElementById('homeAssignmentPriority'),
+     window.__reviewSyntheticItem,raw,DISTRICT_REGISTRY,window.TrustedLinkPolicy.official);
+    return {result:window.__reviewSyntheticItem.residentialSchoolReview.result,
+     status:document.querySelector('#homeResidentialSchoolCrosscheck [role=status]').textContent};
+   });
+   assert.equal(metadataDrift.result,null,'Changed GIS source vintage must invalidate a cached matching result');
+   assert.match(metadataDrift.status,/직접 비교 전/);
+   await review.getByRole('button',{name:'학교급별 결과 비교'}).click();
+   assert.match(await review.locator('[role=status]').innerText(),/4\/4개 일치/,
+    'Current manual inputs can be re-compared; result remains uncertified');
+   // P0 regression: stale comparison invalidates on edit, mismatch and GIS source drift.
+   await review.locator('input[aria-label="공식 검색기 Senior High 학교명"]').fill('SYNTHETIC WRONG SENIOR');
+   assert.match(await review.locator('[role=status]').innerText(),/다시 비교해야 합니다/);
+   await review.getByRole('button',{name:'학교급별 결과 비교'}).click();
+   assert.match(await review.locator('[role=status]').innerText(),/3\/4개 일치/);
+   assert.match(await review.locator('[role=status]').innerText(),/1개 불일치/);
+   const drift=await page.evaluate(()=>{
+    const raw={district:'PISD',status:'finder-current',features:[
+     ['elementary','Haun Elementary'],['middle','Robinson Middle'],
+     ['high','SYNTHETIC CHANGED HIGH'],['senior','Plano West Senior High']
+    ].map(([gradeLevel,school])=>({type:'Feature',properties:{gradeLevel,school},
+     geometry:{type:'Polygon',coordinates:[[[0,0],[1,0],[1,1],[0,0]]]}}))};
+    window.HomeResidentialSchoolCheck.mount(document.getElementById('homeAssignmentPriority'),
+     window.__reviewSyntheticItem,raw,DISTRICT_REGISTRY,window.TrustedLinkPolicy.official);
+    return {result:window.__reviewSyntheticItem.residentialSchoolReview.result,
+     status:document.querySelector('#homeResidentialSchoolCrosscheck [role=status]').textContent,
+     approval:window.ConditionalSchoolRelease.releaseSummary().currentYearResidentialDistrictApprovals};
+   });
+   assert.equal(drift.result,null,'Changed GIS source must invalidate previous result');
+   assert.match(drift.status,/직접 비교 전/);
+   assert.equal(drift.approval,0);
+   await page.evaluate(()=>document.getElementById('homeResidentialSchoolCrosscheck')?.remove());
+   // LISD: 4 school stages include 9th-grade intermediate. Apartment override
+   // must block all user-entered matches, not silently certify a home address.
+   await page.evaluate(()=>{
+    const raw={district:'LISD',status:'finder-current',features:[
+     ['elementary','SYNTHETIC LISD EL'],['middle','SYNTHETIC LISD MID'],
+     ['intermediate','SYNTHETIC LISD NINTH'],['high','SYNTHETIC LISD HIGH']
+    ].map(([gradeLevel,school])=>({type:'Feature',properties:{gradeLevel,school},
+     geometry:{type:'Polygon',coordinates:[[[0,0],[1,0],[1,1],[0,0]]]}}))};
+    window.__lisdTest={geocodeQuality:{usableForSchoolCandidate:true},
+     assignment:{district:'LISD',status:'conditional-finder-only'}};
+    window.HomeResidentialSchoolCheck.mount(document.getElementById('homeAssignmentPriority'),
+     window.__lisdTest,raw,DISTRICT_REGISTRY,window.TrustedLinkPolicy.official);
+   });
+   const lisd=page.locator('#homeResidentialSchoolCrosscheck');
+   await lisd.waitFor();
+   assert.equal(await lisd.getByRole('link',{name:'학군 공식 주소 검색기 열기'}).getAttribute('href'),
+    'https://www.lisd.net/resources/families/school-locator');
+   assert.match(await lisd.innerText(),/아파트는 공식 Find an Apartment/);
+   assert.match(await lisd.innerText(),/GIS 적용 연도 미확인/);
+   assert.equal(await lisd.locator('p.source[data-footnotes-keep]').count(),2,
+    'Source-year and official apartment warnings must never be hidden as footnotes');
+   for(const [grade,name] of [['초등','SYNTHETIC LISD EL'],['중등','SYNTHETIC LISD MID'],
+    ['9학년','SYNTHETIC LISD NINTH'],['고등','SYNTHETIC LISD HIGH']])
+    await lisd.locator('input[aria-label="공식 검색기 '+grade+' 학교명"]').fill(name);
+   await lisd.locator('select[aria-label="공식 검색기 결과 학년도"]').selectOption('2026–27');
+   await lisd.locator('input[type=checkbox]').check();
+   await lisd.getByRole('button',{name:'학교급별 결과 비교'}).click();
+   assert.match(await lisd.locator('[role=status]').innerText(),/0\/4개 일치/,
+    'LISD missing residence type also blocks user-reported GIS matches');
+   await lisd.locator('select[aria-label="주거 형태"]').selectOption('house');
+   await lisd.getByRole('button',{name:'학교급별 결과 비교'}).click();
+   assert.match(await lisd.locator('[role=status]').innerText(),/4\/4개 일치/);
+   assert.match(await lisd.locator('[role=status]').innerText(),/독립 검증 아님/);
+   await lisd.locator('select[aria-label="주거 형태"]').selectOption('apartment');
+   assert.match(await lisd.locator('[role=status]').innerText(),/다시 비교해야 합니다/);
+   await lisd.getByRole('button',{name:'학교급별 결과 비교'}).click();
+   assert.match(await lisd.locator('[role=status]').innerText(),/0\/4개 일치/);
+   assert.equal(await lisd.locator('[data-crosscheck-level]').
+    filter({hasText:'아파트용 공식 검색기에서 재확인 필요'}).count(),4);
+   assert.equal(await lisd.locator('[data-crosscheck-level]:visible').count(),4,
+    'Per-school apartment blockers must remain visible outside optional footnotes');
+   const denied=await page.evaluate(()=>{
+    const x=window.__lisdTest;
+    const vals=Array.from({length:localStorage.length},(_,i)=>localStorage.getItem(localStorage.key(i)))
+     .concat(Array.from({length:sessionStorage.length},(_,i)=>sessionStorage.getItem(sessionStorage.key(i))));
+    return {status:x.residentialSchoolReview.result.status,
+     certified:x.residentialSchoolReview.result.certified,
+     independent:x.residentialSchoolReview.result.independentOfficialLookup,
+     original:x.assignment.status,piiStored:vals.some(v=>/SYNTHETIC LISD (EL|MID|NINTH|HIGH)/.test(String(v))),
+     approvals:window.ConditionalSchoolRelease.releaseSummary().currentYearResidentialDistrictApprovals};
+   });
+   assert.equal(denied.status,'not-independent-verification');
+   assert.equal(denied.certified,false);
+   assert.equal(denied.independent,false);
+   assert.equal(denied.original,'conditional-finder-only');
+   assert.equal(denied.piiStored,false);
+   assert.equal(denied.approvals,0);
+   await page.evaluate(()=>{
+    window.__lisdTest.geocodeQuality.usableForSchoolCandidate=false;
+    const raw={district:'LISD',status:'finder-boundary-review',features:[]};
+    window.HomeResidentialSchoolCheck.mount(document.getElementById('homeAssignmentPriority'),
+     window.__lisdTest,raw,DISTRICT_REGISTRY,window.TrustedLinkPolicy.official);
+   });
+   assert.equal(await page.evaluate(()=>window.__lisdTest.residentialSchoolReview.result),null);
+   assert.match(await lisd.innerText(),/주소 좌표가 불확실/);
+   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+5),
+    'LISD apartment/9th-grade review overflows '+width+'px');
+   await page.evaluate(()=>{document.getElementById('homeResidentialSchoolCrosscheck')?.remove();
+    delete window.__lisdTest;});
+   console.log('PASS P0 Plano drift and LISD apartment, 9th grade, precision fail-closed at '+width+'px');
    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+5),
     'new school comparison must not horizontally overflow at '+width+' px');
    await page.evaluate(()=>document.getElementById('homeResidentialSchoolCrosscheck')?.remove());

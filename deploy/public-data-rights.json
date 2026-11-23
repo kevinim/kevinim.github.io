@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "description": "SEC-04: evidence-backed review decisions for each data/media file in the sanitized Public Production distribution. An absent entry is PENDING, not permission.",
+  "defaultDecision": "pending",
+  "assets": {}
+}

@@ -122,7 +122,7 @@ function verifyExternalCspIntegrity(html){
  const inline=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
   .filter(x=>!/\bsrc\s*=/.test(x[1])&&x[2].trim());
  if(inline.length)throw Error('External build must have zero executable inline scripts');
- const tag='<script src="./dashboard-main.js?v=21"></script>';
+ const tag='<script src="./dashboard-main.js?v=22"></script>';
  if(html.split(tag).length!==2)throw Error('External bootstrap tag missing or duplicated');
  return {policy,inlineHashes:0};
 }
@@ -182,10 +182,31 @@ function safeFiles(){
   .filter(f=>f!=='index.html')
   .sort();
 }
+// SEC-01: This command deletes its output folder before rebuilding. Never
+// accept arbitrary repository paths (for example data/ or features/) as output.
+// Also reject a symlinked dist/ parent or output root to prevent traversing
+// outside the checkout, even when the textual path looks safe.
+function validatePreviewOutput(outdir=OUTPUT, cwd=process.cwd()){
+ const repo=path.resolve(cwd);
+ const out=path.resolve(repo,outdir);
+ const expected=path.join(repo,OUTPUT);
+ if(out!==expected)throw Error('Preview output must be exactly dist/public-preview');
+ const dist=path.join(repo,'dist');
+ if(fs.existsSync(dist)){
+  const parent=fs.lstatSync(dist);
+  if(!parent.isDirectory()||parent.isSymbolicLink()||
+     fs.realpathSync(dist)!==path.join(fs.realpathSync(repo),'dist'))
+   throw Error('Unsafe preview output parent: dist must be a real directory');
+ }
+ if(fs.existsSync(out)){
+  const stat=fs.lstatSync(out);
+  if(!stat.isDirectory()||stat.isSymbolicLink())
+   throw Error('Unsafe preview output target: not a real directory');
+ }
+ return {repo,out};
+}
 function build(outdir=OUTPUT){
- const out=path.resolve(outdir), repo=process.cwd();
- if(!out.startsWith(repo+path.sep))throw Error('Preview output must remain inside this repository');
- if(out===repo||out===path.resolve(repo,'dist'))throw Error('Refusing to erase source or build root');
+ const {repo,out}=validatePreviewOutput(outdir);
  fs.rmSync(out,{recursive:true,force:true});fs.mkdirSync(out,{recursive:true});
  for(const f of safeFiles()){
   const source=path.resolve(repo,f);if(!source.startsWith(repo+path.sep))throw Error('Unsafe source path');
@@ -208,4 +229,4 @@ if(require.main===module)try{
  const built=build(process.argv[2]||OUTPUT);
  process.stdout.write('Public preview built locally for security review only; '+built.files+' curated files; NOT DEPLOYED.\n');
 }catch(e){process.stderr.write('Public preview blocked: '+e.message+'\n');process.exitCode=1;}
-module.exports={sanitizeIndex,sanitizeExtractedAssets,verifyExternalCspIntegrity,safeFiles,build,cspSourceSnapshot,verifyCspIntegrity,relockSanitizedCsp};
+module.exports={sanitizeIndex,sanitizeExtractedAssets,verifyExternalCspIntegrity,safeFiles,build,validatePreviewOutput,cspSourceSnapshot,verifyCspIntegrity,relockSanitizedCsp};

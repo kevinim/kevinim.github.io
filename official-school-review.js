@@ -99,7 +99,19 @@ function makeResidentialSchoolModel(raw,{precise=false,officialUrl=null}={}){
   precise:precise===true,sourceStatus:String(raw?.status||'unavailable'),
   status:!precise?'imprecise-address':!supported?'district-unknown':
    !RESIDENTIAL_REFERENCE_STATES.has(raw?.status)?'gis-reference-unavailable':'reference-only',
-  sourceSignature:JSON.stringify([district,raw?.status,candidates.map(x=>[x.level,x.schools,x.sourceVintage])]),
+  // Invalidate a prior manual result when source provenance or geocode quality
+  // changes even if the displayed school names remain identical.
+  sourceSignature:JSON.stringify([
+   district,raw?.status,precise===true,
+   typeof officialUrl==='string'?officialUrl:null,
+   candidates.map(x=>[x.level,x.schools,x.sourceVintage]),
+   allowed&&Array.isArray(raw?.features)?raw.features.map(f=>{
+    const p=f?.properties||{};
+    return [p.gradeLevel||null,p.school||null,p.schoolYear||null,
+     p.sourceYear||null,p.sourceVintage||null,p.verifiedYear||null,
+     p.yearVerified2627??null,p.campusId||null,p.sourceUrl||null];
+   }).sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b))):null
+  ]),
   independentOfficialResult:false,
   officialLookupIntegrated:false
  };
@@ -110,6 +122,7 @@ function compareResidentialSchoolReport(model,reported){
  const names=reported.schools||{};
  const exact=reported.exactAddressReviewed===true;
  const year=reported.schoolYear==='2026–27';
+ const residenceKnown=reported.residenceType==='house'||reported.residenceType==='apartment';
  const apartment=reported.residenceType==='apartment';
  const results=model.candidates.map(c=>{
   const value=typeof names[c.level]==='string'?names[c.level].trim():'';
@@ -117,6 +130,9 @@ function compareResidentialSchoolReport(model,reported){
   if(value.length>130)return {level:c.level,status:'invalid-name'};
   if(!exact)return {level:c.level,status:'exact-address-unconfirmed'};
   if(!year)return {level:c.level,status:'year-unconfirmed'};
+  // A blank/unsupported residence type must not silently inherit 'house'.
+  // Unit-level exception handling depends on an explicit user choice.
+  if(!residenceKnown)return {level:c.level,status:'residence-type-unconfirmed'};
   if(!model.precise)return {level:c.level,status:'imprecise-address'};
   if(apartment&&model.district==='LISD')
    return {level:c.level,status:'apartment-requires-official-locator'};
@@ -158,7 +174,7 @@ function mountResidentialSchoolReview(after,item,raw,registry,official){
  }
  state.schools=state.schools||{};
  state.schoolYear=state.schoolYear||'';
- state.residenceType=state.residenceType||'house';
+ state.residenceType=['house','apartment'].includes(state.residenceType)?state.residenceType:'';
  state.exactAddressReviewed=state.exactAddressReviewed===true;
  item.residentialSchoolReview=state;
  const invalidateReview=()=>{
@@ -177,8 +193,10 @@ function mountResidentialSchoolReview(after,item,raw,registry,official){
  details.open=state.open!==false;
  details.addEventListener('toggle',()=>{state.open=details.open});
  details.appendChild(el('summary',null,'공식 주소별 학교 대조 · '+(state.result?.status==='user-reported-all-levels-consistent'?'모든 학교급 수동 일치':'독립 자동 검증 미완료')));
- details.appendChild(el('p','source',
-  '1. 공식 검색기에서 동일 주소와 학년도를 조회하세요. 2. 표시된 학교 이름을 아래에 입력해 비교하세요. 대조 결과는 브라우저 메모리에서만 유지되며 교육청 독립 인증이 아닙니다.'));
+ const instructions=el('p','source',
+  '1. 공식 검색기에서 동일 주소와 학년도를 조회하세요. 2. 표시된 학교 이름을 아래에 입력해 비교하세요. 대조 결과는 브라우저 메모리에서만 유지되며 교육청 독립 인증이 아닙니다.');
+ instructions.setAttribute('data-footnotes-keep',''); // Safety-critical, not an optional citation.
+ details.appendChild(instructions);
  if(officialUrl){
   const link=el('a','cardlink','학군 공식 주소 검색기 열기');
   link.href=officialUrl;link.target='_blank';link.rel='noopener noreferrer';
@@ -191,9 +209,14 @@ function mountResidentialSchoolReview(after,item,raw,registry,official){
    :model.district==='PROSPER'
     ?'Prosper: Infofinder의 브라우저 직접 조회에는 CORS 제한이 있습니다. 좌표 GIS 후보 일치만으로 주소 배정을 인증하지 않습니다.'
     :'GIS 경계의 학교명은 참고용입니다. 실제 학교 배정은 공식 주소별 조회에 따릅니다.';
- details.appendChild(el('p','source',important));
- if(model.status!=='reference-only')
-  details.appendChild(el('p','source','참고 GIS 후보 확인 불가: '+(model.status==='imprecise-address'?'주소 좌표가 불확실합니다.':model.status==='district-unknown'?'학군 소속을 확인해야 합니다.':'지도 학교 후보가 없거나 경계·아파트 예외가 있습니다.')+' 공식 검색 결과는 참고로 입력할 수 있지만 일치 판정하지 않습니다.'));
+ const warning=el('p','source',important);
+ warning.setAttribute('data-footnotes-keep',''); // Keep apartment/source-year warnings visible.
+ details.appendChild(warning);
+ if(model.status!=='reference-only'){
+  const blocked=el('p','source','참고 GIS 후보 확인 불가: '+(model.status==='imprecise-address'?'주소 좌표가 불확실합니다.':model.status==='district-unknown'?'학군 소속을 확인해야 합니다.':'지도 학교 후보가 없거나 경계·아파트 예외가 있습니다.')+' 공식 검색 결과는 참고로 입력할 수 있지만 일치 판정하지 않습니다.');
+  blocked.setAttribute('data-footnotes-keep','');
+  details.appendChild(blocked);
+ }
  const yearRow=el('div','field'),yearLabel=el('label',null,'공식 조회 결과 학년도');
  const yearSelect=el('select');yearSelect.setAttribute('aria-label','공식 검색기 결과 학년도');
  for(const [v,label] of [['','학년도 미확인'],['2026–27','2026–27 결과 확인'],['older','과거·다른 학년도']]){
@@ -204,7 +227,7 @@ function mountResidentialSchoolReview(after,item,raw,registry,official){
  yearRow.append(yearLabel,yearSelect);details.appendChild(yearRow);
  const typeRow=el('div','field'),typeLabel=el('label',null,'주거 형태');
  const typeSelect=el('select');typeSelect.setAttribute('aria-label','주거 형태');
- for(const [v,label] of [['house','단독주택·일반 주소'],['apartment','아파트·공동주택']]){
+ for(const [v,label] of [['','주거 형태를 선택하세요'],['house','단독주택·일반 주소'],['apartment','아파트·공동주택']]){
   const option=el('option',null,label);option.value=v;typeSelect.appendChild(option);
  }
  typeSelect.value=state.residenceType;
@@ -220,12 +243,15 @@ function mountResidentialSchoolReview(after,item,raw,registry,official){
   input.setAttribute('aria-label','공식 검색기 '+c.label+' 학교명');
   input.placeholder=c.label+' 학교 이름';input.value=state.schools[c.level]||'';
   input.oninput=()=>{state.schools[c.level]=input.value;invalidateReview()};
+  hint.setAttribute('data-footnotes-keep',''); // Campus vintage is decision-critical.
   row.append(title,hint,label,input);
   const status=el('span','source');status.setAttribute('data-crosscheck-level',c.level);
+  status.setAttribute('data-footnotes-keep',''); // Individual mismatch/apartment blockers stay visible.
   const rowResult=state.result?.results?.find(x=>x.level===c.level);
   status.textContent=rowResult?.status==='user-reported-match'?'사용자 입력과 GIS 참고 후보 일치':
    rowResult?.status==='user-reported-mismatch'?'불일치 · 공식 검색 결과를 우선 확인':
    rowResult?.status==='apartment-requires-official-locator'?'아파트별 공식 조회 필요':
+   rowResult?.status==='residence-type-unconfirmed'?'주거 형태를 선택해야 비교 가능':
    rowResult&&rowResult.status!=='not-entered'?'독립 확인 불가 · 확정 배정 아님':'';
   row.appendChild(status);details.appendChild(row);fields.set(c.level,input);
  }
@@ -258,6 +284,7 @@ function mountResidentialSchoolReview(after,item,raw,registry,official){
    if(label)label.textContent=one.status==='user-reported-match'?'사용자 입력과 GIS 참고 후보 일치':
     one.status==='user-reported-mismatch'?'불일치 · 공식 검색기 확인 필요':
     one.status==='not-entered'?'미입력':one.status==='apartment-requires-official-locator'?'아파트용 공식 검색기에서 재확인 필요':
+    one.status==='residence-type-unconfirmed'?'주거 형태를 먼저 선택하세요':
     '일치 여부 판단 불가 · 확인 필요';
   }
  };

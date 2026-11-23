@@ -11,7 +11,23 @@
   PROSPER:{status:'current',currency:'always',year:'2026–27',source:'Prosper ISD 공식 학교별 경계'},
   '043907':{status:'finder-current',currency:'live',year:'2026–27',source:'McKinney ISD 공식 Finder 연결 경계'}
  });
+ // Current district-operated Finders whose linked *geometry* is not proved
+ // equivalent to 2026–27. Live references only, never a current-year grant.
+ const FINDER_VINTAGE=Object.freeze({
+  PISD:{status:'finder-current',currency:'finder',year:'GIS 원본 2025–26',
+   source:'Plano ISD SchoolFinder 연결 원본(2025–26 레이어)'},
+  LISD:{status:'finder-current',currency:'finder',year:'고등 2025–26 / 초·중 적용년도 미확인',
+   source:'Lewisville ISD School Locator 연결 GIS'}
+ });
  const LEVEL=Object.freeze({elementary:'초등',middle:'중등',high:'고등',senior:'Senior High'});
+ // Prosper ISD 2026–27 new-enrollment restrictions, NOT changes to published GIS zones.
+ // Exact campus IDs come from Prosper's official Infofinder i 31-campus dataset.
+ const PROSPER_CLOSED=Object.freeze({
+  '043912117':'Prosper ISD 2026–27 신규 등록: Christie Elementary 구역의 신규 학생은 유치원(K)을 제외하고 Thomson Elementary로 안내됩니다. K학년은 예외입니다.',
+  '043912042':'Prosper ISD 2026–27 신규 등록: Reynolds Middle 구역의 신규 학생은 공사 기간 Rushing Middle로 안내됩니다.',
+  '043912046':'Prosper ISD 2026–27 신규 등록: Moseley Middle 구역의 신규 학생은 Rushing Middle로 안내됩니다.'
+ });
+ const PROSPER_CLOSED_SOURCE='https://www.prosper-isd.net/page/closed-to-enrollment';
  const REASONS=Object.freeze({
   'needs-address-verification':'주소 위치 정밀도가 충분하지 않습니다.',
   'apartment-split-review':'아파트·건물별 배정 예외가 있어 참고 후보를 표시하지 않습니다.',
@@ -31,7 +47,8 @@
  function plan(raw,registry,official){
   if(!raw||typeof raw!=='object')return blocked('학교 자료가 없습니다.');
   if(Object.hasOwn(REASONS,raw.status))return blocked(REASONS[raw.status]);
-  const cfg=CURRENT[raw.district],entry=registry?.[raw.district];
+  const cfg=CURRENT[raw.district]||FINDER_VINTAGE[raw.district],entry=registry?.[raw.district];
+  const vintageLimited=Object.prototype.hasOwnProperty.call(FINDER_VINTAGE,raw.district);
   if(!cfg||!entry||raw.status!==cfg.status||entry.currency!==cfg.currency)
    return blocked('현행 학교별 GIS 출처를 독립 확인하지 못했습니다.');
   const safeUrl=typeof official==='function'?official(entry.official):null;
@@ -51,7 +68,21 @@
    // Even a source registered as current cannot promote a feature that
    // explicitly identifies itself as older, proposed or unverified.
    const vintage=String(p.schoolYear||p.sourceVintage||'').replace(/[–—]/g,'-').trim();
-   if((vintage&&vintage!=='2026-27')||p.current===false||p.sourceYearConfirmed===false)
+   if(vintageLimited){
+    // The live Finder must yield precisely the expected publisher-mapped
+    // older/uncertain source. A cached/future/altered schema fails closed.
+    const accepted=raw.district==='PISD'
+     ?p.sourceDistrict==='PISD'&&p.currentFinderSource===true&&
+       p.yearVerified2627===false&&
+       p.sourceVintage==='Current district Finder (source layer 2025–26)'
+     :p.yearVerified2627===false&&p.verifiedYear==null&&
+       p.sourceVintage===(p.gradeLevel==='high'
+        ?'공식 검색기 연결 · 고등 레이어 2025–26 표기'
+        :'공식 검색기 연결 · 학년도 미확인')&&
+       (p.sourceYear==null||p.sourceYear==='2025-26');
+    if(!accepted||p.current===true||p.sourceYearConfirmed===true||p.schoolYear)
+     return blocked('공식 Finder 연결 GIS 원본의 학년도·출처가 변경되어 참고 표시를 중단했습니다.');
+   }else if((vintage&&vintage!=='2026-27')||p.current===false||p.sourceYearConfirmed===false)
     return blocked('해당 학교 도형의 출처 학년도가 현행으로 검증되지 않았습니다.');
    const school=p.school.trim(),key=p.gradeLevel+'|'+school.toLocaleLowerCase('en-US');
    if(seen.has(key))return blocked('같은 학교·학년 후보가 중복되어 표시하지 않습니다.');
@@ -64,15 +95,48 @@
     p.sourceYearConfirmed===true&&p.sourceVintage==='2026–27'&&
     p.schoolYear==='2026–27'&&
     /^043912[0-9]{3}$/.test(String(p.campusId||''))&&
-    /^[0-9]{3}$/.test(String(p.schoolCode||''));
+    /^[0-9]{3}$/.test(String(p.schoolCode||''))&&
+    p.campusId==='043912'+p.schoolCode;
    if(raw.district==='PROSPER'&&p.campusId!=null&&!officialProsper)
     return blocked('Prosper 공식 GIS 캠퍼스 번호 또는 학교 코드가 일치하지 않습니다.');
+   const yearNote=raw.district==='PISD'?'공식 SchoolFinder 연결 · 원본 GIS 레이어 2025–26':
+    raw.district==='LISD'?(p.gradeLevel==='high'?'고등 GIS 2025–26 표기 · 주소 배정 미확인':
+     '초·중 GIS 적용 학년도 미확인 · 주소 배정 미확인'):'';
    candidates.push(Object.freeze({school,level:LEVEL[p.gradeLevel],grades,
+    ...(yearNote?{yearNote}:{}),
     ...(officialProsper?{campusId:String(p.campusId),schoolCode:String(p.schoolCode)}:{})}));
   }
   const covered=new Set(features.map(f=>f.properties.gradeLevel));
-  const missing=['elementary','middle','high'].filter(level=>!covered.has(level)&&!(level==='high'&&covered.has('senior'))).map(l=>LEVEL[l]);
+  // Plano High (grades 9–10) and Senior High (grades 11–12) are distinct.
+  // A Senior-only polygon cannot silently satisfy missing High coverage.
+  const missing=['elementary','middle','high'].filter(level=>!covered.has(level)&&
+   !(level==='high'&&raw.district!=='PISD'&&covered.has('senior'))).map(l=>LEVEL[l]);
+  if(raw.district==='PISD'&&!covered.has('senior'))missing.push('Senior High');
   const notices=[];
+  if(raw.district==='PISD')
+   notices.push('Plano: GIS 원본은 2025–26 명칭입니다. 9–10학년 High와 11–12학년 Senior High를 따로 확인하고 Jackson/Coit Rd 분리 진학을 공식 Finder에서 검증하세요.');
+  if(raw.district==='LISD')
+   notices.push('Lewisville: 고등 GIS 2025–26 표기, 초·중 적용 학년도 미확인. 9학년 및 아파트·호수는 별도의 공식 Find an Apartment에서 확인해야 합니다.');
+  // Only source-audited ID-linked Prosper GIS candidate schools can trigger
+  // published capacity/registration notices. A zone shape never automatically
+  // changes into a school enrollment or a transfer-granted campus.
+  let capacityNoticeUrl=null;
+  if(raw.district==='PROSPER'){
+   let hasCapacityNotice=false;
+   for(const candidate of candidates){
+    const notice=PROSPER_CLOSED[candidate.campusId];
+    if(notice){
+     notices.push(notice);
+     hasCapacityNotice=true;
+    }
+   }
+   if(hasCapacityNotice){
+    notices.push('Prosper ISD: 퇴교 후 재등록하는 학생도 신규 등록으로 분류됩니다. 실제 학년·주소·기존 재학생 예외는 교육청 등록 담당자에게 확인하세요. GIS 경계상 후보학교는 변경하지 않습니다.');
+    const verifiedUrl=typeof official==='function'?official(PROSPER_CLOSED_SOURCE):null;
+    if(typeof verifiedUrl==='string'&&verifiedUrl===PROSPER_CLOSED_SOURCE)
+     capacityNoticeUrl=verifiedUrl;
+   }
+  }
   // Frisco's own 2026–27 locator warns that *new* students inside Nelson's
   // attendance zone may be assigned to Wester because Nelson is at capacity.
   // Reference names must never conceal that enrollment-specific exception.
@@ -84,11 +148,15 @@
    notices.push('McKinney ISD: 기존 학생의 전학·잔류(grandfathering) 승인에 따라 실제 등록 학교가 경계 후보와 달라질 수 있습니다.');
   return Object.freeze({
    kind:'reference-only',district:raw.district,source:cfg.source,year:cfg.year,
+   referenceOnlyFinderVintage:vintageLimited,
    officialUrl:safeUrl,
    candidates:Object.freeze(candidates),
    missing:Object.freeze(missing),
    notices:Object.freeze(notices),
-   warning:'GIS 위치 참고 후보이며 실제 주소별 배정학교가 아닙니다. 배정·전학·학년·아파트 예외는 공식 Finder에서 확인하세요.'
+   ...(capacityNoticeUrl?{capacityNoticeUrl}:{}),
+   warning:vintageLimited
+    ?'공식 검색기에 연결된 연도 불확실 GIS 참고 후보입니다. 2026–27 주소별 배정 인증이 아니며 아파트·학년·진학 예외는 공식 Finder에서 확인하세요.'
+    :'GIS 위치 참고 후보이며 실제 주소별 배정학교가 아닙니다. 배정·전학·학년·아파트 예외는 공식 Finder에서 확인하세요.'
   });
  }
  function render(target,model){
@@ -119,6 +187,13 @@
   if(model.missing.length)wrap.appendChild(node('p','school-reference-warning','표시 불완전: '+model.missing.join('·')+' 자료 미확인'));
   for(const note of model.notices||[])wrap.appendChild(node('p','school-reference-warning',note));
   wrap.appendChild(node('p','school-reference-warning',model.warning));
+  if(model.capacityNoticeUrl==='https://www.prosper-isd.net/page/closed-to-enrollment'){
+   const capacity=node('a','cardlink','Prosper ISD 2026–27 신규 등록 제한 공식 안내');
+   capacity.setAttribute('href',model.capacityNoticeUrl);
+   capacity.setAttribute('target','_blank');
+   capacity.setAttribute('rel','noopener noreferrer');
+   wrap.appendChild(capacity);
+  }
   const link=node('a','cardlink','공식 학교배정 확인하기');
   link.setAttribute('href',model.officialUrl);
   link.setAttribute('target','_blank');

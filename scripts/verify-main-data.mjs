@@ -67,7 +67,7 @@ const test = (name, fn) => {
 
 const inlineScripts = [mainBootstrap];
 test('external main application bootstrap compiles with no inline HTML execution',()=>{
- assert.ok(pageHtml.includes('<script src="./dashboard-main.js?v=21"></script>'));
+ assert.ok(pageHtml.includes('<script src="./dashboard-main.js?v=22"></script>'));
  assert.equal([...pageHtml.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].filter(x=>!/\bsrc\s*=/.test(x[1])&&x[2].trim()).length,0);
  new Script(mainBootstrap,{filename:'dashboard-main.js'});
 });
@@ -736,7 +736,7 @@ test('official manual result only checks user transcription, never upgrades old 
  assert.ok(h.includes('officialReviewPanelHtml(home)'));
  assert.ok(h.includes('wireOfficialReviewPanel(home)'));
  assert.ok(h.includes('homeOfficialRequest?.abort()'));
- assert.ok(html.includes('official-school-review.js?v=2'));
+ assert.ok(html.includes('official-school-review.js?v=5'));
  assert.ok(readText('candidate-compare.js').includes('savedOfficialReview:item.officialReview'));
 });
 test('P0 home geocoding rejects uncertain TX and does not silently choose a tied home',()=>{

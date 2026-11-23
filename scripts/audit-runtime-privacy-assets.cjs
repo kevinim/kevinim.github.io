@@ -4,7 +4,7 @@
 const fs=require('node:fs');
 const path=require('node:path');
 const ROOT=path.resolve(__dirname,'..');
-const PAGES=['index.html','reviewed.html'];
+const PAGES=Object.freeze(['index.html','reviewed.html','redfin-uat.html','rent-map-uat.html','school-grade-uat.html']);
 const ADDRESS_SCRIPTS=[
  'home-lookup-v2.js','home-lookup.js','texas-address-suggest.js',
  'candidate-compare.js','collin-parcel-check.js','school-assignment.js'
@@ -25,7 +25,16 @@ function scanAssetReferences(html,root,page){
   const found=/\b(?:src|href)\s*=\s*["']([^"']+)["']/i.exec(tag);
   if(!found)continue;
   const url=found[1];
-  if(!url.startsWith('./')&&!url.startsWith('/'))continue;
+  // A new inline scheme or insecure URL must never be skipped as an
+  // "external CDN" dependency. Existing HTTPS providers remain unchanged.
+  // Only explicit HTTPS external assets or paths within the publication root
+  // are valid. Scan bare relative references too (not merely "./" paths).
+  const https=/^https:\/\//i.test(url);
+  const scheme=/^[a-z][a-z0-9+.-]*:/i.test(url);
+  if(url.startsWith('//')||(scheme&&!https)||/^[?#]/.test(url)){
+   errors.push(page+': unsafe static asset URL scheme');continue;
+  }
+  if(https)continue;
   let pathname;
   try{pathname=decodeURIComponent(url.split(/[?#]/,1)[0]);}
   catch{errors.push(page+': malformed local asset reference');continue;}
@@ -35,8 +44,21 @@ function scanAssetReferences(html,root,page){
   }
   const rel=path.relative(root,absolute).replace(/\\/g,'/');
   assets.push(rel);
-  if(!fs.existsSync(absolute)||!fs.statSync(absolute).isFile()){
-   errors.push(page+': missing referenced static asset '+rel);
+  if(!fs.existsSync(absolute)){
+   errors.push(page+': missing referenced static asset '+rel);continue;
+  }
+  // A symlinked script or stylesheet can resolve outside the audited
+  // publication directory even when its textual href appears harmless.
+  // Reject direct symlinks as well as paths through symlinked directories.
+  try{
+   const stat=fs.lstatSync(absolute);
+   const real=fs.realpathSync(absolute),realRoot=fs.realpathSync(root);
+   if(stat.isSymbolicLink()||(real!==realRoot&&!real.startsWith(realRoot+path.sep))){
+    errors.push(page+': unsafe symlink or external static asset target');continue;
+   }
+   if(!stat.isFile())errors.push(page+': referenced static asset is not a file '+rel);
+  }catch{
+   errors.push(page+': static asset target cannot be verified');
   }
  }
  return {errors,assets};
@@ -46,7 +68,30 @@ function audit(root=ROOT){
  for(const page of PAGES){
   const file=path.join(root,page);
   if(!fs.existsSync(file)){errors.push('missing public entrypoint '+page);continue;}
-  const result=scanAssetReferences(fs.readFileSync(file,'utf8'),root,page);
+  const html=fs.readFileSync(file,'utf8');
+  // Cover all public family/UAT entrypoints, not just the primary/legacy page.
+  // Meta CSP and notices are partial controls; they are not HTTP headers or auth.
+  if(!/<meta\s+http-equiv="Content-Security-Policy"(?:\s|>)/i.test(html))
+   errors.push(page+': missing document CSP declaration');
+  if(page==='reviewed.html'){
+   if(!html.includes('id="legacyPrivacyNotice"'))
+    errors.push(page+': missing legacy external-provider disclosure');
+  }else if(!html.includes('id="homePrivacy"')||!html.includes('id="destinationPrivacy"')){
+   errors.push(page+': missing address or destination external-provider disclosure');
+  }
+  // Any externally loaded executable script or stylesheet needs pinned SRI.
+  // This includes all three UAT pages; the older XSS audit covered only two.
+  for(const tag of html.match(/<(?:script|link)\b[^>]*>/gi)||[]){
+   const isScript=/^<script\b/i.test(tag),isStylesheet=/^<link\b/i.test(tag)&&
+    /\brel\s*=\s*["']stylesheet["']/i.test(tag);
+   if(!isScript&&!isStylesheet)continue;
+   const m=/\b(?:src|href)\s*=\s*["'](https:\/\/[^"']+)["']/i.exec(tag);
+   if(!m)continue;
+   if(!/\bintegrity\s*=\s*["']sha(?:256|384|512)-[^"']+["']/i.test(tag)||
+      !/\bcrossorigin\s*=\s*["'][^"']*["']/i.test(tag))
+    errors.push(page+': remote script or stylesheet missing SRI/crossorigin');
+  }
+  const result=scanAssetReferences(html,root,page);
   errors.push(...result.errors);assets.push(...result.assets);
  }
  for(const file of ADDRESS_SCRIPTS){

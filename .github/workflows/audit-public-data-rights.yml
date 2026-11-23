@@ -1,0 +1,96 @@
+name: SEC-04 public build data rights inventory (no deploy)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/audit-public-data-rights.cjs'
+      - 'tests/audit-public-data-rights.test.cjs'
+      - 'scripts/reconcile-sec04-education-gis-queue.cjs'
+      - 'tests/reconcile-sec04-education-gis-queue.test.cjs'
+      - 'deploy/sec04-education-gis-evidence.json'
+      - 'scripts/audit-sec04-education-gis-evidence.cjs'
+      - 'tests/audit-sec04-education-gis-evidence.test.cjs'
+      - 'deploy/public-data-rights.json'
+      - '.github/workflows/audit-public-data-rights.yml'
+      - 'docs/SEC04_PUBLIC_DATA_RIGHTS_REVIEW_20261121.md'
+  workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+permissions:
+  contents: read
+jobs:
+  asset-rights-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Syntax and synthetic negative rights tests
+        run: |
+          node --check scripts/audit-public-data-rights.cjs
+          node --test tests/audit-public-data-rights.test.cjs
+      - name: Build existing sanitized public preview (NOT DEPLOYED)
+        run: node scripts/verify-public-preview.cjs
+      - name: Enumerate every public build data and media item
+        run: node scripts/audit-public-data-rights.cjs
+      - name: Test and reconcile exact education/GIS built assets against pinned source evidence
+        run: |
+          node --check scripts/reconcile-sec04-education-gis-queue.cjs
+          node --test tests/reconcile-sec04-education-gis-queue.test.cjs
+          node --test tests/audit-sec04-education-gis-evidence.test.cjs
+          node scripts/reconcile-sec04-education-gis-queue.cjs
+      - name: Assert all education/GIS candidates have a review row without granting rights
+        run: |
+          node - <<'NODE'
+          const r=require('./artifacts/security/sec04-education-gis-crosswalk-summary.json');
+          const lanes=r.reviewLaneTotals;
+          if(r.status!=='BLOCKED_EVIDENCE_AND_RIGHTS_REVIEW' ||
+             r.candidateCount!==244 ||
+             lanes.tea_education_candidate.total!==200 ||
+             lanes.school_gis_candidate.total!==44 ||
+             r.pinnedCandidateCount+r.candidatesWithoutPinnedEvidence!==244 ||
+             Object.values(r.unpinnedCandidateMetadataSignals||{}).reduce((a,b)=>a+b,0)!==r.candidatesWithoutPinnedEvidence ||
+             r.sourceEvidenceRecordCount!==15 ||
+             r.pinnedSourcesPresentInBuild>15 ||
+             r.redistributionRightsVerified!==0 ||
+             r.publicProductionApproved!==false)
+            process.exit(1);
+          console.log('SEC04_CROSSWALK_EXPECTED_NO_GO '+JSON.stringify({
+            candidates:r.candidateCount,pinned:r.pinnedCandidateCount,
+            needsSourceReview:r.candidatesWithoutPinnedEvidence,
+            missingOrUnverifiedSourceSignals:r.unpinnedCandidateMetadataSignals,
+            rightsApproved:0
+          }));
+          NODE
+      - name: Prove no unapproved rights are silently promoted to GO
+        run: |
+          node - <<'NODE'
+          const r=require('./artifacts/security/public-data-rights-summary.json');
+          if(r.status!=='BLOCKED_RIGHTS_REVIEW_REQUIRED' || r.rightsDecisions.pending===0 || r.publicProductionApproved!==false)
+            process.exit(1);
+          const laneCount=Object.values(r.reviewLaneCounts||{}).reduce((a,b)=>a+b,0);
+          const extensionCount=Object.values(r.extensionCounts||{}).reduce((a,b)=>a+b,0);
+          if(laneCount!==r.dataAndMediaAssetCount || extensionCount!==r.dataAndMediaAssetCount ||
+             r.reviewLaneClassification!=='FILENAME_HEURISTIC_ONLY_NOT_PUBLISHER_OR_LICENSE_EVIDENCE')
+            process.exit(1);
+          console.log('SEC04_EXPECTED_NO_GO verified; items=' + r.dataAndMediaAssetCount + '; rights pending=' + r.rightsDecisions.pending);
+          console.log('SEC04_REVIEW_LANE_COUNTS '+JSON.stringify(r.reviewLaneCounts));
+          NODE
+      - name: Confirm no tracked changes or publication
+        run: git diff --exit-code
+      - name: Upload aggregate summary only; NEVER the local itemized paths
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: sec04-redacted-rights-summary
+          path: |
+            artifacts/security/public-data-rights-summary.json
+            artifacts/security/sec04-education-gis-crosswalk-summary.json
+          if-no-files-found: warn
+          retention-days: 14
