@@ -49,12 +49,16 @@ function reconcile(root,bundleDir,registry,manifest){
   const lane=laneCounts[item.reviewLane];
   lane.total++;
   const pinnedSource=Boolean(rec);
+  let sourceByteIdentity='not_checked';
   if(pinnedSource){
    lane.pinned++;pinnedCount++;
-   const a=fs.readFileSync(path.join(root,item.path));
-   const b=fs.readFileSync(path.join(bundleDir,item.path));
-   if(a.equals(b))byteIdentical++;
-   else transformed++;
+   const sourceBytes=fs.readFileSync(path.join(root,item.path));
+   const builtBytes=fs.readFileSync(path.join(bundleDir,item.path));
+   if(sourceBytes.equals(builtBytes)){
+    byteIdentical++;sourceByteIdentity='identical';
+   }else{
+    transformed++;sourceByteIdentity='transformed';
+   }
   }else lane.notPinned++;
   const signal=metadataSignal(path.join(bundleDir,item.path));
   signals[signal]++;
@@ -66,8 +70,7 @@ function reconcile(root,bundleDir,registry,manifest){
    embeddedSourceKeySignal:signal,
    rightsDecision:item.decision,
    redistributionPermissionEstablished:false,
-   sourceByteIdentity:pinnedSource?(fs.readFileSync(path.join(root,item.path)).equals(
-    fs.readFileSync(path.join(bundleDir,item.path)))?'identical':'transformed'):'not_checked'
+   sourceByteIdentity
   };
  });
  const evidenceRecordsMissingFromBuild=manifest.records.filter(rec=>!all.some(item=>item.path===rec.path)).length;
