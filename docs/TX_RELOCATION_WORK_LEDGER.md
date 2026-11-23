@@ -109,3 +109,11 @@
 - Baseline main `bf310c5f9bbfc43a760ae9688e160fedd22a3ee3`. Narrow change in `features/school-reference-preview.js` plus synthetic regression `tests/school-reference-preview.test.cjs` on `agent/tx-p0-plano-high-senior-coverage-20261123`.
 - Previously a Senior High polygon could suppress the missing High alert. For Plano 9–10 High and 11–12 Senior High are separate levels; each missing layer must now be independently reported. This is **reference-only GIS coverage UI**, not verified street/unit/grade/year enrollment or new GIS polygons. Source: Plano ISD current SchoolFinder-linked GIS (source layer named 2025–26; exact year independent certification unresolved). No new data copied or source rights asserted.
 - CI and PR evidence to be recorded on Issue #378 and #125 at exact PR HEAD. **Main merge and Pages deployment require per-PR owner authorization**. Public Production remains NO-GO.
+
+
+### 2026-11-23 — TX-P2-02 / SEC-04 scoped follow-up
+
+- Last live baseline checked: `main f4a5c07b1fa657762bd0bdf383d7587df3e1fa50`, Pages run `45212038482` and post-deploy school-map smoke `45212189082` successful, open PRs 0 before work began.
+- This scoped P0 security/data-rights diagnostic adds deeper **structural review subtypes** for the 30 education/GIS preview files without top-level source fields. This is a triage improvement only; exact subtype counts are pending branch CI. 0/288 redistribution rights established, independent residential enrollment certification 0 ISDs, and separate Public Production NO-GO.
+- No new school polygons, enrollment claims, provider workarounds, confidential fields, hosting changes, Cloudflare/family authentication, or live runtime modifications.
+- Continue #378 and #371 with exact-head PR QA and source-by-source legal/evidence review; separate parent-school/GIS milestones are not cleared by this audit.
