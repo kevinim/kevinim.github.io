@@ -9,6 +9,9 @@ on:
       - '.github/workflows/sec04-education-gis-evidence.yml'
       - 'docs/SEC04_EDUCATION_GIS_SOURCE_EVIDENCE_20261123.md'
   workflow_dispatch:
+concurrency:
+  group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 jobs:
