@@ -154,3 +154,5 @@ Only append **factual completed work**. If an agent has not edited GitHub or run
 - **Autonomous design PR #392** is documentation, not evidence that a scheduled run can deploy.
 - Older dated descriptions of #381/#385 as open/unmerged are historical: both were superseded and closed **unmerged** after #398/#397 respectively.
 - Continue to record exact SHA, CI, Pages, source and rights decisions in Issues #371/#378. **Never interpret a security documentation or audit merge as Public Production GO.**
+
+- **2026-11-23 same-day release confirmation:** consolidated SEC-04 [PR #402](https://github.com/kevinim/kevinim.github.io/pull/402) was squash-merged into existing Pages `main` as `3b3e65f40c886b38724b9e839afce48ecbd29a3b` after 5/5 exact-rebased-head GitHub CI. **Pages and post-deployment browser QA were pending at this note's creation**; verify current workflow status before calling the change live. This releases only fail-closed read-only evidence/candidate checks, **not** a licensed Public Production site. Current rights status remains **0 approved / 288 pending**.
