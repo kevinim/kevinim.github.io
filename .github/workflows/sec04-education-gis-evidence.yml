@@ -1,0 +1,56 @@
+name: SEC-04 pinned education and school GIS source evidence (no deploy)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'deploy/sec04-education-gis-evidence.json'
+      - 'scripts/audit-sec04-education-gis-evidence.cjs'
+      - 'tests/audit-sec04-education-gis-evidence.test.cjs'
+      - '.github/workflows/sec04-education-gis-evidence.yml'
+      - 'docs/SEC04_EDUCATION_GIS_SOURCE_EVIDENCE_20261123.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  evidence-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Verify source evidence and negative source drift cases
+        run: |
+          node --check scripts/audit-sec04-education-gis-evidence.cjs
+          node --test tests/audit-sec04-education-gis-evidence.test.cjs
+      - name: Build locally sanitized candidate only (never deploy)
+        run: node scripts/verify-public-preview.cjs
+      - name: Check pinned source blobs and redacted candidate intersection
+        run: node scripts/audit-sec04-education-gis-evidence.cjs
+      - name: Assert no redistribution approval was inferred
+        run: |
+          node - <<'NODE'
+          const x=require('./artifacts/security/sec04-education-gis-summary.json');
+          if(x.status!=='REVIEW_REQUIRED_NOT_REDISTRIBUTION_APPROVAL' ||
+             x.reviewedSourceRecords!==15 || x.rightsPending!==15 ||
+             x.redistributionApproved!==0 || x.publicProductionApproved!==false ||
+             x.selectedSourceGroupCounts.tea!==7 || x.selectedSourceGroupCounts.gis!==8 ||
+             x.presentInSanitizedPreview>15)
+            process.exit(1);
+          console.log('SEC04_EDUCATION_GIS_REVIEW_REQUIRED count=' + x.reviewedSourceRecords +
+            ' candidate-in-bundle=' + x.presentInSanitizedPreview + ' rights-approved=0');
+          NODE
+      - name: Verify no tracked source mutation
+        run: git diff --exit-code
+      - name: Upload aggregate only; never source data or itemized paths
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: sec04-education-gis-evidence-summary
+          path: artifacts/security/sec04-education-gis-summary.json
+          if-no-files-found: warn
+          retention-days: 14
