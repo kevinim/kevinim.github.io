@@ -53,6 +53,9 @@ test('exact bundle candidates are reconciled against pinned evidence with no rel
  assert.equal(r.summary.sourceEvidenceRecordCount,2);
  assert.equal(r.summary.pinnedCandidateCount,2);
  assert.equal(r.summary.candidatesWithoutPinnedEvidence,2);
+ assert.equal(Object.values(r.summary.unpinnedCandidateMetadataSignals).reduce((a,b)=>a+b,0),2);
+ assert.equal(r.summary.unpinnedCandidateMetadataSignals.no_structured_source_fields,1);
+ assert.equal(r.summary.unpinnedCandidateMetadataSignals.source_shaped_field_present_unverified,1);
  assert.equal(r.summary.pinnedCandidateByteIdentical,1);
  assert.equal(r.summary.pinnedCandidateByteTransformed,1);
  assert.equal(r.summary.pinnedSourcesOutsideCandidateLanes,0);
@@ -64,6 +67,9 @@ test('exact bundle candidates are reconciled against pinned evidence with no rel
  assert.ok(!JSON.stringify(r.summary).includes('example.invalid'));
  assert.equal(r.local.reviewQueue.length,4);
  assert.equal(r.local.reviewQueue.filter(x=>x.sourceReviewState==='NEEDS_INDEPENDENT_SOURCE_RECORD').length,2);
+ assert.equal(r.local.reviewQueue.filter(x=>x.nextReviewPriority==='P0_MISSING_SOURCE_METADATA').length,1);
+ assert.equal(r.local.reviewQueue.filter(x=>x.nextReviewPriority==='P1_VALIDATE_SOURCE_METADATA').length,1);
+ assert.equal(r.local.reviewQueue.filter(x=>x.nextReviewPriority==='P2_SOURCE_PINNED_LICENSE_PENDING').length,2);
  assert.ok(r.local.reviewQueue.every(x=>x.redistributionPermissionEstablished===false));
 }));
 test('top-level source-key presence is a structural hint, not provenance clearance',()=>fixture(({build})=>{
