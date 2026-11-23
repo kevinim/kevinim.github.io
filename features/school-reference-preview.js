@@ -107,7 +107,10 @@
     ...(officialProsper?{campusId:String(p.campusId),schoolCode:String(p.schoolCode)}:{})}));
   }
   const covered=new Set(features.map(f=>f.properties.gradeLevel));
-  const missing=['elementary','middle','high'].filter(level=>!covered.has(level)&&!(level==='high'&&covered.has('senior'))).map(l=>LEVEL[l]);
+  // Plano High (grades 9–10) and Senior High (grades 11–12) are distinct.
+  // A Senior-only polygon cannot silently satisfy missing High coverage.
+  const missing=['elementary','middle','high'].filter(level=>!covered.has(level)&&
+   !(level==='high'&&raw.district!=='PISD'&&covered.has('senior'))).map(l=>LEVEL[l]);
   if(raw.district==='PISD'&&!covered.has('senior'))missing.push('Senior High');
   const notices=[];
   if(raw.district==='PISD')
