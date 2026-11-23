@@ -184,3 +184,24 @@ test('preview is not part of the locked residential assignment or map matching p
  assert.match(src,/const result=home\.assignment/);
  assert.doesNotMatch(src,/home\.assignment\s*=\s*referencePlan/);
 });
+
+test('Plano 9–10 High and 11–12 Senior High must each be present independently',()=>{
+ const make=level=>{
+  const f=school(level,'SYNTHETIC PLANO '+level);
+  Object.assign(f.properties,{sourceDistrict:'PISD',currentFinderSource:true,
+   yearVerified2627:false,sourceVintage:'Current district Finder (source layer 2025–26)'});
+  return f;
+ };
+ const raw={district:'PISD',status:'finder-current'};
+ const seniorOnly=plan({...raw,features:['elementary','middle','senior'].map(make)});
+ assert.equal(seniorOnly.kind,'reference-only');
+ assert.deepEqual(seniorOnly.missing,['고등'],'Senior cannot fill missing 9–10 High');
+ assert.ok(seniorOnly.notices.some(n=>n.includes('9–10')&&n.includes('11–12')));
+ const highOnly=plan({...raw,features:['elementary','middle','high'].map(make)});
+ assert.deepEqual(highOnly.missing,['Senior High'],'9–10 High cannot fill 11–12 Senior');
+ const both=plan({...raw,features:['elementary','middle','high','senior'].map(make)});
+ assert.deepEqual(both.missing,[]);
+ assert.equal(both.referenceOnlyFinderVintage,true);
+ assert.equal(policy.apply({...raw,features:['elementary','middle','senior'].map(make)}).status,'conditional-finder-only');
+ assert.equal(policy.releaseSummary().currentYearResidentialDistrictApprovals,0);
+});
