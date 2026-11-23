@@ -77,6 +77,19 @@ test('legacy uploaded-GeoJSON modules never ship in the curated public preview',
  }
 });
 
+test('SEC-04 internal CFB raster QA worksheets stay in source but never ship in curated public preview',()=>{
+ const selected=safeFiles();
+ for(const p of [
+  'data/cfb-ag02-high-gcps.json',
+  'data/cfb-ag02-middle-gcps.json',
+  'data/cfb-ag03-contour-label-review.json'
+ ]){
+  assert.equal(fs.existsSync(p),true,'source research file retained: '+p);
+  assert.equal(selected.includes(p),false,'internal QA must not be redistributed: '+p);
+ }
+ assert.equal(selected.includes('schools.json'),true,'actual school data must not be accidentally removed');
+});
+
 test('SEC-01 preview rebuild cannot erase unrelated source, repository or ancestor directories',()=>{
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'tx-public-preview-output-'));
  try{
