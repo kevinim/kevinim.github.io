@@ -43,6 +43,7 @@ function reconcile(root,bundleDir,registry,manifest){
   uninspected_oversize:0,
   invalid_json_or_unreadable:0,
  };
+ const unpinnedSignals=Object.fromEntries(Object.keys(signals).map(x=>[x,0]));
  let byteIdentical=0,transformed=0,pinnedCount=0;
  const localQueue=candidates.map(item=>{
   const rec=byPath.get(item.path);
@@ -62,11 +63,16 @@ function reconcile(root,bundleDir,registry,manifest){
   }else lane.notPinned++;
   const signal=metadataSignal(path.join(bundleDir,item.path));
   signals[signal]++;
+  if(!pinnedSource)unpinnedSignals[signal]++;
   return {
    relativeBuildPath:item.path,
    reviewLane:item.reviewLane,
    extension:item.extension,
    sourceReviewState:pinnedSource?'PINNED_SOURCE_RECORD_NOT_RIGHTS_APPROVED':'NEEDS_INDEPENDENT_SOURCE_RECORD',
+   nextReviewPriority:pinnedSource?'P2_SOURCE_PINNED_LICENSE_PENDING':
+    signal==='no_structured_source_fields'?'P0_MISSING_SOURCE_METADATA':
+    signal==='source_shaped_field_present_unverified'?'P1_VALIDATE_SOURCE_METADATA':
+    'P0_SOURCE_FILE_MANUAL_INSPECTION',
    embeddedSourceKeySignal:signal,
    rightsDecision:item.decision,
    redistributionPermissionEstablished:false,
@@ -91,6 +97,7 @@ function reconcile(root,bundleDir,registry,manifest){
   pinnedCandidateByteTransformed:transformed,
   candidatesWithoutPinnedEvidence:candidates.length-pinnedCount,
   embeddedSourceFieldSignals:signals,
+  unpinnedCandidateMetadataSignals:unpinnedSignals,
   rightsDecisions:rights.summary.rightsDecisions,
   redistributionRightsVerified:0,
   publicProductionApproved:false,
@@ -107,6 +114,7 @@ function reconcile(root,bundleDir,registry,manifest){
     byteIdentical+transformed!==pinnedCount||
     Object.values(laneCounts).reduce((a,x)=>a+x.total,0)!==candidates.length||
     Object.values(signals).reduce((a,x)=>a+x,0)!==candidates.length||
+    Object.values(unpinnedSignals).reduce((a,x)=>a+x,0)!==candidates.length-pinnedCount||
     !all.every(x=>x.decision==='pending')||
     rights.summary.status!=='BLOCKED_RIGHTS_REVIEW_REQUIRED')
   throw Error('SEC04_CROSSWALK_INVARIANT_FAILED');
@@ -129,6 +137,7 @@ function main(root=process.cwd()){
   total:result.summary.candidateCount,
   pinned:result.summary.pinnedCandidateCount,
   needsEvidence:result.summary.candidatesWithoutPinnedEvidence,
+  unpinnedSourceSignals:result.summary.unpinnedCandidateMetadataSignals,
   lanes:result.summary.reviewLaneTotals,
   bytes:{identical:result.summary.pinnedCandidateByteIdentical,
     transformed:result.summary.pinnedCandidateByteTransformed},
