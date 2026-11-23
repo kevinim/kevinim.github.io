@@ -171,9 +171,19 @@ function sanitizeExtractedAssets(sourceHtml,sourceJs){
  return {html:publicHtml,js:publicJs};
 }
 
+// These are offline CFB raster/GCP audit worksheets, not browser runtime data.
+// Keep in development source and omit from the future sanitized public artifact.
+// Do not treat their exclusion as permission to publish remaining datasets.
+const INTERNAL_RESEARCH_ONLY=new Set([
+ 'data/cfb-ag02-high-gcps.json',
+ 'data/cfb-ag02-middle-gcps.json',
+ 'data/cfb-ag03-contour-label-review.json'
+]);
+
 function safeFiles(){
  const tracked=cp.execFileSync('git',['ls-files','-z'],{encoding:'utf8'}).split('\0').filter(Boolean);
  return tracked.filter(f=>gate.isPublishable(f))
+  .filter(f=>!INTERNAL_RESEARCH_ONLY.has(f))
   .filter(f=>!/^jpm-/i.test(path.basename(f)))
   .filter(f=>!/^reviewed\.html$/i.test(f))
   // Legacy uploader has its own bootstrap and is NOT part of the curated public app.

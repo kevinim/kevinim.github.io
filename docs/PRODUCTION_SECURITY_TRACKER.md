@@ -173,3 +173,12 @@ Only append **factual completed work**. If an agent has not edited GitHub or run
 - Exact sanitized build: **30/30** previously no-top-level-source-key unpinned candidates classified: **13 nested source-shaped key hints**, **2 GeoJSON feature-property records without recognized source keys**, **15 files with no recognized source key**, **0 root arrays / key-bearing GeoJSON / uninspectable**.
 - Full counters unchanged: 288 static data/media candidates, 244 education/school GIS filename candidates, 14 Git-pinned source records (byte-identical), **230 source evidence gaps, 0 independently approved redistribution rights**.
 - This PR remains a *read-only audit plus documentation change*. It neither closes SEC-04 nor approves any currently pending dataset. Main Pages release remains unchanged; no family auth or separate Public Production deployment.
+
+
+### 2026-11-23 — SEC-04 follow-up: omit 3 nonruntime CFB research worksheets from future public preview
+
+- Prior merged baseline: PR #403, main `a4794945b4f36eabc2e3f9d4ea9b69a8311cf539`; Pages build run `45235330039` and school map live smoke `45235468170` both success.
+- Three **internal CFB school-zone raster calibration/QA datasets**, `data/cfb-ag02-high-gcps.json`, `data/cfb-ag02-middle-gcps.json` and `data/cfb-ag03-contour-label-review.json`, are kept in developer source but explicitly excluded from `scripts/build-public-preview.cjs`'s future sanitized public-only artifact.
+- Repository code search found no client-runtime references to the two GCP worksheets; the contour review filename was referenced by reconstruction script and project docs only. This is a narrow, reversible exclusion, **not a declaration that other bundled assets are safe**. Browser/verify CI must still validate any dynamic references before merge.
+- Expected built candidate counts after exclusion: 288→285 data/media; 244→241 education/GIS filename candidates; school GIS 44→41; source pinned 14 unchanged; unpinned source evidence 230→227 (pending exact-head verification).
+- Rights decisions remain **0 approved**, future Public Production **NO-GO**, currently hosted family Pages unchanged until this documentation/build-script PR passes CI and is merged. No Cloudflare/family auth, provider scraping, source migration, historical Git rewrite or owner billing change.

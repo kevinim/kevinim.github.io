@@ -13,6 +13,8 @@ on:
       - 'deploy/public-data-rights.json'
       - '.github/workflows/audit-public-data-rights.yml'
       - 'docs/SEC04_PUBLIC_DATA_RIGHTS_REVIEW_20261121.md'
+      - 'scripts/build-public-preview.cjs'
+      - 'tests/public-preview-build.test.cjs'
   workflow_dispatch:
 concurrency:
   group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
@@ -35,6 +37,7 @@ jobs:
         run: |
           node --check scripts/audit-public-data-rights.cjs
           node --test tests/audit-public-data-rights.test.cjs
+          node --test tests/public-preview-build.test.cjs
       - name: Build existing sanitized public preview (NOT DEPLOYED)
         run: node scripts/verify-public-preview.cjs
       - name: Enumerate every public build data and media item
@@ -51,10 +54,10 @@ jobs:
           const r=require('./artifacts/security/sec04-education-gis-crosswalk-summary.json');
           const lanes=r.reviewLaneTotals;
           if(r.status!=='BLOCKED_EVIDENCE_AND_RIGHTS_REVIEW' ||
-             r.candidateCount!==244 ||
+             r.candidateCount!==241 ||
              lanes.tea_education_candidate.total!==200 ||
-             lanes.school_gis_candidate.total!==44 ||
-             r.pinnedCandidateCount+r.candidatesWithoutPinnedEvidence!==244 ||
+             lanes.school_gis_candidate.total!==41 ||
+             r.pinnedCandidateCount+r.candidatesWithoutPinnedEvidence!==241 ||
              Object.values(r.unpinnedCandidateMetadataSignals||{}).reduce((a,b)=>a+b,0)!==r.candidatesWithoutPinnedEvidence ||
              r.sourceEvidenceRecordCount!==15 ||
              r.pinnedSourcesPresentInBuild>15 ||
