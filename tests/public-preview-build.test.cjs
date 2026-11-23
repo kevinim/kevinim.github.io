@@ -100,7 +100,7 @@ test('SEC-04 exact 12 no-key candidate review keeps three browser assets and nin
   'data/denton-public-residential-finder-holdouts-2026.json',
   'data/dfw-incremental-school-approval-evidence-2026.json',
   'data/school-data-release-lock.json',
-  'data/tea-cfb-lisd-academic-2026-verified-batch01.json',
+  'data/tea-peims-2025-26-gender-parity-audit-1343.json',
   'data/tea-cfb-lisd-academic-2026-verified-batch02.json'
  ];
  assert.equal(internalOnly.length,9);
