@@ -4,7 +4,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const os=require('node:os');
 const path=require('node:path');
-const {reconcile,metadataSignal}=require('../scripts/reconcile-sec04-education-gis-queue.cjs');
+const {reconcile,metadataSignal,metadataGapSubtype,GAP_SUBTYPES}=require('../scripts/reconcile-sec04-education-gis-queue.cjs');
 const {gitBlobSha}=require('../scripts/audit-sec04-education-gis-evidence.cjs');
 
 function fixture(fn){
@@ -55,6 +55,9 @@ test('exact bundle candidates are reconciled against pinned evidence with no rel
  assert.equal(r.summary.candidatesWithoutPinnedEvidence,2);
  assert.equal(Object.values(r.summary.unpinnedCandidateMetadataSignals).reduce((a,b)=>a+b,0),2);
  assert.equal(r.summary.unpinnedCandidateMetadataSignals.no_structured_source_fields,1);
+ assert.equal(Object.values(r.summary.unpinnedMetadataGapSubtypes).reduce((a,b)=>a+b,0),1);
+ assert.equal(r.summary.unpinnedMetadataGapSubtypes.no_source_key_found_manual_review,1);
+ assert.equal(GAP_SUBTYPES.length,Object.keys(r.summary.unpinnedMetadataGapSubtypes).length);
  assert.equal(r.summary.unpinnedCandidateMetadataSignals.source_shaped_field_present_unverified,1);
  assert.equal(r.summary.pinnedCandidateByteIdentical,1);
  assert.equal(r.summary.pinnedCandidateByteTransformed,1);
@@ -112,3 +115,30 @@ test('unexpected added build candidate cannot be covered by an old evidence snap
  assert.equal(r.summary.candidatesWithoutPinnedEvidence,3);
  assert.equal(r.summary.publicProductionApproved,false);
 }));
+
+test('metadata gap subtypes distinguish arrays, GeoJSON feature properties, nested source keys and unknowns without granting rights',()=>fixture(({root,build,doc,registry})=>{
+ const p=name=>path.join(build,'data',name);
+ const change=(name,body)=>fs.writeFileSync(p(name),body);
+ change('tea-unreviewed.json','[{"campus":"fictional"}]');
+ assert.equal(metadataGapSubtype(p('tea-unreviewed.json')),'root_array_manual_review');
+ change('tea-unreviewed.json','{"campuses":[{"meta":{"source":"fictional"}}]}');
+ assert.equal(metadataGapSubtype(p('tea-unreviewed.json')),'nested_source_key_unverified');
+ change('tea-unreviewed.json','{"campuses":[{"name":"fictional"}]}');
+ assert.equal(metadataGapSubtype(p('tea-unreviewed.json')),'no_source_key_found_manual_review');
+ change('allen-school-more.geojson','{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"source":"fictional"},"geometry":null}]}');
+ assert.equal(metadataGapSubtype(p('allen-school-more.geojson')),'geojson_feature_property_source_key_unverified');
+ let r=reconcile(root,build,registry,doc);
+ assert.equal(r.summary.unpinnedCandidateMetadataSignals.no_structured_source_fields,2);
+ assert.equal(r.summary.unpinnedMetadataGapSubtypes.geojson_feature_property_source_key_unverified,1);
+ assert.equal(r.summary.unpinnedMetadataGapSubtypes.no_source_key_found_manual_review,1);
+ assert.equal(r.summary.redistributionRightsVerified,0);
+ assert.equal(r.summary.publicProductionApproved,false);
+ assert.ok(!JSON.stringify(r.summary).includes('fictional'));
+ const local=r.local.reviewQueue.find(x=>x.relativeBuildPath==='data/allen-school-more.geojson');
+ assert.equal(local.rightsDecision,'pending');
+ assert.equal(local.redistributionPermissionEstablished,false);
+ change('allen-school-more.geojson','{"type":"FeatureCollection","features":[{"properties":{"campus":"fictional"}}]}');
+ assert.equal(metadataGapSubtype(p('allen-school-more.geojson')),'geojson_feature_properties_need_review');
+ change('tea-unreviewed.json','not-json');
+ assert.equal(metadataGapSubtype(p('tea-unreviewed.json')),'not_inspectable_manual_review');
+});
