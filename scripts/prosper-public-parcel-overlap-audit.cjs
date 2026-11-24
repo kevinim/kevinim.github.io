@@ -9,11 +9,11 @@ const AXIS=120,CHUNK=12;
 const ENDPOINTS=Object.freeze({
  collin:Object.freeze({
   url:'https://services2.arcgis.com/uXyoacYrZTPTKD3R/arcgis/rest/services/CCAD_Parcel_Feature_Set/FeatureServer/4/query',
-  fields:'propType,propSubType,propYear'
+  fields:'propType,propSubType,propYear,entitySchoolCode'
  }),
  denton:Object.freeze({
   url:'https://geo.dentoncad.com/arcgis/rest/services/LandRecords/Parcels_Appraisal/FeatureServer/1/query',
-  fields:'propType,pYear'
+  fields:'propType,pYear,schoolTaxingUnitName'
  })
 });
 function polygonParts(g){
@@ -51,6 +51,24 @@ function landCategory(value){
   return 'other-property-category';
  return 'unknown-property-category';
 }
+// Taxing-unit evidence is administrative; it is NOT student attendance or enrollment.
+function taxUnitEvidence(value){
+ const code=String(value||'').trim().toUpperCase().replace(/\\s+/g,' ');
+ if(!code)return 'taxing-unit-unmapped';
+ if(code==='SPR'||code==='PROSPER ISD'||code==='PROSPER INDEPENDENT SCHOOL DISTRICT')
+  return 'prosper-isd-taxing-code-reference';
+ // Nonmatching code is not independently proven to be a different school
+ // attendance zone; it is only a separate taxing-unit attribute.
+ return 'nonmatching-or-unmapped-tax-code';
+}
+function classifyTaxEvidence(results){
+ const available=results.filter(x=>x.status==='ok');
+ if(!available.length)return 'source-unavailable';
+ const hits=available.flatMap(x=>x.matches);
+ if(!hits.length)return results.some(x=>x.status!=='ok')?'source-partially-unavailable':'no-parcel-at-grid-point';
+ const statuses=new Set(hits.map(x=>taxUnitEvidence(x.taxUnit)));
+ return statuses.size===1?[...statuses][0]:'mixed-taxing-unit-evidence';
+}
 function classifyPoint(results){
  const available=results.filter(x=>x.status==='ok');
  if(!available.length)return 'source-unavailable';
@@ -69,7 +87,8 @@ function readFeatureResponse(body){
      !Array.isArray(f.geometry.coordinates))
    throw Error('provider-feature-geometry-invalid');
   // Discard raw provider attributes before any output and do not retrieve owner fields.
-  return {geometry:f.geometry,propType:f.properties.propType??null};
+  return {geometry:f.geometry,propType:f.properties.propType??null,
+   taxUnit:f.properties.entitySchoolCode??f.properties.schoolTaxingUnitName??null};
  });
 }
 function buildForm(points,fields){
@@ -90,7 +109,7 @@ async function fetchChunk(fetchFn,source,points){
  if(url.protocol!=='https:'||!['services2.arcgis.com','geo.dentoncad.com'].includes(url.hostname)||
     url.search)throw Error('unapproved-public-CAD-source');
  const fields=source.fields;
- if(!['propType,propSubType,propYear','propType,pYear'].includes(fields))
+ if(!['propType,propSubType,propYear,entitySchoolCode','propType,pYear,schoolTaxingUnitName'].includes(fields))
   throw Error('nonminimal-CAD-field-request');
  const controller=new AbortController();
  const timeout=setTimeout(()=>controller.abort(),15000);
@@ -106,7 +125,7 @@ async function fetchChunk(fetchFn,source,points){
 async function auditCells(cells,fetchFn=fetch){
  if(!Array.isArray(cells)||cells.length>293||cells.some(c=>!Array.isArray(c.point)))
   throw Error('synthetic-sample-count-invalid');
- const byStatus={},byMissing={},sourceFailures={collin:0,denton:0};
+ const byStatus={},byTaxStatus={},byLandAndTax={},byMissing={},sourceFailures={collin:0,denton:0};
  const sources=Object.entries(ENDPOINTS);
  for(let offset=0;offset<cells.length;offset+=CHUNK){
   const rows=cells.slice(offset,offset+CHUNK),points=rows.map(r=>r.point);
@@ -125,13 +144,18 @@ async function auditCells(cells,fetchFn=fetch){
    const outcomes=datasets.map(d=>({status:d.status,matches:d.features.filter(f=>contains(f.geometry,c.point))}));
    const status=classifyPoint(outcomes);
    byStatus[status]=(byStatus[status]||0)+1;
+   const tax=classifyTaxEvidence(outcomes);
+   byTaxStatus[tax]=(byTaxStatus[tax]||0)+1;
+   const intersection=status+' | '+tax;
+   byLandAndTax[intersection]=(byLandAndTax[intersection]||0)+1;
    const g=byMissing[c.missing]||(byMissing[c.missing]={});
    g[status]=(g[status]||0)+1;
   }
  }
  return {schemaVersion:1,sourceScope:'official public Collin CAD and Denton CAD source map, synthetic points only',
   sourceURLs:Object.fromEntries(sources.map(([k,v])=>[k,v.url.replace(/\/query$/,'')])),
-  inputSyntheticCells:cells.length,categories:byStatus,byMissingGradePattern:byMissing,
+  inputSyntheticCells:cells.length,categories:byStatus,taxingUnitEvidence:byTaxStatus,
+  landUseTaxCrossTab:byLandAndTax,byMissingGradePattern:byMissing,
   chunksPerSource:Math.ceil(cells.length/CHUNK),sourceFailureChunks:sourceFailures,
   conclusions:'CAD property classification cannot certify occupancy, attendance boundary, school enrollment, district tax-unit code equivalence or individual address.'};
 }
@@ -151,12 +175,14 @@ async function main(){
  fs.writeFileSync(out,JSON.stringify(report,null,2)+'\n');
  console.log('PROSPER_PUBLIC_CAD_SYNTHETIC '+JSON.stringify({
   stage:live?'live-public-data-query':'offline',total:report.inputSyntheticCells,
-  counts:report.categories||null,sourceFailureChunks:report.sourceFailureChunks||null
+  counts:report.categories||null,taxCodeEvidence:report.taxingUnitEvidence||null,
+  landAndTax:report.landUseTaxCrossTab||null,
+  sourceFailureChunks:report.sourceFailureChunks||null
  }));
 }
 if(require.main===module)main().catch(e=>{
  console.error('PROSPER_PUBLIC_CAD_AUDIT_UNAVAILABLE '+String(e.message).slice(0,180));
  process.exitCode=1;
 });
-module.exports={ENDPOINTS,landCategory,buildForm,readFeatureResponse,classifyPoint,
- makeSyntheticCells,auditCells,fetchChunk};
+module.exports={ENDPOINTS,landCategory,taxUnitEvidence,classifyTaxEvidence,buildForm,
+ readFeatureResponse,classifyPoint,makeSyntheticCells,auditCells,fetchChunk};
