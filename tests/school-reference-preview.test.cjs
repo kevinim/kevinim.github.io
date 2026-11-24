@@ -237,7 +237,7 @@ test('reference renderer shows each campus vintage without claiming enrollment',
   assert.equal(labels.length,levels.length,'each displayed campus needs a visible source year');
   for(let i=0;i<levels.length;i++)
    assert.equal(labels[i].textContent,' · '+model.candidates[i].yearNote);
-  assert.ok(nodes.some(n=>n.textContent.includes('참고 후보 · 실제 배정 미인증')));
+  assert.ok(nodes.some(n=>typeof n.textContent==='string'&&n.textContent.includes('참고 후보 · 실제 배정 미인증')));
   assert.equal(policy.releaseSummary().currentYearResidentialDistrictApprovals,0);
  }
 });
