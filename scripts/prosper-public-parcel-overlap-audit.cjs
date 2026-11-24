@@ -122,7 +122,7 @@ async function fetchChunk(fetchFn,source,points){
   return readFeatureResponse(raw);
  }finally{clearTimeout(timeout);}
 }
-async function auditCells(cells,fetchFn=fetch){
+async function auditCells(cells,fetchFn=fetch,onQualified){
  if(!Array.isArray(cells)||cells.length>293||cells.some(c=>!Array.isArray(c.point)))
   throw Error('synthetic-sample-count-invalid');
  const byStatus={},byTaxStatus={},byLandAndTax={},byMissing={},sourceFailures={collin:0,denton:0};
@@ -148,6 +148,10 @@ async function auditCells(cells,fetchFn=fetch){
    byTaxStatus[tax]=(byTaxStatus[tax]||0)+1;
    const intersection=status+' | '+tax;
    byLandAndTax[intersection]=(byLandAndTax[intersection]||0)+1;
+   // Callback receives only an existing deterministic synthetic grid point;
+   // never pass source parcel geometry/addresses or emit grid coordinates.
+   if(typeof onQualified==='function'&&status==='residential-property-category'&&
+      tax==='prosper-isd-taxing-code-reference')onQualified(c);
    const g=byMissing[c.missing]||(byMissing[c.missing]={});
    g[status]=(g[status]||0)+1;
   }
