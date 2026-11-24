@@ -95,8 +95,13 @@ function audit(features,options={}){
   features:features.length,validFeatures:0,invalidFeatures:invalid,gradeCounts:{},sampleAxis,checkedGridPoints:0};
  const overlaps=Object.fromEntries(GRADES.map(g=>[g,0]));
  const overlapExamples=[];
+ // A strictly deep mismatch is >200 m from EVERY missing grade boundary.
+ // The old max-distance count measured ANY missing grade far away and was
+ // mistakenly described as deep (133 vs 121 on Prosper's 2026–27 grid).
  let coveredAny=0,completeEHM=0,crossGradeMismatch=0,deepMismatchOver200m=0;
+ let anyMissingGradeFarOver200m=0,mixedDepthOver200m=0;
  const missingGrades=Object.fromEntries(GRADES.map(g=>[g,0]));
+ const missingGradePatterns={};
  const gapExamples=[];
  for(let xi=0;xi<sampleAxis;xi++)for(let yi=0;yi<sampleAxis;yi++){
   // Offsets avoid treating a grid point on a polygon edge as an interior point.
@@ -118,11 +123,20 @@ function audit(features,options={}){
   crossGradeMismatch++;
   const missing=GRADES.filter(g=>!hits[g].length);
   missing.forEach(g=>missingGrades[g]++);
-  const boundaryDistance=Math.max(...missing.map(g=>nearestGradeBoundaryMeters(q,gradeFeatures[g])));
-  if(boundaryDistance>200)deepMismatchOver200m++;
-  if(gapExamples.length<8&&(boundaryDistance>200||gapExamples.length<2))
+  const pattern=missing.join('+');
+  missingGradePatterns[pattern]=(missingGradePatterns[pattern]||0)+1;
+  const gradeDistances=missing.map(g=>({grade:g,
+   distanceMeters:nearestGradeBoundaryMeters(q,gradeFeatures[g])}));
+  const nearestMissingBoundary=Math.min(...gradeDistances.map(x=>x.distanceMeters));
+  const farthestMissingBoundary=Math.max(...gradeDistances.map(x=>x.distanceMeters));
+  if(farthestMissingBoundary>200)anyMissingGradeFarOver200m++;
+  if(nearestMissingBoundary>200)deepMismatchOver200m++;
+  if(farthestMissingBoundary>200&&nearestMissingBoundary<=200)mixedDepthOver200m++;
+  if(gapExamples.length<8&&(nearestMissingBoundary>200||gapExamples.length<2))
    gapExamples.push({coordinate:roundPoint(q),present,missing,
-    distanceToMissingGradeBoundaryMeters:Math.round(boundaryDistance)});
+    distanceToMissingGradeBoundaryMeters:Math.round(nearestMissingBoundary),
+    distancesToEachMissingGradeMeters:gradeDistances.map(x=>({grade:x.grade,
+     meters:Math.round(x.distanceMeters)}))});
  }
  const overlapSampleCount=Object.values(overlaps).reduce((a,b)=>a+b,0);
  return {schemaVersion:1,district:options.district||'unknown',
@@ -136,7 +150,11 @@ function audit(features,options={}){
   sameGradeOverlapExamples:overlapExamples,crossGradeChecked:options.crossGrade===true,
   crossGradeMismatchSamples:options.crossGrade===true?crossGradeMismatch:null,
   missingGradeSampleCounts:options.crossGrade===true?missingGrades:null,
+  // "deep" means ALL missing grades' nearest zone boundaries exceed 200 m.
   deepMismatchOver200m:options.crossGrade===true?deepMismatchOver200m:null,
+  anyMissingGradeFarOver200m:options.crossGrade===true?anyMissingGradeFarOver200m:null,
+  mixedDepthOver200m:options.crossGrade===true?mixedDepthOver200m:null,
+  missingGradePatternSamples:options.crossGrade===true?missingGradePatterns:null,
   crossGradeExamples:gapExamples};
 }
 function main(){
