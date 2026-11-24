@@ -13,6 +13,8 @@ on:
       - '*locator*.geojson'
       - 'data/school-data-release-lock.json'
       - 'scripts/school-polygon-linkage-*.cjs'
+      - 'scripts/prosper-public-parcel-overlap-audit.cjs'
+      - 'tests/prosper-public-parcel-overlap-audit.test.cjs'
       - 'tests/school-polygon-linkage-topology.test.cjs'
       - 'tests/allen-historical-original-precision.test.cjs'
       - 'tests/school-polygon-linkage-audit.test.cjs'
@@ -61,6 +63,11 @@ jobs:
           node --test tests/school-polygon-linkage-audit.test.cjs tests/verify-school-linkage-baseline.test.cjs tests/school-polygon-linkage-topology.test.cjs tests/allen-historical-original-precision.test.cjs
       - name: Sample pinned Allen and Prosper polygon topology (no GIS alteration)
         run: node scripts/school-polygon-linkage-topology.cjs
+      - name: Read-only Prosper synthetic grid vs official public CAD reference (aggregate only)
+        run: |
+          node --check scripts/prosper-public-parcel-overlap-audit.cjs
+          node --test tests/prosper-public-parcel-overlap-audit.test.cjs
+          node scripts/prosper-public-parcel-overlap-audit.cjs --live
       - name: Install isolated Chromium only
         run: |
           mkdir -p school-linkage-browser-tmp
@@ -86,6 +93,7 @@ jobs:
           path: |
             artifacts/school-linkage/school-polygon-linkage-census.json
             artifacts/school-linkage/school-geometry-topology-audit.json
+            artifacts/school-linkage/prosper-synthetic-parcel-sourcecheck.json
           if-no-files-found: warn
 
       - name: Archive full DFW per-district and per-campus reason report
