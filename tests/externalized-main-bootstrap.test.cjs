@@ -21,6 +21,9 @@ const regionalCacheRefs=[
  ['./features/area-assessment.js?v=4','./features/area-assessment.js?v=3']
 ];
 let normalizedMainHtml=rawHtml;
+// P0 audited West DFW Carroll enrollment-link label fix: only this cache pin differs.
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ 'features/west-dfw/panel.js?v=3','features/west-dfw/panel.js?v=2');
 for(const [newRef,oldRef] of regionalCacheRefs){
  assert.equal(normalizedMainHtml.split(newRef).length,2,
   'Exactly one reviewed P3 cache reference required: '+newRef);
