@@ -20,10 +20,18 @@ Date: 2026-11-21. Tracker: [Issue #376](https://github.com/kevinim/kevinim.githu
 ## Prosper — current 2026–27 source, not proven residence assignment
 
 - `prosper-attendance-2026.geojson`: 31 official-sourced 2026–27 E/M/H features (20 / 7 / 4), complete campus ID and closed-ring basic structural checks.
-- Preliminary 120 × 120 grid sampling of current pinned sources identified **293 cells with at least one grade polygon but not all three**; **133** of those were more than **200 meters** from the nearest missing-grade boundary. Sampled same-grade overlaps: zero. These are **geometry inconsistencies**, not verified enrolled-address failures.
+- Preliminary 120 × 120 grid sampling of current pinned sources identified **293 cells with at least one grade polygon but not all three**; **121** of those are more than **200 meters from every missing-grade boundary**. The older **133** figure used the farthest of the missing-grade boundaries; **12** samples have mixed distances (at least one missing grade within 200 m and another beyond 200 m), so they are not strictly deep. Sampled same-grade overlaps: zero. These are **geometry inconsistencies**, not verified enrolled-address failures.
 - Example synthetic grid coordinate: longitude -96.89480697 / latitude 33.23102431, high school geometry only; this is not an actual residence.
 - Compare grade union footprint to Prosper's [official 2026–27 boundaries](https://www.prosper-isd.net/documents/about-us/attendance-boundaries/16505278) and exact official [Infofinder](https://www.infofinderi.com/ifi/?cid=PI5FFG7RYZ1) where permitted. Check whether mismatched cells are uninhabited / outside school attendance jurisdiction / border artifacts. Do **not** infer nonexistent elementary/middle schools from other polygons.
 - Separate future update: Prosper board approved **2027–28** middle/high zones on **2026-11-16**. These must not replace the 2026–27 active layer before its effective year.
+
+## 2026-11-24 independent distance-metric correction (source polygons unchanged)
+
+- Cross-grade footprint mismatch on the existing fixed 120×120 grid is still **293/293** source-defined cells, not an estimate of affected homes. Recalculation using a *per-missing-grade* distance found **121 strictly deep** samples (>200 m to the nearest zone boundary of **every** missing grade), **12 mixed-distance** samples, and the historical **133 any-far** count (>200 m to at least one missing grade boundary).
+- Missing-grade pattern breakdown (exclusive sample counts): E+M **177**, H **30**, M+H **19**, E+H **16**, M **20**, E **31**; sum **293**. These patterns are derived from sampled polygon unions, not observed student assignments.
+- The old `deepMismatchOver200m` count was calculated using `Math.max` over missing grade distances and therefore **overstated the strong all-grade distance interpretation by 12**. The corrected report uses `Math.min` for `deepMismatchOver200m=121`, retains `anyMissingGradeFarOver200m=133` separately, reports `mixedDepthOver200m=12`, plus missing-grade histograms and per-grade distance descriptions in bounded synthetic examples.
+- Every coordinate is a synthetic QA grid point, **not a residential address**. We cannot distinguish vacant parcels, school eligibility, or district-jurisdiction edge from this geometry-only data. Official district 2026–27 source shapes remain byte-identical and 31-campus year-labeled reference only. Actual residence enrollment certification remains **NO-GO**.
+- Next independent check requires documented land-use/parcel and district boundary evidence, and only permitted official lookup access, without transmitting user addresses or fabricating missing-grade campuses.
 
 ## CI behavior and follow-up
 
