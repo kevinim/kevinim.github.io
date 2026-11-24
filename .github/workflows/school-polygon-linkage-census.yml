@@ -15,6 +15,8 @@ on:
       - 'scripts/school-polygon-linkage-*.cjs'
       - 'scripts/prosper-public-parcel-overlap-audit.cjs'
       - 'tests/prosper-public-parcel-overlap-audit.test.cjs'
+      - 'scripts/prosper-official-tax-grid-parity.cjs'
+      - 'tests/prosper-official-tax-grid-parity.test.cjs'
       - 'tests/school-polygon-linkage-topology.test.cjs'
       - 'tests/allen-historical-original-precision.test.cjs'
       - 'tests/school-polygon-linkage-audit.test.cjs'
@@ -66,8 +68,9 @@ jobs:
       - name: Read-only Prosper synthetic grid vs official public CAD reference (aggregate only)
         run: |
           node --check scripts/prosper-public-parcel-overlap-audit.cjs
-          node --test tests/prosper-public-parcel-overlap-audit.test.cjs
-          node scripts/prosper-public-parcel-overlap-audit.cjs --live
+          node --test tests/prosper-public-parcel-overlap-audit.test.cjs tests/prosper-official-tax-grid-parity.test.cjs
+          node --check scripts/prosper-official-tax-grid-parity.cjs
+          node scripts/prosper-official-tax-grid-parity.cjs
       - name: Install isolated Chromium only
         run: |
           mkdir -p school-linkage-browser-tmp
