@@ -7,6 +7,14 @@ const districts=require('../district-registry.js');
 const meta=JSON.parse(fs.readFileSync('data/west-dfw-districts-2026.json','utf8'));
 const idSet=new Set(['220919','220907','061911','220906']);
 
+test('Carroll enrollment portal is not falsely labeled an address-based finder',()=>{
+ const carroll=meta.districts.find(d=>d.code==='220919');
+ assert.ok(carroll.officialUrl.includes('/online-enrollment-portal'));
+ assert.match(west.overviewLabel(carroll),/등록 안내/);
+ assert.match(west.overviewLabel(carroll),/주소별 학교 검색 아님/);
+ for(const d of meta.districts.filter(x=>x.code!=='220919'))
+  assert.equal(west.overviewLabel(d),'공식 학교 찾기 / 배정 지도');
+});
 test('the four western district IDs are official TEA-format and distinct',()=>{
  assert.deepEqual(new Set(meta.districts.map(d=>d.code)),idSet);
  assert.equal(west.validateConfig(meta),meta);

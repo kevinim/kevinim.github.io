@@ -59,6 +59,10 @@
   a.href=url;a.target='_blank';a.rel='noopener noreferrer';
   return a;
  }
+ function overviewLabel(d){
+  // The Carroll overview is enrollment navigation, not the separate SchoolSearch.
+  return d.code==='220919'?'공식 등록 안내 (주소별 학교 검색 아님)':'공식 학교 찾기 / 배정 지도';
+ }
  function schoolCount(code,schools){
   return schools.filter(s=>s&&s.district===code&&
    ['elementary','middle','high'].includes(s.type)).length;
@@ -131,7 +135,7 @@
      d.sourceYear==='not verified'?'학년도 독립 검증 필요 · 자동 경계 없음':
        '공식 출처 '+d.sourceYear+' · 자동 경계 없음'));
    if(d.dataNote)card.appendChild(element(doc,'small','west-dfw-vintage-warning',d.dataNote));
-   card.appendChild(link(doc,'공식 학교 찾기 / 배정 지도',d.officialUrl));
+   card.appendChild(link(doc,overviewLabel(d),d.officialUrl));
    // Address lookup must be user-initiated on the district's own website.
    // The GCISD link is a static map: do not label it an address search.
    const finder=typeof window!=='undefined'?window.WestSchoolOfficialFinder?.lookup(d.code):null;
@@ -154,5 +158,5 @@
   refreshCounts();
   return {ready:true,codeCount:config.districts.length,zipCount:config.areas.length};
  }
- return {validateConfig,safeLink,schoolCount,mount,refreshCounts,REQUIRED_CODES};
+ return {validateConfig,safeLink,overviewLabel,schoolCount,mount,refreshCounts,REQUIRED_CODES};
 });

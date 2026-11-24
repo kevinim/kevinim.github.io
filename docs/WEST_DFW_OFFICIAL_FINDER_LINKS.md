@@ -35,3 +35,7 @@ Draft PR based on West DFW source-audit PR #99, which depends on PR #90. Do NOT 
 ## Additional follow-up, outside scope
 
 If users want official Finder results **inside** the dashboard rather than opening a new official page, obtain approved documented APIs, licensing and privacy/retention terms from each district vendor. Client-side scraping of hidden Finder endpoints or sending private addresses automatically is not an adequate substitute.
+
+## 2026-11-24 — Carroll overview link wording
+
+The West DFW district overview button for Carroll points to the district's **online enrollment portal**, not its address-based SchoolSearch. The separately linked published Carroll SchoolSearch (MyPlanware) is still available below the overview button. The former generic overview CTA was misleading; a P0 reference-only UI correction now says "공식 등록 안내 (주소별 학교 검색 아님)" while keeping the exact allowlisted enrollment URL and distinct district-authorized SchoolSearch. No automatic residential school result, downloaded GIS, private address, or source-rights approval is implied. QA is the existing `tests/west-dfw-panel.test.cjs`, 390/1280 browser integration and main HTML baseline gate. Record release separately after full CI, merge, Pages and actual live browser smoke success.
