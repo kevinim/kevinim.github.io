@@ -205,3 +205,39 @@ test('Plano 9–10 High and 11–12 Senior High must each be present independent
  assert.equal(policy.apply({...raw,features:['elementary','middle','senior'].map(make)}).status,'conditional-finder-only');
  assert.equal(policy.releaseSummary().currentYearResidentialDistrictApprovals,0);
 });
+
+test('reference renderer shows each campus vintage without claiming enrollment',()=>{
+ const make=(district,level)=>{
+  const f=school(level,'SYNTHETIC '+district+' '+level);
+  Object.assign(f.properties,district==='PISD'?{
+   sourceDistrict:'PISD',currentFinderSource:true,yearVerified2627:false,
+   sourceVintage:'Current district Finder (source layer 2025–26)'}:{
+   yearVerified2627:false,verifiedYear:null,sourceYear:level==='high'?'2025-26':null,
+   sourceVintage:level==='high'?'공식 검색기 연결 · 고등 레이어 2025–26 표기':'공식 검색기 연결 · 학년도 미확인'});
+  return f;
+ };
+ const doc={createElement(tag){return {
+  tagName:tag,className:'',textContent:'',children:[],attributes:{},
+  setAttribute(name,value){this.attributes[name]=value;},
+  appendChild(el){this.children.push(el);return el;}
+ };}};
+ const target={ownerDocument:doc,children:[],
+  replaceChildren(){this.children=[];},
+  appendChild(el){this.children.push(el);return el;}};
+ const walk=node=>[node,...(node.children||[]).flatMap(walk)];
+ for(const [district,levels] of [
+  ['PISD',['elementary','middle','high','senior']],
+  ['LISD',['elementary','middle','high']]
+ ]){
+  const model=plan({district,status:'finder-current',features:levels.map(level=>make(district,level))});
+  assert.equal(model.kind,'reference-only');
+  assert.equal(preview.render(target,model),true);
+  const nodes=walk(target);
+  const labels=nodes.filter(n=>n.tagName==='small'&&n.className==='school-reference-vintage');
+  assert.equal(labels.length,levels.length,'each displayed campus needs a visible source year');
+  for(let i=0;i<levels.length;i++)
+   assert.equal(labels[i].textContent,' · '+model.candidates[i].yearNote);
+  assert.ok(nodes.some(n=>typeof n.textContent==='string'&&n.textContent.includes('참고 후보 · 실제 배정 미인증')));
+  assert.equal(policy.releaseSummary().currentYearResidentialDistrictApprovals,0);
+ }
+});

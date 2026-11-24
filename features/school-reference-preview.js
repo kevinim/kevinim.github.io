@@ -181,6 +181,8 @@
   const list=node('ul','school-reference-list');
   for(const candidate of model.candidates){
    const item=node('li','',candidate.level+' · '+candidate.school+(candidate.grades?' ('+candidate.grades+')':''));
+   // Keep the campus-specific source-year warning visible beside each candidate.
+   if(candidate.yearNote)item.appendChild(node('small','school-reference-vintage',' · '+candidate.yearNote));
    list.appendChild(item);
   }
   wrap.appendChild(list);
