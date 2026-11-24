@@ -39,6 +39,8 @@ async function measure(page,width,base){
    status:box.dataset.state,districtCodes:districts.map(x=>x.dataset.district),
    availableZips:zips.filter(b=>!b.disabled).map(b=>b.dataset.zip),
    linkHosts:links.map(a=>new URL(a.href).hostname),
+   carrollOverviewLabel:box.querySelector('[data-district="220919"] a.west-dfw-official')?.textContent,
+   carrollDirectSchoolSearch:box.querySelector('[data-district="220919"] a.west-dfw-direct-lookup')?.href,
    directLookupHosts:[...box.querySelectorAll('.west-dfw-district .west-dfw-direct-lookup')].map(a=>new URL(a.href).hostname),
    directLookupRelSafe:[...box.querySelectorAll('.west-dfw-district .west-dfw-direct-lookup')].every(a=>a.rel.includes('noopener')&&a.rel.includes('noreferrer')),
    relSafe:links.every(a=>a.target==='_blank'&&/noopener/.test(a.rel)&&/noreferrer/.test(a.rel)),
@@ -58,6 +60,9 @@ async function measure(page,width,base){
  assert.equal(result.directLookupHosts.length,3,'Carroll/Keller/Northwest offer separate direct lookup cards');
  assert.equal(result.directLookupRelSafe,true,'Direct official links must use noopener noreferrer');
  assert.equal(result.relSafe,true);
+ assert.match(result.carrollOverviewLabel,/등록 안내.*주소별 학교 검색 아님/);
+ assert.ok(result.carrollDirectSchoolSearch?.includes('myplanware.com/schoolsearch/carroll'),
+  'Carroll must retain a separate official address-based SchoolSearch link');
  assert.equal(result.hasDisclosure,true);
  assert.equal(result.hasKellerHistoricalWarning,true,'Keller stale GIS needs visible 2018-19 disclosure');
  assert.ok(result.schoolCounts.every(x=>x.count>=(x.district==='220919'?5:10)),
