@@ -45,3 +45,9 @@ Date: 2026-11-21. Tracker: [Issue #376](https://github.com/kevinim/kevinim.githu
 
 - Related GIS-source inventory PRs #364 and #366, address-reference UI PR #368. This QA PR touches neither their source manifests nor production UI.
 - Complete this P0 only after comparing actual polygon differences and documenting source year, corner cases and disposition, **not** merely because an automated sample job is green.
+
+## 2026-11-24 — missing-grade-layer guard (synthetic negative case)
+
+A source entirely lacking one school grade level has **no observable boundary** for that grade. The former distance function returned `Infinity`; this could be counted as `>200m` and serialized as `null`, conflating "unavailable source layer" with a real, observed deep gap. This source-incomplete case is now classified separately: `absentGradeLayersFromSource` and `unmeasurableDepthSamples`. It contributes to partial E/M/H grid coverage findings but not to any/deep/mixed distance counters. Bounded examples show a `null` per-grade distance **only as an explicit unavailable measurement**. Synthetic two-grade tests reproduce this failure mode and reject a false deep-distance claim.
+
+For the current Prosper 2026–27 source all three school-level layers exist (20 E, 7 M, 4 H), so expected **293 total / 121 deep / 12 mixed / 133 any-far** values and all 31 published geometry features remain **unchanged**. This is an audit contract for future partial district sources, not an expansion of current GIS coverage or a household enrollment certificate.

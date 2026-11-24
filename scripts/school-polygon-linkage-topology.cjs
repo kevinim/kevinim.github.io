@@ -89,6 +89,7 @@ function audit(features,options={}){
   else usable.push(f);
  }
  const gradeFeatures=Object.fromEntries(GRADES.map(g=>[g,usable.filter(f=>f.properties.gradeLevel===g)]));
+ const absentGradeLayers=options.crossGrade===true?GRADES.filter(g=>gradeFeatures[g].length===0):[];
  const bbox=bounds(usable);
  if(!usable.length)return {schemaVersion:1,district:options.district||'unknown',
   sourceVintage:options.sourceVintage||'unknown',status:'INVALID_DATA',
@@ -99,7 +100,7 @@ function audit(features,options={}){
  // The old max-distance count measured ANY missing grade far away and was
  // mistakenly described as deep (133 vs 121 on Prosper's 2026–27 grid).
  let coveredAny=0,completeEHM=0,crossGradeMismatch=0,deepMismatchOver200m=0;
- let anyMissingGradeFarOver200m=0,mixedDepthOver200m=0;
+ let anyMissingGradeFarOver200m=0,mixedDepthOver200m=0,unmeasurableDepthSamples=0;
  const missingGrades=Object.fromEntries(GRADES.map(g=>[g,0]));
  const missingGradePatterns={};
  const gapExamples=[];
@@ -125,18 +126,24 @@ function audit(features,options={}){
   missing.forEach(g=>missingGrades[g]++);
   const pattern=missing.join('+');
   missingGradePatterns[pattern]=(missingGradePatterns[pattern]||0)+1;
+  // A globally absent grade layer has no measurable boundary: fail closed.
+  // Never render Infinity as an observed large gap or JSON null by accident.
   const gradeDistances=missing.map(g=>({grade:g,
-   distanceMeters:nearestGradeBoundaryMeters(q,gradeFeatures[g])}));
-  const nearestMissingBoundary=Math.min(...gradeDistances.map(x=>x.distanceMeters));
-  const farthestMissingBoundary=Math.max(...gradeDistances.map(x=>x.distanceMeters));
-  if(farthestMissingBoundary>200)anyMissingGradeFarOver200m++;
-  if(nearestMissingBoundary>200)deepMismatchOver200m++;
-  if(farthestMissingBoundary>200&&nearestMissingBoundary<=200)mixedDepthOver200m++;
-  if(gapExamples.length<8&&(nearestMissingBoundary>200||gapExamples.length<2))
+   distanceMeters:gradeFeatures[g].length?nearestGradeBoundaryMeters(q,gradeFeatures[g]):null}));
+  const comparable=gradeDistances.every(x=>Number.isFinite(x.distanceMeters));
+  const nearestMissingBoundary=comparable?Math.min(...gradeDistances.map(x=>x.distanceMeters)):null;
+  const farthestMissingBoundary=comparable?Math.max(...gradeDistances.map(x=>x.distanceMeters)):null;
+  if(!comparable)unmeasurableDepthSamples++;
+  else{
+   if(farthestMissingBoundary>200)anyMissingGradeFarOver200m++;
+   if(nearestMissingBoundary>200)deepMismatchOver200m++;
+   if(farthestMissingBoundary>200&&nearestMissingBoundary<=200)mixedDepthOver200m++;
+  }
+  if(gapExamples.length<8&&(!comparable||nearestMissingBoundary>200||gapExamples.length<2))
    gapExamples.push({coordinate:roundPoint(q),present,missing,
-    distanceToMissingGradeBoundaryMeters:Math.round(nearestMissingBoundary),
+    distanceToMissingGradeBoundaryMeters:comparable?Math.round(nearestMissingBoundary):null,
     distancesToEachMissingGradeMeters:gradeDistances.map(x=>({grade:x.grade,
-     meters:Math.round(x.distanceMeters)}))});
+     meters:x.distanceMeters===null?null:Math.round(x.distanceMeters)}))});
  }
  const overlapSampleCount=Object.values(overlaps).reduce((a,b)=>a+b,0);
  return {schemaVersion:1,district:options.district||'unknown',
@@ -150,6 +157,8 @@ function audit(features,options={}){
   sameGradeOverlapExamples:overlapExamples,crossGradeChecked:options.crossGrade===true,
   crossGradeMismatchSamples:options.crossGrade===true?crossGradeMismatch:null,
   missingGradeSampleCounts:options.crossGrade===true?missingGrades:null,
+  absentGradeLayersFromSource:options.crossGrade===true?absentGradeLayers:null,
+  unmeasurableDepthSamples:options.crossGrade===true?unmeasurableDepthSamples:null,
   // "deep" means ALL missing grades' nearest zone boundaries exceed 200 m.
   deepMismatchOver200m:options.crossGrade===true?deepMismatchOver200m:null,
   anyMissingGradeFarOver200m:options.crossGrade===true?anyMissingGradeFarOver200m:null,

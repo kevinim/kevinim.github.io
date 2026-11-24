@@ -106,3 +106,25 @@ test('Prosper published 2026-27 sample depth is not overstated as 133 strictly d
  });
  assert.equal(r.status,'REVIEW_REQUIRED');
 });
+
+test('globally absent grade layers have unmeasurable distance, never infinite-depth claims',()=>{
+ const onlyTwo=[
+  zone('Synthetic Elementary','elementary',-97,33,0.03),
+  zone('Synthetic High','high',-97,33,0.03)
+ ];
+ const r=audit(onlyTwo,{district:'synthetic',sourceVintage:'source-incomplete',sampleAxis:24,crossGrade:true});
+ assert.deepEqual(r.absentGradeLayersFromSource,['middle']);
+ assert.ok(r.crossGradeMismatchSamples>0);
+ assert.equal(r.unmeasurableDepthSamples,r.crossGradeMismatchSamples);
+ assert.equal(r.deepMismatchOver200m,0,'missing layer has no measurable boundary');
+ assert.equal(r.anyMissingGradeFarOver200m,0);
+ assert.equal(r.mixedDepthOver200m,0);
+ assert.equal(r.missingGradePatternSamples.middle,r.crossGradeMismatchSamples);
+ assert.ok(r.crossGradeExamples.every(e=>
+  e.distanceToMissingGradeBoundaryMeters===null&&
+  e.distancesToEachMissingGradeMeters.some(x=>x.grade==='middle'&&x.meters===null)));
+ assert.equal(r.status,'REVIEW_REQUIRED');
+ const intact=audit(onlyTwo,{district:'synthetic',sampleAxis:16,crossGrade:false});
+ assert.equal(intact.unmeasurableDepthSamples,null,'historical mixed-year sources do not run this check');
+ assert.equal(intact.absentGradeLayersFromSource,null);
+});
