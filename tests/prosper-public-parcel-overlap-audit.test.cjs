@@ -79,3 +79,20 @@ test('untrusted ArcGIS response cannot masquerade as parcel evidence',()=>{
  assert.equal(p.landCategory('Vacant Lot'),'unknown-property-category');
  assert.equal(p.landCategory(null),'unknown-property-category');
 });
+
+test('transient official-CAD failure is retried once without false no-residence label',async()=>{
+ const q=[-96.8,33.22];
+ const attempts={collin:0,denton:0};
+ const fn=async(url)=>{
+  const key=url.includes('services2.arcgis')?'collin':'denton';
+  attempts[key]++;
+  if(key==='denton'&&attempts[key]===1)throw Error('transient public source');
+  return {ok:true,json:async()=>({type:'FeatureCollection',
+   features:key==='collin'?[feature(q,'Residential')]:[]})};
+ };
+ const result=await p.auditCells([{point:q,missing:'middle'}],fn);
+ assert.equal(attempts.collin,1);
+ assert.equal(attempts.denton,2);
+ assert.deepEqual(result.sourceFailureChunks,{collin:0,denton:0});
+ assert.equal(result.categories['residential-property-category'],1);
+});
