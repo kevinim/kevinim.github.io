@@ -74,3 +74,35 @@ test('real pinned sources have distinct, accurately labelled vintage and counts'
  assert.equal(current.gradeCounts.middle,7);
  assert.equal(current.gradeCounts.high,4);
 });
+
+test('deep gap requires distance from ALL missing grade boundaries, not just one',()=>{
+ const data=[
+  zone('Short elementary','elementary',-97,33,0.002),
+  zone('Middle strip','middle',-97,33,0.015),
+  zone('Broad high','high',-97,33,0.04)
+ ];
+ const r=audit(data,{district:'synthetic',sourceVintage:'2026-27',sampleAxis:80,crossGrade:true});
+ assert.ok(r.crossGradeMismatchSamples>0);
+ assert.ok(r.mixedDepthOver200m>0,'one missing grade near and another far must NOT count as deep');
+ assert.ok(r.deepMismatchOver200m>0);
+ assert.equal(r.anyMissingGradeFarOver200m,r.deepMismatchOver200m+r.mixedDepthOver200m);
+ assert.equal(Object.values(r.missingGradePatternSamples).reduce((a,b)=>a+b,0),r.crossGradeMismatchSamples);
+ assert.ok(r.crossGradeExamples.every(e=>
+  Array.isArray(e.distancesToEachMissingGradeMeters)&&
+  e.distancesToEachMissingGradeMeters.length===e.missing.length&&
+  e.distanceToMissingGradeBoundaryMeters===Math.min(...e.distancesToEachMissingGradeMeters.map(x=>x.meters))));
+ assert.match(r.qualification,/residential school assignment/);
+});
+test('Prosper published 2026-27 sample depth is not overstated as 133 strictly deep gaps',()=>{
+ const source=JSON.parse(fs.readFileSync(path.resolve(__dirname,'..','prosper-attendance-2026.geojson'),'utf8'));
+ const r=audit(source.features,{district:'PROSPER',sourceVintage:'2026-27',sampleAxis:120,crossGrade:true});
+ assert.equal(r.crossGradeMismatchSamples,293);
+ assert.equal(r.anyMissingGradeFarOver200m,133,'historical any-missing-grade-far metric');
+ assert.equal(r.deepMismatchOver200m,121,'strictly deep means every missing-grade boundary far');
+ assert.equal(r.mixedDepthOver200m,12);
+ assert.deepEqual(r.missingGradePatternSamples,{
+  'elementary+middle':177,high:30,'middle+high':19,
+  'elementary+high':16,middle:20,elementary:31
+ });
+ assert.equal(r.status,'REVIEW_REQUIRED');
+});
