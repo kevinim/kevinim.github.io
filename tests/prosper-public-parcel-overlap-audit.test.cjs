@@ -8,8 +8,9 @@ const p=require('../scripts/prosper-public-parcel-overlap-audit.cjs');
 const DATA=JSON.parse(fs.readFileSync(path.resolve(__dirname,'..','prosper-attendance-2026.geojson'),'utf8'));
 const square=(x,y)=>[[[x-.0001,y-.0001],[x+.0001,y-.0001],
  [x+.0001,y+.0001],[x-.0001,y+.0001],[x-.0001,y-.0001]]];
-const feature=(q,propType)=>({type:'Feature',
- properties:{propType,ownerName:'MUST NOT SURVIVE',situsFullAddress:'PRIVATE'},
+const feature=(q,propType,taxUnit)=>({type:'Feature',
+ properties:{propType,entitySchoolCode:taxUnit,schoolTaxingUnitName:taxUnit,
+  ownerName:'MUST NOT SURVIVE',situsFullAddress:'PRIVATE'},
  geometry:{type:'Polygon',coordinates:square(...q)}});
 const mock=(body)=>async(url,opts)=>{
  const form=new URLSearchParams(opts.body);
@@ -34,21 +35,22 @@ test('only published synthetic Prosper grid cells used, never real residences',(
 });
 test('provider fields are strictly limited and responses discard property identities',async()=>{
  const q=[-96.8,33.22];
- const form=p.buildForm([q],'propType,propSubType,propYear');
- assert.equal(form.get('outFields'),'propType,propSubType,propYear');
+ const form=p.buildForm([q],'propType,propSubType,propYear,entitySchoolCode');
+ assert.equal(form.get('outFields'),'propType,propSubType,propYear,entitySchoolCode');
  assert.doesNotMatch(form.toString(),/owner|situs/i);
  assert.throws(()=>p.buildForm([[0,0]],'propType,propSubType,propYear'));
- const raw={type:'FeatureCollection',features:[feature(q,'Residential')]};
+ const raw={type:'FeatureCollection',features:[feature(q,'Residential','SPR')]};
  const out=await p.fetchChunk(mock(raw),p.ENDPOINTS.collin,[q]);
  assert.equal(out.length,1);
  assert.equal(out[0].propType,'Residential');
+ assert.equal(out[0].taxUnit,'SPR');
  assert.equal('ownerName' in out[0],false);
  assert.equal('situsFullAddress' in out[0],false);
  assert.deepEqual(out[0].geometry,raw.features[0].geometry);
 });
 test('source success, unknown source, empty parcel, and ambiguous classification stay separate',async()=>{
  const a=[-96.8,33.22],b=[-96.81,33.23];
- const features=[feature(a,'Residential'),feature(b,'Commercial')];
+ const features=[feature(a,'Residential','SPR'),feature(b,'Commercial','OTHER')];
  const request=async(url,opts)=>{
   const form=new URLSearchParams(opts.body);
   assert.equal(form.get('f'),'geojson');
@@ -59,6 +61,9 @@ test('source success, unknown source, empty parcel, and ambiguous classification
  assert.equal(r.inputSyntheticCells,2);
  assert.equal(r.categories['residential-property-category'],1);
  assert.equal(r.categories['other-property-category'],1);
+ assert.equal(r.taxingUnitEvidence['prosper-isd-taxing-code-reference'],1);
+ assert.equal(r.taxingUnitEvidence['nonmatching-or-unmapped-tax-code'],1);
+ assert.equal(r.landUseTaxCrossTab['residential-property-category | prosper-isd-taxing-code-reference'],1);
  assert.equal(r.sourceFailureChunks.collin,0);
  assert.equal(r.sourceFailureChunks.denton,0);
  assert.doesNotMatch(JSON.stringify(r),/MUST NOT SURVIVE|PRIVATE|coordinates|owner/i);
@@ -78,6 +83,10 @@ test('untrusted ArcGIS response cannot masquerade as parcel evidence',()=>{
  assert.equal(p.landCategory('Commercial'),'other-property-category');
  assert.equal(p.landCategory('Vacant Lot'),'unknown-property-category');
  assert.equal(p.landCategory(null),'unknown-property-category');
+ assert.equal(p.taxUnitEvidence('SPR'),'prosper-isd-taxing-code-reference');
+ assert.equal(p.taxUnitEvidence('Prosper ISD'),'prosper-isd-taxing-code-reference');
+ assert.equal(p.taxUnitEvidence('Other ISD'),'nonmatching-or-unmapped-tax-code');
+ assert.equal(p.taxUnitEvidence(null),'taxing-unit-unmapped');
 });
 
 test('transient official-CAD failure is retried once without false no-residence label',async()=>{
