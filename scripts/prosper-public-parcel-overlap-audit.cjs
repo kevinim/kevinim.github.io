@@ -113,8 +113,13 @@ async function auditCells(cells,fetchFn=fetch){
   // Independent public cadastral providers. A 2-provider failure never becomes
   // evidence of unoccupied or ineligible residential property.
   const datasets=await Promise.all(sources.map(async([name,source])=>{
-   try{return {name,status:'ok',features:await fetchChunk(fetchFn,source,points)};}
-   catch{sourceFailures[name]++;return {name,status:'unavailable',features:[]};}
+   // One bounded transient retry handles public-CAD 429/5xx/network hiccups;
+   // persistent failures remain unavailable, never classified as unoccupied.
+   for(let attempt=0;attempt<2;attempt++){
+    try{return {name,status:'ok',features:await fetchChunk(fetchFn,source,points)};}
+    catch{if(attempt===0)await new Promise(resolve=>setTimeout(resolve,250));}
+   }
+   sourceFailures[name]++;return {name,status:'unavailable',features:[]};
   }));
   for(const c of rows){
    const outcomes=datasets.map(d=>({status:d.status,matches:d.features.filter(f=>contains(f.geometry,c.point))}));
