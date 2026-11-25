@@ -75,3 +75,21 @@ test('untrusted response HTML is data only and never creates an enrollment grant
  assert.equal(r.status,'not-verified','active HTML markup is rejected by official-result adapter');
  assert.equal(r.enrollmentCertified,false);
 });
+
+test('published code cannot be paired with the name of another Prosper campus',()=>{
+ const p=payload();
+ p.schools[0].schoolName='ROCK HILL HIGH';
+ assert.equal(api.verify(input,p,original).reason,'official-school-name-code-disagreement');
+ const p2=payload();
+ p2.schools[2].schoolName='LIGHT FARMS ELEMENTARY';
+ assert.equal(api.verify(input,p2,original).reason,'official-school-name-code-disagreement');
+});
+test('source-compatible short names remain valid only if unique within a grade',()=>{
+ const p=payload();
+ p.schools[0].schoolName='PROSPER HS';
+ p.schools[1].schoolName='REYNOLDS MIDDLE SCHOOL';
+ p.schools[2].schoolName='RUCKER EL';
+ assert.equal(api.verify(input,p,original).status,'official-address-source-match');
+ p.schools[2].schoolName='ELEMENTARY SCHOOL';
+ assert.equal(api.verify(input,p,original).reason,'official-school-name-code-disagreement');
+});
