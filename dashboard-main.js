@@ -713,6 +713,27 @@ function drawReferenceCampusMarkers(view){
  }
  return candidates.length;
 }
+// UX-01: Show a visible, non-certifying placeholder for every absent grade band.
+// A missing GIS/campus row is not proof that a residence has no assigned school.
+function addressSchoolCardSlots(view,entries){
+ const district=view?.reference?.district||
+  (typeof home!=='undefined'?home?.schoolSourceDistrict:'')||'';
+ const bands=district==='PISD'?['초등','중등','고등','Senior High']:
+  view?.kind==='allen-reference'||district==='AISD'||district==='LISD'?
+   ['초등','중등','9학년','고등']:['초등','중등','고등'];
+ const slots=[],used=new Set();
+ for(const band of bands){
+  let found=false;
+  entries.forEach((entry,index)=>{
+   if(!used.has(index)&&entry.levelText===band){
+    used.add(index);slots.push(entry);found=true;
+   }
+  });
+  if(!found)slots.push({levelText:band,missing:true});
+ }
+ entries.forEach((entry,index)=>{if(!used.has(index))slots.push(entry)});
+ return slots;
+}
 function renderAddressSchoolPriority(){
  const panel=el('homeAssignmentPriority');
  if(!panel)return;
@@ -776,7 +797,25 @@ function renderAddressSchoolPriority(){
      campusId:c.campusId,verifiedRating:c.verifiedRating}))
   :view.schools.map(s=>({name:s.name,school:s,
     levelText:s.type==='elementary'?'초등':s.type==='middle'?'중등':'고등',grades:''}));
- for(const entry of cardsToShow){
+ for(const entry of addressSchoolCardSlots(view,cardsToShow)){
+  if(entry.missing){
+   const card=document.createElement('div');card.className='home-assignment-school';
+   card.setAttribute('aria-label',entry.levelText+' 학교급 자료 미확인 · 학교가 없다는 뜻 아님');
+   const heading=document.createElement('div');heading.className='home-school-main';
+   const name=document.createElement('strong');
+   name.textContent=entry.levelText+' · 확인 필요';
+   const grade=document.createElement('span');
+   grade.className='home-school-grade grade-unknown';
+   grade.textContent='—';
+   grade.setAttribute('aria-label','TEA 학교 등급 미확인 · 해당 학교급 정보 미연결');
+   heading.append(name,grade);card.appendChild(heading);
+   const chips=document.createElement('div');chips.className='home-school-chips';
+   const evidence=document.createElement('span');evidence.className='home-school-chip evidence';
+   evidence.textContent='학교 없음 아님 · 공식 확인 필요';
+   chips.appendChild(evidence);card.appendChild(chips);
+   cards.appendChild(card);
+   continue;
+  }
   const card=document.createElement('div');card.className='home-assignment-school';
   const school=entry.school;
   const rawGrade=entry.verifiedRating||(
