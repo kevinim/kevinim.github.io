@@ -7,9 +7,20 @@ function isTexasGeocode(c){
   &&Number.isFinite(p?.x)&&Number.isFinite(p?.y)
   &&p.x>=-106.7&&p.x<=-93.45&&p.y>=25.8&&p.y<=36.55;
 }
+// A unit-bearing request cannot be validated by a building-only PointAddress.
+// Preserve the result only as a reference until Esri returns the same unit.
+function residentialUnit(value){
+ const m=/(?:\b(?:APT|APARTMENT|UNIT|SUITE|STE)\.?\s*|#\s*)([A-Z0-9]+(?:-[A-Z0-9]+)?)(?=\b|[,;]|$)/i.exec(String(value||''));
+ return m?m[1].replace(/[^A-Z0-9]/gi,'').toUpperCase():null;
+}
+function mentionsUnit(value){
+ return /(?:\b(?:APT|APARTMENT|UNIT|SUITE|STE)\b|#\s*[A-Z0-9])/i.test(String(value||''));
+}
 // A high-score road interpolation is still not a building / apartment placement.
 function assessResidentialGeocode(requestedAddress,c){
  const a=c?.attributes||{},type=String(a.Addr_type||''),score=c?.score;
+ const requestedUnit=residentialUnit(requestedAddress);
+ const returnedUnits=[c?.address,a.Match_addr].map(residentialUnit).filter(Boolean);
  const inputZip=String(requestedAddress||'').match(/\b\d{5}(?:-\d{4})?\b/g)?.at(-1)?.slice(0,5)||null;
  const candidateZip=String(a.Postal||'').match(/\b\d{5}\b/)?.[0]||String(c?.address||'').match(/\b\d{5}\b/)?.[0]||null;
  let reason=null;
@@ -18,6 +29,9 @@ function assessResidentialGeocode(requestedAddress,c){
  else if(inputZip&&(!candidateZip||inputZip!==candidateZip))reason='입력 ZIP과 검색 결과 ZIP이 일치하지 않습니다.';
  else if(!Number.isFinite(score)||score<95)reason='주소 일치도가 95점 미만입니다.';
  else if(!['PointAddress','Subaddress'].includes(type))reason='건물 또는 호수 단위 주소가 아닌 추정 위치입니다.';
+ else if(mentionsUnit(requestedAddress)&&!requestedUnit)reason='아파트 호수 입력이 불완전합니다.';
+ else if(requestedUnit&&type!=='Subaddress')reason='입력한 호수와 일치하는 세부 주소 좌표가 확인되지 않았습니다.';
+ else if(requestedUnit&&!returnedUnits.includes(requestedUnit))reason='검색 결과에서 동일한 아파트 호수를 확인하지 못했습니다.';
  return {usableForSchoolCandidate:reason===null,reason,score:Number.isFinite(score)?score:null,matchType:type||null,matchedZip:candidateZip};
 }
 // Prefer precisely matched residences, keep distinct Texas results, and avoid picking one
@@ -39,4 +53,4 @@ function rankTexasHomeCandidates(requestedAddress,raw){
  ));
  return {candidates,requiresSelection};
 }
-if(typeof module!=='undefined')module.exports={isTexasGeocode,assessResidentialGeocode,rankTexasHomeCandidates};
+if(typeof module!=='undefined')module.exports={isTexasGeocode,residentialUnit,assessResidentialGeocode,rankTexasHomeCandidates};

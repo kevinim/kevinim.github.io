@@ -20,6 +20,19 @@
  function normalizeCode(value){
   const s=String(value??'');return /^\d{1,3}$/.test(s)?s.padStart(3,'0'):null;
  }
+ // "EL" vs "Elementary" and omitted honorees are allowed only when
+ // the official name still identifies exactly one campus within the grade.
+ const GENERIC=new Set(['EL','ELEM','ELEMENTARY','MID','MIDDLE','MS','HIGH','HS','SCHOOL','CAMPUS','SR','SENIOR']);
+ function schoolTokens(name){
+  return String(name||'').toUpperCase().replace(/[^A-Z0-9]+/g,' ').trim()
+   .split(/\s+/).filter(t=>t&&!GENERIC.has(t));
+ }
+ function uniqueCampusNameMatches(official,zone,catalog){
+  const tokens=schoolTokens(official);
+  if(!tokens.length||!tokens.every(t=>schoolTokens(zone.school).includes(t)))return false;
+  return catalog.filter(p=>p.gradeLevel===zone.gradeLevel&&
+   tokens.every(t=>schoolTokens(p.school).includes(t))).length===1;
+ }
  const fail=reason=>Object.freeze({status:'not-verified',reason,enrollmentCertified:false,schools:Object.freeze([])});
  function safeInput(input){
   const street=String(input?.street||'').trim(),zip=String(input?.zip||'').trim();
@@ -57,7 +70,7 @@
    const p=f?.properties,code=normalizeCode(p?.schoolCode);
    if(!p||!code||zones.has(code)||p.sourceDistrict!=='PROSPER'||p.current!==true||
     p.sourceYearConfirmed!==true||p.sourceVintage!=='2026–27'||
-    p.schoolYear!=='2026–27'||!/^043912\d{3}$/.test(p.campusId||'')||
+    p.schoolYear!=='2026–27'||p.campusId!=='043912'+code||
     !LEVELS.includes(p.gradeLevel))return fail('invalid-zone-campus');
    zones.set(code,p);sourceLevels.add(p.gradeLevel);
   }
@@ -70,6 +83,7 @@
    if(!p||usedCodes.has(code)||usedLevels.has(p.gradeLevel)||
     typeof s.schoolName!=='string'||!s.schoolName.trim()||
     s.schoolName.length>150||/[<>\r\n]/.test(s.schoolName))return fail('unmatched-or-duplicate-official-school');
+   if(!uniqueCampusNameMatches(s.schoolName,p,[...zones.values()]))return fail('official-school-name-code-disagreement');
    usedCodes.add(code);usedLevels.add(p.gradeLevel);
    matched.push(Object.freeze({level:p.gradeLevel,schoolCode:code,
     campusId:p.campusId,officialName:s.schoolName.trim(),zoneName:p.school}));

@@ -21,6 +21,10 @@ const regionalCacheRefs=[
  ['./features/area-assessment.js?v=4','./features/area-assessment.js?v=3']
 ];
 let normalizedMainHtml=rawHtml;
+// P1 reviewed geocode unit verification: reverse only the approved static cache pin.
+// Every other byte remains subject to the immutable historical bootstrap comparison.
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ './geocode-quality.js?v=2','./geocode-quality.js?v=1');
 // P0 audited West DFW Carroll enrollment-link label fix: only this cache pin differs.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
  'features/west-dfw/panel.js?v=3','features/west-dfw/panel.js?v=2');
