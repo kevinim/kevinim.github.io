@@ -9,7 +9,7 @@ const base=(process.env.DASHBOARD_BASE_URL||'https://kevinim.github.io/').replac
 const sample=JSON.parse(fs.readFileSync('tests/public-address-finder-crosscheck-2026.json','utf8'))
  .records.filter(x=>x.district==='PROSPER'&&x.residentialEnrolmentVerified===false);
 const report={kind:'prosper-public-facility-typed-address-e2e',source:'production Pages / 2026-27 GIS',
- at:new Date().toISOString(),residentialAddressCertified:false,checks:[],official:[]};
+ at:new Date().toISOString(),residentialAddressCertified:false,checks:[],official:[],publicModels:[]};
 function fail(message){throw Error(message)}
 function codeMap(rows) {
  const out={};
@@ -21,6 +21,29 @@ function codeMap(rows) {
  return out;
 }
 function same(a,b){return ['elementary','middle','high'].every(k=>a[k]===b[k])&&Object.keys(a).length===3}
+// Builder-advertised public model/sales locations, never a private household.
+// Source: Bloomfield Windsong Ranch and Toll Brothers Star Trail public sales pages.
+const publicModels=[
+ {street:'4250 Old Rosebud Lane',zip:'75078',city:'Prosper',label:'model-1'},
+ {street:'821 Koby Cir',zip:'75078',city:'Prosper',label:'model-2'}
+];
+async function officialModel(address){
+ const u=new URL('https://www.infofinderi.com/ifi/ws/SearchRequest.asmx/SearchAddress');
+ for(const [k,v] of Object.entries({clientId:'PI5FFG7RYZ1',streetAddress:address.street,
+ zipCode:address.zip,schoolId:'-1',gradeId:'-1'}))u.searchParams.set(k,v);
+ try{
+  const res=await fetch(u,{signal:AbortSignal.timeout(15000)});
+  if(!res.ok)return {status:'unavailable'};
+  let data=await res.json();
+  if(typeof data==='string')data=JSON.parse(data);
+  if(data?.resultCode!==200||data.exactAddressMatch!==true||
+     (data.addresses||[]).filter(a=>a.addressExact===true).length!==1)
+   return {status:'not-exact'};
+  const codes=(data.schools||[]).map(x=>String(x.schoolCode||'').padStart(3,'0')).sort();
+  return codes.length===3&&new Set(codes).size===3?
+   {status:'official-three',codes}:{status:'official-incomplete'};
+ }catch{return {status:'unavailable'}}
+}
 async function officialAddress(record,index){
  // District-operated endpoint, QA on *public offices/campus only*.
  const u=new URL('https://www.infofinderi.com/ifi/ws/SearchRequest.asmx/SearchAddress');
@@ -108,6 +131,47 @@ async function run(){
      assert.equal(cleared.overlay,0,'clear left stale Prosper polygons');
      report.checks.push({width,case:index,status:'cleared',staleCards:0,stalePolygons:0});
     }
+    // Test public builder model/sales addresses without claiming they belong to
+    // current students. These source addresses are public, non-household sites.
+    for(let index=0;index<publicModels.length;index++){
+     const m=publicModels[index];
+     const result={width,case:index,kind:'builder-public-model',status:'not-verified'};
+     try{
+      const address=m.street+', '+m.city+', TX '+m.zip;
+      await page.locator('#homeAddress').fill(address);
+      await page.locator('#homeSearch').click();
+      await page.waitForFunction(()=>typeof home!=='undefined'&&!!home&&
+       document.querySelector('#homeStatus')?.textContent?.includes('자동 선택:'),null,{timeout:30000});
+      const gis=await page.evaluate(()=>{
+       const raw=schoolAssignmentFor(home);
+       const view=addressSchoolView();
+       return {district:raw.district,status:raw.status,
+        precise:home.geocodeQuality?.usableForSchoolCandidate===true,
+        codes:(raw.features||[]).map(f=>String(f.properties.schoolCode||'')).sort(),
+        view:view?.kind,certified:view?.schools?.length||0};
+      });
+      assert.equal(gis.certified,0,'Public model must not be officially enrollment-certified');
+      const official=await officialModel(m);
+      result.official=official.status;
+      result.gis=gis.precise&&gis.district==='PROSPER'&&
+       gis.status==='current'&&gis.codes.length===3?'three-current':'not-three-current';
+      if(official.status==='official-three'&&result.gis==='three-current'){
+       if(JSON.stringify(official.codes)!==JSON.stringify(gis.codes)){
+        result.status='official-gis-disagreement';
+        report.publicModels.push(result);
+        fail('public model '+index+' official GIS code disagreement');
+       }
+       result.status='source-code-parity';
+      }else result.status='review-required';
+     }catch(e){
+      if(/official GIS code disagreement/.test(String(e.message)))throw e;
+      result.status='review-required';
+      result.reason='geocode-or-source-not-exact';
+     }finally{
+      report.publicModels.push(result);
+      await page.locator('#homeClear').click().catch(()=>{});
+     }
+    }
    }finally{await page.close()}
   }
   // Separate provider review: server-side public facility source check only.
@@ -118,11 +182,12 @@ async function run(){
 run().then(()=>{
  const n=report.checks.length;
  const unconfirmed=report.official.filter(x=>x.status!=='matched').length;
- report.status=unconfirmed?'PASS_UI_PROVIDER_REVIEW_REQUIRED':'PASS_PUBLIC_FACILITY_ONLY';
+ const modelUnconfirmed=report.publicModels.filter(x=>x.status!=='source-code-parity').length;
+ report.status=unconfirmed||modelUnconfirmed?'PASS_UI_PROVIDER_REVIEW_REQUIRED':'PASS_PUBLIC_FACILITY_ONLY';
  fs.mkdirSync('artifacts/prosper-address-e2e',{recursive:true});
  fs.writeFileSync('artifacts/prosper-address-e2e/summary.json',JSON.stringify(report,null,2)+'\n');
  console.log('PROSPER_TYPED_PUBLIC_E2E '+JSON.stringify({status:report.status,
-   uiChecks:n,official:report.official,residentialCertified:false}));
+   uiChecks:n,official:report.official,models:report.publicModels,residentialCertified:false}));
 }).catch(err=>{
  report.status='FAIL';
  report.failureClass=String(err.message||err).replace(/[0-9]{3,7}\s+\w+\s+[A-Za-z]+/g,'[redacted]').slice(0,180);
