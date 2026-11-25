@@ -163,7 +163,7 @@ async function run(){
        result.status='source-code-parity';
       }else result.status='review-required';
      }catch(e){
-      if(/official GIS code disagreement/.test(String(e.message)))throw e;
+      if(/official GIS code disagreement|Public model must not be officially enrollment-certified/.test(String(e.message)))throw e;
       result.status='review-required';
       result.reason='geocode-or-source-not-exact';
      }finally{
