@@ -127,18 +127,29 @@ async function auditCells(cells,fetchFn=fetch,onQualified){
   throw Error('synthetic-sample-count-invalid');
  const byStatus={},byTaxStatus={},byLandAndTax={},byMissing={},sourceFailures={collin:0,denton:0};
  const sources=Object.entries(ENDPOINTS);
+ // Preserve unknown source coverage after repeated failure, rather than
+ // repeatedly waiting for each of 25 synthetic grid batches to time out.
+ const consecutiveFailures={collin:0,denton:0},sourceCircuitOpen={collin:false,denton:false};
  for(let offset=0;offset<cells.length;offset+=CHUNK){
   const rows=cells.slice(offset,offset+CHUNK),points=rows.map(r=>r.point);
   // Independent public cadastral providers. A 2-provider failure never becomes
   // evidence of unoccupied or ineligible residential property.
   const datasets=await Promise.all(sources.map(async([name,source])=>{
+   if(sourceCircuitOpen[name]){
+    sourceFailures[name]++;return {name,status:'unavailable',features:[]};
+   }
    // One bounded transient retry handles public-CAD 429/5xx/network hiccups;
    // persistent failures remain unavailable, never classified as unoccupied.
    for(let attempt=0;attempt<2;attempt++){
-    try{return {name,status:'ok',features:await fetchChunk(fetchFn,source,points)};}
-    catch{if(attempt===0)await new Promise(resolve=>setTimeout(resolve,250));}
+    try{
+     const features=await fetchChunk(fetchFn,source,points);
+     consecutiveFailures[name]=0;
+     return {name,status:'ok',features};
+    }catch{if(attempt===0)await new Promise(resolve=>setTimeout(resolve,250));}
    }
-   sourceFailures[name]++;return {name,status:'unavailable',features:[]};
+   sourceFailures[name]++;consecutiveFailures[name]++;
+   if(consecutiveFailures[name]>=2)sourceCircuitOpen[name]=true;
+   return {name,status:'unavailable',features:[]};
   }));
   for(const c of rows){
    const outcomes=datasets.map(d=>({status:d.status,matches:d.features.filter(f=>contains(f.geometry,c.point))}));
@@ -161,6 +172,7 @@ async function auditCells(cells,fetchFn=fetch,onQualified){
   inputSyntheticCells:cells.length,categories:byStatus,taxingUnitEvidence:byTaxStatus,
   landUseTaxCrossTab:byLandAndTax,byMissingGradePattern:byMissing,
   chunksPerSource:Math.ceil(cells.length/CHUNK),sourceFailureChunks:sourceFailures,
+  providerCircuitOpen:sourceCircuitOpen,
   conclusions:'CAD property classification cannot certify occupancy, attendance boundary, school enrollment, district tax-unit code equivalence or individual address.'};
 }
 async function main(){
