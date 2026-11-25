@@ -639,7 +639,7 @@ test('school assignment candidates require precise residential geocoder results'
  assert.ok(src.includes("status:'needs-address-verification'"));
  assert.ok(src.includes('if(!item?.geocodeQuality?.usableForSchoolCandidate)'));
  assert.ok(src.includes('candidate.savedGeocodeQuality||assessResidentialGeocode'));
- assert.ok(html.includes('./geocode-quality.js?v=1'));
+ assert.ok(html.includes('./geocode-quality.js?v=2'));
 });
 test('official CFB 2026-27 feeder contradiction is not auto-resolved',()=>{
  const c=cfbFeeder.officialSourceConflicts.find(x=>x.school==='Farmers Branch');
