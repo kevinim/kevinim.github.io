@@ -24,6 +24,7 @@ jobs:
         run: node --test tests/ci-workflow-efficiency.test.cjs tests/actions-stale-queue-recovery.test.cjs
       - run: node scripts/verify-main-data.mjs
       - run: node --test tests/commute-operation-lifecycle.test.cjs tests/provider-requests.test.cjs
+      - run: node --test tests/residential-geocode-unit.test.cjs tests/prosper-official-address-response.test.cjs
       - run: node --test tests/dashboard-source-timeouts.test.cjs tests/home-geocode-timeout.test.cjs tests/preview-commute-cancellation.test.cjs
       - run: node --test tests/first-load-assets.test.cjs
       - run: node scripts/audit-first-load-assets.cjs --check
