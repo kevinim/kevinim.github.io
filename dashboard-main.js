@@ -718,7 +718,14 @@ function renderAddressSchoolPriority(){
  if(!panel)return;
  const view=addressSchoolView();
  panel.hidden=!view;
- if(!view)return;
+ if(!view){
+  // Clearing a searched address must remove stale campus content from the DOM,
+  // not merely hide it. No historical residence-specific school cards retained.
+  el('homeAssignmentPriorityStatus')?.replaceChildren();
+  el('homeAssignmentPriorityDescription')?.replaceChildren();
+  el('homeAssignmentPrioritySchools')?.replaceChildren();
+  return;
+ }
  const status=el('homeAssignmentPriorityStatus');
  const desc=el('homeAssignmentPriorityDescription');
  const cards=el('homeAssignmentPrioritySchools');
