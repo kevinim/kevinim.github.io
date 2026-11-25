@@ -258,11 +258,13 @@ const leafletCss=fs.readFileSync(require.resolve('leaflet/dist/leaflet.css'));
       count:document.querySelectorAll('#schoolList button.school').length,
       selected:window.HomeSchoolManualBridge.selectedSchools(home).length,
       status:document.getElementById('homeAssignmentPriorityStatus').textContent,
-      cards:document.querySelectorAll('#homeAssignmentPrioritySchools .home-assignment-school').length
+      cards:document.querySelectorAll('#homeAssignmentPrioritySchools .home-assignment-school:not([data-missing-band])').length,
+      missingBands:document.querySelectorAll('#homeAssignmentPrioritySchools [data-missing-band]').length
     }));
     assert.equal(manual.count,1,'Only the user-chosen Finder campus appears');
     assert.equal(manual.selected,1);
     assert.equal(manual.cards,1,'Top priority summary includes the chosen school');
+    assert.ok(manual.missingBands>=2,'Other school levels must remain explicitly unverified');
     assert.match(manual.status,/검증 전/,'Manual selection cannot impersonate certified assignment');
     await page.evaluate(()=>clearHome());
     const restored=await page.evaluate(()=>({
