@@ -271,3 +271,48 @@ test('clearing selected address purges stale school cards and status from DOM',(
  for(const key of ['homeAssignmentPriorityStatus','homeAssignmentPriorityDescription',
   'homeAssignmentPrioritySchools'])assert.equal(calls[key],1,key+' should be cleared');
 });
+
+test('UX-01: missing E/M/H rows remain explicit unverified grade cards, not missing schools',()=>{
+ const start=source.indexOf('function addressSchoolCardSlots(view,entries){');
+ const end=source.indexOf('function renderAddressSchoolPriority(){',start);
+ assert.ok(start>=0&&end>start,'address grade-band planner exists');
+ const ctx={home:null};
+ vm.runInNewContext(source.slice(start,end),ctx,{timeout:1000});
+ const elementary={name:'Known Elementary',levelText:'초등'};
+ const rows=Array.from(ctx.addressSchoolCardSlots({kind:'gis-reference',
+  reference:{district:'FISD'}},[elementary]));
+ assert.deepEqual(rows.map(x=>x.levelText),['초등','중등','고등']);
+ assert.equal(rows[0].missing,undefined);
+ assert.equal(rows[1].missing,true);
+ assert.equal(rows[2].missing,true);
+ const unknown=Array.from(ctx.addressSchoolCardSlots({kind:'unverified'},[]));
+ assert.deepEqual(unknown,[],'No grade cards when an entire address source is unavailable or in conflict');
+ const render=source.slice(end,source.indexOf(' function drawSchools(){',end));
+ assert.match(render,/entry\.levelText\+' · 확인 필요'/);
+ assert.match(render,/학교 없음 아님 · 공식 확인 필요/);
+ assert.match(render,/cards\.appendChild\(card\)/);
+ assert.doesNotMatch(render,/innerHTML\s*=/,'untrusted school name stays DOM-only');
+});
+test('UX-01: Plano High and Senior High cannot substitute for one another',()=>{
+ const start=source.indexOf('function addressSchoolCardSlots(view,entries){');
+ const end=source.indexOf('function renderAddressSchoolPriority(){',start);
+ const ctx={home:null};
+ vm.runInNewContext(source.slice(start,end),ctx,{timeout:1000});
+ const rows=Array.from(ctx.addressSchoolCardSlots({kind:'gis-reference',
+  reference:{district:'PISD'}},[{name:'9-10',levelText:'고등'},
+   {name:'E',levelText:'초등'},{name:'M',levelText:'중등'}]));
+ assert.deepEqual(rows.map(x=>x.levelText),['초등','중등','고등','Senior High']);
+ assert.equal(rows[2].missing,undefined);
+ assert.equal(rows[3].missing,true,'Senior gap must remain visible despite High');
+});
+test('UX-01: Allen 9th grade remains a separate pending band',()=>{
+ const start=source.indexOf('function addressSchoolCardSlots(view,entries){');
+ const end=source.indexOf('function renderAddressSchoolPriority(){',start);
+ const ctx={home:null};
+ vm.runInNewContext(source.slice(start,end),ctx,{timeout:1000});
+ const rows=Array.from(ctx.addressSchoolCardSlots({kind:'allen-reference'},
+  [{name:'Allen High',levelText:'고등'}, {name:'Elementary',levelText:'초등'}]));
+ assert.deepEqual(rows.map(x=>x.levelText),['초등','중등','9학년','고등']);
+ assert.equal(rows[1].missing,true);assert.equal(rows[2].missing,true);
+ assert.equal(rows[3].missing,undefined);
+});
