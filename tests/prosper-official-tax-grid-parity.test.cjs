@@ -26,14 +26,34 @@ test('public finder endpoint restricted to deterministic synthetic coordinates, 
 });
 test('published GIS code presence and missing-grade disagreement are independently counted',()=>{
  assert.deepEqual(api.compare(['101'],point,features),{
-  allGISCodesReturned:true,returnedMissingGISGrade:false,returnedUnknownCampus:false
+  allGISCodesReturned:true,returnedMissingGISGrade:false,returnedUnknownCampus:false,
+  returnedConflictingGISGrade:false
  });
  assert.deepEqual(api.compare(['101','041'],point,features),{
-  allGISCodesReturned:true,returnedMissingGISGrade:true,returnedUnknownCampus:false
+  allGISCodesReturned:true,returnedMissingGISGrade:true,returnedUnknownCampus:false,
+  returnedConflictingGISGrade:false
  });
  assert.equal(api.compare(['041'],point,features).allGISCodesReturned,false);
  assert.equal(api.compare(['101','999'],point,features).returnedUnknownCampus,true);
  assert.throws(()=>api.compare(['ownerAddress'],point,features));
+});
+test('extra known campus in a GIS-covered grade is not accepted as a perfect official match',()=>{
+ const sameGrade=zone('102','elementary',point[0]+.03,point[1]+.03);
+ const result=api.compare(['101','102'],point,[...features,sameGrade]);
+ assert.equal(result.returnedConflictingGISGrade,true);
+ assert.equal(result.allGISCodesReturned,false);
+ assert.equal(result.returnedUnknownCampus,false);
+ assert.equal(api.compare(['101','999'],point,features).allGISCodesReturned,false);
+ assert.throws(()=>api.compare(['101','101'],point,features),/duplicate/);
+});
+test('official conflict summary records only aggregate counts and no campus identifiers',async()=>{
+ const selected=[{point,missing:'middle+high'}];
+ const sameGrade=zone('102','elementary',point[0]+.03,point[1]+.03);
+ const fetchFn=async()=>({ok:true,json:async()=>({resultCode:200,schools:[{schoolCode:101},{schoolCode:102}]})});
+ const summary=await api.inspect(selected,[...features,sameGrade],fetchFn);
+ assert.equal(summary.officialReturnedSameGradeConflict,1);
+ assert.equal(summary.allGISCodesReturned,0);
+ assert.doesNotMatch(JSON.stringify(summary),/101|102|schoolCode|point/i);
 });
 test('bounded official map-click fetch fails closed and no school names are retained',async()=>{
  const mock=async()=>({ok:true,json:async()=>({resultCode:200,schools:[{
