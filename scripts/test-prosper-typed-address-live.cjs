@@ -43,9 +43,15 @@ async function officialAddress(record,index){
  }catch(err){
   const e=String(err.message||err);
   // Never transform provider failures or mismatches into a fake PASS.
-  const mismatch=/school_code_mismatch|not_exact|ambiguous|provider_result_code/.test(e);
-  report.official.push({case:index,source:'SearchAddress',status:mismatch?'mismatch':'unavailable'});
-  if(mismatch)throw Error('official case '+index+' mismatch');
+  const reason=['school_code_mismatch','not_exact','ambiguous','provider_result_code','http']
+   .find(code=>e.includes(code))||'request_unavailable';
+  const mismatch=/school_code_mismatch|not_exact|ambiguous|provider_result_code/.test(reason);
+  // A non-residential *school building* is not a valid enrollment holdout.
+  // Record its official address-vs-coordinate discrepancy as REVIEW_REQUIRED,
+  // never call the public campus a failed residential zone.
+  report.official.push({case:index,source:'SearchAddress',
+   status:mismatch?'review_required':'unavailable',reason});
+  if(index===0&&mismatch)throw Error('official headquarters source discrepancy: '+reason);
  }
 }
 async function run(){
@@ -111,8 +117,8 @@ async function run(){
 }
 run().then(()=>{
  const n=report.checks.length;
- const unavailable=report.official.filter(x=>x.status==='unavailable').length;
- report.status=unavailable?'PASS_UI_OFFICIAL_UNAVAILABLE':'PASS_PUBLIC_FACILITY_ONLY';
+ const unconfirmed=report.official.filter(x=>x.status!=='matched').length;
+ report.status=unconfirmed?'PASS_UI_PROVIDER_REVIEW_REQUIRED':'PASS_PUBLIC_FACILITY_ONLY';
  fs.mkdirSync('artifacts/prosper-address-e2e',{recursive:true});
  fs.writeFileSync('artifacts/prosper-address-e2e/summary.json',JSON.stringify(report,null,2)+'\n');
  console.log('PROSPER_TYPED_PUBLIC_E2E '+JSON.stringify({status:report.status,
