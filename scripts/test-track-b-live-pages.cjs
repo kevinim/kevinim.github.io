@@ -136,6 +136,7 @@ async function run(){
       levels:reference?.candidates.map(c=>c.level).sort(),
       cardNames:cards.map(c=>c.querySelector('strong')?.textContent),
       referenceNames:reference?.candidates.map(c=>c.school),
+      referenceEntries:reference?.candidates.map(c=>({school:c.school,level:c.level})),
       certified:view?.schools.length,
       cardBadges:cards.map(c=>c.querySelector('.home-school-grade')?.textContent),
       warning:document.getElementById('homeAssignmentPriorityStatus')?.textContent};
@@ -152,8 +153,15 @@ async function run(){
     'District headquarters public point must map to all three official school codes');
    assert.equal(prosper.referenceKind,'reference-only');
    assert.deepEqual(prosper.levels,['고등','중등','초등']);
-   assert.deepEqual(prosper.cardNames,prosper.referenceNames,
-    'Actual Pages address-first school rail must render all three Prosper levels');
+   // The UX-01 address-first rail intentionally sorts campus cards by grade
+   // band, while Infofinder's source response can use an unrelated order.
+   const bandRank={'초등':0,'중등':1,'9학년':2,'고등':3,'Senior High':4};
+   const expectedCardNames=prosper.referenceEntries.slice().sort((a,b)=>
+    (bandRank[a.level]??99)-(bandRank[b.level]??99)).map(x=>x.school);
+   assert.deepEqual(prosper.cardNames,expectedCardNames,
+    'Actual Pages must retain all Prosper schools in E/M/H presentation order');
+   assert.deepEqual([...prosper.cardNames].sort(),[...prosper.referenceNames].sort(),
+    'Presentation order must never change the official candidate membership');
    assert.equal(prosper.certified,0,'GIS reference must not become a residential assignment');
    assert.match(prosper.warning,/배정 미인증/);
    assert.equal(prosper.cardBadges.length,3,'Each level needs an explicit TEA grade badge');
