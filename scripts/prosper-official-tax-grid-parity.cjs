@@ -22,14 +22,21 @@ function compare(codes,point,features){
  if(!Array.isArray(codes)||codes.some(x=>typeof x!=='string'||!/^[0-9]{3}$/.test(x)))
   throw Error('invalid-public-locator-codes');
  const key=c=>String(c||'').padStart(3,'0');
+ if(new Set(codes).size!==codes.length)throw Error('duplicate-public-locator-codes');
  const byCode=new Map(features.map(f=>[key(f.properties.schoolCode),f.properties.gradeLevel]));
  const hits=features.filter(f=>contains(f.geometry,point));
  const expected=hits.map(f=>key(f.properties.schoolCode));
  const present=new Set(hits.map(f=>f.properties.gradeLevel));
  if(!present.size||present.size===3)throw Error('not-a-synthetic-gap-grid-cell');
- return {allGISCodesReturned:expected.every(c=>codes.includes(c)),
+ // An extra code in a GIS-covered grade is a disagreement even if all expected
+ // codes also appear in the response. Missing grades are separately reported.
+ const returnedConflictingGISGrade=codes.some(c=>byCode.has(c)&&
+  present.has(byCode.get(c))&&!expected.includes(c));
+ const returnedUnknownCampus=codes.some(c=>!byCode.has(c));
+ return {allGISCodesReturned:expected.every(c=>codes.includes(c))&&
+   !returnedConflictingGISGrade&&!returnedUnknownCampus,
   returnedMissingGISGrade:codes.some(c=>byCode.has(c)&&!present.has(byCode.get(c))),
-  returnedUnknownCampus:codes.some(c=>!byCode.has(c))};
+  returnedUnknownCampus,returnedConflictingGISGrade};
 }
 async function look(point,fetchFn=fetch){
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);
@@ -52,7 +59,8 @@ async function inspect(selected,features,fetchFn=fetch){
  const out={qualifiedResidentialProsperTaxCategoryCells:selected.length,
   boundedSyntheticPublicFinderQueries:sample.length,comparable:0,
   publicFinderUnavailable:0,allGISCodesReturned:0,sourceCampusMissingInOfficial:0,
-  officialReturnedCampusInMissingGISGrade:0,unrecognizedOfficialCampusCode:0};
+  officialReturnedCampusInMissingGISGrade:0,unrecognizedOfficialCampusCode:0,
+  officialReturnedSameGradeConflict:0};
  for(let i=0;i<sample.length;i+=4){
   const batch=sample.slice(i,i+4);
   const results=await Promise.all(batch.map(async c=>{
@@ -69,6 +77,7 @@ async function inspect(selected,features,fetchFn=fetch){
    else out.sourceCampusMissingInOfficial++;
    if(result.returnedMissingGISGrade)out.officialReturnedCampusInMissingGISGrade++;
    if(result.returnedUnknownCampus)out.unrecognizedOfficialCampusCode++;
+   if(result.returnedConflictingGISGrade)out.officialReturnedSameGradeConflict++;
   }
  }
  return out;
