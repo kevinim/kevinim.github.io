@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/test-track-b-live-pages.cjs'
+      - 'scripts/test-prosper-typed-address-live.cjs'
       - '.github/workflows/track-b-live-production-smoke.yml'
   deployment_status:
   schedule:
@@ -39,6 +40,13 @@ jobs:
           NODE_PATH: ${{ github.workspace }}/live-pages-playwright-tmp/node_modules
           DASHBOARD_BASE_URL: https://kevinim.github.io/
         run: node scripts/test-track-b-live-pages.cjs
+      - name: Prosper typed public-address E2E on deployed Pages (not residential certification)
+        env:
+          NODE_PATH: ${{ github.workspace }}/live-pages-playwright-tmp/node_modules
+          DASHBOARD_BASE_URL: https://kevinim.github.io/
+        run: |
+          node --check scripts/test-prosper-typed-address-live.cjs
+          node scripts/test-prosper-typed-address-live.cjs
       - name: Verify the official CFB Finder and manual map bridge in the same postdeploy run
         env:
           NODE_PATH: ${{ github.workspace }}/live-pages-playwright-tmp/node_modules
@@ -55,5 +63,6 @@ jobs:
             artifacts/track-b-live-pages/track-b-live-report.json
             artifacts/track-b-live-pages/track-b-live-390.png
             artifacts/track-b-live-pages/track-b-live-1366.png
+            artifacts/prosper-address-e2e/summary.json
           if-no-files-found: warn
           retention-days: 7
