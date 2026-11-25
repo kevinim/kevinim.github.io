@@ -120,9 +120,11 @@ async function main(){
     renderHome();drawSchools();drawList();
     return {status:document.getElementById('homeAssignmentPriorityStatus').textContent,
       description:document.getElementById('homeAssignmentPriorityDescription').textContent,
-      cards:document.querySelectorAll('#homeAssignmentPrioritySchools .home-assignment-school').length};
+      cards:document.querySelectorAll('#homeAssignmentPrioritySchools .home-assignment-school:not([data-missing-band])').length,
+      missingBands:document.querySelectorAll('#homeAssignmentPrioritySchools [data-missing-band]').length};
    });
    assert.equal(stale.cards,2,'Stale middle school source is removed; current E/H remain');
+   assert.equal(stale.missingBands,1,'Missing middle grade shown as unverified, never enrolled');
    assert.match(stale.status,/GIS 기준 예상 배정학교/,'GIS estimate status persists during asynchronous source recheck');
    assert.match(stale.description,/미확인 학교급: 중등/,'Stale middle grade must be disclosed');
    const wrong=await page.evaluate(()=>{

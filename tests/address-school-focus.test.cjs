@@ -286,8 +286,7 @@ test('UX-01: missing E/M/H rows remain explicit unverified grade cards, not miss
  assert.equal(rows[1].missing,true);
  assert.equal(rows[2].missing,true);
  const unknown=Array.from(ctx.addressSchoolCardSlots({kind:'unverified'},[]));
- assert.deepEqual(unknown.map(x=>x.levelText),['초등','중등','고등']);
- assert.ok(unknown.every(x=>x.missing===true));
+ assert.deepEqual(unknown,[],'No grade cards when an entire address source is unavailable or in conflict');
  const render=source.slice(end,source.indexOf(' function drawSchools(){',end));
  assert.match(render,/entry\.levelText\+' · 확인 필요'/);
  assert.match(render,/학교 없음 아님 · 공식 확인 필요/);

@@ -716,6 +716,8 @@ function drawReferenceCampusMarkers(view){
 // UX-01: Show a visible, non-certifying placeholder for every absent grade band.
 // A missing GIS/campus row is not proof that a residence has no assigned school.
 function addressSchoolCardSlots(view,entries){
+ // Source conflicts/unavailable whole-address lookups retain the empty fail-closed state.
+ if(view?.kind==='unverified')return entries;
  const district=view?.reference?.district||
   (typeof home!=='undefined'?home?.schoolSourceDistrict:'')||'';
  const bands=district==='PISD'?['초등','중등','고등','Senior High']:
@@ -801,6 +803,7 @@ function renderAddressSchoolPriority(){
   if(entry.missing){
    const card=document.createElement('div');card.className='home-assignment-school';
    card.setAttribute('aria-label',entry.levelText+' 학교급 자료 미확인 · 학교가 없다는 뜻 아님');
+   card.setAttribute('data-missing-band',entry.levelText);
    const heading=document.createElement('div');heading.className='home-school-main';
    const name=document.createElement('strong');
    name.textContent=entry.levelText+' · 확인 필요';
