@@ -61,6 +61,7 @@ test('source-vintage, campus-ID and duplicated GIS identifiers cannot be silentl
   j=>{j.metadata.sourceYear='2025–26'},
   j=>{j.features[0].properties.sourceYearConfirmed=false},
   j=>{j.features[0].properties.campusId='043911101'},
+  j=>{j.features[0].properties.campusId='043912999'},
   j=>{j.features[1].properties.schoolCode=j.features[0].properties.schoolCode},
   j=>{j.features.pop()},
   j=>{j.metadata.sourceGroupNames[0]='2025-2026 ELEMENTARY SCHOOL'}
