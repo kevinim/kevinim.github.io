@@ -254,3 +254,20 @@ test('owner-authorized Prosper reference GIS outlines require exact source/year 
  // copied into home.assignment or the certified school list.
  assert.match(source,/if\(window\.ConditionalSchoolRelease\?\.decide\?\.\(assignment\)\?\.allowed!==true\)/);
 });
+
+
+test('clearing selected address purges stale school cards and status from DOM',()=>{
+ const start=source.indexOf('function renderAddressSchoolPriority(){');
+ const stop=source.indexOf('function drawSchools(){',start);
+ assert.ok(start>0&&stop>start,'address priority renderer boundaries available');
+ const calls={};
+ const nodes=Object.fromEntries(['homeAssignmentPriority','homeAssignmentPriorityStatus',
+  'homeAssignmentPriorityDescription','homeAssignmentPrioritySchools'].map(k=>
+  [k,{hidden:false,replaceChildren(){calls[k]=(calls[k]||0)+1;}}]));
+ const ctx={addressSchoolView:()=>null,el:key=>nodes[key]||null};
+ vm.runInNewContext(source.slice(start,stop),ctx,{timeout:1000});
+ ctx.renderAddressSchoolPriority();
+ assert.equal(nodes.homeAssignmentPriority.hidden,true);
+ for(const key of ['homeAssignmentPriorityStatus','homeAssignmentPriorityDescription',
+  'homeAssignmentPrioritySchools'])assert.equal(calls[key],1,key+' should be cleared');
+});
