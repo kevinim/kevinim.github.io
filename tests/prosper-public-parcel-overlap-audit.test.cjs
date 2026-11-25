@@ -105,3 +105,39 @@ test('transient official-CAD failure is retried once without false no-residence 
  assert.deepEqual(result.sourceFailureChunks,{collin:0,denton:0});
  assert.equal(result.categories['residential-property-category'],1);
 });
+
+test('persistent public CAD outage opens a bounded circuit and keeps every cell unavailable',async()=>{
+ const q=[-96.8,33.22],cells=Array.from({length:48},()=>({point:q,missing:'middle'}));
+ const attempts={collin:0,denton:0};
+ const fetcher=async(url)=>{
+  const which=url.includes('services2.arcgis')?'collin':'denton';attempts[which]++;
+  if(which==='denton')throw Error('Denton source offline');
+  return {ok:true,json:async()=>({type:'FeatureCollection',features:[]})};
+ };
+ const result=await p.auditCells(cells,fetcher);
+ assert.equal(result.chunksPerSource,4);
+ assert.deepEqual(attempts,{collin:4,denton:4},'two bounded retries across two chunks, then stop source calls');
+ assert.equal(result.sourceFailureChunks.denton,4,'skipped chunks remain unavailable');
+ assert.equal(result.sourceFailureChunks.collin,0);
+ assert.equal(result.providerCircuitOpen.denton,true);
+ assert.equal(result.providerCircuitOpen.collin,false);
+ assert.equal(Object.values(result.categories).reduce((a,b)=>a+b,0),48);
+ assert.equal(result.categories['no-parcel-at-grid-point']||0,0,
+  'an offline source must never be treated as a confirmed empty property map');
+ assert.doesNotMatch(JSON.stringify(result),/PRIVATE|ownerName|situsFullAddress/i);
+});
+test('a recovered CAD source resets its failure streak and stays queryable',async()=>{
+ const q=[-96.8,33.22],cells=Array.from({length:36},()=>({point:q,missing:'middle'}));
+ let failures=0,requests=0;
+ const fetcher=async(url)=>{
+  if(url.includes('geo.dentoncad.com')){
+   requests++;
+   if(failures<2){failures++;throw Error('temporary outage');}
+  }
+  return {ok:true,json:async()=>({type:'FeatureCollection',features:[]})};
+ };
+ const result=await p.auditCells(cells,fetcher);
+ assert.equal(requests,4,'first two attempts fail, then next two chunks work');
+ assert.equal(result.providerCircuitOpen.denton,false);
+ assert.equal(result.sourceFailureChunks.denton,1);
+});

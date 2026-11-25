@@ -37,6 +37,10 @@ on:
       - '*attendance*.geojson'
       - '*locator*.geojson'
       - 'data/school-data-release-lock.json'
+      - 'scripts/prosper-public-parcel-overlap-audit.cjs'
+      - 'scripts/prosper-official-tax-grid-parity.cjs'
+      - 'tests/prosper-public-parcel-overlap-audit.test.cjs'
+      - 'tests/prosper-official-tax-grid-parity.test.cjs'
   workflow_dispatch:
 concurrency:
   group: tx-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
