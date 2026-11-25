@@ -158,7 +158,6 @@ async function run(){
       if(official.status==='official-three'&&result.gis==='three-current'){
        if(JSON.stringify(official.codes)!==JSON.stringify(gis.codes)){
         result.status='official-gis-disagreement';
-        report.publicModels.push(result);
         fail('public model '+index+' official GIS code disagreement');
        }
        result.status='source-code-parity';
@@ -169,7 +168,7 @@ async function run(){
       result.reason='geocode-or-source-not-exact';
      }finally{
       report.publicModels.push(result);
-      await page.locator('#homeClear').click().catch(()=>{});
+      await page.locator('#homeClear').click({timeout:1500}).catch(()=>{});
      }
     }
    }finally{await page.close()}
