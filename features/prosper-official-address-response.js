@@ -70,7 +70,7 @@
    const p=f?.properties,code=normalizeCode(p?.schoolCode);
    if(!p||!code||zones.has(code)||p.sourceDistrict!=='PROSPER'||p.current!==true||
     p.sourceYearConfirmed!==true||p.sourceVintage!=='2026–27'||
-    p.schoolYear!=='2026–27'||!/^043912\d{3}$/.test(p.campusId||'')||
+    p.schoolYear!=='2026–27'||p.campusId!=='043912'+code||
     !LEVELS.includes(p.gradeLevel))return fail('invalid-zone-campus');
    zones.set(code,p);sourceLevels.add(p.gradeLevel);
   }
