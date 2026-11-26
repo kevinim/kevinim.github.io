@@ -196,6 +196,54 @@ async function run(){
    assert.equal(prosper.certified,0,'GIS reference must not become a residential assignment');
    assert.match(prosper.warning,/배정 미인증/);
    assert.equal(prosper.cardBadges.length,3,'Each level needs an explicit TEA grade badge');
+   // UX-02: exercise the actual published polygon-picker on the same live
+   // Pages build; the PR event may legitimately still see the prior release.
+   let polygonPicker='previous-Pages-version';
+   if(await page.locator('script[src*="school-boundary-pick.js?v=1"]').count()){
+    await page.waitForSelector('#schoolBoundaryPickToggle',{timeout:30000});
+    await page.locator('#schoolScope').selectOption('all');
+    await page.locator('#schoolBoundaryPickLevel').selectOption('elementary');
+    await page.locator('#schoolBoundaryPickToggle').click();
+    const preparation=await page.evaluate(()=>{
+     const f=state.zoneData.PROSPER?.find(x=>x.properties?.campusId==='043912101');
+     if(!f) return {error:'Prosper Folsom official polygon missing'};
+     const result=window.TXSchoolBoundaryPick?.resolve(f,'PROSPER',state.schools,
+      s=>scoreRecord(s.name,s.district));
+     if(result?.status!=='matched')return {error:'school identity '+result?.status};
+     map.setView([33.226183,-96.7847555],14,{animate:false});
+     return {name:result.school.name,code:f.properties.campusId};
+    });
+    assert.ok(!preparation.error,JSON.stringify(preparation));
+    await page.locator('#map').scrollIntoViewIfNeeded();
+    await page.waitForFunction(()=>
+     document.querySelectorAll('.leaflet-pane.leaflet-tx-school-pick-pane path[role="button"]').length>0,
+     null,{timeout:30000});
+    const clickAt=await page.evaluate(()=>{
+     const point=map.latLngToContainerPoint([33.226183,-96.7847555]);
+     const rect=map.getContainer().getBoundingClientRect();
+     return {x:rect.left+point.x,y:rect.top+point.y};
+    });
+    await page.mouse.click(clickAt.x,clickAt.y);
+    await page.waitForFunction(name=>state.selectedSchool?.name===name,
+     preparation.name,{timeout:20000});
+    const selected=await page.evaluate(()=>({
+     name:state.selectedSchool?.name,
+     pressed:[...document.querySelectorAll('#schoolList button.school[aria-pressed="true"]')]
+      .map(n=>n.textContent),
+     roleStatus:document.getElementById('schoolBoundaryPickStatus')?.textContent,
+     arias:document.querySelectorAll('.leaflet-pane.leaflet-tx-school-pick-pane path[role="button"][tabindex="0"]').length
+    }));
+    assert.equal(selected.name,preparation.name);
+    assert.ok(selected.pressed.some(n=>n.includes(preparation.name)),
+      'Polygon-selected school must also be selected in the school list');
+    assert.match(selected.roleStatus,/배정 인증이 아닙니다/);
+    assert.ok(selected.arias>0,'Boundary targets must be keyboard accessible');
+    await page.locator('#schoolBoundaryPickToggle').click();
+    assert.equal(await page.locator('#schoolBoundaryPickToggle').getAttribute('aria-pressed'),'false');
+    polygonPicker='PASS';
+   }else if(process.env.GITHUB_EVENT_NAME!=='pull_request'){
+    assert.fail('Deployed Pages is missing mandatory UX-02 boundary picker asset');
+   }
    // Official source-only CFB disclosure.
    if(await page.locator('#schoolDataDetails').count())await page.locator('#schoolDataDetails > summary').click();
    const cfb=page.locator('#cfbOfficialRezoningReference');
@@ -254,7 +302,7 @@ async function run(){
    await page.screenshot({path:path.join(outdir,'track-b-live-'+width+'.png'),timeout:25000});
    report.checks.push({width,defaultDark:true,allen,cfbOfficialLinks:2,
     dentonPdfCatalog:39,mckinneyPins:mckinney.pins,prosperLevels:prosper.counts,prosperPublicSchoolCodes:prosper.expectedCodes,bellStatus:bell.status,cheekStatus:cheek.status,
-    dallasSourceLayers:3,irvingModule:true,residentialGrants:0,mobileOverflowPx:sources.overflow});
+    dallasSourceLayers:3,irvingModule:true,residentialGrants:0,polygonPicker,mobileOverflowPx:sources.overflow});
    await page.close();
   }
   report.status='PASS';
