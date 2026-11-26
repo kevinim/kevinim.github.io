@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "reviewedOn": "2026-11-21",
-  "scope": "New DFW unconfigured-ISD GIS-source intake; published references only, no geometry copied, no household addresses queried.",
+  "scope": "DFW unconfigured-ISD source intake, including Melissa's board-approved elementary zoning announcement; published references only, no geometry copied, no household addresses queried.",
   "schoolAssignmentCertified": false,
   "publicGeometryHosted": false,
   "geometryRedistributionApproved": false,
@@ -77,6 +77,24 @@
       "installedSchoolPolygons": 0,
       "liveSchoolAssignmentCertified": false,
       "notes": "Historical district map and current parent locator pathway exist; the 2024 PDF's date is not proof of its attendance academic year, and 2026-27 individual-zone GIS is not independently verified."
+    },
+    {
+      "code": "043908",
+      "name": "Melissa ISD",
+      "inventoryCampuses": 9,
+      "sourceKind": "district-interactive-zoning-reference-only",
+      "publisher": "Melissa ISD",
+      "publisherGIS": null,
+      "officialParent": "https://www.melissaisd.org/page/interactive-zoning-map",
+      "sourceContextUrl": "https://www.melissaisd.org/o/nce/article/2608592",
+      "sourceSchoolYear": null,
+      "approvedElementaryYear": "2026-27",
+      "liveMapCurrentYearIndependentlyVerified": false,
+      "sourceLastEdited": null,
+      "sourceReuseRightsVerified": false,
+      "installedSchoolPolygons": 0,
+      "liveSchoolAssignmentCertified": false,
+      "notes": "Melissa ISD confirms 2026-27 elementary zones were board-approved in March 2025 and that Cardinal Renaissance Academy (Elementary #6) opened with a zone plus existing-campus/GT family choice exceptions. The interactive zoning page has not been independently checked for its selected live academic year, grade-specific campus geometry, service CORS, reuse rights or exact-address assignment. The school-year approval applies to the E map, not an E/M/H GeoJSON or residence certification. Do not copy the 2025-26 zoning map as current."
     }
   ]
 }
