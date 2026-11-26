@@ -68,11 +68,30 @@ function validateRegistry(registry) {
         !DECISIONS.has(record.decision))
       throw Error('invalid_rights_registry_entry');
     if (record.decision === 'approved') {
-      for (const key of ['publisher', 'licenseScope', 'attribution', 'reviewer']) {
+      // A publisher name and generic terms link alone cannot justify public
+      // redistribution. Record the exact source/vintage and each intended use.
+      // This validates evidence completeness, not the authenticity of a license.
+      for (const key of ['publisher', 'licenseScope', 'attribution', 'reviewer',
+                         'dataVintage', 'geographicScope', 'permissionBasis']) {
         if (typeof record[key] !== 'string' || !record[key].trim())
           throw Error('approved_asset_missing_review_evidence');
       }
-      if (!HTTPS_URL.test(record.termsUrl || '') || !REVIEW_DATE.test(record.reviewedAt || ''))
+      if (!['publisher-license', 'written-authorization', 'public-domain-verified']
+          .includes(record.permissionBasis))
+        throw Error('approved_asset_missing_review_evidence');
+      if (!HTTPS_URL.test(record.sourceUrl || '') ||
+          !HTTPS_URL.test(record.termsUrl || '') ||
+          !REVIEW_DATE.test(record.reviewedAt || '') ||
+          !REVIEW_DATE.test(record.retrievedAt || ''))
+        throw Error('approved_asset_missing_review_evidence');
+      const permissions = record.permissions;
+      if (!permissions || typeof permissions !== 'object' ||
+          Array.isArray(permissions) ||
+          !['publicDisplay', 'redistribution', 'browserCaching', 'modification']
+            .every(key => typeof permissions[key] === 'boolean') ||
+          permissions.publicDisplay !== true ||
+          permissions.redistribution !== true ||
+          permissions.browserCaching !== true)
         throw Error('approved_asset_missing_review_evidence');
     }
     // Pending/restricted/excluded never become approved on their own.
