@@ -85,6 +85,22 @@ test('all Allen historical source geometries must never select an unrelated dist
   assert.equal(f.properties.current,false,'Historical is not current assignment');
  }
 });
+test('all configured source families are independently counted and ambiguous joins are visible',()=>{
+ const prosper=JSON.parse(fs.readFileSync('prosper-attendance-2026.geojson','utf8')).features;
+ const allen=JSON.parse(fs.readFileSync('allen-attendance-historical.geojson','utf8')).features;
+ const schools=[
+  ...prosper.map(f=>({name:f.properties.school,district:'PROSPER',type:f.properties.gradeLevel,id:f.properties.campusId})),
+  ...allen.map(f=>({name:f.properties.school,district:'AISD',type:f.properties.gradeLevel}))
+ ];
+ const complete=picker.auditSources({PROSPER:prosper,AISD:allen},schools);
+ assert.deepEqual(complete.totals,{sourceFeatures:51,matched:51,unlinked:0,ambiguous:0,invalid:0});
+ assert.equal(complete.byDistrict.PROSPER.sourceFeatures,31);
+ assert.equal(complete.byDistrict.AISD.sourceFeatures,20);
+ const duplicate={...schools[0]};
+ const blocked=picker.auditSources({PROSPER:prosper},[...schools,duplicate]);
+ assert.equal(blocked.totals.ambiguous,1,'A duplicated campus record is never silently resolved');
+ assert.equal(blocked.totals.matched,30);
+});
 test('explicit enable is required; static site must retain original script and reference warnings',()=>{
  const html=fs.readFileSync('index.html','utf8');
  const code=fs.readFileSync('features/school-boundary-pick.js','utf8');
