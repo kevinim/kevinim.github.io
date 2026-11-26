@@ -175,3 +175,10 @@
 ### 2026-11-24 — TX-P1 Prosper independent public map-click parity on CAD synthetic points (staged)
 - PR #410 (synthetic CAD source and taxing-unit cross-tab) published to main `ac105e0d150a1e419d60ff288e2624f925b3e49c`, GitHub Pages [45489675182](https://github.com/kevinim/kevinim.github.io/actions/runs/45489675182) completed/success and 390/1366 public school map [45489817148](https://github.com/kevinim/kevinim.github.io/actions/runs/45489817148) completed/success. Official CI aggregate: **293** source grid cells; 191 residential-*property category*, 59 no-parcel-grid-point, 24 partial Denton provider unavailable, 19 unknown land category; **20 residential-category plus Prosper taxing-unit code** and 12 unknown land category plus Prosper taxing-unit code. These are synthetic points, not student/home evidence.
 - Follow-up `agent/tx-p1-prosper-residential-tax-synthetic-locator-20261124` adds at most 20 **public official Prosper Infofinder map-click** checks at synthetic grid points matched to residential-property-category/Prosper taxing-unit code, counting publisher source-campus parity vs source missing-grade patterns without personal addresses or IDs in artifact. Pending exact-head PR QA/merge/Pages smoke; do not claim complete until release verified. P1 real residence/land-use/100-ISD GIS expansion, 0 certified residential ISDs and separate Public Production NO-GO remain.
+
+
+### 2026-11-25 ET — GIS 출처·레이어 연도·주거지 공식 배정 상태 분리 (PR #421)
+- **관련 ID:** TX-P0-01, TX-P0-02, TX-P1-01. UI provenance 후속 개선은 PR #421에서 진행 중이며 **main/Pages 배포 완료 판정이 아님**.
+- **변경:** 주소 GIS 참고 후보에서 GIS 제공기관, 경계 유형, 적용 학년도/원본 레이어의 연도, 최초 게시일 미확인, 실제 주소별 배정 미인증을 별도 표시. McKinney 공식 Finder 2026–27 운영 연도와 초·중·고 개별 SCHL_YEAR 구분. 학교 선택 배지는 '공식 배정선' 대신 '공식 학교별 GIS · 배정 미인증'으로 개선.
+- **독립 실행 근거:** GitHub PR #421 브랜치의 실제 소스에서 JS 문법 6개 파일 및 프로비넌스·차단 동작 10개 검증 **16/16 통과** (2026-11-25 ET). 이 검증은 Node 전체 스위트나 브라우저/Pages QA의 PASS를 의미하지 않음.
+- **남은 완료 조건:** GitHub workflow의 해당 PR HEAD 검증, PR #418 변경과의 호환성, main 병합, Pages 실행과 배포 사이트의 GIS/학교 선택·주소 검색 및 모바일 회귀 확인. 공식 거주지 배정 0개 인증 유지, Public Production NO-GO 변경 없음.
