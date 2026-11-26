@@ -113,13 +113,14 @@ if (typeof document !== 'undefined') {
       '<div class="candidate-time-fields">'+fields+'</div>'+
       '<p>사용자 입력값은 검증된 통근시간이 아닙니다. 입력값은 새로고침하면 삭제됩니다.</p></details>'+housingInputs(item,index)+'</section>';
   }
+  function ensureCandidateSuitabilityStyles(){
+    if(document.querySelector('link[data-candidate-suitability-css]'))return;
+    const css=document.createElement('link');
+    css.rel='stylesheet';css.href='./features/candidate-suitability.css?v=2';
+    css.dataset.candidateSuitabilityCss='1';
+    document.head.appendChild(css);
+  }
   function mountPriority(){
-    if(!document.querySelector('link[data-candidate-suitability-css]')){
-      const css=document.createElement('link');
-      css.rel='stylesheet';css.href='./features/candidate-suitability.css?v=2';
-      css.dataset.candidateSuitabilityCss='1';
-      document.head.appendChild(css);
-    }
     const status=el('candidateStatus');
     if(!status||el('candidatePriority'))return;
     const bar=document.createElement('div');bar.className='candidate-priority';
@@ -152,6 +153,8 @@ if (typeof document !== 'undefined') {
       container.innerHTML = '<div class="candidate-empty">주소 검색 후 <b>비교함에 추가</b>를 누르면 여기에 표시됩니다.</div>';
       return;
     }
+    // Prevent optional comparison CSS from increasing first-paint stylesheet count.
+    ensureCandidateSuitabilityStyles();
     const expanded=[...container.querySelectorAll('.candidate-time-entry')].map(d=>d.open);
     const demographicsExpanded=[...container.querySelectorAll('.candidate-demographics')].map(d=>d.open);
     const housingExpanded=[...container.querySelectorAll('.candidate-housing-entry')].map(d=>d.open);

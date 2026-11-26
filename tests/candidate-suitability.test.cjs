@@ -132,3 +132,14 @@ test('rental and photos are transient self-reports, not verified home rankings',
  assert.match(source,/housingExpanded/);
  assert.match(source,/data-candidate-photos/);
 });
+
+test('first paint defers comparison stylesheet until a candidate exists',()=>{
+ const source=fs.readFileSync(path.join(root,'candidate-compare.js'),'utf8');
+ const start=source.indexOf('function mountPriority(){');
+ const end=source.indexOf('function drawCandidates()');
+ assert.ok(start>0&&end>start);
+ assert.doesNotMatch(source.slice(start,end),/ensureCandidateSuitabilityStyles\(\)/);
+ const paint=source.slice(end),empty=paint.indexOf('if (!comparisons.length)');
+ const load=paint.indexOf('ensureCandidateSuitabilityStyles();');
+ assert.ok(empty>=0&&load>empty&&load<paint.indexOf('const expanded='));
+});

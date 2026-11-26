@@ -37,7 +37,11 @@ const css=fs.readFileSync(path.join(root,'features/candidate-suitability.css'),'
    await page.addScriptTag({content:js});
    await page.evaluate(()=>document.dispatchEvent(new Event('DOMContentLoaded')));
    assert.equal(await page.locator('#candidatePriority').count(),1);
+   assert.equal(await page.locator('link[data-candidate-suitability-css]').count(),0,
+     'no optional compare CSS on first paint');
    await page.locator('#addComparison').click();
+   assert.equal(await page.locator('link[data-candidate-suitability-css]').count(),1,
+     'load comparison CSS only when candidates exist');
    assert.equal(await page.locator('.candidate-card').count(),1);
    assert.equal(await page.locator('.candidate-fit-row').count(),7);
    assert.equal(await page.locator('.candidate-demographics').evaluate(x=>x.open),false);
