@@ -85,6 +85,12 @@ if (typeof document !== 'undefined') {
       '<p>사용자 입력값은 검증된 통근시간이 아닙니다. 입력값은 새로고침하면 삭제됩니다.</p></details></section>';
   }
   function mountPriority(){
+    if(!document.querySelector('link[data-candidate-suitability-css]')){
+      const css=document.createElement('link');
+      css.rel='stylesheet';css.href='./features/candidate-suitability.css?v=1';
+      css.dataset.candidateSuitabilityCss='1';
+      document.head.appendChild(css);
+    }
     const status=el('candidateStatus');
     if(!status||el('candidatePriority'))return;
     const bar=document.createElement('div');bar.className='candidate-priority';
