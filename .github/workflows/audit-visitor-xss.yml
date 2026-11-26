@@ -73,5 +73,7 @@ jobs:
           ./node_modules/.bin/playwright install --with-deps chromium
       - name: Run simulated malicious-string browser checks (no network)
         run: NODE_PATH="$PWD/visitor-browser-tmp/node_modules" node scripts/test-visitor-xss-browser.cjs
+      - name: Check address suitability UX in 390px and 1366px synthetic Chromium
+        run: NODE_PATH="$PWD/visitor-browser-tmp/node_modules" node scripts/test-candidate-suitability-browser.cjs
       - name: Demonstrate effective baseline CSP and strict-mode incompatibility (no network)
         run: NODE_PATH="$PWD/visitor-browser-tmp/node_modules" node scripts/test-csp-isolation-browser.cjs
