@@ -11,10 +11,10 @@
    return {kind:'error',label:'원본 연결 실패',explanation:'이번 접속에서 학군 경계 데이터를 불러오지 못했습니다. 없는 경계로 확정하지 않습니다.'};
   if(matchStatus==='matched'){
    if(displayMode==='official')
-    return {kind:'current',label:'공식 배정선 표시',explanation:'학교별 도형이 표시됩니다. 주소·학년·예외는 공식 학군에서 최종 확인하세요.'};
+    return {kind:'current',label:'공식 학교별 GIS · 배정 미인증',explanation:'공식 기관의 학교별 경계입니다. 특정 주소의 공식 배정 조회 결과가 아니며, 학년·아파트·등록 예외는 교육청에서 확인하세요.'};
    if(displayMode==='finder')
-    return {kind:'finder',label:'공식 Finder 연동선',explanation:'현행 공식 Finder가 사용하는 도형입니다. 내부 자료 연도가 다를 수 있습니다.'};
-   return {kind:'historical',label:'과거 참고 경계',explanation:'과거 지도를 참고용으로 표시하며 현재 배정을 보장하지 않습니다.'};
+    return {kind:'finder',label:'공식 Finder 연결 GIS · 배정 미인증',explanation:'교육청의 현재 Finder와 연결된 경계입니다. 도형의 적용 학년도는 별도로 확인해야 하며 주소 배정 인증이 아닙니다.'};
+   return {kind:'historical',label:'과거 공식 GIS · 배정 미인증',explanation:'이전 연도의 공식 또는 참고 GIS 경계입니다. 원본의 기준·갱신 연도를 확인하고 현재 주소 배정과 혼동하지 마세요.'};
   }
   if(matchStatus==='special-campus-no-standard-zone')
    return {kind:'special',label:'일반 배정선 없음',explanation:'학년 전용·선택형·전환 학교 등으로 일반 주소별 배정선이 없을 수 있습니다.'};
