@@ -12,7 +12,7 @@ const DATA_EXT = /\.(?:json|geojson|csv|tsv|topojson|kml|gpx|xml|pbf|png|jpe?g|w
 const DECISIONS = new Set(['approved', 'pending', 'restricted', 'excluded']);
 const SAFE_PATH = /^(?!\/)(?!.*(?:^|\/)\.\.(?:\/|$))(?!.*\\)[A-Za-z0-9_./-]+$/;
 const HTTPS_URL = /^https:\/\/[^\s<>"']+$/i;
-const REVIEW_DATE = /^\\d{4}-\\d{2}-\\d{2}$/;
+const REVIEW_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 // Evidence input must parse as a genuine HTTPS origin, not just start with
 // "https://". Never accept credentials or URL fragments as a publisher pin.
