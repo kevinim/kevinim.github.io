@@ -89,3 +89,15 @@ test('candidate pins stay separate from certified school list and preserve safet
  assert.match(main,/explanation\.textContent=extras\.join/);
  assert.doesNotMatch(main.slice(main.indexOf('function renderAddressSchoolPriority(){'),main.indexOf('function drawSchools(){')),/innerHTML\s*=/);
 });
+
+test('UX-07 mobile native dialog reuses the original school list with escape and focus restore',()=>{
+ assert.match(layout,/installMobileSchoolSheet\(main\)/);
+ assert.match(layout,/dialog\.showModal\(\)/);
+ assert.match(layout,/dialog\.addEventListener\('close',restore\)/);
+ assert.match(layout,/originalParent\.insertBefore\(list,/);
+ assert.match(layout,/toggle\.setAttribute\('aria-expanded','false'\)/);
+ assert.doesNotMatch(layout,/innerHTML|cloneNode|localStorage|sessionStorage/);
+ assert.match(css,/dialog\.mobile-school-sheet::backdrop/);
+ assert.match(css,/#mobileSchoolSheetToggle|\.mobile-school-sheet-trigger/);
+ assert.match(css,/prefers-reduced-motion:reduce/);
+});

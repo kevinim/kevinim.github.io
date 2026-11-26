@@ -21,6 +21,11 @@ const regionalCacheRefs=[
  ['./features/area-assessment.js?v=4','./features/area-assessment.js?v=3']
 ];
 let normalizedMainHtml=rawHtml;
+// UX-08 source-index v3 is reviewed; normalize only its asset key before
+// the protected historical HTML comparison. Melissa v7 and photo v5 remain.
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ '<script src="./features/compact-footnotes.js?v=3"></script>',
+ '<script src="./features/compact-footnotes.js?v=2"></script>');
 // P1 reviewed geocode unit verification: reverse only the approved static cache pin.
 // Every other byte remains subject to the immutable historical bootstrap comparison.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
