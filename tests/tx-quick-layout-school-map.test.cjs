@@ -20,7 +20,7 @@ test('six-section home-first layout preserves original map, form, and filter IDs
   last=i;
  }
  assert.match(html,/class="tx-jump-nav"/);
- assert.match(html,/dashboard-quick-layout\.css\?v=1/);
+ assert.match(html,/dashboard-quick-layout\.css\?v=2/);
  assert.match(html,/dashboard-quick-layout\.js\?v=1/);
  assert.match(css,/\.home-school-grade\.grade-a/);
  assert.match(css,/\.home-school-grade\.grade-b/);

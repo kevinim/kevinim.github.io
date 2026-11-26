@@ -117,3 +117,32 @@ html[data-theme="dark"] .home-school-evidence{color:#bbcee4}
  .tx-stats-section>.kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 }
 @media(max-width:380px){.tx-stats-section>.kpis{grid-template-columns:1fr}}
+
+/* UX-01: distinguish address search state without implying school certification. */
+#homeStatus[data-phase="loading"]:not(:empty),
+#homeStatus[data-phase="choices"]:not(:empty),
+#homeStatus[data-phase="error"]:not(:empty),
+#homeStatus[data-phase="ready"]:not(:empty){
+ margin:8px 0;padding:9px 12px;border-left:3px solid #477db9;
+ border-radius:6px;background:#edf4ff;color:#25456c;line-height:1.5;
+}
+#homeStatus[data-phase="choices"]:not(:empty){border-color:#ad7718;background:#fff6e6;color:#79500b}
+#homeStatus[data-phase="error"]:not(:empty){border-color:#b83937;background:#fff0ef;color:#872825}
+html[data-theme="dark"] #homeStatus[data-phase="loading"]:not(:empty),
+html[data-theme="dark"] #homeStatus[data-phase="ready"]:not(:empty){background:#203d5b;color:#e0efff}
+html[data-theme="dark"] #homeStatus[data-phase="choices"]:not(:empty){background:#48371e;color:#ffdf9e}
+html[data-theme="dark"] #homeStatus[data-phase="error"]:not(:empty){background:#502b32;color:#ffd9d6}
+/* UX-02: shared map/list/card selection; missing/unlinked schools stay unselected. */
+.home-assignment-school.school-map-selected{
+ outline:3px solid #3176cb;outline-offset:-3px;
+ background:#ecf5ff;box-shadow:0 0 0 1px #b5d8fc;
+}
+.home-school-selected-indicator{
+ align-self:flex-start;display:inline-flex;font-size:11px;font-weight:800;
+ background:#275b9a;color:#fff;padding:4px 8px;border-radius:6px;
+}
+.home-school-selected-indicator[hidden]{display:none!important}
+html[data-theme="dark"] .home-assignment-school.school-map-selected{
+ outline-color:#80b7ff;background:#254766;box-shadow:0 0 0 1px #426a91;
+}
+html[data-theme="dark"] .home-school-selected-indicator{background:#bfe0ff;color:#173252}
