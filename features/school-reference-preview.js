@@ -111,7 +111,7 @@
      '초·중 GIS 적용 학년도 미확인 · 주소 배정 미확인'):
     raw.district==='043907'?(p.gradeLevel==='elementary'&&p.yearVerified2627===true&&p.verifiedYear==='2026-27'
      ?'초등 GIS 원본 2026–27 확인 · 주소 배정 미인증':
-     typeof p.sourceYear==='string'&&/^\\d{4}-\\d{2}$/.test(p.sourceYear)
+     typeof p.sourceYear==='string'&&/^\d{4}-\d{2}$/.test(p.sourceYear)
       ?'GIS 레이어 학년도 '+p.sourceYear.replace('-','–')+' · 주소 배정 미인증'
       :'GIS 레이어 학년도 미확인 · Finder 운영 연도와 별개'):'';
    candidates.push(Object.freeze({school,level:LEVEL[p.gradeLevel],grades,
