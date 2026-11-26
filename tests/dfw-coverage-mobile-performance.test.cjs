@@ -69,3 +69,9 @@ test('mobile coverage controls and keyboard table have explicit focus and 44px t
  assert.match(css,/#dfwSchoolCoverageContent button\.dfw-coverage-more\{min-height:44px\}/);
  assert.match(css,/prefers-reduced-motion:reduce/);
 });
+
+test('browser audit measures only rendered buttons; hidden More button is not a 0px failure',()=>{
+ const script=fs.readFileSync(path.join(__dirname,'../scripts/test-dfw-school-coverage-browser.cjs'),'utf8');
+ assert.match(script,/getClientRects\(\)\.length>0/);
+ assert.match(script,/controlHeights\.every\(height=>height>=44\)/);
+});
