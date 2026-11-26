@@ -1,6 +1,6 @@
 'use strict';
 
-const CANDIDATE_PRIORITY_IDS=Object.freeze(['school','commute','church','ballet','hazards','healthcare']);
+const CANDIDATE_PRIORITY_IDS=Object.freeze(['school','commute','church','ballet','hazards','healthcare','housing']);
 const CANDIDATE_TRAVEL_IDS=Object.freeze(['commute','church','ballet']);
 function normalizedCandidateAddress(value){
   return String(value||'').trim().replace(/\s+/g,' ').toLocaleLowerCase('en-US');
@@ -9,6 +9,22 @@ function parseCandidateMinutes(value){
   if(value===null||value===undefined||String(value).trim()==='')return null;
   const n=Number(value);
   return Number.isInteger(n)&&n>=1&&n<=240?n:null;
+}
+function parseCandidateRent(value){
+ if(value===null||value===undefined||String(value).trim()==='')return null;
+ const n=Number(value);return Number.isInteger(n)&&n>=1&&n<=30000?n:null;
+}
+function updateCandidateHousing(items,index,key,value){
+ if(!Array.isArray(items)||!Number.isInteger(index)||index<0||index>=items.length||
+   !['monthlyRent','photosReviewed'].includes(key))return items;
+ return items.map((item,i)=>i===index?{...item,homeNotes:{...(item.homeNotes||{}),
+   [key]:key==='photosReviewed'?value===true:parseCandidateRent(value)}}:item);
+}
+function housingCandidateFact(item){
+ const notes=item?.homeNotes||{},rent=parseCandidateRent(notes.monthlyRent),photo=notes.photosReviewed===true;
+ return {id:'housing',label:'임대료 · 매물 사진',state:rent===null&&!photo?'unknown':'entered',
+  value:(rent===null?'월 임대료 미입력':'월 $'+rent.toLocaleString('en-US'))+' · 사진 '+(photo?'검토 표시':'미검토'),
+  note:'직접 입력·선택한 매물 정보 · 사진·가격·가용성 별도 확인 · 서버 저장 안 함'};
 }
 function updateCandidateMinutes(items,index,key,value){
   if(!Array.isArray(items)||!Number.isInteger(index)||index<0||index>=items.length||
@@ -46,7 +62,8 @@ function candidateSuitability(item,assignment){
     {id:'hazards',label:'재난·정전',state:'unknown',value:'주택별 확인 필요',
      note:'FEMA/NOAA 과거 집계는 개별 주소 위험·정전확률이 아님'},
     {id:'healthcare',label:'응급의료',state:'unknown',value:'운전시간 확인 필요',
-     note:'CMS 병원 좌표의 직선거리는 실제 응급실 운영·도착시간이 아님'}];
+     note:'CMS 병원 좌표의 직선거리는 실제 응급실 운영·도착시간이 아님'},
+    housingCandidateFact(item)];
 }
 function orderedCandidateSuitability(facts,priority){
   if(!CANDIDATE_PRIORITY_IDS.includes(priority))return facts;
@@ -61,11 +78,23 @@ function addCandidate(items, candidate) {
   return [...items, { address: candidate.address, typedAddress:candidate.typedAddress||candidate.address, ll: [...candidate.ll], geocodeQuality: candidate.geocodeQuality ? {...candidate.geocodeQuality} : null, parcel: candidate.parcel?.status==='matched' ? {...candidate.parcel} : null, officialReview: candidate.officialReview ? {...candidate.officialReview} : null, officialDraft: candidate.officialDraft ? {...candidate.officialDraft} : null }];
 }
 function removeCandidate(items, index) { return items.filter((_, i) => i !== index); }
-if (typeof module !== 'undefined') module.exports = { addCandidate, removeCandidate, normalizedCandidateAddress, parseCandidateMinutes, updateCandidateMinutes, candidateSuitability, orderedCandidateSuitability };
+if (typeof module !== 'undefined') module.exports = { addCandidate, removeCandidate, normalizedCandidateAddress, parseCandidateMinutes, updateCandidateMinutes, candidateSuitability, orderedCandidateSuitability, parseCandidateRent, updateCandidateHousing, housingCandidateFact };
 if (typeof document !== 'undefined') {
   let comparisons = [];
   let focusPriority='school';
-  const criterionNames={school:'학교',commute:'Plano 출근',church:'교회',ballet:'발레',hazards:'재난·정전',healthcare:'응급의료'};
+  const criterionNames={school:'학교',commute:'Plano 출근',church:'교회',ballet:'발레',hazards:'재난·정전',healthcare:'응급의료',housing:'임대·사진'};
+  function housingInputs(item,index){
+    const rent=parseCandidateRent(item?.homeNotes?.monthlyRent);
+    const checked=item?.homeNotes?.photosReviewed===true?' checked':'';
+    return '<details class="candidate-housing-entry"><summary>임대료 · 매물 사진 직접 확인</summary>'+
+      '<div class="candidate-housing-fields">'+
+      '<label>월 임대료 ($)<input type="number" inputmode="numeric" min="1" max="30000" step="1"'+
+      ' data-candidate-rent="'+index+'" aria-label="후보 '+ 'ABC'[index]+' 월 임대료 (달러)"'+
+      ' value="'+(rent??'')+'"></label>'+
+      '<label class="candidate-housing-photos"><input type="checkbox" data-candidate-photos="'+index+'"'+checked+'>'+
+      '<span>매물 사진 검토 표시</span></label></div>'+
+      '<p>직접 작성한 확인 메모입니다. 매물 제공처·사진·실제 가격을 확인하세요. 새로고침 시 삭제됩니다.</p></details>';
+  }
   function drawSuitability(item,assignment,index){
     const facts=orderedCandidateSuitability(candidateSuitability(item,assignment),focusPriority);
     const rows=facts.map(f=>'<div class="candidate-fit-row"><dt>'+escape(f.label)+'</dt>'+
@@ -82,12 +111,12 @@ if (typeof document !== 'undefined') {
       '<dl class="candidate-fit-list">'+rows+'</dl>'+
       '<details class="candidate-time-entry"><summary>이동시간 직접 입력 (선택)</summary>'+
       '<div class="candidate-time-fields">'+fields+'</div>'+
-      '<p>사용자 입력값은 검증된 통근시간이 아닙니다. 입력값은 새로고침하면 삭제됩니다.</p></details></section>';
+      '<p>사용자 입력값은 검증된 통근시간이 아닙니다. 입력값은 새로고침하면 삭제됩니다.</p></details>'+housingInputs(item,index)+'</section>';
   }
   function mountPriority(){
     if(!document.querySelector('link[data-candidate-suitability-css]')){
       const css=document.createElement('link');
-      css.rel='stylesheet';css.href='./features/candidate-suitability.css?v=1';
+      css.rel='stylesheet';css.href='./features/candidate-suitability.css?v=2';
       css.dataset.candidateSuitabilityCss='1';
       document.head.appendChild(css);
     }
@@ -125,6 +154,7 @@ if (typeof document !== 'undefined') {
     }
     const expanded=[...container.querySelectorAll('.candidate-time-entry')].map(d=>d.open);
     const demographicsExpanded=[...container.querySelectorAll('.candidate-demographics')].map(d=>d.open);
+    const housingExpanded=[...container.querySelectorAll('.candidate-housing-entry')].map(d=>d.open);
     container.innerHTML = comparisons.map((item, i) => {
       const zipMatches = homeZipMatches(item.ll), d = zipMatches.length === 1 ? zipMatches[0] : null;
       const assignment=schoolAssignmentFor(item);
@@ -134,6 +164,7 @@ if (typeof document !== 'undefined') {
     }).join('');
     container.querySelectorAll('.candidate-time-entry').forEach((node,i)=>{node.open=!!expanded[i]});
     container.querySelectorAll('.candidate-demographics').forEach((node,i)=>{node.open=!!demographicsExpanded[i]});
+    container.querySelectorAll('.candidate-housing-entry').forEach((node,i)=>{node.open=!!housingExpanded[i]});
     container.querySelectorAll('[data-candidate-minutes]').forEach(input=>input.addEventListener('change',()=>{
       const index=Number(input.dataset.candidateIndex),key=input.dataset.candidateMinutes;
       const raw=input.value,minutes=parseCandidateMinutes(raw);
@@ -147,6 +178,25 @@ if (typeof document !== 'undefined') {
       drawCandidates();
       const updated=container.querySelector('[data-candidate-minutes="'+key+'"][data-candidate-index="'+index+'"]');
       updated?.focus({preventScroll:true});
+    }));
+    container.querySelectorAll('[data-candidate-rent]').forEach(input=>input.addEventListener('change',()=>{
+      const index=Number(input.dataset.candidateRent),raw=input.value,rent=parseCandidateRent(raw);
+      if(raw.trim()!==''&&rent===null){
+        el('candidateStatus').textContent='월 임대료는 1~30,000달러 정수를 입력하거나 비워 주세요.';
+        input.value=String(parseCandidateRent(comparisons[index]?.homeNotes?.monthlyRent)??'');
+        return;
+      }
+      comparisons=updateCandidateHousing(comparisons,index,'monthlyRent',raw);
+      el('candidateStatus').textContent='직접 입력한 임대료를 반영했습니다. 새로고침하면 삭제됩니다.';
+      drawCandidates();
+      container.querySelector('[data-candidate-rent="'+index+'"]')?.focus({preventScroll:true});
+    }));
+    container.querySelectorAll('[data-candidate-photos]').forEach(input=>input.addEventListener('change',()=>{
+      const index=Number(input.dataset.candidatePhotos);
+      comparisons=updateCandidateHousing(comparisons,index,'photosReviewed',input.checked);
+      el('candidateStatus').textContent='사진 검토 여부를 반영했습니다. 새로고침하면 삭제됩니다.';
+      drawCandidates();
+      container.querySelector('[data-candidate-photos="'+index+'"]')?.focus({preventScroll:true});
     }));
     container.querySelectorAll('[data-remove]').forEach(button => button.addEventListener('click', () => { comparisons = removeCandidate(comparisons, +button.dataset.remove); drawCandidates(); }));
     container.querySelectorAll('[data-open]').forEach(button => button.addEventListener('click', () => {

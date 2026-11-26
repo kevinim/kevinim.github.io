@@ -84,7 +84,7 @@ test('priority reorders criteria without aggregate score or demographic steering
   const facts=candidateSuitability(home(),{});
   const reordered=orderedCandidateSuitability(facts,'ballet');
   assert.equal(reordered[0].id,'ballet');
-  assert.equal(reordered.length,6);
+  assert.equal(reordered.length,7);
   assert.equal(facts[0].id,'school');
   assert.deepEqual(orderedCandidateSuitability(facts,'invalid'),facts);
   assert.equal(facts.some(f=>/indian|korean|ethnic/i.test(f.id)),false);
@@ -99,10 +99,36 @@ test('UI retains original map navigation, in-memory data, CSP-safe stylesheet an
   assert.match(source,/demographicsExpanded/);
   assert.match(source,/aria-label="후보 /);
   assert.match(source,/data-candidate-suitability-css/);
-  assert.match(source,/candidate-suitability\.css\?v=1/);
+  assert.match(source,/candidate-suitability\.css\?v=2/);
   assert.match(css,/html\[data-theme="dark"\]/);
   assert.match(css,/@media\(max-width:720px\)/);
   assert.match(css,/focus-visible/);
   assert.doesNotMatch(source,/localStorage|sessionStorage|sendBeacon|document\.cookie/);
   assert.doesNotMatch(source,/fetch\(|XMLHttpRequest/);
+});
+
+
+test('rental and photos are transient self-reports, not verified home rankings',()=>{
+ const {parseCandidateRent,updateCandidateHousing,housingCandidateFact}=require('../candidate-compare.js');
+ const base=[home('A'),home('B')];
+ assert.equal(housingCandidateFact(base[0]).state,'unknown');
+ for(const raw of ['',null,'0','-1','200.5','30001','Infinity'])assert.equal(parseCandidateRent(raw),null);
+ assert.equal(parseCandidateRent('2500'),2500);
+ const changed=updateCandidateHousing(base,0,'monthlyRent','2450');
+ assert.equal(base[0].homeNotes,undefined);
+ assert.equal(changed[1].homeNotes,undefined);
+ assert.match(housingCandidateFact(changed[0]).value,/\$2,450/);
+ const marked=updateCandidateHousing(changed,0,'photosReviewed',true);
+ assert.match(housingCandidateFact(marked[0]).value,/사진 검토 표시/);
+ assert.match(housingCandidateFact(marked[0]).note,/별도 확인/);
+ assert.equal(updateCandidateHousing(base,10,'monthlyRent','2000'),base);
+ assert.equal(updateCandidateHousing(base,0,'unknown','2000'),base);
+ const signals=candidateSuitability(marked[0],{status:'current'});
+ assert.equal(fact(signals,'school').state,'unknown');
+ assert.equal(fact(signals,'housing').state,'entered');
+ assert.equal(orderedCandidateSuitability(signals,'housing')[0].id,'housing');
+ const source=fs.readFileSync(path.join(root,'candidate-compare.js'),'utf8');
+ assert.doesNotMatch(source,/localStorage|sessionStorage|sendBeacon|XMLHttpRequest/);
+ assert.match(source,/housingExpanded/);
+ assert.match(source,/data-candidate-photos/);
 });
