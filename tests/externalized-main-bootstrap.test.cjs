@@ -54,6 +54,10 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<script src="./features/dashboard-quick-layout.js?v=1" defer></script>\n','');
 
+// UX-02: opt-in boundary picker is a separate feature and does not alter the protected bootstrap.
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ '<script src="./features/school-boundary-pick.js?v=1" defer></script>\n','');
+
 // One new self-hosted, review-scoped McKinney official Finder crosscheck module.
 // Strip only the exact new script tag when comparing to frozen historical HTML.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
