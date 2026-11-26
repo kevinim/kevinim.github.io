@@ -251,6 +251,12 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  };
  const referencePolicyBaseline=show('4ff3091379d983a8aa2cacc3ff031928f3e99ff1','dashboard-main.js');
  let reviewedReferenceJs=js;
+ // UX-02: the only permitted out-of-region main change is the one-line
+ // selection sync call. Revert it before comparing untouched runtime bytes.
+ // Do not broaden the approved scope to unrelated map/bootstrap changes.
+ reviewedReferenceJs=replaceOnce(reviewedReferenceJs,
+  'function updateSelectedSchoolList(){\\n syncAddressPrioritySchoolSelection();',
+  'function updateSelectedSchoolList(){');
  // Scope the 2026-11-18 owner-approved historical GIS display change to five
  // exact fragments. The remaining main renderer must byte-match its PR parent.
  for(const [newFragment,oldFragment] of [
