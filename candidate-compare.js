@@ -117,6 +117,7 @@ if (typeof document !== 'undefined') {
       return;
     }
     const expanded=[...container.querySelectorAll('.candidate-time-entry')].map(d=>d.open);
+    const demographicsExpanded=[...container.querySelectorAll('.candidate-demographics')].map(d=>d.open);
     container.innerHTML = comparisons.map((item, i) => {
       const zipMatches = homeZipMatches(item.ll), d = zipMatches.length === 1 ? zipMatches[0] : null;
       const assignment=schoolAssignmentFor(item);
@@ -125,6 +126,7 @@ if (typeof document !== 'undefined') {
       return `<article class="candidate-card"><div class="candidate-heading"><strong>후보 ${'ABC'[i]}</strong><button type="button" class="mini-btn" data-remove="${i}" aria-label="후보 ${'ABC'[i]} 삭제">삭제</button></div><div class="candidate-address">${escape(item.address)}</div><div class="candidate-schools"><b>주소 연결 학교 · TEA 2026 예비 등급</b><br>${schoolText}</div>${drawSuitability(item,assignment,i)}<details class="candidate-demographics"><summary>ZIP 통계 참고 펼치기 · ACS 2024</summary><p class="candidate-demographics-note">ZIP/ZCTA 추정 통계이며 배정학교·주소별 위험 또는 주민 개개인을 뜻하지 않습니다.</p><dl>${rows.map(([label,value])=>`<div><dt>${label}</dt><dd>${value}</dd></div>`).join('')}</dl></details><button type="button" class="mini-btn candidate-open" data-open="${i}">지도에서 보기</button></article>`;
     }).join('');
     container.querySelectorAll('.candidate-time-entry').forEach((node,i)=>{node.open=!!expanded[i]});
+    container.querySelectorAll('.candidate-demographics').forEach((node,i)=>{node.open=!!demographicsExpanded[i]});
     container.querySelectorAll('[data-candidate-minutes]').forEach(input=>input.addEventListener('change',()=>{
       const index=Number(input.dataset.candidateIndex),key=input.dataset.candidateMinutes;
       const raw=input.value,minutes=parseCandidateMinutes(raw);
