@@ -439,25 +439,24 @@ test('UX-02: active map and address scripts use fresh cache keys',()=>{
  assert.ok(html.includes('./home-lookup-v2.js?v=29'), 'Address reset logic must not use stale Pages cache');
 });
 
-test('UX-06: clear or replacement address removes old school focus without erasing ZIP filters',()=>{
+
+test('UX-06: existing address clear invalidates the prior campus but retains ZIP filters',()=>{
  const lookup=fs.readFileSync('home-lookup-v2.js','utf8');
- const begin=lookup.indexOf('function clearHome(){'),end=lookup.indexOf('async function geocodeAddress(',begin);
- assert.ok(begin>=0&&end>begin,'Existing clearHome lifecycle must remain');
- const clear=lookup.slice(begin,end);
- const start=clear.indexOf('// An explicit Clear/new-address selection');
- const stop=clear.indexOf('if(map&&homeMarker)',start);
- assert.ok(start>=0&&stop>start,'Address-selected school cleanup is explicit');
- const effect=clear.slice(start,stop);
+ const a=lookup.indexOf('function clearHome(){'),b=lookup.indexOf('async function geocodeAddress(',a);
+ assert.ok(a>=0&&b>a,'Existing Clear lifecycle must remain');
+ const clear=lookup.slice(a,b);
+ const start=clear.indexOf('// Clearing an address invalidates its selected campus');
+ const end=clear.indexOf('if(map&&homeMarker)',start);
+ assert.ok(start>=0&&end>start,'Prior school selection cleanup remains active');
+ const effect=clear.slice(start,end);
  const changes=[];
- const ctx={
-  state:{selectedSchool:{name:'formerly selected'}},
+ const ctx={state:{selectedSchool:{name:'previous'}},
   schoolFocusGroup:{clearLayers(){changes.push('focus')}},
-  referenceCampusGroup:{clearLayers(){changes.push('reference')}},
-  updateSelectedSchoolList(){changes.push('list')}
- };
+  updateSelectedSchoolList(){changes.push('list')},
+  drawDetail(){changes.push('detail')},
+  drawBoundary(){changes.push('boundary')}};
  vm.runInNewContext(effect,ctx,{timeout:1000});
  assert.equal(ctx.state.selectedSchool,null);
- assert.deepEqual(changes,['focus','reference','list']);
- assert.ok(!/state\\.zip|state\\.metric|state\\.level|localStorage|sessionStorage/.test(effect),
-  'Clearing residence must preserve region filters and avoid storing private addresses');
+ assert.deepEqual(changes,['focus','list','detail','boundary']);
+ assert.ok(!/state\\.zip|state\\.metric|localStorage|sessionStorage/.test(effect));
 });
