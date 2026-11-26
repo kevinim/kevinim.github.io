@@ -123,3 +123,15 @@ test('explicit enable is required; static site must retain original script and r
  assert.match(code,/학교 위치·경계는 거주지 공식 배정 인증이 아닙니다/);
  assert.ok(!/localStorage|sessionStorage/.test(code));
 });
+
+test('browser resource budget waits for deferred first-party requests without altering core readiness timing',()=>{
+ const code=fs.readFileSync('scripts/benchmark-tx-map-browser.cjs','utf8');
+ const ready=code.indexOf('const readyAt=await page.evaluate(()=>performance.now())');
+ const settled=code.indexOf("await page.waitForLoadState('networkidle'");
+ const sampled=code.indexOf('const result=await page.evaluate((readyAt)=>{');
+ assert.ok(ready>=0 && settled>ready && sampled>settled,
+  'Network request counts must use a settled waterfall after recording readiness');
+ assert.match(code,/coreReadyMs:readyAt/,'Do not inflate core map readiness by idle settling');
+ assert.match(code,/after\.resourceRequests<=before\.resourceRequests\+5\+providerAdded\+mapFirstAdded\+approvedLayoutAdded/,
+  'Do not broaden the asset budget to silence the performance regression');
+});
