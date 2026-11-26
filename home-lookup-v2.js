@@ -111,14 +111,29 @@ function clearIrvingReference(){
  irvingReferenceLayer=null;
 }
 function clearDallasReference(){if(dallasReferenceLayer&&map)map.removeLayer(dallasReferenceLayer);dallasReferenceLayer=null;}
+// UX-01: UI phase only; a successful geocode is never school assignment proof.
+function setHomeSearchPhase(phase){
+ const status=el('homeStatus');
+ if(status?.dataset)status.dataset.phase=phase;
+ const form=el('homeForm');
+ form?.setAttribute?.('aria-busy',phase==='loading'?'true':'false');
+}
 function clearHome(){
   invalidateZipCommute();
   clearIrvingReference();clearDallasReference();
   document.getElementById('homeResidentialSchoolCrosscheck')?.remove?.();
   homeVersion++;failedGeocodeAllenAddress='';homeRequest?.abort();homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;mckinneyLiveRequest?.abort();mckinneyLiveRequest=null;home=null;homeCandidates=[];
+  // Clearing an address invalidates its selected campus, focus ring and zone.
+  if(typeof state!=='undefined'&&state.selectedSchool){
+   state.selectedSchool=null;
+   if(typeof schoolFocusGroup!=='undefined')schoolFocusGroup?.clearLayers();
+   if(typeof updateSelectedSchoolList==='function')updateSelectedSchoolList();
+   if(typeof drawDetail==='function')drawDetail();
+   if(typeof drawBoundary==='function')drawBoundary();
+  }
   if(map&&homeMarker)map.removeLayer(homeMarker);homeMarker=null;
   if(typeof homeZoneGroup!=='undefined'&&homeZoneGroup)homeZoneGroup.clearLayers();
-  el('homeCandidates').replaceChildren();el('homeResult').replaceChildren();el('homeSchoolInfo').replaceChildren();el('homeStatus').textContent='';if(homeRouteLayer)homeRouteLayer.clearLayers();
+  el('homeCandidates').replaceChildren();el('homeResult').replaceChildren();el('homeSchoolInfo').replaceChildren();el('homeStatus').textContent='';setHomeSearchPhase('idle');if(homeRouteLayer)homeRouteLayer.clearLayers();
   el('homeSearch').disabled=false;if(typeof renderAddressSchoolPriority==='function')renderAddressSchoolPriority();if(map){drawSchools();drawList()}
 }
 async function geocodeAddress(address,signal,suggestion=null){
@@ -621,7 +636,7 @@ function startMcKinneyLiveLookup(){
 function refreshHomeSchools(){if(home){invalidateZipCommute();homeVersion++;homeRouteRequest?.abort();renderHome();startMcKinneyLiveLookup();drawSchools()}}
 function useHomeCandidate(candidate){
   clearIrvingReference();clearDallasReference();
-  if(!map){el('homeStatus').textContent='지도가 아직 준비되지 않았습니다. 잠시 후 주소 검색을 다시 눌러 주세요.';return false}
+  if(!map){el('homeStatus').textContent='지도가 아직 준비되지 않았습니다. 잠시 후 주소 검색을 다시 눌러 주세요.';setHomeSearchPhase('error');return false}
   invalidateZipCommute();homeVersion++;homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;mckinneyLiveRequest?.abort();mckinneyLiveRequest=null;
   home={address:candidate.address,typedAddress:candidate.savedTypedAddress||el('homeAddress').value.trim(),ll:[candidate.location.y,candidate.location.x],geocodeQuality:candidate.savedGeocodeQuality||assessResidentialGeocode(el('homeAddress').value.trim(),candidate),parcel:candidate.savedParcel||{status:'idle'},officialReview:candidate.savedOfficialReview||null,officialDraft:candidate.savedOfficialDraft||null};
   // Fetch the static jurisdiction layer only for a searched Carrollton-area
@@ -640,7 +655,7 @@ function useHomeCandidate(candidate){
   if(typeof schoolFocusGroup!=='undefined')schoolFocusGroup?.clearLayers();
   if(matches.length===1)selectZip(matches[0].z,false);
   map.setView(home.ll,13);renderHome();startMcKinneyLiveLookup();drawSchools();drawList();
-   if(typeof focusHomeAssignedSchools==='function')focusHomeAssignedSchools();el('homeStatus').textContent='검색 결과 위치를 지도에 표시했습니다. 주소와 핀을 확인하세요.';syncHomeClearVisibility();
+   if(typeof focusHomeAssignedSchools==='function')focusHomeAssignedSchools();el('homeStatus').textContent='검색 결과 위치를 지도에 표시했습니다. 주소와 핀을 확인하세요.';setHomeSearchPhase('ready');syncHomeClearVisibility();
    // Following a deliberate address selection, prioritize school assignment status.
    // Never auto-scroll to unrelated ZIP campuses or imply approval.
    const chosenMap=el('homeAssignmentPriority')||el('map');
@@ -689,22 +704,22 @@ function showHomeCandidateChoices(candidates){
 async function searchHome(event,suggestion=null){
   event.preventDefault();const address=el('homeAddress').value.trim();
   homeAutocomplete?.dismiss();clearHome();
-  if(!address){el('homeStatus').textContent='도로명과 도시, 텍사스 주를 포함한 주소를 입력하세요.';el('homeAddress').focus();return}
-  const version=homeVersion;homeRequest=new AbortController();el('homeSearch').disabled=true;el('homeStatus').textContent='주소를 검색 중입니다…';
+  if(!address){el('homeStatus').textContent='도로명과 도시, 텍사스 주를 포함한 주소를 입력하세요.';setHomeSearchPhase('error');el('homeAddress').focus();return}
+  const version=homeVersion;homeRequest=new AbortController();el('homeSearch').disabled=true;el('homeStatus').textContent='주소를 검색 중입니다…';setHomeSearchPhase('loading');
   try{
     const result=await geocodeAddress(address,homeRequest.signal,suggestion);if(version!==homeVersion)return;
     const {candidates,requiresSelection}=rankTexasHomeCandidates(address,result);
     homeCandidates=candidates;
-    if(!candidates.length){el('homeStatus').textContent='텍사스 주소를 찾지 못했습니다. 도시와 TX, ZIP을 포함해 다시 입력하세요.';showOfficialFinderWithoutGeocode(address,'주소 검색 결과가 없습니다.');return}
+    if(!candidates.length){el('homeStatus').textContent='텍사스 주소를 찾지 못했습니다. 도시와 TX, ZIP을 포함해 다시 입력하세요.';setHomeSearchPhase('error');showOfficialFinderWithoutGeocode(address,'주소 검색 결과가 없습니다.');return}
     if(requiresSelection){
      showHomeCandidateChoices(candidates);
-     el('homeStatus').textContent='서로 비슷한 주소 '+candidates.length+'개를 확인했습니다. 아래에서 정확한 집 주소를 선택하세요.';
+     el('homeStatus').textContent='서로 비슷한 주소 '+candidates.length+'개를 확인했습니다. 아래에서 정확한 집 주소를 선택하세요.';setHomeSearchPhase('choices');
      return;
     }
     const best=candidates[0];el('homeSearch').disabled=false;if(!useHomeCandidate(best))return;
     const requestedZip=[...address.matchAll(/\b\d{5}(?:-\d{4})?\b/g)].at(-1),returnedZip=[...best.address.matchAll(/\b\d{5}(?:-\d{4})?\b/g)].at(-1);const zipWarning=requestedZip&&returnedZip&&requestedZip[0].slice(0,5)!==returnedZip[0].slice(0,5)?' 입력한 ZIP과 검색된 ZIP이 다릅니다.':'';const quality=home.geocodeQuality;
     el('homeStatus').textContent='자동 선택: '+best.address+' · 일치도 '+(Number.isFinite(best.score)?Math.round(best.score):'미확인')+'.'+zipWarning+(quality?.usableForSchoolCandidate?' 건물 단위 위치 후보입니다. 등록 자격은 학군에 확인하세요.':' 좌표 신뢰도 부족: '+(quality?.reason||'공식 주소 검색을 이용하세요.'));
-  }catch(error){if(error.name!=='AbortError'&&version===homeVersion){el('homeStatus').textContent=error.code==='timeout'?'주소 검색 시간이 초과되었습니다. 다시 검색해 주세요.':'주소 검색에 실패했습니다. 연결 상태를 확인한 뒤 다시 시도하세요.';showOfficialFinderWithoutGeocode(address,'주소 지오코딩 서비스가 응답하지 않았습니다.');}}
+  }catch(error){if(error.name!=='AbortError'&&version===homeVersion){el('homeStatus').textContent=error.code==='timeout'?'주소 검색 시간이 초과되었습니다. 다시 검색해 주세요.':'주소 검색에 실패했습니다. 연결 상태를 확인한 뒤 다시 시도하세요.';setHomeSearchPhase('error');showOfficialFinderWithoutGeocode(address,'주소 지오코딩 서비스가 응답하지 않았습니다.');}}
   finally{if(version===homeVersion)el('homeSearch').disabled=false}
 }
 async function calculateHomeCommute(){

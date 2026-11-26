@@ -57,7 +57,7 @@ test('year status renderer is source-labelled and does not leak or automatically
 test('the year-status script loads before the main renderer without relaxing certification gate',()=>{
  assert.ok(html.includes('./features/prosper-boundary-years.js?v=1'));
  assert.ok(html.indexOf('./features/prosper-boundary-years.js?v=1')<
-  html.indexOf('./dashboard-main.js?v=22'));
+  html.indexOf('./dashboard-main.js?v=23'));
  assert.match(dashboard,/ProsperBoundaryYears\?\.render\?\.\(cards,'PROSPER'\)/);
  const gate=require('../features/conditional-school-release.js');
  assert.equal(gate.releaseSummary().currentYearResidentialDistrictApprovals,0);

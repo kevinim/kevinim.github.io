@@ -12,6 +12,14 @@ test('only a real matched polygon is labelled as a drawn zone',()=>{
  assert.equal(c({displayMode:'historical'}).kind,'historical');
  assert.ok(c({displayMode:'historical'}).label.includes('과거'));
 });
+test('displayed boundary status never claims certified address assignment',()=>{
+ for(const mode of ['official','finder','historical']){
+  const result=c({displayMode:mode});
+  assert.match(result.label,/GIS/);
+  assert.match(result.label,/미인증/);
+  assert.match(result.explanation,/주소|배정/);
+ }
+});
 test('GIS-absent schools are never labelled as current or matched',()=>{
  assert.equal(c({matchStatus:'no-district-polygon-source'}).kind,'finder-only');
  assert.equal(c({matchStatus:'no-district-polygon-source',officialUrl:null}).kind,'unverified');

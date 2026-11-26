@@ -33,7 +33,7 @@ for(const [newRef,oldRef] of regionalCacheRefs){
   'Exactly one reviewed P3 cache reference required: '+newRef);
  normalizedMainHtml=normalizedMainHtml.replace(newRef,oldRef);
 }
-normalizedMainHtml=normalizedMainHtml.replace('./home-lookup-v2.js?v=28','./home-lookup-v2.js?v=27')
+normalizedMainHtml=normalizedMainHtml.replace('./home-lookup-v2.js?v=29','./home-lookup-v2.js?v=27')
  .replace('./official-school-review.js?v=5','./official-school-review.js?v=1');
 
 /* The six-section UI is a presentation-only change. Subtract its EXACT
@@ -45,7 +45,7 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<section id="txCompareSection" class="tx-layout-section" aria-label="5. 지역 나란히 비교"></section>\n'+
  '<section id="txStatsSection" class="tx-layout-section tx-stats-section" aria-labelledby="txStatsTitle"><h2 id="txStatsTitle" class="tx-stats-title">6. 통계 및 상세 정보</h2></section>\n','');
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
- '<link rel="stylesheet" href="./features/dashboard-quick-layout.css?v=1">\n','');
+ '<link rel="stylesheet" href="./features/dashboard-quick-layout.css?v=2">\n','');
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<script src="./features/dashboard-quick-layout.js?v=1" defer></script>\n','');
 
@@ -74,7 +74,7 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
 for(const [next,previous] of [
  ['<input type="checkbox" id="referenceBoundaryOverlay" checked>','<input type="checkbox" id="referenceBoundaryOverlay">'],
  ['map-first-split.css?v=2','map-first-split.css?v=1'],
- ['dashboard-main.js?v=22','dashboard-main.js?v=10'],
+ ['dashboard-main.js?v=23','dashboard-main.js?v=10'],
  ['allen-lookup.js?v=7','allen-lookup.js?v=5'],
  ['home-lookup-v2.js?v=27','home-lookup-v2.js?v=20'],
  ['denton-official-zone-references.js?v=2','denton-official-zone-references.js?v=1'],
@@ -251,6 +251,23 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  };
  const referencePolicyBaseline=show('4ff3091379d983a8aa2cacc3ff031928f3e99ff1','dashboard-main.js');
  let reviewedReferenceJs=js;
+ // UX-02: the only permitted out-of-region main change is the one-line
+ // selection sync call. Revert it before comparing untouched runtime bytes.
+ // Do not broaden the approved scope to unrelated map/bootstrap changes.
+ reviewedReferenceJs=replaceOnce(reviewedReferenceJs,
+  'function updateSelectedSchoolList(){\n syncAddressPrioritySchoolSelection();',
+  'function updateSelectedSchoolList(){');
+ // UX-02: precisely unapply the reviewed list scroll and filtered-clear
+ // notifications before historical bootstrap hashing (no blanket whitelist).
+ reviewedReferenceJs=replaceOnce(reviewedReferenceJs,
+  "  // Grade/rating changes must clear address-first card selection as well.\n  updateSelectedSchoolList();\n",
+  '');
+ reviewedReferenceJs=replaceOnce(reviewedReferenceJs,
+  "// Reveal map-selected schools within the list's own scrollport without\n// jumping the whole page away from the map, including on narrow screens.\nfunction revealSelectedSchoolInList(){\n const panel=el('schoolList');\n if(!panel||panel.scrollHeight<=panel.clientHeight+1)return;\n const selected=panel.querySelector?.('button.school.school-map-selected[data-sid]');\n if(!selected)return;\n const viewport=panel.getBoundingClientRect(),item=selected.getBoundingClientRect();\n if(item.top>=viewport.top&&item.bottom<=viewport.bottom)return;\n panel.scrollTop+=item.top-viewport.top-(viewport.height-item.height)/2;\n}\n",
+  '');
+ reviewedReferenceJs=replaceOnce(reviewedReferenceJs,
+  " if(!fromList)revealSelectedSchoolInList();\n",
+  '');
  // Scope the 2026-11-18 owner-approved historical GIS display change to five
  // exact fragments. The remaining main renderer must byte-match its PR parent.
  for(const [newFragment,oldFragment] of [

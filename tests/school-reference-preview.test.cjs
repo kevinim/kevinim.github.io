@@ -241,3 +241,43 @@ test('reference renderer shows each campus vintage without claiming enrollment',
   assert.equal(policy.releaseSummary().currentYearResidentialDistrictApprovals,0);
  }
 });
+
+
+test('GIS provenance separates source operator, layer year and official residential assignment',()=>{
+ const frisco=plan(candidate());
+ const prosper=plan(candidate('PROSPER','current'));
+ const mckinney=plan(candidate('043907','finder-current'));
+ for(const p of [frisco,prosper,mckinney]){
+  assert.equal(p.kind,'reference-only');
+  assert.match(p.provenance.source,/공식/);
+  assert.match(p.provenance.officialAddressAssignment,/미인증/);
+  assert.equal(p.provenance.originalPublicationDate,'확인되지 않음');
+  assert.equal(Object.hasOwn(p,'address'),false);
+ }
+ assert.match(frisco.provenance.geometryYear,/2026–27/);
+ assert.match(prosper.provenance.geometryYear,/2026–27/);
+ assert.match(mckinney.provenance.geometryYear,/Finder 2026–27/);
+ assert.match(mckinney.provenance.yearBasis,/중·고/);
+ const grade=school('middle','SYNTHETIC MIDDLE');
+ grade.properties.sourceYear='2025-26';
+ const yearPlan=plan({district:'043907',status:'finder-current',features:[grade]});
+ assert.match(yearPlan.candidates[0].yearNote,/2025–26/);
+ const unknown=plan({district:'043907',status:'finder-current',features:[school('high','SYNTHETIC HIGH')]});
+ assert.match(unknown.candidates[0].yearNote,/학년도 미확인/);
+});
+test('reference panel labels publisher, GIS evidence year and no official address confirmation',()=>{
+ const p=plan(candidate());
+ const nodes=[];
+ function element(tag){
+  return {tag,textContent:'',children:[],attributes:{},appendChild(child){this.children.push(child)},
+   replaceChildren(){this.children=[]},setAttribute(k,v){this.attributes[k]=v}};
+ }
+ const root=element('div');
+ root.ownerDocument={createElement:element};
+ assert.equal(preview.render(root,p),true);
+ function visit(n){nodes.push(n.textContent);for(const ch of n.children)visit(ch)}
+ visit(root);
+ const rendered=nodes.join(' ');
+ for(const term of ['GIS 출처','경계 유형','GIS 기준 연도','연도 해석','최초 게시일','주소 공식 배정','미인증'])
+  assert.ok(rendered.includes(term),term);
+});
