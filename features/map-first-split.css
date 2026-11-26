@@ -127,3 +127,15 @@ html[data-theme="dark"] .home-assignment-priority-status{background:#264866;colo
 html[data-theme="dark"] .home-assignment-school{background:#1b324e;border-color:#4b6584;color:#f2f7ff}
 html[data-theme="dark"] .home-assignment-school small{color:#c1d0e5}
 html[data-theme="dark"] .home-school-address-note{background:#172f48;color:#deebf8;border-color:#496c92}
+
+/* UX-02: map pin, school rail and address-first card share a selected campus.
+   This is a visual selection, never an official enrollment claim. */
+.home-assignment-school.home-school-map-selected{
+ outline:3px solid #b77900;outline-offset:1px;background:#f3f8ff;
+}
+html[data-theme="dark"] .home-assignment-school.home-school-map-selected{
+ outline-color:#ffca59;background:#284563;
+}
+@media (prefers-reduced-motion: reduce){
+ .home-assignment-school.home-school-map-selected{scroll-behavior:auto}
+}
