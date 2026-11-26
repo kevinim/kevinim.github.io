@@ -132,6 +132,9 @@
    let enabled=false,rows=[],refreshing=false;
    const pane=mapRef.getPane('txSchoolPickPane')||mapRef.createPane('txSchoolPickPane');
    pane.style.zIndex='415';pane.style.pointerEvents='none';
+   // The dashboard uses preferCanvas for thousands of campus markers. This
+   // opt-in keyboard-accessible layer requires actual SVG paths instead.
+   const renderer=L.svg({pane:'txSchoolPickPane'});
    const overlay=L.featureGroup().addTo(mapRef);
    function allowedSet(){
     const set=new Set();
@@ -193,7 +196,7 @@
       const current=mode==='official',finder=mode==='finder';
       const color=current?'#087f69':finder?'#285ac0':'#c66a1b';
       const shape=L.geoJSON(row.feature,{
-       pane:'txSchoolPickPane',
+       pane:'txSchoolPickPane',renderer,
        interactive:true,
        style:{color,weight:2,dashArray:current||finder?null:'6 5',fillColor:color,fillOpacity:.06},
       });
