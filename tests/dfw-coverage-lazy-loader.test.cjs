@@ -5,15 +5,20 @@ const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
 const loader=fs.readFileSync(path.join(__dirname,'..','features/dfw-school-coverage-panel.js'),'utf8');
-const RENDERER='./features/dfw-school-coverage-renderer.js?v=5';
+const RENDERER='./features/dfw-school-coverage-renderer.js?v=6';
 
 function setup(){
- const mount={textContent:''},handlers={},scripts=[];
+ const mount={
+  textContent:'',attributes:{},children:[],
+  setAttribute(name,value){this.attributes[name]=String(value)},
+  replaceChildren(...nodes){this.children=nodes;this.textContent=nodes.map(n=>n.textContent||'').join('')}
+ },handlers={},scripts=[];
  const panel={open:false,addEventListener(name,fn){handlers[name]=fn}};
  const document={
   readyState:'complete',
   getElementById(id){return id==='dfwSchoolCoveragePanel'?panel:id==='dfwSchoolCoverageContent'?mount:null},
   createElement(tag){
+   if(tag==='p')return {textContent:'',attributes:{},setAttribute(name,value){this.attributes[name]=String(value)}};
    assert.equal(tag,'script');
    const el={src:'',async:false,removed:false,remove(){this.removed=true}};
    scripts.push(el);return el;
@@ -46,12 +51,14 @@ test('network failure is visible, fail-closed and retryable on the next expansio
  await Promise.resolve();
  assert.equal(h.scripts[0].removed,true);
  assert.match(h.mount.textContent,/불러오지 못했습니다/);
+ assert.equal(h.mount.attributes['aria-busy'],'false');
+ assert.equal(h.mount.children[0].attributes.role,'alert');
  h.close();h.open();
  assert.equal(h.scripts.length,2);
  assert.equal(h.scripts[1].src,RENDERER);
 });
 test('renderer injection is fixed, never built from user input or unsafe markup',()=>{
- assert.match(loader,/const SOURCE='\.\/features\/dfw-school-coverage-renderer\.js\?v=5'/);
+ assert.match(loader,/const SOURCE='\.\/features\/dfw-school-coverage-renderer\.js\?v=6'/);
  assert.doesNotMatch(loader,/innerHTML|eval\(|new Function|location\.search/);
  assert.match(loader,/panel\.addEventListener\('toggle'/);
 });
