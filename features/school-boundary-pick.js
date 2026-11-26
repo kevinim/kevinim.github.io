@@ -74,6 +74,23 @@
   return {status:items.size===1?'matched':items.size?'overlap':'outside',
    school:items.size===1?[...items][0]:null};
  }
+ // Exact-source census across all six configured polygon datasets; this
+ // reports identity quality, not address-assignment verification or GIS coverage.
+ function auditSources(zones,schools,rating){
+  const totals={sourceFeatures:0,matched:0,unlinked:0,ambiguous:0,invalid:0};
+  const byDistrict={};
+  for(const {key,district} of SOURCES){
+   const features=Array.isArray(zones?.[key])?zones[key]:[];
+   const stats={sourceFeatures:features.length,matched:0,unlinked:0,ambiguous:0,invalid:0};
+   for(const f of features){
+    const result=resolve(f,district,schools,rating);
+    stats[result.status]++;
+   }
+   byDistrict[district]=stats;
+   for(const key of Object.keys(totals))totals[key]+=stats[key];
+  }
+  return {totals,byDistrict};
+ }
  function install(){
   let attempts=0;
   function start(){
@@ -227,5 +244,5 @@
   else start();
  }
  if(typeof window!=='undefined'&&typeof document!=='undefined')install();
- return Object.freeze({SOURCES,LEVELS,schoolKey,resolve,insideBounds,uniqueAtPoint});
+ return Object.freeze({SOURCES,LEVELS,schoolKey,resolve,insideBounds,uniqueAtPoint,auditSources});
 });
