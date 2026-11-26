@@ -41,6 +41,16 @@
     const ratedId=typeof rating==='function'?String(rating(s)?.id||''):'';
     return catalogId===id||ratedId===id;
    });
+   // Prosper's confirmed 2026-27 source includes brand-new campuses (e.g.
+   // Jim Bridges) not yet in the preliminary TEA rating directory. Allow one
+   // EXACT same-district/level name with no competing catalog/rating ID.
+   // Preserve strict ID rejection whenever a school directory ID exists.
+   if(!candidates.length&&district==='PROSPER'&&p.current===true
+       &&p.sourceYearConfirmed===true&&p.schoolYear==='2026–27'){
+    const key=schoolKey(p.school);
+    if(key)candidates=matches.filter(s=>schoolKey(s.name)===key
+      &&!s.id&&!(typeof rating==='function'&&rating(s)?.id));
+   }
   }else{
    const name=schoolKey(p.school);
    if(!name)return {status:'invalid',school:null};
