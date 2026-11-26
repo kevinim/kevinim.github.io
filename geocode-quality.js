@@ -18,6 +18,11 @@ function streetNumber(value){
  const m=/^\s*(\d{1,6}[A-Z]?)\b/i.exec(String(value||''));
  return m?m[1].toUpperCase():null;
 }
+// A five-digit civic number at the start is not a postal ZIP.
+function trailingZip(value){
+ const m=/(?:^|[\s,])(\d{5})(?:-\d{4})?\s*$/.exec(String(value||'').trim());
+ return m?m[1]:null;
+}
 function mentionsUnit(value){
  return /(?:\b(?:APT|APARTMENT|UNIT|SUITE|STE)\b|#\s*[A-Z0-9])/i.test(String(value||''));
 }
@@ -28,10 +33,8 @@ function assessResidentialGeocode(requestedAddress,c){
  const requestedNumber=streetNumber(requestedAddress);
  const returnedNumbers=[c?.address,a.Match_addr].map(streetNumber).filter(Boolean);
  const returnedUnits=[c?.address,a.Match_addr].map(residentialUnit).filter(Boolean);
- const inputZip=String(requestedAddress||'').match(/\b\d{5}(?:-\d{4})?\b/g)?.at(-1)?.slice(0,5)||null;
- const returnedZips=[a.Postal,c?.address]
-  .map(x=>String(x||'').match(/\b\d{5}(?:-\d{4})?\b/)?.[0]?.slice(0,5))
-  .filter(Boolean);
+ const inputZip=trailingZip(requestedAddress);
+ const returnedZips=[a.Postal,c?.address].map(trailingZip).filter(Boolean);
  const candidateZip=returnedZips[0]||null;
  let reason=null;
  if(!c?.location||!Number.isFinite(c.location.x)||!Number.isFinite(c.location.y))reason='좌표를 확인하지 못했습니다.';
