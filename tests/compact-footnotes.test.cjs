@@ -5,7 +5,7 @@ const js=fs.readFileSync('features/compact-footnotes.js','utf8');
 const css=html;
 test('production loads CSP-compatible compact-footnote assets',()=>{
   assert.match(html,/\.footnote-original-hidden/);
-  assert.match(html,/features\/compact-footnotes\.js\?v=2/);
+  assert.match(html,/features\/compact-footnotes\.js\?v=3/);
   assert.doesNotMatch(js,/\b(eval|new Function)\s*\(/);
 });
 test('original sources remain available, status and map controls are preserved',()=>{
@@ -29,4 +29,11 @@ test('dynamic updates, required attribution, mobile and dark are supported',()=>
   assert.match(js,/copyContent\(source, detail\)/);
   assert.match(css,/html\[data-theme="dark"\] \.footnote-ref/);
   assert.match(css,/@media \(max-width: 720px\)/);
+});
+test('UX-08 source footnote supports a keyboard-return to the origin',()=>{
+ assert.match(js,/footnote-return/);
+ assert.ok(js.includes("link.focus({preventScroll:true})"));
+ assert.ok(js.includes("item.appendChild(back)"));
+ assert.ok(js.includes("back.style.minHeight = '44px'"));
+ assert.ok(js.includes("target.focus({preventScroll:true})"));
 });

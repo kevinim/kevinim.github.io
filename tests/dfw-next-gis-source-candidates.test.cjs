@@ -5,15 +5,15 @@ const fs=require('node:fs');
 const path=require('node:path');
 const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../data/dfw-next-gis-source-candidates-20261121.json'),'utf8'));
 const matrix=JSON.parse(fs.readFileSync(path.join(__dirname,'../data/dfw-school-coverage-matrix-2026.json'),'utf8'));
-test('four new GIS candidates are evidence only, distinct and present in 108-ISD census',()=>{
+test('five source candidates are evidence only, distinct and present in 108-ISD census',()=>{
  assert.equal(manifest.schemaVersion,1);
  assert.equal(manifest.reviewedOn,'2026-11-21');
  assert.equal(manifest.schoolAssignmentCertified,false);
  assert.equal(manifest.publicGeometryHosted,false);
  assert.equal(manifest.geometryRedistributionApproved,false);
- assert.deepEqual(manifest.districts.map(x=>x.code),['057914','043914','199901','057916']);
- assert.equal(new Set(manifest.districts.map(x=>x.code)).size,4);
- assert.equal(manifest.districts.reduce((n,x)=>n+x.inventoryCampuses,0),147);
+ assert.deepEqual(manifest.districts.map(x=>x.code),['057914','043914','199901','057916','043908']);
+ assert.equal(new Set(manifest.districts.map(x=>x.code)).size,5);
+ assert.equal(manifest.districts.reduce((n,x)=>n+x.inventoryCampuses,0),156);
  for(const x of manifest.districts){
   const d=matrix.districts.find(d=>d.code===x.code);
   assert.ok(d,d?.name||x.code);
@@ -81,7 +81,7 @@ test('lazy coverage renderer validates candidate sources fail closed before disp
  const ctx={};
  vm.runInNewContext(renderer.slice(a,b),ctx,{timeout:1000});
  const valid=ctx.validNextGISSources(manifest);
- assert.equal(valid.size,4);
+ assert.equal(valid.size,5);
  assert.equal(valid.get('057914').sourceKind,'municipal-attendance-polygon');
  const changed=fn=>{const v=structuredClone(manifest);fn(v);return v};
  assert.equal(ctx.validNextGISSources(changed(x=>x.schoolAssignmentCertified=true)),null);
@@ -96,11 +96,40 @@ test('lazy coverage renderer validates candidate sources fail closed before disp
  assert.equal(ctx.validNextGISSources(changed(x=>x.districts[1].officialParent='https://www.wyliebulldogs.org')),null);
  assert.equal(ctx.validNextGISSources(changed(x=>x.districts[2].sourceSchoolYear='2026-27')),null);
  assert.equal(ctx.validNextGISSources(changed(x=>x.districts[2].sourceYearEvidence='2026-27')),null);
- assert.match(renderer,/NEXT_GIS_FILE='\.\/data\/dfw-next-gis-source-candidates-20261121\.json\?v=2'/);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[4].liveMapCurrentYearIndependentlyVerified=true)),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[4].approvedElementaryYear='2025-26')),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[4].locatorGuideSchoolYear='2026-27')),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[4].reviewedOn='2026-11-21')),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[4].sourceSchoolYear='2026-27')),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[4].sourceReuseRightsVerified=true)),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[4].officialParent='https://evil.test/locator')),null);
+ assert.match(renderer,/NEXT_GIS_FILE='\.\/data\/dfw-next-gis-source-candidates-20261121\.json\?v=3'/);
  assert.match(renderer,/newEvidence=nextGIS\?\.get\(d\.code\)/);
  assert.match(renderer,/GIS 후보 발견 · 지도 미탑재/);
  assert.doesNotMatch(renderer,/innerHTML\s*=|eval\s*\(/);
 });
+test('Melissa 2026-27 board-approved elementary zones are locator evidence, not certified live campus geometry',()=>{
+ const m=manifest.districts[4];
+ assert.equal(m.code,'043908');
+ assert.equal(m.inventoryCampuses,9);
+ assert.equal(m.sourceKind,'district-interactive-zoning-reference-only');
+ assert.equal(m.publisherGIS,null);
+ assert.equal(m.sourceSchoolYear,null);
+ assert.equal(m.approvedElementaryYear,'2026-27');
+ assert.equal(m.reviewedOn,'2026-11-25');
+ assert.equal(m.locatorGuideSchoolYear,'2025-26');
+ assert.equal(m.liveMapCurrentYearIndependentlyVerified,false);
+ assert.equal(m.installedSchoolPolygons,0);
+ assert.equal(m.liveSchoolAssignmentCertified,false);
+ assert.equal(m.sourceReuseRightsVerified,false);
+ assert.equal(m.officialParent,'https://www.melissaisd.org/page/interactive-zoning-map');
+ assert.equal(m.sourceContextUrl,'https://www.melissaisd.org/o/nce/article/2608592');
+ assert.match(m.notes,/Cardinal Renaissance Academy/);
+ const {official}=require('../trusted-link-policy.js');
+ assert.equal(official(m.officialParent),m.officialParent);
+ assert.equal(official('https://www.melissaisd.org.evil.test/page/interactive-zoning-map'),null);
+});
+
 test('only exact city-publisher GIS domain is an approved new source link',()=>{
  const {official}=require('../trusted-link-policy.js');
  assert.equal(official('https://gisservice.cityofmesquite.com/arcgis/rest/services/onlinemaps/neighborhood_vitality/MapServer/6'),

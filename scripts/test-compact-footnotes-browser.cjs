@@ -54,6 +54,14 @@ async function run(){
    assert.equal(await page.locator('#homeSuggestHint').evaluate(x=>getComputedStyle(x).display),'none','Secondary keyboard hint moves to source index');
    await page.locator('.footnote-ref:visible').first().click();
    assert.equal(await page.locator('#centralFootnotes').evaluate(e=>e.open),true);
+   // UX-08: footer citations must provide keyboard-visible return navigation.
+   const back=page.locator('#sourceFootnotes .footnote-return').first();
+   assert.equal(await back.count(),1,'Each index section needs a return action');
+   assert.ok((await back.evaluate(el=>el.getBoundingClientRect().height))>=44,
+    'Mobile source-return action needs >=44px touch target');
+   await back.click();
+   assert.equal(await page.evaluate(()=>document.activeElement?.classList.contains('footnote-ref')),
+    true,'Return action must focus the original source citation');
    await page.evaluate(()=>{
      const section=document.createElement('section');
      section.id='syntheticFootnoteRegion';

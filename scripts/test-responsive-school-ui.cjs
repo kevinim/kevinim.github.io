@@ -35,6 +35,9 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
             .filter(link=>link.getAttribute('href')==='./features/tea-peims-public-share-addon.css?v=2').length,
           lazyVectorStyleLinks:[...document.querySelectorAll('link[rel="stylesheet"]')]
             .filter(link=>link.href.includes('unpkg.com/maplibre-gl@5.5.0/dist/maplibre-gl.css')).length,
+          candidateSuitabilityStyleLinks:[...document.querySelectorAll('link[rel="stylesheet"]')]
+            .filter(link=>link.getAttribute('href')==='./features/candidate-suitability.css?v=1'&&
+              link.dataset.candidateSuitabilityCss==='1').length,
            renderBundleLoaded:[...document.styleSheets].some(sheet=>
              sheet.href&&sheet.href.includes('/features/first-render-ui.bundle.css')&&
              sheet.cssRules.length>20),
@@ -65,7 +68,8 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
       assert.ok(state.schoolControls.every(x=>x.inside),'All school settings should be grouped together at '+width);
        assert.equal(state.reviewedPeimsAddonLinks,1,'Exactly one reviewed PEIMS stylesheet at '+width);
        assert.ok(state.lazyVectorStyleLinks<=1,'Liberty CSS must load at most once at '+width);
-       assert.equal(state.styleLinks-state.reviewedPeimsAddonLinks-state.lazyVectorStyleLinks,12,
+       assert.ok(state.candidateSuitabilityStyleLinks<=1,'Candidate evidence CSS must not be duplicated at '+width);
+       assert.equal(state.styleLinks-state.reviewedPeimsAddonLinks-state.lazyVectorStyleLinks-state.candidateSuitabilityStyleLinks,12,
          'Six first-paint stylesheets remain bundled with map-first and six-section layouts at '+width);
        assert.equal(state.renderBundleLoaded,true,'Compiled CSS must load and contain rules at '+width);
        assert.equal(state.oldSourcesLinked,false,'No original CSS link should remain at '+width);
@@ -84,6 +88,24 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
         assert.ok(state.mapBox.x>state.filterCard.right,'Desktop map must sit right of filters/results at '+width);
         assert.ok(state.mapBox.height>500,'Desktop map must be prominent at '+width);
       }
+      // UX-07: mobile map retains the real list and native dialog focus/escape.
+      const sheetToggle=page.locator('#mobileSchoolSheetToggle');
+      await sheetToggle.waitFor({state:'attached'});
+      if(width<=720){
+        assert.equal(await sheetToggle.isVisible(),true,'School sheet control visible '+width);
+        assert.ok(await sheetToggle.evaluate(x=>x.getBoundingClientRect().height>=44));
+        await sheetToggle.click();
+        assert.equal(await page.locator('#mobileSchoolSheetDialog').evaluate(x=>x.open),true);
+        assert.equal(await page.locator('#mobileSchoolSheetDialog #schoolList').count(),1,
+          'Original school list moved into the dialog; no duplicate');
+        assert.equal(await sheetToggle.getAttribute('aria-expanded'),'true');
+        await page.keyboard.press('Escape');
+        await page.waitForFunction(()=>!document.getElementById('mobileSchoolSheetDialog').open&&
+          document.getElementById('mobileSchoolSheetToggle').getAttribute('aria-expanded')==='false');
+        assert.equal(await page.locator('#mobileSchoolSheetDialog #schoolList').count(),0,
+          'Closing sheet restores original school list');
+        assert.equal(await page.locator('#schoolList').count(),1,'Exactly one school list after closing');
+      }else assert.equal(await sheetToggle.isVisible(),false,'Desktop hides mobile sheet trigger');
       assert.equal(await page.locator('#homeClear').isVisible(),false,'X initially hidden at '+width);
       await page.locator('#homeAddress').fill('3400 Legacy Dr, Plano, TX');
       assert.equal(await page.locator('#homeClear').isVisible(),true,'X appears when address typed at '+width);

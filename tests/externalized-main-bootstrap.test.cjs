@@ -21,6 +21,11 @@ const regionalCacheRefs=[
  ['./features/area-assessment.js?v=4','./features/area-assessment.js?v=3']
 ];
 let normalizedMainHtml=rawHtml;
+// UX-08 source-index v3 is reviewed; normalize only its asset key before
+// the protected historical HTML comparison. Melissa v7 and photo v5 remain.
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ '<script src="./features/compact-footnotes.js?v=3"></script>',
+ '<script src="./features/compact-footnotes.js?v=2"></script>');
 // P1 reviewed geocode unit verification: reverse only the approved static cache pin.
 // Every other byte remains subject to the immutable historical bootstrap comparison.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
@@ -33,7 +38,7 @@ for(const [newRef,oldRef] of regionalCacheRefs){
   'Exactly one reviewed P3 cache reference required: '+newRef);
  normalizedMainHtml=normalizedMainHtml.replace(newRef,oldRef);
 }
-normalizedMainHtml=normalizedMainHtml.replace('./home-lookup-v2.js?v=28','./home-lookup-v2.js?v=27')
+normalizedMainHtml=normalizedMainHtml.replace('./home-lookup-v2.js?v=29','./home-lookup-v2.js?v=27')
  .replace('./official-school-review.js?v=5','./official-school-review.js?v=1');
 
 /* The six-section UI is a presentation-only change. Subtract its EXACT
@@ -45,7 +50,7 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<section id="txCompareSection" class="tx-layout-section" aria-label="5. 지역 나란히 비교"></section>\n'+
  '<section id="txStatsSection" class="tx-layout-section tx-stats-section" aria-labelledby="txStatsTitle"><h2 id="txStatsTitle" class="tx-stats-title">6. 통계 및 상세 정보</h2></section>\n','');
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
- '<link rel="stylesheet" href="./features/dashboard-quick-layout.css?v=1">\n','');
+ '<link rel="stylesheet" href="./features/dashboard-quick-layout.css?v=2">\n','');
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<script src="./features/dashboard-quick-layout.js?v=1" defer></script>\n','');
 
@@ -74,11 +79,12 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
 for(const [next,previous] of [
  ['<input type="checkbox" id="referenceBoundaryOverlay" checked>','<input type="checkbox" id="referenceBoundaryOverlay">'],
  ['map-first-split.css?v=2','map-first-split.css?v=1'],
- ['dashboard-main.js?v=22','dashboard-main.js?v=10'],
+ ['dashboard-main.js?v=23','dashboard-main.js?v=10'],
  ['allen-lookup.js?v=7','allen-lookup.js?v=5'],
  ['home-lookup-v2.js?v=27','home-lookup-v2.js?v=20'],
  ['denton-official-zone-references.js?v=2','denton-official-zone-references.js?v=1'],
  ['features/dashboard-extras.css?v=5','features/dashboard-extras.css?v=4'],
+ ['candidate-compare.js?v=5','candidate-compare.js?v=4'],
  ['cfb-official-bridge.js?v=3','cfb-official-bridge.js?v=2'],
  ['home-school-manual-bridge.js?v=3','home-school-manual-bridge.js?v=1']
 ])normalizedMainHtml=replaceOnce(normalizedMainHtml,next,previous);
@@ -87,7 +93,7 @@ for(const [next,prior] of [["https://gis.texaswildfirerisk.com https://tiles.ope
 // Normalize only the newly approved CFB/Denton school source panel cache key
 // before comparing the old immutable HTML baseline; all other bytes stay pinned.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
- './features/dfw-school-coverage-panel.js?v=6',
+ './features/dfw-school-coverage-panel.js?v=7',
  './features/dfw-school-coverage-panel.js?v=2');
 assert.equal(normalizedMainHtml,show('c12ab9860057e5d59b6f0e52e486b392f083da8a','index.html'),
  'Unreviewed main HTML changes beyond Liberty/split UX');
@@ -251,6 +257,23 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  };
  const referencePolicyBaseline=show('4ff3091379d983a8aa2cacc3ff031928f3e99ff1','dashboard-main.js');
  let reviewedReferenceJs=js;
+ // UX-02: the only permitted out-of-region main change is the one-line
+ // selection sync call. Revert it before comparing untouched runtime bytes.
+ // Do not broaden the approved scope to unrelated map/bootstrap changes.
+ reviewedReferenceJs=replaceOnce(reviewedReferenceJs,
+  'function updateSelectedSchoolList(){\n syncAddressPrioritySchoolSelection();',
+  'function updateSelectedSchoolList(){');
+ // UX-02: precisely unapply the reviewed list scroll and filtered-clear
+ // notifications before historical bootstrap hashing (no blanket whitelist).
+ reviewedReferenceJs=replaceOnce(reviewedReferenceJs,
+  "  // Grade/rating changes must clear address-first card selection as well.\n  updateSelectedSchoolList();\n",
+  '');
+ reviewedReferenceJs=replaceOnce(reviewedReferenceJs,
+  "// Reveal map-selected schools within the list's own scrollport without\n// jumping the whole page away from the map, including on narrow screens.\nfunction revealSelectedSchoolInList(){\n const panel=el('schoolList');\n if(!panel||panel.scrollHeight<=panel.clientHeight+1)return;\n const selected=panel.querySelector?.('button.school.school-map-selected[data-sid]');\n if(!selected)return;\n const viewport=panel.getBoundingClientRect(),item=selected.getBoundingClientRect();\n if(item.top>=viewport.top&&item.bottom<=viewport.bottom)return;\n panel.scrollTop+=item.top-viewport.top-(viewport.height-item.height)/2;\n}\n",
+  '');
+ reviewedReferenceJs=replaceOnce(reviewedReferenceJs,
+  " if(!fromList)revealSelectedSchoolInList();\n",
+  '');
  // Scope the 2026-11-18 owner-approved historical GIS display change to five
  // exact fragments. The remaining main renderer must byte-match its PR parent.
  for(const [newFragment,oldFragment] of [
@@ -429,7 +452,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  // Independently sourced TexasWorks physical-campuses explanation: cache-bust
  // only the existing collapsed, lazily loaded coverage JS module.
  approvedHtml=replaceOnce(approvedHtml,'./features/dfw-school-coverage-panel.js?v=1',
-  './features/dfw-school-coverage-panel.js?v=6');
+  './features/dfw-school-coverage-panel.js?v=7');
  // Source-only CFB 2025-26 conflict disclosure; still no auto-assignment.
  approvedHtml=replaceOnce(approvedHtml,'./features/cfb-approved-zone-atlas.js?v=1',
   './features/cfb-approved-zone-atlas.js?v=2');
@@ -487,7 +510,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
   '</body></html>');
  const restoredApprovedCache=replaceOnce(withoutCompactFootnotes,
   './features/dfw-school-coverage-panel.js?v=2',
-  './features/dfw-school-coverage-panel.js?v=6');
+  './features/dfw-school-coverage-panel.js?v=7');
  assert.equal(hash(restoredApprovedCache),hash(approvedHtml),
   'Unreviewed HTML drift beyond the documented compact-footnote additions');
  // Strip only previously released #262 zoom label additions from the
