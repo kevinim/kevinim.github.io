@@ -109,8 +109,15 @@ if (typeof document !== 'undefined') {
     info.textContent='총점·자동 순위 없음. 학교 배정·통근·지역 위험은 자료와 측정 수준을 각각 확인합니다. 인구 구성은 점수에 사용하지 않습니다.';
     bar.appendChild(info);status.after(bar);
   }
+  // Rendering a focused input can dispatch a nested change event during
+  // DOM replacement. One renderer owns the container at any moment.
+  let drawingCandidates=false;
   function drawCandidates() {
+    if(drawingCandidates)return;
+    drawingCandidates=true;
+    try {
     const container = el('candidateCards');
+    if(container.contains(document.activeElement))document.activeElement.blur();
     el('candidateCount').textContent = comparisons.length + ' / 3';
     if (!comparisons.length) {
       container.innerHTML = '<div class="candidate-empty">주소 검색 후 <b>비교함에 추가</b>를 누르면 여기에 표시됩니다.</div>';
@@ -148,6 +155,7 @@ if (typeof document !== 'undefined') {
       useHomeCandidate({address:item.address,location:{y:item.ll[0],x:item.ll[1]},savedTypedAddress:item.typedAddress,savedGeocodeQuality:item.geocodeQuality,savedParcel:item.parcel,savedOfficialReview:item.officialReview,savedOfficialDraft:item.officialDraft});
       el('map').scrollIntoView({behavior:'smooth',block:'center'});
     }));
+    } finally { drawingCandidates=false; }
   }
   window.refreshCandidateComparisons = () => { if (comparisons.length) drawCandidates(); };
   document.addEventListener('DOMContentLoaded', () => {
