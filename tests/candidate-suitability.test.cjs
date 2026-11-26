@@ -95,6 +95,8 @@ test('UI retains original map navigation, in-memory data, CSP-safe stylesheet an
   assert.match(source,/let comparisons = \[\]/);
   assert.match(source,/useHomeCandidate\(\{address:item.address/);
   assert.match(source,/data-candidate-minutes/);
+  assert.match(source,/candidate-demographics/);
+  assert.match(source,/demographicsExpanded/);
   assert.match(source,/aria-label="후보 /);
   assert.match(source,/data-candidate-suitability-css/);
   assert.match(source,/candidate-suitability\.css\?v=1/);
