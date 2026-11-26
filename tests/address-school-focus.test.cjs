@@ -361,14 +361,16 @@ test('UX-02: map events and address cards share one selection path without widen
  const renderStart=source.indexOf('function renderAddressSchoolPriority(){');
  const renderEnd=source.indexOf(' function drawSchools(){',renderStart);
  assert.ok(listStart>=0&&mapStart>=0&&renderEnd>renderStart);
- assert.match(source.slice(listStart,listEnd),/syncAddressPrioritySchoolSelection\\(\\)/);
- assert.match(source.slice(mapStart,mapEnd),/updateSelectedSchoolList\\(\\)/);
- assert.match(source,/marker\\.on\\('click',\\(\\)=>schoolClicked\\(school\\)\\)/);
- assert.match(source.slice(renderStart,renderEnd),/referenceCandidateSchoolRecords\\(view\\)\\.includes\\(school\\)/);
- assert.match(source.slice(renderStart,renderEnd),/addressPrioritySchoolCards\\.clear\\(\\)/);
- assert.match(source.slice(renderStart,renderEnd),/addressPrioritySchoolCards\\.set\\(school,existing\\)/);
- assert.match(source.slice(renderStart,renderEnd),/mapButton\\.onclick=\\(\\)=>schoolClicked\\(school,true\\)/);
- assert.doesNotMatch(source.slice(renderStart,renderEnd),/innerHTML\\s*=/);
+ const list=source.slice(listStart,listEnd),map=source.slice(mapStart,mapEnd);
+ const render=source.slice(renderStart,renderEnd);
+ assert.ok(list.includes('syncAddressPrioritySchoolSelection()'));
+ assert.ok(map.includes('updateSelectedSchoolList()'));
+ assert.ok(source.includes("marker.on('click',()=>schoolClicked(school))"));
+ assert.ok(render.includes('referenceCandidateSchoolRecords(view).includes(school)'));
+ assert.ok(render.includes('addressPrioritySchoolCards.clear()'));
+ assert.ok(render.includes('addressPrioritySchoolCards.set(school,existing)'));
+ assert.ok(render.includes('mapButton.onclick=()=>schoolClicked(school,true)'));
+ assert.ok(!render.includes('innerHTML'));
 });
 test('UX-01: search phase is accessible, resets busy form and never grants assignment',()=>{
  const lookup=fs.readFileSync('home-lookup-v2.js','utf8');
@@ -390,5 +392,5 @@ test('UX-01: search phase is accessible, resets busy form and never grants assig
  assert.ok(search.includes("setHomeSearchPhase('choices')"));
  assert.ok(search.includes("setHomeSearchPhase('error')"));
  assert.ok(lookup.includes("setHomeSearchPhase('idle')"));
- assert.doesNotMatch(lookup.slice(start,stop),/localStorage|sessionStorage|fetch\\(/);
+ assert.ok(!['localStorage','sessionStorage','fetch('].some(text=>lookup.slice(start,stop).includes(text)));
 });
