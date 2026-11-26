@@ -94,6 +94,32 @@ test('claimed approval without explicit public reuse rights fails closed',()=>{
     assert.throws(()=>validateRegistry(rights),/approved_asset_missing_review_evidence/);
   }
 });
+test('rights approval rejects invalid calendar dates and reversed evidence chronology',()=>{
+  const bad = [
+    {reviewedAt:'2026-02-30'},
+    {retrievedAt:'2026-13-01'},
+    {reviewedAt:'2999-01-01'},
+    {retrievedAt:'2026-11-22'}, // retrieved after the reviewed date
+  ];
+  for(const patch of bad) {
+    const rights=base();
+    rights.assets['schools.json']={...approved(),...patch};
+    assert.throws(()=>validateRegistry(rights),/approved_asset_missing_review_evidence/);
+  }
+});
+test('rights approval rejects malformed, credentialed or fragment-based source links',()=>{
+  const bad = [
+    {sourceUrl:'https:///'},
+    {termsUrl:'https://user:token@example.invalid/terms'},
+    {sourceUrl:'https://example.invalid/data#unverifiable-section'},
+    {termsUrl:'https://bad host.invalid/terms'},
+  ];
+  for(const patch of bad) {
+    const rights=base();
+    rights.assets['schools.json']={...approved(),...patch};
+    assert.throws(()=>validateRegistry(rights),/approved_asset_missing_review_evidence/);
+  }
+});
 test('unsafe registry paths and invalid declarations are rejected',()=>{
   for(const name of ['../not-contained.json','data/../../outside.csv','data\\bad.json','docs/readme.md']) {
     const rights=base();
