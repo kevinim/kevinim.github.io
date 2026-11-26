@@ -153,9 +153,9 @@ test('HTML loads optional coverage UI without modifying inline CSP bootstrap',()
  assert.ok(html.includes('./features/dfw-school-coverage-panel.css?v=1'));
  assert.ok(html.includes('src="./school-zone-ui.js?v=1"'));
  const ui=fs.readFileSync(path.join(root,'features/dfw-school-coverage-renderer.js'),'utf8');
- assert.ok(fs.readFileSync(path.join(root,'features/dfw-school-coverage-panel.js'),'utf8').includes("./features/dfw-school-coverage-renderer.js?v=6"));
+ assert.ok(fs.readFileSync(path.join(root,'features/dfw-school-coverage-panel.js'),'utf8').includes("./features/dfw-school-coverage-renderer.js?v=7"));
  assert.equal(require('node:child_process').execFileSync('git',['hash-object','features/dfw-school-coverage-renderer.js'],{cwd:root,encoding:'utf8'}).trim(),
-  '01b16b05a299d332fad47d6e9ac0aa61d096c6bf','Reviewed DFW renderer including CFB/Denton public-source disclosure must remain byte-for-byte pinned');
+  'f77757153a58089abf7582bb30038b1b17192690','Reviewed DFW renderer including CFB/Denton public-source disclosure must remain byte-for-byte pinned');
  assert.ok(ui.includes('document.createElement'));
  assert.ok(!ui.includes('.innerHTML'));
  assert.ok(ui.includes('window.TrustedLinkPolicy?.official?.(url)'));

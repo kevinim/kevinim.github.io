@@ -98,6 +98,8 @@ test('lazy coverage renderer validates candidate sources fail closed before disp
  assert.equal(ctx.validNextGISSources(changed(x=>x.districts[2].sourceYearEvidence='2026-27')),null);
  assert.equal(ctx.validNextGISSources(changed(x=>x.districts[4].liveMapCurrentYearIndependentlyVerified=true)),null);
  assert.equal(ctx.validNextGISSources(changed(x=>x.districts[4].approvedElementaryYear='2025-26')),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[4].locatorGuideSchoolYear='2026-27')),null);
+ assert.equal(ctx.validNextGISSources(changed(x=>x.districts[4].reviewedOn='2026-11-21')),null);
  assert.equal(ctx.validNextGISSources(changed(x=>x.districts[4].sourceSchoolYear='2026-27')),null);
  assert.equal(ctx.validNextGISSources(changed(x=>x.districts[4].sourceReuseRightsVerified=true)),null);
  assert.equal(ctx.validNextGISSources(changed(x=>x.districts[4].officialParent='https://evil.test/locator')),null);
@@ -114,6 +116,8 @@ test('Melissa 2026-27 board-approved elementary zones are locator evidence, not 
  assert.equal(m.publisherGIS,null);
  assert.equal(m.sourceSchoolYear,null);
  assert.equal(m.approvedElementaryYear,'2026-27');
+ assert.equal(m.reviewedOn,'2026-11-25');
+ assert.equal(m.locatorGuideSchoolYear,'2025-26');
  assert.equal(m.liveMapCurrentYearIndependentlyVerified,false);
  assert.equal(m.installedSchoolPolygons,0);
  assert.equal(m.liveSchoolAssignmentCertified,false);

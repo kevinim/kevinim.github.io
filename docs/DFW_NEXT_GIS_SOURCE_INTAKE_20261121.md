@@ -61,3 +61,5 @@ Verified independent district announcement, December 19, 2025:
 - Follow-up: inspect publisher locator year selection and grade layers, crosscheck public non-residential points and CRA choice exceptions; confirm embedding rights before any reference polygon activation.
 
 Files: data/dfw-next-gis-source-candidates-20261121.json, features/dfw-school-coverage-renderer.js, tests/dfw-next-gis-source-candidates.test.cjs. SEC-04 rightsDecision remains pending and the updated link-only JSON blob SHA is pinned.
+
+- Provenance clarification (2026-11-25): the official Melissa **online zoning help page still describes 2025–26** as its shown school-year guide; its separate board announcement confirms approval of the **2026–27 elementary** attendance zones. This is not proof that every live GIS E/M/H polygon was refreshed. The candidate's per-row review date and guide year are recorded independently of its unknown `sourceSchoolYear`.

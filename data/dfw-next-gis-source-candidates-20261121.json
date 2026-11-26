@@ -94,7 +94,9 @@
       "sourceReuseRightsVerified": false,
       "installedSchoolPolygons": 0,
       "liveSchoolAssignmentCertified": false,
-      "notes": "Melissa ISD confirms 2026-27 elementary zones were board-approved in March 2025 and that Cardinal Renaissance Academy (Elementary #6) opened with a zone plus existing-campus/GT family choice exceptions. The interactive zoning page has not been independently checked for its selected live academic year, grade-specific campus geometry, service CORS, reuse rights or exact-address assignment. The school-year approval applies to the E map, not an E/M/H GeoJSON or residence certification. Do not copy the 2025-26 zoning map as current."
+      "notes": "Melissa ISD confirms 2026-27 elementary zones were board-approved in March 2025 and that Cardinal Renaissance Academy (Elementary #6) opened with a zone plus existing-campus/GT family choice exceptions. The interactive zoning page has not been independently checked for its selected live academic year, grade-specific campus geometry, service CORS, reuse rights or exact-address assignment. The school-year approval applies to the E map, not an E/M/H GeoJSON or residence certification. Do not copy the 2025-26 zoning map as current. Publisher zoning guide still describes the 2025-26 school year; the board-approved 2026-27 elementary map is distinct from unverified live E/M/H service layers.",
+      "reviewedOn": "2026-11-25",
+      "locatorGuideSchoolYear": "2025-26"
     }
   ]
 }

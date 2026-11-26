@@ -192,3 +192,4 @@
 - Fail-closed validator pins district, official URLs, unverified live geometry year, separately approved 2026–27 E map, 0 imported polygons, 0 automatic certifications, unapproved reuse. Rights remain pending.
 
 - Branch gpt/tx-gis-melissa-source-20261125. CI, merge SHA, Pages deploy and live smoke must be checked separately; PR creation is not deployment proof. Follow-up: licensed current school-by-grade polygon sources and public-point/parcel exception checks.
+- **Source vintage refinement:** district web zoning guide still describes 2025–26; separate board notice approves 2026–27 elementary boundaries, but live E/M/H GIS year remains unverified. Both years are independently stored, Melissa row reviewed 2026-11-25.
