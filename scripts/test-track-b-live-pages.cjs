@@ -227,6 +227,8 @@ async function run(){
     await page.waitForFunction(name=>state.selectedSchool?.name===name,
      preparation.name,{timeout:20000});
     const selected=await page.evaluate(()=>({
+     census:window.TXSchoolBoundaryPick.auditSources(state.zoneData,state.schools,
+      school=>scoreRecord(school.name,school.district)),
      name:state.selectedSchool?.name,
      pressed:[...document.querySelectorAll('#schoolList button.school[aria-pressed="true"]')]
       .map(n=>n.textContent),
@@ -234,6 +236,9 @@ async function run(){
      arias:map.getPane('txSchoolPickPane')?.querySelectorAll('path[role="button"][tabindex="0"]').length||0
     }));
     assert.equal(selected.name,preparation.name);
+    assert.equal(selected.census.byDistrict.PROSPER.sourceFeatures,31);
+    assert.equal(selected.census.byDistrict.AISD.sourceFeatures,20);
+    assert.ok(selected.census.totals.sourceFeatures>=51,'Source-wide polygon audit disappeared');
     assert.ok(selected.pressed.some(n=>n.includes(preparation.name)),
       'Polygon-selected school must also be selected in the school list');
     assert.match(selected.roleStatus,/배정 인증이 아닙니다/);
