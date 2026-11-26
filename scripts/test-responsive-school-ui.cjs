@@ -35,6 +35,9 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
             .filter(link=>link.getAttribute('href')==='./features/tea-peims-public-share-addon.css?v=2').length,
           lazyVectorStyleLinks:[...document.querySelectorAll('link[rel="stylesheet"]')]
             .filter(link=>link.href.includes('unpkg.com/maplibre-gl@5.5.0/dist/maplibre-gl.css')).length,
+          // Approved UX-04/05 comparison stylesheet is appended at runtime.
+          candidateSuitabilityLinks:[...document.querySelectorAll('link[rel="stylesheet"]')]
+            .filter(link=>link.getAttribute('href')==='./features/candidate-suitability.css?v=1').length,
            renderBundleLoaded:[...document.styleSheets].some(sheet=>
              sheet.href&&sheet.href.includes('/features/first-render-ui.bundle.css')&&
              sheet.cssRules.length>20),
@@ -65,7 +68,8 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
       assert.ok(state.schoolControls.every(x=>x.inside),'All school settings should be grouped together at '+width);
        assert.equal(state.reviewedPeimsAddonLinks,1,'Exactly one reviewed PEIMS stylesheet at '+width);
        assert.ok(state.lazyVectorStyleLinks<=1,'Liberty CSS must load at most once at '+width);
-       assert.equal(state.styleLinks-state.reviewedPeimsAddonLinks-state.lazyVectorStyleLinks,12,
+       assert.ok(state.candidateSuitabilityLinks<=1,'Reviewed comparison CSS must not duplicate at '+width);
+       assert.equal(state.styleLinks-state.reviewedPeimsAddonLinks-state.lazyVectorStyleLinks-state.candidateSuitabilityLinks,12,
          'Six first-paint stylesheets remain bundled with map-first and six-section layouts at '+width);
        assert.equal(state.renderBundleLoaded,true,'Compiled CSS must load and contain rules at '+width);
        assert.equal(state.oldSourcesLinked,false,'No original CSS link should remain at '+width);
