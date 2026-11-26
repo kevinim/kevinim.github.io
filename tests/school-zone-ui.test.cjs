@@ -12,6 +12,14 @@ test('only a real matched polygon is labelled as a drawn zone',()=>{
  assert.equal(c({displayMode:'historical'}).kind,'historical');
  assert.ok(c({displayMode:'historical'}).label.includes('과거'));
 });
+test('displayed boundary status never claims certified address assignment',()=>{
+ for(const mode of ['official','finder','historical']){
+  const result=c({displayMode:mode});
+  assert.match(result.label,/GIS/);
+  assert.match(result.label,/미인증/);
+  assert.match(result.explanation,/주소|배정/);
+ }
+});
 test('GIS-absent schools are never labelled as current or matched',()=>{
  assert.equal(c({matchStatus:'no-district-polygon-source'}).kind,'finder-only');
  assert.equal(c({matchStatus:'no-district-polygon-source',officialUrl:null}).kind,'unverified');
@@ -25,7 +33,7 @@ test('outage and pending state are distinct from missing school geometry',()=>{
 });
 test('main UI has direct school badge and map explanation without TEA as fake attendance search',()=>{
  const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8')+'\n'+fs.readFileSync(path.join(__dirname,'../dashboard-main.js'),'utf8');
- assert.ok(html.includes('<script src="./school-zone-ui.js?v=1"></script>'));
+ assert.ok(html.includes('<script src="./school-zone-ui.js?v=2"></script>'));
  assert.ok(html.includes('id="schoolZoneMapHint"'));
  assert.ok(html.includes('function schoolZoneInfo(s)'));
  assert.ok(html.includes('renderSchoolZoneMapHint(s,schoolZoneInfo(s))'));
