@@ -33,7 +33,7 @@ for(const [newRef,oldRef] of regionalCacheRefs){
   'Exactly one reviewed P3 cache reference required: '+newRef);
  normalizedMainHtml=normalizedMainHtml.replace(newRef,oldRef);
 }
-normalizedMainHtml=normalizedMainHtml.replace('./home-lookup-v2.js?v=28','./home-lookup-v2.js?v=27')
+normalizedMainHtml=normalizedMainHtml.replace('./home-lookup-v2.js?v=29','./home-lookup-v2.js?v=27')
  .replace('./official-school-review.js?v=5','./official-school-review.js?v=1');
 
 /* The six-section UI is a presentation-only change. Subtract its EXACT
@@ -74,7 +74,7 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
 for(const [next,previous] of [
  ['<input type="checkbox" id="referenceBoundaryOverlay" checked>','<input type="checkbox" id="referenceBoundaryOverlay">'],
  ['map-first-split.css?v=2','map-first-split.css?v=1'],
- ['dashboard-main.js?v=22','dashboard-main.js?v=10'],
+ ['dashboard-main.js?v=23','dashboard-main.js?v=10'],
  ['allen-lookup.js?v=7','allen-lookup.js?v=5'],
  ['home-lookup-v2.js?v=27','home-lookup-v2.js?v=20'],
  ['denton-official-zone-references.js?v=2','denton-official-zone-references.js?v=1'],

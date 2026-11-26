@@ -65,7 +65,7 @@ test('wrong district, vintage, licensing, holdouts or fabricated digest cannot a
 test('page loads fail-closed policy before home lookup, and renderHome actually downgrades assignments',()=>{
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  const policy='./features/conditional-school-release.js?v=1';
- const home='./home-lookup-v2.js?v=28';
+ const home='./home-lookup-v2.js?v=29';
  assert.ok(html.includes(policy),'policy missing from public app');
  assert.ok(html.indexOf(policy)<html.indexOf(home),'release policy must load before address handler');
  const src=fs.readFileSync(path.join(root,'home-lookup-v2.js'),'utf8');
@@ -212,7 +212,7 @@ test('home address UI exposes official comparison without persistence or new una
  assert.match(src,/document\.getElementById\('homeResidentialSchoolCrosscheck'\)\?\.remove\?\.\(\)/);
  assert.match(html,/official-school-review\.js\?v=5/);
  assert.match(html,/home-lookup-v2\.js\?v=28/);
- assert.ok(html.indexOf('official-school-review.js?v=5')<html.indexOf('home-lookup-v2.js?v=28'));
+ assert.ok(html.indexOf('official-school-review.js?v=5')<html.indexOf('home-lookup-v2.js?v=29'));
  assert.match(mod,/id='homeResidentialSchoolCrosscheck'/);
  assert.doesNotMatch(mod.slice(mod.indexOf('function makeResidentialSchoolModel')),/fetch\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage|innerHTML\s*=/);
  assert.match(mod,/user-transcribed-not-independent-official-address-result/);
