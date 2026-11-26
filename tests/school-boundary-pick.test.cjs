@@ -14,6 +14,13 @@ test('identity is district-and-grade scoped; never uses same name from a foreign
  assert.equal(picker.resolve(f,'FISD',[local,foreign]).status,'invalid');
  assert.equal(picker.resolve(poly('Lincoln Elementary','AISD','high'),'AISD',[local]).status,'unlinked');
 });
+test('Plano senior-high source geometry selects only a high campus in Plano',()=>{
+ const plano={name:'Plano Senior High School',district:'PISD',type:'high'};
+ const other={name:'Plano Senior High School',district:'FISD',type:'high'};
+ const f=poly('Plano Senior High','PISD_LOOKUP','senior');
+ assert.equal(picker.resolve(f,'PISD',[plano,other]).school,plano);
+ assert.equal(picker.resolve(f,'FISD',[other]).status,'invalid');
+});
 test('two same-district catalog identities fail closed (no arbitrary first match)',()=>{
  const a={name:'Roosevelt Elementary',district:'FISD',type:'elementary'};
  const b={...a};
