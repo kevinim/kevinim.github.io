@@ -13,8 +13,12 @@ const approved = () => ({
   licenseScope:'Synthetic redistribution of this fake test only',
   attribution:'Synthetic source',
   reviewer:'Synthetic reviewer',
-  reviewedAt:'2026-11-21',
-  termsUrl:'https://example.invalid/fake-synthetic-license'
+  reviewedAt:'2026-11-21', retrievedAt:'2026-11-20',
+  sourceUrl:'https://example.invalid/fake-synthetic-dataset',
+  termsUrl:'https://example.invalid/fake-synthetic-license',
+  dataVintage:'synthetic-2026', geographicScope:'synthetic region',
+  permissionBasis:'publisher-license',
+  permissions:{publicDisplay:true,redistribution:true,browserCaching:true,modification:false}
 });
 function fixture(fn) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tx-rights-test-'));
@@ -66,10 +70,53 @@ test('stale registry records cannot silently authorize unrelated files',()=>fixt
   assert.equal(r.summary.status,'BLOCKED_RIGHTS_REVIEW_REQUIRED');
 }));
 test('approved decisions without source, reviewer or terms fail closed',()=>{
-  for(const removed of ['publisher','licenseScope','attribution','reviewer','reviewedAt','termsUrl']) {
+  for(const removed of ['publisher','licenseScope','attribution','reviewer','reviewedAt','retrievedAt',
+                       'sourceUrl','termsUrl','dataVintage','geographicScope','permissionBasis','permissions']) {
     const rights=base(), rec=approved();
     delete rec[removed];
     rights.assets['schools.json']=rec;
+    assert.throws(()=>validateRegistry(rights),/approved_asset_missing_review_evidence/);
+  }
+});
+test('claimed approval without explicit public reuse rights fails closed',()=>{
+  const invalid = [
+    {permissions:{...approved().permissions,publicDisplay:false}},
+    {permissions:{...approved().permissions,redistribution:false}},
+    {permissions:{...approved().permissions,browserCaching:false}},
+    {permissions:{...approved().permissions,modification:'unknown'}},
+    {permissionBasis:'assumed-public-source'},
+    {sourceUrl:'http://example.invalid/source'},
+    {retrievedAt:'unknown'},
+  ];
+  for(const patch of invalid) {
+    const rights=base();
+    rights.assets['schools.json']={...approved(),...patch};
+    assert.throws(()=>validateRegistry(rights),/approved_asset_missing_review_evidence/);
+  }
+});
+test('rights approval rejects invalid calendar dates and reversed evidence chronology',()=>{
+  const bad = [
+    {reviewedAt:'2026-02-30'},
+    {retrievedAt:'2026-13-01'},
+    {reviewedAt:'2999-01-01'},
+    {retrievedAt:'2026-11-22'}, // retrieved after the reviewed date
+  ];
+  for(const patch of bad) {
+    const rights=base();
+    rights.assets['schools.json']={...approved(),...patch};
+    assert.throws(()=>validateRegistry(rights),/approved_asset_missing_review_evidence/);
+  }
+});
+test('rights approval rejects malformed, credentialed or fragment-based source links',()=>{
+  const bad = [
+    {sourceUrl:'https:///'},
+    {termsUrl:'https://user:token@example.invalid/terms'},
+    {sourceUrl:'https://example.invalid/data#unverifiable-section'},
+    {termsUrl:'https://bad host.invalid/terms'},
+  ];
+  for(const patch of bad) {
+    const rights=base();
+    rights.assets['schools.json']={...approved(),...patch};
     assert.throws(()=>validateRegistry(rights),/approved_asset_missing_review_evidence/);
   }
 });
@@ -128,4 +175,14 @@ test('review lanes partition all assets with no per-file paths in uploaded summa
  for(const name of extra)assert.ok(!JSON.stringify(report.summary).includes(name),'CI summary must omit paths');
  assert.ok(report.local.itemizedPaths.every(item=>item.reviewLane&&item.extension&&
   item.publisherAndReuseRightsIndependentlyVerified===false));
+}));
+
+test('prototype-inherited rights are never an explicit asset approval',()=>fixture(dir=>{
+ const rights=base();
+ Object.setPrototypeOf(rights.assets, {'schools.json':approved(),'data/schools.json':approved()});
+ const result=audit(dir,rights);
+ assert.equal(result.summary.rightsDecisions.approved,0);
+ assert.equal(result.summary.rightsDecisions.pending,2);
+ assert.equal(result.summary.status,'BLOCKED_RIGHTS_REVIEW_REQUIRED');
+ assert.equal(result.summary.publicProductionApproved,false);
 }));

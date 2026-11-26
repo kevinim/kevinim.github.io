@@ -14,6 +14,23 @@ const SAFE_PATH = /^(?!\/)(?!.*(?:^|\/)\.\.(?:\/|$))(?!.*\\)[A-Za-z0-9_./-]+$/;
 const HTTPS_URL = /^https:\/\/[^\s<>"']+$/i;
 const REVIEW_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
+// Evidence input must parse as a genuine HTTPS origin, not just start with
+// "https://". Never accept credentials or URL fragments as a publisher pin.
+function validEvidenceUrl(value) {
+  if (typeof value !== 'string' || !HTTPS_URL.test(value)) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && !!url.hostname &&
+      !url.username && !url.password && !url.hash;
+  } catch { return false; }
+}
+function validEvidenceDate(value) {
+  if (typeof value !== 'string' || !REVIEW_DATE.test(value)) return false;
+  const timestamp = Date.parse(value + 'T00:00:00Z');
+  return Number.isFinite(timestamp) &&
+    new Date(timestamp).toISOString().slice(0, 10) === value;
+}
+
 // Filename-derived REVIEW QUEUE only: never infer a publisher, license, or
 // permission from a filename or a public URL. Unknown assets stay pending.
 const REVIEW_LANES = Object.freeze([
@@ -68,11 +85,32 @@ function validateRegistry(registry) {
         !DECISIONS.has(record.decision))
       throw Error('invalid_rights_registry_entry');
     if (record.decision === 'approved') {
-      for (const key of ['publisher', 'licenseScope', 'attribution', 'reviewer']) {
+      // A publisher name and generic terms link alone cannot justify public
+      // redistribution. Record the exact source/vintage and each intended use.
+      // This validates evidence completeness, not the authenticity of a license.
+      for (const key of ['publisher', 'licenseScope', 'attribution', 'reviewer',
+                         'dataVintage', 'geographicScope', 'permissionBasis']) {
         if (typeof record[key] !== 'string' || !record[key].trim())
           throw Error('approved_asset_missing_review_evidence');
       }
-      if (!HTTPS_URL.test(record.termsUrl || '') || !REVIEW_DATE.test(record.reviewedAt || ''))
+      if (!['publisher-license', 'written-authorization', 'public-domain-verified']
+          .includes(record.permissionBasis))
+        throw Error('approved_asset_missing_review_evidence');
+      if (!validEvidenceUrl(record.sourceUrl) ||
+          !validEvidenceUrl(record.termsUrl) ||
+          !validEvidenceDate(record.reviewedAt) ||
+          !validEvidenceDate(record.retrievedAt) ||
+          record.retrievedAt > record.reviewedAt ||
+          record.reviewedAt > new Date().toISOString().slice(0, 10))
+        throw Error('approved_asset_missing_review_evidence');
+      const permissions = record.permissions;
+      if (!permissions || typeof permissions !== 'object' ||
+          Array.isArray(permissions) ||
+          !['publicDisplay', 'redistribution', 'browserCaching', 'modification']
+            .every(key => typeof permissions[key] === 'boolean') ||
+          permissions.publicDisplay !== true ||
+          permissions.redistribution !== true ||
+          permissions.browserCaching !== true)
         throw Error('approved_asset_missing_review_evidence');
     }
     // Pending/restricted/excluded never become approved on their own.
@@ -92,7 +130,9 @@ function audit(bundleDir, registry) {
   const extensionCounts = {};
   const local = [];
   for (const file of dataFiles) {
-    const detail = registry.assets[file];
+    // Only an explicit own registry entry may grant rights. Prototype-inherited
+    // records are never part of the reviewed manifest.
+    const detail = Object.hasOwn(registry.assets, file) ? registry.assets[file] : null;
     const decision = detail ? detail.decision : registry.defaultDecision;
     counts[decision] += 1;
     const reviewLane = classifyReviewLane(file);

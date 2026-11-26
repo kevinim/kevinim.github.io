@@ -109,7 +109,8 @@ function makeResidentialSchoolModel(raw,{precise=false,officialUrl=null}={}){
     const p=f?.properties||{};
     return [p.gradeLevel||null,p.school||null,p.schoolYear||null,
      p.sourceYear||null,p.sourceVintage||null,p.verifiedYear||null,
-     p.yearVerified2627??null,p.campusId||null,p.sourceUrl||null];
+     p.yearVerified2627??null,p.campusId||null,p.schoolCode||null,
+     p.sourceDistrict||null,p.sourceUrl||null];
    }).sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b))):null
   ]),
   independentOfficialResult:false,
