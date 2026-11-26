@@ -12,6 +12,7 @@
   {key:'043907',district:'043907'},{key:'PROSPER',district:'PROSPER'}
  ]);
  const LEVELS=Object.freeze(['elementary','middle','high']);
+ const levelOf=value=>value==='senior'?'high':value;
  function schoolKey(name){
   return String(name||'').toLowerCase()
    .replace(/\bh\.?\s*s\.?\b/g,'high').replace(/\bm\.?\s*s\.?\b/g,'middle')
@@ -25,11 +26,12 @@
  function resolve(feature,district,schools,rating){
   const p=feature?.properties||{};
   if(!['Polygon','MultiPolygon'].includes(feature?.geometry?.type)
-   ||!LEVELS.includes(p.gradeLevel)||!p.school||!district
-   ||(p.sourceDistrict&&p.sourceDistrict!==district))
+   ||!LEVELS.includes(levelOf(p.gradeLevel))||!p.school||!district
+   ||(p.sourceDistrict&&p.sourceDistrict!==district&&
+      !(district==='PISD'&&p.sourceDistrict==='PISD_LOOKUP')))
    return {status:'invalid',school:null};
   const matches=(Array.isArray(schools)?schools:[]).filter(s=>
-   s?.district===district&&s.type===p.gradeLevel);
+   s?.district===district&&s.type===levelOf(p.gradeLevel));
   const id=p.campusId===null||p.campusId===undefined?'':String(p.campusId).trim();
   let candidates=[];
   if(id){
@@ -159,7 +161,7 @@
       if(stateRef.zoneLoadErrors?.[key]){offline++;continue;}
       if(stateRef.sourceStatus?.[key]?.polygon==='loading')continue;
       for(const feature of stateRef.zoneData[key]||[]){
-       if(feature?.properties?.gradeLevel!==level||!insideBounds(feature.geometry,ext))continue;
+       if(levelOf(feature?.properties?.gradeLevel)!==level||!insideBounds(feature.geometry,ext))continue;
        const match=resolve(feature,district,stateRef.schools,s=>
         typeof scoreRecord==='function'?scoreRecord(s.name,s.district):null);
        if(match.status==='invalid'){invalid++;continue;}
