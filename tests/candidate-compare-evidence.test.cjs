@@ -94,3 +94,11 @@ test('stale or malformed input cannot imply a verified driving time', () => {
   assert.match(r.school.value, /확인 필요/);
   assert.match(r.work.note, /직접 입력/);
 });
+
+
+test('comparison preserves official review and parcel metadata when returning to the map', () => {
+  const source = fs.readFileSync(path.join(root, 'candidate-compare.js'), 'utf8');
+  for (const key of ['savedTypedAddress:item.typedAddress', 'savedGeocodeQuality:item.geocodeQuality', 'savedOfficialReview:item.officialReview']) {
+    assert.ok(source.includes(key), key);
+  }
+});

@@ -226,8 +226,8 @@ if (typeof document !== 'undefined') {
       const selected = useHomeCandidate({
         address: item.address, location: {y: item.ll[0], x: item.ll[1]},
         savedTypedAddress:item.typedAddress,
-        savedGeocodeQuality: item.geocodeQuality, savedParcel: item.parcel,
-        savedOfficialReview: item.officialReview, savedOfficialDraft: item.officialDraft
+        savedGeocodeQuality:item.geocodeQuality, savedParcel: item.parcel,
+        savedOfficialReview:item.officialReview, savedOfficialDraft: item.officialDraft
       });
       if (selected !== false) {
         const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
