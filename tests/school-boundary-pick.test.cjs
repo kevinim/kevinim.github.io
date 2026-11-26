@@ -62,6 +62,18 @@ test('viewport bounding boxes exclude distant polygons and malformed coordinates
  f.geometry.coordinates[0][0][0]='malformed';
  assert.equal(picker.insideBounds(f.geometry,{west:-98,east:-95,south:32,north:35}),false);
 });
+test('current Prosper Jim Bridges zone may link by unique source name without a TEA rating ID',()=>{
+ const zones=JSON.parse(fs.readFileSync('prosper-attendance-2026.geojson','utf8')).features;
+ const bridge=zones.find(f=>f.properties.campusId==='043912048');
+ assert.ok(bridge&&bridge.properties.sourceYearConfirmed);
+ const newCampus={name:'Jim Bridges Middle School',district:'PROSPER',type:'middle'};
+ assert.equal(picker.resolve(bridge,'PROSPER',[newCampus],()=>null).school,newCampus);
+ assert.equal(picker.resolve(bridge,'PROSPER',[newCampus,{...newCampus}],()=>null).status,'ambiguous');
+ const withWrongId={...newCampus,id:'043912999'};
+ assert.equal(picker.resolve(bridge,'PROSPER',[withWrongId],()=>null).status,'unlinked');
+ const historical=JSON.parse(JSON.stringify(bridge));historical.properties.sourceYearConfirmed=false;
+ assert.equal(picker.resolve(historical,'PROSPER',[newCampus],()=>null).status,'unlinked');
+});
 test('all local official Prosper 31 source geometries retain strict distinct campus IDs',()=>{
  const data=JSON.parse(fs.readFileSync('prosper-attendance-2026.geojson','utf8'));
  assert.equal(data.features.length,31);
