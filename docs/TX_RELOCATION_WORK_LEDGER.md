@@ -175,3 +175,13 @@
 ### 2026-11-24 — TX-P1 Prosper independent public map-click parity on CAD synthetic points (staged)
 - PR #410 (synthetic CAD source and taxing-unit cross-tab) published to main `ac105e0d150a1e419d60ff288e2624f925b3e49c`, GitHub Pages [45489675182](https://github.com/kevinim/kevinim.github.io/actions/runs/45489675182) completed/success and 390/1366 public school map [45489817148](https://github.com/kevinim/kevinim.github.io/actions/runs/45489817148) completed/success. Official CI aggregate: **293** source grid cells; 191 residential-*property category*, 59 no-parcel-grid-point, 24 partial Denton provider unavailable, 19 unknown land category; **20 residential-category plus Prosper taxing-unit code** and 12 unknown land category plus Prosper taxing-unit code. These are synthetic points, not student/home evidence.
 - Follow-up `agent/tx-p1-prosper-residential-tax-synthetic-locator-20261124` adds at most 20 **public official Prosper Infofinder map-click** checks at synthetic grid points matched to residential-property-category/Prosper taxing-unit code, counting publisher source-campus parity vs source missing-grade patterns without personal addresses or IDs in artifact. Pending exact-head PR QA/merge/Pages smoke; do not claim complete until release verified. P1 real residence/land-use/100-ISD GIS expansion, 0 certified residential ISDs and separate Public Production NO-GO remain.
+
+### 2026-11-25 — GIS next-source iteration (Melissa, TX-P1-02)
+
+- The 2026-11-21 baseline remains **108 public ISDs, 6 default polygon sources, 2 opt-in sources, 100 without app campus polygons; 0 independently certified residence assignments**.
+
+- Fifth curated source candidate Melissa ISD (TEA 043908; 9 TEA campus records) is **reference-only**; earlier four candidates retain their original evidence and status. District announcement confirms board-approved 2026–27 elementary zones and CRA family placement choices, NOT the live GIS layer's year/coverage.
+
+- Fail-closed validator pins district, official URLs, unverified live geometry year, separately approved 2026–27 E map, 0 imported polygons, 0 automatic certifications, unapproved reuse. Rights remain pending.
+
+- Branch gpt/tx-gis-melissa-source-20261125. CI, merge SHA, Pages deploy and live smoke must be checked separately; PR creation is not deployment proof. Follow-up: licensed current school-by-grade polygon sources and public-point/parcel exception checks.
