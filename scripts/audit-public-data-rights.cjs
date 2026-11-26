@@ -12,7 +12,24 @@ const DATA_EXT = /\.(?:json|geojson|csv|tsv|topojson|kml|gpx|xml|pbf|png|jpe?g|w
 const DECISIONS = new Set(['approved', 'pending', 'restricted', 'excluded']);
 const SAFE_PATH = /^(?!\/)(?!.*(?:^|\/)\.\.(?:\/|$))(?!.*\\)[A-Za-z0-9_./-]+$/;
 const HTTPS_URL = /^https:\/\/[^\s<>"']+$/i;
-const REVIEW_DATE = /^\d{4}-\d{2}-\d{2}$/;
+const REVIEW_DATE = /^\\d{4}-\\d{2}-\\d{2}$/;
+
+// Evidence input must parse as a genuine HTTPS origin, not just start with
+// "https://". Never accept credentials or URL fragments as a publisher pin.
+function validEvidenceUrl(value) {
+  if (typeof value !== 'string' || !HTTPS_URL.test(value)) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && !!url.hostname &&
+      !url.username && !url.password && !url.hash;
+  } catch { return false; }
+}
+function validEvidenceDate(value) {
+  if (typeof value !== 'string' || !REVIEW_DATE.test(value)) return false;
+  const timestamp = Date.parse(value + 'T00:00:00Z');
+  return Number.isFinite(timestamp) &&
+    new Date(timestamp).toISOString().slice(0, 10) === value;
+}
 
 // Filename-derived REVIEW QUEUE only: never infer a publisher, license, or
 // permission from a filename or a public URL. Unknown assets stay pending.
@@ -79,10 +96,12 @@ function validateRegistry(registry) {
       if (!['publisher-license', 'written-authorization', 'public-domain-verified']
           .includes(record.permissionBasis))
         throw Error('approved_asset_missing_review_evidence');
-      if (!HTTPS_URL.test(record.sourceUrl || '') ||
-          !HTTPS_URL.test(record.termsUrl || '') ||
-          !REVIEW_DATE.test(record.reviewedAt || '') ||
-          !REVIEW_DATE.test(record.retrievedAt || ''))
+      if (!validEvidenceUrl(record.sourceUrl) ||
+          !validEvidenceUrl(record.termsUrl) ||
+          !validEvidenceDate(record.reviewedAt) ||
+          !validEvidenceDate(record.retrievedAt) ||
+          record.retrievedAt > record.reviewedAt ||
+          record.reviewedAt > new Date().toISOString().slice(0, 10))
         throw Error('approved_asset_missing_review_evidence');
       const permissions = record.permissions;
       if (!permissions || typeof permissions !== 'object' ||
