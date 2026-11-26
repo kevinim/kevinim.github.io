@@ -100,6 +100,15 @@ test('Prosper published 2026-27 sample depth is not overstated as 133 strictly d
  assert.equal(r.anyMissingGradeFarOver200m,133,'historical any-missing-grade-far metric');
  assert.equal(r.deepMismatchOver200m,121,'strictly deep means every missing-grade boundary far');
  assert.equal(r.mixedDepthOver200m,12);
+ const bins=r.crossGradeMismatchDepthClasses;
+ assert.deepEqual(bins,{
+  nearAllMissingBoundariesAtMost200m:160,
+  mixedDepthOver200m:12,
+  deepMismatchOver200m:121,
+  unmeasurableDepthSamples:0
+ });
+ assert.equal(Object.values(bins).reduce((x,y)=>x+y,0),r.crossGradeMismatchSamples,
+  'Every published mismatch belongs to exactly one review depth class');
  assert.deepEqual(r.missingGradePatternSamples,{
   'elementary+middle':177,high:30,'middle+high':19,
   'elementary+high':16,middle:20,elementary:31

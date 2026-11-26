@@ -100,7 +100,7 @@ function audit(features,options={}){
  // The old max-distance count measured ANY missing grade far away and was
  // mistakenly described as deep (133 vs 121 on Prosper's 2026–27 grid).
  let coveredAny=0,completeEHM=0,crossGradeMismatch=0,deepMismatchOver200m=0;
- let anyMissingGradeFarOver200m=0,mixedDepthOver200m=0,unmeasurableDepthSamples=0;
+ let anyMissingGradeFarOver200m=0,mixedDepthOver200m=0,unmeasurableDepthSamples=0,nearAllMissingBoundariesAtMost200m=0;
  const missingGrades=Object.fromEntries(GRADES.map(g=>[g,0]));
  const missingGradePatterns={};
  const gapExamples=[];
@@ -138,6 +138,7 @@ function audit(features,options={}){
    if(farthestMissingBoundary>200)anyMissingGradeFarOver200m++;
    if(nearestMissingBoundary>200)deepMismatchOver200m++;
    if(farthestMissingBoundary>200&&nearestMissingBoundary<=200)mixedDepthOver200m++;
+   if(farthestMissingBoundary<=200)nearAllMissingBoundariesAtMost200m++;
   }
   if(gapExamples.length<8&&(!comparable||nearestMissingBoundary>200||gapExamples.length<2))
    gapExamples.push({coordinate:roundPoint(q),present,missing,
@@ -163,6 +164,11 @@ function audit(features,options={}){
   deepMismatchOver200m:options.crossGrade===true?deepMismatchOver200m:null,
   anyMissingGradeFarOver200m:options.crossGrade===true?anyMissingGradeFarOver200m:null,
   mixedDepthOver200m:options.crossGrade===true?mixedDepthOver200m:null,
+  // Disjoint: report shallow, mixed-depth, all-deep and unmeasurable separately.
+  crossGradeMismatchDepthClasses:options.crossGrade===true?{
+   nearAllMissingBoundariesAtMost200m,mixedDepthOver200m,
+   deepMismatchOver200m,unmeasurableDepthSamples
+  }:null,
   missingGradePatternSamples:options.crossGrade===true?missingGradePatterns:null,
   crossGradeExamples:gapExamples};
 }

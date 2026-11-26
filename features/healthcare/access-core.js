@@ -21,8 +21,12 @@
   for(const f of ed){
    if(seen.has(f.cmsFacilityId))throw new RangeError('duplicate CMS Facility ID');
    seen.add(f.cmsFacilityId);
-   const v=travelMinutesByFacility[f.cmsFacilityId];
-   if(v===null||v===undefined||v===''){missing++;continue}
+   // Inherited properties are not verified route results. Whitespace is
+   // missing, not 0 minutes; booleans are never valid travel-time measurements.
+   const v=Object.hasOwn(travelMinutesByFacility,f.cmsFacilityId)
+    ?travelMinutesByFacility[f.cmsFacilityId]:undefined;
+   if(v===null||v===undefined||(typeof v==='string'&&!v.trim())){missing++;continue}
+   if(typeof v==='boolean'||typeof v==='object')throw new RangeError('invalid routed minutes for '+f.cmsFacilityId);
    const n=Number(v);
    if(!Number.isFinite(n)||n<0||n>1440)throw new RangeError('invalid routed minutes for '+f.cmsFacilityId);
    candidates.push({cmsFacilityId:f.cmsFacilityId,name:f.name,city:f.city,driveMinutes:n});

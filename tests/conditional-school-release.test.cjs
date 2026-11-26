@@ -194,6 +194,14 @@ test('manual school review invalidates on source URL, GIS vintage and precision 
  const b=makeResidentialSchoolModel(changedVintage,opts);
  assert.notEqual(a.sourceSignature,b.sourceSignature,
   'Changing source evidence cannot preserve a cached comparison merely because campus names are identical');
+ const changedCode=structuredClone(raw);
+ changedCode.features[0].properties.schoolCode='999';
+ assert.notEqual(a.sourceSignature,makeResidentialSchoolModel(changedCode,opts).sourceSignature,
+  'Changes in publisher campus codes must invalidate the manual comparison');
+ const changedDistrict=structuredClone(raw);
+ changedDistrict.features[0].properties.sourceDistrict='DIFFERENT-ISD';
+ assert.notEqual(a.sourceSignature,makeResidentialSchoolModel(changedDistrict,opts).sourceSignature,
+  'Foreign source-district identity changes must invalidate the manual comparison');
  const reordered={...raw,features:raw.features.slice().reverse()};
  assert.equal(a.sourceSignature,makeResidentialSchoolModel(reordered,opts).sourceSignature,
   'Reordering equivalent independent GIS records must not invalidate a truthful comparison');
