@@ -29,7 +29,19 @@
       "districtLocatorUrl": "https://mesquiteisd.org/attendance-zones",
       "districtLocatorPublicSchoolCount": 52,
       "districtLocatorObservedOn": "2026-11-26",
-      "districtToTeaCampusIdentityVerified": false
+      "districtToTeaCampusIdentityVerified": false,
+      "districtPublicCampusProfile": {
+        "asOf": "2026-11-26",
+        "sourceUrl": "https://mesquiteisd.org/realtors",
+        "campuses": 52,
+        "elementary": 34,
+        "middle": 10,
+        "comprehensiveHigh": 5,
+        "choice": 1,
+        "nonTraditionalHigh": 1,
+        "alternativeLearningCenter": 1,
+        "teaRosterCrosswalkStatus": "unresolved"
+      }
     },
     {
       "code": "043914",
