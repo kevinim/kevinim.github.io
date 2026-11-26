@@ -89,7 +89,7 @@ const report={url,views:[],addressClear:{},issues:[],testedAt:new Date().toISOSt
       }
       // UX-07: mobile map retains the real list and native dialog focus/escape.
       const sheetToggle=page.locator('#mobileSchoolSheetToggle');
-      await sheetToggle.waitFor();
+      await sheetToggle.waitFor({state:'attached'});
       if(width<=720){
         assert.equal(await sheetToggle.isVisible(),true,'School sheet control visible '+width);
         assert.ok(await sheetToggle.evaluate(x=>x.getBoundingClientRect().height>=44));
