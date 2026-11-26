@@ -257,6 +257,17 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  reviewedReferenceJs=replaceOnce(reviewedReferenceJs,
   'function updateSelectedSchoolList(){\n syncAddressPrioritySchoolSelection();',
   'function updateSelectedSchoolList(){');
+ // UX-02: precisely unapply the reviewed list scroll and filtered-clear
+ // notifications before historical bootstrap hashing (no blanket whitelist).
+ reviewedReferenceJs=replaceOnce(reviewedReferenceJs,
+  "  // Grade/rating changes must clear address-first card selection as well.\n  updateSelectedSchoolList();\n",
+  '');
+ reviewedReferenceJs=replaceOnce(reviewedReferenceJs,
+  "// Reveal map-selected schools within the list's own scrollport without\n// jumping the whole page away from the map, including on narrow screens.\nfunction revealSelectedSchoolInList(){\n const panel=el('schoolList');\n if(!panel||panel.scrollHeight<=panel.clientHeight+1)return;\n const selected=panel.querySelector('button.school.school-map-selected[data-sid]');\n if(!selected)return;\n const viewport=panel.getBoundingClientRect(),item=selected.getBoundingClientRect();\n if(item.top>=viewport.top&&item.bottom<=viewport.bottom)return;\n panel.scrollTop+=item.top-viewport.top-(viewport.height-item.height)/2;\n}\n",
+  '');
+ reviewedReferenceJs=replaceOnce(reviewedReferenceJs,
+  " if(!fromList)revealSelectedSchoolInList();\n",
+  '');
  // Scope the 2026-11-18 owner-approved historical GIS display change to five
  // exact fragments. The remaining main renderer must byte-match its PR parent.
  for(const [newFragment,oldFragment] of [
