@@ -51,3 +51,11 @@ test('house-number gate does not bypass apartment unit or ZIP safeguards',()=>{
  contradictory.attributes.Postal='75079';
  assert.equal(assessResidentialGeocode(request,contradictory).usableForSchoolCandidate,false);
 });
+test('five-digit civic house number is not parsed as a ZIP code when user omits postal code',()=>{
+ const exact=match('12345 Synthetic Lane, Prosper TX 75078');
+ assert.equal(assessResidentialGeocode('12345 Synthetic Lane, Prosper TX',exact).usableForSchoolCandidate,true);
+ assert.equal(assessResidentialGeocode('12345 Synthetic Lane, Prosper TX 75078',exact).usableForSchoolCandidate,true);
+ assert.equal(assessResidentialGeocode('12345 Synthetic Lane, Prosper TX 75079',exact).usableForSchoolCandidate,false);
+ assert.equal(assessResidentialGeocode('12345 Synthetic Lane, Prosper TX',
+  match('12346 Synthetic Lane, Prosper TX 75078')).usableForSchoolCandidate,false);
+});
