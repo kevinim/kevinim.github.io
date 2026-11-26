@@ -29,7 +29,7 @@ const mapFirstAdded=[
 ].filter(asset=>candidateHtml.includes(asset)&&!baselineHtml.includes(asset)).length;
 // The owner-approved six-section view has precisely two new first-party UI
 // assets. Count them only when absent in the pinned baseline; no wildcard waiver.
-const uiLayoutAssets=['./features/dashboard-quick-layout.css?v=1',
+const uiLayoutAssets=['./features/dashboard-quick-layout.css?v=2',
  './features/dashboard-quick-layout.js?v=1'];
 const approvedLayoutAdded=uiLayoutAssets.filter(asset=>
  candidateHtml.includes(asset)&&!baselineHtml.includes(asset)).length;

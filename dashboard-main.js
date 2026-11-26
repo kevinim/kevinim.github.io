@@ -112,6 +112,8 @@ function clearSelectedSchoolIfFiltered(){
   state.selectedSchool=null;
   schoolFocusGroup?.clearLayers();
   drawDetail();drawBoundary();
+  // Grade/rating changes must clear address-first card selection as well.
+  updateSelectedSchoolList();
  }
 }
 function ratingText(r){if(!r)return 'TEA 미연결';if(r.rating==='Not Rated'){const p=r.prior2025;return '2026 미평가'+(unratedExplanation(r)?' · '+unratedExplanation(r):'')+(p?` · 2025 ${p.rating} ${p.score}${p.paired?' (학군 연계)':''}`:'')}return (r.score===null?`${r.rating} · 점수 미공개`:`${r.rating} · ${r.score}`)+(r.paired2026?' (연계 평가)':'')}
@@ -438,6 +440,7 @@ function gradeTag(s){return s.type==='high'?'고등':s.type==='middle'?'중등':
 // Use a dedicated overlay so viewport marker redraws and grade/rating filters
 // cannot make an explicitly selected campus disappear.
 function updateSelectedSchoolList(){
+ syncAddressPrioritySchoolSelection();
  const panel=el('schoolList');
  if(!panel)return;
  for(const button of panel.querySelectorAll('button.school[data-sid]')){
@@ -446,6 +449,17 @@ function updateSelectedSchoolList(){
   button.classList.toggle('school-map-selected',selected);
   button.setAttribute('aria-pressed',String(selected));
  }
+}
+// Reveal map-selected schools within the list's own scrollport without
+// jumping the whole page away from the map, including on narrow screens.
+function revealSelectedSchoolInList(){
+ const panel=el('schoolList');
+ if(!panel||panel.scrollHeight<=panel.clientHeight+1)return;
+ const selected=panel.querySelector?.('button.school.school-map-selected[data-sid]');
+ if(!selected)return;
+ const viewport=panel.getBoundingClientRect(),item=selected.getBoundingClientRect();
+ if(item.top>=viewport.top&&item.bottom<=viewport.bottom)return;
+ panel.scrollTop+=item.top-viewport.top-(viewport.height-item.height)/2;
 }
 function focusSelectedSchoolCampus(s,fromList=false){
  if(!map||!schoolFocusGroup)return false;
@@ -484,6 +498,7 @@ async function schoolClicked(s,fromList=false){
  if(!s)return;
  claimMapViewport();state.selectedSchool=s;
  updateSelectedSchoolList();
+ if(!fromList)revealSelectedSchoolInList();
  // Preserve existing source/year warnings and user-selected boundary overlay.
 
  drawDetail();
@@ -736,9 +751,26 @@ function addressSchoolCardSlots(view,entries){
  entries.forEach((entry,index)=>{if(!used.has(index))slots.push(entry)});
  return slots;
 }
+// UX-02: Link selected campus objects to the address-first rail without
+// inferring school assignment from marker location, ZIP, or TEA rating.
+const addressPrioritySchoolCards=new Map();
+function syncAddressPrioritySchoolSelection(){
+ const selected=typeof state!=='undefined'?state.selectedSchool:null;
+ const hasAddress=typeof home!=='undefined'&&!!home;
+ for(const [school,nodes] of addressPrioritySchoolCards){
+  for(const card of nodes){
+   const active=hasAddress&&selected===school&&card.isConnected!==false;
+   card.classList.toggle('school-map-selected',active);
+   card.setAttribute('aria-current',active?'true':'false');
+   const indicator=card.querySelector?.('.home-school-selected-indicator');
+   if(indicator)indicator.hidden=!active;
+  }
+ }
+}
 function renderAddressSchoolPriority(){
  const panel=el('homeAssignmentPriority');
  if(!panel)return;
+ addressPrioritySchoolCards.clear();
  const view=addressSchoolView();
  panel.hidden=!view;
  if(!view){
@@ -869,8 +901,25 @@ function renderAddressSchoolPriority(){
    const explanation=document.createElement('p');explanation.textContent=extras.join(' · ');
    details.append(summary,explanation);card.appendChild(details);
   }
+  // Only an exact source-linked catalog object may connect this rail to the
+  // interactive map; missing and unlinked reference names stay plain text.
+  const linkable=school&&(
+   ['certified','manual'].includes(view.kind)
+    ?view.schools.includes(school)
+    :referenceCandidateSchoolRecords(view).includes(school));
+  if(linkable){
+   const indicator=document.createElement('span');
+   indicator.className='home-school-selected-indicator';
+   indicator.textContent='지도에서 선택됨';
+   indicator.hidden=true;
+   indicator.setAttribute('aria-hidden','true');
+   card.appendChild(indicator);
+   const existing=addressPrioritySchoolCards.get(school)||[];
+   existing.push(card);addressPrioritySchoolCards.set(school,existing);
+  }
   cards.appendChild(card);
  }
+ syncAddressPrioritySchoolSelection();
 
  if(['gis-reference','mckinney-reference','allen-reference'].includes(view.kind)){
   const source=document.createElement('small');
@@ -907,7 +956,7 @@ function renderAddressSchoolPriority(){
   const referenceMarkers=drawReferenceCampusMarkers(addressView);
   if(addressView&&state.selectedSchool&&!addressView.schools.includes(state.selectedSchool)&&
      !referenceCandidateSchoolRecords(addressView).includes(state.selectedSchool)){
-   state.selectedSchool=null;schoolFocusGroup?.clearLayers();drawDetail();
+   state.selectedSchool=null;schoolFocusGroup?.clearLayers();drawDetail();updateSelectedSchoolList();
   }
   const legend=el('schoolLegend');
   if(legend){
