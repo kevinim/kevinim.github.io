@@ -40,11 +40,15 @@ const css=fs.readFileSync(path.join(root,'features/candidate-suitability.css'),'
    await page.locator('#addComparison').click();
    assert.equal(await page.locator('.candidate-card').count(),1);
    assert.equal(await page.locator('.candidate-fit-row').count(),6);
+   assert.equal(await page.locator('.candidate-demographics').evaluate(x=>x.open),false);
    assert.match(await page.locator('.candidate-fit-row:first-child .candidate-fit-state').innerText(),/공식 배정 미확인/);
+   await page.locator('.candidate-demographics summary').click();
+   assert.equal(await page.locator('.candidate-demographics').evaluate(x=>x.open),true);
    await page.locator('.candidate-time-entry summary').click();
    const commute=page.locator('[data-candidate-index="0"][data-candidate-minutes="commute"]');
    await commute.fill('30');await commute.dispatchEvent('change');
    assert.match(await page.locator('.candidate-fit-row').nth(1).innerText(),/입력 기준 30분 이내/);
+   assert.equal(await page.locator('.candidate-demographics').evaluate(x=>x.open),true,'expanded ZIP detail retained');
    await page.locator('[data-candidate-index="0"][data-candidate-minutes="church"]').fill('20');
    await page.locator('[data-candidate-index="0"][data-candidate-minutes="church"]').dispatchEvent('change');
    assert.match(await page.locator('.candidate-fit-row').nth(2).innerText(),/사용자 입력 20분/);
