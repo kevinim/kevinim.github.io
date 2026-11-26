@@ -438,3 +438,26 @@ test('UX-02: active map and address scripts use fresh cache keys',()=>{
  assert.ok(html.includes('./dashboard-main.js?v=23'), 'Map selection renderer must not use stale Pages cache');
  assert.ok(html.includes('./home-lookup-v2.js?v=29'), 'Address reset logic must not use stale Pages cache');
 });
+
+test('UX-06: clear or replacement address removes old school focus without erasing ZIP filters',()=>{
+ const lookup=fs.readFileSync('home-lookup-v2.js','utf8');
+ const begin=lookup.indexOf('function clearHome(){'),end=lookup.indexOf('async function geocodeAddress(',begin);
+ assert.ok(begin>=0&&end>begin,'Existing clearHome lifecycle must remain');
+ const clear=lookup.slice(begin,end);
+ const start=clear.indexOf('// An explicit Clear/new-address selection');
+ const stop=clear.indexOf('if(map&&homeMarker)',start);
+ assert.ok(start>=0&&stop>start,'Address-selected school cleanup is explicit');
+ const effect=clear.slice(start,stop);
+ const changes=[];
+ const ctx={
+  state:{selectedSchool:{name:'formerly selected'}},
+  schoolFocusGroup:{clearLayers(){changes.push('focus')}},
+  referenceCampusGroup:{clearLayers(){changes.push('reference')}},
+  updateSelectedSchoolList(){changes.push('list')}
+ };
+ vm.runInNewContext(effect,ctx,{timeout:1000});
+ assert.equal(ctx.state.selectedSchool,null);
+ assert.deepEqual(changes,['focus','reference','list']);
+ assert.ok(!/state\\.zip|state\\.metric|state\\.level|localStorage|sessionStorage/.test(effect),
+  'Clearing residence must preserve region filters and avoid storing private addresses');
+});

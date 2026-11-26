@@ -123,6 +123,12 @@ function clearHome(){
   clearIrvingReference();clearDallasReference();
   document.getElementById('homeResidentialSchoolCrosscheck')?.remove?.();
   homeVersion++;failedGeocodeAllenAddress='';homeRequest?.abort();homeRouteRequest?.abort();homeParcelRequest?.abort();homeParcelRequest=null;homeOfficialRequest?.abort();homeOfficialRequest=null;mckinneyLiveRequest?.abort();mckinneyLiveRequest=null;home=null;homeCandidates=[];
+  // An explicit Clear/new-address selection invalidates the previous school's
+  // map focus. Keep unrelated ZIP and regional filters intact for navigation.
+  if(typeof state!=='undefined')state.selectedSchool=null;
+  if(typeof schoolFocusGroup!=='undefined')schoolFocusGroup?.clearLayers();
+  if(typeof referenceCampusGroup!=='undefined')referenceCampusGroup?.clearLayers();
+  if(typeof updateSelectedSchoolList==='function')updateSelectedSchoolList();
   // Clearing an address invalidates its selected campus, focus ring and zone.
   if(typeof state!=='undefined'&&state.selectedSchool){
    state.selectedSchool=null;

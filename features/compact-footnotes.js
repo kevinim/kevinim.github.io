@@ -1,4 +1,4 @@
-/* TX compact footnote index v2.
+/* TX compact footnote index v3.
  * Pure display enhancement: keep original source DOM, source IDs and official links.
  * Only explanatory text is archived; status, privacy, map legend and assignment warnings stay visible.
  */
@@ -129,6 +129,19 @@
       link.href = '#' + id;
       link.textContent = '각주 [' + groupNum + ']';
       link.setAttribute('aria-label', title + ' · 각주 ' + groupNum + ' 및 자료 출처');
+      // Keyboard users need a reliable path back to the exact source section.
+      const back = document.createElement('button');
+      back.type = 'button';
+      back.className = 'btn secondary footnote-return';
+      back.style.minHeight = '44px';
+      back.textContent = '원래 자료 위치로 돌아가기';
+      back.setAttribute('aria-label', title + ' · 원래 자료 위치로 돌아가기');
+      back.onclick = event => {
+        event.preventDefault();
+        link.focus({preventScroll:true});
+        link.scrollIntoView({block:'center',behavior:'auto'});
+      };
+      item.appendChild(back);
       link.onclick = event => {
         event.preventDefault();
         event.stopPropagation();

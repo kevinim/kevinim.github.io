@@ -478,7 +478,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  assert.equal(gitBlobSha(areaCss),'165d23e4a2d6eee84391737b25608b235ac3dd5e','Approved region-explorer CSS changed without review');
  const releaseCss='\n/* Approved Map-First/Redfin production styles, reviewed UAT CSS kept as source. */\n'+
   rentCss+'\n'+areaCss+'\n/* End approved Map-First/Redfin production styles. */\n';
- const releaseFooter="<script src=\"./features/compact-footnotes.js?v=2\"></script><script src=\"./features/dfw-rent-map-uat-core.js?v=3\"></script>\n<script src=\"./features/dfw-rent-map-uat.js?v=4\" defer></script>\n<script src=\"./features/dfw-area-explorer-uat-core.js?v=1\"></script>\n<script src=\"./features/dfw-area-explorer-uat.js?v=2\" defer></script>\n</body></html>";
+ const releaseFooter="<script src=\"./features/compact-footnotes.js?v=3\"></script><script src=\"./features/dfw-rent-map-uat-core.js?v=3\"></script>\n<script src=\"./features/dfw-rent-map-uat.js?v=4\" defer></script>\n<script src=\"./features/dfw-area-explorer-uat-core.js?v=1\"></script>\n<script src=\"./features/dfw-area-explorer-uat.js?v=2\" defer></script>\n</body></html>";
  // #SchoolGradeThreshold: undo only the four reviewed school-grade UI anchors
  // before the immutable production HTML comparison; preserve all other bytes.
  let normalizedSchoolHtml=providerNormalizedHtml;
@@ -488,7 +488,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
   '<option value="F">F등급만</option><option value="rated">');
  normalizedSchoolHtml=replaceOnce(normalizedSchoolHtml,"위 드롭다운에서는 개별 등급을, 빠른 버튼에서는 해당 등급 이상을 선택합니다. 학교 목록과 지도 마커에 동시에 반영되며, 미평가와 등급 미연결 학교는 이상 등급 필터에서 제외됩니다.","TEA 2026 문자 등급 기준으로 학교 목록과 지도 마커를 함께 필터링합니다. 점수 숫자는 고려하지 않습니다. 등급 미연결과 공식 미평가는 구별합니다.");
  const normalizedReleaseHtml=replaceOnce(replaceOnce(normalizedSchoolHtml,releaseCss,''),
-  releaseFooter,'<script src="./features/compact-footnotes.js?v=2"></script></body></html>');
+  releaseFooter,'<script src="./features/compact-footnotes.js?v=3"></script></body></html>');
  const compactMarker='\n/* Compact links preserve all source content in the shared, collapsed footer. */';
  const compactStart=normalizedReleaseHtml.indexOf(compactMarker);
  const compactEnd=normalizedReleaseHtml.indexOf('</style>',compactStart);
@@ -497,10 +497,10 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  const compactCss=normalizedReleaseHtml.slice(compactStart,compactEnd);
  assert.ok(compactCss.includes('.footnote-original-hidden { display: none !important; }'));
  assert.ok(compactCss.includes('html[data-theme="dark"] .footnote-ref'));
- assert.equal(html.split('features/compact-footnotes.js?v=2').length,2);
+ assert.equal(html.split('features/compact-footnotes.js?v=3').length,2);
  const withoutCompactStyle=normalizedReleaseHtml.slice(0,compactStart)+normalizedReleaseHtml.slice(compactEnd);
  const withoutCompactFootnotes=replaceOnce(withoutCompactStyle,
-  '<script src="./features/compact-footnotes.js?v=2"></script></body></html>',
+  '<script src="./features/compact-footnotes.js?v=3"></script></body></html>',
   '</body></html>');
  const restoredApprovedCache=replaceOnce(withoutCompactFootnotes,
   './features/dfw-school-coverage-panel.js?v=2',
