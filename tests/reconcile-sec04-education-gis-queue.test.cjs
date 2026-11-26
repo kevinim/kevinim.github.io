@@ -85,8 +85,12 @@ test('any rights approved without independent evidence blocks this crosswalk',()
  registry.assets['data/tea-accountability.json']={
   decision:'approved',publisher:'synthetic test',
   licenseScope:'synthetic fictional reuse',attribution:'synthetic',
-  reviewer:'test',reviewedAt:'2026-11-23',
-  termsUrl:'https://example.invalid/synthetic'
+  reviewer:'test',reviewedAt:'2026-11-23',retrievedAt:'2026-11-23',
+  sourceUrl:'https://example.invalid/synthetic-source',
+  termsUrl:'https://example.invalid/synthetic',
+  dataVintage:'synthetic-year',geographicScope:'synthetic',
+  permissionBasis:'publisher-license',
+  permissions:{publicDisplay:true,redistribution:true,browserCaching:true,modification:false}
  };
  assert.throws(()=>reconcile(root,build,registry,doc),/SEC04_CROSSWALK_INVARIANT_FAILED/);
 }));
