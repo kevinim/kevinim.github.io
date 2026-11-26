@@ -316,3 +316,43 @@ test('UX-01: Allen 9th grade remains a separate pending band',()=>{
  assert.equal(rows[1].missing,true);assert.equal(rows[2].missing,true);
  assert.equal(rows[3].missing,undefined);
 });
+
+
+test('UX-02: map selection highlights only the exact address-priority school, and clears safely',()=>{
+ const start=source.indexOf('const addressPriorityCardSchools=new WeakMap();');
+ const end=source.indexOf('function focusSelectedSchoolCampus(',start);
+ assert.ok(start>0&&end>start,'shared selected-card helper is present');
+ const assigned={name:'Exact campus'},different={name:'Other campus'};
+ const mockCard=()=>{
+  const classes=new Set(),attributes=new Map(),scrolls=[];
+  return {classes,attributes,scrolls,
+   classList:{toggle:(name,on)=>on?classes.add(name):classes.delete(name)},
+   setAttribute:(name,value)=>attributes.set(name,value),
+   removeAttribute:name=>attributes.delete(name),scrollIntoView:options=>scrolls.push(options)};
+ };
+ const cards=[mockCard(),mockCard(),mockCard()]; // The third card is an unverified placeholder.
+ const root={querySelectorAll:()=>cards};
+ const ctx={state:{selectedSchool:assigned},
+  el:id=>id==='homeAssignmentPrioritySchools'?root:id==='homeAssignmentPriority'?{hidden:false}:null,
+  window:{matchMedia:()=>({matches:true})}};
+ vm.runInNewContext(source.slice(start,end)+'\nfunction bindAddressCard(card,school){addressPriorityCardSchools.set(card,school)}',ctx);
+ ctx.bindAddressCard(cards[0],assigned);ctx.bindAddressCard(cards[1],different);
+ ctx.updateSelectedAddressSchoolCards(true);
+ assert.equal(cards[0].classes.has('home-school-map-selected'),true);
+ assert.equal(cards[0].attributes.get('aria-current'),'true');
+ assert.equal(cards[0].scrolls.length,1);
+ assert.equal(cards[0].scrolls[0].behavior,'auto','Reduced-motion preference applies');
+ assert.equal(cards[1].classes.has('home-school-map-selected'),false);
+ assert.equal(cards[2].classes.has('home-school-map-selected'),false,'Unverified placeholder must never be selected');
+ ctx.state.selectedSchool=different;ctx.updateSelectedAddressSchoolCards();
+ assert.equal(cards[0].attributes.has('aria-current'),false);
+ assert.equal(cards[1].classes.has('home-school-map-selected'),true);
+ assert.equal(cards[0].scrolls.length,1,'Rerender/silent selection must not steal scroll');
+ ctx.state.selectedSchool=null;ctx.updateSelectedAddressSchoolCards();
+ assert.equal(cards.some(card=>card.classes.has('home-school-map-selected')),false);
+ assert.equal(cards.some(card=>card.attributes.has('aria-current')),false);
+ assert.match(source,/updateSelectedAddressSchoolCards\(!fromList\)/,'Marker/list click updates address cards');
+ assert.match(source,/addressPriorityCardSchools\.set\(card,school\)/,'Only real linked school records are bound');
+ assert.match(css,/home-assignment-school\.home-school-map-selected/,'Selected cards have visible styling');
+ assert.match(css,/data-theme="dark".*home-assignment-school\.home-school-map-selected/,'Dark-mode contrast provided');
+});
