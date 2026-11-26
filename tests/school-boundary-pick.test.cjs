@@ -84,7 +84,7 @@ test('explicit enable is required; static site must retain original script and r
  assert.match(html,/school-boundary-pick\.js\?v=1/);
  assert.match(code,/let enabled=false/);
  assert.match(code,/if\(!enabled\|\|!row\)return/);
- assert.match(code,/address·학교 목록 필터 밖/);
+ assert.match(code,/주소·학교 목록 필터 밖/);
  assert.match(code,/학교 위치·경계는 거주지 공식 배정 인증이 아닙니다/);
  assert.ok(!/localStorage|sessionStorage/.test(code));
 });
