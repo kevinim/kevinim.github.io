@@ -43,6 +43,19 @@ test('Mesquite polygon schema is a candidate only, not current school assignment
  assert.equal(m.districtLocatorUrl,'https://mesquiteisd.org/attendance-zones');
  assert.equal(m.districtLocatorObservedOn,'2026-11-26');
  assert.equal(m.districtToTeaCampusIdentityVerified,false);
+ const profile=m.districtPublicCampusProfile;
+ assert.equal(profile.asOf,'2026-11-26');
+ assert.equal(profile.sourceUrl,'https://mesquiteisd.org/realtors');
+ assert.equal(profile.campuses,52);
+ assert.equal(profile.teaRosterCrosswalkStatus,'unresolved');
+ assert.deepEqual(
+  [profile.elementary,profile.middle,profile.comprehensiveHigh,profile.choice,
+   profile.nonTraditionalHigh,profile.alternativeLearningCenter],
+  [34,10,5,1,1,1]);
+ assert.equal(profile.elementary+profile.middle+profile.comprehensiveHigh+
+  profile.choice+profile.nonTraditionalHigh+profile.alternativeLearningCenter,52);
+ assert.notEqual(profile.campuses,m.inventoryCampuses,
+  'Publisher count and pinned TEA snapshot must not silently be treated as equivalent');
  assert.equal(m.sourceSchoolYear,null);
  assert.equal(m.sourceReuseRightsVerified,false);
  assert.equal(m.liveSchoolAssignmentCertified,false);
