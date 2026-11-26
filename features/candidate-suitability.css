@@ -32,3 +32,10 @@ html[data-theme="dark"] .candidate-fit-state,html[data-theme="dark"] .candidate-
 html[data-theme="dark"] .candidate-time-fields input,html[data-theme="dark"] .candidate-priority select{background:#162338;color:#edf4ff;border-color:#7089a8}
 @media(max-width:720px){.candidate-fit-list .candidate-fit-row{grid-template-columns:minmax(0,1fr)}.candidate-time-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:360px){.candidate-time-fields{grid-template-columns:minmax(0,1fr)}}
+
+.candidate-demographics{margin:10px 0 12px;padding-top:9px;border-top:1px solid rgba(132,154,184,.3)}
+.candidate-demographics summary{cursor:pointer;font-size:11px;font-weight:700;line-height:1.6;color:var(--text,#31557c)}
+.candidate-demographics summary:focus-visible{outline:3px solid #4c85d9;outline-offset:2px}
+.candidate-demographics-note{font-size:10px;line-height:1.5;margin:7px 0 9px;color:var(--muted,#53667f)}
+html[data-theme="dark"] .candidate-demographics summary{color:#e3edf9}
+html[data-theme="dark"] .candidate-demographics-note{color:#bbcce1}
