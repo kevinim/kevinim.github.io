@@ -176,3 +176,13 @@ test('review lanes partition all assets with no per-file paths in uploaded summa
  assert.ok(report.local.itemizedPaths.every(item=>item.reviewLane&&item.extension&&
   item.publisherAndReuseRightsIndependentlyVerified===false));
 }));
+
+test('prototype-inherited rights are never an explicit asset approval',()=>fixture(dir=>{
+ const rights=base();
+ Object.setPrototypeOf(rights.assets, {'schools.json':approved(),'data/schools.json':approved()});
+ const result=audit(dir,rights);
+ assert.equal(result.summary.rightsDecisions.approved,0);
+ assert.equal(result.summary.rightsDecisions.pending,2);
+ assert.equal(result.summary.status,'BLOCKED_RIGHTS_REVIEW_REQUIRED');
+ assert.equal(result.summary.publicProductionApproved,false);
+}));
