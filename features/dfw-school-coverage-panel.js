@@ -11,13 +11,24 @@
   const panel=document.getElementById('dfwSchoolCoveragePanel');
   const mount=document.getElementById('dfwSchoolCoverageContent');
   if(!panel||!mount)return Promise.resolve(false);
+  // Announce only the short status, not the entire dynamically rebuilt table.
+  mount.setAttribute('aria-live','off');
+  mount.setAttribute('aria-busy','true');
+  const status=document.createElement('p');
+  status.setAttribute('role','status');
+  status.textContent='DFW 학군 연결 현황을 불러오는 중…';
+  mount.replaceChildren(status);
   const script=document.createElement('script');
   script.src=SOURCE;script.async=true;
   loading=new Promise((resolve,reject)=>{
    script.onload=()=>resolve(true);
    script.onerror=()=>{
     script.remove();loading=null;
-    mount.textContent='전체 학군 안내를 불러오지 못했습니다. 패널을 닫았다 다시 열어 시도하세요.';
+    mount.setAttribute('aria-busy','false');
+    const error=document.createElement('p');
+    error.setAttribute('role','alert');
+    error.textContent='현황표를 불러오지 못했습니다. 패널을 닫았다 다시 열어 시도하세요.';
+    mount.replaceChildren(error);
     reject(Error('DFW coverage renderer unavailable'));
    };
   });
