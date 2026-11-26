@@ -12,7 +12,7 @@ test('five source candidates are evidence only, distinct and present in 108-ISD 
  assert.equal(manifest.publicGeometryHosted,false);
  assert.equal(manifest.geometryRedistributionApproved,false);
  assert.deepEqual(manifest.districts.map(x=>x.code),['057914','043914','199901','057916','043908']);
- assert.equal(new Set(manifest.districts.map(x=>x.code)).size,4);
+ assert.equal(new Set(manifest.districts.map(x=>x.code)).size,5);
  assert.equal(manifest.districts.reduce((n,x)=>n+x.inventoryCampuses,0),156);
  for(const x of manifest.districts){
   const d=matrix.districts.find(d=>d.code===x.code);
