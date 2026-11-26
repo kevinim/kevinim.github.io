@@ -45,3 +45,19 @@ Rockwall publisher's [attendance areas page](https://www.rockwallisd.com/new-stu
 **No new campus attendance polygon has been added.** Source status changes require deterministic validation in `tests/dfw-next-gis-source-candidates.test.cjs`; the renderer now fails closed if wrong Wylie/Abilene links or unsupported Rockwall school years reappear. These are source-quality fixes, not a certified E/M/H residence assignment.
 
 Sources checked: https://www.wyliebulldogs.org/article/2594492 ; https://www.wylieisd.net/our-district/district-profile ; https://www.wylieisd.net/our-district/district-profile/district-maps ; https://www.wylieisd.net/our-district/rezoning-2025-26 ; https://www.rockwallisd.com/new-student/new-student/school-attendance-areas .
+
+## 2026-11-25 incremental review — Melissa ISD (TEA 043908)
+
+The original four-district inventory above remains a dated 2026-11-21 snapshot. The dashboard now has a **fifth researched source-card candidate**: Melissa ISD (9 TEA campus records; five-source intake totals 156 campus records). **It does not add campus polygons**: DFW runtime remains 6 primary GIS + 2 optional GIS + 100 no-campus-polygon ISDs.
+
+Verified independent district announcement, December 19, 2025:
+
+- [Melissa Move](https://www.melissaisd.org/o/nce/article/2608592) confirms that **2026–27 elementary zones were board-approved in March 2025**. Cardinal Renaissance Academy (Elementary #6) opens in 2026–27; families in its assigned zone and district GT students may have enrollment choices. GIS-only elementary assignment would be unsafe.
+
+- [Interactive Zoning Map](https://www.melissaisd.org/page/interactive-zoning-map) is the district-controlled public entry point. The live selected school-year, E/M/H geometry completeness, campus ID crosswalk, rights and CORS were **not independently verified**. The null sourceSchoolYear describes **live map geometry**; approvedElementaryYear 2026-27 refers only to the board-approved E map announcement.
+
+- No live source geometry was copied; no private residence queried or stored; no automatic student assignment or redistribution permission granted.
+
+- Follow-up: inspect publisher locator year selection and grade layers, crosscheck public non-residential points and CRA choice exceptions; confirm embedding rights before any reference polygon activation.
+
+Files: data/dfw-next-gis-source-candidates-20261121.json, features/dfw-school-coverage-renderer.js, tests/dfw-next-gis-source-candidates.test.cjs. SEC-04 rightsDecision remains pending and the updated link-only JSON blob SHA is pinned.
