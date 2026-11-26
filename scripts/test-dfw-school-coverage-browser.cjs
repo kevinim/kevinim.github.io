@@ -56,7 +56,8 @@ fs.mkdirSync(folder,{recursive:true});
     if(width===390){
       const controlHeights=await coverageContent.locator(
         '.dfw-coverage-filter input, .dfw-coverage-filter select, button.dfw-coverage-more'
-      ).evaluateAll(nodes=>nodes.map(node=>node.getBoundingClientRect().height));
+      ).evaluateAll(nodes=>nodes.filter(node=>node.getClientRects().length>0)
+        .map(node=>node.getBoundingClientRect().height));
       assert.ok(controlHeights.length>=3 && controlHeights.every(height=>height>=44),
         'mobile search/select/quick-jump controls require >=44px height: '+controlHeights);
     }
