@@ -37,9 +37,13 @@ const css=fs.readFileSync(path.join(root,'features/candidate-suitability.css'),'
    await page.addScriptTag({content:js});
    await page.evaluate(()=>document.dispatchEvent(new Event('DOMContentLoaded')));
    assert.equal(await page.locator('#candidatePriority').count(),1);
+   assert.equal(await page.locator('link[data-candidate-suitability-css]').count(),0,
+     'no optional compare CSS on first paint');
    await page.locator('#addComparison').click();
+   assert.equal(await page.locator('link[data-candidate-suitability-css]').count(),1,
+     'load comparison CSS only when candidates exist');
    assert.equal(await page.locator('.candidate-card').count(),1);
-   assert.equal(await page.locator('.candidate-fit-row').count(),6);
+   assert.equal(await page.locator('.candidate-fit-row').count(),7);
    assert.equal(await page.locator('.candidate-demographics').evaluate(x=>x.open),false);
    assert.match(await page.locator('.candidate-fit-row:first-child .candidate-fit-state').innerText(),/공식 배정 미확인/);
    await page.locator('.candidate-demographics summary').click();
@@ -52,6 +56,15 @@ const css=fs.readFileSync(path.join(root,'features/candidate-suitability.css'),'
    await page.locator('[data-candidate-index="0"][data-candidate-minutes="church"]').fill('20');
    await page.locator('[data-candidate-index="0"][data-candidate-minutes="church"]').dispatchEvent('change');
    assert.match(await page.locator('.candidate-fit-row').nth(2).innerText(),/사용자 입력 20분/);
+   await page.locator('.candidate-housing-entry summary').click();
+   await page.locator('[data-candidate-rent="0"]').fill('2450');
+   await page.locator('[data-candidate-rent="0"]').dispatchEvent('change');
+   assert.match(await page.locator('.candidate-fit-row').last().innerText(),/\$2,450/);
+   assert.equal(await page.locator('.candidate-housing-entry').evaluate(x=>x.open),true);
+   await page.locator('[data-candidate-photos="0"]').check();
+   assert.match(await page.locator('.candidate-fit-row').last().innerText(),/사진 검토 표시/);
+   await page.selectOption('#candidatePriority','housing');
+   assert.match(await page.locator('.candidate-fit-row').first().innerText(),/임대료/);
    await page.selectOption('#candidatePriority','ballet');
    assert.match(await page.locator('.candidate-fit-row').first().innerText(),/Contemporary Ballet Dallas/);
    await page.evaluate(()=>window.home={address:'200 Maple St, Allen, TX 75013',ll:[33.11,-96.66]});
