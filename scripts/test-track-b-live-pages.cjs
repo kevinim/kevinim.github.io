@@ -216,7 +216,7 @@ async function run(){
     assert.ok(!preparation.error,JSON.stringify(preparation));
     await page.locator('#map').scrollIntoViewIfNeeded();
     await page.waitForFunction(()=>
-     document.querySelectorAll('.leaflet-pane.leaflet-tx-school-pick-pane path[role="button"]').length>0,
+     map.getPane('txSchoolPickPane')?.querySelectorAll('path[role="button"]').length>0,
      null,{timeout:30000});
     const clickAt=await page.evaluate(()=>{
      const point=map.latLngToContainerPoint([33.226183,-96.7847555]);
@@ -231,7 +231,7 @@ async function run(){
      pressed:[...document.querySelectorAll('#schoolList button.school[aria-pressed="true"]')]
       .map(n=>n.textContent),
      roleStatus:document.getElementById('schoolBoundaryPickStatus')?.textContent,
-     arias:document.querySelectorAll('.leaflet-pane.leaflet-tx-school-pick-pane path[role="button"][tabindex="0"]').length
+     arias:map.getPane('txSchoolPickPane')?.querySelectorAll('path[role="button"][tabindex="0"]').length||0
     }));
     assert.equal(selected.name,preparation.name);
     assert.ok(selected.pressed.some(n=>n.includes(preparation.name)),
