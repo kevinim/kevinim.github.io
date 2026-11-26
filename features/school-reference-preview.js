@@ -197,7 +197,7 @@
    wrap.appendChild(node('p','school-reference-warning',model?.reason||'참고 자료가 없습니다. 공식 Finder에서 확인하세요.'));
    target.appendChild(wrap);return false;
   }
-  wrap.appendChild(node('strong','school-reference-warning','GIS 경계 후보 · 주소 공식 배정 미인증'));
+  wrap.appendChild(node('strong','school-reference-warning','GIS 참고 후보 · 실제 배정 미인증'));
   const prov=model.provenance;
   const evidence=node('div','school-reference-provenance');
   evidence.setAttribute('aria-label','GIS 출처 및 학교 배정 검증 상태');
