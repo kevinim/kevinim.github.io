@@ -114,9 +114,9 @@ function clearDallasReference(){if(dallasReferenceLayer&&map)map.removeLayer(dal
 // UX-01: UI phase only; a successful geocode is never school assignment proof.
 function setHomeSearchPhase(phase){
  const status=el('homeStatus');
- if(status)status.dataset.phase=phase;
+ if(status?.dataset)status.dataset.phase=phase;
  const form=el('homeForm');
- form?.setAttribute('aria-busy',phase==='loading'?'true':'false');
+ form?.setAttribute?.('aria-busy',phase==='loading'?'true':'false');
 }
 function clearHome(){
   invalidateZipCommute();
