@@ -130,7 +130,9 @@ function audit(bundleDir, registry) {
   const extensionCounts = {};
   const local = [];
   for (const file of dataFiles) {
-    const detail = registry.assets[file];
+    // Only an explicit own registry entry may grant rights. Prototype-inherited
+    // records are never part of the reviewed manifest.
+    const detail = Object.hasOwn(registry.assets, file) ? registry.assets[file] : null;
     const decision = detail ? detail.decision : registry.defaultDecision;
     counts[decision] += 1;
     const reviewLane = classifyReviewLane(file);
