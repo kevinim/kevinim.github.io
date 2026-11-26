@@ -82,3 +82,15 @@ test('addresses are tab-only; demographics never enter suitability criteria', ()
   assert.match(css, /data-theme="dark"/);
   assert.match(css, /max-width:390px/);
 });
+
+
+test('stale or malformed input cannot imply a verified driving time', () => {
+  const item = addCandidate([], sample())[0];
+  for (const value of ['', null, undefined, NaN, Infinity, -1, 0, '30.5', 361]) {
+    item.manual.workMinutes = value;
+    assert.equal(evaluateCandidate(item).work.state, 'unknown', String(value));
+  }
+  const r = evaluateCandidate(item, {status: 'unavailable'});
+  assert.match(r.school.value, /확인 필요/);
+  assert.match(r.work.note, /직접 입력/);
+});
