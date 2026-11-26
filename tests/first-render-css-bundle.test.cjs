@@ -23,7 +23,7 @@ test('six individual render-blocking stylesheets become exactly one linked asset
  assert.equal(peimsLinks.length,1,'Exactly one independently reviewed PEIMS chart stylesheet');
  assert.equal(links.filter(link=>link[0].includes('./features/map-first-split.css?v=2')).length,1,
   'Exactly one separately audited Redfin-split stylesheet');
- assert.equal(links.filter(link=>link[0].includes('./features/dashboard-quick-layout.css?v=1')).length,1,
+ assert.equal(links.filter(link=>link[0].includes('./features/dashboard-quick-layout.css?v=2')).length,1,
   'Exactly one separately reviewed six-section dashboard layout stylesheet');
  assert.equal(links.length-peimsLinks.length,12,
   'Approved map-first and six-section layouts add two stylesheets without undoing the six-file bundle');

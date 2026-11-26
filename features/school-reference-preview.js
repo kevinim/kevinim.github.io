@@ -19,6 +19,13 @@
   LISD:{status:'finder-current',currency:'finder',year:'고등 2025–26 / 초·중 적용년도 미확인',
    source:'Lewisville ISD School Locator 연결 GIS'}
  });
+ const SOURCE_EVIDENCE=Object.freeze({
+  FISD:{kind:'교육청 직접 제공 공식 학교별 경계',year:'2026–27 적용 학년도 확인',yearBasis:'GIS 최초 게시·갱신일은 별도 미확인'},
+  PROSPER:{kind:'교육청 공식 Infofinder 학교별 GIS',year:'2026–27 적용 학년도 확인',yearBasis:'구역 학년도 확인 · 실제 등록 자격은 별도'},
+  PISD:{kind:'현재 교육청 SchoolFinder가 연결한 GIS',year:'GIS 레이어 표기 2025–26',yearBasis:'Finder 현재 운영과 2026–27 경계 독립 인증은 별개'},
+  LISD:{kind:'현재 교육청 School Locator가 연결한 GIS',year:'고등 레이어 2025–26 · 초·중 미확인',yearBasis:'Finder 제목의 2026–27은 개별 GIS 연도 증명이 아님'},
+  '043907':{kind:'현재 교육청 School Zone Finder 연결 GIS',year:'Finder 2026–27 · 개별 레이어 원본 연도 분리 확인',yearBasis:'초등 일부 2026–27 표기 · 중·고는 레이어별 원본 확인 필요'}
+ });
  const LEVEL=Object.freeze({elementary:'초등',middle:'중등',high:'고등',senior:'Senior High'});
  // Prosper ISD 2026–27 new-enrollment restrictions, NOT changes to published GIS zones.
  // Exact campus IDs come from Prosper's official Infofinder i 31-campus dataset.
@@ -101,7 +108,12 @@
     return blocked('Prosper 공식 GIS 캠퍼스 번호 또는 학교 코드가 일치하지 않습니다.');
    const yearNote=raw.district==='PISD'?'공식 SchoolFinder 연결 · 원본 GIS 레이어 2025–26':
     raw.district==='LISD'?(p.gradeLevel==='high'?'고등 GIS 2025–26 표기 · 주소 배정 미확인':
-     '초·중 GIS 적용 학년도 미확인 · 주소 배정 미확인'):'';
+     '초·중 GIS 적용 학년도 미확인 · 주소 배정 미확인'):
+    raw.district==='043907'?(p.gradeLevel==='elementary'&&p.yearVerified2627===true&&p.verifiedYear==='2026-27'
+     ?'초등 GIS 원본 2026–27 확인 · 주소 배정 미인증':
+     typeof p.sourceYear==='string'&&/^\d{4}-\d{2}$/.test(p.sourceYear)
+      ?'GIS 레이어 학년도 '+p.sourceYear.replace('-','–')+' · 주소 배정 미인증'
+      :'GIS 레이어 학년도 미확인 · Finder 운영 연도와 별개'):'';
    candidates.push(Object.freeze({school,level:LEVEL[p.gradeLevel],grades,
     ...(yearNote?{yearNote}:{}),
     ...(officialProsper?{campusId:String(p.campusId),schoolCode:String(p.schoolCode)}:{})}));
@@ -146,8 +158,17 @@
   // placements even when 2026–27 zoned-campus geometry is current.
   if(raw.district==='043907')
    notices.push('McKinney ISD: 기존 학생의 전학·잔류(grandfathering) 승인에 따라 실제 등록 학교가 경계 후보와 달라질 수 있습니다.');
+  const evidence=SOURCE_EVIDENCE[raw.district];
+  // Source authority, geometry vintage and official residence assignment
+  // are distinct claims. Neither a Finder link nor a polygon grants enrollment.
+  const provenance=Object.freeze({
+   source:cfg.source,geometryKind:evidence.kind,geometryYear:evidence.year,
+   yearBasis:evidence.yearBasis,officialAddressAssignment:'미인증 · 공식 주소별 검색 결과를 수신하지 않음',
+   originalPublicationDate:'확인되지 않음'
+  });
   return Object.freeze({
    kind:'reference-only',district:raw.district,source:cfg.source,year:cfg.year,
+   provenance,
    referenceOnlyFinderVintage:vintageLimited,
    officialUrl:safeUrl,
    candidates:Object.freeze(candidates),
@@ -176,8 +197,19 @@
    wrap.appendChild(node('p','school-reference-warning',model?.reason||'참고 자료가 없습니다. 공식 Finder에서 확인하세요.'));
    target.appendChild(wrap);return false;
   }
-  wrap.appendChild(node('strong','school-reference-warning','참고 후보 · 실제 배정 미인증'));
-  wrap.appendChild(node('p','school-reference-source',model.source+' · 자료 학년도 '+model.year+' · 주소 조회 미검증'));
+  wrap.appendChild(node('strong','school-reference-warning','GIS 참고 후보 · 실제 배정 미인증'));
+  const prov=model.provenance;
+  const evidence=node('div','school-reference-provenance');
+  evidence.setAttribute('aria-label','GIS 출처 및 학교 배정 검증 상태');
+  for(const [label,value] of [
+   ['GIS 출처',prov?.source||model.source],
+   ['경계 유형',prov?.geometryKind||'자료 확인 필요'],
+   ['GIS 기준 연도',prov?.geometryYear||'미확인'],
+   ['연도 해석',prov?.yearBasis||'자료 확인 필요'],
+   ['최초 게시일',prov?.originalPublicationDate||'확인되지 않음'],
+   ['주소 공식 배정',prov?.officialAddressAssignment||'미인증']
+  ])evidence.appendChild(node('p','school-reference-source',label+' · '+value));
+  wrap.appendChild(evidence);
   const list=node('ul','school-reference-list');
   for(const candidate of model.candidates){
    const item=node('li','',candidate.level+' · '+candidate.school+(candidate.grades?' ('+candidate.grades+')':''));

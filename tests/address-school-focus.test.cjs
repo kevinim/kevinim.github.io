@@ -169,8 +169,8 @@ test('production UI shows address-first panel and moves commute below map/result
  assert.match(html,/id="homeAssignmentPriority"/);
  assert.match(html,/id="schoolAddressNotice"/);
  assert.match(html,/map-first-split\.css\?v=2/);
- assert.match(html,/dashboard-main\.js\?v=22/);
- assert.match(html,/home-lookup-v2\.js\?v=28/);
+ assert.match(html,/dashboard-main\.js\?v=23/);
+ assert.match(html,/home-lookup-v2\.js\?v=29/);
  assert.match(html,/home-school-manual-bridge\.js\?v=3/);
  assert.match(css,/\.shell>\.controls-grid>\.office-controls\{order:90/);
  assert.match(css,/\.shell>\.footer\{order:100/);
@@ -264,7 +264,7 @@ test('clearing selected address purges stale school cards and status from DOM',(
  const nodes=Object.fromEntries(['homeAssignmentPriority','homeAssignmentPriorityStatus',
   'homeAssignmentPriorityDescription','homeAssignmentPrioritySchools'].map(k=>
   [k,{hidden:false,replaceChildren(){calls[k]=(calls[k]||0)+1;}}]));
- const ctx={addressSchoolView:()=>null,el:key=>nodes[key]||null};
+ const ctx={addressSchoolView:()=>null,el:key=>nodes[key]||null,addressPrioritySchoolCards:new Map()};
  vm.runInNewContext(source.slice(start,stop),ctx,{timeout:1000});
  ctx.renderAddressSchoolPriority();
  assert.equal(nodes.homeAssignmentPriority.hidden,true);
@@ -315,4 +315,126 @@ test('UX-01: Allen 9th grade remains a separate pending band',()=>{
  assert.deepEqual(rows.map(x=>x.levelText),['초등','중등','9학년','고등']);
  assert.equal(rows[1].missing,true);assert.equal(rows[2].missing,true);
  assert.equal(rows[3].missing,undefined);
+});
+
+test('UX-02: map-selected campus highlights only exact address-linked cards, and resets',()=>{
+ const begin=source.indexOf('const addressPrioritySchoolCards=new Map();');
+ const end=source.indexOf('function renderAddressSchoolPriority(){',begin);
+ assert.ok(begin>=0&&end>begin,'Address-first selection bridge exists');
+ const school={name:'DOWELL',district:'043907',type:'middle'};
+ const other={name:'DOWELL',district:'FISD',type:'middle'};
+ const fakeCard=()=>{
+  const classes=new Set(),attributes={},indicator={hidden:true};
+  return {classes,attributes,indicator,isConnected:true,
+   classList:{toggle(name,enable){if(enable)classes.add(name);else classes.delete(name)}},
+   setAttribute(name,value){attributes[name]=value},
+   querySelector(selector){return selector==='.home-school-selected-indicator'?indicator:null}};
+ };
+ const chosen=fakeCard(),sameCampusSecondBand=fakeCard(),unrelated=fakeCard();
+ const ctx={home:{},state:{selectedSchool:school}};
+ vm.createContext(ctx);
+ vm.runInContext(source.slice(begin,end),ctx,{timeout:1000});
+ const cards=vm.runInContext('addressPrioritySchoolCards',ctx);
+ cards.set(school,[chosen,sameCampusSecondBand]);cards.set(other,[unrelated]);
+ ctx.syncAddressPrioritySchoolSelection();
+ for(const card of [chosen,sameCampusSecondBand]){
+  assert.ok(card.classes.has('school-map-selected'),'Linked address cards selected');
+  assert.equal(card.attributes['aria-current'],'true');
+  assert.equal(card.indicator.hidden,false);
+ }
+ assert.equal(unrelated.attributes['aria-current'],'false','Identical name in another district is not selected');
+ ctx.state.selectedSchool={...school};
+ ctx.syncAddressPrioritySchoolSelection();
+ assert.equal(chosen.attributes['aria-current'],'false','Object identity prevents same-name false matches');
+ ctx.state.selectedSchool=school;ctx.home=null;
+ ctx.syncAddressPrioritySchoolSelection();
+ assert.equal(chosen.indicator.hidden,true,'Clearing searched home removes selection emphasis');
+ chosen.isConnected=false;ctx.home={};ctx.syncAddressPrioritySchoolSelection();
+ assert.equal(chosen.attributes['aria-current'],'false','Detached former address cannot appear active');
+});
+
+test('UX-02: map events and address cards share one selection path without widening certification',()=>{
+ const listStart=source.indexOf('function updateSelectedSchoolList(){');
+ const listEnd=source.indexOf('function focusSelectedSchoolCampus(',listStart);
+ const mapStart=source.indexOf('async function schoolClicked(');
+ const mapEnd=source.indexOf('function syncMapSize()',mapStart);
+ const renderStart=source.indexOf('function renderAddressSchoolPriority(){');
+ const renderEnd=source.indexOf(' function drawSchools(){',renderStart);
+ assert.ok(listStart>=0&&mapStart>=0&&renderEnd>renderStart);
+ const list=source.slice(listStart,listEnd),map=source.slice(mapStart,mapEnd);
+ const render=source.slice(renderStart,renderEnd);
+ assert.ok(list.includes('syncAddressPrioritySchoolSelection()'));
+ assert.ok(map.includes('updateSelectedSchoolList()'));
+ assert.ok(source.includes("marker.on('click',()=>schoolClicked(school))"));
+ assert.ok(render.includes('referenceCandidateSchoolRecords(view).includes(school)'));
+ assert.ok(render.includes('addressPrioritySchoolCards.clear()'));
+ assert.ok(render.includes('addressPrioritySchoolCards.set(school,existing)'));
+ assert.ok(render.includes('mapButton.onclick=()=>schoolClicked(school,true)'));
+ assert.ok(!render.includes('innerHTML'));
+});
+test('UX-01: search phase is accessible, resets busy form and never grants assignment',()=>{
+ const lookup=fs.readFileSync('home-lookup-v2.js','utf8');
+ const start=lookup.indexOf('function setHomeSearchPhase(phase){');
+ const stop=lookup.indexOf('function clearHome(){',start);
+ assert.ok(start>=0&&stop>start);
+ const status={dataset:{}},form={attrs:{},setAttribute(key,value){this.attrs[key]=value}};
+ const ctx={el:key=>key==='homeStatus'?status:key==='homeForm'?form:null};
+ vm.runInNewContext(lookup.slice(start,stop),ctx,{timeout:1000});
+ ctx.setHomeSearchPhase('loading');
+ assert.equal(status.dataset.phase,'loading');assert.equal(form.attrs['aria-busy'],'true');
+ for(const phase of ['choices','ready','error','idle']){
+  ctx.setHomeSearchPhase(phase);
+  assert.equal(status.dataset.phase,phase);
+  assert.equal(form.attrs['aria-busy'],'false');
+ }
+ const search=lookup.slice(lookup.indexOf('async function searchHome('),lookup.indexOf('async function calculateHomeCommute('));
+ assert.ok(search.includes("setHomeSearchPhase('loading')"));
+ assert.ok(search.includes("setHomeSearchPhase('choices')"));
+ assert.ok(search.includes("setHomeSearchPhase('error')"));
+ assert.ok(lookup.includes("setHomeSearchPhase('idle')"));
+ assert.ok(!['localStorage','sessionStorage','fetch('].some(text=>lookup.slice(start,stop).includes(text)));
+});
+
+test('UX-02: a map pin reveals its selected school inside the rail without page scrolling',()=>{
+ const begin=source.indexOf('function revealSelectedSchoolInList(){');
+ const end=source.indexOf('function focusSelectedSchoolCampus(',begin);
+ assert.ok(begin>=0&&end>begin,'Map-to-list internal scroll bridge is present');
+ const rect={top:100,bottom:200,height:100};
+ const item={top:300,bottom:320,height:20};
+ const button={getBoundingClientRect:()=>item};
+ const panel={scrollHeight:550,clientHeight:100,scrollTop:0,
+  getBoundingClientRect:()=>rect,querySelector:selector=>{
+   assert.equal(selector,'button.school.school-map-selected[data-sid]');
+   return button;
+  }};
+ const ctx={el:name=>name==='schoolList'?panel:null};
+ vm.runInNewContext(source.slice(begin,end),ctx,{timeout:1000});
+ ctx.revealSelectedSchoolInList();
+ assert.equal(panel.scrollTop,160,'Only the list scrollTop moves toward the selected school');
+ panel.scrollTop=0;item.top=125;item.bottom=145;
+ ctx.revealSelectedSchoolInList();
+ assert.equal(panel.scrollTop,0,'Already visible school must not jump');
+ panel.scrollHeight=100;item.top=300;item.bottom=320;
+ ctx.revealSelectedSchoolInList();
+ assert.equal(panel.scrollTop,0,'Expanded desktop list must not scroll the page');
+ const clickSource=source.slice(source.indexOf('async function schoolClicked('),source.indexOf('function syncMapSize()'));
+ assert.ok(clickSource.includes('if(!fromList)revealSelectedSchoolInList()'));
+});
+
+test('UX-02: home reset and grade filtering clear previously selected campus across map/list',()=>{
+ const lookup=fs.readFileSync('home-lookup-v2.js','utf8');
+ const clear=lookup.slice(lookup.indexOf('function clearHome(){'),lookup.indexOf('async function geocodeAddress(',lookup.indexOf('function clearHome(){')));
+ assert.match(clear,/home=null;homeCandidates=\[\]/);
+ assert.match(clear,/state\.selectedSchool=null/,'Address clear must invalidate linked school selection');
+ assert.match(clear,/schoolFocusGroup\?\.clearLayers\(\)/);
+ assert.match(clear,/updateSelectedSchoolList\(\)/);
+ assert.match(clear,/drawBoundary\(\)/);
+ const filtered=source.slice(source.indexOf('function clearSelectedSchoolIfFiltered(){'),source.indexOf('function ratingText('));
+ assert.match(filtered,/state\.selectedSchool=null/);
+ assert.match(filtered,/updateSelectedSchoolList\(\)/,'Filter clear must update address-first cards');
+});
+
+test('UX-02: active map and address scripts use fresh cache keys',()=>{
+ assert.ok(html.includes('./dashboard-main.js?v=23'), 'Map selection renderer must not use stale Pages cache');
+ assert.ok(html.includes('./home-lookup-v2.js?v=29'), 'Address reset logic must not use stale Pages cache');
 });
