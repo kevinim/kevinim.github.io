@@ -13,8 +13,12 @@ const approved = () => ({
   licenseScope:'Synthetic redistribution of this fake test only',
   attribution:'Synthetic source',
   reviewer:'Synthetic reviewer',
-  reviewedAt:'2026-11-21',
-  termsUrl:'https://example.invalid/fake-synthetic-license'
+  reviewedAt:'2026-11-21', retrievedAt:'2026-11-20',
+  sourceUrl:'https://example.invalid/fake-synthetic-dataset',
+  termsUrl:'https://example.invalid/fake-synthetic-license',
+  dataVintage:'synthetic-2026', geographicScope:'synthetic region',
+  permissionBasis:'publisher-license',
+  permissions:{publicDisplay:true,redistribution:true,browserCaching:true,modification:false}
 });
 function fixture(fn) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tx-rights-test-'));
@@ -66,10 +70,27 @@ test('stale registry records cannot silently authorize unrelated files',()=>fixt
   assert.equal(r.summary.status,'BLOCKED_RIGHTS_REVIEW_REQUIRED');
 }));
 test('approved decisions without source, reviewer or terms fail closed',()=>{
-  for(const removed of ['publisher','licenseScope','attribution','reviewer','reviewedAt','termsUrl']) {
+  for(const removed of ['publisher','licenseScope','attribution','reviewer','reviewedAt','retrievedAt',
+                       'sourceUrl','termsUrl','dataVintage','geographicScope','permissionBasis','permissions']) {
     const rights=base(), rec=approved();
     delete rec[removed];
     rights.assets['schools.json']=rec;
+    assert.throws(()=>validateRegistry(rights),/approved_asset_missing_review_evidence/);
+  }
+});
+test('claimed approval without explicit public reuse rights fails closed',()=>{
+  const invalid = [
+    {permissions:{...approved().permissions,publicDisplay:false}},
+    {permissions:{...approved().permissions,redistribution:false}},
+    {permissions:{...approved().permissions,browserCaching:false}},
+    {permissions:{...approved().permissions,modification:'unknown'}},
+    {permissionBasis:'assumed-public-source'},
+    {sourceUrl:'http://example.invalid/source'},
+    {retrievedAt:'unknown'},
+  ];
+  for(const patch of invalid) {
+    const rights=base();
+    rights.assets['schools.json']={...approved(),...patch};
     assert.throws(()=>validateRegistry(rights),/approved_asset_missing_review_evidence/);
   }
 });
