@@ -39,3 +39,20 @@ html[data-theme="dark"] .candidate-time-fields input,html[data-theme="dark"] .ca
 .candidate-demographics-note{font-size:10px;line-height:1.5;margin:7px 0 9px;color:var(--muted,#53667f)}
 html[data-theme="dark"] .candidate-demographics summary{color:#e3edf9}
 html[data-theme="dark"] .candidate-demographics-note{color:#bbcce1}
+
+
+/* UX-05 manual rental and photo review; evidence is self-reported only. */
+.candidate-housing-entry{margin-top:9px;border-top:1px solid rgba(132,154,184,.3);padding-top:9px}
+.candidate-housing-entry summary{cursor:pointer;font-size:11px;font-weight:700;line-height:1.6;color:var(--text,#31557c)}
+.candidate-housing-entry summary:focus-visible,.candidate-housing-fields input:focus-visible{outline:3px solid #4c85d9;outline-offset:2px}
+.candidate-housing-fields{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:8px;align-items:center;margin-top:9px}
+.candidate-housing-fields label{display:grid;gap:5px;min-width:0;font-size:11px;color:var(--muted,#4c607c)}
+.candidate-housing-fields input[type="number"]{width:100%;min-height:38px;box-sizing:border-box;border:1px solid #a6b9d2;border-radius:7px;padding:5px 8px;background:var(--card,#fff);color:var(--text,#132b4a)}
+.candidate-housing-fields .candidate-housing-photos{display:flex;align-items:center;gap:8px;min-height:38px}
+.candidate-housing-fields input[type="checkbox"]{width:17px;height:17px;flex:none;accent-color:#3872d7}
+.candidate-housing-entry p{font-size:10px;line-height:1.5;margin:7px 0 0;color:var(--muted,#53667f)}
+html[data-theme="dark"] .candidate-housing-entry summary,
+html[data-theme="dark"] .candidate-housing-fields label{color:#d8e6f9}
+html[data-theme="dark"] .candidate-housing-fields input[type="number"]{background:#162338;color:#edf4ff;border-color:#7089a8}
+html[data-theme="dark"] .candidate-housing-entry p{color:#bbcee0}
+@media(max-width:390px){.candidate-housing-fields{grid-template-columns:minmax(0,1fr)}}

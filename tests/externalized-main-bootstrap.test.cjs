@@ -21,8 +21,8 @@ const regionalCacheRefs=[
  ['./features/area-assessment.js?v=4','./features/area-assessment.js?v=3']
 ];
 let normalizedMainHtml=rawHtml;
-// UX-08 explicitly reviewed asset cache bump only; the historical HTML baseline
-// still expects the prior release URL, so normalize this single script tag.
+// UX-08: only the reviewed compact source-index cache reference changes.
+// Restore the previous script URL before immutable historical HTML comparison.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<script src="./features/compact-footnotes.js?v=3"></script>',
  '<script src="./features/compact-footnotes.js?v=2"></script>');
@@ -84,6 +84,7 @@ for(const [next,previous] of [
  ['home-lookup-v2.js?v=27','home-lookup-v2.js?v=20'],
  ['denton-official-zone-references.js?v=2','denton-official-zone-references.js?v=1'],
  ['features/dashboard-extras.css?v=5','features/dashboard-extras.css?v=4'],
+ ['candidate-compare.js?v=5','candidate-compare.js?v=4'],
  ['cfb-official-bridge.js?v=3','cfb-official-bridge.js?v=2'],
  ['home-school-manual-bridge.js?v=3','home-school-manual-bridge.js?v=1']
 ])normalizedMainHtml=replaceOnce(normalizedMainHtml,next,previous);
