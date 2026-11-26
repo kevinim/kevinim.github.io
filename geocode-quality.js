@@ -29,13 +29,18 @@ function assessResidentialGeocode(requestedAddress,c){
  const returnedNumbers=[c?.address,a.Match_addr].map(streetNumber).filter(Boolean);
  const returnedUnits=[c?.address,a.Match_addr].map(residentialUnit).filter(Boolean);
  const inputZip=String(requestedAddress||'').match(/\b\d{5}(?:-\d{4})?\b/g)?.at(-1)?.slice(0,5)||null;
- const candidateZip=String(a.Postal||'').match(/\b\d{5}\b/)?.[0]||String(c?.address||'').match(/\b\d{5}\b/)?.[0]||null;
+ const returnedZips=[a.Postal,c?.address]
+  .map(x=>String(x||'').match(/\b\d{5}(?:-\d{4})?\b/)?.[0]?.slice(0,5))
+  .filter(Boolean);
+ const candidateZip=returnedZips[0]||null;
  let reason=null;
  if(!c?.location||!Number.isFinite(c.location.x)||!Number.isFinite(c.location.y))reason='좌표를 확인하지 못했습니다.';
  else if(!isTexasGeocode(c))reason='텍사스 주와 좌표를 확인할 수 없습니다.';
  else if(!requestedNumber)reason='주거지 번지수를 확인할 수 없습니다.';
  else if(!returnedNumbers.length||returnedNumbers.some(n=>n!==requestedNumber))
   reason='입력한 주거지 번지수와 검색 결과가 일치하지 않습니다.';
+ else if(returnedZips.length>1&&new Set(returnedZips).size>1)
+  reason='검색 결과의 ZIP 정보가 서로 일치하지 않습니다.';
  else if(inputZip&&(!candidateZip||inputZip!==candidateZip))reason='입력 ZIP과 검색 결과 ZIP이 일치하지 않습니다.';
  else if(!Number.isFinite(score)||score<95)reason='주소 일치도가 95점 미만입니다.';
  else if(!['PointAddress','Subaddress'].includes(type))reason='건물 또는 호수 단위 주소가 아닌 추정 위치입니다.';
