@@ -62,11 +62,12 @@ test('coverage UI has resilient lazy, validated source evidence and no unsafe HT
  assert.match(ui,/function validTexasWorks\(extra,district\)/);
  assert.match(ui,/ids\.has\(entry\.campusId\)/);
  assert.match(ui,/entry\.sourceURL!=='https:\/\/texasworks\.com\/learning\/landing-page-find-a-campus\/'/);
- assert.match(ui,/if\(validTexasWorks\(extra,data\.districts\.find/);
+ assert.match(ui,/validTexasWorks\(extra,data\.districts\.find/);
+ assert.match(ui,/Promise\.all\(\[/,'Optional source evidence must load concurrently');
  assert.match(ui,/locationEvidence/);
  assert.match(ui,/집 주소의 배정학교/);
  assert(!ui.includes('.innerHTML'),'textContent and DOM nodes only');
  assert.match(browser,/texasworks-physical-locality/);
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
- assert.match(html,/\.\/features\/dfw-school-coverage-panel\.js\?v=6/);
+ assert.match(html,/\.\/features\/dfw-school-coverage-panel\.js\?v=7/);
 });

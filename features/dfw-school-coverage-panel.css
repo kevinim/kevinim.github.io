@@ -27,3 +27,32 @@
 #dfwSchoolCoverageContent .dfw-source-disposition>summary:focus-visible{outline:2px solid #4574c0;outline-offset:2px;border-radius:2px}
 #dfwSchoolCoverageContent .dfw-source-disposition>p{font-size:11px;line-height:1.5;margin:5px 0;color:var(--sub)}
 #dfwSchoolCoverageContent .dfw-coverage-filter button.dfw-coverage-more{margin:0;padding:6px 9px;white-space:nowrap}
+
+/* UX-07: mobile controls remain operable at 320–430px without enlarging the table.
+   The data table itself scrolls horizontally inside its named keyboard region. */
+#dfwSchoolCoverageContent{min-width:0;overflow-wrap:anywhere}
+#dfwSchoolCoveragePanel>summary{min-height:44px}
+#dfwSchoolCoverageContent .dfw-coverage-table-wrap:focus-visible,
+#dfwSchoolCoverageContent .dfw-coverage-filter input:focus-visible,
+#dfwSchoolCoverageContent .dfw-coverage-filter select:focus-visible,
+#dfwSchoolCoverageContent button.dfw-coverage-more:focus-visible{
+ outline:3px solid #2369bd;outline-offset:2px;
+}
+html[data-theme="dark"] #dfwSchoolCoverageContent .dfw-coverage-table-wrap:focus-visible,
+html[data-theme="dark"] #dfwSchoolCoverageContent .dfw-coverage-filter input:focus-visible,
+html[data-theme="dark"] #dfwSchoolCoverageContent .dfw-coverage-filter select:focus-visible,
+html[data-theme="dark"] #dfwSchoolCoverageContent button.dfw-coverage-more:focus-visible{
+ outline-color:#b8d6ff;
+}
+@media(max-width:520px){
+ #dfwSchoolCoverageContent .dfw-coverage-filter{align-items:stretch}
+ #dfwSchoolCoverageContent .dfw-coverage-filter input,
+ #dfwSchoolCoverageContent .dfw-coverage-filter select,
+ #dfwSchoolCoverageContent button.dfw-coverage-more{min-height:44px}
+ #dfwSchoolCoverageContent .dfw-coverage-table-wrap{
+  overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ #dfwSchoolCoverageContent .dfw-coverage-table-wrap{scroll-behavior:auto}
+}

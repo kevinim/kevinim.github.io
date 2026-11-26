@@ -21,6 +21,11 @@ const regionalCacheRefs=[
  ['./features/area-assessment.js?v=4','./features/area-assessment.js?v=3']
 ];
 let normalizedMainHtml=rawHtml;
+// UX-08 source-index v3 is reviewed; normalize only its asset key before
+// the protected historical HTML comparison. Melissa v7 and photo v5 remain.
+normalizedMainHtml=replaceOnce(normalizedMainHtml,
+ '<script src="./features/compact-footnotes.js?v=3"></script>',
+ '<script src="./features/compact-footnotes.js?v=2"></script>');
 // P1 reviewed geocode unit verification: reverse only the approved static cache pin.
 // Every other byte remains subject to the immutable historical bootstrap comparison.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
@@ -48,6 +53,7 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<link rel="stylesheet" href="./features/dashboard-quick-layout.css?v=2">\n','');
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<script src="./features/dashboard-quick-layout.js?v=1" defer></script>\n','');
+
 // UX-02: opt-in boundary picker is a separate feature and does not alter the protected bootstrap.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<script src="./features/school-boundary-pick.js?v=1" defer></script>\n','');
@@ -82,6 +88,7 @@ for(const [next,previous] of [
  ['home-lookup-v2.js?v=27','home-lookup-v2.js?v=20'],
  ['denton-official-zone-references.js?v=2','denton-official-zone-references.js?v=1'],
  ['features/dashboard-extras.css?v=5','features/dashboard-extras.css?v=4'],
+ ['candidate-compare.js?v=5','candidate-compare.js?v=4'],
  ['cfb-official-bridge.js?v=3','cfb-official-bridge.js?v=2'],
  ['home-school-manual-bridge.js?v=3','home-school-manual-bridge.js?v=1']
 ])normalizedMainHtml=replaceOnce(normalizedMainHtml,next,previous);
@@ -90,7 +97,7 @@ for(const [next,prior] of [["https://gis.texaswildfirerisk.com https://tiles.ope
 // Normalize only the newly approved CFB/Denton school source panel cache key
 // before comparing the old immutable HTML baseline; all other bytes stay pinned.
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
- './features/dfw-school-coverage-panel.js?v=6',
+ './features/dfw-school-coverage-panel.js?v=7',
  './features/dfw-school-coverage-panel.js?v=2');
 assert.equal(normalizedMainHtml,show('c12ab9860057e5d59b6f0e52e486b392f083da8a','index.html'),
  'Unreviewed main HTML changes beyond Liberty/split UX');
@@ -449,7 +456,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
  // Independently sourced TexasWorks physical-campuses explanation: cache-bust
  // only the existing collapsed, lazily loaded coverage JS module.
  approvedHtml=replaceOnce(approvedHtml,'./features/dfw-school-coverage-panel.js?v=1',
-  './features/dfw-school-coverage-panel.js?v=6');
+  './features/dfw-school-coverage-panel.js?v=7');
  // Source-only CFB 2025-26 conflict disclosure; still no auto-assignment.
  approvedHtml=replaceOnce(approvedHtml,'./features/cfb-approved-zone-atlas.js?v=1',
   './features/cfb-approved-zone-atlas.js?v=2');
@@ -507,7 +514,7 @@ test('main index is byte-exact to newest approved CFB baseline, except home look
   '</body></html>');
  const restoredApprovedCache=replaceOnce(withoutCompactFootnotes,
   './features/dfw-school-coverage-panel.js?v=2',
-  './features/dfw-school-coverage-panel.js?v=6');
+  './features/dfw-school-coverage-panel.js?v=7');
  assert.equal(hash(restoredApprovedCache),hash(approvedHtml),
   'Unreviewed HTML drift beyond the documented compact-footnote additions');
  // Strip only previously released #262 zoom label additions from the
