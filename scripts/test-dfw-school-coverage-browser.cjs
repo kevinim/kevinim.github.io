@@ -38,6 +38,29 @@ fs.mkdirSync(folder,{recursive:true});
     assert.equal(vintageSourceRequests.length,0,'Plano/Lewisville vintage evidence must never block initial map');
     await page.locator('#dfwSchoolCoveragePanel > summary').click();
     await page.locator('#dfwSchoolCoverageContent .dfw-coverage-stats').waitFor({timeout:45000});
+
+    // UX-07: a real browser checks focusable horizontal table and mobile hit targets.
+    await page.waitForFunction(()=>{
+      const content=document.getElementById('dfwSchoolCoverageContent');
+      return content?.getAttribute('aria-busy')==='false';
+    });
+    const coverageContent=page.locator('#dfwSchoolCoverageContent');
+    assert.equal(await coverageContent.getAttribute('aria-live'),'off',
+      'the full table should not flood screen-reader live announcements');
+    const tableRegion=coverageContent.locator('.dfw-coverage-table-wrap');
+    assert.equal(await tableRegion.getAttribute('role'),'region');
+    assert.equal(await tableRegion.getAttribute('aria-label'),'DFW 학군별 학교 배정 연결 현황');
+    await tableRegion.focus();
+    assert.equal(await tableRegion.evaluate(node=>document.activeElement===node),true,
+      'horizontal table region must be keyboard focusable');
+    if(width===390){
+      const controlHeights=await coverageContent.locator(
+        '.dfw-coverage-filter input, .dfw-coverage-filter select, button.dfw-coverage-more'
+      ).evaluateAll(nodes=>nodes.map(node=>node.getBoundingClientRect().height));
+      assert.ok(controlHeights.length>=3 && controlHeights.every(height=>height>=44),
+        'mobile search/select/quick-jump controls require >=44px height: '+controlHeights);
+    }
+
     assert.equal(rendererRequests.length,1,'Opening panel should load the approved same-origin JS renderer exactly once');
      assert.equal(requests.length,1,'opening panel should request coverage dataset once');
     assert.equal(localityRequests.length,1,'TexasWorks physical-locality evidence must load only when panel opens');
