@@ -111,6 +111,7 @@ function clearSelectedSchoolIfFiltered(){
     ||!schoolPassesRatingFilter(state.selectedSchool)){
   state.selectedSchool=null;
   schoolFocusGroup?.clearLayers();
+  updateSelectedSchoolList();updateSelectedAddressSchoolCards();
   drawDetail();drawBoundary();
  }
 }
@@ -437,6 +438,24 @@ function gradeTag(s){return s.type==='high'?'고등':s.type==='middle'?'중등':
 // A school-site location is a distinct item from any enrollment boundary.
 // Use a dedicated overlay so viewport marker redraws and grade/rating filters
 // cannot make an explicitly selected campus disappear.
+// Address-first cards share an exact campus object with the map/rail.
+// ZIP, campus name and proximity never establish residence assignment.
+const addressPriorityCardSchools=new WeakMap();
+function updateSelectedAddressSchoolCards(scrollToCard=false){
+ const root=el('homeAssignmentPrioritySchools');
+ if(!root)return;
+ let activeCard=null;
+ for(const card of root.querySelectorAll('.home-assignment-school')){
+  const selected=!!state.selectedSchool&&addressPriorityCardSchools.get(card)===state.selectedSchool;
+  card.classList.toggle('home-school-map-selected',selected);
+  if(selected){card.setAttribute('aria-current','true');activeCard=card;}
+  else card.removeAttribute('aria-current');
+ }
+ if(scrollToCard&&activeCard&&!el('homeAssignmentPriority')?.hidden){
+  const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+  activeCard.scrollIntoView?.({behavior:reduced?'auto':'smooth',block:'nearest'});
+ }
+}
 function updateSelectedSchoolList(){
  const panel=el('schoolList');
  if(!panel)return;
@@ -484,6 +503,7 @@ async function schoolClicked(s,fromList=false){
  if(!s)return;
  claimMapViewport();state.selectedSchool=s;
  updateSelectedSchoolList();
+ updateSelectedAddressSchoolCards(!fromList);
  // Preserve existing source/year warnings and user-selected boundary overlay.
 
  drawDetail();
@@ -821,6 +841,7 @@ function renderAddressSchoolPriority(){
   }
   const card=document.createElement('div');card.className='home-assignment-school';
   const school=entry.school;
+  if(school&&state.schools.includes(school))addressPriorityCardSchools.set(card,school);
   const rawGrade=entry.verifiedRating||(
    school&&typeof scoreRecord==='function'?scoreRecord(school.name,school.district)?.rating:null);
   const grade=['A','B','C','D','F'].includes(rawGrade)?rawGrade:
@@ -898,6 +919,7 @@ function renderAddressSchoolPriority(){
    bridge.scrollIntoView({behavior:'auto',block:'start'});
   }else el('homeSchoolInfo')?.scrollIntoView({behavior:'auto',block:'start'});
  };
+ updateSelectedAddressSchoolCards();
 }
  function drawSchools(){
   if(!map)return;
@@ -908,6 +930,7 @@ function renderAddressSchoolPriority(){
   if(addressView&&state.selectedSchool&&!addressView.schools.includes(state.selectedSchool)&&
      !referenceCandidateSchoolRecords(addressView).includes(state.selectedSchool)){
    state.selectedSchool=null;schoolFocusGroup?.clearLayers();drawDetail();
+   updateSelectedSchoolList();updateSelectedAddressSchoolCards();
   }
   const legend=el('schoolLegend');
   if(legend){
