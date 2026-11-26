@@ -22,7 +22,7 @@ test('workplace briefcase marker shared by home and ZIP route',()=>{
 });
 
 test('functional scripts and source files are loaded without an extra map library',()=>{
- for(const file of ['features/dashboard-extras.css?v=5','features/commute/workplace-marker.js?v=1',
+ for(const file of ['features/dashboard-extras.css?v=6','features/commute/workplace-marker.js?v=1',
  'features/commute/cost-model.js?v=1','features/dashboard-extras.js?v=3']){
   assert.ok(index.includes(file),file+' not loaded');
  }
@@ -49,7 +49,7 @@ test('existing controls and school map logic remain present',()=>{
  assert.ok(index.includes('L.map(\'map\''));
  assert.ok(index.includes('createCrimeCityMap?.'));
  assert.ok(index.includes('createFemaHazardOverlay?.'));
- assert.ok(index.includes('./home-lookup-v2.js?v=28'));
+ assert.ok(index.includes('./home-lookup-v2.js?v=29'));
  assert.ok(home.includes("window.noteCommuteRouteDistance?.(data.routes?.[0]?.distance,'home')"));
  assert.ok(index.includes("window.noteCommuteRouteDistance?.(j.routes?.[0]?.distance,'zip')"));
 });

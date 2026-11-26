@@ -47,6 +47,7 @@ async function run(){
    const mckinney=await page.evaluate(()=>{
     const previous={assignmentFor:schoolAssignmentFor,schools:state.schools,
      ratings:state.ratings,liveFinder:state.liveFinder['043907'],homeValue:home,
+     selectedSchool:state.selectedSchool,
      center:map.getCenter(),zoom:map.getZoom()};
     try{
      const names=[
@@ -74,7 +75,24 @@ async function run(){
      const cards=[...document.querySelectorAll(
       '#homeAssignmentPrioritySchools .home-assignment-school')];
      const view=addressSchoolView();
-     return {labels:cards.map(c=>c.querySelector('strong')?.textContent),
+     // Actual Leaflet marker -> priority card, then priority card -> map.
+     const bennettMarker=referenceCampusGroup?.getLayers().find(m=>
+      m.options?.title?.includes('BENNETT'));
+     bennettMarker?.fire('click');
+     const mapToCard={selected:state.selectedSchool?.name,
+      cards:cards.filter(c=>c.classList.contains('school-map-selected')).map(c=>
+       c.querySelector('strong')?.textContent),
+      current:cards.filter(c=>c.getAttribute('aria-current')==='true').length};
+     cards[1]?.querySelector('button.home-school-map-button')?.click();
+     const cardToMap={selected:state.selectedSchool?.name,
+      cards:cards.filter(c=>c.classList.contains('school-map-selected')).map(c=>
+       c.querySelector('strong')?.textContent),
+      current:cards.filter(c=>c.getAttribute('aria-current')==='true').length};
+     state.selectedSchool=null;updateSelectedSchoolList();
+     const cleared=cards.every(c=>c.getAttribute('aria-current')==='false'&&
+      !c.classList.contains('school-map-selected'));
+     return {mapToCard,cardToMap,cleared,
+      labels:cards.map(c=>c.querySelector('strong')?.textContent),
       buttons:cards.filter(c=>!!c.querySelector('button.home-school-map-button')).length,
       pins:referenceCampusGroup?.getLayers().length||0,
       linked:referenceCandidateSchoolLocations(view).map(s=>s.name),
@@ -83,7 +101,7 @@ async function run(){
      schoolAssignmentFor=previous.assignmentFor;
      state.schools=previous.schools;state.ratings=previous.ratings;
      state.liveFinder['043907']=previous.liveFinder;
-     home=previous.homeValue;
+     home=previous.homeValue;state.selectedSchool=previous.selectedSchool;
      map.setView(previous.center,previous.zoom,{animate:false});
      renderHome();drawSchools();drawList();
     }
@@ -95,6 +113,19 @@ async function run(){
    assert.deepEqual(mckinney.linked,
     ['DEAN AND MILDRED BENNETT EL','DOWELL MIDDLE','MCKINNEY BOYD H S']);
    assert.equal(mckinney.certified,0,'GIS references are not enrollment certification');
+   // PR smoke reads the EXISTING Pages deployment before this PR merges.
+   // Enforce new UX-02 behavior on actual deployment-status/scheduled/manual
+   // runs, and also during PR runs once CSS v2 is already live. Never call
+   // pre-merge old Pages a failed new-feature release.
+   const ux02LiveExpected=process.env.GITHUB_EVENT_NAME!=='pull_request'||
+    (await page.locator('link[href*="dashboard-quick-layout.css?v=2"]').count())>0;
+   if(ux02LiveExpected){
+    assert.deepEqual(mckinney.mapToCard,{selected:'DEAN AND MILDRED BENNETT EL',
+     cards:['BENNETT'],current:1},'Marker click must select only linked reference card');
+    assert.deepEqual(mckinney.cardToMap,{selected:'DOWELL MIDDLE',
+     cards:['DOWELL'],current:1},'Address card click must synchronize map selection');
+    assert.equal(mckinney.cleared,true,'Cleared campus must leave no stale selected card');
+   }
    // Prosper regression: exercise the actual Pages-loaded 2026-27 E/M/H
    // district GIS and rendered address-first reference cards at both widths.
    // Use a PUBLIC district office point, never a residential address.

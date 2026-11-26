@@ -17,7 +17,7 @@ function addCandidate(items, candidate) {
       candidate.ll.length !== 2 || !candidate.ll.every(Number.isFinite) ||
       items.length >= 3 || items.some(x => cleanAddress(x.address) === cleanAddress(candidate.address))) return items;
   return [...items, {
-    address: candidate.address, typedAddress: candidate.typedAddress || candidate.address,
+    address: candidate.address, typedAddress:candidate.typedAddress||candidate.address,
     ll: [...candidate.ll],
     geocodeQuality: candidate.geocodeQuality ? {...candidate.geocodeQuality} : null,
     parcel: candidate.parcel?.status === 'matched' ? {...candidate.parcel} : null,
@@ -225,7 +225,7 @@ if (typeof document !== 'undefined') {
       $('homeAddress').value = item.address;
       const selected = useHomeCandidate({
         address: item.address, location: {y: item.ll[0], x: item.ll[1]},
-        savedTypedAddress: item.typedAddress,
+        savedTypedAddress:item.typedAddress,
         savedGeocodeQuality: item.geocodeQuality, savedParcel: item.parcel,
         savedOfficialReview: item.officialReview, savedOfficialDraft: item.officialDraft
       });

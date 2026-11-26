@@ -13,7 +13,7 @@ test('tracked high-risk browser sources remain within the reviewed HTML sink inv
   const result = auditBrowserSurface(sources());
   assert.deepEqual(result.errors, []);
   assert.equal(result.summary.scannedFiles, Object.keys(SINK_LIMITS).length);
-  assert.equal(result.summary.htmlSinkOccurrences, 31);
+  assert.equal(result.summary.htmlSinkOccurrences, 30); // One legacy candidate innerHTML sink removed; audited lower baseline.
   assert.ok(result.warnings.some(x => /not certified safe/i.test(x)));
 });
 

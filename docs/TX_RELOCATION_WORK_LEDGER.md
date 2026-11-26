@@ -177,9 +177,7 @@
 - Follow-up `agent/tx-p1-prosper-residential-tax-synthetic-locator-20261124` adds at most 20 **public official Prosper Infofinder map-click** checks at synthetic grid points matched to residential-property-category/Prosper taxing-unit code, counting publisher source-campus parity vs source missing-grade patterns without personal addresses or IDs in artifact. Pending exact-head PR QA/merge/Pages smoke; do not claim complete until release verified. P1 real residence/land-use/100-ISD GIS expansion, 0 certified residential ISDs and separate Public Production NO-GO remain.
 
 
-### 2026-11-25 EST — UX-04/05 evidence-led address comparison (PR #423, not released)
-- Baseline main 4bf3e32928daf941a92e0f74e6bbdaf42f52e3ec; implementation branch gpt/ux04-05-candidate-evidence-20261125.
-- Existing three-address tab-only comparison expanded with side-by-side school GIS/source caution, Plano 30-minute user-entered commute, Irving church / Contemporary Ballet Dallas travel times, monthly rent and photos review. ACS ZIP context stays collapsible; no ethnic-group housing suitability scoring or neighborhood exclusions.
-- UX-04 / UX-05 state: **implementation on PR / CI & deployment unverified**. School B+ and official residential E/M/H assignment remain external verification gates; no school-grant, map geometry, GIS data or certification logic changed.
-- Automated test tests/candidate-compare-evidence.test.cjs added to existing verify job. At initial PR creation, validation checks are queued; no success or Pages release claimed. Other open UI PR #418 owns overlapping index.html changes and must be reconciled before merge.
-- Public Production remains **NO-GO**; no paid backend, address persistence or personal residence test fixture was introduced. Reference: Issue #412 and PR #423.
+### 2026-11-25 EST — UX-04/05 evidence-led address comparison (PR #423)
+- Branch gpt/ux04-05-candidate-evidence-20261125 adds tab-only 3-address comparison for school GIS reference and unknown official assignment, user-entered Plano 30-minute commute, Irving church and Contemporary Ballet Dallas travel minutes, rental and photo review; demographic ZIP context stays disclosure-only, never eligibility/ranking.
+- CI had regressions from stale asset-version hard-coded checks and source string fixtures; integration reconciles with concurrent #418 main. Final PR HEAD / CI / Pages + live smoke remain mandatory before marking released.
+- Addresses and notes are not stored beyond this tab or submitted to new endpoints. Public Production NO-GO remains unchanged. Evidence: Issue #412, PR #423.
