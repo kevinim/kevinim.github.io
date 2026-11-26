@@ -131,7 +131,7 @@
    box.insertBefore(toolbar,mapRef.getContainer());
    let enabled=false,rows=[],refreshing=false;
    const pane=mapRef.getPane('txSchoolPickPane')||mapRef.createPane('txSchoolPickPane');
-   pane.style.zIndex='415';pane.style.pointerEvents='auto';
+   pane.style.zIndex='415';pane.style.pointerEvents='none';
    const overlay=L.featureGroup().addTo(mapRef);
    function allowedSet(){
     const set=new Set();
@@ -222,6 +222,7 @@
    }
    button.addEventListener('click',()=>{
     enabled=!enabled;
+    pane.style.pointerEvents=enabled?'auto':'none';
     button.setAttribute('aria-pressed',String(enabled));
     button.textContent='GIS 경계 클릭 선택: '+(enabled?'켬':'끔');
     if(enabled)redraw();
