@@ -46,6 +46,8 @@ test('house-number gate does not bypass apartment unit or ZIP safeguards',()=>{
   match('1234 Synthetic Lane Apt 4A, Prosper TX 75078','Subaddress')).usableForSchoolCandidate,false);
  assert.equal(assessResidentialGeocode(a,
   match('1234 Synthetic Lane Apt 4B, Prosper TX 75078','Subaddress')).usableForSchoolCandidate,true);
- assert.equal(assessResidentialGeocode(request,
-  match('1234 Synthetic Lane, Prosper TX 75079')).usableForSchoolCandidate,true===false);
+ const contradictory=match('1234 Synthetic Lane, Prosper TX 75079');
+ assert.equal(assessResidentialGeocode(request,contradictory).usableForSchoolCandidate,false);
+ contradictory.attributes.Postal='75079';
+ assert.equal(assessResidentialGeocode(request,contradictory).usableForSchoolCandidate,false);
 });
