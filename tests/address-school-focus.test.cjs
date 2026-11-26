@@ -394,3 +394,42 @@ test('UX-01: search phase is accessible, resets busy form and never grants assig
  assert.ok(lookup.includes("setHomeSearchPhase('idle')"));
  assert.ok(!['localStorage','sessionStorage','fetch('].some(text=>lookup.slice(start,stop).includes(text)));
 });
+
+test('UX-02: a map pin reveals its selected school inside the rail without page scrolling',()=>{
+ const begin=source.indexOf('function revealSelectedSchoolInList(){');
+ const end=source.indexOf('function focusSelectedSchoolCampus(',begin);
+ assert.ok(begin>=0&&end>begin,'Map-to-list internal scroll bridge is present');
+ const rect={top:100,bottom:200,height:100};
+ const item={top:300,bottom:320,height:20};
+ const button={getBoundingClientRect:()=>item};
+ const panel={scrollHeight:550,clientHeight:100,scrollTop:0,
+  getBoundingClientRect:()=>rect,querySelector:selector=>{
+   assert.equal(selector,'button.school.school-map-selected[data-sid]');
+   return button;
+  }};
+ const ctx={el:name=>name==='schoolList'?panel:null};
+ vm.runInNewContext(source.slice(begin,end),ctx,{timeout:1000});
+ ctx.revealSelectedSchoolInList();
+ assert.equal(panel.scrollTop,160,'Only the list scrollTop moves toward the selected school');
+ panel.scrollTop=0;item.top=125;item.bottom=145;
+ ctx.revealSelectedSchoolInList();
+ assert.equal(panel.scrollTop,0,'Already visible school must not jump');
+ panel.scrollHeight=100;item.top=300;item.bottom=320;
+ ctx.revealSelectedSchoolInList();
+ assert.equal(panel.scrollTop,0,'Expanded desktop list must not scroll the page');
+ const clickSource=source.slice(source.indexOf('async function schoolClicked('),source.indexOf('function syncMapSize()'));
+ assert.ok(clickSource.includes('if(!fromList)revealSelectedSchoolInList()'));
+});
+
+test('UX-02: home reset and grade filtering clear previously selected campus across map/list',()=>{
+ const lookup=fs.readFileSync('home-lookup-v2.js','utf8');
+ const clear=lookup.slice(lookup.indexOf('function clearHome(){'),lookup.indexOf('async function geocodeAddress(',lookup.indexOf('function clearHome(){')));
+ assert.match(clear,/home=null;homeCandidates=\[\]/);
+ assert.match(clear,/state\.selectedSchool=null/,'Address clear must invalidate linked school selection');
+ assert.match(clear,/schoolFocusGroup\?\.clearLayers\(\)/);
+ assert.match(clear,/updateSelectedSchoolList\(\)/);
+ assert.match(clear,/drawBoundary\(\)/);
+ const filtered=source.slice(source.indexOf('function clearSelectedSchoolIfFiltered(){'),source.indexOf('function ratingText('));
+ assert.match(filtered,/state\.selectedSchool=null/);
+ assert.match(filtered,/updateSelectedSchoolList\(\)/,'Filter clear must update address-first cards');
+});
