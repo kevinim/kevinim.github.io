@@ -112,6 +112,8 @@ function clearSelectedSchoolIfFiltered(){
   state.selectedSchool=null;
   schoolFocusGroup?.clearLayers();
   drawDetail();drawBoundary();
+  // Grade/rating changes must clear address-first card selection as well.
+  updateSelectedSchoolList();
  }
 }
 function ratingText(r){if(!r)return 'TEA 미연결';if(r.rating==='Not Rated'){const p=r.prior2025;return '2026 미평가'+(unratedExplanation(r)?' · '+unratedExplanation(r):'')+(p?` · 2025 ${p.rating} ${p.score}${p.paired?' (학군 연계)':''}`:'')}return (r.score===null?`${r.rating} · 점수 미공개`:`${r.rating} · ${r.score}`)+(r.paired2026?' (연계 평가)':'')}
@@ -448,6 +450,17 @@ function updateSelectedSchoolList(){
   button.setAttribute('aria-pressed',String(selected));
  }
 }
+// Reveal map-selected schools within the list's own scrollport without
+// jumping the whole page away from the map, including on narrow screens.
+function revealSelectedSchoolInList(){
+ const panel=el('schoolList');
+ if(!panel||panel.scrollHeight<=panel.clientHeight+1)return;
+ const selected=panel.querySelector('button.school.school-map-selected[data-sid]');
+ if(!selected)return;
+ const viewport=panel.getBoundingClientRect(),item=selected.getBoundingClientRect();
+ if(item.top>=viewport.top&&item.bottom<=viewport.bottom)return;
+ panel.scrollTop+=item.top-viewport.top-(viewport.height-item.height)/2;
+}
 function focusSelectedSchoolCampus(s,fromList=false){
  if(!map||!schoolFocusGroup)return false;
  schoolFocusGroup.clearLayers();
@@ -485,6 +498,7 @@ async function schoolClicked(s,fromList=false){
  if(!s)return;
  claimMapViewport();state.selectedSchool=s;
  updateSelectedSchoolList();
+ if(!fromList)revealSelectedSchoolInList();
  // Preserve existing source/year warnings and user-selected boundary overlay.
 
  drawDetail();
