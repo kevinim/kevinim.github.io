@@ -433,3 +433,8 @@ test('UX-02: home reset and grade filtering clear previously selected campus acr
  assert.match(filtered,/state\.selectedSchool=null/);
  assert.match(filtered,/updateSelectedSchoolList\(\)/,'Filter clear must update address-first cards');
 });
+
+test('UX-02: active map and address scripts use fresh cache keys',()=>{
+ assert.ok(html.includes('./dashboard-main.js?v=23'), 'Map selection renderer must not use stale Pages cache');
+ assert.ok(html.includes('./home-lookup-v2.js?v=29'), 'Address reset logic must not use stale Pages cache');
+});
