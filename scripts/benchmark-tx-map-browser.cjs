@@ -69,7 +69,12 @@ async function caseRun(browser,url,viewport,label){
     state.ratings.length>500&&Object.keys(state.polys).length>150}
    catch{return false}
   },null,{timeout:waitMs,polling:100});
-  const result=await page.evaluate(()=>{
+  // Capture readiness before settling optional asynchronous same-origin loads.
+  // Resource counts taken at initial core readiness race the deferred loaders:
+  // baseline cold navigation has been observed as both 107 and 111 assets.
+  const readyAt=await page.evaluate(()=>performance.now());
+  await page.waitForLoadState('networkidle',{timeout:15000});
+  const result=await page.evaluate((readyAt)=>{
    const p=performance,nav=p.getEntriesByType('navigation')[0];
    const resources=p.getEntriesByType('resource');
    const self=location.origin;
@@ -89,7 +94,7 @@ async function caseRun(browser,url,viewport,label){
    return {
     dclMs:nav?.domContentLoadedEventEnd??null,
     fcpMs:fcp,
-    coreReadyMs:p.now(),
+    coreReadyMs:readyAt,
     schoolCount:state.schools.length,ratedCount:state.ratings.length,
     zipShapes:Object.keys(state.polys).length,
     visibleMarkerCount:schoolGroup.getLayers().length,
@@ -100,7 +105,7 @@ async function caseRun(browser,url,viewport,label){
     markerRedrawWorstMs:costs[costs.length-1],
     topTransferred:sorted.slice(0,5).map(r=>({name:new URL(r.name).pathname,bytes:r.transferSize,durationMs:r.duration}))
    };
-  });
+  },readyAt);
   samples.push({pass,...result});
  }
  await context.close();
