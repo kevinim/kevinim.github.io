@@ -285,3 +285,77 @@
 :root[data-theme="dark"] .workplace-clear{color:#bbcae0}
 :root[data-theme="dark"] .workplace-clear:hover{background:#40516c;color:#fff}
 @media(max-width:720px){.workplaces-panel{padding:9px}.workplace-entry{flex-direction:column}.workplace-entry-actions{width:100%}.workplace-entry-actions .mini-btn{flex:1}}
+
+
+/* UX-04/05: evidence-led comparison; manual inputs stay in this tab. */
+.candidate-cards .candidate-compare-guide{
+  grid-column:1/-1;margin:2px 0 4px;padding:9px 12px;
+  border-left:3px solid #5379b8;border-radius:6px;
+  background:#edf4ff;color:#284469;font-size:12px;line-height:1.55
+}
+.candidate-card{display:flex;flex-direction:column;gap:9px;color:#233750}
+.candidate-card .candidate-address{margin:1px 0 3px;font-size:13px;line-height:1.5}
+.candidate-card .candidate-signals{display:grid;gap:6px;margin:0}
+.candidate-signals .candidate-fact{
+  display:grid;grid-template-columns:minmax(84px,36%) minmax(0,1fr);
+  gap:8px;padding:8px 9px;border:1px solid #e0e8f3;
+  border-radius:8px;background:#fff
+}
+.candidate-signals .candidate-fact dt{font-size:11px;font-weight:700;color:#345475}
+.candidate-signals .candidate-fact dd{margin:0;text-align:left;min-width:0}
+.candidate-signals .candidate-fact strong{display:block;font-size:12px;line-height:1.5;color:#243f62;overflow-wrap:anywhere}
+.candidate-signals .candidate-fact small{display:block;margin-top:3px;font-size:10px;line-height:1.5;color:#536982}
+.candidate-signals .candidate-fact[data-state="within"]{
+  border-color:#9bcfb6;background:#effbf4
+}
+.candidate-signals .candidate-fact[data-state="within"] strong{color:#175e3e}
+.candidate-signals .candidate-fact[data-state="over"]{
+  border-color:#e5b3aa;background:#fff0ed
+}
+.candidate-signals .candidate-fact[data-state="over"] strong{color:#9c392d}
+.candidate-manual{border:1px solid #ccd9ea;border-radius:9px;margin:0;padding:9px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.candidate-manual legend{font-size:11px;color:#34516e;font-weight:800;padding:0 4px}
+.candidate-manual-field{display:flex;flex-direction:column;gap:4px;min-width:0;font-size:11px;color:#3d5875;font-weight:650}
+.candidate-manual-field input{width:100%;max-width:100%;min-height:37px;box-sizing:border-box;background:#fff;color:#152c48;border:1px solid #b5c5dc;border-radius:7px;padding:6px 8px;font:inherit;font-size:13px}
+.candidate-photo-check{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;color:#35516f;min-height:30px}
+.candidate-photo-check input{width:17px;height:17px;flex:none}
+.candidate-school-details,.candidate-demo-details{border-top:1px solid #dbe5f2;padding-top:8px}
+.candidate-school-details summary,.candidate-demo-details summary{cursor:pointer;color:#275aa2;font-size:11px;font-weight:800;line-height:1.5}
+.candidate-school-details .candidate-schools{margin:8px 0 0}
+.candidate-demo-list{margin:7px 0!important}
+.candidate-census-note{font-size:10px;line-height:1.6;color:#566e8c;margin:6px 0 0}
+.candidate-card .candidate-open{margin-top:auto;align-self:start}
+.candidate-card summary:focus-visible,.candidate-manual input:focus-visible{
+  outline:3px solid #456ec1;outline-offset:2px
+}
+:root[data-theme="dark"] .candidate-cards .candidate-compare-guide{background:#243b5c;color:#dce9ff;border-color:#98bbef}
+:root[data-theme="dark"] .candidate-card{background:#1d304b;color:#e6efff;border-color:#486180}
+:root[data-theme="dark"] .candidate-card .candidate-heading{color:#d3e4ff}
+:root[data-theme="dark"] .candidate-signals .candidate-fact{background:#223a58;border-color:#4c6583}
+:root[data-theme="dark"] .candidate-signals .candidate-fact dt{color:#c4d9f3}
+:root[data-theme="dark"] .candidate-signals .candidate-fact strong{color:#f2f7ff}
+:root[data-theme="dark"] .candidate-signals .candidate-fact small{color:#bfcee0}
+:root[data-theme="dark"] .candidate-signals .candidate-fact[data-state="within"]{background:#173f35;border-color:#368e6a}
+:root[data-theme="dark"] .candidate-signals .candidate-fact[data-state="within"] strong{color:#b4f0d0}
+:root[data-theme="dark"] .candidate-signals .candidate-fact[data-state="over"]{background:#552c32;border-color:#b35e61}
+:root[data-theme="dark"] .candidate-signals .candidate-fact[data-state="over"] strong{color:#ffcbc6}
+:root[data-theme="dark"] .candidate-manual{border-color:#59718e}
+:root[data-theme="dark"] .candidate-manual legend,
+:root[data-theme="dark"] .candidate-manual-field,
+:root[data-theme="dark"] .candidate-photo-check{color:#d1e3fa}
+:root[data-theme="dark"] .candidate-manual-field input{background:#15263b;color:#f0f6ff;border-color:#6b84a6}
+:root[data-theme="dark"] .candidate-school-details,
+:root[data-theme="dark"] .candidate-demo-details{border-color:#4e6684}
+:root[data-theme="dark"] .candidate-school-details summary,
+:root[data-theme="dark"] .candidate-demo-details summary{color:#c5dcff}
+:root[data-theme="dark"] .candidate-census-note{color:#c2d0e3}
+@media(max-width:1040px) and (min-width:721px){
+  .candidate-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:720px){
+  .candidate-cards{grid-template-columns:minmax(0,1fr)}
+  .candidate-signals .candidate-fact{grid-template-columns:minmax(100px,36%) minmax(0,1fr)}
+}
+@media(max-width:390px){
+  .candidate-manual{grid-template-columns:minmax(0,1fr)}
+}
