@@ -4,7 +4,7 @@ const picker=require('../features/school-boundary-pick.js');
 const poly=(school,district,grade='elementary',campusId)=>({
  type:'Feature',properties:{school,sourceDistrict:district,gradeLevel:grade,
   ...(campusId?{campusId}:{})},
- geometry:{type:'Polygon',coordinates:[[[-97,33],[-96,33],[-96,34],[-97,33]]}
+ geometry:{type:'Polygon',coordinates:[[[-97,33],[-96,33],[-96,34],[-97,33]]]}
 });
 test('identity is district-and-grade scoped; never uses same name from a foreign ISD',()=>{
  const local={name:'Lincoln Elementary',district:'AISD',type:'elementary'};
