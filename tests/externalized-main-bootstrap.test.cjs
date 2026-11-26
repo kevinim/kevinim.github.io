@@ -255,7 +255,7 @@ test('pre-existing dashboard remains byte-exact except approved personal commute
  // selection sync call. Revert it before comparing untouched runtime bytes.
  // Do not broaden the approved scope to unrelated map/bootstrap changes.
  reviewedReferenceJs=replaceOnce(reviewedReferenceJs,
-  'function updateSelectedSchoolList(){\\n syncAddressPrioritySchoolSelection();',
+  'function updateSelectedSchoolList(){\n syncAddressPrioritySchoolSelection();',
   'function updateSelectedSchoolList(){');
  // Scope the 2026-11-18 owner-approved historical GIS display change to five
  // exact fragments. The remaining main renderer must byte-match its PR parent.
