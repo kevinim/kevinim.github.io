@@ -36,6 +36,17 @@ test('Mesquite polygon schema is a candidate only, not current school assignment
  assert.equal(m.sourceGeometry,'esriGeometryPolygon');
  assert.equal(m.sourceSchoolYear,null);
  assert.equal(m.sourceLastEdited,null);
+ // The official school's 52-entry locator catalog is not the frozen TEA 51-record
+ // snapshot and must never auto-promote a zoning polygon or missing campus ID.
+ assert.equal(m.inventoryCampuses,51);
+ assert.equal(m.districtLocatorPublicSchoolCount,52);
+ assert.equal(m.districtLocatorUrl,'https://mesquiteisd.org/attendance-zones');
+ assert.equal(m.districtLocatorObservedOn,'2026-11-26');
+ assert.equal(m.districtToTeaCampusIdentityVerified,false);
+ assert.equal(m.sourceSchoolYear,null);
+ assert.equal(m.sourceReuseRightsVerified,false);
+ assert.equal(m.liveSchoolAssignmentCertified,false);
+ assert.match(m.notes,/campus ID membership.*NOT verified/);
 });
 test('Wylie Collin County is not silently swapped with Abilene Wylie ISD',()=>{
  const w=manifest.districts[1];
