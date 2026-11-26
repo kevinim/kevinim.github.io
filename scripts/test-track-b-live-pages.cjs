@@ -113,11 +113,19 @@ async function run(){
    assert.deepEqual(mckinney.linked,
     ['DEAN AND MILDRED BENNETT EL','DOWELL MIDDLE','MCKINNEY BOYD H S']);
    assert.equal(mckinney.certified,0,'GIS references are not enrollment certification');
-   assert.deepEqual(mckinney.mapToCard,{selected:'DEAN AND MILDRED BENNETT EL',
-    cards:['BENNETT'],current:1},'Marker click must select only linked reference card');
-   assert.deepEqual(mckinney.cardToMap,{selected:'DOWELL MIDDLE',
-    cards:['DOWELL'],current:1},'Address card click must synchronize map selection');
-   assert.equal(mckinney.cleared,true,'Cleared campus must leave no stale selected card');
+   // PR smoke reads the EXISTING Pages deployment before this PR merges.
+   // Enforce new UX-02 behavior on actual deployment-status/scheduled/manual
+   // runs, and also during PR runs once CSS v2 is already live. Never call
+   // pre-merge old Pages a failed new-feature release.
+   const ux02LiveExpected=process.env.GITHUB_EVENT_NAME!=='pull_request'||
+    (await page.locator('link[href*="dashboard-quick-layout.css?v=2"]').count())>0;
+   if(ux02LiveExpected){
+    assert.deepEqual(mckinney.mapToCard,{selected:'DEAN AND MILDRED BENNETT EL',
+     cards:['BENNETT'],current:1},'Marker click must select only linked reference card');
+    assert.deepEqual(mckinney.cardToMap,{selected:'DOWELL MIDDLE',
+     cards:['DOWELL'],current:1},'Address card click must synchronize map selection');
+    assert.equal(mckinney.cleared,true,'Cleared campus must leave no stale selected card');
+   }
    // Prosper regression: exercise the actual Pages-loaded 2026-27 E/M/H
    // district GIS and rendered address-first reference cards at both widths.
    // Use a PUBLIC district office point, never a residential address.
