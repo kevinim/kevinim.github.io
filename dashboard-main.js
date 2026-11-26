@@ -455,7 +455,7 @@ function updateSelectedSchoolList(){
 function revealSelectedSchoolInList(){
  const panel=el('schoolList');
  if(!panel||panel.scrollHeight<=panel.clientHeight+1)return;
- const selected=panel.querySelector('button.school.school-map-selected[data-sid]');
+ const selected=panel.querySelector?.('button.school.school-map-selected[data-sid]');
  if(!selected)return;
  const viewport=panel.getBoundingClientRect(),item=selected.getBoundingClientRect();
  if(item.top>=viewport.top&&item.bottom<=viewport.bottom)return;
