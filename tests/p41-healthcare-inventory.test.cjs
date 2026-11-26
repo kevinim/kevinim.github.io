@@ -54,3 +54,25 @@ test('Reject invalid times, duplicate IDs and non-CMS records',()=>{
  assert.throws(()=>summarizeEmergencyAccess([{...ed,cmsFacilityId:'X'}],{}));
  assert.throws(()=>summarizeEmergencyAccess([ed],{},[15,15]));
 });
+test('Whitespace-only route values remain unknown, never zero-minute EDs',()=>{
+ const ed=data.records.filter(x=>x.emergencyServices===true).slice(0,2);
+ const route={[ed[0].cmsFacilityId]:'   ',[ed[1].cmsFacilityId]:'15.5'};
+ const result=summarizeEmergencyAccess(ed,route);
+ assert.equal(result.nearestKnown.cmsFacilityId,ed[1].cmsFacilityId);
+ assert.equal(result.nearestKnown.driveMinutes,15.5);
+ assert.equal(result.facilitiesMissingTravelTime,1);
+ assert.equal(result.completeTravelTimeCoverage,false);
+ assert.equal(result.accessCountsLowerBound['15'],0);
+});
+test('Boolean and inherited travel times cannot fabricate an emergency route',()=>{
+ const ed=data.records.find(x=>x.emergencyServices===true);
+ for(const value of [true,false,{},[]])
+  assert.throws(()=>summarizeEmergencyAccess([ed],{[ed.cmsFacilityId]:value}),
+   /invalid routed minutes/);
+ const inherited=Object.create({[ed.cmsFacilityId]:1});
+ const missing=summarizeEmergencyAccess([ed],inherited);
+ assert.equal(missing.nearestKnown,null);
+ assert.equal(missing.facilitiesMissingTravelTime,1);
+ const atSite=summarizeEmergencyAccess([ed],{[ed.cmsFacilityId]:0});
+ assert.equal(atSite.nearestKnown.driveMinutes,0,'Real explicit zero-minute route remains valid');
+});
