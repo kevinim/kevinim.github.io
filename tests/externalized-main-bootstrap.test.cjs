@@ -45,7 +45,7 @@ normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<section id="txCompareSection" class="tx-layout-section" aria-label="5. 지역 나란히 비교"></section>\n'+
  '<section id="txStatsSection" class="tx-layout-section tx-stats-section" aria-labelledby="txStatsTitle"><h2 id="txStatsTitle" class="tx-stats-title">6. 통계 및 상세 정보</h2></section>\n','');
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
- '<link rel="stylesheet" href="./features/dashboard-quick-layout.css?v=1">\n','');
+ '<link rel="stylesheet" href="./features/dashboard-quick-layout.css?v=2">\n','');
 normalizedMainHtml=replaceOnce(normalizedMainHtml,
  '<script src="./features/dashboard-quick-layout.js?v=1" defer></script>\n','');
 
