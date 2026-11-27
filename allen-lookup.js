@@ -49,7 +49,11 @@ function matchAllenAddress(address, rows, inDistrict) {
   // An overlapping official street range is an informational candidate only
   // when every matching source row lists the same four campuses. Conflicting
   // or missing schools fail closed. Enrollment and source year stay unverified.
-  if(matches.length===1)return matches[0];
+  // A source row missing any of K–6, 7–8, grade 9 or grades 10–12
+  // cannot be rendered as a complete address-to-school reference chain.
+  const complete=row=>row.length>=6&&row.slice(2,6).every(
+    value=>typeof value==='string'&&value.trim().length>0&&value.length<=120);
+  if(matches.length===1)return complete(matches[0])?matches[0]:null;
   if(matches.length<2)return null;
   const chains=matches.map(r=>r.slice(2,6).map(v=>String(v||'').trim().toUpperCase()));
   return chains.every(chain=>chain.length===4&&chain.every((name,i)=>name&&name===chains[0][i]))
