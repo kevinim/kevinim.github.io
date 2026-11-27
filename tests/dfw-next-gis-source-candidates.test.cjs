@@ -36,6 +36,30 @@ test('Mesquite polygon schema is a candidate only, not current school assignment
  assert.equal(m.sourceGeometry,'esriGeometryPolygon');
  assert.equal(m.sourceSchoolYear,null);
  assert.equal(m.sourceLastEdited,null);
+ // The official school's 52-entry locator catalog is not the frozen TEA 51-record
+ // snapshot and must never auto-promote a zoning polygon or missing campus ID.
+ assert.equal(m.inventoryCampuses,51);
+ assert.equal(m.districtLocatorPublicSchoolCount,52);
+ assert.equal(m.districtLocatorUrl,'https://mesquiteisd.org/attendance-zones');
+ assert.equal(m.districtLocatorObservedOn,'2026-11-26');
+ assert.equal(m.districtToTeaCampusIdentityVerified,false);
+ const profile=m.districtPublicCampusProfile;
+ assert.equal(profile.asOf,'2026-11-26');
+ assert.equal(profile.sourceUrl,'https://mesquiteisd.org/realtors');
+ assert.equal(profile.campuses,52);
+ assert.equal(profile.teaRosterCrosswalkStatus,'unresolved');
+ assert.deepEqual(
+  [profile.elementary,profile.middle,profile.comprehensiveHigh,profile.choice,
+   profile.nonTraditionalHigh,profile.alternativeLearningCenter],
+  [34,10,5,1,1,1]);
+ assert.equal(profile.elementary+profile.middle+profile.comprehensiveHigh+
+  profile.choice+profile.nonTraditionalHigh+profile.alternativeLearningCenter,52);
+ assert.notEqual(profile.campuses,m.inventoryCampuses,
+  'Publisher count and pinned TEA snapshot must not silently be treated as equivalent');
+ assert.equal(m.sourceSchoolYear,null);
+ assert.equal(m.sourceReuseRightsVerified,false);
+ assert.equal(m.liveSchoolAssignmentCertified,false);
+ assert.match(m.notes,/campus ID membership.*NOT verified/);
 });
 test('Wylie Collin County is not silently swapped with Abilene Wylie ISD',()=>{
  const w=manifest.districts[1];

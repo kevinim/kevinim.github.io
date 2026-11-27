@@ -25,7 +25,23 @@
       "sourceReuseRightsVerified": false,
       "installedSchoolPolygons": 0,
       "liveSchoolAssignmentCertified": false,
-      "notes": "Municipal layer combines ES/MS/HS zone labels within polygon features. City service does not state a verified 2026-27 school year, districtwide coverage, campus IDs or reuse license. Mesquite ISD provides separate current address locator; do not equate either with independent address-specific assignment."
+      "notes": "Municipal layer combines ES/MS/HS zone labels within polygon features. City service does not state a verified 2026-27 school year, districtwide coverage, campus IDs or reuse license. Mesquite ISD provides separate current address locator; do not equate either with independent address-specific assignment. Independent Mesquite ISD public locator page observed 2026-11-26 advertises 52 schools, versus frozen TEA 2026 inventory of 51 campus records. These have different scope/measurement dates; campus ID membership and 2026-27 zone polygon parity are NOT verified. The district locator is a parent-facing reference only.",
+      "districtLocatorUrl": "https://mesquiteisd.org/attendance-zones",
+      "districtLocatorPublicSchoolCount": 52,
+      "districtLocatorObservedOn": "2026-11-26",
+      "districtToTeaCampusIdentityVerified": false,
+      "districtPublicCampusProfile": {
+        "asOf": "2026-11-26",
+        "sourceUrl": "https://mesquiteisd.org/realtors",
+        "campuses": 52,
+        "elementary": 34,
+        "middle": 10,
+        "comprehensiveHigh": 5,
+        "choice": 1,
+        "nonTraditionalHigh": 1,
+        "alternativeLearningCenter": 1,
+        "teaRosterCrosswalkStatus": "unresolved"
+      }
     },
     {
       "code": "043914",
