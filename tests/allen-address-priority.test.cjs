@@ -76,3 +76,51 @@ test('the address-first panel and list explicitly say unverified and preserve ta
  assert.match(homeSource,/home\.allenAddressReference=rawSchoolCandidate/);
  assert.match(source,/searchedHome\.assignment\?\.status==='conditional-finder-only'/);
 });
+
+test('Allen 2026 public street source snapshot retains four grade bands and quarantines malformed publisher row',()=>{
+ const table=JSON.parse(fs.readFileSync('allen-address-schools.json','utf8'));
+ const {matchAllenAddress}=require('../allen-lookup.js');
+ assert.equal(table.schoolYear,null,'official street table does not certify a current academic year');
+ assert.equal(table.rows.length,1688);
+ const malformed=table.rows.filter(r=>!/^\s*\d+\s*(?:[-–—]\s*\d+)?\s*(?:\(even numbers only\))?\s*$/i.test(String(r[1]||'')));
+ assert.equal(malformed.length,1);
+ assert.equal(malformed[0][1],'2050 Peak St');
+ assert.ok(table.rows.every(row=>Array.isArray(row)&&row.length>=6&&
+  row.slice(2,6).every(c=>typeof c==='string'&&c.trim().length>0)));
+ const r=matchAllenAddress('2050 Peak St, Allen, TX 75013',table.rows);
+ assert.deepEqual(r.slice(2,6),['Evans','Ereckson','Lowery','Allen High School']);
+ assert.equal(matchAllenAddress('2050 Crestview Heights, Allen, TX 75013',table.rows),null);
+});
+test('Allen row cannot show partial K-6, 7-8, freshman or 10-12 chain as complete',()=>{
+ const {matchAllenAddress}=require('../allen-lookup.js');
+ const row=['Synthetic Rd','2000-2100','Evans','Ereckson','Lowery','Allen High School'];
+ const req='2050 Synthetic Rd, Allen, TX';
+ assert.deepEqual(matchAllenAddress(req,[row]),row);
+ for(const pos of [2,3,4,5]){
+  const bad=[...row];bad[pos]='';
+  assert.equal(matchAllenAddress(req,[bad]),null,'missing grade band at '+pos);
+ }
+ assert.equal(matchAllenAddress('2050 Synthetic Rd, Frisco, TX',[row]),null);
+ assert.equal(matchAllenAddress(req,[row],false),null);
+});
+test('Allen overlapping published street ranges require a single unambiguous four-campus chain',()=>{
+ const {matchAllenAddress}=require('../allen-lookup.js');
+ const row=['Synthetic Lane','2000-2100','Evans','Ereckson','Lowery','Allen High School'];
+ const same=['Synthetic Ln','2050-2150','Evans','Ereckson','Lowery','Allen High School'];
+ const conflict=['Synthetic Ln','2050-2150','Other Elem','Ereckson','Lowery','Allen High School'];
+ const q='2060 Synthetic Lane, Allen, TX';
+ assert.deepEqual(matchAllenAddress(q,[row,same]),row);
+ assert.equal(matchAllenAddress(q,[row,conflict]),null);
+});
+test('Allen split-apartment boundary exceptions remain separately blocked for all four published sites',()=>{
+ const {allenSplitApartmentException}=require('../allen-apartment-exceptions.js');
+ for(const addr of ['4450 South Ridge Road Apt 8302, Allen TX',
+  '4700 S Ridge Rd Building 6, Allen TX',
+  '6551 McKinney Ranch Parkway Unit 621, McKinney TX',
+  '7830 Van Tuyl Pkwy Apt 116, Allen TX']){
+  const e=allenSplitApartmentException(addr);
+  assert.equal(e?.status,'unit-specific-district-boundary',addr);
+  assert.equal(e?.source,'https://www.allenisd.org/page/findaschool');
+ }
+ assert.equal(allenSplitApartmentException('2050 Peak St, Allen, TX'),null);
+});
