@@ -35,6 +35,33 @@
   '043912046':'Prosper ISD 2026–27 신규 등록: Moseley Middle 구역의 신규 학생은 Rushing Middle로 안내됩니다.'
  });
  const PROSPER_CLOSED_SOURCE='https://www.prosper-isd.net/page/closed-to-enrollment';
+ // Pin school code + grade + distinctive source-name token to the already
+ // audited 31-campus 2026–27 Prosper GIS catalog. Do not infer campus identity
+ // from a syntactically valid ID alone; otherwise a swapped name can display
+ // the wrong enrollment-capacity warning for a different campus.
+ const PROSPER_NAME_PIN=Object.freeze({
+  elementary:Object.freeze({
+   '101':'FOLSOM','102':'RUCKER','103':'BAKER','104':'COCKRELL',
+   '105':'LIGHT FARMS','106':'WINDSONG RANCH','107':'HUGHES','108':'BOYER',
+   '109':'SPRADLEY','110':'FURR','111':'STUBER','112':'JOHNSON',
+   '113':'REEVES','114':'BRYANT','115':'HALL','116':'LILYANA',
+   '117':'CHRISTIE','118':'JACKSON','119':'THOMSON','120':'SMOTHERMON'
+  }),
+  middle:Object.freeze({
+   '041':'ROGERS','042':'REYNOLDS','043':'HAYS','044':'RUSHING',
+   '045':'JONES','046':'MOSELEY','048':'BRIDGES'
+  }),
+  high:Object.freeze({
+   '001':'PROSPER','005':'ROCK HILL','006':'WALNUT GROVE','007':'RICHLAND'
+  })
+ });
+ function matchesProsperCampus(p){
+  const required=PROSPER_NAME_PIN[p.gradeLevel]?.[p.schoolCode];
+  if(!required||typeof p.school!=='string')return false;
+  const normalized=' '+p.school.toUpperCase().replace(/[^A-Z0-9]+/g,' ').trim()+' ';
+  return normalized.includes(' '+required+' ');
+ }
+
  const REASONS=Object.freeze({
   'needs-address-verification':'주소 위치 정밀도가 충분하지 않습니다.',
   'apartment-split-review':'아파트·건물별 배정 예외가 있어 참고 후보를 표시하지 않습니다.',
@@ -103,8 +130,8 @@
     p.schoolYear==='2026–27'&&
     /^043912[0-9]{3}$/.test(String(p.campusId||''))&&
     /^[0-9]{3}$/.test(String(p.schoolCode||''))&&
-    p.campusId==='043912'+p.schoolCode;
-   if(raw.district==='PROSPER'&&p.campusId!=null&&!officialProsper)
+    p.campusId==='043912'+p.schoolCode&&matchesProsperCampus(p);
+   if(raw.district==='PROSPER'&&!officialProsper)
     return blocked('Prosper 공식 GIS 캠퍼스 번호 또는 학교 코드가 일치하지 않습니다.');
    const yearNote=raw.district==='PISD'?'공식 SchoolFinder 연결 · 원본 GIS 레이어 2025–26':
     raw.district==='LISD'?(p.gradeLevel==='high'?'고등 GIS 2025–26 표기 · 주소 배정 미확인':
