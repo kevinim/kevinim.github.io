@@ -13,6 +13,45 @@ function residentialUnit(value){
  const m=/(?:\b(?:APT|APARTMENT|UNIT|SUITE|STE)\.?\s*|#\s*)([A-Z0-9]+(?:-[A-Z0-9]+)?)(?=\b|[,;]|$)/i.exec(String(value||''));
  return m?m[1].replace(/[^A-Z0-9]/gi,'').toUpperCase():null;
 }
+// Confidence score and ZIP cannot substitute for a matching civic house number.
+function streetNumber(value){
+ const m=/^\s*(\d{1,6}[A-Z]?)\b/i.exec(String(value||''));
+ return m?m[1].toUpperCase():null;
+}
+// A five-digit civic number at the start is not a postal ZIP.
+function trailingZip(value){
+ const m=/(?:^|[\s,])(\d{5})(?:-\d{4})?\s*$/.exec(String(value||'').trim());
+ return m?m[1]:null;
+}
+// A matching civic number is insufficient when Esri returns a different road.
+// Normalize common TX road-name directionals and suffixes and discard any unit.
+// Ambiguous street comparison stays reference-only.
+const ROAD_ALIASES=Object.freeze({
+ NORTH:'N',SOUTH:'S',EAST:'E',WEST:'W',
+ STREET:'ST',ROAD:'RD',DRIVE:'DR',LANE:'LN',AVENUE:'AVE',
+ BOULEVARD:'BLVD',PARKWAY:'PKWY',COURT:'CT',CIRCLE:'CIR',
+ PLACE:'PL',TRAIL:'TRL',TERRACE:'TER',HIGHWAY:'HWY',
+ ROUTE:'RTE',CROSSING:'XING',ALLEY:'ALY'
+});
+const ROAD_ENDINGS=new Set([
+ 'ST','RD','DR','LN','AVE','BLVD','PKWY','CT','CIR','PL','TRL',
+ 'TER','HWY','RTE','XING','ALY','WAY','LOOP'
+]);
+function streetKey(value){
+ const raw=String(value||'');
+ const first=raw.split(',')[0]
+  .replace(/\b(?:APT|APARTMENT|UNIT|SUITE|STE)\b.*$/i,'')
+  .replace(/#.*$/,'');
+ const match=/^\s*\d{1,6}[A-Z]?\s+(.+)$/i.exec(first);
+ if(!match)return null;
+ const tokens=match[1].toUpperCase().replace(/[^A-Z0-9]+/g,' ')
+  .trim().split(/\s+/).filter(Boolean).map(t=>ROAD_ALIASES[t]||t);
+ if(!tokens.length)return null;
+ let end=-1;
+ for(let i=1;i<tokens.length;i++)if(ROAD_ENDINGS.has(tokens[i]))end=i;
+ if(end!==-1)return tokens.slice(0,end+1).join(' ');
+ return raw.includes(',')?tokens.join(' '):null;
+}
 function mentionsUnit(value){
  return /(?:\b(?:APT|APARTMENT|UNIT|SUITE|STE)\b|#\s*[A-Z0-9])/i.test(String(value||''));
 }
@@ -20,12 +59,24 @@ function mentionsUnit(value){
 function assessResidentialGeocode(requestedAddress,c){
  const a=c?.attributes||{},type=String(a.Addr_type||''),score=c?.score;
  const requestedUnit=residentialUnit(requestedAddress);
+ const requestedNumber=streetNumber(requestedAddress);
+ const returnedNumbers=[c?.address,a.Match_addr].map(streetNumber).filter(Boolean);
+ const requestedStreet=streetKey(requestedAddress);
+ const returnedStreets=[c?.address,a.Match_addr].map(streetKey).filter(Boolean);
  const returnedUnits=[c?.address,a.Match_addr].map(residentialUnit).filter(Boolean);
- const inputZip=String(requestedAddress||'').match(/\b\d{5}(?:-\d{4})?\b/g)?.at(-1)?.slice(0,5)||null;
- const candidateZip=String(a.Postal||'').match(/\b\d{5}\b/)?.[0]||String(c?.address||'').match(/\b\d{5}\b/)?.[0]||null;
+ const inputZip=trailingZip(requestedAddress);
+ const returnedZips=[a.Postal,c?.address].map(trailingZip).filter(Boolean);
+ const candidateZip=returnedZips[0]||null;
  let reason=null;
  if(!c?.location||!Number.isFinite(c.location.x)||!Number.isFinite(c.location.y))reason='좌표를 확인하지 못했습니다.';
  else if(!isTexasGeocode(c))reason='텍사스 주와 좌표를 확인할 수 없습니다.';
+ else if(!requestedNumber)reason='주거지 번지수를 확인할 수 없습니다.';
+ else if(!returnedNumbers.length||returnedNumbers.some(n=>n!==requestedNumber))
+  reason='입력한 주거지 번지수와 검색 결과가 일치하지 않습니다.';
+ else if(!requestedStreet||!returnedStreets.length||returnedStreets.some(x=>x!==requestedStreet))
+  reason='입력한 도로명과 검색 결과 도로명이 일치하지 않습니다.';
+ else if(returnedZips.length>1&&new Set(returnedZips).size>1)
+  reason='검색 결과의 ZIP 정보가 서로 일치하지 않습니다.';
  else if(inputZip&&(!candidateZip||inputZip!==candidateZip))reason='입력 ZIP과 검색 결과 ZIP이 일치하지 않습니다.';
  else if(!Number.isFinite(score)||score<95)reason='주소 일치도가 95점 미만입니다.';
  else if(!['PointAddress','Subaddress'].includes(type))reason='건물 또는 호수 단위 주소가 아닌 추정 위치입니다.';
