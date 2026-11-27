@@ -96,7 +96,10 @@
       (year&&year!==YEAR)){
     // Fail closed per school level rather than removing independently valid
     // elementary/middle/high evidence from the entire result.
-    excludedYears.set(level,String(p.sourceYearRaw||p.sourceYear||'미표기'));
+    const explanation=rawYear&&normalizedYear&&rawYear!==normalizedYear
+     ?'원본 '+p.sourceYearRaw+' / 변환 '+p.sourceYear+' (학년도 충돌)'
+     :String(p.sourceYearRaw||p.sourceYear||'미표기');
+    excludedYears.set(level,explanation);
     byLevel.delete(level);
     continue;
    }
