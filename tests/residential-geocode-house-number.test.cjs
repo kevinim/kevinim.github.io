@@ -59,3 +59,18 @@ test('five-digit civic house number is not parsed as a ZIP code when user omits 
  assert.equal(assessResidentialGeocode('12345 Synthetic Lane, Prosper TX',
   match('12346 Synthetic Lane, Prosper TX 75078')).usableForSchoolCandidate,false);
 });
+test('same number and ZIP on a different road never becomes a usable school-reference point',()=>{
+ const changedRoad=match('1234 Wrong Drive, Prosper TX 75078');
+ const q=assessResidentialGeocode(request,changedRoad);
+ assert.equal(q.usableForSchoolCandidate,false);
+ assert.match(q.reason,/도로명/);
+ const c=match();
+ c.attributes.Match_addr='1234 Wrong Drive, Prosper TX 75078';
+ assert.equal(assessResidentialGeocode(request,c).usableForSchoolCandidate,false);
+});
+test('directional and road-suffix aliases normalize without suppressing genuine differences',()=>{
+ const south=match('1234 S Synthetic Ln, Prosper TX 75078');
+ assert.equal(assessResidentialGeocode('1234 South Synthetic Lane, Prosper TX 75078',south).usableForSchoolCandidate,true);
+ assert.equal(assessResidentialGeocode('1234 North Synthetic Lane, Prosper TX 75078',south).usableForSchoolCandidate,false);
+ assert.equal(assessResidentialGeocode('1234 Synthetic Rd, Prosper TX 75078',match()).usableForSchoolCandidate,false);
+});
