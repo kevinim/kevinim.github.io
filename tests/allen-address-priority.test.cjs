@@ -124,3 +124,30 @@ test('Allen split-apartment boundary exceptions remain separately blocked for al
  }
  assert.equal(allenSplitApartmentException('2050 Peak St, Allen, TX'),null);
 });
+
+test('all 1688 Allen published street rows retain correct K-12 chain across endpoints and midpoint',()=>{
+ const {matchAllenAddress}=require('../allen-lookup.js');
+ const table=JSON.parse(fs.readFileSync('allen-address-schools.json','utf8'));
+ let accepted=0,blocked=0,unparseable=0;
+ for(const row of table.rows){
+  const range=String(row[1]||'').match(/^\s*(\d+)\s*(?:[-–—]\s*(\d+))?\s*(\(even numbers only\))?\s*$/i);
+  if(!range){unparseable++;continue}
+  const min=+range[1],max=+(range[2]||range[1]);
+  const samples=new Set([min,max,Math.floor((min+max)/2)]);
+  for(let num of samples){
+   if(range[3]&&num%2)num++;
+   if(num>max||num<min)continue;
+   const observed=matchAllenAddress(num+' '+row[0]+', Allen, TX',table.rows);
+   if(row[0].includes('***')){
+    assert.equal(observed,null,'apartment-specific district split cannot be a generic street-table campus');
+    blocked++;
+   }else{
+    assert.ok(observed,'official source failed to match: '+row[0]+' range '+row[1]);
+    assert.deepEqual(observed.slice(2,6),row.slice(2,6),
+     'source chain disagreement on '+row[0]+' range '+row[1]);
+    accepted++;
+   }
+  }
+ }
+ assert.deepEqual({accepted,blocked,unparseable},{accepted:4925,blocked:4,unparseable:1});
+});
