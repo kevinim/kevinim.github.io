@@ -251,3 +251,46 @@ test('25 adopted 2026-27 McKinney zoned-campus aliases link to exact TEA IDs wit
   }
  }
 });
+
+test('McKinney 2026-27 repurposed elementary campuses never appear as zoned reference schools',()=>{
+ for(const name of ['EDDINS ELEMENTARY','McNeil Elementary','Wolford Elementary']){
+  const f=fixture();
+  f.raw.features[0].properties.school=name;
+  delete f.raw.features[0].properties.campusId;
+  const p=api.crosscheck(f);
+  assert.equal(p.kind,'unavailable',name);
+  assert.equal(p.code,'repurposed-campus',name);
+  assert.deepEqual(p.candidates,[]);
+ }
+});
+test('raw and normalized McKinney source years must not disagree or hide malformed publisher years',()=>{
+ for(const [raw,normalized] of [
+  ['2026/27','2026-27'],['2026-27','2025-26'],
+  ['2025-26','2026-27'],['2026-27','TBA'],['','2026-27']
+ ]){
+  const f=fixture();
+  Object.assign(f.raw.features[1].properties,{sourceYearRaw:raw,sourceYear:normalized});
+  const p=api.crosscheck(f);
+  assert.equal(p.kind,'reference-only');
+  assert.equal(p.complete,false);
+  assert.equal(p.candidates.length,2);
+  assert.ok(p.missing.includes('중등'),JSON.stringify([raw,normalized]));
+  assert.ok(p.sourceWarnings.some(x=>x.includes('중등')),JSON.stringify([raw,normalized]));
+  if(raw==='2026-27'&&normalized==='2025-26')assert.ok(p.sourceWarnings.some(x=>x.includes('학년도 충돌')));
+ }
+});
+test('valid year alias and genuinely absent middle/year continue as reference with clear vintage warning',()=>{
+ const f=fixture();
+ f.raw.features[1].properties.sourceYearRaw='2026–27';
+ f.raw.features[1].properties.sourceYear='2026-27';
+ let p=api.crosscheck(f);
+ assert.equal(p.kind,'reference-only');
+ assert.equal(p.complete,true);
+ f.raw.features[1].properties.sourceYearRaw=null;
+ f.raw.features[1].properties.sourceYear=null;
+ p=api.crosscheck(f);
+ assert.equal(p.kind,'reference-only');
+ assert.equal(p.complete,true);
+ assert.match(p.candidates[1].yearNote,/미표기/);
+ assert.equal(p.independentOfficialAddressVerified,false);
+});

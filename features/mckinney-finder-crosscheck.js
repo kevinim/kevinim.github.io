@@ -51,6 +51,10 @@
  const normalize=value=>String(value||'').toLowerCase()
   .replace(/\b(?:dr|doctor|elementary|elem|el|middle|mid|high|school|campus|hs|ms)\b/g,'')
   .replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
+ // McKinney ISD converted Eddins, McNeil and Wolford from regular
+ // attendance-zone elementary campuses for 2026–27. An obsolete publisher
+ // label must never be shown as a current zoned school.
+ const RETIRED_2026_ELEMENTARY=/\b(?:eddins|mcneil|wolford)\b/i;
  const cleanYear=value=>typeof value==='string'&&/^\d{4}[-–]\d{2}$/.test(value)
   ?value.replace('–','-'):null;
  const unavailable=(reason,code)=>Object.freeze({kind:'unavailable',district:DISTRICT,
@@ -80,13 +84,22 @@
       !Array.isArray(geom.coordinates)||!geom.coordinates.length||
       !LEVELS.includes(level)||school.length<2||school.length>120)
     return unavailable('공식 GIS 응답에 잘못된 학교·학교급·도형이 있습니다.','malformed-feature');
-   // SCHL_YEAR is provider metadata. Only elementary has an independent
-   // feature-year verification gate in the current application.
-   const year=cleanYear(p.sourceYearRaw)||cleanYear(p.sourceYear);
-   if((p.sourceYearRaw!=null&&!year)||(year&&year!==YEAR)){
+   if(level==='elementary'&&RETIRED_2026_ELEMENTARY.test(school))
+    return unavailable('2026–27 용도 전환 초등학교는 현행 통학구역 후보로 표시하지 않습니다.','repurposed-campus');
+   // Provider raw and converted year are separate evidence. Never let a
+   // sanitized 2026–27 fallback hide an invalid/stale or conflicting raw year.
+   const rawYear=cleanYear(p.sourceYearRaw),normalizedYear=cleanYear(p.sourceYear);
+   const year=rawYear||normalizedYear;
+   if((p.sourceYearRaw!=null&&!rawYear)||
+      (p.sourceYear!=null&&!normalizedYear)||
+      (rawYear&&normalizedYear&&rawYear!==normalizedYear)||
+      (year&&year!==YEAR)){
     // Fail closed per school level rather than removing independently valid
     // elementary/middle/high evidence from the entire result.
-    excludedYears.set(level,String(p.sourceYearRaw||p.sourceYear||'미표기'));
+    const explanation=rawYear&&normalizedYear&&rawYear!==normalizedYear
+     ?'원본 '+p.sourceYearRaw+' / 변환 '+p.sourceYear+' (학년도 충돌)'
+     :String(p.sourceYearRaw||p.sourceYear||'미표기');
+    excludedYears.set(level,explanation);
     byLevel.delete(level);
     continue;
    }
