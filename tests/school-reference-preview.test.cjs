@@ -11,6 +11,14 @@ const school=(level='elementary',name='SYNTHETIC CAMPUS')=>({
 const candidate=(district='FISD',status='current')=>({district,status,features:[
  school('elementary','SYNTHETIC ELEMENTARY'),school('middle','SYNTHETIC MIDDLE'),school('high','SYNTHETIC HIGH')]});
 const plan=x=>preview.plan(x,DISTRICT_REGISTRY,safe.official);
+const verifiedProsperCandidate=()=>{
+ const f=school('elementary','JUDY RUCKER EL');
+ Object.assign(f.properties,{sourceDistrict:'PROSPER',current:true,
+  sourceYearConfirmed:true,sourceVintage:'2026–27',schoolYear:'2026–27',
+  campusId:'043912102',schoolCode:'102'});
+ return {district:'PROSPER',status:'current',features:[f]};
+};
+
 test('explicit reference preview keeps residential grant immutable and strips geometry',()=>{
  const raw=candidate();const p=plan(raw);
  assert.equal(p.kind,'reference-only');
@@ -23,8 +31,11 @@ test('explicit reference preview keeps residential grant immutable and strips ge
  assert.equal(policy.releaseSummary().currentYearResidentialDistrictApprovals,0);
 });
 test('only known, current published source statuses are previewable',()=>{
- for(const [district,status] of [['PROSPER','current'],['043907','finder-current']])
-  assert.equal(plan(candidate(district,status)).kind,'reference-only',district);
+ assert.equal(plan(verifiedProsperCandidate()).kind,'reference-only',
+  'Prosper must have source-audited campus identity');
+ assert.equal(plan(candidate('PROSPER','current')).kind,'unavailable',
+  'Prosper synthetic candidates without campus identity must fail closed');
+ assert.equal(plan(candidate('043907','finder-current')).kind,'reference-only');
  for(const [district,status] of [
   ['FISD','finder-current'],['PISD','finder-current'],['LISD','finder-current'],
   ['AISD','unverified-year'],['CFB','unavailable'],['043907','current'],['UNKNOWN','current']
@@ -245,7 +256,7 @@ test('reference renderer shows each campus vintage without claiming enrollment',
 
 test('GIS provenance separates source operator, layer year and official residential assignment',()=>{
  const frisco=plan(candidate());
- const prosper=plan(candidate('PROSPER','current'));
+ const prosper=plan(verifiedProsperCandidate());
  const mckinney=plan(candidate('043907','finder-current'));
  for(const p of [frisco,prosper,mckinney]){
   assert.equal(p.kind,'reference-only');
