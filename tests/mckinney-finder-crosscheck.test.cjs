@@ -276,6 +276,7 @@ test('raw and normalized McKinney source years must not disagree or hide malform
   assert.equal(p.candidates.length,2);
   assert.ok(p.missing.includes('중등'),JSON.stringify([raw,normalized]));
   assert.ok(p.sourceWarnings.some(x=>x.includes('중등')),JSON.stringify([raw,normalized]));
+  if(raw==='2026-27'&&normalized==='2025-26')assert.ok(p.sourceWarnings.some(x=>x.includes('학년도 충돌')));
  }
 });
 test('valid year alias and genuinely absent middle/year continue as reference with clear vintage warning',()=>{
