@@ -104,7 +104,7 @@
     /^043912[0-9]{3}$/.test(String(p.campusId||''))&&
     /^[0-9]{3}$/.test(String(p.schoolCode||''))&&
     p.campusId==='043912'+p.schoolCode;
-   if(raw.district==='PROSPER'&&p.campusId!=null&&!officialProsper)
+   if(raw.district==='PROSPER'&&!officialProsper)
     return blocked('Prosper 공식 GIS 캠퍼스 번호 또는 학교 코드가 일치하지 않습니다.');
    const yearNote=raw.district==='PISD'?'공식 SchoolFinder 연결 · 원본 GIS 레이어 2025–26':
     raw.district==='LISD'?(p.gradeLevel==='high'?'고등 GIS 2025–26 표기 · 주소 배정 미확인':
